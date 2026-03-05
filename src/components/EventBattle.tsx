@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ThumbsUp, Send, Flame, X, Sparkles, Zap, MessageCircleReply } from 'lucide-react';
+import { ThumbsUp, Send, Flame, X, Sparkles, Zap, MessageCircleReply } from 'lucide-react';
 import CountUp from 'react-countup';
 import type { NewsItem, EventComment, EventReply, CommentSide } from '../data/mock_data';
 import { mockEventComments } from '../data/mock_data';
@@ -21,7 +21,7 @@ const RC = '#FF0055';
 const randomBattleGain = () => 10 + Math.floor(Math.random() * 91);
 
 const card =
-  'rounded-2xl border border-white/15 bg-[linear-gradient(140deg,rgba(11,17,32,0.88),rgba(16,25,46,0.8)_55%,rgba(8,13,25,0.9))] backdrop-blur-xl shadow-[0_18px_52px_rgba(4,8,20,0.42)] ring-1 ring-white/10';
+  'rounded-none border border-white/18 bg-transparent backdrop-blur-none shadow-none ring-0';
 
 function calcPower(items: EventComment[]) {
   return Math.max(
@@ -324,10 +324,8 @@ const BATTLE_CSS = `
 }
 .battle-shell {
   position: relative;
-  border-radius: 22px;
+  border-radius: 0;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 30px 90px rgba(0,0,0,0.55);
   background: radial-gradient(120% 160% at 50% -30%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 45%, rgba(5,8,15,0.95) 100%);
 }
 .battle-shell::before {
@@ -458,7 +456,6 @@ const BATTLE_CSS = `
 .battle-stat-card {
   position: relative;
   overflow: hidden;
-  border-radius: 16px;
 }
 .battle-stat-card::after {
   content: '';
@@ -585,6 +582,88 @@ const BATTLE_CSS = `
   clip-path: polygon(20% 0, 100% 0, 88% 50%, 100% 100%, 20% 100%, 0 50%);
   animation: pk-runner-right 0.72s linear infinite;
 }
+.battle-shell {
+  background:
+    linear-gradient(180deg, rgba(5,8,18,0.72), rgba(5,8,18,0.8)),
+    radial-gradient(1400px 700px at 50% -25%, rgba(108,72,255,0.2), transparent 58%),
+    radial-gradient(1200px 700px at 15% 100%, rgba(0,210,255,0.18), transparent 62%),
+    radial-gradient(1200px 700px at 85% 100%, rgba(255,0,85,0.16), transparent 62%),
+    url('/bg.png') center/cover no-repeat,
+    #050812;
+}
+.battle-outer-frame {
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06), 0 16px 80px rgba(0,0,0,0.55);
+}
+.battle-header-strip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: linear-gradient(90deg, rgba(8,15,32,0.95), rgba(16,27,50,0.84), rgba(36,12,42,0.8));
+  color: rgba(235,241,255,0.9);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+.battle-header-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,210,255,0.12), transparent 30%, transparent 70%, rgba(255,0,85,0.12));
+  pointer-events: none;
+}
+.battle-main-panel {
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: none;
+}
+.battle-vs-cross-x,
+.battle-vs-cross-y {
+  position: absolute;
+  pointer-events: none;
+  z-index: 6;
+}
+.battle-vs-cross-x {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0,210,255,0.5), rgba(255,255,255,0.78), rgba(255,0,85,0.5));
+  box-shadow: 0 0 16px rgba(255,255,255,0.45);
+}
+.battle-vs-cross-y {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.86), rgba(255,255,255,0.08));
+  box-shadow: 0 0 16px rgba(255,255,255,0.45);
+}
+.battle-vs-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 7;
+  font-size: 72px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #fff4d0;
+  text-shadow: 0 0 20px rgba(255,185,72,0.9), 0 0 54px rgba(255,100,16,0.9);
+  pointer-events: none;
+}
+.battle-right-panel {
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: none;
+  background: transparent;
+}
+.battle-odds-btn {
+  min-height: 86px;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.02em;
+}
 }`;
 
 /* ══════════ Particle System ══════════ */
@@ -600,6 +679,15 @@ interface Particle {
   size: number;
   drag: number;
   glow: number;
+}
+
+interface StarDust {
+  x: number;
+  y: number;
+  r: number;
+  a: number;
+  phase: number;
+  color: string;
 }
 
 interface BattleFx {
@@ -774,7 +862,6 @@ const ParticleCanvas: React.FC<{
   leftFail: number;
   rightSuccess: number;
   rightFail: number;
-  splitPct: number;
   convergeX: number;
   convergeY: number;
 }> = ({
@@ -785,14 +872,22 @@ const ParticleCanvas: React.FC<{
   leftFail,
   rightSuccess,
   rightFail,
-  splitPct,
   convergeX,
   convergeY,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particles = useRef<Particle[]>([]);
+  const stars = useRef<StarDust[]>([]);
   const raf = useRef(0);
   const lastTs = useRef(0);
+  const dprRef = useRef(1);
+  const perfMode = useRef<'high' | 'mid' | 'low'>('mid');
+  const gradientsRef = useRef<{
+    width: number;
+    height: number;
+    hazeL: CanvasGradient | null;
+    hazeR: CanvasGradient | null;
+  }>({ width: 0, height: 0, hazeL: null, hazeR: null });
   const prevL = useRef(leftPower);
   const prevR = useRef(rightPower);
   const prevLs = useRef(leftSuccess);
@@ -802,14 +897,53 @@ const ParticleCanvas: React.FC<{
   const heatL = useRef(0);
   const heatR = useRef(0);
 
-  useEffect(() => {
+  const setupCanvas = useCallback(() => {
     const cvs = canvasRef.current;
     const el = containerRef.current;
-    if (cvs && el) {
-      cvs.width = el.offsetWidth;
-      cvs.height = el.offsetHeight;
-    }
-  }, [containerRef, splitPct, convergeX, convergeY]);
+    if (!cvs || !el) return null;
+    const logicalW = Math.max(1, el.offsetWidth);
+    const logicalH = Math.max(1, el.offsetHeight);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    dprRef.current = dpr;
+    cvs.width = Math.floor(logicalW * dpr);
+    cvs.height = Math.floor(logicalH * dpr);
+    cvs.style.width = `${logicalW}px`;
+    cvs.style.height = `${logicalH}px`;
+    const ctx = cvs.getContext('2d');
+    if (!ctx) return null;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const area = logicalW * logicalH;
+    const cores = navigator.hardwareConcurrency || 4;
+    perfMode.current = area > 850_000 || cores <= 4 ? 'low' : area > 520_000 || cores <= 6 ? 'mid' : 'high';
+
+    const starBase = perfMode.current === 'low' ? 46 : perfMode.current === 'mid' ? 68 : 92;
+    stars.current = Array.from({ length: starBase }, () => {
+      const isLeft = Math.random() > 0.5;
+      return {
+        x: Math.random() * logicalW,
+        y: Math.random() * logicalH,
+        r: 0.5 + Math.random() * (perfMode.current === 'high' ? 2.1 : 1.6),
+        a: 0.2 + Math.random() * 0.55,
+        phase: Math.random() * Math.PI * 2,
+        color: isLeft ? 'rgba(0,210,255,0.95)' : 'rgba(255,0,85,0.95)',
+      };
+    });
+
+    const hazeL = ctx.createRadialGradient(logicalW * 0.2, logicalH * 0.65, 10, logicalW * 0.2, logicalH * 0.65, logicalW * 0.65);
+    hazeL.addColorStop(0, 'rgba(0,210,255,0.32)');
+    hazeL.addColorStop(1, 'rgba(0,210,255,0)');
+    const hazeR = ctx.createRadialGradient(logicalW * 0.8, logicalH * 0.65, 10, logicalW * 0.8, logicalH * 0.65, logicalW * 0.65);
+    hazeR.addColorStop(0, 'rgba(255,0,85,0.32)');
+    hazeR.addColorStop(1, 'rgba(255,0,85,0)');
+    gradientsRef.current = { width: logicalW, height: logicalH, hazeL, hazeR };
+
+    return { ctx, logicalW, logicalH };
+  }, [containerRef]);
+
+  useEffect(() => {
+    setupCanvas();
+  }, [setupCanvas]);
 
   const startLoop = useCallback(() => {
     if (raf.current) return;
@@ -818,35 +952,68 @@ const ParticleCanvas: React.FC<{
       if (!cvs) { raf.current = 0; return; }
       const ctx = cvs.getContext('2d');
       if (!ctx) { raf.current = 0; return; }
-      if (ts - lastTs.current < 20) {
+      const minStep = perfMode.current === 'low' ? 34 : perfMode.current === 'mid' ? 24 : 16;
+      if (ts - lastTs.current < minStep) {
         raf.current = requestAnimationFrame(tick);
         return;
       }
       lastTs.current = ts;
       const el = containerRef.current;
+      const dpr = dprRef.current || 1;
       if (el) {
-        const w = el.offsetWidth;
-        const h = el.offsetHeight;
-        if (cvs.width !== w || cvs.height !== h) { cvs.width = w; cvs.height = h; }
+        const w = Math.max(1, el.offsetWidth);
+        const h = Math.max(1, el.offsetHeight);
+        if (Math.floor(cvs.width / dpr) !== w || Math.floor(cvs.height / dpr) !== h) {
+          setupCanvas();
+        }
       }
-      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      const width = Math.max(1, Math.floor(cvs.width / dpr));
+      const height = Math.max(1, Math.floor(cvs.height / dpr));
+      ctx.clearRect(0, 0, width, height);
       const ps = particles.current;
-      const streamBase = 2;
-      const leftStream = streamBase + Math.min(10, heatL.current * 0.4);
-      const rightStream = streamBase + Math.min(10, heatR.current * 0.4);
-      const centerX = Math.min(cvs.width * 0.88, Math.max(cvs.width * 0.12, cvs.width * convergeX));
-      const centerY = Math.min(cvs.height * 0.92, Math.max(cvs.height * 0.12, cvs.height * convergeY));
-      const halfH = cvs.height * 0.5;
+      const centerX = Math.min(width * 0.88, Math.max(width * 0.12, width * convergeX));
+      const centerY = Math.min(height * 0.92, Math.max(height * 0.12, height * convergeY));
+      const halfH = height * 0.5;
+      const quality = perfMode.current === 'low' ? 0.68 : perfMode.current === 'mid' ? 0.86 : 1;
+
+      // base star dust + left/right energy haze
+      ctx.globalCompositeOperation = 'lighter';
+      const hL = Math.min(1, heatL.current / 18);
+      const hR = Math.min(1, heatR.current / 18);
+      for (let i = 0; i < stars.current.length; i++) {
+        const s = stars.current[i];
+        const pulse = 0.45 + 0.55 * Math.sin(ts * 0.0012 + s.phase);
+        ctx.globalAlpha = s.a * pulse * 0.55;
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 0.22 + hL * 0.35;
+      const cachedGrad = gradientsRef.current;
+      if (cachedGrad.width !== width || cachedGrad.height !== height || !cachedGrad.hazeL || !cachedGrad.hazeR) {
+        setupCanvas();
+      }
+      ctx.fillStyle = gradientsRef.current.hazeL ?? 'rgba(0,210,255,0.06)';
+      ctx.fillRect(0, 0, width, height);
+      ctx.globalAlpha = 0.22 + hR * 0.35;
+      ctx.fillStyle = gradientsRef.current.hazeR ?? 'rgba(255,0,85,0.06)';
+      ctx.fillRect(0, 0, width, height);
+      ctx.globalAlpha = 1;
+
+      const streamBase = perfMode.current === 'low' ? 1.3 : 2.1;
+      const leftStream = (streamBase + Math.min(8, heatL.current * 0.26)) * quality;
+      const rightStream = (streamBase + Math.min(8, heatR.current * 0.26)) * quality;
       const spawnStream = (side: 'left' | 'right', amount: number) => {
         const color = side === 'left' ? LC : RC;
         const fromLeft = side === 'left';
         for (let i = 0; i < Math.floor(amount); i++) {
-          const sx = fromLeft ? Math.random() * (cvs.width * 0.46) : cvs.width * 0.54 + Math.random() * (cvs.width * 0.46);
-          const sy = halfH + (Math.random() - 0.5) * (cvs.height * 0.62);
+          const sx = fromLeft ? Math.random() * (width * 0.46) : width * 0.54 + Math.random() * (width * 0.46);
+          const sy = halfH + (Math.random() - 0.5) * (height * 0.62);
           const dx = centerX - sx;
           const dy = centerY - sy;
           const dist = Math.max(1, Math.hypot(dx, dy));
-          const speed = 1.1 + Math.random() * 2.5 + (side === 'left' ? heatL.current : heatR.current) * 0.09;
+          const speed = 1 + Math.random() * 2 + (side === 'left' ? heatL.current : heatR.current) * 0.08;
           ps.push({
             x: sx,
             y: sy,
@@ -854,17 +1021,20 @@ const ParticleCanvas: React.FC<{
             vy: (dy / dist) * speed + (Math.random() - 0.5) * 0.7,
             tx: centerX + (Math.random() - 0.5) * 10,
             ty: centerY + (Math.random() - 0.5) * 8,
-            life: 0.45 + Math.random() * 0.4,
+            life: 0.45 + Math.random() * 0.34,
             color,
-            size: 0.9 + Math.random() * 1.8,
+            size: 0.8 + Math.random() * 1.7,
             drag: 0.988,
             glow: 6 + Math.random() * 8,
           });
         }
       };
-      spawnStream('left', leftStream);
-      spawnStream('right', rightStream);
-      if (Math.random() < 0.45) {
+      const maxParticles = perfMode.current === 'low' ? 260 : perfMode.current === 'mid' ? 380 : 520;
+      if (ps.length < maxParticles * 0.92) {
+        spawnStream('left', leftStream);
+        spawnStream('right', rightStream);
+      }
+      if (Math.random() < 0.38 * quality && ps.length < maxParticles) {
         for (let i = 0; i < 2; i++) {
           const side = Math.random() > 0.5 ? 1 : -1;
           ps.push({
@@ -882,7 +1052,6 @@ const ParticleCanvas: React.FC<{
           });
         }
       }
-      const maxParticles = 560;
       if (ps.length > maxParticles) ps.splice(0, ps.length - maxParticles);
       for (let i = ps.length - 1; i >= 0; i--) {
         const p = ps[i];
@@ -904,21 +1073,38 @@ const ParticleCanvas: React.FC<{
         }
         if (p.life <= 0) { ps.splice(i, 1); continue; }
         ctx.globalAlpha = p.life;
-        ctx.shadowBlur = p.glow;
-        ctx.shadowColor = p.color;
+        const heavyGlow = perfMode.current === 'high' && ps.length < 320 && i % 2 === 0;
+        ctx.shadowBlur = heavyGlow ? p.glow : 0;
+        ctx.shadowColor = heavyGlow ? p.color : 'transparent';
         ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-        ctx.fill();
+        const radius = p.size * p.life;
+        if (radius < 1.1) {
+          ctx.fillRect(p.x, p.y, 1.2, 1.2);
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
       heatL.current = Math.max(0, heatL.current * 0.94 - 0.04);
       heatR.current = Math.max(0, heatR.current * 0.94 - 0.04);
+      // side push beams into center (cheap but strong visual)
+      const beamW = Math.max(24, 58 + Math.max(heatL.current, heatR.current) * 2.2);
+      ctx.globalAlpha = 0.32 + Math.min(0.4, (heatL.current + heatR.current) * 0.01);
+      ctx.fillStyle = 'rgba(0,210,255,0.65)';
+      ctx.fillRect(Math.max(0, centerX - beamW - 12), centerY - 10, beamW, 20);
+      ctx.fillStyle = 'rgba(255,0,85,0.65)';
+      ctx.fillRect(centerX + 12, centerY - 10, beamW, 20);
+      ctx.globalAlpha = 0.42;
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.fillRect(centerX - 8, centerY - 8, 16, 16);
       ctx.shadowBlur = 0;
       ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
       raf.current = ps.length > 0 ? requestAnimationFrame(tick) : 0;
     };
     raf.current = requestAnimationFrame(tick);
-  }, [containerRef, splitPct, convergeX, convergeY]);
+  }, [containerRef, convergeX, convergeY, setupCanvas]);
 
   const spawnBurst = useCallback(
     (side: 'left' | 'right', intensity: number) => {
@@ -928,7 +1114,8 @@ const ParticleCanvas: React.FC<{
       const color = side === 'left' ? LC : RC;
       const sx = side === 'left' ? w * 0.04 : w * 0.96;
       const dir = side === 'left' ? 1 : -1;
-      const count = 12 + Math.round(intensity * 18);
+      const quality = perfMode.current === 'low' ? 0.6 : perfMode.current === 'mid' ? 0.82 : 1;
+      const count = Math.max(8, Math.round((12 + intensity * 16) * quality));
       const tx = Math.min(w * 0.88, Math.max(w * 0.12, w * convergeX));
       const ty = Math.min(h * 0.92, Math.max(h * 0.12, h * convergeY));
       for (let i = 0; i < count; i++) {
@@ -944,9 +1131,9 @@ const ParticleCanvas: React.FC<{
           vy: (dy / dist) * speed + (Math.random() - 0.5) * 0.8,
           tx: tx + (Math.random() - 0.5) * 10,
           ty: ty + (Math.random() - 0.5) * 8,
-          life: 0.55 + Math.random() * 0.4,
+          life: 0.52 + Math.random() * 0.36,
           color,
-          size: 1.2 + Math.random() * (1.8 + intensity),
+          size: 1 + Math.random() * (1.4 + intensity * 0.85),
           drag: 0.986,
           glow: 8 + Math.random() * 10,
         });
@@ -993,15 +1180,38 @@ const ParticleCanvas: React.FC<{
     if (raf.current) cancelAnimationFrame(raf.current);
   }, []);
 
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.hidden) {
+        if (raf.current) cancelAnimationFrame(raf.current);
+        raf.current = 0;
+      } else if (particles.current.length) {
+        startLoop();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, [startLoop]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setupCanvas());
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [containerRef, setupCanvas]);
+
   return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-20" />;
 };
 
 /* ══════════ FlameAvatar ══════════ */
-const FlameAvatar: React.FC<{
+const FlameAvatar = React.memo(({
+  emoji, side, compact,
+}: {
   emoji: string;
   side: CommentSide;
   compact?: boolean;
-}> = ({ emoji, side, compact }) => {
+}) => {
   const color = side === 'A' ? LC : RC;
   return (
     <div
@@ -1017,15 +1227,17 @@ const FlameAvatar: React.FC<{
       {emoji}
     </div>
   );
-};
+});
 
 /* ══════════ MVP Avatar ══════════ */
-const MvpAvatar: React.FC<{
+const MvpAvatar = React.memo(({
+  avatar, likes, leading, color,
+}: {
   avatar: string;
   likes: number;
   leading: boolean;
   color: string;
-}> = ({ avatar, likes, leading, color }) => (
+}) => (
   <motion.div
     className="relative w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0"
     style={{
@@ -1055,12 +1267,11 @@ const MvpAvatar: React.FC<{
       <AnimatedCount value={likes} duration={0.45} />
     </span>
   </motion.div>
-);
+));
 
 /* ══════════ BattleHeader (hero image + PK bar merged) ══════════ */
 const BattleHeader: React.FC<{
   news: NewsItem;
-  onBack: () => void;
   leftPower: number;
   rightPower: number;
   leftSuccess: number;
@@ -1070,10 +1281,11 @@ const BattleHeader: React.FC<{
   splitPct: number;
   commentsA: EventComment[];
   commentsB: EventComment[];
+  comboA: number;
+  comboB: number;
   shakeKey: number;
 }> = ({
   news,
-  onBack,
   leftPower,
   rightPower,
   leftSuccess,
@@ -1083,6 +1295,8 @@ const BattleHeader: React.FC<{
   splitPct,
   commentsA,
   commentsB,
+  comboA,
+  comboB,
   shakeKey,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1183,7 +1397,11 @@ const BattleHeader: React.FC<{
   );
 
   return (
-    <div ref={containerRef} className="relative rounded-none overflow-hidden border border-white/20 shadow-[0_22px_70px_rgba(7,11,26,0.55)]">
+    <div ref={containerRef} className="relative rounded-none overflow-hidden border border-white/14 shadow-[0_26px_90px_rgba(0,0,0,0.6)]">
+      <span
+        className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
+        style={{ background: `linear-gradient(90deg, ${LC}, rgba(255,255,255,0.75), ${RC})`, animation: 'idle-sweep 2.8s linear infinite' }}
+      />
       {/* Image with brightness filter + edge vignette */}
       <img src={news.image} alt="" className="absolute inset-0 w-full h-full object-cover brightness-[0.45] contrast-[1.1]" />
       <div
@@ -1202,31 +1420,16 @@ const BattleHeader: React.FC<{
         leftFail={leftFail}
         rightSuccess={rightSuccess}
         rightFail={rightFail}
-        splitPct={splitPct}
         convergeX={convergePoint.x}
         convergeY={convergePoint.y}
       />
 
       {/* Content overlay */}
-      <div className="relative z-10 flex flex-col justify-between px-8 py-7 md:px-12 md:py-10 lg:px-14 lg:py-12" style={{padding:'12px', minHeight: 280 }}>
-        {/* Top-left — back button */}
-        <div className="flex items-center justify-between gap-3">
-          <button
-            onClick={onBack}
-            className="self-start flex items-center gap-1.5 px-2.5 py-1 rounded-none bg-black/30 backdrop-blur-sm text-white/80 hover:text-white text-xs font-medium border-0 cursor-pointer transition-colors hover:bg-black/50"
-          >
-            <ArrowLeft size={14} /> 返回
-          </button>
-          <div className="px-2.5 py-1 rounded-none bg-black/35 border border-white/15 text-[10px] font-bold text-white/90 inline-flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-rose-500" style={{ animation: 'pulse-ring 1.5s ease-out infinite' }} />
-            LIVE BATTLE
-          </div>
-        </div>
-
+      <div className="relative z-10 flex flex-col justify-end px-5 py-3 md:px-10 md:py-6 lg:px-14 lg:py-8 min-h-[320px] md:min-h-[380px]">
         {/* Center — title + summary */}
-        <div className="pointer-events-none absolute left-1/2 top-[29%] z-20 w-[calc(100%-64px)] md:w-[calc(100%-120px)] lg:w-[calc(100%-160px)] max-w-3xl -translate-x-1/2 -translate-y-1/2 px-4 md:px-8 relative">
+        <div className="pointer-events-none absolute left-1/2 top-[24%] z-20 w-[calc(100%-56px)] md:w-[calc(100%-120px)] lg:w-[calc(100%-180px)] max-w-4xl -translate-x-1/2 -translate-y-1/2 px-4 md:px-8 relative">
           <h2
-            className="battle-title text-2xl md:text-3xl font-black text-white leading-tight tracking-tight text-center px-2 overflow-hidden"
+            className="battle-title text-[42px] md:text-[54px] font-black text-white leading-tight tracking-tight text-center px-2 overflow-hidden"
             style={{ fontFamily: "'Orbitron', sans-serif" }}
           >
             <span className="battle-title-glitch-a">{news.title}</span>
@@ -1234,26 +1437,43 @@ const BattleHeader: React.FC<{
             <span className="relative z-10">{news.title}</span>
           </h2>
           <p
-            className="absolute left-0 right-0 text-[13px] md:text-[15px] text-white/90 leading-[1.75] text-center drop-shadow-[0_1px_10px_rgba(0,0,0,0.95)] battle-hot-text"
-            style={{ fontFamily: "'Orbitron', sans-serif", top: 'calc(100% + 12px)' }}
+            className="absolute left-0 right-0 text-[19px] md:text-[24px] text-white/90 leading-[1.6] text-center drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)] battle-hot-text"
+            style={{ fontFamily: "'Orbitron', sans-serif", top: 'calc(100% + 14px)' }}
           >
             {news.summary}
           </p>
         </div>
-        {/* Bottom section — summary + power numbers + PK bar */}
-        <div className="space-y-2">
-          
-          {/* Power numbers + option labels */}
-          <div className="flex items-center justify-between">
-            <div className="power-hud flex items-center gap-2 px-2 py-1 bg-cyan-400/10">
-              <Zap size={11} className="text-cyan-300" />
-              <span className="text-xs font-bold text-white/90 drop-shadow-lg">{news.optionA}</span>
-              <ReelPowerNumber value={leftPower} color={LC} align="right" leading={leftLeading} idPrefix="lp" />
+        {/* Bottom section — power numbers + PK bar */}
+        <div className="space-y-2 pt-24">
+          <div className="flex items-end justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-14 h-14 rounded-full border-2 border-cyan-300/55 bg-transparent p-1 shadow-[0_0_22px_rgba(0,210,255,0.65)]">
+                <div className="w-full h-full rounded-full bg-cyan-500/20 border border-cyan-200/45 flex items-center justify-center">
+                  <Zap size={20} className="text-cyan-100" />
+                </div>
+              </div>
+              <div className="min-w-0">
+                <div className="text-[13px] font-semibold tracking-wide text-cyan-100/90 truncate">{news.optionA}</div>
+                <div className="flex items-end gap-2">
+                  <ReelPowerNumber value={leftPower} color={LC} align="right" leading={leftLeading} idPrefix="hero-lp" />
+                </div>
+                <div className="text-[11px] font-bold text-cyan-100/75">COMBO x<AnimatedCount value={Math.max(1, comboA)} duration={0.4} /></div>
+              </div>
             </div>
-            <div className="power-hud flex items-center gap-2 px-2 py-1 bg-rose-500/10">
-              <ReelPowerNumber value={rightPower} color={RC} align="left" leading={!leftLeading} idPrefix="rp" />
-              <span className="text-xs font-bold text-white/90 drop-shadow-lg">{news.optionB}</span>
-              <Zap size={11} className="text-rose-300" />
+
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="min-w-0 text-right">
+                <div className="text-[13px] font-semibold tracking-wide text-rose-100/90 truncate">{news.optionB}</div>
+                <div className="flex items-end justify-end gap-2">
+                  <ReelPowerNumber value={rightPower} color={RC} align="left" leading={!leftLeading} idPrefix="hero-rp" />
+                </div>
+                <div className="text-[11px] font-bold text-rose-100/75">COMBO x<AnimatedCount value={Math.max(1, comboB)} duration={0.4} /></div>
+              </div>
+              <div className="w-14 h-14 rounded-full border-2 border-rose-300/55 bg-transparent p-1 shadow-[0_0_22px_rgba(255,0,85,0.65)]">
+                <div className="w-full h-full rounded-full bg-rose-500/20 border border-rose-200/45 flex items-center justify-center">
+                  <Zap size={20} className="text-rose-100" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1313,25 +1533,26 @@ const BattleHeader: React.FC<{
               ))}
 
               {/* Text */}
-              <span className="pk-text text-5xl tracking-[0.2em] select-none" style={{ fontFamily: "'Ma Shan Zheng', cursive" }}>
+              <span className="pk-text text-4xl md:text-5xl tracking-[0.22em] select-none" style={{ fontFamily: "'Ma Shan Zheng', cursive" }}>
                 龟势PK
               </span>
             </div>
           </div>
 
           {/* MVP + Bar */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <motion.div
               className="flex items-center gap-1.5 shrink-0"
               animate={leftLeading ? { x: [0, -3, 0], scale: [1, 1.04, 1] } : { x: 0, scale: 1 }}
               transition={leftLeading ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
             >
               {mvpA.length > 0
-                ? mvpA.map((c) => <MvpAvatar key={c.id} avatar={c.author.avatar} likes={c.likes} leading={leftLeading} color={LC} />)
+                ? mvpA.slice(0, 1).map((c) => <MvpAvatar key={c.id} avatar={c.author.avatar} likes={c.likes} leading={leftLeading} color={LC} />)
                 : <div className="w-10 h-10 rounded-full border-2 border-dashed border-white/20" />}
             </motion.div>
-            <div className="flex-1 relative h-8 rounded-none overflow-hidden bg-black/35 border border-white/15 backdrop-blur-sm">
+            <div className="flex-1 relative h-10 rounded-none overflow-hidden bg-transparent border border-white/24 backdrop-blur-none">
               <span className="bar-ticks" style={{ opacity: 0.22 }} />
+              <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08), transparent 40%, rgba(255,255,255,0.06))' }} />
               <motion.div
                 className="absolute inset-y-0 left-0"
                 style={{
@@ -1546,20 +1767,17 @@ const BattleHeader: React.FC<{
               >
                 <motion.div
                   key={shakeKey}
-                  initial={{ scale: 2.2, rotate: -15 }}
+                  initial={{ scale: 1.8, rotate: -10 }}
                   animate={{
-                    scale: 1 + clashStrength * 0.16,
+                    scale: 1 + clashStrength * 0.14,
                     rotate: 0,
-                    boxShadow: `0 0 ${14 + clashStrength * 22}px rgba(255,255,255,${0.25 + clashStrength * 0.35})`,
+                    boxShadow: `0 0 ${10 + clashStrength * 14}px rgba(255,255,255,${0.35 + clashStrength * 0.28})`,
                   }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 12 }}
-                  className="w-8 h-8 rounded-full bg-white/90 dark:bg-white flex items-center justify-center shadow-lg shadow-black/40 relative overflow-visible"
+                  transition={{ type: 'spring', stiffness: 440, damping: 13 }}
+                  className="min-w-[42px] h-7 px-2 rounded-full bg-[linear-gradient(90deg,rgba(0,210,255,0.28),rgba(255,255,255,0.92),rgba(255,0,85,0.28))] border border-white/70 flex items-center justify-center relative overflow-visible"
                 >
-                  <span className="vs-ring" />
-                  <span className="vs-ring" style={{ animationDelay: '0.5s' }} />
-                  <span className="absolute -top-1 -right-1 text-[9px] text-cyan-400"><Sparkles size={9} /></span>
-                  <span className="absolute -bottom-1 -left-1 text-[9px] text-rose-400"><Sparkles size={9} /></span>
-                  <span className="text-[10px] font-black text-slate-900 tracking-tight">VS</span>
+                  <span className="absolute inset-0 rounded-full opacity-60" style={{ background: 'linear-gradient(90deg, rgba(0,210,255,0.25), transparent 35%, transparent 65%, rgba(255,0,85,0.25))', animation: 'neon-sweep 1.8s linear infinite' }} />
+                  <span className="text-sm font-black text-slate-900 tracking-tight">VS</span>
                 </motion.div>
               </motion.div>
             </div>
@@ -1569,7 +1787,7 @@ const BattleHeader: React.FC<{
               transition={!leftLeading ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
             >
               {mvpB.length > 0
-                ? mvpB.map((c) => <MvpAvatar key={c.id} avatar={c.author.avatar} likes={c.likes} leading={!leftLeading} color={RC} />)
+                ? mvpB.slice(0, 1).map((c) => <MvpAvatar key={c.id} avatar={c.author.avatar} likes={c.likes} leading={!leftLeading} color={RC} />)
                 : <div className="w-10 h-10 rounded-full border-2 border-dashed border-white/20" />}
             </motion.div>
           </div>
@@ -1586,67 +1804,55 @@ const DynamicDivider: React.FC<{
   leftPower: number;
   rightPower: number;
 }> = ({ splitRatio, pulse, leftPower, rightPower }) => {
-  const lean = splitRatio < 0.45 ? -1 : splitRatio > 0.55 ? 1 : 0;
   const diff = Math.abs(leftPower - rightPower);
-  const leadColor = leftPower >= rightPower ? '#6ee7b7' : '#fcd34d';
+  const heat = Math.min(1, Math.abs(0.5 - splitRatio) * 2);
   return (
-    <div className="relative w-3 shrink-0 self-stretch flex items-center justify-center z-20">
-      <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-white/20" />
+    <div className="relative w-0 shrink-0 self-stretch z-20">
+      <div className="absolute inset-y-0 left-0 w-px bg-white/20" />
       <motion.div
-        className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[3px] rounded-full"
+        className="absolute inset-y-0 left-0 w-[5px]"
         style={{
-          background: 'rgba(255,255,255,0.35)',
+          background: `linear-gradient(180deg, rgba(0,210,255,0.0), rgba(0,210,255,0.7), rgba(255,255,255,0.95), rgba(255,0,85,0.7), rgba(255,0,85,0.0))`,
+          filter: 'blur(0.2px)',
+          mixBlendMode: 'screen',
         }}
-        animate={pulse ? { opacity: [0.35, 0.6, 0.35] } : { opacity: 0.35 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        animate={pulse ? { opacity: [0.35, 0.9, 0.35] } : { opacity: 0.55 + heat * 0.25 }}
+        transition={{ duration: 0.7, ease: 'easeInOut' }}
       />
-      <motion.div
-        className="relative z-10 text-xl select-none drop-shadow-lg rounded-none bg-black/45 border border-white/20 w-8 h-8 flex items-center justify-center"
-        animate={{ x: lean * 14, rotate: lean * 18 }}
-        transition={{ type: 'spring', stiffness: 100, damping: 10 }}
-      >
-        <motion.span
-          animate={lean !== 0 ? { x: [0, lean * 4, 0] } : {}}
-          transition={lean !== 0 ? { duration: 1, repeat: Infinity, ease: 'easeInOut' } : {}}
-        >
-          🐢
-        </motion.span>
-      </motion.div>
 
       <motion.div
-        key={`divider-diff-${diff}`}
-        className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.6, y: 18 }}
-        animate={{ opacity: 1, scale: [0.6, 1.3, 1], y: [18, -20, -14] }}
-        transition={{ duration: 0.65, ease: 'easeOut' }}
+        key={`arena-vs-${diff}`}
+        className="absolute left-0 top-[62%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        initial={{ opacity: 0, scale: 0.55, y: 26, rotate: -22, filter: 'blur(3px)' }}
+        animate={{ opacity: 1, scale: [0.55, 1.16, 1], y: [26, -8, 0], rotate: [-22, 8, 0], filter: ['blur(3px)', 'blur(0px)', 'blur(0px)'] }}
+        transition={{ duration: 0.72, ease: 'easeOut' }}
       >
-        <span
-          className="relative inline-flex items-center justify-center min-w-[34px] h-6 px-1.5 border text-[12px] font-black text-white rounded-none bg-black/60"
-          style={{ borderColor: `${leadColor}cc`, boxShadow: `0 0 16px ${leadColor}88` }}
+        <motion.div
+          animate={{
+            scale: pulse ? [1, 1.1, 1] : [1, 1.05, 1],
+            boxShadow: ['0 0 8px rgba(255,255,255,0.35)', '0 0 18px rgba(255,255,255,0.62)', '0 0 8px rgba(255,255,255,0.35)'],
+          }}
+          transition={{ duration: pulse ? 0.75 : 1.3, repeat: Infinity, ease: 'easeInOut' }}
+          className="relative min-w-[38px] h-6 px-2 rounded-full bg-[linear-gradient(90deg,rgba(0,210,255,0.26),rgba(255,255,255,0.92),rgba(255,0,85,0.26))] border border-white/75 flex items-center justify-center overflow-hidden"
         >
-          <motion.span
-            key={`divider-diff-ring-${diff}`}
-            initial={{ scale: 0.25, opacity: 0.9 }}
-            animate={{ scale: 1.8, opacity: 0 }}
-            transition={{ duration: 0.55, ease: 'easeOut' }}
-            className="absolute inset-0"
-            style={{ border: `1px solid ${leadColor}`, boxShadow: `0 0 16px ${leadColor}` }}
-          />
-          {[...Array(4)].map((_, i) => (
+          <span className="absolute inset-0 opacity-65" style={{ background: 'linear-gradient(90deg, rgba(0,210,255,0.22), transparent 34%, transparent 66%, rgba(255,0,85,0.22))', animation: 'neon-sweep 2s linear infinite' }} />
+          <span className="text-[10px] font-black text-slate-900 tracking-tight">VS</span>
+          {[...Array(10)].map((_, i) => (
             <motion.span
-              key={`divider-diff-ray-${diff}-${i}`}
-              initial={{ opacity: 0.9, scaleX: 0.35, scaleY: 0.35 }}
-              animate={{ opacity: 0, scaleX: 1.2, scaleY: 1.2 }}
-              transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.03 }}
-              className="absolute left-1/2 top-1/2 h-[2px] w-5 -translate-x-1/2 -translate-y-1/2"
+              key={`vs-spark-${diff}-${i}`}
+              className="absolute left-1/2 top-1/2 h-[2px] w-7"
               style={{
-                background: `linear-gradient(90deg, transparent, ${leadColor}, transparent)`,
-                transform: `translate(-50%, -50%) rotate(${i * 45}deg)`,
+                background: i % 2 === 0
+                  ? 'linear-gradient(90deg, transparent, rgba(0,210,255,1), transparent)'
+                  : 'linear-gradient(90deg, transparent, rgba(255,0,85,1), transparent)',
+                transform: `translate(-50%, -50%) rotate(${i * 18}deg)`,
               }}
+              initial={{ opacity: 0.95, scaleX: 0.2, scaleY: 0.2 }}
+              animate={{ opacity: 0, scaleX: 1.35, scaleY: 1.2 }}
+              transition={{ duration: 0.55, ease: 'easeOut', delay: i * 0.02 }}
             />
           ))}
-          <FlipNumber value={diff} className="tabular-nums leading-none" />
-        </span>
+        </motion.div>
       </motion.div>
     </div>
   );
@@ -1765,7 +1971,7 @@ const BattleTicker: React.FC<{
   const lead = leftPower === rightPower ? '势均力敌' : leftPower > rightPower ? `${optionA} 领先` : `${optionB} 领先`;
   const diff = Math.abs(leftPower - rightPower);
   return (
-    <div className="relative h-7 rounded-none border border-white/15 bg-black/35 overflow-hidden">
+    <div className="relative h-7 rounded-none border border-white/18 bg-transparent overflow-hidden">
       <div className="absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-cyan-400/20 to-transparent pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-rose-500/20 to-transparent pointer-events-none" />
       <div className="battle-ticker h-full flex items-center">
@@ -1790,7 +1996,7 @@ const KoFlash: React.FC<{ fx: KoFx | null }> = ({ fx }) => (
         <div
           className="absolute inset-0"
           style={{
-            background: `radial-gradient(circle at center, ${fx.color}44 0%, rgba(0,0,0,0.7) 52%, rgba(0,0,0,0.92) 100%)`,
+            background: `radial-gradient(circle at center, ${fx.color}40 0%, ${fx.color}14 32%, rgba(255,255,255,0.04) 52%, transparent 76%)`,
             animation: 'ko-flash 0.95s ease-out forwards',
           }}
         />
@@ -1798,7 +2004,7 @@ const KoFlash: React.FC<{ fx: KoFx | null }> = ({ fx }) => (
           initial={{ scale: 0.6, opacity: 0 }}
           animate={{ scale: [0.6, 1.08, 0.95], opacity: [0, 1, 0.92] }}
           transition={{ duration: 0.9, ease: 'easeOut' }}
-          className="relative text-center px-6 py-4 rounded-none border border-white/30 bg-black/55"
+          className="relative text-center px-6 py-4 rounded-none border border-white/30 bg-transparent"
           style={{ boxShadow: `0 0 40px ${fx.color}99` }}
         >
           <div className="text-4xl font-black tracking-[0.2em] text-white" style={{ fontFamily: "'Orbitron', sans-serif", textShadow: `0 0 16px ${fx.color}` }}>
@@ -1839,7 +2045,9 @@ const IdleArenaFx: React.FC<{ active: boolean }> = ({ active }) => (
 );
 
 /* ══════════ ArgumentCard ══════════ */
-const ArgumentCard: React.FC<{
+const ArgumentCard = React.memo(({
+  comment, side, compact, onLike, onStomp, stomped, showPoop, onReply, onLikeReply, accent, pushFx,
+}: {
   comment: EventComment;
   side: CommentSide;
   compact: boolean;
@@ -1851,9 +2059,12 @@ const ArgumentCard: React.FC<{
   onLikeReply: (commentId: string, replyId: string) => void;
   accent: string;
   pushFx: (side: CommentSide, type: BattleFx['type']) => void;
-}> = ({ comment, side, compact, onLike, onStomp, stomped, showPoop, onReply, onLikeReply, accent, pushFx }) => {
+}) => {
   const [likedPulse, setLikedPulse] = useState(false);
   const [replyPulse, setReplyPulse] = useState(false);
+  const hoverBg = side === 'A' ? 'rgba(0,210,255,0.1)' : 'rgba(255,0,85,0.1)';
+  const hoverBorder = side === 'A' ? 'rgba(0,210,255,0.6)' : 'rgba(255,0,85,0.6)';
+  const hoverGlow = side === 'A' ? 'rgba(0,210,255,0.25)' : 'rgba(255,0,85,0.25)';
 
   const triggerPulse = (kind: 'like' | 'reply') => {
     if (kind === 'like') {
@@ -1871,8 +2082,13 @@ const ArgumentCard: React.FC<{
         layout
         initial={{ opacity: 0, y: 8, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
+        whileHover={{
+          borderColor: hoverBorder,
+          backgroundColor: hoverBg,
+          boxShadow: `inset 0 0 0 1px ${hoverBorder}, 0 0 20px ${hoverGlow}`,
+        }}
         transition={{ duration: 0.28, ease: 'easeOut' }}
-        className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-rdark-hover transition-colors"
+        className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border border-transparent transition-colors"
       >
         <FlameAvatar emoji={comment.author.avatar} side={side} compact />
         <span className="text-[10px] truncate flex-1 min-w-0 battle-hot-text">
@@ -1900,7 +2116,12 @@ const ArgumentCard: React.FC<{
       layout
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="px-3 py-2.5 rounded-none hover:bg-slate-50 dark:hover:bg-rdark-hover transition-colors relative overflow-hidden"
+      whileHover={{
+        borderColor: hoverBorder,
+        backgroundColor: hoverBg,
+        boxShadow: `inset 0 0 0 1px ${hoverBorder}, 0 0 20px ${hoverGlow}`,
+      }}
+      className="px-3 py-2.5 rounded-none border border-transparent transition-colors relative overflow-hidden"
     >
       {showPoop && <PoopBurst />}
       <div className="flex items-start gap-2">
@@ -2005,10 +2226,10 @@ const ArgumentCard: React.FC<{
       </div>
     </motion.div>
   );
-};
+});
 
 /* ══════════ SideColumn ══════════ */
-const SideColumn: React.FC<{
+interface SideColumnProps {
   side: CommentSide;
   label: string;
   power: number;
@@ -2025,7 +2246,9 @@ const SideColumn: React.FC<{
   textColor: string;
   pushFx: (side: CommentSide, type: BattleFx['type']) => void;
   comboCount: number;
-}> = ({
+}
+
+const SideColumn = React.memo(({
   side,
   label,
   power,
@@ -2042,7 +2265,9 @@ const SideColumn: React.FC<{
   textColor,
   pushFx,
   comboCount,
-}) => (
+}: SideColumnProps) => {
+  const poopCommentIds = useMemo(() => new Set(poopAnims.map((a) => a.commentId)), [poopAnims]);
+  return (
   <>
     <div
       className="px-3 py-2 border-b border-white/10 flex items-center gap-2 shrink-0 relative overflow-hidden"
@@ -2065,7 +2290,7 @@ const SideColumn: React.FC<{
     <div
       ref={scrollRef}
       className="flex-1 overflow-y-auto py-1 space-y-0.5 relative z-10 battle-scroll"
-      style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01) 40%, rgba(0,0,0,0.08))' }}
+      style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.004) 42%, rgba(0,0,0,0.03))' }}
     >
       {comments.map((c) => (
         <ArgumentCard
@@ -2076,7 +2301,7 @@ const SideColumn: React.FC<{
           onLike={onLike}
           onStomp={onStomp}
           stomped={stompedSet.has(c.id)}
-          showPoop={poopAnims.some((a) => a.commentId === c.id)}
+          showPoop={poopCommentIds.has(c.id)}
           onReply={onReply}
           onLikeReply={onLikeReply}
           accent={textColor}
@@ -2088,7 +2313,8 @@ const SideColumn: React.FC<{
       )}
     </div>
   </>
-);
+  );
+});
 
 /* ═══════════════════ Main EventBattle ═══════════════════ */
 export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide, onBet }) => {
@@ -2107,15 +2333,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
   const [comboA, setComboA] = useState(0);
   const [comboB, setComboB] = useState(0);
   const [koFx, setKoFx] = useState<KoFx | null>(null);
-  const [lastActionAt, setLastActionAt] = useState(() => Date.now());
-  const [clock, setClock] = useState(() => Date.now());
+  const [isIdle, setIsIdle] = useState(false);
 
   const scrollA = useRef<HTMLDivElement>(null);
   const scrollB = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const comboTimerA = useRef<number | null>(null);
   const comboTimerB = useRef<number | null>(null);
-  const isIdle = clock - lastActionAt > 4500;
+  const idleTimerRef = useRef<number | null>(null);
 
   const commentsA = useMemo(() => comments.filter((c) => c.side === 'A'), [comments]);
   const commentsB = useMemo(() => comments.filter((c) => c.side === 'B'), [comments]);
@@ -2148,7 +2373,15 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
     return () => clearTimeout(t);
   }, []);
 
-  const markAction = useCallback(() => setLastActionAt(Date.now()), []);
+  const scheduleIdle = useCallback(() => {
+    if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = window.setTimeout(() => setIsIdle(true), 4500);
+  }, []);
+
+  const markAction = useCallback(() => {
+    setIsIdle(false);
+    scheduleIdle();
+  }, [scheduleIdle]);
 
   const triggerCombo = useCallback(
     (side: CommentSide) => {
@@ -2195,14 +2428,17 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
     () => () => {
       if (comboTimerA.current) window.clearTimeout(comboTimerA.current);
       if (comboTimerB.current) window.clearTimeout(comboTimerB.current);
+      if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
     },
     [],
   );
 
   useEffect(() => {
-    const t = window.setInterval(() => setClock(Date.now()), 1000);
-    return () => window.clearInterval(t);
-  }, []);
+    scheduleIdle();
+    return () => {
+      if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+    };
+  }, [scheduleIdle]);
 
   useEffect(() => {
     if (!isIdle) return;
@@ -2338,19 +2574,27 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
   };
 
   return (
-    <div className="min-h-[calc(100vh-56px)] bg-[#050814] px-3 sm:px-5 md:px-8 py-4 md:py-6">
-      <div className="battle-shell p-0 h-full">
-        <style>{BATTLE_CSS}</style>
+    <div className="battle-shell px-2 md:px-3 py-2 h-full min-h-[calc(100vh-56px)]">
+      <style>{BATTLE_CSS}</style>
+      <div className="battle-outer-frame relative overflow-hidden">
         <span className="battle-orb w-36 h-36 -left-10 -top-8 bg-cyan-400/20" />
         <span className="battle-orb w-44 h-44 -right-14 top-16 bg-rose-500/20" style={{ animationDelay: '0.6s' }} />
         <span className="battle-orb w-32 h-32 left-1/3 -bottom-12 bg-emerald-400/15" style={{ animationDelay: '1.1s' }} />
-
-        <div className="relative z-10 mx-auto w-full max-w-[1500px] h-full min-h-[calc(100vh-56px)] flex flex-col gap-4 md:gap-6 overflow-hidden">
+        <div className="battle-header-strip">
+          <button
+            onClick={onBack}
+            className="relative z-10 inline-flex items-center gap-2 text-white/90 text-xs font-semibold bg-transparent border-0 cursor-pointer"
+          >
+            <span className="text-cyan-300">☰</span>
+            返回
+          </button>
+          <span className="relative z-10 text-white/75 text-xs font-semibold tracking-[0.2em]">LIVE BATTLE</span>
+        </div>
+      <div className="relative z-10 w-full h-full min-h-[calc(100vh-56px)] flex flex-col gap-4 md:gap-5 overflow-hidden px-2 md:px-3 py-3">
         <KoFlash fx={koFx} />
 
         <BattleHeader
           news={news}
-          onBack={onBack}
           leftPower={leftPower}
           rightPower={rightPower}
           leftSuccess={leftSuccess}
@@ -2360,29 +2604,39 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
           splitPct={splitPct}
           commentsA={commentsA}
           commentsB={commentsB}
+          comboA={comboA}
+          comboB={comboB}
           shakeKey={shakeKey}
         />
 
-       {false && <>
+        {false && <>
           <BattleTicker
-            optionA={news.optionA}
-            optionB={news.optionB}
-            leftPower={leftPower}
-            rightPower={rightPower}
-          />
+          optionA={news.optionA}
+          optionB={news.optionB}
+          leftPower={leftPower}
+          rightPower={rightPower}
+        />
 
-          <div className="relative -mt-2">
-            <BattleDanmu messages={danmu} />
-          </div>
-       </> }
+        <div className="relative -mt-3">
+          <BattleDanmu messages={danmu} />
+        </div>
+        </>}
 
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_460px] 2xl:grid-cols-[minmax(0,1fr)_520px] gap-6 md:gap-7 items-start flex-1 min-h-0">
-          <div className={`${card} overflow-hidden relative h-full min-h-0`}>
-            <div className="battle-arena-grid absolute inset-0 pointer-events-none" />
-            <IdleArenaFx active={isIdle} />
-            <ActionFxBurst fxList={battleFx} />
-            <div className="flex h-full min-h-[60vh] xl:min-h-0">
-              <div className="flex flex-col overflow-hidden relative w-1/2 min-h-0">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] 2xl:grid-cols-[minmax(0,1fr)_420px] gap-5 md:gap-6 items-start flex-1 min-h-0">
+            <div className={`${card} battle-main-panel overflow-hidden relative h-full min-h-0`}>
+              <div className="battle-arena-grid absolute inset-0 pointer-events-none opacity-[0.07]" />
+              <span className="battle-vs-cross-y" />
+              <IdleArenaFx active={isIdle} />
+              <ActionFxBurst fxList={battleFx} />
+            <div className="flex h-full min-h-[68vh] xl:min-h-0">
+              <div className="flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
+                <span
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      'radial-gradient(900px 520px at 16% 18%, rgba(0,210,255,0.22), transparent 55%), radial-gradient(700px 420px at 60% 80%, rgba(0,210,255,0.12), transparent 58%), linear-gradient(180deg, rgba(0,210,255,0.06), transparent 55%, rgba(0,0,0,0.25))',
+                  }}
+                />
                 <SideColumn
                   side="A"
                   label={news.optionA}
@@ -2410,7 +2664,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                 rightPower={rightPower}
               />
 
-              <div className="flex flex-col overflow-hidden relative w-1/2 min-h-0">
+              <div className="flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
+                <span
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      'radial-gradient(900px 520px at 84% 18%, rgba(255,0,85,0.22), transparent 55%), radial-gradient(700px 420px at 40% 80%, rgba(255,0,85,0.12), transparent 58%), linear-gradient(180deg, rgba(255,0,85,0.06), transparent 55%, rgba(0,0,0,0.25))',
+                  }}
+                />
                 <SideColumn
                   side="B"
                   label={news.optionB}
@@ -2433,14 +2694,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
             </div>
           </div>
 
-          <aside className="flex flex-col gap-6 xl:sticky xl:top-6 h-full min-h-0">
-            <div className={`${card} p-4 space-y-3`}>
+          <aside className="flex flex-col gap-4 xl:sticky xl:top-4 h-full min-h-0">
+            <div className={`${card} battle-right-panel p-4 space-y-3`}>
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-white/75">实时战况</span>
                 <span className="text-white/50">优势差值 {Math.abs(leftPower - rightPower)}</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-none border border-cyan-300/30 bg-cyan-400/10 p-2">
+                <div className="rounded-none border border-cyan-300/30 bg-transparent p-2">
                   <div className="text-[10px] text-cyan-200/80">{news.optionA}</div>
                   <div className="text-lg font-black text-cyan-100">
                     <AnimatedCount value={leftPower} duration={0.55} />
@@ -2531,7 +2792,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     </div>
                   </div>
                 </div>
-                <div className="rounded-none border border-rose-300/30 bg-rose-500/10 p-2">
+                <div className="rounded-none border border-rose-300/30 bg-transparent p-2">
                   <div className="text-[10px] text-rose-200/80">{news.optionB}</div>
                   <div className="text-lg font-black text-rose-100">
                     <AnimatedCount value={rightPower} duration={0.55} />
@@ -2625,7 +2886,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
               </div>
             </div>
 
-            <div className={`${card} px-4 py-3 relative overflow-hidden`}>
+            <div className={`${card} battle-right-panel px-4 py-3 relative overflow-hidden`}>
               <span
                 className="absolute inset-y-0 w-24 pointer-events-none"
                 style={{ background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.2), transparent)', animation: 'neon-sweep 2.9s linear infinite' }}
@@ -2654,17 +2915,17 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
               <div className="flex items-center gap-2.5">
                 {userSide ? (
                   <span
-                    className="shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-white inline-flex items-center gap-1"
+                    className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold text-white inline-flex items-center gap-1"
                     style={{ backgroundColor: userSide === 'A' ? LC : RC, boxShadow: `0 0 16px ${userSide === 'A' ? LC : RC}88` }}
                   >
                     <Zap size={11} /> {userSide === 'A' ? news.optionA : news.optionB}
                   </span>
                 ) : (
-                  <span className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold bg-white/10 text-white/55">
+                  <span className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold bg-transparent border border-white/20 text-white/55">
                     未投票
                   </span>
                 )}
-                <div className="flex-1 flex items-center gap-2 rounded-2xl px-4 py-3 border border-white/15 bg-white/5 focus-within:border-emerald-300/70 transition-colors relative overflow-hidden">
+                <div className="flex-1 flex items-center gap-2 rounded-none px-3 py-2 border border-white/20 bg-transparent focus-within:border-emerald-300/70 transition-colors relative overflow-hidden">
                   <span
                     className="absolute inset-y-0 w-14 pointer-events-none"
                     style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', animation: 'neon-sweep 2.4s linear infinite' }}
@@ -2689,10 +2950,10 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     disabled={!inputText.trim() || !userSide}
                     whileTap={inputText.trim() && userSide ? { scale: 0.92 } : {}}
                     whileHover={inputText.trim() && userSide ? { scale: 1.06 } : {}}
-                    className={`p-1.5 rounded-xl border-0 cursor-pointer transition-colors ${
+                    className={`p-1.5 rounded-none border-0 cursor-pointer transition-colors ${
                       inputText.trim() && userSide
                         ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-                        : 'bg-white/10 text-white/45 cursor-not-allowed'
+                        : 'bg-transparent border border-white/20 text-white/45 cursor-not-allowed'
                     }`}
                   >
                     <span className="inline-flex items-center gap-1">
@@ -2710,7 +2971,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                   whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${LC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => onBet(news.id, 'A', news.oddsA)}
-                  className={`${card} relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
+                  className={`${card} battle-right-panel battle-odds-btn relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
                   style={{ borderColor: LC, boxShadow: `0 0 20px ${LC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
                 >
                   <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, ${LC}, transparent 60%)` }} />
@@ -2725,7 +2986,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                   whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${RC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => onBet(news.id, 'B', news.oddsB)}
-                  className={`${card} relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
+                  className={`${card} battle-right-panel battle-odds-btn relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
                   style={{ borderColor: RC, boxShadow: `0 0 20px ${RC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
                 >
                   <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, transparent 40%, ${RC})` }} />
