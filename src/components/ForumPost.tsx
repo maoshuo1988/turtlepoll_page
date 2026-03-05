@@ -1,0 +1,301 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, MessageCircle, Repeat2, Share, BarChart2, MoreHorizontal, BadgeCheck, Bookmark } from 'lucide-react';
+import type { ForumPost as ForumPostType } from '../data/mock_data';
+import { FORUM_TAGS } from '../data/mock_data';
+
+interface ForumPostProps {
+  post: ForumPostType;
+  index: number;
+  onLike: (postId: string) => void;
+  onLikeComment: (postId: string, commentId: string) => void;
+  onAddComment: (postId: string, content: string) => void;
+}
+
+const formatCount = (n: number) => {
+  if (n >= 10000) return `${(n / 10000).toFixed(1)}万`;
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return n > 0 ? String(n) : '';
+};
+
+/* ── Image Grid (X / Twitter style) ── */
+const ImageGrid: React.FC<{ images: string[] }> = ({ images }) => {
+  const count = images.length;
+  if (count === 0) return null;
+
+  const baseClass = 'w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity';
+
+  if (count === 1) {
+    return (
+      <div className="mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border">
+        <img src={images[0]} alt="" loading="lazy" className={`${baseClass} max-h-[510px]`} />
+      </div>
+    );
+  }
+
+  if (count === 2) {
+    return (
+      <div className="mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 gap-0.5 h-[286px]">
+        <img src={images[0]} alt="" loading="lazy" className={baseClass} />
+        <img src={images[1]} alt="" loading="lazy" className={baseClass} />
+      </div>
+    );
+  }
+
+  if (count === 3) {
+    return (
+      <div className="mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 grid-rows-2 gap-0.5 h-[286px]">
+        <div className="row-span-2">
+          <img src={images[0]} alt="" loading="lazy" className={`${baseClass} h-full`} />
+        </div>
+        <img src={images[1]} alt="" loading="lazy" className={baseClass} />
+        <img src={images[2]} alt="" loading="lazy" className={baseClass} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 grid-rows-2 gap-0.5 h-[286px]">
+      {images.slice(0, 4).map((src, i) => (
+        <div key={i} className="relative overflow-hidden">
+          <img src={src} alt="" loading="lazy" className={baseClass} />
+          {i === 3 && images.length > 4 && (
+            <div className="absolute inset-0 bg-black/50 grid place-items-center text-white text-2xl font-bold cursor-pointer">
+              +{images.length - 4}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+/* ── Action Button ── */
+const ActionBtn: React.FC<{
+  icon: React.ReactNode;
+  count?: string;
+  hoverColor: string;
+  active?: boolean;
+  activeColor?: string;
+  onClick?: (e: React.MouseEvent) => void;
+}> = ({ icon, count, hoverColor, active, activeColor, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`group flex items-center gap-1 cursor-pointer border-0 bg-transparent transition-colors ${
+      active && activeColor ? activeColor : 'text-slate-500 dark:text-rdark-text2'
+    }`}
+  >
+    <div className={`p-2 rounded-full transition-colors ${active ? '' : `group-hover:${hoverColor}`}`}>
+      {icon}
+    </div>
+    {count && (
+      <span className={`text-[13px] -ml-0.5 transition-colors ${active ? '' : `group-hover:${hoverColor.replace('bg-', 'text-').replace('/20', '').replace('/10', '').replace('50', '500')}`}`}>
+        {count}
+      </span>
+    )}
+  </button>
+);
+
+/* ── Main Post Card ── */
+export const ForumPostCard: React.FC<ForumPostProps> = ({
+  post,
+  index,
+  onLike,
+  onLikeComment,
+  onAddComment,
+}) => {
+  const [expanded, setExpanded] = useState(false);
+  const [replyText, setReplyText] = useState('');
+  const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+
+  const handleLike = () => {
+    if (!liked) { onLike(post.id); setLiked(true); }
+  };
+
+  const handleReply = () => {
+    const trimmed = replyText.trim();
+    if (!trimmed) return;
+    onAddComment(post.id, trimmed);
+    setReplyText('');
+  };
+
+  const likeCount = post.likes + (liked ? 1 : 0);
+  const viewCount = post.likes * 14 + post.comments.length * 42;
+
+  return (
+    <motion.article
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: index * 0.03, duration: 0.15 }}
+      className="px-4 py-3 border-b border-slate-100 dark:border-rdark-border hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+    >
+      <div className="flex gap-3">
+        {/* Avatar */}
+        <div className="shrink-0 pt-0.5">
+          <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl cursor-pointer hover:opacity-80 transition-opacity">
+            {post.author.avatar}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          {/* Header: name / handle / time / more */}
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-1 min-w-0 flex-wrap">
+              <span className="text-[15px] font-bold text-slate-900 dark:text-rdark-text truncate cursor-pointer hover:underline">
+                {post.author.name}
+              </span>
+              {post.author.verified && (
+                <BadgeCheck size={16} className="text-blue-500 shrink-0" fill="currentColor" stroke="white" />
+              )}
+              <span className="text-[14px] text-slate-500 dark:text-rdark-text2 truncate">
+                {post.author.handle}
+              </span>
+              <span className="text-slate-400 dark:text-rdark-text2">·</span>
+              <span className="text-[14px] text-slate-500 dark:text-rdark-text2 cursor-pointer hover:underline shrink-0">
+                {post.time}
+              </span>
+            </div>
+            <button className="p-1.5 -mr-1.5 -mt-0.5 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-slate-400 dark:text-rdark-text2 hover:text-blue-500 cursor-pointer border-0 bg-transparent transition-colors shrink-0">
+              <MoreHorizontal size={17} />
+            </button>
+          </div>
+
+          {/* Tag badge */}
+          <span className={`inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[post.tag]}`}>
+            #{post.tag}
+          </span>
+
+          {/* Post text */}
+          <p className="text-[15px] text-slate-900 dark:text-rdark-text leading-[1.5] whitespace-pre-wrap">
+            {post.content}
+          </p>
+
+          {/* Images */}
+          {post.images && post.images.length > 0 && <ImageGrid images={post.images} />}
+
+          {/* Action bar */}
+          <div className="flex items-center justify-between mt-2 -ml-2 max-w-[450px]">
+            <ActionBtn
+              icon={<MessageCircle size={17} className="group-hover:text-blue-500 transition-colors" />}
+              count={formatCount(post.comments.length)}
+              hoverColor="bg-blue-50 dark:bg-blue-900/20"
+              onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
+            />
+            <ActionBtn
+              icon={<Repeat2 size={17} className="group-hover:text-green-500 transition-colors" />}
+              count={formatCount(Math.floor(post.likes * 0.3))}
+              hoverColor="bg-green-50 dark:bg-green-900/20"
+            />
+            <button
+              onClick={(e) => { e.stopPropagation(); handleLike(); }}
+              className={`group flex items-center gap-1 cursor-pointer border-0 bg-transparent transition-colors ${
+                liked ? 'text-pink-600' : 'text-slate-500 dark:text-rdark-text2'
+              }`}
+            >
+              <div className={`p-2 rounded-full transition-colors ${liked ? '' : 'group-hover:bg-pink-50 dark:group-hover:bg-pink-900/20'}`}>
+                <motion.div animate={liked ? { scale: [1, 1.35, 1] } : {}} transition={{ duration: 0.3 }}>
+                  <Heart size={17} fill={liked ? 'currentColor' : 'none'} className={liked ? '' : 'group-hover:text-pink-600 transition-colors'} />
+                </motion.div>
+              </div>
+              <span className={`text-[13px] -ml-0.5 transition-colors ${liked ? '' : 'group-hover:text-pink-600'}`}>
+                {formatCount(likeCount)}
+              </span>
+            </button>
+            <ActionBtn
+              icon={<BarChart2 size={17} className="group-hover:text-blue-500 transition-colors" />}
+              count={formatCount(viewCount)}
+              hoverColor="bg-blue-50 dark:bg-blue-900/20"
+            />
+            <button
+              onClick={(e) => { e.stopPropagation(); setBookmarked((b) => !b); }}
+              className={`group cursor-pointer border-0 bg-transparent transition-colors ${
+                bookmarked ? 'text-blue-500' : 'text-slate-500 dark:text-rdark-text2'
+              }`}
+            >
+              <div className={`p-2 rounded-full transition-colors ${bookmarked ? '' : 'group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20'}`}>
+                <Bookmark size={17} fill={bookmarked ? 'currentColor' : 'none'} className={bookmarked ? '' : 'group-hover:text-blue-500 transition-colors'} />
+              </div>
+            </button>
+            <button className="group cursor-pointer border-0 bg-transparent text-slate-500 dark:text-rdark-text2 transition-colors">
+              <div className="p-2 rounded-full group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
+                <Share size={17} className="group-hover:text-blue-500 transition-colors" />
+              </div>
+            </button>
+          </div>
+
+          {/* ── Comments thread ── */}
+          <AnimatePresence>
+            {expanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="mt-2 pt-3 border-t border-slate-100 dark:border-rdark-border">
+                  {post.comments.length === 0 && (
+                    <p className="text-[13px] text-slate-400 dark:text-rdark-text2 mb-3">还没有回复，来抢沙发！</p>
+                  )}
+                  {post.comments.map((c) => (
+                    <div key={c.id} className="flex gap-2.5 py-3 border-b border-slate-50 dark:border-rdark-border/40 last:border-b-0">
+                      <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-sm shrink-0 cursor-pointer">
+                        {c.author.avatar}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1">
+                          <span className="text-[13px] font-bold text-slate-900 dark:text-rdark-text cursor-pointer hover:underline">{c.author.name}</span>
+                          <span className="text-[12px] text-slate-500 dark:text-rdark-text2">{c.author.handle}</span>
+                          <span className="text-slate-300 dark:text-rdark-text2">·</span>
+                          <span className="text-[12px] text-slate-500 dark:text-rdark-text2">{c.time}</span>
+                        </div>
+                        <p className="text-[14px] text-slate-800 dark:text-rdark-text leading-snug mt-0.5">{c.content}</p>
+                        <div className="flex items-center gap-5 mt-2">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); onLikeComment(post.id, c.id); }}
+                            className="group flex items-center gap-1 text-[12px] text-slate-400 dark:text-rdark-text2 hover:text-pink-500 cursor-pointer transition-colors border-0 bg-transparent"
+                          >
+                            <Heart size={13} /> {c.likes}
+                          </button>
+                          <button className="text-[12px] text-slate-400 dark:text-rdark-text2 hover:text-blue-500 cursor-pointer transition-colors border-0 bg-transparent">
+                            <MessageCircle size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Reply compose */}
+                  <div className="flex items-center gap-2.5 pt-3">
+                    <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-sm shrink-0">
+                      🦊
+                    </div>
+                    <div className="flex-1 flex items-center gap-2 border border-slate-200 dark:border-rdark-border rounded-full px-4 py-2 focus-within:border-blue-500 transition-colors">
+                      <input
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleReply()}
+                        onClick={(e) => e.stopPropagation()}
+                        placeholder="发布你的回复"
+                        className="flex-1 bg-transparent border-0 outline-none text-[14px] text-slate-800 dark:text-rdark-text placeholder:text-slate-400 dark:placeholder:text-rdark-text2"
+                      />
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleReply(); }}
+                        disabled={!replyText.trim()}
+                        className="px-4 py-1 rounded-full text-[13px] font-bold bg-blue-500 text-white border-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
+                      >
+                        回复
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </motion.article>
+  );
+};

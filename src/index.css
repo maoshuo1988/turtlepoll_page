@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: #f1f5f9;
+  color: #1e293b;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+.dark body {
+  background: #030303;
+  color: #d7dadc;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.dark ::-webkit-scrollbar-thumb { background: #343536; }
+
+/* Reddit-style dark mode custom colors */
+@theme {
+  --color-rdark: #030303;
+  --color-rdark-card: #1a1a1b;
+  --color-rdark-hover: #252526;
+  --color-rdark-border: #343536;
+  --color-rdark-text: #d7dadc;
+  --color-rdark-text2: #818384;
+  --color-rdark-input: #272729;
+}
