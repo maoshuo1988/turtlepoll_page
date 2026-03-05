@@ -21,7 +21,7 @@ const RC = '#FF0055';
 const randomBattleGain = () => 10 + Math.floor(Math.random() * 91);
 
 const card =
-  'rounded-none border border-white/20 bg-[linear-gradient(140deg,rgba(11,17,32,0.88),rgba(16,25,46,0.8)_55%,rgba(8,13,25,0.9))] backdrop-blur-xl shadow-[0_20px_60px_rgba(4,8,20,0.45)]';
+  'rounded-2xl border border-white/15 bg-[linear-gradient(140deg,rgba(11,17,32,0.88),rgba(16,25,46,0.8)_55%,rgba(8,13,25,0.9))] backdrop-blur-xl shadow-[0_18px_52px_rgba(4,8,20,0.42)] ring-1 ring-white/10';
 
 function calcPower(items: EventComment[]) {
   return Math.max(
@@ -324,8 +324,10 @@ const BATTLE_CSS = `
 }
 .battle-shell {
   position: relative;
-  border-radius: 0;
+  border-radius: 22px;
   overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.55);
   background: radial-gradient(120% 160% at 50% -30%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 45%, rgba(5,8,15,0.95) 100%);
 }
 .battle-shell::before {
@@ -456,6 +458,7 @@ const BATTLE_CSS = `
 .battle-stat-card {
   position: relative;
   overflow: hidden;
+  border-radius: 16px;
 }
 .battle-stat-card::after {
   content: '';
@@ -2335,13 +2338,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
   };
 
   return (
-    <div className="battle-shell p-0 h-full min-h-[calc(100vh-56px)]">
-      <style>{BATTLE_CSS}</style>
-      <span className="battle-orb w-36 h-36 -left-10 -top-8 bg-cyan-400/20" />
-      <span className="battle-orb w-44 h-44 -right-14 top-16 bg-rose-500/20" style={{ animationDelay: '0.6s' }} />
-      <span className="battle-orb w-32 h-32 left-1/3 -bottom-12 bg-emerald-400/15" style={{ animationDelay: '1.1s' }} />
+    <div className="min-h-[calc(100vh-56px)] bg-[#050814] px-3 sm:px-5 md:px-8 py-4 md:py-6">
+      <div className="battle-shell p-0 h-full">
+        <style>{BATTLE_CSS}</style>
+        <span className="battle-orb w-36 h-36 -left-10 -top-8 bg-cyan-400/20" />
+        <span className="battle-orb w-44 h-44 -right-14 top-16 bg-rose-500/20" style={{ animationDelay: '0.6s' }} />
+        <span className="battle-orb w-32 h-32 left-1/3 -bottom-12 bg-emerald-400/15" style={{ animationDelay: '1.1s' }} />
 
-      <div className="relative z-10 w-full h-full min-h-[calc(100vh-56px)] flex flex-col gap-4 md:gap-5 overflow-hidden">
+        <div className="relative z-10 mx-auto w-full max-w-[1500px] h-full min-h-[calc(100vh-56px)] flex flex-col gap-4 md:gap-6 overflow-hidden">
         <KoFlash fx={koFx} />
 
         <BattleHeader
@@ -2359,23 +2363,25 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
           shakeKey={shakeKey}
         />
 
-        <BattleTicker
-          optionA={news.optionA}
-          optionB={news.optionB}
-          leftPower={leftPower}
-          rightPower={rightPower}
-        />
+       {false && <>
+          <BattleTicker
+            optionA={news.optionA}
+            optionB={news.optionB}
+            leftPower={leftPower}
+            rightPower={rightPower}
+          />
 
-        <div className="relative -mt-2">
-          <BattleDanmu messages={danmu} />
-        </div>
+          <div className="relative -mt-2">
+            <BattleDanmu messages={danmu} />
+          </div>
+       </> }
 
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-4 md:gap-5 items-start flex-1 min-h-0">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_460px] 2xl:grid-cols-[minmax(0,1fr)_520px] gap-6 md:gap-7 items-start flex-1 min-h-0">
           <div className={`${card} overflow-hidden relative h-full min-h-0`}>
             <div className="battle-arena-grid absolute inset-0 pointer-events-none" />
             <IdleArenaFx active={isIdle} />
             <ActionFxBurst fxList={battleFx} />
-            <div className="flex h-full min-h-[52vh] xl:min-h-0">
+            <div className="flex h-full min-h-[60vh] xl:min-h-0">
               <div className="flex flex-col overflow-hidden relative w-1/2 min-h-0">
                 <SideColumn
                   side="A"
@@ -2427,7 +2433,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
             </div>
           </div>
 
-          <aside className="flex flex-col gap-4 xl:sticky xl:top-4 h-full min-h-0">
+          <aside className="flex flex-col gap-6 xl:sticky xl:top-6 h-full min-h-0">
             <div className={`${card} p-4 space-y-3`}>
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-white/75">实时战况</span>
@@ -2648,7 +2654,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
               <div className="flex items-center gap-2.5">
                 {userSide ? (
                   <span
-                    className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold text-white inline-flex items-center gap-1"
+                    className="shrink-0 px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-white inline-flex items-center gap-1"
                     style={{ backgroundColor: userSide === 'A' ? LC : RC, boxShadow: `0 0 16px ${userSide === 'A' ? LC : RC}88` }}
                   >
                     <Zap size={11} /> {userSide === 'A' ? news.optionA : news.optionB}
@@ -2658,7 +2664,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     未投票
                   </span>
                 )}
-                <div className="flex-1 flex items-center gap-2 rounded-none px-3 py-2 border border-white/15 bg-white/5 focus-within:border-emerald-300/70 transition-colors relative overflow-hidden">
+                <div className="flex-1 flex items-center gap-2 rounded-2xl px-4 py-3 border border-white/15 bg-white/5 focus-within:border-emerald-300/70 transition-colors relative overflow-hidden">
                   <span
                     className="absolute inset-y-0 w-14 pointer-events-none"
                     style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', animation: 'neon-sweep 2.4s linear infinite' }}
@@ -2683,7 +2689,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     disabled={!inputText.trim() || !userSide}
                     whileTap={inputText.trim() && userSide ? { scale: 0.92 } : {}}
                     whileHover={inputText.trim() && userSide ? { scale: 1.06 } : {}}
-                    className={`p-1.5 rounded-none border-0 cursor-pointer transition-colors ${
+                    className={`p-1.5 rounded-xl border-0 cursor-pointer transition-colors ${
                       inputText.trim() && userSide
                         ? 'bg-emerald-500 text-white hover:bg-emerald-600'
                         : 'bg-white/10 text-white/45 cursor-not-allowed'
@@ -2734,6 +2740,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
           </aside>
         </div>
       </div>
+    </div>
     </div>
   );
 };
