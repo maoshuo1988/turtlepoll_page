@@ -2042,16 +2042,16 @@ const SideColumn: React.FC<{
 }) => (
   <>
     <div
-      className="px-4 py-3 border-b border-white/10 flex items-center gap-2.5 shrink-0 relative overflow-hidden"
+      className="px-3 py-2 border-b border-white/10 flex items-center gap-2 shrink-0 relative overflow-hidden"
       style={{ background: `linear-gradient(90deg, ${dotColor}18, rgba(255,255,255,0.02))` }}
     >
       <span className="absolute inset-y-0 left-0 w-1" style={{ background: dotColor }} />
       <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dotColor, boxShadow: `0 0 10px ${dotColor}` }} />
       {!compact ? (
         <>
-          <span className="text-sm font-bold battle-hot-text">{label}</span>
-          <span className="text-xs text-white/80 ml-auto flex items-center gap-1.5">
-            <Flame size={12} /> <AnimatedCount value={power} duration={0.5} />
+          <span className="text-xs font-bold battle-hot-text">{label}</span>
+          <span className="text-[10px] text-white/70 ml-auto flex items-center gap-1">
+            <Flame size={10} /> <AnimatedCount value={power} duration={0.5} />
           </span>
           <ComboBadge side={side} count={comboCount} />
         </>
@@ -2061,7 +2061,7 @@ const SideColumn: React.FC<{
     </div>
     <div
       ref={scrollRef}
-      className="flex-1 overflow-y-auto py-2 space-y-1 relative z-10 battle-scroll"
+      className="flex-1 overflow-y-auto py-1 space-y-0.5 relative z-10 battle-scroll"
       style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01) 40%, rgba(0,0,0,0.08))' }}
     >
       {comments.map((c) => (
@@ -2358,7 +2358,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
           commentsB={commentsB}
           shakeKey={shakeKey}
         />
-        {/* <BattleTicker
+
+        <BattleTicker
           optionA={news.optionA}
           optionB={news.optionB}
           leftPower={leftPower}
@@ -2367,14 +2368,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
 
         <div className="relative -mt-2">
           <BattleDanmu messages={danmu} />
-        </div> */}
+        </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_460px] 2xl:grid-cols-[minmax(0,1fr)_520px] gap-6 md:gap-7 items-stretch flex-1 min-h-0">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-4 md:gap-5 items-start flex-1 min-h-0">
           <div className={`${card} overflow-hidden relative h-full min-h-0`}>
             <div className="battle-arena-grid absolute inset-0 pointer-events-none" />
             <IdleArenaFx active={isIdle} />
             <ActionFxBurst fxList={battleFx} />
-            <div className="flex h-full min-h-[62vh] xl:min-h-0">
+            <div className="flex h-full min-h-[52vh] xl:min-h-0">
               <div className="flex flex-col overflow-hidden relative w-1/2 min-h-0">
                 <SideColumn
                   side="A"
@@ -2426,24 +2427,24 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
             </div>
           </div>
 
-          <aside className="flex flex-col gap-6 xl:sticky xl:top-5 h-full min-h-0">
-            <div className={`${card} p-6 md:p-7 space-y-5`}>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-white/90 font-bold tracking-wide">实时战况</span>
-                <span className="text-white/60 text-xs md:text-sm">优势差值 {Math.abs(leftPower - rightPower)}</span>
+          <aside className="flex flex-col gap-4 xl:sticky xl:top-4 h-full min-h-0">
+            <div className={`${card} p-4 space-y-3`}>
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-white/75">实时战况</span>
+                <span className="text-white/50">优势差值 {Math.abs(leftPower - rightPower)}</span>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-none border border-cyan-300/30 bg-cyan-400/10 p-4 md:p-4.5 min-h-[238px]">
-                  <div className="text-sm text-cyan-200/95 font-semibold">{news.optionA}</div>
-                  <div className="text-[32px] font-black text-cyan-100 leading-none mt-1.5">
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-none border border-cyan-300/30 bg-cyan-400/10 p-2">
+                  <div className="text-[10px] text-cyan-200/80">{news.optionA}</div>
+                  <div className="text-lg font-black text-cyan-100">
                     <AnimatedCount value={leftPower} duration={0.55} />
                   </div>
-                  <div className="text-sm text-cyan-100/85 mt-1.5">
+                  <div className="text-[10px] text-cyan-100/80">
                     COMBO <AnimatedCount value={comboA} duration={0.45} />
                   </div>
-                  <div className="mt-4 grid grid-cols-2 gap-2.5">
-                    <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-2.5 py-2 h-[108px] flex flex-col justify-between">
-                      <div className="text-xs text-emerald-200/85">会成功</div>
+                  <div className="mt-2 grid grid-cols-2 gap-1.5">
+                    <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
+                      <div className="text-[10px] text-emerald-200/85">会成功</div>
                       <motion.div
                         key={`ls-fx-ring-${leftSuccess}`}
                         initial={{ scale: 0.25, opacity: 0.9 }}
@@ -2476,14 +2477,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                           filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
                         }}
                         transition={{ duration: 0.72, ease: 'easeOut' }}
-                        className="battle-stat-num text-[30px] text-emerald-100 tabular-nums"
+                        className="battle-stat-num text-[26px] text-emerald-100 tabular-nums"
                         style={{ textShadow: '0 0 18px rgba(110,231,183,0.95), 0 0 34px rgba(52,211,153,0.75)' }}
                       >
                         <FlipNumber value={leftSuccess} className="tabular-nums" />
                       </motion.div>
                     </div>
-                    <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-2.5 py-2 h-[108px] flex flex-col justify-between">
-                      <div className="text-xs text-amber-100/90">会失败</div>
+                    <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
+                      <div className="text-[10px] text-amber-100/90">会失败</div>
                       <motion.div
                         key={`lf-fx-ring-${leftFail}`}
                         initial={{ scale: 0.25, opacity: 0.9 }}
@@ -2516,7 +2517,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                           filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
                         }}
                         transition={{ duration: 0.72, ease: 'easeOut' }}
-                        className="battle-stat-num text-[30px] text-amber-100 tabular-nums"
+                        className="battle-stat-num text-[26px] text-amber-100 tabular-nums"
                         style={{ textShadow: '0 0 18px rgba(252,211,77,0.95), 0 0 34px rgba(245,158,11,0.75)' }}
                       >
                         <FlipNumber value={leftFail} className="tabular-nums" />
@@ -2524,17 +2525,17 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     </div>
                   </div>
                 </div>
-                <div className="rounded-none border border-rose-300/30 bg-rose-500/10 p-4 md:p-4.5 min-h-[238px]">
-                  <div className="text-sm text-rose-200/95 font-semibold">{news.optionB}</div>
-                  <div className="text-[32px] font-black text-rose-100 leading-none mt-1.5">
+                <div className="rounded-none border border-rose-300/30 bg-rose-500/10 p-2">
+                  <div className="text-[10px] text-rose-200/80">{news.optionB}</div>
+                  <div className="text-lg font-black text-rose-100">
                     <AnimatedCount value={rightPower} duration={0.55} />
                   </div>
-                  <div className="text-sm text-rose-100/85 mt-1.5">
+                  <div className="text-[10px] text-rose-100/80">
                     COMBO <AnimatedCount value={comboB} duration={0.45} />
                   </div>
-                  <div className="mt-4 grid grid-cols-2 gap-2.5">
-                    <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-2.5 py-2 h-[108px] flex flex-col justify-between">
-                      <div className="text-xs text-emerald-200/85">会成功</div>
+                  <div className="mt-2 grid grid-cols-2 gap-1.5">
+                    <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
+                      <div className="text-[10px] text-emerald-200/85">会成功</div>
                       <motion.div
                         key={`rs-fx-ring-${rightSuccess}`}
                         initial={{ scale: 0.25, opacity: 0.9 }}
@@ -2567,14 +2568,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                           filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
                         }}
                         transition={{ duration: 0.72, ease: 'easeOut' }}
-                        className="battle-stat-num text-[30px] text-emerald-100 tabular-nums"
+                        className="battle-stat-num text-[26px] text-emerald-100 tabular-nums"
                         style={{ textShadow: '0 0 18px rgba(110,231,183,0.95), 0 0 34px rgba(52,211,153,0.75)' }}
                       >
                         <FlipNumber value={rightSuccess} className="tabular-nums" />
                       </motion.div>
                     </div>
-                    <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-2.5 py-2 h-[108px] flex flex-col justify-between">
-                      <div className="text-xs text-amber-100/90">会失败</div>
+                    <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
+                      <div className="text-[10px] text-amber-100/90">会失败</div>
                       <motion.div
                         key={`rf-fx-ring-${rightFail}`}
                         initial={{ scale: 0.25, opacity: 0.9 }}
@@ -2607,7 +2608,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                           filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
                         }}
                         transition={{ duration: 0.72, ease: 'easeOut' }}
-                        className="battle-stat-num text-[30px] text-amber-100 tabular-nums"
+                        className="battle-stat-num text-[26px] text-amber-100 tabular-nums"
                         style={{ textShadow: '0 0 18px rgba(252,211,77,0.95), 0 0 34px rgba(245,158,11,0.75)' }}
                       >
                         <FlipNumber value={rightFail} className="tabular-nums" />
@@ -2618,7 +2619,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
               </div>
             </div>
 
-            <div className={`${card} px-6 py-5 md:px-7 md:py-6 relative overflow-hidden`}>
+            <div className={`${card} px-4 py-3 relative overflow-hidden`}>
               <span
                 className="absolute inset-y-0 w-24 pointer-events-none"
                 style={{ background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.2), transparent)', animation: 'neon-sweep 2.9s linear infinite' }}
@@ -2629,9 +2630,9 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="flex items-center gap-2.5 mb-3 pb-3 border-b border-white/15"
+                    className="flex items-center gap-2 mb-2 pb-2 border-b border-white/15"
                   >
-                    <span className="text-xs text-white/75">
+                    <span className="text-[10px] text-white/70">
                       回复 <span className="font-semibold text-white">@{replyingTo.authorName}</span>
                     </span>
                     <button
@@ -2644,20 +2645,20 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                 )}
               </AnimatePresence>
 
-              <div className="flex items-center gap-3.5">
+              <div className="flex items-center gap-2.5">
                 {userSide ? (
                   <span
-                    className="shrink-0 px-3 py-2 rounded-none text-xs font-bold text-white inline-flex items-center gap-1.5"
+                    className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold text-white inline-flex items-center gap-1"
                     style={{ backgroundColor: userSide === 'A' ? LC : RC, boxShadow: `0 0 16px ${userSide === 'A' ? LC : RC}88` }}
                   >
-                    <Zap size={12} /> {userSide === 'A' ? news.optionA : news.optionB}
+                    <Zap size={11} /> {userSide === 'A' ? news.optionA : news.optionB}
                   </span>
                 ) : (
-                  <span className="shrink-0 px-3 py-2 rounded-none text-xs font-bold bg-white/10 text-white/55">
+                  <span className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold bg-white/10 text-white/55">
                     未投票
                   </span>
                 )}
-                <div className="flex-1 flex items-center gap-3 rounded-none px-4.5 py-3 border border-white/15 bg-white/5 focus-within:border-emerald-300/70 transition-colors relative overflow-hidden">
+                <div className="flex-1 flex items-center gap-2 rounded-none px-3 py-2 border border-white/15 bg-white/5 focus-within:border-emerald-300/70 transition-colors relative overflow-hidden">
                   <span
                     className="absolute inset-y-0 w-14 pointer-events-none"
                     style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', animation: 'neon-sweep 2.4s linear infinite' }}
@@ -2675,22 +2676,22 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                           ? '发表火力评论...'
                           : '请先投票后发言'
                     }
-                    className="flex-1 bg-transparent border-0 outline-none text-sm text-white placeholder:text-white/45"
+                    className="flex-1 bg-transparent border-0 outline-none text-xs text-white placeholder:text-white/45"
                   />
                   <motion.button
                     onClick={handleSend}
                     disabled={!inputText.trim() || !userSide}
                     whileTap={inputText.trim() && userSide ? { scale: 0.92 } : {}}
                     whileHover={inputText.trim() && userSide ? { scale: 1.06 } : {}}
-                    className={`p-2 rounded-none border-0 cursor-pointer transition-colors ${
+                    className={`p-1.5 rounded-none border-0 cursor-pointer transition-colors ${
                       inputText.trim() && userSide
                         ? 'bg-emerald-500 text-white hover:bg-emerald-600'
                         : 'bg-white/10 text-white/45 cursor-not-allowed'
                     }`}
                   >
                     <span className="inline-flex items-center gap-1">
-                      <Send size={13} style={{ animation: inputText.trim() && userSide ? 'hot-icon-spin 0.9s ease-in-out infinite' : undefined }} />
-                      {inputText.trim() && userSide && <Sparkles size={11} />}
+                      <Send size={12} style={{ animation: inputText.trim() && userSide ? 'hot-icon-spin 0.9s ease-in-out infinite' : undefined }} />
+                      {inputText.trim() && userSide && <Sparkles size={10} />}
                     </span>
                   </motion.button>
                 </div>
@@ -2698,19 +2699,19 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
             </div>
 
             {onBet && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-3">
                 <motion.button
                   whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${LC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => onBet(news.id, 'A', news.oddsA)}
-                  className={`${card} relative py-4 px-4 border-2 cursor-pointer overflow-hidden transition-shadow`}
+                  className={`${card} relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
                   style={{ borderColor: LC, boxShadow: `0 0 20px ${LC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
                 >
                   <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, ${LC}, transparent 60%)` }} />
                   <div className="relative text-center">
-                    <div className="text-xs font-semibold mb-1" style={{ color: LC }}>{news.optionA}</div>
-                    <div className="text-2xl font-black text-white leading-none">{news.oddsA.toFixed(1)}x</div>
-                    <div className="text-[10px] text-white/60 mt-1">点击下注</div>
+                    <div className="text-[10px] font-semibold mb-0.5" style={{ color: LC }}>{news.optionA}</div>
+                    <div className="text-lg font-black text-white">{news.oddsA.toFixed(1)}x</div>
+                    <div className="text-[9px] text-white/55">点击下注</div>
                   </div>
                 </motion.button>
 
@@ -2718,14 +2719,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                   whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${RC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => onBet(news.id, 'B', news.oddsB)}
-                  className={`${card} relative py-4 px-4 border-2 cursor-pointer overflow-hidden transition-shadow`}
+                  className={`${card} relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
                   style={{ borderColor: RC, boxShadow: `0 0 20px ${RC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
                 >
                   <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, transparent 40%, ${RC})` }} />
                   <div className="relative text-center">
-                    <div className="text-xs font-semibold mb-1" style={{ color: RC }}>{news.optionB}</div>
-                    <div className="text-2xl font-black text-white leading-none">{news.oddsB.toFixed(1)}x</div>
-                    <div className="text-[10px] text-white/60 mt-1">点击下注</div>
+                    <div className="text-[10px] font-semibold mb-0.5" style={{ color: RC }}>{news.optionB}</div>
+                    <div className="text-lg font-black text-white">{news.oddsB.toFixed(1)}x</div>
+                    <div className="text-[9px] text-white/55">点击下注</div>
                   </div>
                 </motion.button>
               </div>
