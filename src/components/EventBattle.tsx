@@ -875,334 +875,334 @@ const ParticleCanvas: React.FC<{
   convergeX,
   convergeY,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particles = useRef<Particle[]>([]);
-  const stars = useRef<StarDust[]>([]);
-  const raf = useRef(0);
-  const lastTs = useRef(0);
-  const dprRef = useRef(1);
-  const perfMode = useRef<'high' | 'mid' | 'low'>('mid');
-  const gradientsRef = useRef<{
-    width: number;
-    height: number;
-    hazeL: CanvasGradient | null;
-    hazeR: CanvasGradient | null;
-  }>({ width: 0, height: 0, hazeL: null, hazeR: null });
-  const prevL = useRef(leftPower);
-  const prevR = useRef(rightPower);
-  const prevLs = useRef(leftSuccess);
-  const prevLf = useRef(leftFail);
-  const prevRs = useRef(rightSuccess);
-  const prevRf = useRef(rightFail);
-  const heatL = useRef(0);
-  const heatR = useRef(0);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const particles = useRef<Particle[]>([]);
+    const stars = useRef<StarDust[]>([]);
+    const raf = useRef(0);
+    const lastTs = useRef(0);
+    const dprRef = useRef(1);
+    const perfMode = useRef<'high' | 'mid' | 'low'>('mid');
+    const gradientsRef = useRef<{
+      width: number;
+      height: number;
+      hazeL: CanvasGradient | null;
+      hazeR: CanvasGradient | null;
+    }>({ width: 0, height: 0, hazeL: null, hazeR: null });
+    const prevL = useRef(leftPower);
+    const prevR = useRef(rightPower);
+    const prevLs = useRef(leftSuccess);
+    const prevLf = useRef(leftFail);
+    const prevRs = useRef(rightSuccess);
+    const prevRf = useRef(rightFail);
+    const heatL = useRef(0);
+    const heatR = useRef(0);
 
-  const setupCanvas = useCallback(() => {
-    const cvs = canvasRef.current;
-    const el = containerRef.current;
-    if (!cvs || !el) return null;
-    const logicalW = Math.max(1, el.offsetWidth);
-    const logicalH = Math.max(1, el.offsetHeight);
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    dprRef.current = dpr;
-    cvs.width = Math.floor(logicalW * dpr);
-    cvs.height = Math.floor(logicalH * dpr);
-    cvs.style.width = `${logicalW}px`;
-    cvs.style.height = `${logicalH}px`;
-    const ctx = cvs.getContext('2d');
-    if (!ctx) return null;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const area = logicalW * logicalH;
-    const cores = navigator.hardwareConcurrency || 4;
-    perfMode.current = area > 850_000 || cores <= 4 ? 'low' : area > 520_000 || cores <= 6 ? 'mid' : 'high';
-
-    const starBase = perfMode.current === 'low' ? 46 : perfMode.current === 'mid' ? 68 : 92;
-    stars.current = Array.from({ length: starBase }, () => {
-      const isLeft = Math.random() > 0.5;
-      return {
-        x: Math.random() * logicalW,
-        y: Math.random() * logicalH,
-        r: 0.5 + Math.random() * (perfMode.current === 'high' ? 2.1 : 1.6),
-        a: 0.2 + Math.random() * 0.55,
-        phase: Math.random() * Math.PI * 2,
-        color: isLeft ? 'rgba(0,210,255,0.95)' : 'rgba(255,0,85,0.95)',
-      };
-    });
-
-    const hazeL = ctx.createRadialGradient(logicalW * 0.2, logicalH * 0.65, 10, logicalW * 0.2, logicalH * 0.65, logicalW * 0.65);
-    hazeL.addColorStop(0, 'rgba(0,210,255,0.32)');
-    hazeL.addColorStop(1, 'rgba(0,210,255,0)');
-    const hazeR = ctx.createRadialGradient(logicalW * 0.8, logicalH * 0.65, 10, logicalW * 0.8, logicalH * 0.65, logicalW * 0.65);
-    hazeR.addColorStop(0, 'rgba(255,0,85,0.32)');
-    hazeR.addColorStop(1, 'rgba(255,0,85,0)');
-    gradientsRef.current = { width: logicalW, height: logicalH, hazeL, hazeR };
-
-    return { ctx, logicalW, logicalH };
-  }, [containerRef]);
-
-  useEffect(() => {
-    setupCanvas();
-  }, [setupCanvas]);
-
-  const startLoop = useCallback(() => {
-    if (raf.current) return;
-    const tick = (ts: number) => {
+    const setupCanvas = useCallback(() => {
       const cvs = canvasRef.current;
-      if (!cvs) { raf.current = 0; return; }
-      const ctx = cvs.getContext('2d');
-      if (!ctx) { raf.current = 0; return; }
-      const minStep = perfMode.current === 'low' ? 34 : perfMode.current === 'mid' ? 24 : 16;
-      if (ts - lastTs.current < minStep) {
-        raf.current = requestAnimationFrame(tick);
-        return;
-      }
-      lastTs.current = ts;
       const el = containerRef.current;
-      const dpr = dprRef.current || 1;
-      if (el) {
-        const w = Math.max(1, el.offsetWidth);
-        const h = Math.max(1, el.offsetHeight);
-        if (Math.floor(cvs.width / dpr) !== w || Math.floor(cvs.height / dpr) !== h) {
-          setupCanvas();
-        }
-      }
-      const width = Math.max(1, Math.floor(cvs.width / dpr));
-      const height = Math.max(1, Math.floor(cvs.height / dpr));
-      ctx.clearRect(0, 0, width, height);
-      const ps = particles.current;
-      const centerX = Math.min(width * 0.88, Math.max(width * 0.12, width * convergeX));
-      const centerY = Math.min(height * 0.92, Math.max(height * 0.12, height * convergeY));
-      const halfH = height * 0.5;
-      const quality = perfMode.current === 'low' ? 0.68 : perfMode.current === 'mid' ? 0.86 : 1;
+      if (!cvs || !el) return null;
+      const logicalW = Math.max(1, el.offsetWidth);
+      const logicalH = Math.max(1, el.offsetHeight);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      dprRef.current = dpr;
+      cvs.width = Math.floor(logicalW * dpr);
+      cvs.height = Math.floor(logicalH * dpr);
+      cvs.style.width = `${logicalW}px`;
+      cvs.style.height = `${logicalH}px`;
+      const ctx = cvs.getContext('2d');
+      if (!ctx) return null;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // base star dust + left/right energy haze
-      ctx.globalCompositeOperation = 'lighter';
-      const hL = Math.min(1, heatL.current / 18);
-      const hR = Math.min(1, heatR.current / 18);
-      for (let i = 0; i < stars.current.length; i++) {
-        const s = stars.current[i];
-        const pulse = 0.45 + 0.55 * Math.sin(ts * 0.0012 + s.phase);
-        ctx.globalAlpha = s.a * pulse * 0.55;
-        ctx.fillStyle = s.color;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 0.22 + hL * 0.35;
-      const cachedGrad = gradientsRef.current;
-      if (cachedGrad.width !== width || cachedGrad.height !== height || !cachedGrad.hazeL || !cachedGrad.hazeR) {
-        setupCanvas();
-      }
-      ctx.fillStyle = gradientsRef.current.hazeL ?? 'rgba(0,210,255,0.06)';
-      ctx.fillRect(0, 0, width, height);
-      ctx.globalAlpha = 0.22 + hR * 0.35;
-      ctx.fillStyle = gradientsRef.current.hazeR ?? 'rgba(255,0,85,0.06)';
-      ctx.fillRect(0, 0, width, height);
-      ctx.globalAlpha = 1;
+      const area = logicalW * logicalH;
+      const cores = navigator.hardwareConcurrency || 4;
+      perfMode.current = area > 850_000 || cores <= 4 ? 'low' : area > 520_000 || cores <= 6 ? 'mid' : 'high';
 
-      const streamBase = perfMode.current === 'low' ? 1.3 : 2.1;
-      const leftStream = (streamBase + Math.min(8, heatL.current * 0.26)) * quality;
-      const rightStream = (streamBase + Math.min(8, heatR.current * 0.26)) * quality;
-      const spawnStream = (side: 'left' | 'right', amount: number) => {
-        const color = side === 'left' ? LC : RC;
-        const fromLeft = side === 'left';
-        for (let i = 0; i < Math.floor(amount); i++) {
-          const sx = fromLeft ? Math.random() * (width * 0.46) : width * 0.54 + Math.random() * (width * 0.46);
-          const sy = halfH + (Math.random() - 0.5) * (height * 0.62);
-          const dx = centerX - sx;
-          const dy = centerY - sy;
-          const dist = Math.max(1, Math.hypot(dx, dy));
-          const speed = 1 + Math.random() * 2 + (side === 'left' ? heatL.current : heatR.current) * 0.08;
-          ps.push({
-            x: sx,
-            y: sy,
-            vx: (dx / dist) * speed + (Math.random() - 0.5) * 0.9,
-            vy: (dy / dist) * speed + (Math.random() - 0.5) * 0.7,
-            tx: centerX + (Math.random() - 0.5) * 10,
-            ty: centerY + (Math.random() - 0.5) * 8,
-            life: 0.45 + Math.random() * 0.34,
-            color,
-            size: 0.8 + Math.random() * 1.7,
-            drag: 0.988,
-            glow: 6 + Math.random() * 8,
-          });
+      const starBase = perfMode.current === 'low' ? 46 : perfMode.current === 'mid' ? 68 : 92;
+      stars.current = Array.from({ length: starBase }, () => {
+        const isLeft = Math.random() > 0.5;
+        return {
+          x: Math.random() * logicalW,
+          y: Math.random() * logicalH,
+          r: 0.5 + Math.random() * (perfMode.current === 'high' ? 2.1 : 1.6),
+          a: 0.2 + Math.random() * 0.55,
+          phase: Math.random() * Math.PI * 2,
+          color: isLeft ? 'rgba(0,210,255,0.95)' : 'rgba(255,0,85,0.95)',
+        };
+      });
+
+      const hazeL = ctx.createRadialGradient(logicalW * 0.2, logicalH * 0.65, 10, logicalW * 0.2, logicalH * 0.65, logicalW * 0.65);
+      hazeL.addColorStop(0, 'rgba(0,210,255,0.32)');
+      hazeL.addColorStop(1, 'rgba(0,210,255,0)');
+      const hazeR = ctx.createRadialGradient(logicalW * 0.8, logicalH * 0.65, 10, logicalW * 0.8, logicalH * 0.65, logicalW * 0.65);
+      hazeR.addColorStop(0, 'rgba(255,0,85,0.32)');
+      hazeR.addColorStop(1, 'rgba(255,0,85,0)');
+      gradientsRef.current = { width: logicalW, height: logicalH, hazeL, hazeR };
+
+      return { ctx, logicalW, logicalH };
+    }, [containerRef]);
+
+    useEffect(() => {
+      setupCanvas();
+    }, [setupCanvas]);
+
+    const startLoop = useCallback(() => {
+      if (raf.current) return;
+      const tick = (ts: number) => {
+        const cvs = canvasRef.current;
+        if (!cvs) { raf.current = 0; return; }
+        const ctx = cvs.getContext('2d');
+        if (!ctx) { raf.current = 0; return; }
+        const minStep = perfMode.current === 'low' ? 34 : perfMode.current === 'mid' ? 24 : 16;
+        if (ts - lastTs.current < minStep) {
+          raf.current = requestAnimationFrame(tick);
+          return;
         }
-      };
-      const maxParticles = perfMode.current === 'low' ? 260 : perfMode.current === 'mid' ? 380 : 520;
-      if (ps.length < maxParticles * 0.92) {
-        spawnStream('left', leftStream);
-        spawnStream('right', rightStream);
-      }
-      if (Math.random() < 0.38 * quality && ps.length < maxParticles) {
-        for (let i = 0; i < 2; i++) {
-          const side = Math.random() > 0.5 ? 1 : -1;
-          ps.push({
-            x: centerX + (Math.random() - 0.5) * 12,
-            y: centerY + (Math.random() - 0.5) * 26,
-            vx: side * (0.4 + Math.random() * 2.1),
-            vy: -0.2 + (Math.random() - 0.5) * 1.6,
-            tx: centerX + (Math.random() - 0.5) * 8,
-            ty: centerY + (Math.random() - 0.5) * 6,
-            life: 0.38 + Math.random() * 0.25,
-            color: '#ffffff',
-            size: 0.9 + Math.random() * 1.4,
-            drag: 0.984,
-            glow: 10 + Math.random() * 8,
-          });
+        lastTs.current = ts;
+        const el = containerRef.current;
+        const dpr = dprRef.current || 1;
+        if (el) {
+          const w = Math.max(1, el.offsetWidth);
+          const h = Math.max(1, el.offsetHeight);
+          if (Math.floor(cvs.width / dpr) !== w || Math.floor(cvs.height / dpr) !== h) {
+            setupCanvas();
+          }
         }
-      }
-      if (ps.length > maxParticles) ps.splice(0, ps.length - maxParticles);
-      for (let i = ps.length - 1; i >= 0; i--) {
-        const p = ps[i];
-        const dx = p.tx - p.x;
-        const dy = p.ty - p.y;
-        const dist = Math.hypot(dx, dy);
-        // Keep particles converging toward PK anchor so they vanish at the target zone.
-        p.vx += dx * 0.0016;
-        p.vy += dy * 0.0016;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= p.drag;
-        p.vy *= p.drag;
-        // Fade slower globally; fade fast only near target.
-        p.life -= dist < 14 ? 0.075 : 0.0075;
-        if (dist < 10) {
-          p.x = p.tx;
-          p.y = p.ty;
-        }
-        if (p.life <= 0) { ps.splice(i, 1); continue; }
-        ctx.globalAlpha = p.life;
-        const heavyGlow = perfMode.current === 'high' && ps.length < 320 && i % 2 === 0;
-        ctx.shadowBlur = heavyGlow ? p.glow : 0;
-        ctx.shadowColor = heavyGlow ? p.color : 'transparent';
-        ctx.fillStyle = p.color;
-        const radius = p.size * p.life;
-        if (radius < 1.1) {
-          ctx.fillRect(p.x, p.y, 1.2, 1.2);
-        } else {
+        const width = Math.max(1, Math.floor(cvs.width / dpr));
+        const height = Math.max(1, Math.floor(cvs.height / dpr));
+        ctx.clearRect(0, 0, width, height);
+        const ps = particles.current;
+        const centerX = Math.min(width * 0.88, Math.max(width * 0.12, width * convergeX));
+        const centerY = Math.min(height * 0.92, Math.max(height * 0.12, height * convergeY));
+        const halfH = height * 0.5;
+        const quality = perfMode.current === 'low' ? 0.68 : perfMode.current === 'mid' ? 0.86 : 1;
+
+        // base star dust + left/right energy haze
+        ctx.globalCompositeOperation = 'lighter';
+        const hL = Math.min(1, heatL.current / 18);
+        const hR = Math.min(1, heatR.current / 18);
+        for (let i = 0; i < stars.current.length; i++) {
+          const s = stars.current[i];
+          const pulse = 0.45 + 0.55 * Math.sin(ts * 0.0012 + s.phase);
+          ctx.globalAlpha = s.a * pulse * 0.55;
+          ctx.fillStyle = s.color;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
           ctx.fill();
         }
-      }
-      heatL.current = Math.max(0, heatL.current * 0.94 - 0.04);
-      heatR.current = Math.max(0, heatR.current * 0.94 - 0.04);
-      // side push beams into center (cheap but strong visual)
-      const beamW = Math.max(24, 58 + Math.max(heatL.current, heatR.current) * 2.2);
-      ctx.globalAlpha = 0.32 + Math.min(0.4, (heatL.current + heatR.current) * 0.01);
-      ctx.fillStyle = 'rgba(0,210,255,0.65)';
-      ctx.fillRect(Math.max(0, centerX - beamW - 12), centerY - 10, beamW, 20);
-      ctx.fillStyle = 'rgba(255,0,85,0.65)';
-      ctx.fillRect(centerX + 12, centerY - 10, beamW, 20);
-      ctx.globalAlpha = 0.42;
-      ctx.fillStyle = 'rgba(255,255,255,0.8)';
-      ctx.fillRect(centerX - 8, centerY - 8, 16, 16);
-      ctx.shadowBlur = 0;
-      ctx.globalAlpha = 1;
-      ctx.globalCompositeOperation = 'source-over';
-      raf.current = ps.length > 0 ? requestAnimationFrame(tick) : 0;
-    };
-    raf.current = requestAnimationFrame(tick);
-  }, [containerRef, convergeX, convergeY, setupCanvas]);
+        ctx.globalAlpha = 0.22 + hL * 0.35;
+        const cachedGrad = gradientsRef.current;
+        if (cachedGrad.width !== width || cachedGrad.height !== height || !cachedGrad.hazeL || !cachedGrad.hazeR) {
+          setupCanvas();
+        }
+        ctx.fillStyle = gradientsRef.current.hazeL ?? 'rgba(0,210,255,0.06)';
+        ctx.fillRect(0, 0, width, height);
+        ctx.globalAlpha = 0.22 + hR * 0.35;
+        ctx.fillStyle = gradientsRef.current.hazeR ?? 'rgba(255,0,85,0.06)';
+        ctx.fillRect(0, 0, width, height);
+        ctx.globalAlpha = 1;
 
-  const spawnBurst = useCallback(
-    (side: 'left' | 'right', intensity: number) => {
-      const el = containerRef.current;
-      const w = el?.offsetWidth ?? 600;
-      const h = el?.offsetHeight ?? 120;
-      const color = side === 'left' ? LC : RC;
-      const sx = side === 'left' ? w * 0.04 : w * 0.96;
-      const dir = side === 'left' ? 1 : -1;
-      const quality = perfMode.current === 'low' ? 0.6 : perfMode.current === 'mid' ? 0.82 : 1;
-      const count = Math.max(8, Math.round((12 + intensity * 16) * quality));
-      const tx = Math.min(w * 0.88, Math.max(w * 0.12, w * convergeX));
-      const ty = Math.min(h * 0.92, Math.max(h * 0.12, h * convergeY));
-      for (let i = 0; i < count; i++) {
-        const sy = h * (0.25 + Math.random() * 0.5);
-        const dx = tx - sx;
-        const dy = ty - sy;
-        const dist = Math.max(1, Math.hypot(dx, dy));
-        const speed = 2.1 + Math.random() * (2 + intensity * 1.5);
-        particles.current.push({
-          x: sx + (Math.random() - 0.5) * 14,
-          y: sy,
-          vx: (dx / dist) * speed + dir * (0.2 + Math.random() * 0.8),
-          vy: (dy / dist) * speed + (Math.random() - 0.5) * 0.8,
-          tx: tx + (Math.random() - 0.5) * 10,
-          ty: ty + (Math.random() - 0.5) * 8,
-          life: 0.52 + Math.random() * 0.36,
-          color,
-          size: 1 + Math.random() * (1.4 + intensity * 0.85),
-          drag: 0.986,
-          glow: 8 + Math.random() * 10,
-        });
-      }
-      startLoop();
-    },
-    [containerRef, convergeX, convergeY, startLoop],
-  );
+        const streamBase = perfMode.current === 'low' ? 1.3 : 2.1;
+        const leftStream = (streamBase + Math.min(8, heatL.current * 0.26)) * quality;
+        const rightStream = (streamBase + Math.min(8, heatR.current * 0.26)) * quality;
+        const spawnStream = (side: 'left' | 'right', amount: number) => {
+          const color = side === 'left' ? LC : RC;
+          const fromLeft = side === 'left';
+          for (let i = 0; i < Math.floor(amount); i++) {
+            const sx = fromLeft ? Math.random() * (width * 0.46) : width * 0.54 + Math.random() * (width * 0.46);
+            const sy = halfH + (Math.random() - 0.5) * (height * 0.62);
+            const dx = centerX - sx;
+            const dy = centerY - sy;
+            const dist = Math.max(1, Math.hypot(dx, dy));
+            const speed = 1 + Math.random() * 2 + (side === 'left' ? heatL.current : heatR.current) * 0.08;
+            ps.push({
+              x: sx,
+              y: sy,
+              vx: (dx / dist) * speed + (Math.random() - 0.5) * 0.9,
+              vy: (dy / dist) * speed + (Math.random() - 0.5) * 0.7,
+              tx: centerX + (Math.random() - 0.5) * 10,
+              ty: centerY + (Math.random() - 0.5) * 8,
+              life: 0.45 + Math.random() * 0.34,
+              color,
+              size: 0.8 + Math.random() * 1.7,
+              drag: 0.988,
+              glow: 6 + Math.random() * 8,
+            });
+          }
+        };
+        const maxParticles = perfMode.current === 'low' ? 260 : perfMode.current === 'mid' ? 380 : 520;
+        if (ps.length < maxParticles * 0.92) {
+          spawnStream('left', leftStream);
+          spawnStream('right', rightStream);
+        }
+        if (Math.random() < 0.38 * quality && ps.length < maxParticles) {
+          for (let i = 0; i < 2; i++) {
+            const side = Math.random() > 0.5 ? 1 : -1;
+            ps.push({
+              x: centerX + (Math.random() - 0.5) * 12,
+              y: centerY + (Math.random() - 0.5) * 26,
+              vx: side * (0.4 + Math.random() * 2.1),
+              vy: -0.2 + (Math.random() - 0.5) * 1.6,
+              tx: centerX + (Math.random() - 0.5) * 8,
+              ty: centerY + (Math.random() - 0.5) * 6,
+              life: 0.38 + Math.random() * 0.25,
+              color: '#ffffff',
+              size: 0.9 + Math.random() * 1.4,
+              drag: 0.984,
+              glow: 10 + Math.random() * 8,
+            });
+          }
+        }
+        if (ps.length > maxParticles) ps.splice(0, ps.length - maxParticles);
+        for (let i = ps.length - 1; i >= 0; i--) {
+          const p = ps[i];
+          const dx = p.tx - p.x;
+          const dy = p.ty - p.y;
+          const dist = Math.hypot(dx, dy);
+          // Keep particles converging toward PK anchor so they vanish at the target zone.
+          p.vx += dx * 0.0016;
+          p.vy += dy * 0.0016;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vx *= p.drag;
+          p.vy *= p.drag;
+          // Fade slower globally; fade fast only near target.
+          p.life -= dist < 14 ? 0.075 : 0.0075;
+          if (dist < 10) {
+            p.x = p.tx;
+            p.y = p.ty;
+          }
+          if (p.life <= 0) { ps.splice(i, 1); continue; }
+          ctx.globalAlpha = p.life;
+          const heavyGlow = perfMode.current === 'high' && ps.length < 320 && i % 2 === 0;
+          ctx.shadowBlur = heavyGlow ? p.glow : 0;
+          ctx.shadowColor = heavyGlow ? p.color : 'transparent';
+          ctx.fillStyle = p.color;
+          const radius = p.size * p.life;
+          if (radius < 1.1) {
+            ctx.fillRect(p.x, p.y, 1.2, 1.2);
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        heatL.current = Math.max(0, heatL.current * 0.94 - 0.04);
+        heatR.current = Math.max(0, heatR.current * 0.94 - 0.04);
+        // side push beams into center (cheap but strong visual)
+        const beamW = Math.max(24, 58 + Math.max(heatL.current, heatR.current) * 2.2);
+        ctx.globalAlpha = 0.32 + Math.min(0.4, (heatL.current + heatR.current) * 0.01);
+        ctx.fillStyle = 'rgba(0,210,255,0.65)';
+        ctx.fillRect(Math.max(0, centerX - beamW - 12), centerY - 10, beamW, 20);
+        ctx.fillStyle = 'rgba(255,0,85,0.65)';
+        ctx.fillRect(centerX + 12, centerY - 10, beamW, 20);
+        ctx.globalAlpha = 0.42;
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.fillRect(centerX - 8, centerY - 8, 16, 16);
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+        raf.current = ps.length > 0 ? requestAnimationFrame(tick) : 0;
+      };
+      raf.current = requestAnimationFrame(tick);
+    }, [containerRef, convergeX, convergeY, setupCanvas]);
 
-  useEffect(() => {
-    const dLp = Math.max(0, leftPower - prevL.current);
-    const dRp = Math.max(0, rightPower - prevR.current);
-    const dLs = Math.max(0, leftSuccess - prevLs.current);
-    const dLf = Math.max(0, leftFail - prevLf.current);
-    const dRs = Math.max(0, rightSuccess - prevRs.current);
-    const dRf = Math.max(0, rightFail - prevRf.current);
-
-    if (dLp > 0 || dLs > 0 || dLf > 0) {
-      const gain = dLs + dLf;
-      const impulse = dLp * 0.08 + gain * 0.22;
-      heatL.current = Math.min(36, heatL.current + impulse);
-      const burstIntensity = Math.min(5.2, 0.5 + gain / 24 + dLp / 80);
-      spawnBurst('left', burstIntensity);
-    }
-    if (dRp > 0 || dRs > 0 || dRf > 0) {
-      const gain = dRs + dRf;
-      const impulse = dRp * 0.08 + gain * 0.22;
-      heatR.current = Math.min(36, heatR.current + impulse);
-      const burstIntensity = Math.min(5.2, 0.5 + gain / 24 + dRp / 80);
-      spawnBurst('right', burstIntensity);
-    }
-
-    prevL.current = leftPower;
-    prevR.current = rightPower;
-    prevLs.current = leftSuccess;
-    prevLf.current = leftFail;
-    prevRs.current = rightSuccess;
-    prevRf.current = rightFail;
-
-    if (particles.current.length) startLoop();
-  }, [leftPower, rightPower, leftSuccess, leftFail, rightSuccess, rightFail, spawnBurst, startLoop]);
-
-  useEffect(() => () => {
-    if (raf.current) cancelAnimationFrame(raf.current);
-  }, []);
-
-  useEffect(() => {
-    const onVisibility = () => {
-      if (document.hidden) {
-        if (raf.current) cancelAnimationFrame(raf.current);
-        raf.current = 0;
-      } else if (particles.current.length) {
+    const spawnBurst = useCallback(
+      (side: 'left' | 'right', intensity: number) => {
+        const el = containerRef.current;
+        const w = el?.offsetWidth ?? 600;
+        const h = el?.offsetHeight ?? 120;
+        const color = side === 'left' ? LC : RC;
+        const sx = side === 'left' ? w * 0.04 : w * 0.96;
+        const dir = side === 'left' ? 1 : -1;
+        const quality = perfMode.current === 'low' ? 0.6 : perfMode.current === 'mid' ? 0.82 : 1;
+        const count = Math.max(8, Math.round((12 + intensity * 16) * quality));
+        const tx = Math.min(w * 0.88, Math.max(w * 0.12, w * convergeX));
+        const ty = Math.min(h * 0.92, Math.max(h * 0.12, h * convergeY));
+        for (let i = 0; i < count; i++) {
+          const sy = h * (0.25 + Math.random() * 0.5);
+          const dx = tx - sx;
+          const dy = ty - sy;
+          const dist = Math.max(1, Math.hypot(dx, dy));
+          const speed = 2.1 + Math.random() * (2 + intensity * 1.5);
+          particles.current.push({
+            x: sx + (Math.random() - 0.5) * 14,
+            y: sy,
+            vx: (dx / dist) * speed + dir * (0.2 + Math.random() * 0.8),
+            vy: (dy / dist) * speed + (Math.random() - 0.5) * 0.8,
+            tx: tx + (Math.random() - 0.5) * 10,
+            ty: ty + (Math.random() - 0.5) * 8,
+            life: 0.52 + Math.random() * 0.36,
+            color,
+            size: 1 + Math.random() * (1.4 + intensity * 0.85),
+            drag: 0.986,
+            glow: 8 + Math.random() * 10,
+          });
+        }
         startLoop();
+      },
+      [containerRef, convergeX, convergeY, startLoop],
+    );
+
+    useEffect(() => {
+      const dLp = Math.max(0, leftPower - prevL.current);
+      const dRp = Math.max(0, rightPower - prevR.current);
+      const dLs = Math.max(0, leftSuccess - prevLs.current);
+      const dLf = Math.max(0, leftFail - prevLf.current);
+      const dRs = Math.max(0, rightSuccess - prevRs.current);
+      const dRf = Math.max(0, rightFail - prevRf.current);
+
+      if (dLp > 0 || dLs > 0 || dLf > 0) {
+        const gain = dLs + dLf;
+        const impulse = dLp * 0.08 + gain * 0.22;
+        heatL.current = Math.min(36, heatL.current + impulse);
+        const burstIntensity = Math.min(5.2, 0.5 + gain / 24 + dLp / 80);
+        spawnBurst('left', burstIntensity);
       }
-    };
-    document.addEventListener('visibilitychange', onVisibility);
-    return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, [startLoop]);
+      if (dRp > 0 || dRs > 0 || dRf > 0) {
+        const gain = dRs + dRf;
+        const impulse = dRp * 0.08 + gain * 0.22;
+        heatR.current = Math.min(36, heatR.current + impulse);
+        const burstIntensity = Math.min(5.2, 0.5 + gain / 24 + dRp / 80);
+        spawnBurst('right', burstIntensity);
+      }
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => setupCanvas());
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [containerRef, setupCanvas]);
+      prevL.current = leftPower;
+      prevR.current = rightPower;
+      prevLs.current = leftSuccess;
+      prevLf.current = leftFail;
+      prevRs.current = rightSuccess;
+      prevRf.current = rightFail;
 
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-20" />;
-};
+      if (particles.current.length) startLoop();
+    }, [leftPower, rightPower, leftSuccess, leftFail, rightSuccess, rightFail, spawnBurst, startLoop]);
+
+    useEffect(() => () => {
+      if (raf.current) cancelAnimationFrame(raf.current);
+    }, []);
+
+    useEffect(() => {
+      const onVisibility = () => {
+        if (document.hidden) {
+          if (raf.current) cancelAnimationFrame(raf.current);
+          raf.current = 0;
+        } else if (particles.current.length) {
+          startLoop();
+        }
+      };
+      document.addEventListener('visibilitychange', onVisibility);
+      return () => document.removeEventListener('visibilitychange', onVisibility);
+    }, [startLoop]);
+
+    useEffect(() => {
+      const el = containerRef.current;
+      if (!el) return;
+      const ro = new ResizeObserver(() => setupCanvas());
+      ro.observe(el);
+      return () => ro.disconnect();
+    }, [containerRef, setupCanvas]);
+
+    return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-20" />;
+  };
 
 /* ══════════ FlameAvatar ══════════ */
 const FlameAvatar = React.memo(({
@@ -1215,9 +1215,8 @@ const FlameAvatar = React.memo(({
   const color = side === 'A' ? LC : RC;
   return (
     <div
-      className={`relative rounded-full flex items-center justify-center shrink-0 ${
-        compact ? 'w-5 h-5 text-xs' : 'w-7 h-7 text-base'
-      }`}
+      className={`relative rounded-full flex items-center justify-center shrink-0 ${compact ? 'w-5 h-5 text-xs' : 'w-7 h-7 text-base'
+        }`}
       style={{
         '--flame': color,
         border: `${compact ? '1.5px' : '2px'} solid ${color}`,
@@ -1299,503 +1298,503 @@ const BattleHeader: React.FC<{
   comboB,
   shakeKey,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pkAnchorRef = useRef<HTMLDivElement>(null);
-  const leftLeading = leftPower >= rightPower;
-  const [convergePoint, setConvergePoint] = useState({ x: 0.5, y: 0.72 });
-  const [barHeat, setBarHeat] = useState(0.22);
-  const [clashPulses, setClashPulses] = useState<ClashPulse[]>([]);
-  const prevMetricRef = useRef({
-    lp: leftPower,
-    rp: rightPower,
-    ls: leftSuccess,
-    rs: rightSuccess,
-    lf: leftFail,
-    rf: rightFail,
-  });
-
-  useEffect(() => {
-    const prev = prevMetricRef.current;
-    const dLp = Math.max(0, leftPower - prev.lp);
-    const dRp = Math.max(0, rightPower - prev.rp);
-    const dLs = Math.max(0, leftSuccess - prev.ls);
-    const dRs = Math.max(0, rightSuccess - prev.rs);
-    const dLf = Math.max(0, leftFail - prev.lf);
-    const dRf = Math.max(0, rightFail - prev.rf);
-    const impulse = dLp * 0.01 + dRp * 0.01 + dLs * 0.08 + dRs * 0.08 + dLf * 0.05 + dRf * 0.05;
-    if (impulse > 0) setBarHeat((v) => Math.min(1, v + impulse));
-
-    prevMetricRef.current = {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const pkAnchorRef = useRef<HTMLDivElement>(null);
+    const leftLeading = leftPower >= rightPower;
+    const [convergePoint, setConvergePoint] = useState({ x: 0.5, y: 0.72 });
+    const [barHeat, setBarHeat] = useState(0.22);
+    const [clashPulses, setClashPulses] = useState<ClashPulse[]>([]);
+    const prevMetricRef = useRef({
       lp: leftPower,
       rp: rightPower,
       ls: leftSuccess,
       rs: rightSuccess,
       lf: leftFail,
       rf: rightFail,
-    };
-  }, [leftPower, rightPower, leftSuccess, rightSuccess, leftFail, rightFail]);
+    });
 
-  useEffect(() => {
-    const spawnPush = (side: 'left' | 'right', strength: number) => {
-      const id = `push-${side}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-      setClashPulses((prevPulses) => [...prevPulses.slice(-8), { id, side, strength }]);
-      window.setTimeout(() => {
-        setClashPulses((prevPulses) => prevPulses.filter((p) => p.id !== id));
-      }, 650);
-    };
-    const iv = window.setInterval(() => {
-      const side: 'left' | 'right' = Math.random() > 0.5 ? 'left' : 'right';
-      const strength = 0.6 + Math.random() * 0.4;
-      spawnPush(side, strength);
-    }, 520);
-    return () => window.clearInterval(iv);
-  }, []);
+    useEffect(() => {
+      const prev = prevMetricRef.current;
+      const dLp = Math.max(0, leftPower - prev.lp);
+      const dRp = Math.max(0, rightPower - prev.rp);
+      const dLs = Math.max(0, leftSuccess - prev.ls);
+      const dRs = Math.max(0, rightSuccess - prev.rs);
+      const dLf = Math.max(0, leftFail - prev.lf);
+      const dRf = Math.max(0, rightFail - prev.rf);
+      const impulse = dLp * 0.01 + dRp * 0.01 + dLs * 0.08 + dRs * 0.08 + dLf * 0.05 + dRf * 0.05;
+      if (impulse > 0) setBarHeat((v) => Math.min(1, v + impulse));
 
-  useEffect(() => {
-    const t = window.setInterval(() => {
-      setBarHeat((v) => Math.max(0.2, v * 0.94));
-    }, 80);
-    return () => window.clearInterval(t);
-  }, []);
+      prevMetricRef.current = {
+        lp: leftPower,
+        rp: rightPower,
+        ls: leftSuccess,
+        rs: rightSuccess,
+        lf: leftFail,
+        rf: rightFail,
+      };
+    }, [leftPower, rightPower, leftSuccess, rightSuccess, leftFail, rightFail]);
 
-  useEffect(() => {
-    const syncAnchor = () => {
-      const containerEl = containerRef.current;
-      const anchorEl = pkAnchorRef.current;
-      if (!containerEl || !anchorEl) return;
-      const cRect = containerEl.getBoundingClientRect();
-      const aRect = anchorEl.getBoundingClientRect();
-      if (!cRect.width || !cRect.height) return;
-      const x = (aRect.left + aRect.width / 2 - cRect.left) / cRect.width;
-      const y = (aRect.top - cRect.top - 8) / cRect.height;
-      setConvergePoint({
-        x: Math.min(0.88, Math.max(0.12, x)),
-        y: Math.min(0.9, Math.max(0.12, y)),
-      });
-    };
-    syncAnchor();
-    const ro = new ResizeObserver(syncAnchor);
-    if (containerRef.current) ro.observe(containerRef.current);
-    if (pkAnchorRef.current) ro.observe(pkAnchorRef.current);
-    window.addEventListener('resize', syncAnchor);
-    return () => {
-      window.removeEventListener('resize', syncAnchor);
-      ro.disconnect();
-    };
-  }, []);
+    useEffect(() => {
+      const spawnPush = (side: 'left' | 'right', strength: number) => {
+        const id = `push-${side}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        setClashPulses((prevPulses) => [...prevPulses.slice(-8), { id, side, strength }]);
+        window.setTimeout(() => {
+          setClashPulses((prevPulses) => prevPulses.filter((p) => p.id !== id));
+        }, 650);
+      };
+      const iv = window.setInterval(() => {
+        const side: 'left' | 'right' = Math.random() > 0.5 ? 'left' : 'right';
+        const strength = 0.6 + Math.random() * 0.4;
+        spawnPush(side, strength);
+      }, 520);
+      return () => window.clearInterval(iv);
+    }, []);
 
-  const clashStrength = Math.min(1, 0.25 + barHeat * 0.9);
-  const clashPx = 26 + Math.round(clashStrength * 30);
+    useEffect(() => {
+      const t = window.setInterval(() => {
+        setBarHeat((v) => Math.max(0.2, v * 0.94));
+      }, 80);
+      return () => window.clearInterval(t);
+    }, []);
 
-  const mvpA = useMemo(
-    () => [...commentsA].sort((a, b) => b.likes - a.likes).slice(0, 2),
-    [commentsA],
-  );
-  const mvpB = useMemo(
-    () => [...commentsB].sort((a, b) => b.likes - a.likes).slice(0, 2),
-    [commentsB],
-  );
+    useEffect(() => {
+      const syncAnchor = () => {
+        const containerEl = containerRef.current;
+        const anchorEl = pkAnchorRef.current;
+        if (!containerEl || !anchorEl) return;
+        const cRect = containerEl.getBoundingClientRect();
+        const aRect = anchorEl.getBoundingClientRect();
+        if (!cRect.width || !cRect.height) return;
+        const x = (aRect.left + aRect.width / 2 - cRect.left) / cRect.width;
+        const y = (aRect.top - cRect.top - 8) / cRect.height;
+        setConvergePoint({
+          x: Math.min(0.88, Math.max(0.12, x)),
+          y: Math.min(0.9, Math.max(0.12, y)),
+        });
+      };
+      syncAnchor();
+      const ro = new ResizeObserver(syncAnchor);
+      if (containerRef.current) ro.observe(containerRef.current);
+      if (pkAnchorRef.current) ro.observe(pkAnchorRef.current);
+      window.addEventListener('resize', syncAnchor);
+      return () => {
+        window.removeEventListener('resize', syncAnchor);
+        ro.disconnect();
+      };
+    }, []);
 
-  return (
-    <div ref={containerRef} className="relative rounded-none overflow-hidden border border-white/14 shadow-[0_26px_90px_rgba(0,0,0,0.6)]">
-      <span
-        className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
-        style={{ background: `linear-gradient(90deg, ${LC}, rgba(255,255,255,0.75), ${RC})`, animation: 'idle-sweep 2.8s linear infinite' }}
-      />
-      {/* Image with brightness filter + edge vignette */}
-      <img src={news.image} alt="" className="absolute inset-0 w-full h-full object-cover brightness-[0.45] contrast-[1.1]" />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          boxShadow: 'inset 0 0 60px 30px rgba(0,0,0,0.55), inset 0 0 120px 60px rgba(0,0,0,0.25)',
-        }}
-      />
+    const clashStrength = Math.min(1, 0.25 + barHeat * 0.9);
+    const clashPx = 26 + Math.round(clashStrength * 30);
 
-      {/* Particle layer */}
-      <ParticleCanvas
-        containerRef={containerRef}
-        leftPower={leftPower}
-        rightPower={rightPower}
-        leftSuccess={leftSuccess}
-        leftFail={leftFail}
-        rightSuccess={rightSuccess}
-        rightFail={rightFail}
-        convergeX={convergePoint.x}
-        convergeY={convergePoint.y}
-      />
+    const mvpA = useMemo(
+      () => [...commentsA].sort((a, b) => b.likes - a.likes).slice(0, 2),
+      [commentsA],
+    );
+    const mvpB = useMemo(
+      () => [...commentsB].sort((a, b) => b.likes - a.likes).slice(0, 2),
+      [commentsB],
+    );
 
-      {/* Content overlay */}
-      <div className="relative z-10 flex flex-col justify-end px-5 py-3 md:px-10 md:py-6 lg:px-14 lg:py-8 min-h-[320px] md:min-h-[380px]">
-        {/* Center — title + summary */}
-        <div className="pointer-events-none absolute left-1/2 top-[24%] z-20 w-[calc(100%-56px)] md:w-[calc(100%-120px)] lg:w-[calc(100%-180px)] max-w-4xl -translate-x-1/2 -translate-y-1/2 px-4 md:px-8 relative">
-          <h2
-            className="battle-title text-[42px] md:text-[54px] font-black text-white leading-tight tracking-tight text-center px-2 overflow-hidden"
-            style={{ fontFamily: "'Orbitron', sans-serif" }}
-          >
-            <span className="battle-title-glitch-a">{news.title}</span>
-            <span className="battle-title-glitch-b">{news.title}</span>
-            <span className="relative z-10">{news.title}</span>
-          </h2>
-          <p
-            className="absolute left-0 right-0 text-[19px] md:text-[24px] text-white/90 leading-[1.6] text-center drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)] battle-hot-text"
-            style={{ fontFamily: "'Orbitron', sans-serif", top: 'calc(100% + 14px)' }}
-          >
-            {news.summary}
-          </p>
-        </div>
-        {/* Bottom section — power numbers + PK bar */}
-        <div className="space-y-2 pt-24">
-          <div className="flex items-end justify-between gap-4">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-14 h-14 rounded-full border-2 border-cyan-300/55 bg-transparent p-1 shadow-[0_0_22px_rgba(0,210,255,0.65)]">
-                <div className="w-full h-full rounded-full bg-cyan-500/20 border border-cyan-200/45 flex items-center justify-center">
-                  <Zap size={20} className="text-cyan-100" />
-                </div>
-              </div>
-              <div className="min-w-0">
-                <div className="text-[13px] font-semibold tracking-wide text-cyan-100/90 truncate">{news.optionA}</div>
-                <div className="flex items-end gap-2">
-                  <ReelPowerNumber value={leftPower} color={LC} align="right" leading={leftLeading} idPrefix="hero-lp" />
-                </div>
-                <div className="text-[11px] font-bold text-cyan-100/75">COMBO x<AnimatedCount value={Math.max(1, comboA)} duration={0.4} /></div>
-              </div>
-            </div>
+    return (
+      <div ref={containerRef} className="relative rounded-none overflow-hidden border border-white/14 shadow-[0_26px_90px_rgba(0,0,0,0.6)]">
+        <span
+          className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
+          style={{ background: `linear-gradient(90deg, ${LC}, rgba(255,255,255,0.75), ${RC})`, animation: 'idle-sweep 2.8s linear infinite' }}
+        />
+        {/* Image with brightness filter + edge vignette */}
+        <img src={news.image} alt="" className="absolute inset-0 w-full h-full object-cover brightness-[0.45] contrast-[1.1]" />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            boxShadow: 'inset 0 0 60px 30px rgba(0,0,0,0.55), inset 0 0 120px 60px rgba(0,0,0,0.25)',
+          }}
+        />
 
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="min-w-0 text-right">
-                <div className="text-[13px] font-semibold tracking-wide text-rose-100/90 truncate">{news.optionB}</div>
-                <div className="flex items-end justify-end gap-2">
-                  <ReelPowerNumber value={rightPower} color={RC} align="left" leading={!leftLeading} idPrefix="hero-rp" />
-                </div>
-                <div className="text-[11px] font-bold text-rose-100/75">COMBO x<AnimatedCount value={Math.max(1, comboB)} duration={0.4} /></div>
-              </div>
-              <div className="w-14 h-14 rounded-full border-2 border-rose-300/55 bg-transparent p-1 shadow-[0_0_22px_rgba(255,0,85,0.65)]">
-                <div className="w-full h-full rounded-full bg-rose-500/20 border border-rose-200/45 flex items-center justify-center">
-                  <Zap size={20} className="text-rose-100" />
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Particle layer */}
+        <ParticleCanvas
+          containerRef={containerRef}
+          leftPower={leftPower}
+          rightPower={rightPower}
+          leftSuccess={leftSuccess}
+          leftFail={leftFail}
+          rightSuccess={rightSuccess}
+          rightFail={rightFail}
+          convergeX={convergePoint.x}
+          convergeY={convergePoint.y}
+        />
 
-          {/* 🔥 龟势PK — real flame */}
-          <div ref={pkAnchorRef} className="flex justify-center relative" style={{ marginBottom: -2 }}>
-            <div className="flame-wrap px-5 py-1">
-              {/* Radial glow base */}
-              <div className="flame-base" />
-
-              {/* Flame tongues — different sizes, speeds, positions */}
-              {[
-                { left: '8%',  w: 10, h: 22, bg: '#ff6600', dur: '0.7s', delay: '0s' },
-                { left: '18%', w: 8,  h: 18, bg: '#ff8c00', dur: '0.9s', delay: '0.2s' },
-                { left: '30%', w: 12, h: 26, bg: '#ff4500', dur: '0.6s', delay: '0.1s' },
-                { left: '45%', w: 14, h: 30, bg: '#ff6600', dur: '0.8s', delay: '0.05s' },
-                { left: '55%', w: 10, h: 24, bg: '#ffaa00', dur: '0.65s', delay: '0.3s' },
-                { left: '68%', w: 12, h: 28, bg: '#ff4500', dur: '0.75s', delay: '0.15s' },
-                { left: '80%', w: 9,  h: 20, bg: '#ff8c00', dur: '0.85s', delay: '0.25s' },
-                { left: '90%', w: 7,  h: 16, bg: '#ff6600', dur: '0.7s', delay: '0.35s' },
-              ].map((f, i) => (
-                <div
-                  key={i}
-                  className="flame-tongue"
-                  style={{
-                    left: f.left,
-                    width: f.w,
-                    height: f.h,
-                    background: `radial-gradient(ellipse at center bottom, ${f.bg} 0%, rgba(255,69,0,0.3) 60%, transparent 100%)`,
-                    animationDuration: f.dur,
-                    animationDelay: f.delay,
-                  }}
-                />
-              ))}
-
-              {/* Embers — tiny bright dots floating up */}
-              {[
-                { left: '12%', bg: '#ffd54f', dur: '1.2s', delay: '0s', ex: '8px' },
-                { left: '30%', bg: '#ff9800', dur: '1.0s', delay: '0.4s', ex: '-6px' },
-                { left: '50%', bg: '#ffeb3b', dur: '1.4s', delay: '0.2s', ex: '4px' },
-                { left: '65%', bg: '#ff5722', dur: '1.1s', delay: '0.6s', ex: '-10px' },
-                { left: '82%', bg: '#ffc107', dur: '1.3s', delay: '0.15s', ex: '6px' },
-                { left: '22%', bg: '#ffab40', dur: '1.5s', delay: '0.5s', ex: '-4px' },
-                { left: '72%', bg: '#ffe082', dur: '1.0s', delay: '0.35s', ex: '10px' },
-              ].map((e, i) => (
-                <span
-                  key={i}
-                  className="ember"
-                  style={{
-                    left: e.left,
-                    background: e.bg,
-                    animationDuration: e.dur,
-                    animationDelay: e.delay,
-                    '--ex': e.ex,
-                    boxShadow: `0 0 4px ${e.bg}`,
-                  } as React.CSSProperties}
-                />
-              ))}
-
-              {/* Text */}
-              <span className="pk-text text-4xl md:text-5xl tracking-[0.22em] select-none" style={{ fontFamily: "'Ma Shan Zheng', cursive" }}>
-                龟势PK
-              </span>
-            </div>
-          </div>
-
-          {/* MVP + Bar */}
-          <div className="flex items-center gap-3">
-            <motion.div
-              className="flex items-center gap-1.5 shrink-0"
-              animate={leftLeading ? { x: [0, -3, 0], scale: [1, 1.04, 1] } : { x: 0, scale: 1 }}
-              transition={leftLeading ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
+        {/* Content overlay */}
+        <div className="relative z-10 flex flex-col justify-end px-5 py-3 md:px-10 md:py-6 lg:px-14 lg:py-8 min-h-[320px] md:min-h-[380px]">
+          {/* Center — title + summary */}
+          <div className="pointer-events-none absolute left-1/2 top-[24%] z-20 w-[calc(100%-56px)] md:w-[calc(100%-120px)] lg:w-[calc(100%-180px)] max-w-4xl -translate-x-1/2 -translate-y-1/2 px-4 md:px-8 relative">
+            <h2
+              className="battle-title text-[42px] md:text-[54px] font-black text-white leading-tight tracking-tight text-center px-2 overflow-hidden"
+              style={{ fontFamily: "'Orbitron', sans-serif" }}
             >
-              {mvpA.length > 0
-                ? mvpA.slice(0, 1).map((c) => <MvpAvatar key={c.id} avatar={c.author.avatar} likes={c.likes} leading={leftLeading} color={LC} />)
-                : <div className="w-10 h-10 rounded-full border-2 border-dashed border-white/20" />}
-            </motion.div>
-            <div className="flex-1 relative h-10 rounded-none overflow-hidden bg-transparent border border-white/24 backdrop-blur-none">
-              <span className="bar-ticks" style={{ opacity: 0.22 }} />
-              <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08), transparent 40%, rgba(255,255,255,0.06))' }} />
+              <span className="battle-title-glitch-a">{news.title}</span>
+              <span className="battle-title-glitch-b">{news.title}</span>
+              <span className="relative z-10">{news.title}</span>
+            </h2>
+            <p
+              className="absolute left-0 right-0 text-[14px] md:text-[18px] text-white/90 leading-[1.6] text-center drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)] battle-hot-text"
+              style={{ fontFamily: "'Orbitron', sans-serif", top: 'calc(100% + 14px)' }}
+            >
+              {news.summary}
+            </p>
+          </div>
+          {/* Bottom section — power numbers + PK bar */}
+          <div className="space-y-2 pt-24">
+            <div className="flex items-end justify-center gap-x-20 md:gap-x-40">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-14 h-14 rounded-full border-2 border-cyan-300/55 bg-transparent p-1 shadow-[0_0_22px_rgba(0,210,255,0.65)]">
+                  <div className="w-full h-full rounded-full bg-cyan-500/20 border border-cyan-200/45 flex items-center justify-center">
+                    <Zap size={20} className="text-cyan-100" />
+                  </div>
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[13px] font-semibold tracking-wide text-cyan-100/90 truncate">{news.optionA}</div>
+                  <div className="flex items-end gap-2">
+                    <ReelPowerNumber value={leftPower} color={LC} align="right" leading={leftLeading} idPrefix="hero-lp" />
+                  </div>
+                  <div className="text-[11px] font-bold text-cyan-100/75">COMBO x<AnimatedCount value={Math.max(1, comboA)} duration={0.4} /></div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="min-w-0 text-right">
+                  <div className="text-[13px] font-semibold tracking-wide text-rose-100/90 truncate">{news.optionB}</div>
+                  <div className="flex items-end justify-end gap-2">
+                    <ReelPowerNumber value={rightPower} color={RC} align="left" leading={!leftLeading} idPrefix="hero-rp" />
+                  </div>
+                  <div className="text-[11px] font-bold text-rose-100/75">COMBO x<AnimatedCount value={Math.max(1, comboB)} duration={0.4} /></div>
+                </div>
+                <div className="w-14 h-14 rounded-full border-2 border-rose-300/55 bg-transparent p-1 shadow-[0_0_22px_rgba(255,0,85,0.65)]">
+                  <div className="w-full h-full rounded-full bg-rose-500/20 border border-rose-200/45 flex items-center justify-center">
+                    <Zap size={20} className="text-rose-100" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 🔥 龟势PK — real flame */}
+            <div ref={pkAnchorRef} className="flex justify-center relative" style={{ marginBottom: -2 }}>
+              <div className="flame-wrap px-5 py-1">
+                {/* Radial glow base */}
+                <div className="flame-base" />
+
+                {/* Flame tongues — different sizes, speeds, positions */}
+                {[
+                  { left: '8%', w: 10, h: 22, bg: '#ff6600', dur: '0.7s', delay: '0s' },
+                  { left: '18%', w: 8, h: 18, bg: '#ff8c00', dur: '0.9s', delay: '0.2s' },
+                  { left: '30%', w: 12, h: 26, bg: '#ff4500', dur: '0.6s', delay: '0.1s' },
+                  { left: '45%', w: 14, h: 30, bg: '#ff6600', dur: '0.8s', delay: '0.05s' },
+                  { left: '55%', w: 10, h: 24, bg: '#ffaa00', dur: '0.65s', delay: '0.3s' },
+                  { left: '68%', w: 12, h: 28, bg: '#ff4500', dur: '0.75s', delay: '0.15s' },
+                  { left: '80%', w: 9, h: 20, bg: '#ff8c00', dur: '0.85s', delay: '0.25s' },
+                  { left: '90%', w: 7, h: 16, bg: '#ff6600', dur: '0.7s', delay: '0.35s' },
+                ].map((f, i) => (
+                  <div
+                    key={i}
+                    className="flame-tongue"
+                    style={{
+                      left: f.left,
+                      width: f.w,
+                      height: f.h,
+                      background: `radial-gradient(ellipse at center bottom, ${f.bg} 0%, rgba(255,69,0,0.3) 60%, transparent 100%)`,
+                      animationDuration: f.dur,
+                      animationDelay: f.delay,
+                    }}
+                  />
+                ))}
+
+                {/* Embers — tiny bright dots floating up */}
+                {[
+                  { left: '12%', bg: '#ffd54f', dur: '1.2s', delay: '0s', ex: '8px' },
+                  { left: '30%', bg: '#ff9800', dur: '1.0s', delay: '0.4s', ex: '-6px' },
+                  { left: '50%', bg: '#ffeb3b', dur: '1.4s', delay: '0.2s', ex: '4px' },
+                  { left: '65%', bg: '#ff5722', dur: '1.1s', delay: '0.6s', ex: '-10px' },
+                  { left: '82%', bg: '#ffc107', dur: '1.3s', delay: '0.15s', ex: '6px' },
+                  { left: '22%', bg: '#ffab40', dur: '1.5s', delay: '0.5s', ex: '-4px' },
+                  { left: '72%', bg: '#ffe082', dur: '1.0s', delay: '0.35s', ex: '10px' },
+                ].map((e, i) => (
+                  <span
+                    key={i}
+                    className="ember"
+                    style={{
+                      left: e.left,
+                      background: e.bg,
+                      animationDuration: e.dur,
+                      animationDelay: e.delay,
+                      '--ex': e.ex,
+                      boxShadow: `0 0 4px ${e.bg}`,
+                    } as React.CSSProperties}
+                  />
+                ))}
+
+                {/* Text */}
+                <span className="pk-text text-4xl md:text-5xl tracking-[0.22em] select-none" style={{ fontFamily: "'Ma Shan Zheng', cursive" }}>
+                  龟势PK
+                </span>
+              </div>
+            </div>
+
+            {/* MVP + Bar */}
+            <div className="flex items-center gap-3">
               <motion.div
-                className="absolute inset-y-0 left-0"
-                style={{
-                  background: `linear-gradient(90deg, ${LC}B8, ${LC}EE)`,
-                  boxShadow: `inset 0 0 14px ${LC}66`,
-                  filter: `drop-shadow(0 0 ${leftLeading ? 16 : 10}px ${LC}AA)`,
-                }}
-                initial={false}
-                animate={{ width: `${splitPct}%` }}
-                transition={{ type: 'spring', stiffness: 180, damping: 16 }}
+                className="flex items-center gap-1.5 shrink-0"
+                animate={leftLeading ? { x: [0, -3, 0], scale: [1, 1.04, 1] } : { x: 0, scale: 1 }}
+                transition={leftLeading ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
               >
-                <motion.span
-                  className="absolute inset-0"
-                  style={{
-                    backgroundImage:
-                      'repeating-linear-gradient(115deg, rgba(255,255,255,0.42) 0 2px, transparent 2px 10px)',
-                  }}
-                  animate={{ backgroundPositionX: ['0px', '110px'] }}
-                  transition={{ duration: 0.58, repeat: Infinity, ease: 'linear' }}
-                />
-                <motion.span
-                  className="absolute top-0 bottom-0 right-[-6%] w-[42%]"
-                  style={{
-                    background: `linear-gradient(90deg, transparent, ${LC}, rgba(255,255,255,0.95))`,
-                    filter: 'blur(1px)',
-                  }}
-                  animate={{ x: [-6, 6, -6], opacity: [0.45, 0.95, 0.45] }}
-                  transition={{ duration: 0.52, repeat: Infinity, ease: 'easeInOut' }}
-                />
+                {mvpA.length > 0
+                  ? mvpA.slice(0, 1).map((c) => <MvpAvatar key={c.id} avatar={c.author.avatar} likes={c.likes} leading={leftLeading} color={LC} />)
+                  : <div className="w-10 h-10 rounded-full border-2 border-dashed border-white/20" />}
               </motion.div>
-              <motion.div
-                className="absolute inset-y-0 right-0"
-                style={{
-                  background: `linear-gradient(90deg, ${RC}EE, ${RC}B8)`,
-                  boxShadow: `inset 0 0 14px ${RC}66`,
-                  filter: `drop-shadow(0 0 ${!leftLeading ? 16 : 10}px ${RC}AA)`,
-                }}
-                initial={false}
-                animate={{ width: `${100 - splitPct}%` }}
-                transition={{ type: 'spring', stiffness: 180, damping: 16 }}
-              >
-                <motion.span
-                  className="absolute inset-0"
-                  style={{
-                    backgroundImage:
-                      'repeating-linear-gradient(65deg, rgba(255,255,255,0.42) 0 2px, transparent 2px 10px)',
-                  }}
-                  animate={{ backgroundPositionX: ['0px', '-110px'] }}
-                  transition={{ duration: 0.58, repeat: Infinity, ease: 'linear' }}
-                />
-                <motion.span
-                  className="absolute top-0 bottom-0 left-[-6%] w-[42%]"
-                  style={{
-                    background: `linear-gradient(90deg, rgba(255,255,255,0.95), ${RC}, transparent)`,
-                    filter: 'blur(1px)',
-                  }}
-                  animate={{ x: [6, -6, 6], opacity: [0.45, 0.95, 0.45] }}
-                  transition={{ duration: 0.52, repeat: Infinity, ease: 'easeInOut' }}
-                />
-              </motion.div>
-              <motion.div
-                className="absolute top-1/2 z-[8] pointer-events-none"
-                style={{ left: `${splitPct}%`, x: '-50%', y: '-50%' }}
-                initial={false}
-                animate={{ width: `${18 + clashStrength * 24}px`, opacity: [0.4, 0.95, 0.4] }}
-                transition={{ duration: 0.78, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <div
-                  className="h-6"
-                  style={{
-                    background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.28) 38%, transparent 75%)',
-                    filter: 'blur(2px)',
-                  }}
-                />
-              </motion.div>
-              <motion.div
-                className="absolute top-1/2 z-[7] h-[58%] pointer-events-none"
-                style={{ left: `${splitPct}%`, x: '-112%', y: '-50%' }}
-                animate={{ width: `${14 + clashStrength * 18}px`, opacity: [0.55, 1, 0.55] }}
-                transition={{ duration: 0.42, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <div
-                  className="h-full"
-                  style={{
-                    background: `linear-gradient(90deg, transparent, ${LC}, rgba(255,255,255,0.95))`,
-                    clipPath: 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 16% 50%)',
-                    filter: `drop-shadow(0 0 8px ${LC})`,
-                  }}
-                />
-              </motion.div>
-              <motion.div
-                className="absolute top-1/2 z-[7] h-[58%] pointer-events-none"
-                style={{ left: `${splitPct}%`, x: '12%', y: '-50%' }}
-                animate={{ width: `${14 + clashStrength * 18}px`, opacity: [0.55, 1, 0.55] }}
-                transition={{ duration: 0.42, repeat: Infinity, ease: 'easeInOut', delay: 0.08 }}
-              >
-                <div
-                  className="h-full"
-                  style={{
-                    background: `linear-gradient(90deg, rgba(255,255,255,0.95), ${RC}, transparent)`,
-                    clipPath: 'polygon(15% 0, 100% 0, 84% 50%, 100% 100%, 15% 100%, 0 50%)',
-                    filter: `drop-shadow(0 0 8px ${RC})`,
-                  }}
-                />
-              </motion.div>
-              <motion.div
-                className="absolute top-1/2 z-[8] h-[90%] pointer-events-none"
-                style={{ x: '-50%', y: '-50%' }}
-                initial={false}
-                animate={{ left: `${splitPct}%`, width: `${10 + clashStrength * 14}px` }}
-                transition={{ type: 'spring', stiffness: 220, damping: 20 }}
-              >
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: 'linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.08), rgba(255,255,255,0.95))',
-                    boxShadow: `0 0 ${10 + clashStrength * 18}px rgba(255,255,255,0.9)`,
-                  }}
-                />
-              </motion.div>
-              <motion.div
-                className="absolute top-1/2 z-[7] pointer-events-none"
-                style={{ x: '-50%', y: '-50%' }}
-                initial={false}
-                animate={{ left: `${splitPct}%`, width: `${clashPx * 1.4}px`, opacity: 0.35 + clashStrength * 0.45 }}
-                transition={{ type: 'spring', stiffness: 220, damping: 20 }}
-              >
-                <div
-                  className="h-5"
-                  style={{
-                    background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.24) 35%, transparent 75%)',
-                    filter: `blur(${2 + clashStrength * 4}px)`,
-                  }}
-                />
-              </motion.div>
-              {[...Array(14)].map((_, i) => (
-                <motion.span
-                  key={`bar-clash-${shakeKey}-${i}`}
-                  className="absolute top-1/2 z-[9] h-[2px] w-6 pointer-events-none"
-                  style={{
-                    left: `${splitPct}%`,
-                    background: i % 2 === 0
-                      ? 'linear-gradient(90deg, transparent, rgba(0,210,255,1), transparent)'
-                      : 'linear-gradient(90deg, transparent, rgba(255,0,85,1), transparent)',
-                  }}
-                  initial={{ opacity: 1, x: '-50%', y: '-50%', scaleX: 0.2, scaleY: 0.2 }}
-                  animate={{
-                    opacity: 0,
-                    x: `calc(-50% + ${(i % 2 === 0 ? -1 : 1) * (18 + i * 4)}px)`,
-                    y: `calc(-50% + ${(i - 5.5) * 3}px)`,
-                    scaleX: 1.35,
-                    scaleY: 1.2,
-                    rotate: (i - 5.5) * 10,
-                  }}
-                  transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.015 }}
-                />
-              ))}
-              <AnimatePresence>
-                {clashPulses.map((pulse) => {
-                  const c = pulse.side === 'left' ? LC : RC;
-                  const fromLeft = pulse.side === 'left';
-                  const zoneWidth = fromLeft ? splitPct : 100 - splitPct;
-                  return (
-                    <motion.div
-                      key={pulse.id}
-                      className="absolute inset-y-0 z-[9] pointer-events-none overflow-hidden"
-                      style={
-                        fromLeft
-                          ? { left: 0, width: `${zoneWidth}%` }
-                          : { right: 0, width: `${zoneWidth}%` }
-                      }
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0, 1, 0.2] }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.62, ease: 'easeOut' }}
-                    >
-                      <motion.div
-                        className="absolute inset-y-0 w-[48%]"
-                        style={{
-                          background: fromLeft
-                            ? `linear-gradient(90deg, transparent, ${c}, rgba(255,255,255,0.98), transparent)`
-                            : `linear-gradient(90deg, transparent, rgba(255,255,255,0.98), ${c}, transparent)`,
-                          filter: `drop-shadow(0 0 ${18 + pulse.strength * 20}px ${c})`,
-                        }}
-                        initial={{ x: fromLeft ? '-120%' : '120%' }}
-                        animate={{ x: fromLeft ? '150%' : '-150%' }}
-                        transition={{ duration: 0.52, ease: 'easeOut' }}
-                      />
-                      <motion.div
-                        className="absolute inset-y-0 w-[28%]"
-                        style={{
-                          background: fromLeft
-                            ? `linear-gradient(90deg, transparent, rgba(255,255,255,0.95), ${c}, transparent)`
-                            : `linear-gradient(90deg, transparent, ${c}, rgba(255,255,255,0.95), transparent)`,
-                          filter: 'blur(2px)',
-                          opacity: 0.9,
-                        }}
-                        initial={{ x: fromLeft ? '-150%' : '150%' }}
-                        animate={{ x: fromLeft ? '190%' : '-190%' }}
-                        transition={{ duration: 0.52, ease: 'easeOut', delay: 0.03 }}
-                      />
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-              <motion.div
-                className="absolute top-1/2 z-10"
-                style={{ y: '-50%', x: '-50%' }}
-                initial={false}
-                animate={{ left: `${splitPct}%` }}
-                transition={{ type: 'spring', stiffness: 180, damping: 16 }}
-              >
+              <div className="flex-1 relative h-10 rounded-none overflow-hidden bg-transparent border border-white/24 backdrop-blur-none">
+                <span className="bar-ticks" style={{ opacity: 0.22 }} />
+                <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08), transparent 40%, rgba(255,255,255,0.06))' }} />
                 <motion.div
-                  key={shakeKey}
-                  initial={{ scale: 1.8, rotate: -10 }}
-                  animate={{
-                    scale: 1 + clashStrength * 0.14,
-                    rotate: 0,
-                    boxShadow: `0 0 ${10 + clashStrength * 14}px rgba(255,255,255,${0.35 + clashStrength * 0.28})`,
+                  className="absolute inset-y-0 left-0"
+                  style={{
+                    background: `linear-gradient(90deg, ${LC}B8, ${LC}EE)`,
+                    boxShadow: `inset 0 0 14px ${LC}66`,
+                    filter: `drop-shadow(0 0 ${leftLeading ? 16 : 10}px ${LC}AA)`,
                   }}
-                  transition={{ type: 'spring', stiffness: 440, damping: 13 }}
-                  className="min-w-[42px] h-7 px-2 rounded-full bg-[linear-gradient(90deg,rgba(0,210,255,0.28),rgba(255,255,255,0.92),rgba(255,0,85,0.28))] border border-white/70 flex items-center justify-center relative overflow-visible"
+                  initial={false}
+                  animate={{ width: `${splitPct}%` }}
+                  transition={{ type: 'spring', stiffness: 180, damping: 16 }}
                 >
-                  <span className="absolute inset-0 rounded-full opacity-60" style={{ background: 'linear-gradient(90deg, rgba(0,210,255,0.25), transparent 35%, transparent 65%, rgba(255,0,85,0.25))', animation: 'neon-sweep 1.8s linear infinite' }} />
-                  <span className="text-sm font-black text-slate-900 tracking-tight">VS</span>
+                  <motion.span
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage:
+                        'repeating-linear-gradient(115deg, rgba(255,255,255,0.42) 0 2px, transparent 2px 10px)',
+                    }}
+                    animate={{ backgroundPositionX: ['0px', '110px'] }}
+                    transition={{ duration: 0.58, repeat: Infinity, ease: 'linear' }}
+                  />
+                  <motion.span
+                    className="absolute top-0 bottom-0 right-[-6%] w-[42%]"
+                    style={{
+                      background: `linear-gradient(90deg, transparent, ${LC}, rgba(255,255,255,0.95))`,
+                      filter: 'blur(1px)',
+                    }}
+                    animate={{ x: [-6, 6, -6], opacity: [0.45, 0.95, 0.45] }}
+                    transition={{ duration: 0.52, repeat: Infinity, ease: 'easeInOut' }}
+                  />
                 </motion.div>
+                <motion.div
+                  className="absolute inset-y-0 right-0"
+                  style={{
+                    background: `linear-gradient(90deg, ${RC}EE, ${RC}B8)`,
+                    boxShadow: `inset 0 0 14px ${RC}66`,
+                    filter: `drop-shadow(0 0 ${!leftLeading ? 16 : 10}px ${RC}AA)`,
+                  }}
+                  initial={false}
+                  animate={{ width: `${100 - splitPct}%` }}
+                  transition={{ type: 'spring', stiffness: 180, damping: 16 }}
+                >
+                  <motion.span
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage:
+                        'repeating-linear-gradient(65deg, rgba(255,255,255,0.42) 0 2px, transparent 2px 10px)',
+                    }}
+                    animate={{ backgroundPositionX: ['0px', '-110px'] }}
+                    transition={{ duration: 0.58, repeat: Infinity, ease: 'linear' }}
+                  />
+                  <motion.span
+                    className="absolute top-0 bottom-0 left-[-6%] w-[42%]"
+                    style={{
+                      background: `linear-gradient(90deg, rgba(255,255,255,0.95), ${RC}, transparent)`,
+                      filter: 'blur(1px)',
+                    }}
+                    animate={{ x: [6, -6, 6], opacity: [0.45, 0.95, 0.45] }}
+                    transition={{ duration: 0.52, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                </motion.div>
+                <motion.div
+                  className="absolute top-1/2 z-[8] pointer-events-none"
+                  style={{ left: `${splitPct}%`, x: '-50%', y: '-50%' }}
+                  initial={false}
+                  animate={{ width: `${18 + clashStrength * 24}px`, opacity: [0.4, 0.95, 0.4] }}
+                  transition={{ duration: 0.78, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <div
+                    className="h-6"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.28) 38%, transparent 75%)',
+                      filter: 'blur(2px)',
+                    }}
+                  />
+                </motion.div>
+                <motion.div
+                  className="absolute top-1/2 z-[7] h-[58%] pointer-events-none"
+                  style={{ left: `${splitPct}%`, x: '-112%', y: '-50%' }}
+                  animate={{ width: `${14 + clashStrength * 18}px`, opacity: [0.55, 1, 0.55] }}
+                  transition={{ duration: 0.42, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <div
+                    className="h-full"
+                    style={{
+                      background: `linear-gradient(90deg, transparent, ${LC}, rgba(255,255,255,0.95))`,
+                      clipPath: 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 16% 50%)',
+                      filter: `drop-shadow(0 0 8px ${LC})`,
+                    }}
+                  />
+                </motion.div>
+                <motion.div
+                  className="absolute top-1/2 z-[7] h-[58%] pointer-events-none"
+                  style={{ left: `${splitPct}%`, x: '12%', y: '-50%' }}
+                  animate={{ width: `${14 + clashStrength * 18}px`, opacity: [0.55, 1, 0.55] }}
+                  transition={{ duration: 0.42, repeat: Infinity, ease: 'easeInOut', delay: 0.08 }}
+                >
+                  <div
+                    className="h-full"
+                    style={{
+                      background: `linear-gradient(90deg, rgba(255,255,255,0.95), ${RC}, transparent)`,
+                      clipPath: 'polygon(15% 0, 100% 0, 84% 50%, 100% 100%, 15% 100%, 0 50%)',
+                      filter: `drop-shadow(0 0 8px ${RC})`,
+                    }}
+                  />
+                </motion.div>
+                <motion.div
+                  className="absolute top-1/2 z-[8] h-[90%] pointer-events-none"
+                  style={{ x: '-50%', y: '-50%' }}
+                  initial={false}
+                  animate={{ left: `${splitPct}%`, width: `${10 + clashStrength * 14}px` }}
+                  transition={{ type: 'spring', stiffness: 220, damping: 20 }}
+                >
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.08), rgba(255,255,255,0.95))',
+                      boxShadow: `0 0 ${10 + clashStrength * 18}px rgba(255,255,255,0.9)`,
+                    }}
+                  />
+                </motion.div>
+                <motion.div
+                  className="absolute top-1/2 z-[7] pointer-events-none"
+                  style={{ x: '-50%', y: '-50%' }}
+                  initial={false}
+                  animate={{ left: `${splitPct}%`, width: `${clashPx * 1.4}px`, opacity: 0.35 + clashStrength * 0.45 }}
+                  transition={{ type: 'spring', stiffness: 220, damping: 20 }}
+                >
+                  <div
+                    className="h-5"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.24) 35%, transparent 75%)',
+                      filter: `blur(${2 + clashStrength * 4}px)`,
+                    }}
+                  />
+                </motion.div>
+                {[...Array(14)].map((_, i) => (
+                  <motion.span
+                    key={`bar-clash-${shakeKey}-${i}`}
+                    className="absolute top-1/2 z-[9] h-[2px] w-6 pointer-events-none"
+                    style={{
+                      left: `${splitPct}%`,
+                      background: i % 2 === 0
+                        ? 'linear-gradient(90deg, transparent, rgba(0,210,255,1), transparent)'
+                        : 'linear-gradient(90deg, transparent, rgba(255,0,85,1), transparent)',
+                    }}
+                    initial={{ opacity: 1, x: '-50%', y: '-50%', scaleX: 0.2, scaleY: 0.2 }}
+                    animate={{
+                      opacity: 0,
+                      x: `calc(-50% + ${(i % 2 === 0 ? -1 : 1) * (18 + i * 4)}px)`,
+                      y: `calc(-50% + ${(i - 5.5) * 3}px)`,
+                      scaleX: 1.35,
+                      scaleY: 1.2,
+                      rotate: (i - 5.5) * 10,
+                    }}
+                    transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.015 }}
+                  />
+                ))}
+                <AnimatePresence>
+                  {clashPulses.map((pulse) => {
+                    const c = pulse.side === 'left' ? LC : RC;
+                    const fromLeft = pulse.side === 'left';
+                    const zoneWidth = fromLeft ? splitPct : 100 - splitPct;
+                    return (
+                      <motion.div
+                        key={pulse.id}
+                        className="absolute inset-y-0 z-[9] pointer-events-none overflow-hidden"
+                        style={
+                          fromLeft
+                            ? { left: 0, width: `${zoneWidth}%` }
+                            : { right: 0, width: `${zoneWidth}%` }
+                        }
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 1, 0.2] }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.62, ease: 'easeOut' }}
+                      >
+                        <motion.div
+                          className="absolute inset-y-0 w-[48%]"
+                          style={{
+                            background: fromLeft
+                              ? `linear-gradient(90deg, transparent, ${c}, rgba(255,255,255,0.98), transparent)`
+                              : `linear-gradient(90deg, transparent, rgba(255,255,255,0.98), ${c}, transparent)`,
+                            filter: `drop-shadow(0 0 ${18 + pulse.strength * 20}px ${c})`,
+                          }}
+                          initial={{ x: fromLeft ? '-120%' : '120%' }}
+                          animate={{ x: fromLeft ? '150%' : '-150%' }}
+                          transition={{ duration: 0.52, ease: 'easeOut' }}
+                        />
+                        <motion.div
+                          className="absolute inset-y-0 w-[28%]"
+                          style={{
+                            background: fromLeft
+                              ? `linear-gradient(90deg, transparent, rgba(255,255,255,0.95), ${c}, transparent)`
+                              : `linear-gradient(90deg, transparent, ${c}, rgba(255,255,255,0.95), transparent)`,
+                            filter: 'blur(2px)',
+                            opacity: 0.9,
+                          }}
+                          initial={{ x: fromLeft ? '-150%' : '150%' }}
+                          animate={{ x: fromLeft ? '190%' : '-190%' }}
+                          transition={{ duration: 0.52, ease: 'easeOut', delay: 0.03 }}
+                        />
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+                <motion.div
+                  className="absolute top-1/2 z-10"
+                  style={{ y: '-50%', x: '-50%' }}
+                  initial={false}
+                  animate={{ left: `${splitPct}%` }}
+                  transition={{ type: 'spring', stiffness: 180, damping: 16 }}
+                >
+                  <motion.div
+                    key={shakeKey}
+                    initial={{ scale: 1.8, rotate: -10 }}
+                    animate={{
+                      scale: 1 + clashStrength * 0.14,
+                      rotate: 0,
+                      boxShadow: `0 0 ${10 + clashStrength * 14}px rgba(255,255,255,${0.35 + clashStrength * 0.28})`,
+                    }}
+                    transition={{ type: 'spring', stiffness: 440, damping: 13 }}
+                    className="min-w-[42px] h-7 px-2 rounded-full bg-[linear-gradient(90deg,rgba(0,210,255,0.28),rgba(255,255,255,0.92),rgba(255,0,85,0.28))] border border-white/70 flex items-center justify-center relative overflow-visible"
+                  >
+                    <span className="absolute inset-0 rounded-full opacity-60" style={{ background: 'linear-gradient(90deg, rgba(0,210,255,0.25), transparent 35%, transparent 65%, rgba(255,0,85,0.25))', animation: 'neon-sweep 1.8s linear infinite' }} />
+                    <span className="text-sm font-black text-slate-900 tracking-tight">VS</span>
+                  </motion.div>
+                </motion.div>
+              </div>
+              <motion.div
+                className="flex items-center gap-1.5 shrink-0"
+                animate={!leftLeading ? { x: [0, 3, 0], scale: [1, 1.04, 1] } : { x: 0, scale: 1 }}
+                transition={!leftLeading ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
+              >
+                {mvpB.length > 0
+                  ? mvpB.slice(0, 1).map((c) => <MvpAvatar key={c.id} avatar={c.author.avatar} likes={c.likes} leading={!leftLeading} color={RC} />)
+                  : <div className="w-10 h-10 rounded-full border-2 border-dashed border-white/20" />}
               </motion.div>
             </div>
-            <motion.div
-              className="flex items-center gap-1.5 shrink-0"
-              animate={!leftLeading ? { x: [0, 3, 0], scale: [1, 1.04, 1] } : { x: 0, scale: 1 }}
-              transition={!leftLeading ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
-            >
-              {mvpB.length > 0
-                ? mvpB.slice(0, 1).map((c) => <MvpAvatar key={c.id} avatar={c.author.avatar} likes={c.likes} leading={!leftLeading} color={RC} />)
-                : <div className="w-10 h-10 rounded-full border-2 border-dashed border-white/20" />}
-            </motion.div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 /* ══════════ DynamicDivider ══════════ */
 const DynamicDivider: React.FC<{
@@ -1827,7 +1826,7 @@ const DynamicDivider: React.FC<{
         animate={{ opacity: 1, scale: [0.55, 1.16, 1], y: [26, -8, 0], rotate: [-22, 8, 0], filter: ['blur(3px)', 'blur(0px)', 'blur(0px)'] }}
         transition={{ duration: 0.72, ease: 'easeOut' }}
       >
-        <motion.div
+        {/* <motion.div
           animate={{
             scale: pulse ? [1, 1.1, 1] : [1, 1.05, 1],
             boxShadow: ['0 0 8px rgba(255,255,255,0.35)', '0 0 18px rgba(255,255,255,0.62)', '0 0 8px rgba(255,255,255,0.35)'],
@@ -1852,7 +1851,7 @@ const DynamicDivider: React.FC<{
               transition={{ duration: 0.55, ease: 'easeOut', delay: i * 0.02 }}
             />
           ))}
-        </motion.div>
+        </motion.div> */}
       </motion.div>
     </div>
   );
@@ -2160,11 +2159,10 @@ const ArgumentCard = React.memo(({
             <button
               onClick={() => onStomp(comment.id)}
               disabled={stomped}
-              className={`flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none border-0 bg-transparent cursor-pointer transition-colors ${
-                stomped
-                  ? 'text-amber-600 dark:text-amber-400 cursor-default opacity-70'
-                  : 'text-slate-400 dark:text-rdark-text2 hover:text-amber-500'
-              }`}
+              className={`flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none border-0 bg-transparent cursor-pointer transition-colors ${stomped
+                ? 'text-amber-600 dark:text-amber-400 cursor-default opacity-70'
+                : 'text-slate-400 dark:text-rdark-text2 hover:text-amber-500'
+                }`}
             >
               💩 <AnimatedCount value={comment.dislikes ?? 0} duration={0.45} />
             </button>
@@ -2268,51 +2266,51 @@ const SideColumn = React.memo(({
 }: SideColumnProps) => {
   const poopCommentIds = useMemo(() => new Set(poopAnims.map((a) => a.commentId)), [poopAnims]);
   return (
-  <>
-    <div
-      className="px-3 py-2 border-b border-white/10 flex items-center gap-2 shrink-0 relative overflow-hidden"
-      style={{ background: `linear-gradient(90deg, ${dotColor}18, rgba(255,255,255,0.02))` }}
-    >
-      <span className="absolute inset-y-0 left-0 w-1" style={{ background: dotColor }} />
-      <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dotColor, boxShadow: `0 0 10px ${dotColor}` }} />
-      {!compact ? (
-        <>
-          <span className="text-xs font-bold battle-hot-text">{label}</span>
-          <span className="text-[10px] text-white/70 ml-auto flex items-center gap-1">
-            <Flame size={10} /> <AnimatedCount value={power} duration={0.5} />
-          </span>
-          <ComboBadge side={side} count={comboCount} />
-        </>
-      ) : (
-        <span className="text-[10px] font-bold truncate battle-hot-text">{label}</span>
-      )}
-    </div>
-    <div
-      ref={scrollRef}
-      className="flex-1 overflow-y-auto py-1 space-y-0.5 relative z-10 battle-scroll"
-      style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.004) 42%, rgba(0,0,0,0.03))' }}
-    >
-      {comments.map((c) => (
-        <ArgumentCard
-          key={c.id}
-          comment={c}
-          side={side}
-          compact={compact}
-          onLike={onLike}
-          onStomp={onStomp}
-          stomped={stompedSet.has(c.id)}
-          showPoop={poopCommentIds.has(c.id)}
-          onReply={onReply}
-          onLikeReply={onLikeReply}
-          accent={textColor}
-          pushFx={pushFx}
-        />
-      ))}
-      {comments.length === 0 && (
-        <div className="text-center text-xs text-white/55 py-8">暂无评论</div>
-      )}
-    </div>
-  </>
+    <>
+      <div
+        className="px-3 py-2 border-b border-white/10 flex items-center gap-2 shrink-0 relative overflow-hidden"
+        style={{ background: `linear-gradient(90deg, ${dotColor}18, rgba(255,255,255,0.02))` }}
+      >
+        <span className="absolute inset-y-0 left-0 w-1" style={{ background: dotColor }} />
+        <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dotColor, boxShadow: `0 0 10px ${dotColor}` }} />
+        {!compact ? (
+          <>
+            <span className="text-xs font-bold battle-hot-text">{label}</span>
+            <span className="text-[10px] text-white/70 ml-auto flex items-center gap-1">
+              <Flame size={10} /> <AnimatedCount value={power} duration={0.5} />
+            </span>
+            <ComboBadge side={side} count={comboCount} />
+          </>
+        ) : (
+          <span className="text-[10px] font-bold truncate battle-hot-text">{label}</span>
+        )}
+      </div>
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto py-1 space-y-0.5 relative z-10 battle-scroll"
+        style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.004) 42%, rgba(0,0,0,0.03))' }}
+      >
+        {comments.map((c) => (
+          <ArgumentCard
+            key={c.id}
+            comment={c}
+            side={side}
+            compact={compact}
+            onLike={onLike}
+            onStomp={onStomp}
+            stomped={stompedSet.has(c.id)}
+            showPoop={poopCommentIds.has(c.id)}
+            onReply={onReply}
+            onLikeReply={onLikeReply}
+            accent={textColor}
+            pushFx={pushFx}
+          />
+        ))}
+        {comments.length === 0 && (
+          <div className="text-center text-xs text-white/55 py-8">暂无评论</div>
+        )}
+      </div>
+    </>
   );
 });
 
@@ -2590,418 +2588,423 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
           </button>
           <span className="relative z-10 text-white/75 text-xs font-semibold tracking-[0.2em]">LIVE BATTLE</span>
         </div>
-      <div className="relative z-10 w-full h-full min-h-[calc(100vh-56px)] flex flex-col gap-4 md:gap-5 overflow-hidden px-2 md:px-3 py-3">
-        <KoFlash fx={koFx} />
+        <div className="relative z-10 w-full h-full min-h-[calc(100vh-56px)] flex flex-col gap-4 md:gap-5 overflow-hidden px-2 md:px-3 py-3">
+          <KoFlash fx={koFx} />
 
-        <BattleHeader
-          news={news}
-          leftPower={leftPower}
-          rightPower={rightPower}
-          leftSuccess={leftSuccess}
-          leftFail={leftFail}
-          rightSuccess={rightSuccess}
-          rightFail={rightFail}
-          splitPct={splitPct}
-          commentsA={commentsA}
-          commentsB={commentsB}
-          comboA={comboA}
-          comboB={comboB}
-          shakeKey={shakeKey}
-        />
+          <BattleHeader
+            news={news}
+            leftPower={leftPower}
+            rightPower={rightPower}
+            leftSuccess={leftSuccess}
+            leftFail={leftFail}
+            rightSuccess={rightSuccess}
+            rightFail={rightFail}
+            splitPct={splitPct}
+            commentsA={commentsA}
+            commentsB={commentsB}
+            comboA={comboA}
+            comboB={comboB}
+            shakeKey={shakeKey}
+          />
 
-        {false && <>
-          <BattleTicker
-          optionA={news.optionA}
-          optionB={news.optionB}
-          leftPower={leftPower}
-          rightPower={rightPower}
-        />
+          {false && <>
+            <BattleTicker
+              optionA={news.optionA}
+              optionB={news.optionB}
+              leftPower={leftPower}
+              rightPower={rightPower}
+            />
 
-        <div className="relative -mt-3">
-          <BattleDanmu messages={danmu} />
-        </div>
-        </>}
+            <div className="relative -mt-3">
+              <BattleDanmu messages={danmu} />
+            </div>
+          </>}
 
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] 2xl:grid-cols-[minmax(0,1fr)_420px] gap-5 md:gap-6 items-start flex-1 min-h-0">
+          <div className="grid grid-cols-1  gap-5 md:gap-6 items-start flex-1 min-h-0">
             <div className={`${card} battle-main-panel overflow-hidden relative h-full min-h-0`}>
               <div className="battle-arena-grid absolute inset-0 pointer-events-none opacity-[0.07]" />
-              <span className="battle-vs-cross-y" />
+              {/* <span className="battle-vs-cross-y" /> */}
               <IdleArenaFx active={isIdle} />
               <ActionFxBurst fxList={battleFx} />
-            <div className="flex h-full min-h-[68vh] xl:min-h-0">
-              <div className="flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
-                <span
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      'radial-gradient(900px 520px at 16% 18%, rgba(0,210,255,0.22), transparent 55%), radial-gradient(700px 420px at 60% 80%, rgba(0,210,255,0.12), transparent 58%), linear-gradient(180deg, rgba(0,210,255,0.06), transparent 55%, rgba(0,0,0,0.25))',
-                  }}
-                />
-                <SideColumn
-                  side="A"
-                  label={news.optionA}
-                  power={leftPower}
-                  comments={commentsA}
-                  compact={false}
-                  scrollRef={scrollA}
-                  onLike={handleLike}
-                  onStomp={handleStomp}
-                  stompedSet={stompedSet}
-                  poopAnims={poopAnims}
-                  onReply={handleReply}
-                  onLikeReply={handleLikeReply}
-                  dotColor={LC}
-                  textColor={LC}
-                  pushFx={pushFx}
-                  comboCount={comboA}
-                />
-              </div>
+              <div className="flex h-full min-h-[68vh] xl:min-h-0">
+                <div className="flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
+                  <span
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        'radial-gradient(900px 520px at 16% 18%, rgba(0,210,255,0.22), transparent 55%), radial-gradient(700px 420px at 60% 80%, rgba(0,210,255,0.12), transparent 58%), linear-gradient(180deg, rgba(0,210,255,0.06), transparent 55%, rgba(0,0,0,0.25))',
+                    }}
+                  />
+                  <SideColumn
+                    side="A"
+                    label={news.optionA}
+                    power={leftPower}
+                    comments={commentsA}
+                    compact={false}
+                    scrollRef={scrollA}
+                    onLike={handleLike}
+                    onStomp={handleStomp}
+                    stompedSet={stompedSet}
+                    poopAnims={poopAnims}
+                    onReply={handleReply}
+                    onLikeReply={handleLikeReply}
+                    dotColor={LC}
+                    textColor={LC}
+                    pushFx={pushFx}
+                    comboCount={comboA}
+                  />
+                </div>
 
-              <DynamicDivider
-                splitRatio={splitPct / 100}
-                pulse={pulse}
-                leftPower={leftPower}
-                rightPower={rightPower}
-              />
+                <DynamicDivider
+                  splitRatio={splitPct / 100}
+                  pulse={pulse}
+                  leftPower={leftPower}
+                  rightPower={rightPower}
+                />
+                <aside className="flex flex-col gap-5 xl:sticky xl:top-4 h-full min-h-0 w-full sm:w-[420px] 2xl:w-[500px] shrink-0 ml-3 xl:ml-6">
+                  <div className={`${card} battle-right-panel p-4 space-y-3`}>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-white/75">实时战况</span>
+                      <span className="text-white/50">优势差值 {Math.abs(leftPower - rightPower)}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="rounded-none border border-cyan-300/30 bg-transparent p-2">
+                        <div className="text-[10px] text-cyan-200/80">{news.optionA}</div>
+                        <div className="text-lg font-black text-cyan-100">
+                          <AnimatedCount value={leftPower} duration={0.55} />
+                        </div>
+                        <div className="text-[10px] text-cyan-100/80">
+                          COMBO <AnimatedCount value={comboA} duration={0.45} />
+                        </div>
+                        <div className="mt-2 grid grid-cols-2 gap-1.5">
+                          <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
+                            <div className="text-[10px] text-emerald-200/85">会成功</div>
+                            <motion.div
+                              key={`ls-fx-ring-${leftSuccess}`}
+                              initial={{ scale: 0.25, opacity: 0.9 }}
+                              animate={{ scale: 1.8, opacity: 0 }}
+                              transition={{ duration: 0.58, ease: 'easeOut' }}
+                              className="absolute inset-0 pointer-events-none"
+                              style={{ border: '1px solid rgba(110,231,183,0.9)', boxShadow: '0 0 20px rgba(16,185,129,0.85)' }}
+                            />
+                            {[...Array(6)].map((_, i) => (
+                              <motion.span
+                                key={`ls-fx-ray-${leftSuccess}-${i}`}
+                                initial={{ opacity: 0.95, scaleX: 0.35, scaleY: 0.35 }}
+                                animate={{ opacity: 0, scaleX: 1.2, scaleY: 1.2 }}
+                                transition={{ duration: 0.52, ease: 'easeOut', delay: i * 0.03 }}
+                                className="absolute left-1/2 top-1/2 h-[2px] w-6 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                                style={{
+                                  background: 'linear-gradient(90deg, transparent, rgba(110,231,183,0.95), transparent)',
+                                  transform: `translate(-50%, -50%) rotate(${i * 30}deg)`,
+                                }}
+                              />
+                            ))}
+                            <motion.div
+                              key={`ls-${leftSuccess}`}
+                              initial={{ scale: 0.4, y: 18, opacity: 0, rotate: -8, filter: 'blur(2px)' }}
+                              animate={{
+                                scale: [0.4, 1.55, 1.08, 1],
+                                y: [18, -8, 1, 0],
+                                rotate: [-8, 6, -2, 0],
+                                opacity: [0, 1, 1, 1],
+                                filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
+                              }}
+                              transition={{ duration: 0.72, ease: 'easeOut' }}
+                              className="battle-stat-num text-[26px] text-emerald-100 tabular-nums"
+                              style={{ textShadow: '0 0 18px rgba(110,231,183,0.95), 0 0 34px rgba(52,211,153,0.75)' }}
+                            >
+                              <FlipNumber value={leftSuccess} className="tabular-nums" />
+                            </motion.div>
+                          </div>
+                          <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
+                            <div className="text-[10px] text-amber-100/90">会失败</div>
+                            <motion.div
+                              key={`lf-fx-ring-${leftFail}`}
+                              initial={{ scale: 0.25, opacity: 0.9 }}
+                              animate={{ scale: 1.8, opacity: 0 }}
+                              transition={{ duration: 0.58, ease: 'easeOut' }}
+                              className="absolute inset-0 pointer-events-none"
+                              style={{ border: '1px solid rgba(252,211,77,0.9)', boxShadow: '0 0 20px rgba(245,158,11,0.85)' }}
+                            />
+                            {[...Array(6)].map((_, i) => (
+                              <motion.span
+                                key={`lf-fx-ray-${leftFail}-${i}`}
+                                initial={{ opacity: 0.95, scaleX: 0.35, scaleY: 0.35 }}
+                                animate={{ opacity: 0, scaleX: 1.2, scaleY: 1.2 }}
+                                transition={{ duration: 0.52, ease: 'easeOut', delay: i * 0.03 }}
+                                className="absolute left-1/2 top-1/2 h-[2px] w-6 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                                style={{
+                                  background: 'linear-gradient(90deg, transparent, rgba(252,211,77,0.95), transparent)',
+                                  transform: `translate(-50%, -50%) rotate(${i * 30}deg)`,
+                                }}
+                              />
+                            ))}
+                            <motion.div
+                              key={`lf-${leftFail}`}
+                              initial={{ scale: 0.4, y: 18, opacity: 0, rotate: -8, filter: 'blur(2px)' }}
+                              animate={{
+                                scale: [0.4, 1.55, 1.08, 1],
+                                y: [18, -8, 1, 0],
+                                rotate: [-8, 6, -2, 0],
+                                opacity: [0, 1, 1, 1],
+                                filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
+                              }}
+                              transition={{ duration: 0.72, ease: 'easeOut' }}
+                              className="battle-stat-num text-[26px] text-amber-100 tabular-nums"
+                              style={{ textShadow: '0 0 18px rgba(252,211,77,0.95), 0 0 34px rgba(245,158,11,0.75)' }}
+                            >
+                              <FlipNumber value={leftFail} className="tabular-nums" />
+                            </motion.div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="rounded-none border border-rose-300/30 bg-transparent p-2">
+                        <div className="text-[10px] text-rose-200/80">{news.optionB}</div>
+                        <div className="text-lg font-black text-rose-100">
+                          <AnimatedCount value={rightPower} duration={0.55} />
+                        </div>
+                        <div className="text-[10px] text-rose-100/80">
+                          COMBO <AnimatedCount value={comboB} duration={0.45} />
+                        </div>
+                        <div className="mt-2 grid grid-cols-2 gap-1.5">
+                          <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
+                            <div className="text-[10px] text-emerald-200/85">会成功</div>
+                            <motion.div
+                              key={`rs-fx-ring-${rightSuccess}`}
+                              initial={{ scale: 0.25, opacity: 0.9 }}
+                              animate={{ scale: 1.8, opacity: 0 }}
+                              transition={{ duration: 0.58, ease: 'easeOut' }}
+                              className="absolute inset-0 pointer-events-none"
+                              style={{ border: '1px solid rgba(110,231,183,0.9)', boxShadow: '0 0 20px rgba(16,185,129,0.85)' }}
+                            />
+                            {[...Array(6)].map((_, i) => (
+                              <motion.span
+                                key={`rs-fx-ray-${rightSuccess}-${i}`}
+                                initial={{ opacity: 0.95, scaleX: 0.35, scaleY: 0.35 }}
+                                animate={{ opacity: 0, scaleX: 1.2, scaleY: 1.2 }}
+                                transition={{ duration: 0.52, ease: 'easeOut', delay: i * 0.03 }}
+                                className="absolute left-1/2 top-1/2 h-[2px] w-6 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                                style={{
+                                  background: 'linear-gradient(90deg, transparent, rgba(110,231,183,0.95), transparent)',
+                                  transform: `translate(-50%, -50%) rotate(${i * 30}deg)`,
+                                }}
+                              />
+                            ))}
+                            <motion.div
+                              key={`rs-${rightSuccess}`}
+                              initial={{ scale: 0.4, y: 18, opacity: 0, rotate: -8, filter: 'blur(2px)' }}
+                              animate={{
+                                scale: [0.4, 1.55, 1.08, 1],
+                                y: [18, -8, 1, 0],
+                                rotate: [-8, 6, -2, 0],
+                                opacity: [0, 1, 1, 1],
+                                filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
+                              }}
+                              transition={{ duration: 0.72, ease: 'easeOut' }}
+                              className="battle-stat-num text-[26px] text-emerald-100 tabular-nums"
+                              style={{ textShadow: '0 0 18px rgba(110,231,183,0.95), 0 0 34px rgba(52,211,153,0.75)' }}
+                            >
+                              <FlipNumber value={rightSuccess} className="tabular-nums" />
+                            </motion.div>
+                          </div>
+                          <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
+                            <div className="text-[10px] text-amber-100/90">会失败</div>
+                            <motion.div
+                              key={`rf-fx-ring-${rightFail}`}
+                              initial={{ scale: 0.25, opacity: 0.9 }}
+                              animate={{ scale: 1.8, opacity: 0 }}
+                              transition={{ duration: 0.58, ease: 'easeOut' }}
+                              className="absolute inset-0 pointer-events-none"
+                              style={{ border: '1px solid rgba(252,211,77,0.9)', boxShadow: '0 0 20px rgba(245,158,11,0.85)' }}
+                            />
+                            {[...Array(6)].map((_, i) => (
+                              <motion.span
+                                key={`rf-fx-ray-${rightFail}-${i}`}
+                                initial={{ opacity: 0.95, scaleX: 0.35, scaleY: 0.35 }}
+                                animate={{ opacity: 0, scaleX: 1.2, scaleY: 1.2 }}
+                                transition={{ duration: 0.52, ease: 'easeOut', delay: i * 0.03 }}
+                                className="absolute left-1/2 top-1/2 h-[2px] w-6 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                                style={{
+                                  background: 'linear-gradient(90deg, transparent, rgba(252,211,77,0.95), transparent)',
+                                  transform: `translate(-50%, -50%) rotate(${i * 30}deg)`,
+                                }}
+                              />
+                            ))}
+                            <motion.div
+                              key={`rf-${rightFail}`}
+                              initial={{ scale: 0.4, y: 18, opacity: 0, rotate: -8, filter: 'blur(2px)' }}
+                              animate={{
+                                scale: [0.4, 1.55, 1.08, 1],
+                                y: [18, -8, 1, 0],
+                                rotate: [-8, 6, -2, 0],
+                                opacity: [0, 1, 1, 1],
+                                filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
+                              }}
+                              transition={{ duration: 0.72, ease: 'easeOut' }}
+                              className="battle-stat-num text-[26px] text-amber-100 tabular-nums"
+                              style={{ textShadow: '0 0 18px rgba(252,211,77,0.95), 0 0 34px rgba(245,158,11,0.75)' }}
+                            >
+                              <FlipNumber value={rightFail} className="tabular-nums" />
+                            </motion.div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
-                <span
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      'radial-gradient(900px 520px at 84% 18%, rgba(255,0,85,0.22), transparent 55%), radial-gradient(700px 420px at 40% 80%, rgba(255,0,85,0.12), transparent 58%), linear-gradient(180deg, rgba(255,0,85,0.06), transparent 55%, rgba(0,0,0,0.25))',
-                  }}
+                  <div className={`${card} battle-right-panel px-4 py-3 relative overflow-hidden`}>
+                    <span
+                      className="absolute inset-y-0 w-24 pointer-events-none"
+                      style={{ background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.2), transparent)', animation: 'neon-sweep 2.9s linear infinite' }}
+                    />
+                    <AnimatePresence>
+                      {replyingTo && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="flex items-center gap-2 mb-2 pb-2 border-b border-white/15"
+                        >
+                          <span className="text-[10px] text-white/70">
+                            回复 <span className="font-semibold text-white">@{replyingTo.authorName}</span>
+                          </span>
+                          <button
+                            onClick={() => setReplyingTo(null)}
+                            className="ml-auto p-0.5 rounded-none border-0 bg-transparent cursor-pointer text-white/60 hover:text-white transition-colors"
+                          >
+                            <X size={12} />
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <div className="flex items-center gap-2.5">
+                      {userSide ? (
+                        <span
+                          className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold text-white inline-flex items-center gap-1"
+                          style={{ backgroundColor: userSide === 'A' ? LC : RC, boxShadow: `0 0 16px ${userSide === 'A' ? LC : RC}88` }}
+                        >
+                          <Zap size={11} /> {userSide === 'A' ? news.optionA : news.optionB}
+                        </span>
+                      ) : (
+                        <span className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold bg-transparent border border-white/20 text-white/55">
+                          未投票
+                        </span>
+                      )}
+                      <div className="flex-1 flex items-center gap-2 rounded-none px-3 py-2 border border-white/20 bg-transparent focus-within:border-emerald-300/70 transition-colors relative overflow-hidden">
+                        <span
+                          className="absolute inset-y-0 w-14 pointer-events-none"
+                          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', animation: 'neon-sweep 2.4s linear infinite' }}
+                        />
+                        <input
+                          ref={inputRef}
+                          type="text"
+                          value={inputText}
+                          onChange={(e) => setInputText(e.target.value)}
+                          onKeyDown={onKey}
+                          placeholder={
+                            replyingTo
+                              ? `回复 @${replyingTo.authorName}...`
+                              : userSide
+                                ? '发表火力评论...'
+                                : '请先投票后发言'
+                          }
+                          className="flex-1 bg-transparent border-0 outline-none text-xs text-white placeholder:text-white/45"
+                        />
+                        <motion.button
+                          onClick={handleSend}
+                          disabled={!inputText.trim() || !userSide}
+                          whileTap={inputText.trim() && userSide ? { scale: 0.92 } : {}}
+                          whileHover={inputText.trim() && userSide ? { scale: 1.06 } : {}}
+                          className={`p-1.5 rounded-none border-0 cursor-pointer transition-colors ${inputText.trim() && userSide
+                            ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                            : 'bg-transparent border border-white/20 text-white/45 cursor-not-allowed'
+                            }`}
+                        >
+                          <span className="inline-flex items-center gap-1">
+                            <Send size={12} style={{ animation: inputText.trim() && userSide ? 'hot-icon-spin 0.9s ease-in-out infinite' : undefined }} />
+                            {inputText.trim() && userSide && <Sparkles size={10} />}
+                          </span>
+                        </motion.button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {onBet && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-3">
+                      <motion.button
+                        whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${LC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => onBet(news.id, 'A', news.oddsA)}
+                        className={`${card} battle-right-panel battle-odds-btn relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
+                        style={{ borderColor: LC, boxShadow: `0 0 20px ${LC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
+                      >
+                        <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, ${LC}, transparent 60%)` }} />
+                        <div className="relative text-center">
+                          <div className="text-[10px] font-semibold mb-0.5" style={{ color: LC }}>{news.optionA}</div>
+                          <div className="text-lg font-black text-white">{news.oddsA.toFixed(1)}x</div>
+                          <div className="text-[9px] text-white/55">点击下注</div>
+                        </div>
+                      </motion.button>
+
+                      <motion.button
+                        whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${RC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => onBet(news.id, 'B', news.oddsB)}
+                        className={`${card} battle-right-panel battle-odds-btn relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
+                        style={{ borderColor: RC, boxShadow: `0 0 20px ${RC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
+                      >
+                        <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, transparent 40%, ${RC})` }} />
+                        <div className="relative text-center">
+                          <div className="text-[10px] font-semibold mb-0.5" style={{ color: RC }}>{news.optionB}</div>
+                          <div className="text-lg font-black text-white">{news.oddsB.toFixed(1)}x</div>
+                          <div className="text-[9px] text-white/55">点击下注</div>
+                        </div>
+                      </motion.button>
+                    </div>
+                  )}
+                </aside>
+                  <DynamicDivider
+                  splitRatio={splitPct / 100}
+                  pulse={pulse}
+                  leftPower={leftPower}
+                  rightPower={rightPower}
                 />
-                <SideColumn
-                  side="B"
-                  label={news.optionB}
-                  power={rightPower}
-                  comments={commentsB}
-                  compact={false}
-                  scrollRef={scrollB}
-                  onLike={handleLike}
-                  onStomp={handleStomp}
-                  stompedSet={stompedSet}
-                  poopAnims={poopAnims}
-                  onReply={handleReply}
-                  onLikeReply={handleLikeReply}
-                  dotColor={RC}
-                  textColor={RC}
-                  pushFx={pushFx}
-                  comboCount={comboB}
-                />
+
+
+                <div className="flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
+                  <span
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        'radial-gradient(900px 520px at 84% 18%, rgba(255,0,85,0.22), transparent 55%), radial-gradient(700px 420px at 40% 80%, rgba(255,0,85,0.12), transparent 58%), linear-gradient(180deg, rgba(255,0,85,0.06), transparent 55%, rgba(0,0,0,0.25))',
+                    }}
+                  />
+                  <SideColumn
+                    side="B"
+                    label={news.optionB}
+                    power={rightPower}
+                    comments={commentsB}
+                    compact={false}
+                    scrollRef={scrollB}
+                    onLike={handleLike}
+                    onStomp={handleStomp}
+                    stompedSet={stompedSet}
+                    poopAnims={poopAnims}
+                    onReply={handleReply}
+                    onLikeReply={handleLikeReply}
+                    dotColor={RC}
+                    textColor={RC}
+                    pushFx={pushFx}
+                    comboCount={comboB}
+                  />
+                </div>
               </div>
             </div>
           </div>
-
-          <aside className="flex flex-col gap-4 xl:sticky xl:top-4 h-full min-h-0">
-            <div className={`${card} battle-right-panel p-4 space-y-3`}>
-              <div className="flex items-center justify-between text-[11px]">
-                <span className="text-white/75">实时战况</span>
-                <span className="text-white/50">优势差值 {Math.abs(leftPower - rightPower)}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-none border border-cyan-300/30 bg-transparent p-2">
-                  <div className="text-[10px] text-cyan-200/80">{news.optionA}</div>
-                  <div className="text-lg font-black text-cyan-100">
-                    <AnimatedCount value={leftPower} duration={0.55} />
-                  </div>
-                  <div className="text-[10px] text-cyan-100/80">
-                    COMBO <AnimatedCount value={comboA} duration={0.45} />
-                  </div>
-                  <div className="mt-2 grid grid-cols-2 gap-1.5">
-                    <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
-                      <div className="text-[10px] text-emerald-200/85">会成功</div>
-                      <motion.div
-                        key={`ls-fx-ring-${leftSuccess}`}
-                        initial={{ scale: 0.25, opacity: 0.9 }}
-                        animate={{ scale: 1.8, opacity: 0 }}
-                        transition={{ duration: 0.58, ease: 'easeOut' }}
-                        className="absolute inset-0 pointer-events-none"
-                        style={{ border: '1px solid rgba(110,231,183,0.9)', boxShadow: '0 0 20px rgba(16,185,129,0.85)' }}
-                      />
-                      {[...Array(6)].map((_, i) => (
-                        <motion.span
-                          key={`ls-fx-ray-${leftSuccess}-${i}`}
-                          initial={{ opacity: 0.95, scaleX: 0.35, scaleY: 0.35 }}
-                          animate={{ opacity: 0, scaleX: 1.2, scaleY: 1.2 }}
-                          transition={{ duration: 0.52, ease: 'easeOut', delay: i * 0.03 }}
-                          className="absolute left-1/2 top-1/2 h-[2px] w-6 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                          style={{
-                            background: 'linear-gradient(90deg, transparent, rgba(110,231,183,0.95), transparent)',
-                            transform: `translate(-50%, -50%) rotate(${i * 30}deg)`,
-                          }}
-                        />
-                      ))}
-                      <motion.div
-                        key={`ls-${leftSuccess}`}
-                        initial={{ scale: 0.4, y: 18, opacity: 0, rotate: -8, filter: 'blur(2px)' }}
-                        animate={{
-                          scale: [0.4, 1.55, 1.08, 1],
-                          y: [18, -8, 1, 0],
-                          rotate: [-8, 6, -2, 0],
-                          opacity: [0, 1, 1, 1],
-                          filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
-                        }}
-                        transition={{ duration: 0.72, ease: 'easeOut' }}
-                        className="battle-stat-num text-[26px] text-emerald-100 tabular-nums"
-                        style={{ textShadow: '0 0 18px rgba(110,231,183,0.95), 0 0 34px rgba(52,211,153,0.75)' }}
-                      >
-                        <FlipNumber value={leftSuccess} className="tabular-nums" />
-                      </motion.div>
-                    </div>
-                    <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
-                      <div className="text-[10px] text-amber-100/90">会失败</div>
-                      <motion.div
-                        key={`lf-fx-ring-${leftFail}`}
-                        initial={{ scale: 0.25, opacity: 0.9 }}
-                        animate={{ scale: 1.8, opacity: 0 }}
-                        transition={{ duration: 0.58, ease: 'easeOut' }}
-                        className="absolute inset-0 pointer-events-none"
-                        style={{ border: '1px solid rgba(252,211,77,0.9)', boxShadow: '0 0 20px rgba(245,158,11,0.85)' }}
-                      />
-                      {[...Array(6)].map((_, i) => (
-                        <motion.span
-                          key={`lf-fx-ray-${leftFail}-${i}`}
-                          initial={{ opacity: 0.95, scaleX: 0.35, scaleY: 0.35 }}
-                          animate={{ opacity: 0, scaleX: 1.2, scaleY: 1.2 }}
-                          transition={{ duration: 0.52, ease: 'easeOut', delay: i * 0.03 }}
-                          className="absolute left-1/2 top-1/2 h-[2px] w-6 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                          style={{
-                            background: 'linear-gradient(90deg, transparent, rgba(252,211,77,0.95), transparent)',
-                            transform: `translate(-50%, -50%) rotate(${i * 30}deg)`,
-                          }}
-                        />
-                      ))}
-                      <motion.div
-                        key={`lf-${leftFail}`}
-                        initial={{ scale: 0.4, y: 18, opacity: 0, rotate: -8, filter: 'blur(2px)' }}
-                        animate={{
-                          scale: [0.4, 1.55, 1.08, 1],
-                          y: [18, -8, 1, 0],
-                          rotate: [-8, 6, -2, 0],
-                          opacity: [0, 1, 1, 1],
-                          filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
-                        }}
-                        transition={{ duration: 0.72, ease: 'easeOut' }}
-                        className="battle-stat-num text-[26px] text-amber-100 tabular-nums"
-                        style={{ textShadow: '0 0 18px rgba(252,211,77,0.95), 0 0 34px rgba(245,158,11,0.75)' }}
-                      >
-                        <FlipNumber value={leftFail} className="tabular-nums" />
-                      </motion.div>
-                    </div>
-                  </div>
-                </div>
-                <div className="rounded-none border border-rose-300/30 bg-transparent p-2">
-                  <div className="text-[10px] text-rose-200/80">{news.optionB}</div>
-                  <div className="text-lg font-black text-rose-100">
-                    <AnimatedCount value={rightPower} duration={0.55} />
-                  </div>
-                  <div className="text-[10px] text-rose-100/80">
-                    COMBO <AnimatedCount value={comboB} duration={0.45} />
-                  </div>
-                  <div className="mt-2 grid grid-cols-2 gap-1.5">
-                    <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
-                      <div className="text-[10px] text-emerald-200/85">会成功</div>
-                      <motion.div
-                        key={`rs-fx-ring-${rightSuccess}`}
-                        initial={{ scale: 0.25, opacity: 0.9 }}
-                        animate={{ scale: 1.8, opacity: 0 }}
-                        transition={{ duration: 0.58, ease: 'easeOut' }}
-                        className="absolute inset-0 pointer-events-none"
-                        style={{ border: '1px solid rgba(110,231,183,0.9)', boxShadow: '0 0 20px rgba(16,185,129,0.85)' }}
-                      />
-                      {[...Array(6)].map((_, i) => (
-                        <motion.span
-                          key={`rs-fx-ray-${rightSuccess}-${i}`}
-                          initial={{ opacity: 0.95, scaleX: 0.35, scaleY: 0.35 }}
-                          animate={{ opacity: 0, scaleX: 1.2, scaleY: 1.2 }}
-                          transition={{ duration: 0.52, ease: 'easeOut', delay: i * 0.03 }}
-                          className="absolute left-1/2 top-1/2 h-[2px] w-6 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                          style={{
-                            background: 'linear-gradient(90deg, transparent, rgba(110,231,183,0.95), transparent)',
-                            transform: `translate(-50%, -50%) rotate(${i * 30}deg)`,
-                          }}
-                        />
-                      ))}
-                      <motion.div
-                        key={`rs-${rightSuccess}`}
-                        initial={{ scale: 0.4, y: 18, opacity: 0, rotate: -8, filter: 'blur(2px)' }}
-                        animate={{
-                          scale: [0.4, 1.55, 1.08, 1],
-                          y: [18, -8, 1, 0],
-                          rotate: [-8, 6, -2, 0],
-                          opacity: [0, 1, 1, 1],
-                          filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
-                        }}
-                        transition={{ duration: 0.72, ease: 'easeOut' }}
-                        className="battle-stat-num text-[26px] text-emerald-100 tabular-nums"
-                        style={{ textShadow: '0 0 18px rgba(110,231,183,0.95), 0 0 34px rgba(52,211,153,0.75)' }}
-                      >
-                        <FlipNumber value={rightSuccess} className="tabular-nums" />
-                      </motion.div>
-                    </div>
-                    <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
-                      <div className="text-[10px] text-amber-100/90">会失败</div>
-                      <motion.div
-                        key={`rf-fx-ring-${rightFail}`}
-                        initial={{ scale: 0.25, opacity: 0.9 }}
-                        animate={{ scale: 1.8, opacity: 0 }}
-                        transition={{ duration: 0.58, ease: 'easeOut' }}
-                        className="absolute inset-0 pointer-events-none"
-                        style={{ border: '1px solid rgba(252,211,77,0.9)', boxShadow: '0 0 20px rgba(245,158,11,0.85)' }}
-                      />
-                      {[...Array(6)].map((_, i) => (
-                        <motion.span
-                          key={`rf-fx-ray-${rightFail}-${i}`}
-                          initial={{ opacity: 0.95, scaleX: 0.35, scaleY: 0.35 }}
-                          animate={{ opacity: 0, scaleX: 1.2, scaleY: 1.2 }}
-                          transition={{ duration: 0.52, ease: 'easeOut', delay: i * 0.03 }}
-                          className="absolute left-1/2 top-1/2 h-[2px] w-6 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                          style={{
-                            background: 'linear-gradient(90deg, transparent, rgba(252,211,77,0.95), transparent)',
-                            transform: `translate(-50%, -50%) rotate(${i * 30}deg)`,
-                          }}
-                        />
-                      ))}
-                      <motion.div
-                        key={`rf-${rightFail}`}
-                        initial={{ scale: 0.4, y: 18, opacity: 0, rotate: -8, filter: 'blur(2px)' }}
-                        animate={{
-                          scale: [0.4, 1.55, 1.08, 1],
-                          y: [18, -8, 1, 0],
-                          rotate: [-8, 6, -2, 0],
-                          opacity: [0, 1, 1, 1],
-                          filter: ['blur(2px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'],
-                        }}
-                        transition={{ duration: 0.72, ease: 'easeOut' }}
-                        className="battle-stat-num text-[26px] text-amber-100 tabular-nums"
-                        style={{ textShadow: '0 0 18px rgba(252,211,77,0.95), 0 0 34px rgba(245,158,11,0.75)' }}
-                      >
-                        <FlipNumber value={rightFail} className="tabular-nums" />
-                      </motion.div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className={`${card} battle-right-panel px-4 py-3 relative overflow-hidden`}>
-              <span
-                className="absolute inset-y-0 w-24 pointer-events-none"
-                style={{ background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.2), transparent)', animation: 'neon-sweep 2.9s linear infinite' }}
-              />
-              <AnimatePresence>
-                {replyingTo && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="flex items-center gap-2 mb-2 pb-2 border-b border-white/15"
-                  >
-                    <span className="text-[10px] text-white/70">
-                      回复 <span className="font-semibold text-white">@{replyingTo.authorName}</span>
-                    </span>
-                    <button
-                      onClick={() => setReplyingTo(null)}
-                      className="ml-auto p-0.5 rounded-none border-0 bg-transparent cursor-pointer text-white/60 hover:text-white transition-colors"
-                    >
-                      <X size={12} />
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div className="flex items-center gap-2.5">
-                {userSide ? (
-                  <span
-                    className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold text-white inline-flex items-center gap-1"
-                    style={{ backgroundColor: userSide === 'A' ? LC : RC, boxShadow: `0 0 16px ${userSide === 'A' ? LC : RC}88` }}
-                  >
-                    <Zap size={11} /> {userSide === 'A' ? news.optionA : news.optionB}
-                  </span>
-                ) : (
-                  <span className="shrink-0 px-2.5 py-1.5 rounded-none text-[11px] font-bold bg-transparent border border-white/20 text-white/55">
-                    未投票
-                  </span>
-                )}
-                <div className="flex-1 flex items-center gap-2 rounded-none px-3 py-2 border border-white/20 bg-transparent focus-within:border-emerald-300/70 transition-colors relative overflow-hidden">
-                  <span
-                    className="absolute inset-y-0 w-14 pointer-events-none"
-                    style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', animation: 'neon-sweep 2.4s linear infinite' }}
-                  />
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    onKeyDown={onKey}
-                    placeholder={
-                      replyingTo
-                        ? `回复 @${replyingTo.authorName}...`
-                        : userSide
-                          ? '发表火力评论...'
-                          : '请先投票后发言'
-                    }
-                    className="flex-1 bg-transparent border-0 outline-none text-xs text-white placeholder:text-white/45"
-                  />
-                  <motion.button
-                    onClick={handleSend}
-                    disabled={!inputText.trim() || !userSide}
-                    whileTap={inputText.trim() && userSide ? { scale: 0.92 } : {}}
-                    whileHover={inputText.trim() && userSide ? { scale: 1.06 } : {}}
-                    className={`p-1.5 rounded-none border-0 cursor-pointer transition-colors ${
-                      inputText.trim() && userSide
-                        ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-                        : 'bg-transparent border border-white/20 text-white/45 cursor-not-allowed'
-                    }`}
-                  >
-                    <span className="inline-flex items-center gap-1">
-                      <Send size={12} style={{ animation: inputText.trim() && userSide ? 'hot-icon-spin 0.9s ease-in-out infinite' : undefined }} />
-                      {inputText.trim() && userSide && <Sparkles size={10} />}
-                    </span>
-                  </motion.button>
-                </div>
-              </div>
-            </div>
-
-            {onBet && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-3">
-                <motion.button
-                  whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${LC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => onBet(news.id, 'A', news.oddsA)}
-                  className={`${card} battle-right-panel battle-odds-btn relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
-                  style={{ borderColor: LC, boxShadow: `0 0 20px ${LC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
-                >
-                  <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, ${LC}, transparent 60%)` }} />
-                  <div className="relative text-center">
-                    <div className="text-[10px] font-semibold mb-0.5" style={{ color: LC }}>{news.optionA}</div>
-                    <div className="text-lg font-black text-white">{news.oddsA.toFixed(1)}x</div>
-                    <div className="text-[9px] text-white/55">点击下注</div>
-                  </div>
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${RC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => onBet(news.id, 'B', news.oddsB)}
-                  className={`${card} battle-right-panel battle-odds-btn relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
-                  style={{ borderColor: RC, boxShadow: `0 0 20px ${RC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
-                >
-                  <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, transparent 40%, ${RC})` }} />
-                  <div className="relative text-center">
-                    <div className="text-[10px] font-semibold mb-0.5" style={{ color: RC }}>{news.optionB}</div>
-                    <div className="text-lg font-black text-white">{news.oddsB.toFixed(1)}x</div>
-                    <div className="text-[9px] text-white/55">点击下注</div>
-                  </div>
-                </motion.button>
-              </div>
-            )}
-          </aside>
         </div>
       </div>
-    </div>
     </div>
   );
 };
