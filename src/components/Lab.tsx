@@ -15,7 +15,7 @@ const COMBO_DURATION = 120; // 2s at 60fps
 const COMBO_MAGNET = 50; // px attract radius
 const DAILY_COIN_CAP = 200;
 
-const card = 'rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
+const card = 'rounded-xl border border-white/10 bg-[#0c1a28]';
 
 /* ═══════════════════════════════════════
    Types
@@ -530,30 +530,19 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const sign = state.phase === 'GAMEOVER' ? mockSign(state.score, state.sessionId, duration) : '';
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Header */}
-      <div className={`${card} px-4 py-3 flex items-center gap-3`}>
+    <div className="flex flex-col gap-3">
+      <div className={`${card} px-4 py-2.5 flex items-center gap-3`}>
         <button
           onClick={onBack}
-          className="p-1.5 rounded-lg hover:bg-slate-100/80 dark:hover:bg-rdark-hover transition-colors border-0 bg-transparent cursor-pointer text-slate-500 dark:text-rdark-text2"
+          className="text-[#5b7a8a] hover:text-[#e8e6f0] transition-colors border-0 bg-transparent cursor-pointer inline-flex items-center gap-1 text-sm"
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={16} />
+          返回龟投
         </button>
-        <div>
-          <h2 className="text-sm font-bold text-slate-800 dark:text-rdark-text">🐢 Turtle Dash</h2>
-          <p className="text-[10px] text-slate-400 dark:text-rdark-text2">点击切换方向，躲避障碍收集龟币！</p>
-        </div>
-        <div className="ml-auto flex items-center gap-3 text-xs">
-          <span className="text-slate-500 dark:text-rdark-text2">
-            深度 <b className="text-blue-600 dark:text-blue-400">{depthM}m</b>
-          </span>
-          <span className="text-slate-500 dark:text-rdark-text2">
-            龟币 <b className="text-amber-600 dark:text-amber-400">{state.coins}</b>
-          </span>
-        </div>
+        <div className="text-[#4cc9f0] font-bold text-[18px]">🐢 龟龟跳海</div>
+        <div className="ml-auto text-[#ffd93d] text-sm font-bold">🪙 {state.coins.toLocaleString()}</div>
       </div>
 
-      {/* Canvas */}
       <div ref={containerRef} className={`${card} overflow-hidden relative flex justify-center`}>
         <canvas
           ref={canvasRef}
@@ -564,24 +553,47 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           style={{ maxWidth: '100%' }}
         />
 
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[6] px-4 py-2 rounded-xl border border-white/10 bg-[#0c1a28cc] backdrop-blur-sm flex items-center gap-5 text-xs">
+          <div className="text-center">
+            <div className="text-[#5b7a8a] text-[9px] uppercase tracking-wider">得分</div>
+            <div className="text-[#06d6a0] text-lg font-bold leading-none">{state.score}</div>
+          </div>
+          <div className="text-center">
+            <div className="text-[#5b7a8a] text-[9px] uppercase tracking-wider">深度</div>
+            <div className="text-[#4cc9f0] text-lg font-bold leading-none">{depthM}m</div>
+          </div>
+          <div className="text-center">
+            <div className="text-[#5b7a8a] text-[9px] uppercase tracking-wider">速度</div>
+            <div className="text-[#ffd93d] text-lg font-bold leading-none">{(1 + state.frameCount * 0.00015).toFixed(1)}x</div>
+          </div>
+        </div>
+
+        <div className="absolute top-3 right-3 z-[6] w-[170px] rounded-xl border border-white/10 bg-[#0c1a28d9] px-3 py-2 text-[11px]">
+          <div className="text-[#ffd93d] font-bold text-center mb-1">🏆 排行榜</div>
+          <div className="space-y-1 text-[#e8e6f0]">
+            <div className="flex items-center gap-2"><span className="w-4 text-center text-[#ffd93d]">1</span><span className="flex-1">LionMaster</span><span className="text-[#4cc9f0] font-bold">3280</span></div>
+            <div className="flex items-center gap-2"><span className="w-4 text-center text-slate-300">2</span><span className="flex-1">DragonSeer</span><span className="text-[#4cc9f0] font-bold">2750</span></div>
+            <div className="flex items-center gap-2"><span className="w-4 text-center text-amber-700">3</span><span className="flex-1">EagleEye</span><span className="text-[#4cc9f0] font-bold">2140</span></div>
+          </div>
+        </div>
+
         {/* Start overlay */}
         {state.phase === 'START' && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-sky-500/85 to-indigo-900/85 backdrop-blur-sm z-10">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#06111ae0] backdrop-blur-sm z-10">
             <div className="text-6xl mb-3" style={{ animation: 'bounce 1s infinite' }}>🐢</div>
-            <h2 className="text-2xl font-black text-white drop-shadow-lg mb-2">Turtle Dash</h2>
-            <div className="text-sm text-white/70 space-y-1 text-center mb-5 px-6">
-              <p>小龟自动下落 + 横向移动</p>
-              <p>点击屏幕 / 空格键 <b className="text-white">切换方向</b></p>
-              <p>躲避 🪼 水母 和 ▲ 崖壁刺</p>
-              <p>收集 🪙 龟币，连续 {COMBO_TARGET} 次触发冲刺！</p>
+            <h2 className="text-3xl font-black text-[#4cc9f0] mb-2">龟龟跳海</h2>
+            <div className="text-sm text-[#5b7a8a] space-y-1 text-center mb-5 px-6">
+              <p>小龟龟正在跳入深海！</p>
+              <p>左右躲避障碍物，越深分越高</p>
+              <p>速度会越来越快，你能坚持多久？</p>
             </div>
             <button
               onClick={() => dispatch({ type: 'START' })}
-              className="px-8 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg border-0 cursor-pointer transition-colors shadow-lg shadow-emerald-500/30"
+              className="px-10 py-3 rounded-xl border-0 bg-gradient-to-r from-[#06d6a0] to-[#4cc9f0] text-[#06111a] font-black text-lg cursor-pointer"
             >
-              开始深潜
+              开始跳海!
             </button>
-            <p className="text-[10px] text-white/35 mt-3">按空格键 或 点击开始</p>
+            <p className="text-[11px] text-[#5b7a8a] mt-3">← → 或 A/D 移动 · 空格键切换方向</p>
           </div>
         )}
 
@@ -640,7 +652,7 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   onClick={onBack}
                   className="w-full py-2.5 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/50 dark:hover:bg-amber-900/80 text-amber-800 dark:text-amber-300 font-medium text-sm border border-amber-300/50 dark:border-amber-700/50 cursor-pointer transition-colors"
                 >
-                  回到论坛参加预测
+                  返回龟投首页
                 </button>
               </div>
 
@@ -653,13 +665,12 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         )}
       </div>
 
-      {/* Legend */}
       <div className={`${card} px-4 py-2.5`}>
-        <div className="flex items-center justify-center gap-4 text-[11px] text-slate-500 dark:text-rdark-text2 flex-wrap">
-          <span>▲ 崖壁刺 <b className="text-red-400">致命</b></span>
-          <span>🪼 水母 <b className="text-red-400">致命</b></span>
-          <span>🪙 龟币 <b className="text-amber-500">+1币</b></span>
-          <span>⚡ 连击×{COMBO_TARGET} <b className="text-yellow-500">冲刺!</b></span>
+        <div className="flex items-center justify-center gap-4 text-[11px] text-[#5b7a8a] flex-wrap">
+          <span>▲ 崖壁刺 <b className="text-[#ff6b6b]">致命</b></span>
+          <span>🪼 水母 <b className="text-[#ff6b6b]">致命</b></span>
+          <span>🪙 龟币 <b className="text-[#ffd93d]">+1币</b></span>
+          <span>⚡ 连击×{COMBO_TARGET} <b className="text-[#06d6a0]">冲刺!</b></span>
         </div>
       </div>
     </div>

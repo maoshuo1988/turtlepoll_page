@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>开战广场</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #060c16;
+    }
+    .host-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #060c16;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="battleFrame" class="host-frame" src="/legacy/index.html?tab=battle"></iframe>
+
+  <script>
+    const frame = document.getElementById('battleFrame');
+
+    function trimToBattleOnly(doc) {
+      const nav = doc.querySelector('nav');
+      const left = doc.querySelector('aside.left');
+      const right = doc.querySelector('.right');
+      if (nav) nav.style.display = 'none';
+      if (left) left.style.display = 'none';
+      if (right) right.style.display = 'none';
+
+      const page = doc.querySelector('.page');
+      if (page) {
+        page.style.margin = '0';
+        page.style.padding = '0';
+        page.style.width = '100vw';
+        page.style.maxWidth = '100vw';
+      }
+
+      const main = doc.getElementById('main-content');
+      if (main) {
+        main.style.padding = '0';
+        main.style.margin = '0';
+        main.style.maxWidth = '100vw';
+      }
+
+      const battlePage = doc.getElementById('page-battle');
+      if (battlePage) {
+        battlePage.style.display = 'block';
+        battlePage.style.minHeight = '100vh';
+        battlePage.style.padding = '14px';
+      }
+
+      const others = ['all', 'wc', 'hot', 'tech', 'ai', 'ent', 'forum'];
+      for (const p of others) {
+        const node = doc.getElementById('page-' + p);
+        if (node) node.style.display = 'none';
+      }
+    }
+
+    frame.addEventListener('load', () => {
+      try {
+        const doc = frame.contentDocument;
+        if (!doc) return;
+        trimToBattleOnly(doc);
+      } catch (_) {
+        // same-origin expected
+      }
+    });
+  </script>
+</body>
+</html>
+

@@ -44,10 +44,10 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
   const MAX_CHARS = 280;
 
   return (
-    <div className="px-4 py-3">
-      <div className="flex gap-3">
+    <div className="legacy-forum-compose px-4 py-3">
+      <div className="legacy-forum-compose-row flex gap-3">
         {/* Avatar */}
-        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl shrink-0 mt-1">
+        <div className="legacy-forum-compose-avatar w-10 h-10 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl shrink-0 mt-1">
           🦊
         </div>
 
@@ -68,7 +68,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
             onFocus={() => setFocused(true)}
             placeholder="有什么新鲜事？"
             rows={focused ? 4 : 2}
-            className="w-full resize-none bg-transparent border-0 outline-none text-[20px] text-slate-900 dark:text-rdark-text placeholder:text-slate-500/60 dark:placeholder:text-rdark-text2/60 leading-relaxed font-light"
+            className="legacy-forum-compose-input w-full resize-none bg-transparent border-0 outline-none text-[20px] text-slate-900 dark:text-rdark-text placeholder:text-slate-500/60 dark:placeholder:text-rdark-text2/60 leading-relaxed font-light"
           />
 
           {/* Image preview grid */}
@@ -111,9 +111,9 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
           )}
 
           {/* Bottom toolbar */}
-          <div className="flex items-center justify-between">
+          <div className="legacy-forum-compose-foot flex items-center justify-between">
             {/* Media buttons */}
-            <div className="flex items-center -ml-2">
+            <div className="legacy-forum-compose-tools flex items-center -ml-2">
               <button
                 onClick={addImage}
                 disabled={images.length >= 4}
@@ -154,7 +154,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
               <button
                 onClick={handleSubmit}
                 disabled={!canPost || charCount > MAX_CHARS}
-                className="px-5 py-2 rounded-full text-[15px] font-bold cursor-pointer transition-all border-0 bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                className="legacy-forum-compose-submit px-5 py-2 rounded-full text-[15px] font-bold cursor-pointer transition-all border-0 bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
               >
                 发帖
               </button>

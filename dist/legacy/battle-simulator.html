@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐢 Battle-Event 机制模拟器</title>
+<style>
+:root {
+  --bg:#0c0c0f; --panel:#141418; --card:#1c1c22; --card2:#222229;
+  --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.13);
+  --ink:#f0ede8; --muted:#6b6760; --dim:#2e2e36;
+  --fr:#3c8eff; --fr-dim:rgba(60,142,255,.14);
+  --br:#00d68f; --br-dim:rgba(0,214,143,.14);
+  --gold:#ffc94d; --red:#ff4757; --orange:#ff7b2c;
+  --sh:0 2px 12px rgba(0,0,0,.5);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+  font-family:'SF Pro Text','Noto Sans SC',system-ui,sans-serif;font-size:13px;}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:48px;background:var(--panel);border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;
+}
+.tb-title{font-size:14px;font-weight:700;color:var(--gold);white-space:nowrap;}
+.tb-title small{color:var(--muted);font-weight:400;font-size:11px;margin-left:6px;}
+.tb-sep{width:1px;height:20px;background:var(--border2);}
+.tb-speed{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;white-space:nowrap;}
+.tb-speed input{width:72px;accent-color:var(--gold);cursor:pointer;}
+.tb-btns{display:flex;gap:6px;margin-left:auto;}
+.btn{padding:5px 12px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;
+  border:1.5px solid var(--border2);background:var(--card2);color:var(--ink);transition:.13s;white-space:nowrap;}
+.btn:hover{background:var(--card);border-color:rgba(255,255,255,.22);}
+.btn.go{background:var(--gold);color:#0c0c0f;border-color:var(--gold);}
+.btn.go:hover{opacity:.85;}
+.btn.fr-btn{border-color:rgba(60,142,255,.35);color:var(--fr);}
+.btn.fr-btn:hover{background:var(--fr-dim);}
+.btn.br-btn{border-color:rgba(0,214,143,.35);color:var(--br);}
+.btn.br-btn:hover{background:var(--br-dim);}
+.btn.danger{border-color:rgba(255,71,87,.3);color:var(--red);}
+.btn.danger:hover{background:rgba(255,71,87,.08);}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:290px 1fr;height:calc(100vh - 48px);overflow:hidden;}
+
+/* ── PARAM PANEL ── */
+.params{
+  background:var(--panel);border-right:1px solid var(--border2);
+  overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;
+}
+.params::-webkit-scrollbar{width:4px;}
+.params::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.pgroup{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 12px;}
+.pgroup-title{
+  font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.prow{margin-bottom:11px;}
+.prow:last-child{margin-bottom:0;}
+.plabel{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.pname{font-size:11px;font-weight:600;color:var(--ink);}
+.pval{
+  font-size:11px;font-weight:700;color:var(--gold);
+  background:rgba(255,201,77,.1);border:1px solid rgba(255,201,77,.22);
+  border-radius:4px;padding:1px 7px;min-width:38px;text-align:center;
+}
+input[type=range].pslider{
+  width:100%;height:3px;accent-color:var(--gold);cursor:pointer;display:block;
+}
+.pdesc{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5;}
+
+/* Toggle row */
+.ptoggle{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+.ptoggle:last-child{margin-bottom:0;}
+.ptoggle-name{font-size:11px;font-weight:600;}
+.switch{position:relative;width:36px;height:20px;cursor:pointer;}
+.switch input{opacity:0;width:0;height:0;}
+.slider-sw{
+  position:absolute;inset:0;background:var(--dim);border-radius:10px;transition:.2s;
+}
+.slider-sw::before{
+  content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;
+  background:#fff;border-radius:50%;transition:.2s;
+}
+.switch input:checked + .slider-sw{background:var(--gold);}
+.switch input:checked + .slider-sw::before{transform:translateX(16px);}
+
+/* Export */
+.export-box{
+  background:rgba(255,201,77,.04);border:1px solid rgba(255,201,77,.15);
+  border-radius:11px;padding:10px 12px;
+}
+.export-title{
+  font-size:10px;font-weight:800;color:var(--gold);
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px;
+}
+.export-code{
+  font-family:'Menlo','Monaco','Courier New',monospace;
+  font-size:9.5px;color:rgba(240,237,232,.65);line-height:1.7;
+  white-space:pre;overflow-x:auto;
+}
+.export-code::-webkit-scrollbar{height:3px;}
+.export-code::-webkit-scrollbar-thumb{background:var(--border2);}
+
+/* ── SIM AREA ── */
+.sim{display:flex;flex-direction:column;height:100%;overflow:hidden;}
+
+/* Vote bar */
+.votebar{
+  display:flex;align-items:center;gap:10px;padding:9px 16px;
+  background:var(--panel);border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.vote-lbl{font-size:11px;font-weight:700;white-space:nowrap;}
+.vote-lbl.fr{color:var(--fr);}
+.vote-lbl.br{color:var(--br);}
+.vote-track{
+  flex:1;height:8px;border-radius:4px;background:var(--dim);overflow:hidden;display:flex;
+}
+.vote-fr{height:100%;background:var(--fr);transition:width .6s ease;}
+.vote-br{height:100%;background:var(--br);transition:width .6s ease;}
+
+/* Arenas */
+.arenas{flex:1;display:grid;grid-template-columns:1fr 40px 1fr;overflow:hidden;}
+.arena{display:flex;flex-direction:column;overflow:hidden;}
+.arena.fr{border-top:3px solid var(--fr);}
+.arena.br{border-top:3px solid var(--br);}
+
+.arena-head{
+  display:flex;align-items:center;gap:8px;padding:8px 14px;
+  background:var(--panel);border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.arena-flag{font-size:18px;}
+.arena-name{font-size:13px;font-weight:700;}
+.arena-stats{margin-left:auto;display:flex;gap:10px;}
+.astat{font-size:10px;color:var(--muted);}
+.astat b{font-weight:700;}
+.astat.fr b{color:var(--fr);}
+.astat.br b{color:var(--br);}
+.astat.kl b{color:var(--red);}
+
+/* Battlefield */
+.field{
+  height:130px;position:relative;background:var(--card);
+  border-bottom:1px solid var(--border);overflow:hidden;flex-shrink:0;
+}
+.field-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(255,255,255,.012) 30px,rgba(255,255,255,.012) 31px);
+}
+.field-lbl{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:rgba(255,255,255,.06);font-style:italic;pointer-events:none;
+}
+
+/* Comment list */
+.cmt-list{flex:1;overflow-y:auto;padding:6px;}
+.cmt-list::-webkit-scrollbar{width:3px;}
+.cmt-list::-webkit-scrollbar-thumb{background:var(--border2);}
+.ci{
+  display:flex;gap:6px;padding:5px 7px;border-radius:8px;margin-bottom:3px;
+  background:var(--card2);border:1px solid var(--border);transition:border-color .25s,opacity .3s;
+}
+.ci.glow{border-color:rgba(255,201,77,.45);}
+.ci.hatched{opacity:.55;}
+.ci.dead{opacity:.28;text-decoration:line-through;}
+.ci-av{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  font-size:12px;flex-shrink:0;background:var(--dim);}
+.ci-body{flex:1;min-width:0;}
+.ci-text{font-size:10px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ci-foot{display:flex;align-items:center;gap:5px;margin-top:3px;}
+.ci-icon{font-size:10px;}
+.ci-lk{
+  font-size:10px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:2px;
+  padding:1px 5px;border-radius:8px;background:rgba(255,255,255,.04);
+  border:1px solid var(--border);transition:.12s;margin-left:auto;
+}
+.ci-lk:hover{background:rgba(255,255,255,.09);}
+.ci-lk.liked{color:var(--red);border-color:rgba(255,71,87,.3);}
+
+/* Input row */
+.cmt-row{
+  display:flex;gap:5px;padding:7px;border-top:1px solid var(--border);
+  background:var(--panel);flex-shrink:0;
+}
+.cmt-inp{
+  flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:7px;
+  padding:5px 10px;font-size:10px;color:var(--ink);outline:none;font-family:inherit;
+}
+.cmt-inp::placeholder{color:var(--muted);}
+.cmt-inp:focus{border-color:rgba(255,255,255,.25);}
+.cmt-sub{
+  width:28px;height:28px;border-radius:7px;display:grid;place-items:center;
+  font-size:12px;cursor:pointer;border:1px solid;transition:.12s;flex-shrink:0;
+}
+.fr .cmt-sub{background:var(--fr-dim);border-color:rgba(60,142,255,.3);color:var(--fr);}
+.fr .cmt-sub:hover{background:rgba(60,142,255,.28);}
+.br .cmt-sub{background:var(--br-dim);border-color:rgba(0,214,143,.3);color:var(--br);}
+.br .cmt-sub:hover{background:rgba(0,214,143,.28);}
+
+/* VS col */
+.vs-col{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--panel);border-left:1px solid var(--border);border-right:1px solid var(--border);
+}
+.vs-txt{font-size:10px;font-weight:900;color:var(--muted);writing-mode:vertical-rl;letter-spacing:.1em;}
+
+/* Stats bar */
+.statsbar{
+  display:flex;align-items:center;gap:18px;padding:7px 16px;
+  background:var(--panel);border-top:1px solid var(--border);font-size:10px;flex-shrink:0;
+}
+.sitem{color:var(--muted);}
+.sitem b{font-weight:700;color:var(--ink);}
+.sitem.fri b{color:var(--fr);}
+.sitem.bri b{color:var(--br);}
+.sim-status{margin-left:auto;font-size:10px;}
+
+/* Zone overlays */
+.field-zone{
+  position:absolute;border:1.5px dashed;border-radius:8px;
+  pointer-events:none;z-index:1;top:5%;bottom:5%;
+}
+.zone-egg{left:3%;width:44%;background:rgba(255,201,77,.04);border-color:rgba(255,201,77,.22);}
+.zone-turtle-fr{left:53%;width:44%;background:rgba(60,142,255,.05);border-color:rgba(60,142,255,.22);}
+.zone-turtle-br{left:3%;width:44%;background:rgba(0,214,143,.05);border-color:rgba(0,214,143,.22);}
+.zone-egg-br{left:53%;width:44%;background:rgba(255,201,77,.04);border-color:rgba(255,201,77,.22);}
+.zone-lbl-inner{
+  position:absolute;bottom:3px;left:0;right:0;text-align:center;
+  font-size:9px;color:rgba(255,255,255,.22);letter-spacing:.03em;
+}
+
+/* Egg & Turtle els */
+.egg-el{
+  position:absolute;font-size:17px;cursor:pointer;user-select:none;line-height:1;
+  animation:eggDrop .35s ease forwards;will-change:transform;
+}
+.egg-el.glow{filter:drop-shadow(0 0 7px rgba(255,201,77,.9));animation:wiggle .45s ease-in-out infinite alternate;}
+.turtle-el{position:absolute;font-size:15px;user-select:none;line-height:1;z-index:10;}
+
+@keyframes eggDrop {from{transform:translateY(-25px);opacity:0} to{transform:translateY(0);opacity:1}}
+@keyframes wiggle  {from{transform:rotate(-9deg) scale(1.08)} to{transform:rotate(9deg) scale(1.15)}}
+@keyframes crack   {0%{transform:scale(1)}40%{transform:scale(1.35) rotate(14deg)}70%{transform:scale(.6) rotate(-8deg)}100%{transform:scale(0);opacity:0}}
+@keyframes pop     {0%,100%{transform:scale(1)}50%{transform:scale(1.6)}}
+@keyframes eating  {0%{transform:scale(1) rotate(0deg)}25%{transform:scale(1.25) rotate(-20deg)}50%{transform:scale(1.1) rotate(0deg)}75%{transform:scale(1.25) rotate(20deg)}100%{transform:scale(1) rotate(0deg)}}
+.turtle-el.eating{animation:eating 0.35s ease-in-out infinite;filter:drop-shadow(0 0 5px rgba(255,201,77,.85));}
+@keyframes flash   {0%{opacity:1}100%{opacity:0}}
+.field.flashing::after{
+  content:'💥';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:36px;animation:flash .4s ease forwards;pointer-events:none;
+}
+/* Rubber-band badge */
+@keyframes rbPulse{from{opacity:1;transform:scale(1)}to{opacity:.55;transform:scale(.92)}}
+.rb-badge{
+  font-size:9px;font-weight:800;background:var(--gold);color:#0c0c0f;
+  border-radius:10px;padding:1px 8px;margin-left:6px;
+  animation:rbPulse .75s ease-in-out infinite alternate;
+}
+
+/* Vote formula hint */
+.vote-formula{font-size:9px;color:var(--muted);text-align:center;line-height:1;}
+/* Event toast */
+.event-toast{
+  position:absolute;left:50%;top:0;transform:translateX(-50%) translateY(-4px);
+  background:var(--gold);color:#0c0c0f;font-size:11px;font-weight:800;
+  padding:3px 12px;border-radius:20px;white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity .25s,transform .25s;z-index:50;
+}
+.event-toast.show{opacity:1;transform:translateX(-50%) translateY(-18px);}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-title">🐢 Battle-Event 模拟器 <small>机制调参 & 实时预览</small></div>
+  <div class="tb-sep"></div>
+  <div class="tb-speed">
+    模拟速度
+    <input type="range" min="0.5" max="4" step="0.5" value="1" id="speedSlider" oninput="setSpeed(+this.value)">
+    <span id="speedVal">×1</span>
+  </div>
+  <div class="tb-btns">
+    <button class="btn go" id="startBtn" onclick="toggleSim()">▶ 开始</button>
+    <button class="btn fr-btn" onclick="manualLike('france')">👍 法国 +赞</button>
+    <button class="btn br-btn" onclick="manualLike('brazil')">👍 巴西 +赞</button>
+    <button class="btn fr-btn" onclick="manualComment('france')">💬 法国发言</button>
+    <button class="btn br-btn" onclick="manualComment('brazil')">💬 巴西发言</button>
+    <button class="btn danger" onclick="resetSim()">🔄 重置</button>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- LEFT: PARAMS -->
+  <div class="params">
+
+    <!-- 蛋的机制 -->
+    <div class="pgroup">
+      <div class="pgroup-title">🥚 蛋的机制</div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">孵化阈值（点赞数）</span><span class="pval" id="v-hatch">3</span></div>
+        <input type="range" class="pslider" min="2" max="12" value="3" oninput="setP('HATCH_THRESHOLD',+this.value,'v-hatch')">
+        <div class="pdesc">达到此赞数时，蛋破壳孵化为龟</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">发光提示量（孵化前几赞）</span><span class="pval" id="v-glow">1</span></div>
+        <input type="range" class="pslider" min="1" max="4" value="1" oninput="setP('GLOW_OFFSET',+this.value,'v-glow')">
+        <div class="pdesc">孵化阈值 − 此值 = 开始金色发光的赞数</div>
+      </div>
+    </div>
+
+    <!-- 龟的行为 -->
+    <div class="pgroup">
+      <div class="pgroup-title">🐢 龟的行为</div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">移动速度（%/帧）</span><span class="pval" id="v-spd">2</span></div>
+        <input type="range" class="pslider" min="0.1" max="6" step="0.1" value="2" oninput="setP('TURTLE_SPEED',+this.value,'v-spd')">
+        <div class="pdesc">越大越快，受「模拟速度」倍率影响。可低至 0.1 观察单步移动。</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">吃蛋时间（秒）</span><span class="pval" id="v-eat">2s</span></div>
+        <input type="range" class="pslider" min="0.5" max="6" step="0.5" value="2" oninput="setP('EAT_DURATION',+this.value*1000,'v-eat',v=>v/1000+'s')">
+        <div class="pdesc">龟到达蛋后原地「啃蛋」的持续时间，期间显示动画</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">攻击冷却（秒）</span><span class="pval" id="v-cool">4s</span></div>
+        <input type="range" class="pslider" min="1" max="12" value="4" oninput="setP('ATTACK_CD',+this.value*1000,'v-cool',v=>Math.round(v/1000)+'s')">
+        <div class="pdesc">龟回家后休息的时间（吃蛋结束后才开始计算）</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">每方最大龟数</span><span class="pval" id="v-maxt">3</span></div>
+        <input type="range" class="pslider" min="1" max="8" value="3" oninput="setP('MAX_TURTLES',+this.value,'v-maxt')">
+        <div class="pdesc">超出上限时孵化停止（蛋保留）</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">目标选择策略</span><span class="pval" id="v-target" style="font-size:9px;min-width:52px">最弱蛋</span></div>
+        <select id="targetSelect" onchange="setTargetMode(this.value)"
+          style="width:100%;background:var(--card2);border:1px solid var(--border2);color:var(--ink);border-radius:6px;padding:5px 8px;font-size:10px;outline:none;">
+          <option value="weakest">最弱蛋（赞数最少）</option>
+          <option value="strongest">最强蛋（赞数最多）</option>
+          <option value="random">随机选目标</option>
+          <option value="nearest">最近的蛋</option>
+        </select>
+        <div class="pdesc">龟选择攻击目标的算法</div>
+      </div>
+    </div>
+
+    <!-- 自动演示 -->
+    <div class="pgroup">
+      <div class="pgroup-title">🤖 自动演示（Bot）</div>
+      <div class="ptoggle">
+        <span class="ptoggle-name">自动点赞</span>
+        <label class="switch"><input type="checkbox" id="tog-autolike" checked onchange="toggleAuto('autolike')"><span class="slider-sw"></span></label>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">点赞间隔（秒）</span><span class="pval" id="v-lkms">3.5s</span></div>
+        <input type="range" class="pslider" min="0.5" max="10" step="0.5" value="3.5" oninput="setP('AUTO_LIKE_MS',+this.value*1000,'v-lkms',v=>v/1000+'s')">
+        <div class="pdesc">越小越快孵化，游戏节奏越紧张</div>
+      </div>
+      <div class="ptoggle">
+        <span class="ptoggle-name">自动发评论</span>
+        <label class="switch"><input type="checkbox" id="tog-autocmt" checked onchange="toggleAuto('autocmt')"><span class="slider-sw"></span></label>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">发言间隔（秒）</span><span class="pval" id="v-cmtms">7s</span></div>
+        <input type="range" class="pslider" min="2" max="20" step="1" value="7" oninput="setP('AUTO_CMT_MS',+this.value*1000,'v-cmtms',v=>v/1000+'s')">
+        <div class="pdesc">控制战场蛋的密度与刷新率</div>
+      </div>
+    </div>
+
+    <!-- 票数经济 -->
+    <div class="pgroup">
+      <div class="pgroup-title">📊 票数经济</div>
+      <div class="pdesc" style="margin-bottom:10px;line-height:1.6;">
+        票率 = 双方<b style="color:var(--ink)">评论分 + 歼灭分</b>之比，实时重算。<br>
+        评论越多 / 歼灭越多 → 票率越高。
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">每条评论票值（分）</span><span class="pval" id="v-cvt">1</span></div>
+        <input type="range" class="pslider" min="0.5" max="10" step="0.5" value="1" oninput="setP('COMMENT_VOTE',+this.value,'v-cvt'); recalcVote();">
+        <div class="pdesc">每条评论贡献的票数分值。值越大，评论对票率影响越显著。</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">每次歼灭票值（分）</span><span class="pval" id="v-kvt">3</span></div>
+        <input type="range" class="pslider" min="0" max="20" step="0.5" value="3" oninput="setP('KILL_VOTE',+this.value,'v-kvt'); recalcVote();">
+        <div class="pdesc">每次摧毁敌蛋的分值。1歼灭 = N条评论的票数贡献。</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">票率上限（%）</span><span class="pval" id="v-vcap">95%</span></div>
+        <input type="range" class="pslider" min="60" max="99" value="95" oninput="setP('VOTE_CAP',+this.value,'v-vcap',v=>v+'%'); recalcVote();">
+        <div class="pdesc">防止一方票率被完全碾压的保护上限。</div>
+      </div>
+    </div>
+
+    <!-- 平衡 & 限流 -->
+    <div class="pgroup">
+      <div class="pgroup-title">⚖️ 平衡 & 限流</div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">蛋上限（每方）</span><span class="pval" id="v-ecap">30</span></div>
+        <input type="range" class="pslider" min="5" max="60" step="5" value="30" oninput="setP('EGG_CAP',+this.value,'v-ecap')">
+        <div class="pdesc">超出时自动淘汰赞数最少的蛋（💨 消失）</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">同时移动龟上限（全场）</span><span class="pval" id="v-mmov">6</span></div>
+        <input type="range" class="pslider" min="2" max="14" step="1" value="6" oninput="setP('MAX_MOVING',+this.value,'v-mmov')">
+        <div class="pdesc">超过上限的龟等待空位再出发</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">攻击动画间隔</span><span class="pval" id="v-atkrate">1500ms</span></div>
+        <input type="range" class="pslider" min="200" max="4000" step="100" value="1500" oninput="setP('ATTACK_RATE_MS',+this.value,'v-atkrate',v=>v+'ms')">
+        <div class="pdesc">全场每次攻击动画的最短间隔，多余的排队</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">弱势触发线（战力差）</span><span class="pval" id="v-rbgap">30%</span></div>
+        <input type="range" class="pslider" min="10" max="60" step="5" value="30" oninput="setP('RB_GAP',+this.value/100,'v-rbgap',v=>Math.round(v*100)+'%')">
+        <div class="pdesc">战力差超过此比例 → 弱势方激活橡皮筋加成</div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span class="pname">弱势阈值降幅</span><span class="pval" id="v-rbred">-2</span></div>
+        <input type="range" class="pslider" min="1" max="5" value="2" oninput="setP('RB_REDUCE',+this.value,'v-rbred',v=>'-'+v)">
+        <div class="pdesc">弱势方孵化所需赞数减少量 + 每2秒获得1~2隐形赞</div>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="export-box">
+      <div class="export-title">📋 复制参数 → battle-event.html</div>
+      <div class="export-code" id="export-code">— 点击「开始」后更新 —</div>
+    </div>
+
+  </div><!-- /params -->
+
+  <!-- RIGHT: SIM -->
+  <div class="sim">
+
+    <!-- Vote bar -->
+    <div class="votebar">
+      <span class="vote-lbl fr">🇫🇷 法国 <span id="fr-pct">50</span>%</span>
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px;position:relative;">
+        <div class="vote-track">
+          <div class="vote-fr" id="vfr" style="width:50%"></div>
+          <div class="vote-br" id="vbr" style="width:50%"></div>
+        </div>
+        <div class="vote-formula" id="vote-formula">评论 0 : 0 · 歼灭 0 : 0 → 各 50%</div>
+        <div class="event-toast" id="event-toast"></div>
+      </div>
+      <span class="vote-lbl br"><span id="br-pct">50</span>% 巴西 🇧🇷</span>
+    </div>
+
+    <!-- Arenas -->
+    <div class="arenas">
+
+      <!-- FRANCE -->
+      <div class="arena fr">
+        <div class="arena-head">
+          <span class="arena-flag">🇫🇷</span>
+          <span class="arena-name" style="color:var(--fr)">法国</span>
+          <span class="rb-badge" id="rb-badge-france" style="display:none">⚡弱势加成</span>
+          <div class="arena-stats">
+            <div class="astat fr">🥚 <b id="fr-eggs">0</b></div>
+            <div class="astat fr">🐢 <b id="fr-turtles">0</b></div>
+            <div class="astat kl">💀 <b id="fr-kills">0</b></div>
+          </div>
+        </div>
+        <div class="field" id="france-field">
+          <div class="field-bg"></div>
+          <div class="field-zone zone-egg"><div class="zone-lbl-inner">🥚 蛋巢</div></div>
+          <div class="field-zone zone-turtle-fr"><div class="zone-lbl-inner">🐢 龟阵</div></div>
+        </div>
+        <div class="cmt-list" id="france-cmts"></div>
+        <div class="cmt-row">
+          <input class="cmt-inp" id="france-inp" placeholder="🇫🇷 以法国身份发评论…"
+            onkeydown="if(event.key==='Enter')submitCmt('france')">
+          <div class="cmt-sub" onclick="submitCmt('france')">↑</div>
+        </div>
+      </div>
+
+      <!-- VS -->
+      <div class="vs-col">
+        <div class="vs-txt">V&nbsp;&nbsp;S</div>
+      </div>
+
+      <!-- BRAZIL -->
+      <div class="arena br">
+        <div class="arena-head">
+          <span class="arena-flag">🇧🇷</span>
+          <span class="arena-name" style="color:var(--br)">巴西</span>
+          <span class="rb-badge" id="rb-badge-brazil" style="display:none">⚡弱势加成</span>
+          <div class="arena-stats">
+            <div class="astat br">🥚 <b id="br-eggs">0</b></div>
+            <div class="astat br">🐢 <b id="br-turtles">0</b></div>
+            <div class="astat kl">💀 <b id="br-kills">0</b></div>
+          </div>
+        </div>
+        <div class="field" id="brazil-field">
+          <div class="field-bg"></div>
+          <div class="field-zone zone-turtle-br"><div class="zone-lbl-inner">🐢 龟阵</div></div>
+          <div class="field-zone zone-egg-br"><div class="zone-lbl-inner">🥚 蛋巢</div></div>
+        </div>
+        <div class="cmt-list" id="brazil-cmts"></div>
+        <div class="cmt-row">
+          <input class="cmt-inp" id="brazil-inp" placeholder="🇧🇷 以巴西身份发评论…"
+            onkeydown="if(event.key==='Enter')submitCmt('brazil')">
+          <div class="cmt-sub" onclick="submitCmt('brazil')">↑</div>
+        </div>
+      </div>
+
+    </div><!-- /arenas -->
+
+    <!-- Stats bar -->
+    <div class="statsbar">
+      <div class="sitem">帧数 <b id="fc">0</b></div>
+      <div class="sitem">场上蛋 <b id="tot-eggs">0</b></div>
+      <div class="sitem">场上龟 <b id="tot-turtles">0</b></div>
+      <div class="sitem fri">法国歼灭 <b id="fr-kl">0</b></div>
+      <div class="sitem bri">巴西歼灭 <b id="br-kl">0</b></div>
+      <div class="sitem">移动龟 <b id="moving-cnt">0</b></div>
+      <div class="sitem">攻击队 <b id="atk-q">0</b></div>
+      <div class="sitem">战力 <b id="fr-pow" style="color:var(--fr)">0</b>:<b id="br-pow" style="color:var(--br)">0</b></div>
+      <div class="sitem">⚡弱势 <b id="rb-info">-</b></div>
+      <div class="sitem" style="margin-left:auto">
+        总评论 <b id="tot-cmts">0</b>
+      </div>
+      <div class="sim-status" id="sim-status" style="color:var(--muted)">⏸ 未运行 — 点击「开始」</div>
+    </div>
+
+  </div><!-- /sim -->
+</div><!-- /layout -->
+
+<script>
+// ══════════════════════════════════════
+// 参数对象（所有 slider 改的都是这里）
+// ══════════════════════════════════════
+const P = {
+  HATCH_THRESHOLD : 3,
+  GLOW_OFFSET     : 1,
+  TURTLE_SPEED    : 2,
+  EAT_DURATION    : 2000,
+  ATTACK_CD       : 4000,
+  MAX_TURTLES     : 3,
+  AUTO_LIKE_MS    : 3500,
+  AUTO_CMT_MS     : 7000,
+  COMMENT_VOTE    : 1,
+  KILL_VOTE       : 3,
+  VOTE_CAP        : 95,
+  TARGET_MODE     : 'weakest',   // weakest | strongest | random | nearest
+  AUTO_LIKE_ON    : true,
+  AUTO_CMT_ON     : true,
+  // Balance & throttle
+  EGG_CAP         : 30,
+  MAX_MOVING      : 6,
+  ATTACK_RATE_MS  : 1500,
+  RB_GAP          : 0.30,
+  RB_REDUCE       : 2,
+};
+let SIM_SPEED = 1;
+
+function setP(key, val, dispId, fmt) {
+  P[key] = val;
+  const el = document.getElementById(dispId);
+  if (el) el.textContent = fmt ? fmt(val) : val;
+  renderExport();
+  if (key === 'AUTO_LIKE_MS' || key === 'AUTO_CMT_MS') restartTimers();
+}
+function setSpeed(v) {
+  SIM_SPEED = v;
+  document.getElementById('speedVal').textContent = '×' + v;
+  if (S.running) restartTimers();
+}
+function setTargetMode(v) {
+  P.TARGET_MODE = v;
+  document.getElementById('v-target').textContent = { weakest:'最弱蛋', strongest:'最强蛋', random:'随机', nearest:'最近蛋' }[v];
+  renderExport();
+}
+function toggleAuto(key) {
+  if (key === 'autolike') P.AUTO_LIKE_ON = document.getElementById('tog-autolike').checked;
+  if (key === 'autocmt')  P.AUTO_CMT_ON  = document.getElementById('tog-autocmt').checked;
+  if (S.running) restartTimers();
+}
+function renderExport() {
+  document.getElementById('export-code').textContent =
+`const HATCH_THRESHOLD = ${P.HATCH_THRESHOLD};   // 孵化赞数
+const GLOW_THRESHOLD  = ${P.HATCH_THRESHOLD - P.GLOW_OFFSET};   // 发光提示赞数
+const TURTLE_SPEED    = ${P.TURTLE_SPEED};   // 移速 %/帧
+const ATTACK_CD       = ${P.ATTACK_CD};   // 冷却 ms
+const MAX_TURTLES     = ${P.MAX_TURTLES};   // 每方上限
+const AUTO_LIKE_MS    = ${P.AUTO_LIKE_MS};   // bot 点赞间隔
+const COMMENT_VOTE    = ${P.COMMENT_VOTE};   // 每条评论票值（分）
+const KILL_VOTE       = ${P.KILL_VOTE};   // 每次歼灭票值（分）
+const VOTE_CAP        = ${P.VOTE_CAP};   // 票率上限 %
+const TARGET_MODE     = '${P.TARGET_MODE}';`;
+}
+
+// ══════════════════════════════════════
+// 状态
+// ══════════════════════════════════════
+const SIDES   = ['france','brazil'];
+const ENEMY   = { france:'brazil', brazil:'france' };
+const AVATARS = ['🦁','🐉','🦅','🐯','🦊','🐺','🦔','🦋','🐼','🦓'];
+const BOT_TXT = {
+  france: ['姆巴佩是最强的！','法国中场无人能及','2018冠军血统在！','格里兹曼天下第一','法国必赢本届杯！'],
+  brazil: ['维尼修斯 GOAT！','桑巴足球万岁！','巴西必夺冠军！','罗德里戈666','桑巴节奏天下无敌！'],
+};
+
+let S = {
+  france  : { cmts:[], turtles:[], kills:0, vote:50, power:0, rubberBand:false },
+  brazil  : { cmts:[], turtles:[], kills:0, vote:50, power:0, rubberBand:false },
+  running : false,
+  rafId   : null,
+  timers  : {},
+  frame   : 0,
+  lastT   : 0,
+  cmtCnt  : 0,
+  turtCnt : 0,
+  attackQueue    : [],
+  lastAttackTime : 0,
+};
+
+// ══════════════════════════════════════
+// 评论 & 蛋
+// ══════════════════════════════════════
+function submitCmt(side) {
+  const inp = document.getElementById(side + '-inp');
+  const txt = inp.value.trim(); if (!txt) return;
+  inp.value = '';
+  addCmt(side, txt, AVATARS[Math.floor(Math.random() * AVATARS.length)]);
+}
+function manualComment(side) {
+  const txts = BOT_TXT[side];
+  addCmt(side, txts[Math.floor(Math.random()*txts.length)], AVATARS[Math.floor(Math.random()*AVATARS.length)]);
+}
+function addCmt(side, txt, av) {
+  // Egg cap: evict lowest-like egg if over limit
+  const aliveEggs = S[side].cmts.filter(c=>c.status==='egg'||c.status==='glowing').length;
+  if (aliveEggs >= P.EGG_CAP) evictEgg(side);
+  const id = 'c' + (++S.cmtCnt);
+  const cmt = { id, side, txt, av, likes:0, status:'egg', eggEl:null };
+  S[side].cmts.push(cmt);
+  renderCmt(side, cmt);
+  spawnEgg(side, cmt);
+  recalcVote();
+  checkEvents(side);
+  refreshStats();
+}
+function renderCmt(side, cmt) {
+  const list = document.getElementById(side + '-cmts');
+  const d = document.createElement('div');
+  d.className = 'ci'; d.id = 'ci-' + cmt.id;
+  d.innerHTML = `<div class="ci-av">${cmt.av}</div><div class="ci-body">
+    <div class="ci-text">${cmt.txt}</div>
+    <div class="ci-foot">
+      <span class="ci-icon" id="ics-${cmt.id}">🥚</span>
+      <span class="ci-lk" id="ilk-${cmt.id}" onclick="likeCmt('${cmt.id}','${side}')">❤️ <span id="ilkc-${cmt.id}">0</span></span>
+    </div></div>`;
+  list.appendChild(d);
+  list.scrollTop = list.scrollHeight;
+}
+function spawnEgg(side, cmt) {
+  const field = document.getElementById(side + '-field');
+  const el = document.createElement('div');
+  el.className = 'egg-el'; el.id = 'egg-' + cmt.id; el.textContent = '🥚';
+  // Egg zone: france → left 3-47%, brazil → right 53-97%
+  const xMin = side === 'france' ? 5  : 55;
+  const xMax = side === 'france' ? 44 : 94;
+  const x = xMin + Math.random() * (xMax - xMin);
+  const y = 12 + Math.random() * 55;
+  el.style.left = x + '%'; el.style.top = y + '%';
+  el.onclick = () => likeCmt(cmt.id, side);
+  field.appendChild(el);
+  cmt.eggEl = el; cmt.eggX = x; cmt.eggY = y;
+}
+
+// ══════════════════════════════════════
+// 点赞 & 孵化
+// ══════════════════════════════════════
+function likeCmt(id, side) {
+  if (!side) { for (const s of SIDES) { if (S[s].cmts.find(c=>c.id===id)) { side=s; break; } } }
+  const cmt = S[side].cmts.find(c => c.id === id);
+  if (!cmt || cmt.status === 'hatched' || cmt.status === 'dead') return;
+  cmt.likes++;
+  const cnt = document.getElementById('ilkc-' + id);
+  if (cnt) cnt.textContent = cmt.likes;
+  const thr = getHatchThreshold(side);
+  const glowAt = thr - P.GLOW_OFFSET;
+  if (cmt.likes >= glowAt && cmt.status === 'egg') {
+    cmt.status = 'glowing';
+    cmt.eggEl?.classList.add('glow');
+    const ic = document.getElementById('ics-' + id); if (ic) ic.textContent = '✨🥚';
+    document.getElementById('ci-' + id)?.classList.add('glow');
+  }
+  if (cmt.likes >= thr) hatch(cmt, side);
+}
+function hatch(cmt, side) {
+  if (cmt.status === 'hatched') return;
+  cmt.status = 'hatched';
+  if (cmt.eggEl) {
+    cmt.eggEl.style.animation = 'crack .45s ease forwards';
+    setTimeout(() => { cmt.eggEl?.remove(); cmt.eggEl = null; }, 450);
+  }
+  const ic = document.getElementById('ics-' + cmt.id); if (ic) ic.textContent = '🐢';
+  const ci = document.getElementById('ci-' + cmt.id);
+  if (ci) { ci.classList.remove('glow'); ci.classList.add('hatched'); }
+  const alive = S[side].turtles.filter(t => t.status !== 'dead').length;
+  if (alive < P.MAX_TURTLES) spawnTurtle(side, cmt);
+  refreshStats();
+}
+
+// ══════════════════════════════════════
+// 龟
+// ══════════════════════════════════════
+function spawnTurtle(side, cmt) {
+  const field = document.getElementById(side + '-field');
+  const el = document.createElement('div');
+  el.className = 'turtle-el';
+  el.textContent = '🐢';
+  // Turtle zone: france → right 53-97%, brazil → left 3-47%
+  const sx = side === 'france' ? 55 + Math.random()*38 : 5 + Math.random()*38;
+  const sy = 15 + Math.random() * 60;
+  el.style.left = sx + '%'; el.style.top = sy + '%';
+  if (side === 'france') el.style.transform = 'scaleX(-1)';
+  field.appendChild(el);
+  const turtle = {
+    id: 't' + (++S.turtCnt), el, side,
+    x: sx, y: sy,
+    status: 'idle',   // idle | moving | attacking | eating | cooling
+    targetCmt: null,
+    coolUntil: 0,
+    inEnemy: false,
+  };
+  S[side].turtles.push(turtle);
+}
+
+function pickTarget(turtle) {
+  const enemy = ENEMY[turtle.side];
+  const pool = S[enemy].cmts.filter(c => (c.status === 'egg' || c.status === 'glowing') && c.eggEl);
+  if (!pool.length) return null;
+  switch (P.TARGET_MODE) {
+    case 'weakest'  : return pool.reduce((a,b) => a.likes < b.likes ? a : b);
+    case 'strongest': return pool.reduce((a,b) => a.likes > b.likes ? a : b);
+    case 'nearest'  : return pool.reduce((a,b) => {
+        const da = Math.hypot(a.eggX - turtle.x, a.eggY - turtle.y);
+        const db = Math.hypot(b.eggX - turtle.x, b.eggY - turtle.y);
+        return da < db ? a : b;
+      });
+    default: return pool[Math.floor(Math.random() * pool.length)];
+  }
+}
+
+function moveTurtles(dt) {
+  const spd = P.TURTLE_SPEED * SIM_SPEED * (dt / 16.67);
+  let movingCount = SIDES.flatMap(s=>S[s].turtles).filter(t=>t.status==='moving').length;
+  for (const side of SIDES) {
+    for (const t of S[side].turtles) {
+      if (t.status === 'cooling' || t.status === 'attacking' || t.status === 'eating') continue;
+      if (t.status === 'dead') continue;
+
+      // Cooldown check + movement cap
+      if (t.status === 'idle' || !t.targetCmt) {
+        if (Date.now() < t.coolUntil) continue;
+        if (movingCount >= P.MAX_MOVING) continue;   // wait for a slot
+        t.targetCmt = pickTarget(t);
+        if (!t.targetCmt) continue;
+        t.status = 'moving';
+        movingCount++;
+        t.inEnemy = false;
+      }
+
+      const tc = t.targetCmt;
+      // Target gone?
+      if (!tc || tc.status === 'dead' || tc.status === 'hatched' || !tc.eggEl) {
+        t.targetCmt = null; t.status = 'idle';
+        // Return home if in enemy field
+        if (t.inEnemy) returnTurtle(t);
+        continue;
+      }
+
+      const enemyField = document.getElementById(ENEMY[side] + '-field');
+      const ownField   = document.getElementById(side + '-field');
+
+      if (!t.inEnemy) {
+        // Move toward crossing edge
+        const edgeX = side === 'france' ? 97 : 3;
+        const tx = edgeX, ty = tc.eggY ?? 50;
+        const dx = tx - t.x, dy = ty - t.y, dist = Math.hypot(dx, dy);
+        if (dist < spd + 2) {
+          // Cross to enemy field
+          enemyField.appendChild(t.el);
+          t.inEnemy = true;
+          t.x = side === 'france' ? 3 : 97;
+          t.y = ty;
+          t.el.style.left = t.x + '%'; t.el.style.top = t.y + '%';
+          t.el.style.transform = side === 'france' ? 'scaleX(-1)' : '';
+        } else {
+          t.x += (dx/dist)*spd; t.y += (dy/dist)*spd;
+          t.el.style.left = t.x + '%'; t.el.style.top = t.y + '%';
+          t.el.style.transform = side === 'france' ? 'scaleX(-1)' : '';
+        }
+      } else {
+        // In enemy field — head to egg
+        const tx = tc.eggX ?? 50, ty = tc.eggY ?? 50;
+        const dx = tx - t.x, dy = ty - t.y, dist = Math.hypot(dx, dy);
+        if (dist < spd + 3) {
+          attack(t, tc);
+        } else {
+          t.x += (dx/dist)*spd; t.y += (dy/dist)*spd;
+          t.el.style.left = t.x + '%'; t.el.style.top = t.y + '%';
+          // Face the direction of travel
+          t.el.style.transform = dx > 0 ? 'scaleX(-1)' : '';
+        }
+      }
+    }
+  }
+}
+
+function attack(turtle, tc) {
+  turtle.status = 'attacking';
+  // Immediately claim the egg (prevent other turtles retargeting it)
+  tc.eggEl?.remove(); tc.eggEl = null;
+  tc.status = 'dead';
+  document.getElementById('ci-' + tc.id)?.classList.add('dead');
+  // Queue the animation (rate-limited globally)
+  S.attackQueue.push({turtle, tc});
+  tryFlushAttackQueue();
+}
+
+function returnTurtle(turtle) {
+  turtle.status = 'cooling';
+  turtle.targetCmt = null;
+  const ownField = document.getElementById(turtle.side + '-field');
+  ownField.appendChild(turtle.el);
+  turtle.inEnemy = false;
+  // Return to turtle zone
+  turtle.x = turtle.side === 'france' ? 55 + Math.random()*38 : 5 + Math.random()*38;
+  turtle.y = 15 + Math.random()*60;
+  turtle.el.style.left = turtle.x + '%'; turtle.el.style.top = turtle.y + '%';
+  turtle.el.style.transform = turtle.side === 'france' ? '' : 'scaleX(-1)';
+  const cd = P.ATTACK_CD / SIM_SPEED;
+  turtle.coolUntil = Date.now() + cd;
+  setTimeout(() => { turtle.status = 'idle'; turtle.coolUntil = Date.now(); }, cd);
+}
+
+// ══════════════════════════════════════
+// 票数（公式驱动，实时重算）
+// ══════════════════════════════════════
+function recalcVote() {
+  const fc = S.france.cmts.length, bc = S.brazil.cmts.length;
+  const fk = S.france.kills,       bk = S.brazil.kills;
+  // 分值 = 评论数 × 评论票值 + 歼灭数 × 歼灭票值
+  const fPts = fc * P.COMMENT_VOTE + fk * P.KILL_VOTE;
+  const bPts = bc * P.COMMENT_VOTE + bk * P.KILL_VOTE;
+  const total = fPts + bPts;
+  let frPct = total === 0 ? 50 : Math.round(fPts / total * 100);
+  frPct = Math.min(P.VOTE_CAP, Math.max(100 - P.VOTE_CAP, frPct));
+  S.france.vote = frPct; S.brazil.vote = 100 - frPct;
+  document.getElementById('vfr').style.width = frPct + '%';
+  document.getElementById('vbr').style.width = (100-frPct) + '%';
+  document.getElementById('fr-pct').textContent = frPct;
+  document.getElementById('br-pct').textContent = 100 - frPct;
+  // 显示计算来源
+  document.getElementById('vote-formula').textContent =
+    `评论 ${fc}:${bc} (×${P.COMMENT_VOTE}) · 歼灭 ${fk}:${bk} (×${P.KILL_VOTE}) → 分 ${fPts}:${bPts}`;
+}
+
+// ══════════════════════════════════════
+// 战力 & 弱势加成（Rubber Band）
+// ══════════════════════════════════════
+function calcPower(side) {
+  const eggs    = S[side].cmts.filter(c=>c.status==='egg'||c.status==='glowing').length;
+  const turtles = S[side].turtles.filter(t=>t.status!=='dead').length;
+  return eggs + turtles * 1.5 + S[side].kills * 0.5;
+}
+function getHatchThreshold(side) {
+  return S[side].rubberBand ? Math.max(1, P.HATCH_THRESHOLD - P.RB_REDUCE) : P.HATCH_THRESHOLD;
+}
+function checkRubberBand() {
+  const fp = calcPower('france');
+  const bp = calcPower('brazil');
+  S.france.power = fp; S.brazil.power = bp;
+  const maxP = Math.max(fp, bp);
+  if (maxP < 1) { S.france.rubberBand = S.brazil.rubberBand = false; }
+  else {
+    const gap = Math.abs(fp - bp) / maxP;
+    if (gap > P.RB_GAP) {
+      const weak = fp < bp ? 'france' : 'brazil';
+      S[weak].rubberBand = true; S[ENEMY[weak]].rubberBand = false;
+    } else {
+      S.france.rubberBand = S.brazil.rubberBand = false;
+    }
+  }
+  for (const side of SIDES) {
+    const badge = document.getElementById('rb-badge-' + side);
+    if (badge) badge.style.display = S[side].rubberBand ? '' : 'none';
+  }
+}
+function rubberBandBoost() {
+  if (!S.running) return;
+  for (const side of SIDES) {
+    if (!S[side].rubberBand) continue;
+    const pool = S[side].cmts.filter(c=>c.status==='egg'||c.status==='glowing');
+    if (!pool.length) continue;
+    const boost = 1 + Math.floor(Math.random() * 2);
+    const pick  = pool[Math.floor(Math.random() * pool.length)];
+    for (let i = 0; i < boost; i++) silentLike(pick, side);
+  }
+}
+function silentLike(cmt, side) {
+  if (cmt.status === 'hatched' || cmt.status === 'dead') return;
+  cmt.likes++;
+  const thr = getHatchThreshold(side);
+  const glowAt = thr - P.GLOW_OFFSET;
+  if (cmt.likes >= glowAt && cmt.status === 'egg') {
+    cmt.status = 'glowing';
+    cmt.eggEl?.classList.add('glow');
+    const ic = document.getElementById('ics-' + cmt.id); if (ic) ic.textContent = '✨🥚';
+    document.getElementById('ci-' + cmt.id)?.classList.add('glow');
+  }
+  if (cmt.likes >= thr) hatch(cmt, side);
+}
+
+// ══════════════════════════════════════
+// 蛋上限
+// ══════════════════════════════════════
+function evictEgg(side) {
+  const alive = S[side].cmts.filter(c=>c.status==='egg'||c.status==='glowing');
+  if (!alive.length) return;
+  const victim = alive.reduce((a,b) => a.likes <= b.likes ? a : b);
+  victim.eggEl?.remove(); victim.eggEl = null;
+  victim.status = 'dead';
+  document.getElementById('ci-' + victim.id)?.classList.add('dead');
+  const ic = document.getElementById('ics-' + victim.id); if (ic) ic.textContent = '💨';
+}
+
+// ══════════════════════════════════════
+// 攻击队列（全场限速）
+// ══════════════════════════════════════
+function tryFlushAttackQueue() {
+  if (!S.attackQueue.length) return;
+  const now = Date.now();
+  if (now - S.lastAttackTime < P.ATTACK_RATE_MS / SIM_SPEED) return;
+  S.lastAttackTime = now;
+  const {turtle, tc} = S.attackQueue.shift();
+  doAttackAnim(turtle, tc);
+}
+function doAttackAnim(turtle, tc) {
+  const ef = document.getElementById(ENEMY[turtle.side] + '-field');
+  ef.classList.add('flashing');
+  setTimeout(() => ef.classList.remove('flashing'), 420);
+  turtle.el.style.animation = 'pop .3s ease';
+  setTimeout(() => turtle.el.style.animation = '', 300);
+  const ic = document.getElementById('ics-' + tc.id); if (ic) ic.textContent = '💥';
+  S[turtle.side].kills++;
+  recalcVote();
+  checkEvents(turtle.side);
+  refreshStats();
+  setTimeout(() => {
+    turtle.status = 'eating';
+    turtle.el.classList.add('eating');
+    setTimeout(() => {
+      turtle.el.classList.remove('eating');
+      returnTurtle(turtle);
+    }, P.EAT_DURATION / SIM_SPEED);
+  }, 350);
+}
+
+// ── 事件通知 ──
+const FIRED = new Set();
+function checkEvents(side) {
+  const name = side === 'france' ? '🇫🇷 法国' : '🇧🇷 巴西';
+  const cmts  = S[side].cmts.length;
+  const kills = S[side].kills;
+  const lead  = S[side].vote - S[ENEMY[side]].vote;
+  // 评论里程碑
+  for (const n of [5, 10, 20, 50]) {
+    const k = `${side}-c${n}`;
+    if (cmts >= n && !FIRED.has(k)) { FIRED.add(k); showEvent(`${name} 突破 ${n} 条评论 🔥`); return; }
+  }
+  // 歼灭里程碑
+  for (const n of [1, 5, 10]) {
+    const k = `${side}-k${n}`;
+    if (kills >= n && !FIRED.has(k)) { FIRED.add(k); showEvent(`${name} 歼灭 ${n} 个敌蛋 ⚔️`); return; }
+  }
+  // 票率领先里程碑
+  for (const n of [10, 20, 30]) {
+    const k = `${side}-lead${n}`;
+    if (lead >= n && !FIRED.has(k)) { FIRED.add(k); showEvent(`${name} 领先 ${n}% 📊`); return; }
+  }
+}
+let _toastTimer = null;
+function showEvent(msg) {
+  const el = document.getElementById('event-toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════════
+// 统计刷新
+// ══════════════════════════════════════
+function refreshStats() {
+  for (const side of SIDES) {
+    const pre = side === 'france' ? 'fr' : 'br';
+    const eggs = S[side].cmts.filter(c=>c.status==='egg'||c.status==='glowing').length;
+    const turt = S[side].turtles.filter(t=>t.status!=='dead').length;
+    document.getElementById(pre+'-eggs').textContent    = eggs;
+    document.getElementById(pre+'-turtles').textContent = turt;
+    document.getElementById(pre+'-kills').textContent   = S[side].kills;
+  }
+  const totEgg  = SIDES.flatMap(s=>S[s].cmts.filter(c=>c.status==='egg'||c.status==='glowing')).length;
+  const totTurt = SIDES.flatMap(s=>S[s].turtles.filter(t=>t.status!=='dead')).length;
+  document.getElementById('tot-eggs').textContent    = totEgg;
+  document.getElementById('tot-turtles').textContent = totTurt;
+  document.getElementById('fr-kl').textContent = S.france.kills;
+  document.getElementById('br-kl').textContent = S.brazil.kills;
+  document.getElementById('tot-cmts').textContent = S.cmtCnt;
+  const movingNow = SIDES.flatMap(s=>S[s].turtles).filter(t=>t.status==='moving').length;
+  document.getElementById('moving-cnt').textContent = movingNow;
+  document.getElementById('atk-q').textContent = S.attackQueue.length;
+  document.getElementById('fr-pow').textContent = S.france.power.toFixed(1);
+  document.getElementById('br-pow').textContent = S.brazil.power.toFixed(1);
+  const rbSide = S.france.rubberBand ? '🇫🇷' : S.brazil.rubberBand ? '🇧🇷' : '-';
+  document.getElementById('rb-info').textContent = rbSide;
+}
+
+// ══════════════════════════════════════
+// 动画主循环
+// ══════════════════════════════════════
+function loop(ts) {
+  if (!S.running) return;
+  const dt = Math.min(ts - S.lastT, 60);
+  S.lastT = ts; S.frame++;
+  document.getElementById('fc').textContent = S.frame;
+  moveTurtles(dt);
+  tryFlushAttackQueue();
+  if (S.frame % 60 === 0) checkRubberBand();
+  refreshStats();
+  S.rafId = requestAnimationFrame(loop);
+}
+
+// ══════════════════════════════════════
+// 控制
+// ══════════════════════════════════════
+function toggleSim() { S.running ? pauseSim() : startSim(); }
+function startSim() {
+  S.running = true; S.lastT = performance.now();
+  S.rafId = requestAnimationFrame(loop);
+  startTimers();
+  document.getElementById('startBtn').textContent = '⏸ 暂停';
+  document.getElementById('sim-status').style.color = 'var(--br)';
+  document.getElementById('sim-status').textContent = '▶ 运行中';
+  renderExport();
+}
+function pauseSim() {
+  S.running = false;
+  if (S.rafId) cancelAnimationFrame(S.rafId);
+  clearTimers();
+  document.getElementById('startBtn').textContent = '▶ 开始';
+  document.getElementById('sim-status').style.color = 'var(--muted)';
+  document.getElementById('sim-status').textContent = '⏸ 已暂停';
+}
+function resetSim() {
+  pauseSim();
+  for (const side of SIDES) {
+    const isF = side === 'france';
+    document.getElementById(side+'-field').innerHTML = '<div class="field-bg"></div>' + (isF
+      ? '<div class="field-zone zone-egg"><div class="zone-lbl-inner">🥚 蛋巢</div></div><div class="field-zone zone-turtle-fr"><div class="zone-lbl-inner">🐢 龟阵</div></div>'
+      : '<div class="field-zone zone-turtle-br"><div class="zone-lbl-inner">🐢 龟阵</div></div><div class="field-zone zone-egg-br"><div class="zone-lbl-inner">🥚 蛋巢</div></div>');
+    document.getElementById(side+'-cmts').innerHTML = '';
+    S[side] = { cmts:[], turtles:[], kills:0, vote:50, power:0, rubberBand:false };
+    const badge = document.getElementById('rb-badge-'+side); if (badge) badge.style.display='none';
+  }
+  S.frame = 0; S.cmtCnt = 0; S.turtCnt = 0;
+  S.attackQueue = []; S.lastAttackTime = 0;
+  document.getElementById('fc').textContent = '0';
+  document.getElementById('sim-status').style.color = 'var(--muted)';
+  document.getElementById('sim-status').textContent = '⏸ 已重置';
+  FIRED.clear();
+  recalcVote(); refreshStats();
+}
+
+// ══════════════════════════════════════
+// 定时器（Bot）
+// ══════════════════════════════════════
+function startTimers() {
+  clearTimers();
+  if (P.AUTO_LIKE_ON) S.timers.like = setInterval(autoLike, P.AUTO_LIKE_MS / SIM_SPEED);
+  if (P.AUTO_CMT_ON)  S.timers.cmt  = setInterval(autoCmt,  P.AUTO_CMT_MS  / SIM_SPEED);
+  S.timers.rb = setInterval(rubberBandBoost, 2000 / SIM_SPEED);
+}
+function clearTimers() {
+  clearInterval(S.timers.like);
+  clearInterval(S.timers.cmt);
+  clearInterval(S.timers.rb);
+}
+function restartTimers() { if (S.running) { clearTimers(); startTimers(); } }
+function autoLike() {
+  const pool = [];
+  for (const side of SIDES)
+    S[side].cmts.filter(c=>c.status==='egg'||c.status==='glowing').forEach(c=>pool.push({c,side}));
+  if (!pool.length) return;
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  likeCmt(pick.c.id, pick.side);
+}
+function autoCmt() {
+  const side = Math.random() < 0.5 ? 'france' : 'brazil';
+  const txts = BOT_TXT[side];
+  addCmt(side, txts[Math.floor(Math.random()*txts.length)], AVATARS[Math.floor(Math.random()*AVATARS.length)]);
+}
+function manualLike(side) {
+  const pool = S[side].cmts.filter(c=>c.status==='egg'||c.status==='glowing');
+  if (!pool.length) { alert('该方暂时没有存活的蛋！'); return; }
+  likeCmt(pool[Math.floor(Math.random()*pool.length)].id, side);
+}
+
+// ══════════════════════════════════════
+// 初始化
+// ══════════════════════════════════════
+renderExport();
+// 预置几条评论让战场立刻有内容
+['姆巴佩状态如火如荼！','格里兹曼天下第一！'].forEach(t => addCmt('france', t, AVATARS[Math.floor(Math.random()*AVATARS.length)]));
+['维尼修斯当世最佳！','桑巴足球征服世界！'].forEach(t => addCmt('brazil', t, AVATARS[Math.floor(Math.random()*AVATARS.length)]));
+</script>
+</body>
+</html>

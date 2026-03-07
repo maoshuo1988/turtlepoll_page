@@ -35,7 +35,7 @@ export const TopicDetail: React.FC<TopicDetailProps> = ({
   onAddComment,
 }) => {
   return (
-    <div className="space-y-5">
+    <div className="legacy-topic-page space-y-5">
       {/* ━━━ Header bar ━━━ */}
       <div className={`${card} px-5 py-3.5 flex items-center justify-between`}>
         <button

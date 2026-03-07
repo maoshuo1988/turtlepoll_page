@@ -2661,14 +2661,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                   leftPower={leftPower}
                   rightPower={rightPower}
                 />
-                <aside className="flex flex-col gap-5 xl:sticky xl:top-4 h-full min-h-0 w-full sm:w-[420px] 2xl:w-[500px] shrink-0 ml-3 xl:ml-6">
-                  <div className={`${card} battle-right-panel p-4 space-y-3`}>
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-white/75">实时战况</span>
-                      <span className="text-white/50">优势差值 {Math.abs(leftPower - rightPower)}</span>
+                <aside className="battle-right-stack flex flex-col gap-5 xl:sticky xl:top-4 h-full min-h-0 w-full sm:w-[420px] 2xl:w-[500px] shrink-0 ml-3 xl:ml-6">
+                  <div className={`${card} battle-right-panel battle-live-board p-4 space-y-3`}>
+                    <div className="battle-live-head flex items-center justify-between text-[11px]">
+                      <span className="battle-live-title text-white/75">实时战况</span>
+                      <span className="battle-live-diff text-white/50">优势差值 {Math.abs(leftPower - rightPower)}</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="rounded-none border border-cyan-300/30 bg-transparent p-2">
+                    <div className="battle-live-grid grid grid-cols-2 gap-2">
+                      <div className="battle-live-side battle-live-left rounded-none border border-cyan-300/30 bg-transparent p-2">
                         <div className="text-[10px] text-cyan-200/80">{news.optionA}</div>
                         <div className="text-lg font-black text-cyan-100">
                           <AnimatedCount value={leftPower} duration={0.55} />
@@ -2676,8 +2676,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                         <div className="text-[10px] text-cyan-100/80">
                           COMBO <AnimatedCount value={comboA} duration={0.45} />
                         </div>
-                        <div className="mt-2 grid grid-cols-2 gap-1.5">
-                          <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
+                        <div className="battle-live-breakdown mt-2 grid grid-cols-2 gap-1.5">
+                          <div className="battle-stat-card battle-stat-success rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
                             <div className="text-[10px] text-emerald-200/85">会成功</div>
                             <motion.div
                               key={`ls-fx-ring-${leftSuccess}`}
@@ -2717,7 +2717,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                               <FlipNumber value={leftSuccess} className="tabular-nums" />
                             </motion.div>
                           </div>
-                          <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
+                          <div className="battle-stat-card battle-stat-fail rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
                             <div className="text-[10px] text-amber-100/90">会失败</div>
                             <motion.div
                               key={`lf-fx-ring-${leftFail}`}
@@ -2759,7 +2759,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                           </div>
                         </div>
                       </div>
-                      <div className="rounded-none border border-rose-300/30 bg-transparent p-2">
+                      <div className="battle-live-side battle-live-right rounded-none border border-rose-300/30 bg-transparent p-2">
                         <div className="text-[10px] text-rose-200/80">{news.optionB}</div>
                         <div className="text-lg font-black text-rose-100">
                           <AnimatedCount value={rightPower} duration={0.55} />
@@ -2767,8 +2767,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                         <div className="text-[10px] text-rose-100/80">
                           COMBO <AnimatedCount value={comboB} duration={0.45} />
                         </div>
-                        <div className="mt-2 grid grid-cols-2 gap-1.5">
-                          <div className="battle-stat-card rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
+                        <div className="battle-live-breakdown mt-2 grid grid-cols-2 gap-1.5">
+                          <div className="battle-stat-card battle-stat-success rounded-none border border-emerald-300/40 bg-emerald-400/10 px-1.5 py-1">
                             <div className="text-[10px] text-emerald-200/85">会成功</div>
                             <motion.div
                               key={`rs-fx-ring-${rightSuccess}`}
@@ -2808,7 +2808,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                               <FlipNumber value={rightSuccess} className="tabular-nums" />
                             </motion.div>
                           </div>
-                          <div className="battle-stat-card rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
+                          <div className="battle-stat-card battle-stat-fail rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
                             <div className="text-[10px] text-amber-100/90">会失败</div>
                             <motion.div
                               key={`rf-fx-ring-${rightFail}`}

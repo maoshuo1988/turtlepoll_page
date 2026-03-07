@@ -128,12 +128,12 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: index * 0.03, duration: 0.15 }}
-      className="px-4 py-3 border-b border-slate-100 dark:border-rdark-border hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+      className="legacy-forum-post px-4 py-3 border-b border-slate-100 dark:border-rdark-border hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
     >
-      <div className="flex gap-3">
+      <div className="legacy-forum-post-row flex gap-3">
         {/* Avatar */}
         <div className="shrink-0 pt-0.5">
-          <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl cursor-pointer hover:opacity-80 transition-opacity">
+          <div className="legacy-forum-post-avatar w-10 h-10 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl cursor-pointer hover:opacity-80 transition-opacity">
             {post.author.avatar}
           </div>
         </div>
@@ -168,7 +168,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           </span>
 
           {/* Post text */}
-          <p className="text-[15px] text-slate-900 dark:text-rdark-text leading-[1.5] whitespace-pre-wrap">
+          <p className="legacy-forum-post-text text-[15px] text-slate-900 dark:text-rdark-text leading-[1.5] whitespace-pre-wrap">
             {post.content}
           </p>
 
@@ -176,7 +176,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           {post.images && post.images.length > 0 && <ImageGrid images={post.images} />}
 
           {/* Action bar */}
-          <div className="flex items-center justify-between mt-2 -ml-2 max-w-[450px]">
+          <div className="legacy-forum-post-actions flex items-center justify-between mt-2 -ml-2 max-w-[450px]">
             <ActionBtn
               icon={<MessageCircle size={17} className="group-hover:text-blue-500 transition-colors" />}
               count={formatCount(post.comments.length)}
@@ -235,7 +235,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="mt-2 pt-3 border-t border-slate-100 dark:border-rdark-border">
+                <div className="legacy-forum-comments mt-2 pt-3 border-t border-slate-100 dark:border-rdark-border">
                   {post.comments.length === 0 && (
                     <p className="text-[13px] text-slate-400 dark:text-rdark-text2 mb-3">还没有回复，来抢沙发！</p>
                   )}

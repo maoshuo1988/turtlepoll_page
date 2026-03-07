@@ -6,13 +6,13 @@ import type { ViewType } from './components/Sidebar';
 import { HeroPrediction } from './components/HeroPrediction';
 import { NewsFeed } from './components/NewsFeed';
 import { Forum } from './components/Forum';
-import { BattleView } from './components/BattleView';
 import { PetChat } from './components/PetChat';
 import { PetPage } from './components/PetPage';
 import { EventBattle } from './components/EventBattle';
-import { Lab } from './components/Lab';
 import { Shop } from './components/Shop';
 import { TopicDetail } from './components/TopicDetail';
+import { BattleSquarePixel } from './components/BattleSquarePixel';
+import { TurtleDivePixel } from './components/TurtleDivePixel';
 import type { NewsItem, ForumPost, Battle, BattleSide, PetSkin, HotTopic } from './data/mock_data';
 import {
   mockUser,
@@ -32,7 +32,7 @@ function App() {
   const [petDialogue, setPetDialogue] = useState<string | null>(null);
   const [betFlash, setBetFlash] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<NewsItem['type'] | 'all'>('all');
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') !== 'light');
   const [activeView, setActiveView] = useState<ViewType>('predictions');
   const [forumPosts, setForumPosts] = useState<ForumPost[]>(mockForumPosts);
   const [battles, setBattles] = useState<Battle[]>(mockBattles);
@@ -43,6 +43,7 @@ function App() {
   const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);
   const [selectedTopic, setSelectedTopic] = useState<HotTopic | null>(null);
   const isEventBattleActive = activeView === 'predictions' && !!selectedNewsId;
+  const usePredStyleLayout = true;
 
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
@@ -195,11 +196,16 @@ function App() {
     );
   }, []);
 
+  void battles;
+  void handleCreateBattle;
+  void handleAcceptBattle;
+  void handleResolveBattle;
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-rdark transition-colors">
+    <div className={`legacy-fusion-app fixed-sidebar-style min-h-screen bg-slate-50 dark:bg-rdark transition-colors ${usePredStyleLayout ? 'home-main-style' : ''}`}>
       {/* Top nav — minimal */}
-      <header className="sticky top-0 z-50 bg-white/80 dark:bg-rdark-card/95 backdrop-blur-xl border-b border-slate-100 dark:border-rdark-border">
-        <div className="flex items-center gap-4 px-8 py-2.5">
+      <header className="app-header sticky top-0 z-50 bg-white/80 dark:bg-rdark-card/95 backdrop-blur-xl border-b border-slate-100 dark:border-rdark-border">
+        <div className="flex items-center gap-5 px-8 py-2.5">
           {/* Logo */}
           <div className="flex items-center gap-2 shrink-0 cursor-pointer group">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="shrink-0">
@@ -258,13 +264,9 @@ function App() {
       </header>
 
       {/* Main layout */}
-      <main
-        className={`flex min-h-[calc(100vh-56px)] ${
-          isEventBattleActive ? 'gap-0 px-0 py-0' : 'gap-6 p-6 px-8'
-        }`}
-      >
+      <main className="app-main flex min-h-[calc(100vh-56px)] gap-8 p-6 px-10">
         {/* Left sidebar */}
-        <aside className="w-[260px] shrink-0 hidden xl:block sticky top-[57px] self-start">
+        <aside className="app-sidebar w-[360px] shrink-0 hidden xl:block sticky self-start">
           <Sidebar
             balance={balance}
             winStreak={mockUser.winStreak}
@@ -286,40 +288,44 @@ function App() {
         </aside>
 
         {/* Divider between sidebar and content */}
-        <div className="hidden xl:block w-px shrink-0 bg-slate-200 dark:bg-rdark-border" />
+        <div className="hidden xl:block w-px shrink-0 bg-slate-200 dark:bg-rdark-border opacity-60" />
 
         {/* Center content */}
-        <div className={`flex-1 min-w-0 ${isEventBattleActive ? 'h-[calc(100vh-56px)]' : 'space-y-6'}`}>
+        <div className="app-content flex-1 min-w-0 space-y-6">
           {activeView === 'predictions' ? (
             selectedNewsId ? (
-              <EventBattle
-                news={[heroNews, ...mockNews].find((n) => n.id === selectedNewsId) ?? heroNews}
-                onBack={() => setSelectedNewsId(null)}
-                userSide={selectedNewsId ? userVotes[selectedNewsId] ?? null : null}
-                onBet={handleBet}
-              />
+              <section className="view-shell view-event-battle">
+                <EventBattle
+                  news={[heroNews, ...mockNews].find((n) => n.id === selectedNewsId) ?? heroNews}
+                  onBack={() => setSelectedNewsId(null)}
+                  userSide={selectedNewsId ? userVotes[selectedNewsId] ?? null : null}
+                  onBet={handleBet}
+                />
+              </section>
             ) : selectedTopic ? (
-              <TopicDetail
-                topic={selectedTopic}
-                relatedNews={
-                  selectedTopic.relatedNewsId
-                    ? [heroNews, ...mockNews].find((n) => n.id === selectedTopic.relatedNewsId) ?? null
-                    : null
-                }
-                relatedPosts={
-                  selectedTopic.relatedNewsId
-                    ? forumPosts.filter((p) => p.relatedNewsId === selectedTopic.relatedNewsId)
-                    : []
-                }
-                onBack={() => setSelectedTopic(null)}
-                onBet={handleBet}
-                onEnterBattle={setSelectedNewsId}
-                onLikePost={handleLikePost}
-                onLikeComment={handleLikeComment}
-                onAddComment={handleAddComment}
-              />
+              <section className="view-shell view-topic">
+                <TopicDetail
+                  topic={selectedTopic}
+                  relatedNews={
+                    selectedTopic.relatedNewsId
+                      ? [heroNews, ...mockNews].find((n) => n.id === selectedTopic.relatedNewsId) ?? null
+                      : null
+                  }
+                  relatedPosts={
+                    selectedTopic.relatedNewsId
+                      ? forumPosts.filter((p) => p.relatedNewsId === selectedTopic.relatedNewsId)
+                      : []
+                  }
+                  onBack={() => setSelectedTopic(null)}
+                  onBet={handleBet}
+                  onEnterBattle={setSelectedNewsId}
+                  onLikePost={handleLikePost}
+                  onLikeComment={handleLikeComment}
+                  onAddComment={handleAddComment}
+                />
+              </section>
             ) : (
-              <>
+              <section className="view-shell view-predictions">
                 <AnimatePresence>
                   {betFlash === heroNews.id && (
                     <motion.div
@@ -332,51 +338,61 @@ function App() {
                 </AnimatePresence>
                 <HeroPrediction news={heroNews} onBet={handleBet} onEnterBattle={setSelectedNewsId} />
                 <NewsFeed items={filteredNews} onBet={handleBet} onEnterBattle={setSelectedNewsId} />
-              </>
+              </section>
             )
           ) : activeView === 'forum' ? (
-            <Forum
-              posts={forumPosts}
-              onNewPost={handleNewPost}
-              onLikePost={handleLikePost}
-              onLikeComment={handleLikeComment}
-              onAddComment={handleAddComment}
-            />
+            <section className="view-shell view-forum">
+              <Forum
+                posts={forumPosts}
+                onNewPost={handleNewPost}
+                onLikePost={handleLikePost}
+                onLikeComment={handleLikeComment}
+                onAddComment={handleAddComment}
+              />
+            </section>
           ) : activeView === 'pet' ? (
-            <PetPage
-              pet={currentPet}
-              balance={balance}
-              winRate={0.68}
-              winStreak={mockUser.winStreak}
-              totalPredictions={42}
-              onBack={() => setActiveView('predictions')}
-              skins={skins}
-              onEquipSkin={handleEquipSkin}
-            />
+            <section className="view-shell view-pet">
+              <PetPage
+                pet={currentPet}
+                balance={balance}
+                winRate={0.68}
+                winStreak={mockUser.winStreak}
+                totalPredictions={42}
+                onBack={() => setActiveView('predictions')}
+                skins={skins}
+                onEquipSkin={handleEquipSkin}
+              />
+            </section>
           ) : activeView === 'lab' ? (
-            <Lab onBack={() => setActiveView('predictions')} />
+            <section className="view-shell view-lab">
+              <TurtleDivePixel onBack={() => setActiveView('predictions')} />
+            </section>
           ) : activeView === 'shop' ? (
-            <Shop
-              balance={balance}
-              onBalanceChange={(delta) => setBalance((b) => b + delta)}
-              pet={currentPet}
-              onStaminaChange={setPetStamina}
-              skins={skins}
-              onSkinUnlock={(skinId) =>
-                setSkins((prev) =>
-                  prev.map((s) => (s.id === skinId ? { ...s, owned: true } : s)),
-                )
-              }
-              onBack={() => setActiveView('predictions')}
-            />
+            <section className="view-shell view-shop">
+              <Shop
+                balance={balance}
+                onBalanceChange={(delta) => setBalance((b) => b + delta)}
+                pet={currentPet}
+                onStaminaChange={setPetStamina}
+                skins={skins}
+                onSkinUnlock={(skinId) =>
+                  setSkins((prev) =>
+                    prev.map((s) => (s.id === skinId ? { ...s, owned: true } : s)),
+                  )
+                }
+                onBack={() => setActiveView('predictions')}
+              />
+            </section>
           ) : (
-            <BattleView
-              battles={battles}
-              userBalance={balance}
-              onCreateBattle={handleCreateBattle}
-              onAcceptBattle={handleAcceptBattle}
-              onResolveBattle={handleResolveBattle}
-            />
+            <section className="view-shell view-battle-square">
+              <BattleSquarePixel
+                battles={battles}
+                userBalance={balance}
+                onCreateBattle={handleCreateBattle}
+                onAcceptBattle={handleAcceptBattle}
+                onResolveBattle={handleResolveBattle}
+              />
+            </section>
           )}
         </div>
       </main>

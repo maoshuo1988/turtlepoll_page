@@ -107,7 +107,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, stam
   };
 
   return (
-    <div className={`flex flex-col ${fullScreen ? 'h-full' : 'h-[360px]'}`}>
+    <div className={`legacy-pet-chat flex flex-col ${fullScreen ? 'h-full' : 'h-[360px]'}`}>
       {/* Header */}
       <div className="flex items-center gap-2.5 px-3 py-2.5 border-b border-emerald-100 dark:border-emerald-900/30 shrink-0">
         <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 grid place-items-center text-base">

@@ -127,7 +127,7 @@ export const Shop: React.FC<ShopProps> = ({
   const ownedSkins = skins.filter((s) => s.owned);
 
   return (
-    <div className="space-y-5">
+    <div className="legacy-shop-page space-y-5">
       {/* ━━━ Header ━━━ */}
       <div className={`${card} px-5 py-4 flex items-center justify-between`}>
         <button

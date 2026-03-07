@@ -54,8 +54,8 @@ const card = 'rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dar
 const NAV_ITEMS: { key: string; label: string; icon: React.ReactNode; view?: ViewType; enabled: boolean }[] = [
   { key: 'predictions', label: '预测市场', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
   { key: 'forum', label: '社区广场', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
-  { key: 'battle', label: '对局', icon: <Swords size={22} />, view: 'battle', enabled: true },
-  { key: 'lab', label: '战斗实验室', icon: <FlaskConical size={22} />, view: 'lab', enabled: true },
+  { key: 'battle', label: '开战广场', icon: <Swords size={22} />, view: 'battle', enabled: true },
+  { key: 'lab', label: '龟龟跳海', icon: <FlaskConical size={22} />, view: 'lab', enabled: true },
   { key: 'rank', label: '排行榜', icon: <Trophy size={22} />, enabled: true },
   { key: 'shop', label: '抽奖&商店', icon: <Gift size={22} />, view: 'shop' as ViewType, enabled: true },
   { key: 'inventory', label: '背包&资产', icon: <Backpack size={22} />, enabled: false },
@@ -129,7 +129,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   /* ── 宠物空间模式：聊天铺满整个侧栏 ── */
   if (activeView === 'pet') {
     return (
-      <div className="flex flex-col h-[calc(100vh-80px)]">
+      <div className="legacy-sidebar flex flex-col h-[calc(100vh-80px)]">
         <div className={`${card} flex-1 overflow-hidden`}>
           <PetChat pet={pet} onClose={() => onViewChange('predictions')} fullScreen />
         </div>
@@ -138,7 +138,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)]">
+    <div className="legacy-sidebar flex flex-col h-[calc(100vh-80px)]">
       <div className="overflow-hidden shrink-0 flex flex-col gap-3.5 py-1">
 
         {/* ━━━ 区域1：个人中心 ━━━ */}
@@ -464,20 +464,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* ━━━ 区域3：导航目录（独立滚动） ━━━ */}
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-1 py-1">
-        <div className="space-y-1">
+        <div className="legacy-sidebar-nav space-y-1">
           {NAV_ITEMS.map((item) => {
               const isActive = item.view ? activeView === item.view : (item.key === 'rank' && rankOpen);
+              const isFeatured = item.key === 'lab';
 
               return (
                 <React.Fragment key={item.key}>
                   <button
                     onClick={() => handleNavClick(item)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[18px] font-semibold cursor-pointer transition-all border-0 text-left ${
+                    className={`sidebar-nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[16px] font-semibold cursor-pointer transition-all border-0 text-left ${
                       !item.enabled
-                        ? 'text-slate-300 dark:text-rdark-text2/50 cursor-default'
+                        ? 'sidebar-nav-item-disabled text-slate-300 dark:text-rdark-text2/50 cursor-default'
                         : isActive
-                          ? 'bg-emerald-50 dark:bg-emerald-900/15 text-emerald-700 dark:text-emerald-400'
-                          : 'bg-transparent text-slate-600 dark:text-rdark-text hover:bg-slate-100/80 dark:hover:bg-rdark-hover'
+                          ? 'sidebar-nav-item-on bg-emerald-50 dark:bg-emerald-900/15 text-emerald-700 dark:text-emerald-400'
+                          : `bg-transparent text-slate-600 dark:text-rdark-text hover:bg-slate-100/80 dark:hover:bg-rdark-hover ${isFeatured ? 'sidebar-nav-item-featured' : ''}`
                     }`}
                   >
                     <span className={`w-6 shrink-0 flex items-center justify-center ${

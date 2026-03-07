@@ -470,7 +470,7 @@ export const PetPage: React.FC<PetPageProps> = ({
   }, []);
 
   return (
-    <div className="w-full space-y-5">
+    <div className="legacy-pet-page w-full space-y-5">
 
       {/* ━━━ 上半：宠物形象 & 空间 ━━━ */}
       <div className={`${card} overflow-hidden`}>
