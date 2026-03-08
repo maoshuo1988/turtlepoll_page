@@ -7,7 +7,11 @@ interface RankingsProps {
 }
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉'];
-const RANK_COLORS: Record<number, string> = { 1: '#f5a623', 2: '#9ca3af', 3: '#cd7c3e' };
+const RANK_COLOR_CLASS: Record<number, string> = {
+  1: 'text-amber-500',
+  2: 'text-slate-400',
+  3: 'text-amber-700 dark:text-amber-600',
+};
 
 export const Rankings: React.FC<RankingsProps> = ({ users, topics }) => {
   return (
@@ -23,11 +27,10 @@ export const Rankings: React.FC<RankingsProps> = ({ users, topics }) => {
             key={u.rank}
             className="flex items-center gap-2.5 py-2 border-b border-black/8 dark:border-rdark-border last:border-b-0"
           >
-            <div
-              className="w-6 text-center font-extrabold text-sm"
-              style={{ color: RANK_COLORS[u.rank] || (u.isMe ? '#0d9488' : '#9ca3af') }}
-            >
-              {u.rank <= 3 ? RANK_MEDALS[u.rank - 1] : u.rank}
+            <div className="w-6 text-center font-extrabold text-sm">
+              <span className={RANK_COLOR_CLASS[u.rank] || (u.isMe ? 'text-teal-600 dark:text-teal-400' : 'text-slate-400')}>
+                {u.rank <= 3 ? RANK_MEDALS[u.rank - 1] : u.rank}
+              </span>
             </div>
 
             <div className="w-[34px] h-[34px] rounded-full shrink-0 grid place-items-center text-[17px] bg-slate-100 dark:bg-rdark-input border-2 border-black/8 dark:border-rdark-border">
@@ -38,21 +41,14 @@ export const Rankings: React.FC<RankingsProps> = ({ users, topics }) => {
               <div className="text-[13px] font-semibold flex items-center gap-1.5 dark:text-rdark-text">
                 {u.name}
                 {u.isMe && (
-                  <span
-                    className="text-[10px] px-1.5 py-0.5 rounded font-bold"
-                    style={{
-                      background: 'rgba(45,212,191,0.15)',
-                      color: '#0d9488',
-                      border: '1px solid rgba(45,212,191,0.3)',
-                    }}
-                  >
+                  <span className="text-[10px] px-1.5 py-0.5 rounded font-bold bg-teal-500/15 text-teal-700 dark:text-teal-400 border border-teal-500/30">
                     ME
                   </span>
                 )}
               </div>
               <div className="text-[11px] text-gray-500 dark:text-rdark-text2">
                 {u.streak ? (
-                  <span className="font-bold" style={{ color: '#ff4757' }}>🔥 {u.streak}连胜</span>
+                  <span className="font-bold text-rose-500">🔥 {u.streak}连胜</span>
                 ) : (
                   <span>胜率 {(u.winRate * 100).toFixed(0)}%</span>
                 )}
@@ -86,8 +82,7 @@ export const Rankings: React.FC<RankingsProps> = ({ users, topics }) => {
               <div className="text-[11px] text-gray-500 dark:text-rdark-text2">{t.heat.toLocaleString()} 票</div>
             </div>
             <div
-              className="text-xs font-bold whitespace-nowrap"
-              style={{ color: t.isHot ? '#ff4757' : '#22c55e' }}
+              className={`text-xs font-bold whitespace-nowrap ${t.isHot ? 'text-rose-500' : 'text-emerald-500'}`}
             >
               {t.isHot ? '🔥' : '↑'} {t.change}
             </div>
