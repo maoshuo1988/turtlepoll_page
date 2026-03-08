@@ -26,12 +26,12 @@ export const Forum: React.FC<ForumProps> = ({
     <div className="legacy-forum relative min-h-screen border-x border-slate-200 bg-slate-50 dark:border-rdark-border dark:bg-rdark-card">
       {/* ── Sticky tab header ── */}
       <div className="legacy-forum-tabs sticky top-0 z-30 w-full border-b border-cyan-500/20 bg-[radial-gradient(circle_at_30%_0%,rgba(34,211,238,0.18),transparent_46%),linear-gradient(180deg,#071329_0%,#091a34_100%)] backdrop-blur-xl dark:border-rdark-border">
-        <div className="legacy-forum-tabs-row mx-auto flex ">
+        <div className="legacy-forum-tabs-row mx-auto flex h-[50px]">
           {(['recommend', 'following'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`legacy-forum-tab relative flex-1 cursor-pointer border-0 bg-transparent py-3.5 text-[24px] tracking-[0.02em] transition-colors ${
+              className={`legacy-forum-tab relative flex-1 cursor-pointer border-0 bg-transparent py-3.5 text-[16px] tracking-[0.02em] transition-colors ${
                 activeTab === tab
                   ? 'legacy-forum-tab-on font-extrabold text-[#e6f7ff]'
                   : 'font-semibold text-[#9bb4d6] hover:text-[#c7ddf5]'
@@ -39,7 +39,7 @@ export const Forum: React.FC<ForumProps> = ({
             >
               {tab === 'recommend' ? '推荐' : '关注'}
               {activeTab === tab && (
-                <div className="legacy-forum-tab-indicator absolute bottom-0 left-1/2 h-[3px] w-[112px] -translate-x-1/2 rounded-full bg-[#2ce8d4] shadow-[0_0_12px_rgba(44,232,212,0.8)]" />
+                <div className="!mt-2 legacy-forum-tab-indicator absolute bottom-0 left-1/2 h-[3px] w-[112px] -translate-x-1/2 rounded-full bg-[#2ce8d4] shadow-[0_0_12px_rgba(44,232,212,0.8)]" />
               )}
             </button>
           ))}
