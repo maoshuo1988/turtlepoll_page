@@ -234,7 +234,7 @@ function App() {
       />
 
       {/* Main layout */}
-      <main className="app-main !px-4 flex h-[calc(100vh-56px)] overflow-hidden gap-4 px-5 py-6">
+      <main className="app-main !px-4 flex h-[calc(100vh-68px)] overflow-hidden gap-4 px-5 py-6">
         {/* Left sidebar */}
         <aside className="app-sidebar hidden xl:block shrink-0 self-start sticky top-14 h-[calc(100vh-72px)] overflow-y-auto overscroll-contain w-[420px] min-w-[420px] max-w-[420px]">
           <Sidebar
