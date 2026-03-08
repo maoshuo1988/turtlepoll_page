@@ -5,14 +5,14 @@ import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
 import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
 
-export type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop';
+export type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'predictions', label: '预测市场', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
   { key: 'forum', label: '社区广场', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
   { key: 'battle', label: '开战广场', icon: <Swords size={22} />, view: 'battle', enabled: true },
   { key: 'lab', label: '龟龟跳海', icon: <FlaskConical size={22} />, view: 'lab', enabled: true },
-  { key: 'rank', label: '排行榜', icon: <Trophy size={22} />, enabled: true },
+  { key: 'rank', label: '排行榜', icon: <Trophy size={22} />, view: 'rank', enabled: true },
   { key: 'shop', label: '抽奖&商店', icon: <Gift size={22} />, view: 'shop', enabled: true },
   { key: 'inventory', label: '背包&资产', icon: <Backpack size={22} />, enabled: false },
   { key: 'club', label: '俱乐部&工会', icon: <Users size={22} />, enabled: false },
@@ -34,7 +34,6 @@ interface SidebarMainPanelsProps {
   dialogueKey: number;
   selectedTag: string | null;
   activeView: ViewType;
-  rankOpen: boolean;
   onOpenChat: () => void;
   onCloseChat: () => void;
   onViewPet: () => void;
@@ -56,7 +55,6 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
   dialogueKey,
   selectedTag,
   activeView,
-  rankOpen,
   onOpenChat,
   onCloseChat,
   onViewPet,
@@ -91,7 +89,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
         />
       </div>
 
-      <SidebarNavMenu navItems={NAV_ITEMS} activeView={activeView} rankOpen={rankOpen} onNavClick={onNavClick} />
+      <SidebarNavMenu navItems={NAV_ITEMS} activeView={activeView} onNavClick={onNavClick} />
     </>
   );
 };

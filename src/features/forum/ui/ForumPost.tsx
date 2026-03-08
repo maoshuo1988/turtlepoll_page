@@ -128,12 +128,12 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: index * 0.03, duration: 0.15 }}
-      className="legacy-forum-post px-4 py-3 border-b border-slate-100 dark:border-rdark-border hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+      className="legacy-forum-post !py-3 border-b border-slate-100 dark:border-rdark-border hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
     >
       <div className="legacy-forum-post-row flex gap-3">
         {/* Avatar */}
         <div className="shrink-0 pt-0.5">
-          <div className="legacy-forum-post-avatar w-10 h-10 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl cursor-pointer hover:opacity-80 transition-opacity">
+          <div className="legacy-forum-post-avatar w-15 h-15 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl cursor-pointer hover:opacity-80 transition-opacity">
             {post.author.avatar}
           </div>
         </div>
@@ -142,7 +142,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
         <div className="flex-1 min-w-0">
           {/* Header: name / handle / time / more */}
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-1 min-w-0 flex-wrap">
+            <div className="flex items-center gap-2 min-w-0 flex-wrap">
               <span className="text-[15px] font-bold text-slate-900 dark:text-rdark-text truncate cursor-pointer hover:underline">
                 {post.author.name}
               </span>
@@ -163,12 +163,12 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           </div>
 
           {/* Tag badge */}
-          <span className={`inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[post.tag]}`}>
+          <span className={`inline-block text-[11px] font-semibold px-2 !py-2 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[post.tag]}`}>
             #{post.tag}
           </span>
 
           {/* Post text */}
-          <p className="legacy-forum-post-text text-[15px] text-slate-900 dark:text-rdark-text leading-[1.5] whitespace-pre-wrap">
+          <p className="legacy-forum-post-text !py-2 text-[15px] text-slate-900 dark:text-rdark-text leading-[1.5] whitespace-pre-wrap">
             {post.content}
           </p>
 
@@ -176,7 +176,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           {post.images && post.images.length > 0 && <ImageGrid images={post.images} />}
 
           {/* Action bar */}
-          <div className="legacy-forum-post-actions flex items-center justify-between mt-2 -ml-2 max-w-[450px]">
+          <div className="legacy-forum-post-actions flex items-center justify-between !mt-4 -ml-2 max-w-[450px]">
             <ActionBtn
               icon={<MessageCircle size={17} className="group-hover:text-blue-500 transition-colors" />}
               count={formatCount(post.comments.length)}

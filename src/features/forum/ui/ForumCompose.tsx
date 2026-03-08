@@ -8,12 +8,15 @@ interface ForumComposeProps {
 }
 
 const tags: ForumPost['tag'][] = ['讨论', '爆料', '分析'];
+const visibilityOptions = ['所有人可见', '仅自己可见', '所有人不可见'] as const;
 
 export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
   const [content, setContent] = useState('');
   const [tag, setTag] = useState<ForumPost['tag']>('讨论');
   const [images, setImages] = useState<string[]>([]);
   const [focused, setFocused] = useState(false);
+  const [visibility, setVisibility] = useState<(typeof visibilityOptions)[number]>('所有人可见');
+  const [visibilityOpen, setVisibilityOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = () => {
@@ -44,32 +47,62 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
   const MAX_CHARS = 280;
 
   return (
-    <div className="legacy-forum-compose px-4 py-3">
-      <div className="legacy-forum-compose-row flex gap-3">
-        {/* Avatar */}
-        <div className="legacy-forum-compose-avatar w-10 h-10 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl shrink-0 mt-1">
-          🦊
-        </div>
-
-        {/* Compose area */}
-        <div className="flex-1 min-w-0">
+    <div className="legacy-forum-compose !p-4">
+      <div className="legacy-forum-compose-row">
+        <div className="min-w-0">
           {/* Audience selector (visual only) */}
           {focused && (
-            <button className="text-[13px] font-bold text-blue-500 border border-blue-200 dark:border-blue-800 rounded-full px-3 py-0.5 mb-2 bg-transparent cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-              所有人可见 ▾
-            </button>
+            <div className="relative  !mb-2 inline-block">
+              <button
+                onClick={() => setVisibilityOpen((v) => !v)}
+                className="cursor-pointer rounded bg-cyan-500/10 !px-3 !py-1 text-[12px] font-bold text-cyan-200 transition-colors hover:bg-cyan-500/20"
+              >
+                {visibility} ▾
+              </button>
+              {visibilityOpen && (
+                <div className="absolute left-0 top-[calc(100%+6px)] z-20 min-w-[132px] overflow-hidden rounded-md border border-cyan-300/25 bg-[#0c1f3f] shadow-lg">
+                  {visibilityOptions.map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => {
+                        setVisibility(option);
+                        setVisibilityOpen(false);
+                      }}
+                      className={`block w-full cursor-pointer border-0 px-3 py-1.5 text-left text-[12px] transition-colors ${
+                        visibility === option
+                          ? 'bg-cyan-500/20 text-cyan-100'
+                          : 'bg-transparent text-cyan-200 hover:bg-cyan-500/12'
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
 
-          {/* Textarea */}
-          <textarea
-            ref={textareaRef}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            onFocus={() => setFocused(true)}
-            placeholder="有什么新鲜事？"
-            rows={focused ? 4 : 2}
-            className="legacy-forum-compose-input w-full resize-none bg-transparent border-0 outline-none text-[20px] text-slate-900 dark:text-rdark-text placeholder:text-slate-500/60 dark:placeholder:text-rdark-text2/60 leading-relaxed font-light"
-          />
+          <div className="flex  gap-4 rounded-xl border border-cyan-300/22 bg-[#0a1d3c]/72 !px-3 !py-2 backdrop-blur-sm">
+            <div className="grid h-15 w-15 shrink-0 place-items-center rounded-full bg-[#142f58] text-cyan-300">💬</div>
+            <textarea
+              ref={textareaRef}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              onFocus={() => setFocused(true)}
+              placeholder="写点什么..."
+              rows={ 5 }
+              className="legacy-forum-compose-input max-h-100 w-full resize-none border-0 bg-transparent text-[14px] leading-relaxed text-[#d9e8ff] outline-none placeholder:text-[#7f9bc4]"
+            />
+            <div className='flex items-end'>
+              <button
+              onClick={handleSubmit}
+              disabled={!canPost || charCount > MAX_CHARS}
+              className="legacy-forum-compose-submit h-[36px] min-w-[86px] rounded-[8px] border-0 bg-gradient-to-b from-[#33c6bb] to-[#219f95] px-4 text-[14px] font-bold text-[#e8fff9] shadow-[0_0_12px_rgba(35,187,176,0.45)] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              发布
+            </button>
+            </div>
+          </div>
 
           {/* Image preview grid */}
           {images.length > 0 && (
@@ -92,16 +125,16 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
 
           {/* Tag selector */}
           {focused && (
-            <div className="flex items-center gap-1.5 pb-3 mb-3 border-b border-slate-100 dark:border-rdark-border">
-              <span className="text-[12px] text-slate-400 dark:text-rdark-text2 mr-1">标签:</span>
+            <div className="!mb-2 !mt-2 flex items-center gap-1.5 border-b border-cyan-400/20 !pb-2">
+              <span className="!mr-1 text-[16px] text-[#8eb0da]">标签:</span>
               {tags.map((t) => (
                 <button
                   key={t}
                   onClick={() => setTag(t)}
-                  className={`text-[12px] font-semibold px-3 py-1 rounded-full cursor-pointer transition-all border ${
+                  className={`cursor-pointer rounded-full border !px-3 !py-1 text-[16px] font-semibold transition-all ${
                     tag === t
                       ? `${FORUM_TAGS[t]} border-transparent`
-                      : 'bg-transparent text-slate-500 dark:text-rdark-text2 border-slate-200 dark:border-rdark-border hover:bg-slate-50 dark:hover:bg-rdark-hover'
+                      : 'border-cyan-300/20 bg-transparent text-[#9eb8da] hover:bg-cyan-500/10'
                   }`}
                 >
                   {t}
@@ -111,53 +144,31 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
           )}
 
           {/* Bottom toolbar */}
-          <div className="legacy-forum-compose-foot flex items-center justify-between">
+          <div className="legacy-forum-compose-foot flex items-center justify-between !pt-1">
             {/* Media buttons */}
-            <div className="legacy-forum-compose-tools flex items-center -ml-2">
+            <div className="legacy-forum-compose-tools flex items-center gap-1">
               <button
                 onClick={addImage}
                 disabled={images.length >= 4}
-                className="p-2 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-500 cursor-pointer border-0 bg-transparent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="cursor-pointer rounded-full border-0 bg-transparent p-1.5 text-[#7fb6f6] transition-colors hover:bg-cyan-500/10 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-30"
                 title="添加图片"
               >
-                <Image size={18} />
+                <Image size={24} />
               </button>
-              <button className="p-2 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-500 cursor-pointer border-0 bg-transparent transition-colors">
-                <BarChart3 size={18} />
+              <button className="cursor-pointer rounded-full border-0 bg-transparent !p-1.5 text-[#7fb6f6] transition-colors hover:bg-cyan-500/10 hover:text-cyan-300">
+                <BarChart3 size={24} />
               </button>
-              <button className="p-2 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-500 cursor-pointer border-0 bg-transparent transition-colors">
-                <Smile size={18} />
+              <button className="cursor-pointer rounded-full border-0 bg-transparent !p-1.5 text-[#7fb6f6] transition-colors hover:bg-cyan-500/10 hover:text-cyan-300">
+                <Smile size={24} />
               </button>
-              <button className="p-2 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-500 cursor-pointer border-0 bg-transparent transition-colors">
-                <MapPin size={18} />
+              <button className="cursor-pointer rounded-full border-0 bg-transparent !p-1.5 text-[#7fb6f6] transition-colors hover:bg-cyan-500/10 hover:text-cyan-300">
+                <MapPin size={24} />
               </button>
             </div>
 
             {/* Right: char count + post button */}
-            <div className="flex items-center gap-3">
-              {/* Circular character counter */}
-              {focused && charCount > 0 && (
-                <div className="relative w-6 h-6">
-                  <svg viewBox="0 0 24 24" className="w-6 h-6 -rotate-90">
-                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"
-                      className="text-slate-200 dark:text-rdark-border" />
-                    <circle cx="12" cy="12" r="10" fill="none" strokeWidth="2"
-                      strokeDasharray={`${Math.min(charCount / MAX_CHARS, 1) * 62.8} 62.8`}
-                      className={charCount > MAX_CHARS ? 'text-red-500' : charCount > MAX_CHARS * 0.8 ? 'text-amber-500' : 'text-blue-500'}
-                      strokeLinecap="round" />
-                  </svg>
-                </div>
-              )}
-
-              {focused && <div className="w-px h-6 bg-slate-200 dark:bg-rdark-border" />}
-
-              <button
-                onClick={handleSubmit}
-                disabled={!canPost || charCount > MAX_CHARS}
-                className="legacy-forum-compose-submit px-5 py-2 rounded-full text-[15px] font-bold cursor-pointer transition-all border-0 bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-              >
-                发帖
-              </button>
+            <div className="flex items-center gap-2">
+              <button className="cursor-default border-0 bg-transparent text-[12px] font-medium text-[#8eb0da]">•••</button>
             </div>
           </div>
         </div>

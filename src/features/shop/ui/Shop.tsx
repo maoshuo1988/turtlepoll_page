@@ -127,9 +127,9 @@ export const Shop: React.FC<ShopProps> = ({
   const ownedSkins = skins.filter((s) => s.owned);
 
   return (
-    <div className="legacy-shop-page space-y-5">
+    <div className="legacy-shop-page space-y-5 !mt-4">
       {/* ━━━ Header ━━━ */}
-      <div className={`${card} px-5 py-4 flex items-center justify-between`}>
+      <div className={`${card} !px-5 !py-4 flex items-center justify-between`}>
         <button
           onClick={onBack}
           className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-rdark-text2 hover:text-slate-700 dark:hover:text-rdark-text transition"
@@ -145,7 +145,7 @@ export const Shop: React.FC<ShopProps> = ({
       </div>
 
       {/* ━━━ Gacha Section ━━━ */}
-      <div className={`${card} px-5 py-6`}>
+      <div className={`${card} !mt-4 !px-5 !py-6`}>
         <div className="flex flex-col items-center">
           {/* ── Egg / Result Area ── */}
           <div className="relative w-48 h-56 flex items-center justify-center mb-4">
@@ -187,12 +187,12 @@ export const Shop: React.FC<ShopProps> = ({
                     />
                   )}
                   <span className="text-8xl relative z-10 drop-shadow-lg">{result.avatar}</span>
-                  <div className="mt-3 text-center relative z-10">
+                  <div className="!mt-3 text-center relative z-10">
                     <p className="font-bold text-lg text-slate-800 dark:text-rdark-text">
                       {result.name}
                     </p>
                     <span
-                      className={`inline-block mt-1 px-2 py-0.5 text-xs font-semibold rounded-full ${RARITY_COLORS[result.rarity]}`}
+                      className={`inline-block !mt-1 !px-2 py-0.5 text-xs font-semibold rounded-full ${RARITY_COLORS[result.rarity]}`}
                     >
                       {result.rarity}
                     </span>
@@ -331,14 +331,14 @@ export const Shop: React.FC<ShopProps> = ({
               whileTap={{ scale: 0.96 }}
               onClick={doGacha}
               disabled={balance < GACHA_COST}
-              className={`px-6 py-2.5 rounded-xl font-bold text-white text-sm transition
+              className={`!px-6 !py-2.5 rounded-xl font-bold text-white text-sm transition
                 ${
                   balance >= GACHA_COST
                     ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-amber-500/25'
                     : 'bg-slate-400 cursor-not-allowed'
                 }`}
             >
-              <Coins size={14} className="inline mr-1.5 -mt-0.5" />
+              <Coins size={14} className="inline !mr-1.5 !-mt-0.5" />
               花 {GACHA_COST} 龟币孵化
             </motion.button>
           ) : phase === 'reveal' ? (
@@ -347,7 +347,7 @@ export const Shop: React.FC<ShopProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               onClick={resetGacha}
-              className="px-6 py-2.5 rounded-xl font-bold text-sm bg-cyan-500 hover:bg-cyan-600 text-white transition shadow-lg shadow-cyan-500/25"
+              className="!px-6 !py-2.5 rounded-xl font-bold text-sm bg-cyan-500 hover:bg-cyan-600 text-white transition shadow-lg shadow-cyan-500/25"
             >
               继续孵化
             </motion.button>
@@ -363,7 +363,7 @@ export const Shop: React.FC<ShopProps> = ({
         </div>
 
         {/* ── Probability hint ── */}
-        <div className="mt-4 flex justify-center gap-3 text-[10px] text-slate-400 dark:text-rdark-text2">
+        <div className="!mt-4 flex justify-center gap-3 text-[16px] text-slate-400 dark:text-rdark-text2">
           <span>N 50%</span>
           <span className="text-blue-500">R 30%</span>
           <span className="text-purple-500">SR 15%</span>
@@ -372,21 +372,21 @@ export const Shop: React.FC<ShopProps> = ({
       </div>
 
       {/* ━━━ Skin Collection ━━━ */}
-      <div className={`${card} px-5 py-4`}>
-        <h3 className="text-sm font-bold text-slate-700 dark:text-rdark-text mb-3">
+      <div className={`${card} !mt-4 !px-5 !py-4`}>
+        <h3 className="text-xl font-bold text-slate-700 dark:text-rdark-text !mb-3">
           已获得形象 ({ownedSkins.length}/{skins.length})
         </h3>
-        <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className="flex gap-3 overflow-x-auto !pb-2">
           {skins.map((skin) => (
             <div
               key={skin.id}
-              className={`flex-shrink-0 w-16 h-20 rounded-lg border-2 flex flex-col items-center justify-center gap-1 transition
+              className={`flex-shrink-0 w-32 h-40 rounded-lg border-2 flex flex-col items-center justify-center gap-1 transition
                 ${skin.owned ? RARITY_BORDER_COLORS[skin.rarity] : 'border-slate-200 dark:border-slate-700 opacity-40'}
                 ${skin.equipped ? 'ring-2 ring-cyan-400' : ''}`}
             >
-              <span className="text-2xl">{skin.owned ? skin.avatar : '?'}</span>
+              <span className="text-6xl">{skin.owned ? skin.avatar : '?'}</span>
               <span
-                className={`text-[9px] font-semibold px-1 rounded ${
+                className={`!mt-4 text-[16px] font-semibold !px-1 rounded ${
                   skin.owned ? RARITY_COLORS[skin.rarity] : 'text-slate-400'
                 }`}
               >
@@ -398,9 +398,9 @@ export const Shop: React.FC<ShopProps> = ({
       </div>
 
       {/* ━━━ Apple Shop ━━━ */}
-      <div className={`${card} px-5 py-4`}>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-slate-700 dark:text-rdark-text flex items-center gap-1.5">
+      <div className={`${card} !mt-4 !px-5 !py-4`}>
+        <div className="flex items-center justify-between !mb-3">
+          <h3 className="text-xl font-bold text-slate-700 dark:text-rdark-text flex items-center gap-1.5">
             <span>🍎</span> 体力商店
           </h3>
           {/* Stamina bar */}
@@ -418,7 +418,7 @@ export const Shop: React.FC<ShopProps> = ({
                 />
               ))}
             </div>
-            <span className="text-xs text-slate-500 dark:text-rdark-text2 ml-1">
+            <span className="text-xl text-slate-500 dark:text-rdark-text2 !ml-1">
               {pet.stamina}/{pet.maxStamina}
             </span>
           </div>
@@ -437,7 +437,7 @@ export const Shop: React.FC<ShopProps> = ({
                 whileTap={disabled ? {} : { scale: 0.97 }}
                 onClick={() => buyApple(item)}
                 disabled={disabled}
-                className={`relative rounded-xl p-3 text-center transition border
+                className={`relative rounded-xl !p-3 text-center transition border
                   ${
                     disabled
                       ? 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 opacity-50 cursor-not-allowed'
@@ -452,15 +452,15 @@ export const Shop: React.FC<ShopProps> = ({
                     className="absolute inset-0 rounded-xl bg-green-400/30"
                   />
                 )}
-                <span className="text-3xl block mb-1">{item.icon}</span>
-                <p className="text-xs font-bold text-slate-700 dark:text-rdark-text">
+                <span className="text-4xl block mb-1">{item.icon}</span>
+                <p className="!mt-2 text-xl font-bold text-slate-700 dark:text-rdark-text">
                   {item.name}
                 </p>
-                <p className="text-[10px] text-slate-500 dark:text-rdark-text2 mt-0.5">
+                <p className="text-[16px] text-slate-500 dark:text-rdark-text2 !mt-2">
                   +{item.effect.value} 体力
                 </p>
-                <div className="mt-1.5 flex items-center justify-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
-                  <Coins size={12} /> {item.price}
+                <div className="!mt-1.5 flex items-center justify-center gap-1 text-xl font-semibold text-amber-600 dark:text-amber-400">
+                  <Coins size={20} /> {item.price}
                 </div>
               </motion.button>
             );

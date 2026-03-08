@@ -638,11 +638,11 @@ export const TYPE_LABELS: Record<NewsItem['type'], string> = {
 };
 
 export const TYPE_COLORS: Record<NewsItem['type'], string> = {
-  politics: 'bg-red-100 text-red-600',
-  tech: 'bg-blue-100 text-blue-600',
-  sports: 'bg-green-100 text-green-600',
-  entertainment: 'bg-purple-100 text-purple-600',
-  finance: 'bg-amber-100 text-amber-700',
+  politics: 'bg-red-100/70 text-red-600',
+  tech: 'bg-blue-100/70 text-blue-600',
+  sports: 'bg-green-100/70 text-green-600',
+  entertainment: 'bg-purple-100/70 text-purple-600',
+  finance: 'bg-amber-100/70 text-amber-700',
 };
 
 /* ── Pet Page types & mock data ── */

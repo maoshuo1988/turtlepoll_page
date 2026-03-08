@@ -23,31 +23,30 @@ export const Forum: React.FC<ForumProps> = ({
   const [activeTab, setActiveTab] = useState<FeedTab>('recommend');
 
   return (
-    <div className="legacy-forum bg-white dark:bg-rdark-card border-x border-slate-100 dark:border-rdark-border min-h-screen">
+    <div className="legacy-forum relative min-h-screen border-x border-slate-200 bg-slate-50 dark:border-rdark-border dark:bg-rdark-card">
       {/* ── Sticky tab header ── */}
-      <div className="legacy-forum-tabs sticky top-[57px] z-10 bg-white/80 dark:bg-rdark-card/80 backdrop-blur-md border-b border-slate-100 dark:border-rdark-border">
-        <div className="legacy-forum-tabs-row flex">
+      <div className="legacy-forum-tabs sticky top-0 z-30 w-full border-b border-cyan-500/20 bg-[radial-gradient(circle_at_30%_0%,rgba(34,211,238,0.18),transparent_46%),linear-gradient(180deg,#071329_0%,#091a34_100%)] backdrop-blur-xl dark:border-rdark-border">
+        <div className="legacy-forum-tabs-row mx-auto flex ">
           {(['recommend', 'following'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`legacy-forum-tab flex-1 py-4 text-[15px] cursor-pointer border-0 bg-transparent transition-colors relative hover:bg-black/[0.03] dark:hover:bg-white/[0.03] ${
+              className={`legacy-forum-tab relative flex-1 cursor-pointer border-0 bg-transparent py-3.5 text-[24px] tracking-[0.02em] transition-colors ${
                 activeTab === tab
-                  ? 'legacy-forum-tab-on font-extrabold text-slate-900 dark:text-rdark-text'
-                  : 'font-medium text-slate-500 dark:text-rdark-text2'
+                  ? 'legacy-forum-tab-on font-extrabold text-[#e6f7ff]'
+                  : 'font-semibold text-[#9bb4d6] hover:text-[#c7ddf5]'
               }`}
             >
               {tab === 'recommend' ? '推荐' : '关注'}
               {activeTab === tab && (
-                <div className="legacy-forum-tab-indicator absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-[3px] bg-blue-500 rounded-full" />
+                <div className="legacy-forum-tab-indicator absolute bottom-0 left-1/2 h-[3px] w-[112px] -translate-x-1/2 rounded-full bg-[#2ce8d4] shadow-[0_0_12px_rgba(44,232,212,0.8)]" />
               )}
             </button>
           ))}
         </div>
       </div>
-
       {/* ── Compose area ── */}
-      <div className="border-b border-slate-100 dark:border-rdark-border">
+      <div className="border-b border-cyan-500/20 bg-[radial-gradient(circle_at_25%_0%,rgba(34,211,238,0.15),transparent_44%),linear-gradient(180deg,#091a34_0%,#0a1b36_100%)] px-3 py-2.5">
         <ForumCompose onPost={onNewPost} />
       </div>
 

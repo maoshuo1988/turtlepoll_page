@@ -41,7 +41,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [dialogueKey, setDialogueKey] = useState(0);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
-  const [rankOpen, setRankOpen] = useState(false);
 
   useEffect(() => {
     if (petDialogue) {
@@ -66,10 +65,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const handleNavClick = (item: (typeof NAV_ITEMS)[number]) => {
     if (!item.enabled) return;
-    if (item.key === 'rank') {
-      setRankOpen((v) => !v);
-      return;
-    }
     if (item.key === 'predictions') {
       setSelectedTag(null);
       onCategoryChange('all');
@@ -101,7 +96,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         dialogueKey={dialogueKey}
         selectedTag={selectedTag}
         activeView={activeView}
-        rankOpen={rankOpen}
         onOpenChat={() => setChatOpen(true)}
         onCloseChat={() => setChatOpen(false)}
         onViewPet={() => onViewChange('pet')}

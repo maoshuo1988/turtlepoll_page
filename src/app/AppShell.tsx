@@ -3,14 +3,15 @@ import { Sidebar } from '../features/layout';
 import type { ViewType } from '../features/layout';
 import { EventBattle, PredictionsView } from '../features/predictions';
 import { Forum } from '../features/forum';
-import { PetPage } from '../features/pet';
 import { Shop } from '../features/shop';
 import { TopicDetail } from '../features/topic';
 import { BattleSquarePixel } from '../features/battle';
 import { TurtleDivePixel } from '../features/lab';
+import { RankPage } from '../features/rank';
 import { FloatingPetChat } from '../features/layout/ui/FloatingPetChat';
 import { AppFooter } from './AppFooter';
 import { AppHeader } from './AppHeader';
+import { GuideTourModal } from './GuideTourModal';
 import type { NewsItem, ForumPost, Battle, BattleSide, PetSkin, HotTopic } from '../data/mock_data';
 import {
   mockUser,
@@ -51,6 +52,7 @@ function App() {
   const [battles, setBattles] = useState<Battle[]>(mockBattles);
   const [floatingChatOpen, setFloatingChatOpen] = useState(false);
   const [selectedNewsId, setSelectedNewsId] = useState<string | null>(null);
+  const [guideOpen, setGuideOpen] = useState(false);
   const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});
   const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);
   const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);
@@ -62,15 +64,6 @@ function App() {
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
   const currentPet = { ...mockUser.petInfo, stamina: petStamina, avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar };
-
-  const handleEquipSkin = useCallback((skinId: string) => {
-    setSkins((prev) =>
-      prev.map((s) => ({
-        ...s,
-        equipped: s.id === skinId,
-      })),
-    );
-  }, []);
 
   useEffect(() => {
     applyTheme(theme);
@@ -234,7 +227,11 @@ function App() {
 
   return (
     <div className={`legacy-fusion-app fixed-sidebar-style h-screen overflow-hidden bg-slate-50 dark:bg-rdark transition-colors ${usePredStyleLayout ? 'home-main-style' : ''}`}>
-      <AppHeader darkMode={darkMode} onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))} />
+      <AppHeader
+        darkMode={darkMode}
+        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+        onOpenGuide={() => setGuideOpen(true)}
+      />
 
       {/* Main layout */}
       <main className="app-main !px-4 flex h-[calc(100vh-56px)] overflow-hidden gap-4 px-5 py-6">
@@ -316,19 +313,23 @@ function App() {
                 onAddComment={handleAddComment}
               />
             </section>
-          ) : activeView === 'pet' ? (
-            <section className="view-shell view-rhythm view-pet w-full max-w-none mx-0 grid gap-4">
-              <PetPage
-                pet={currentPet}
-                balance={balance}
-                winRate={0.68}
-                winStreak={mockUser.winStreak}
-                totalPredictions={42}
-                onBack={() => setActiveView('predictions')}
-                skins={skins}
-                onEquipSkin={handleEquipSkin}
-              />
-            </section>
+          )
+          //  : activeView === 'pet' ? (
+          //   <section className="view-shell view-rhythm view-pet w-full max-w-none mx-0 grid gap-4">
+          //     <PetPage
+          //       pet={currentPet}
+          //       balance={balance}
+          //       winRate={0.68}
+          //       winStreak={mockUser.winStreak}
+          //       totalPredictions={42}
+          //       onBack={() => setActiveView('predictions')}
+          //       skins={skins}
+          //       onEquipSkin={handleEquipSkin}
+          //     />
+          //   </section>
+          // ) 
+          : activeView === 'rank' ? (
+            <RankPage />
           ) : activeView === 'lab' ? (
             <section className="view-shell view-rhythm view-lab w-full max-w-none mx-0 grid gap-4">
               <TurtleDivePixel onBack={() => setActiveView('predictions')} />
@@ -377,6 +378,8 @@ function App() {
         onClose={() => setFloatingChatOpen(false)}
         onStaminaChange={setPetStamina}
       />
+
+      <GuideTourModal open={guideOpen} onClose={() => setGuideOpen(false)} />
     </div>
   );
 }

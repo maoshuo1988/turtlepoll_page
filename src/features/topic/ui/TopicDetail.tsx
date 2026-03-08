@@ -5,7 +5,7 @@ import { ForumPostCard } from '../../forum/ui/ForumPost';
 import type { HotTopic, NewsItem, ForumPost } from '../../../data/mock_data';
 
 const card =
-  'rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
+  '!p-4 rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
 
 function fmtHeat(n: number): string {
   return n >= 10000 ? (n / 10000).toFixed(1) + 'w' : n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n);
@@ -69,7 +69,7 @@ export const TopicDetail: React.FC<TopicDetailProps> = ({
 
       {/* ━━━ Related forum posts ━━━ */}
       <div className={`${card} overflow-hidden`}>
-        <div className="px-5 py-3.5 border-b border-slate-100 dark:border-rdark-border flex items-center gap-2">
+        <div className="!py-3.5 border-b border-slate-100 dark:border-rdark-border flex items-center gap-2">
           <MessageSquare size={16} className="text-blue-500" />
           <span className="text-sm font-bold text-slate-700 dark:text-rdark-text">
             {isAllMode ? '全部讨论' : '相关讨论'}
@@ -93,7 +93,7 @@ export const TopicDetail: React.FC<TopicDetailProps> = ({
             ))}
           </div>
         ) : (
-          <div className="px-5 py-12 text-center text-sm text-slate-400 dark:text-rdark-text2">
+          <div className="px-5 !py-12 text-center text-sm text-slate-400 dark:text-rdark-text2">
             暂无相关讨论，快来发第一条帖子吧!
           </div>
         )}
