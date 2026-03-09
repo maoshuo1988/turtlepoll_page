@@ -74,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   if (activeView === 'pet') {
     return (
-      <div className="legacy-sidebar flex flex-col h-[calc(100vh-80px)]">
+      <div className="legacy-sidebar flex flex-col h-auto xl:h-[calc(100vh-80px)]">
         <div className={`${card} flex-1 overflow-hidden`}>
           <PetChat pet={pet} onClose={() => onViewChange('predictions')} fullScreen />
         </div>
@@ -83,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   }
 
   return (
-    <div className="legacy-sidebar flex flex-col h-[calc(100vh-80px)]">
+    <div className="legacy-sidebar flex flex-col h-auto xl:h-[calc(100vh-80px)]">
       <SidebarMainPanels
         balance={balance}
         winStreak={winStreak}

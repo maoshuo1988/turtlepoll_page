@@ -22,7 +22,7 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
   onNavClick,
 }) => {
   const navItemBase =
-    'w-full flex items-center gap-3 min-h-[46px] px-3.5 py-2.5 rounded-xl text-[16px] font-semibold cursor-pointer transition-all border text-left relative before:content-[\'\'] before:absolute before:left-2 before:top-1/2 before:w-[3px] before:h-0 before:-translate-y-1/2 before:rounded-full before:bg-gradient-to-b before:from-cyan-400 before:to-emerald-400 before:opacity-0 before:transition-all';
+    'w-full flex items-center gap-2.5 md:gap-3 min-h-[42px] md:min-h-[46px] px-3 py-2 rounded-xl text-[14px] md:text-[16px] font-semibold cursor-pointer transition-all border text-left relative before:content-[\'\'] before:absolute before:left-2 before:top-1/2 before:w-[3px] before:h-0 before:-translate-y-1/2 before:rounded-full before:bg-gradient-to-b before:from-cyan-400 before:to-emerald-400 before:opacity-0 before:transition-all';
   const navItemDisabled = 'opacity-55 text-slate-300 dark:text-rdark-text2/50 cursor-default';
   const navItemIdle =
     'border-transparent bg-transparent text-slate-600 dark:text-rdark-text hover:border-sky-300/50 hover:bg-[linear-gradient(100deg,rgba(60,142,255,0.14),rgba(16,29,61,0.12))] hover:before:h-[22px] hover:before:opacity-85';
@@ -41,7 +41,7 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
               className={`sidebar-nav-item ${navItemBase} ${!item.enabled ? navItemDisabled : isActive ? navItemActive : navItemIdle}`}
             >
               <span
-                className={`w-6 shrink-0 flex items-center justify-center ${
+                className={`w-5 md:w-6 shrink-0 flex items-center justify-center ${
                   !item.enabled
                     ? 'text-slate-300 dark:text-rdark-text2/50'
                     : isActive

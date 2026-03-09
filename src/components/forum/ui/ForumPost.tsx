@@ -27,15 +27,15 @@ const ImageGrid: React.FC<{ images: string[] }> = ({ images }) => {
 
   if (count === 1) {
     return (
-      <div className="mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border">
-        <img src={images[0]} alt="" loading="lazy" className={`${baseClass} max-h-[510px]`} />
+      <div className="mt-2.5 md:mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border">
+        <img src={images[0]} alt="" loading="lazy" className={`${baseClass} max-h-[220px] sm:max-h-[320px] md:max-h-[510px]`} />
       </div>
     );
   }
 
   if (count === 2) {
     return (
-      <div className="mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 gap-0.5 h-[286px]">
+      <div className="mt-2.5 md:mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 gap-0.5 h-[156px] sm:h-[220px] md:h-[286px]">
         <img src={images[0]} alt="" loading="lazy" className={baseClass} />
         <img src={images[1]} alt="" loading="lazy" className={baseClass} />
       </div>
@@ -44,7 +44,7 @@ const ImageGrid: React.FC<{ images: string[] }> = ({ images }) => {
 
   if (count === 3) {
     return (
-      <div className="mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 grid-rows-2 gap-0.5 h-[286px]">
+      <div className="mt-2.5 md:mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 grid-rows-2 gap-0.5 h-[156px] sm:h-[220px] md:h-[286px]">
         <div className="row-span-2">
           <img src={images[0]} alt="" loading="lazy" className={`${baseClass} h-full`} />
         </div>
@@ -55,7 +55,7 @@ const ImageGrid: React.FC<{ images: string[] }> = ({ images }) => {
   }
 
   return (
-    <div className="mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 grid-rows-2 gap-0.5 h-[286px]">
+    <div className="mt-2.5 md:mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 grid-rows-2 gap-0.5 h-[156px] sm:h-[220px] md:h-[286px]">
       {images.slice(0, 4).map((src, i) => (
         <div key={i} className="relative overflow-hidden">
           <img src={src} alt="" loading="lazy" className={baseClass} />
@@ -105,6 +105,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
   onAddComment,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [textExpanded, setTextExpanded] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -122,6 +123,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
 
   const likeCount = post.likes + (liked ? 1 : 0);
   const viewCount = post.likes * 14 + post.comments.length * 42;
+  const canExpandText = post.content.length > 52;
 
   return (
     <motion.article
@@ -163,20 +165,29 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           </div>
 
           {/* Tag badge */}
-          <span className={`inline-block text-[11px] font-semibold px-2 !py-2 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[post.tag]}`}>
+          <span className={`inline-block text-[10px] md:text-[11px] font-semibold px-2 !py-1 md:!py-2 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[post.tag]}`}>
             #{post.tag}
           </span>
 
           {/* Post text */}
-          <p className="legacy-forum-post-text !py-2 text-[15px] text-slate-900 dark:text-rdark-text leading-[1.5] whitespace-pre-wrap">
+          <p className={`legacy-forum-post-text !py-1.5 md:!py-2 text-[14px] md:text-[15px] text-slate-900 dark:text-rdark-text leading-[1.5] whitespace-pre-wrap ${textExpanded ? '' : 'line-clamp-2 md:line-clamp-none'}`}>
             {post.content}
           </p>
+          {canExpandText && (
+            <button
+              type="button"
+              onClick={() => setTextExpanded((v) => !v)}
+              className="md:hidden text-[12px] font-semibold text-blue-500 hover:text-blue-600 bg-transparent border-0 p-0"
+            >
+              {textExpanded ? '收起' : '展开'}
+            </button>
+          )}
 
           {/* Images */}
           {post.images && post.images.length > 0 && <ImageGrid images={post.images} />}
 
           {/* Action bar */}
-          <div className="legacy-forum-post-actions flex items-center justify-between !mt-4 -ml-2 max-w-[450px]">
+          <div className="legacy-forum-post-actions flex items-center !mt-3 md:!mt-4 -ml-1 md:-ml-2 max-w-full md:max-w-[450px] gap-1.5 md:gap-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             <ActionBtn
               icon={<MessageCircle size={17} className="group-hover:text-blue-500 transition-colors" />}
               count={formatCount(post.comments.length)}
@@ -235,7 +246,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="legacy-forum-comments mt-2 pt-3 border-t border-slate-100 dark:border-rdark-border">
+                <div className="legacy-forum-comments mt-2 pt-2.5 md:pt-3 border-t border-slate-100 dark:border-rdark-border">
                   {post.comments.length === 0 && (
                     <p className="text-[13px] text-slate-400 dark:text-rdark-text2 mb-3">还没有回复，来抢沙发！</p>
                   )}
@@ -268,23 +279,23 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
                   ))}
 
                   {/* Reply compose */}
-                  <div className="flex items-center gap-2.5 pt-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-sm shrink-0">
+                  <div className="flex items-center gap-2 pt-3">
+                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xs md:text-sm shrink-0">
                       🦊
                     </div>
-                    <div className="flex-1 flex items-center gap-2 border border-slate-200 dark:border-rdark-border rounded-full px-4 py-2 focus-within:border-blue-500 transition-colors">
+                    <div className="flex-1 flex items-center gap-2 border border-slate-200 dark:border-rdark-border rounded-full px-3 md:px-4 py-1.5 md:py-2 focus-within:border-blue-500 transition-colors">
                       <input
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleReply()}
                         onClick={(e) => e.stopPropagation()}
                         placeholder="发布你的回复"
-                        className="flex-1 bg-transparent border-0 outline-none text-[14px] text-slate-800 dark:text-rdark-text placeholder:text-slate-400 dark:placeholder:text-rdark-text2"
+                        className="flex-1 bg-transparent border-0 outline-none text-[13px] md:text-[14px] text-slate-800 dark:text-rdark-text placeholder:text-slate-400 dark:placeholder:text-rdark-text2"
                       />
                       <button
                         onClick={(e) => { e.stopPropagation(); handleReply(); }}
                         disabled={!replyText.trim()}
-                        className="px-4 py-1 rounded-full text-[13px] font-bold bg-blue-500 text-white border-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
+                        className="px-3 md:px-4 py-1 rounded-full text-[12px] md:text-[13px] font-bold bg-blue-500 text-white border-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
                       >
                         回复
                       </button>

@@ -9,33 +9,33 @@ interface AppHeaderProps {
 
 export const AppHeader: React.FC<AppHeaderProps> = ({ darkMode, onToggleTheme, onOpenGuide }) => {
   return (
-    <header className="app-header sticky top-0 z-50 border-b border-slate-200/80 dark:border-rdark-border  backdrop-blur-xl">
-      <div className="flex h-[54px] items-center justify-between !px-4">
-        <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-400 to-cyan-500 text-white grid place-items-center shadow-[0_0_0_1px_rgba(255,255,255,0.3),0_6px_16px_rgba(16,185,129,0.35)]">
+    <header className="app-header sticky top-0 z-50 border-b border-slate-200/80 dark:border-rdark-border backdrop-blur-xl">
+      <div className="flex h-[54px] md:h-[56px] items-center justify-between !px-2.5 md:!px-4">
+        <div className="flex items-center gap-2 md:gap-2.5 min-w-0">
+          <div className="h-7 w-7 md:h-8 md:w-8 rounded-lg bg-gradient-to-br from-emerald-400 to-cyan-500 text-white grid place-items-center shadow-[0_0_0_1px_rgba(255,255,255,0.3),0_6px_16px_rgba(16,185,129,0.35)]">
             🐢
           </div>
-          <span className="text-[24px] font-black tracking-[-0.02em] text-slate-900 dark:text-white">龟投</span>
+          <span className="text-[19px] md:text-[24px] font-black tracking-[-0.02em] text-slate-900 dark:text-white truncate">龟投</span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1.5 md:gap-4">
           <button
             onClick={onToggleTheme}
-            className="h-7 min-w-[50px] !px-2 rounded-full border border-slate-300/70 dark:border-white/15 bg-white dark:bg-[#1a1f2d] text-slate-600 dark:text-slate-200 cursor-pointer inline-flex items-center justify-center"
+            className="h-7 min-w-[40px] md:min-w-[50px] !px-1.5 md:!px-2 rounded-full border border-slate-300/70 dark:border-white/15 bg-white dark:bg-[#1a1f2d] text-slate-600 dark:text-slate-200 cursor-pointer inline-flex items-center justify-center"
           >
             {darkMode ? <Sun size={14} /> : <Moon size={14} />}
           </button>
           <button
             onClick={onOpenGuide}
-            className="relative h-7 min-w-[38px] !px-2 rounded-full border border-slate-300/70 dark:border-white/15 bg-white dark:bg-[#1a1f2d] text-slate-600 dark:text-slate-200 cursor-pointer inline-flex items-center justify-center"
+            className="relative h-7 min-w-[34px] md:min-w-[38px] !px-1.5 md:!px-2 rounded-full border border-slate-300/70 dark:border-white/15 bg-white dark:bg-[#1a1f2d] text-slate-600 dark:text-slate-200 cursor-pointer inline-flex items-center justify-center"
           >
             <CircleHelp size={14} />
           </button>
-          <button className="h-7 !px-3 rounded-full border border-slate-300/70 dark:border-white/15 bg-white dark:bg-[#1a1f2d] text-slate-700 dark:text-slate-100 cursor-pointer inline-flex items-center justify-center gap-1.5 font-bold text-[14px]">
-            <Coins size={13} className="text-amber-500" />
+          <button className="h-7 !px-2 md:!px-3 rounded-full border border-slate-300/70 dark:border-white/15 bg-white dark:bg-[#1a1f2d] text-slate-700 dark:text-slate-100 cursor-pointer inline-flex items-center justify-center gap-1 font-bold text-[12px] md:text-[14px]">
+            <Coins size={12} className="text-amber-500" />
             2,480
           </button>
-          <button className="h-10 w-10 rounded-full border border-slate-300/70 dark:border-white/15 bg-white dark:bg-[#1a1f2d] text-[16px] cursor-pointer grid place-items-center">
+          <button className="h-8 w-8 md:h-10 md:w-10 rounded-full border border-slate-300/70 dark:border-white/15 bg-white dark:bg-[#1a1f2d] text-[14px] md:text-[16px] cursor-pointer grid place-items-center">
             🦊
           </button>
         </div>

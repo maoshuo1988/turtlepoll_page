@@ -1,14 +1,14 @@
-import { API_CRYPTO_LEFT_LIST } from "@/api/api";
+import { API_Config_Configs } from "@/api/api";
 import { axiosCustom } from "@/api/axios";
 import { useQuery } from "react-query";
 
-export function useCryptoLeftList() {
+export function useConfigConfigs() {
   async function fetchData() {
     const res = await axiosCustom({
       method: "get",
-      cmd: API_CRYPTO_LEFT_LIST,
+      cmd: API_Config_Configs,
     });
     return res;
   }
-  return useQuery({ queryKey: ["cryptoLeftList"], queryFn: fetchData });
+  return useQuery({ queryKey: ["configConfigs"], queryFn: fetchData });
 }

@@ -127,28 +127,30 @@ export const Shop: React.FC<ShopProps> = ({
   const ownedSkins = skins.filter((s) => s.owned);
 
   return (
-    <div className="legacy-shop-page space-y-5 !mt-4">
+    <div className="legacy-shop-page space-y-4 md:space-y-5 !mt-3 md:!mt-4">
       {/* ━━━ Header ━━━ */}
-      <div className={`${card} !px-5 !py-4 flex items-center justify-between`}>
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-rdark-text2 hover:text-slate-700 dark:hover:text-rdark-text transition"
-        >
-          <ArrowLeft size={18} /> 返回
-        </button>
-        <h2 className="text-lg font-bold text-slate-800 dark:text-rdark-text">
+      <div className={`${card} !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
+        <div className="flex items-center justify-between gap-2">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-1 text-xs sm:text-sm text-slate-500 dark:text-rdark-text2 hover:text-slate-700 dark:hover:text-rdark-text transition shrink-0"
+          >
+            <ArrowLeft size={16} className="sm:w-[18px] sm:h-[18px]" /> 返回
+          </button>
+          <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-semibold text-xs sm:text-sm shrink-0 rounded-lg bg-amber-50/80 dark:bg-amber-900/20 px-2 py-1">
+            <Coins size={14} className="sm:w-4 sm:h-4" /> {balance.toLocaleString()}
+          </div>
+        </div>
+        <h2 className="!mt-2 text-base sm:text-lg md:text-lg font-bold text-slate-800 dark:text-rdark-text text-center">
           抽奖 & 商店
         </h2>
-        <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-semibold text-sm">
-          <Coins size={16} /> {balance.toLocaleString()}
-        </div>
       </div>
 
       {/* ━━━ Gacha Section ━━━ */}
-      <div className={`${card} !mt-4 !px-5 !py-6`}>
-        <div className="flex flex-col items-center">
+      <div className={`${card} !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-4 md:!py-6`}>
+        <div className="flex flex-col items-center text-center">
           {/* ── Egg / Result Area ── */}
-          <div className="relative w-48 h-56 flex items-center justify-center mb-4">
+          <div className="relative w-36 h-44 sm:w-44 sm:h-52 md:w-48 md:h-56 flex items-center justify-center mb-3 md:mb-4">
             <AnimatePresence mode="wait">
               {phase === 'reveal' && result ? (
                 /* ── Reveal: show new skin ── */
@@ -186,9 +188,9 @@ export const Shop: React.FC<ShopProps> = ({
                       transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
                     />
                   )}
-                  <span className="text-8xl relative z-10 drop-shadow-lg">{result.avatar}</span>
-                  <div className="!mt-3 text-center relative z-10">
-                    <p className="font-bold text-lg text-slate-800 dark:text-rdark-text">
+                  <span className="text-6xl sm:text-8xl relative z-10 drop-shadow-lg">{result.avatar}</span>
+                  <div className="!mt-2 sm:!mt-3 text-center relative z-10 max-w-[220px]">
+                    <p className="font-bold text-base sm:text-lg text-slate-800 dark:text-rdark-text">
                       {result.name}
                     </p>
                     <span
@@ -227,7 +229,7 @@ export const Shop: React.FC<ShopProps> = ({
                           : { duration: 0.3 }
                   }
                 >
-                  <span className="text-[7rem] leading-none select-none relative">
+                  <span className="text-[5.5rem] sm:text-[6.5rem] md:text-[7rem] leading-none select-none relative">
                     🥚
                     {/* Crack lines overlay */}
                     {(phase === 'cracking' || phase === 'breaking') && (
@@ -312,7 +314,7 @@ export const Shop: React.FC<ShopProps> = ({
 
           {/* Temperature bar */}
           {(phase === 'heating' || phase === 'cracking') && (
-            <div className="w-40 h-2 rounded-full bg-slate-200 dark:bg-slate-700 mb-3 overflow-hidden">
+            <div className="w-36 sm:w-40 h-2 rounded-full bg-slate-200 dark:bg-slate-700 mb-3 overflow-hidden">
               <motion.div
                 className="h-full rounded-full"
                 style={{
@@ -331,7 +333,7 @@ export const Shop: React.FC<ShopProps> = ({
               whileTap={{ scale: 0.96 }}
               onClick={doGacha}
               disabled={balance < GACHA_COST}
-              className={`!px-6 !py-2.5 rounded-xl font-bold text-white text-sm transition
+              className={`w-full sm:w-auto !px-4 sm:!px-6 !py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm transition
                 ${
                   balance >= GACHA_COST
                     ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-amber-500/25'
@@ -347,7 +349,7 @@ export const Shop: React.FC<ShopProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               onClick={resetGacha}
-              className="!px-6 !py-2.5 rounded-xl font-bold text-sm bg-cyan-500 hover:bg-cyan-600 text-white transition shadow-lg shadow-cyan-500/25"
+              className="w-full sm:w-auto !px-4 sm:!px-6 !py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-cyan-500 hover:bg-cyan-600 text-white transition shadow-lg shadow-cyan-500/25"
             >
               继续孵化
             </motion.button>
@@ -363,7 +365,7 @@ export const Shop: React.FC<ShopProps> = ({
         </div>
 
         {/* ── Probability hint ── */}
-        <div className="!mt-4 flex justify-center gap-3 text-[16px] text-slate-400 dark:text-rdark-text2">
+        <div className="!mt-3 md:!mt-4 flex flex-wrap justify-center gap-x-3 gap-y-1 text-[13px] sm:text-[14px] md:text-[16px] text-slate-400 dark:text-rdark-text2">
           <span>N 50%</span>
           <span className="text-blue-500">R 30%</span>
           <span className="text-purple-500">SR 15%</span>
@@ -372,21 +374,21 @@ export const Shop: React.FC<ShopProps> = ({
       </div>
 
       {/* ━━━ Skin Collection ━━━ */}
-      <div className={`${card} !mt-4 !px-5 !py-4`}>
-        <h3 className="text-xl font-bold text-slate-700 dark:text-rdark-text !mb-3">
+      <div className={`${card} !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
+        <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-700 dark:text-rdark-text !mb-2.5 md:!mb-3">
           已获得形象 ({ownedSkins.length}/{skins.length})
         </h3>
-        <div className="flex gap-3 overflow-x-auto !pb-2">
+        <div className="grid grid-cols-3 gap-2 sm:gap-2.5 md:flex md:gap-3 md:overflow-x-auto !pb-2">
           {skins.map((skin) => (
             <div
               key={skin.id}
-              className={`flex-shrink-0 w-32 h-40 rounded-lg border-2 flex flex-col items-center justify-center gap-1 transition
+              className={`w-full h-28 sm:h-32 md:flex-shrink-0 md:w-32 md:h-40 rounded-lg border-2 flex flex-col items-center justify-center gap-1 transition
                 ${skin.owned ? RARITY_BORDER_COLORS[skin.rarity] : 'border-slate-200 dark:border-slate-700 opacity-40'}
                 ${skin.equipped ? 'ring-2 ring-cyan-400' : ''}`}
             >
-              <span className="text-6xl">{skin.owned ? skin.avatar : '?'}</span>
+              <span className="text-5xl sm:text-6xl">{skin.owned ? skin.avatar : '?'}</span>
               <span
-                className={`!mt-4 text-[16px] font-semibold !px-1 rounded ${
+                className={`!mt-2.5 sm:!mt-4 text-[13px] sm:text-[16px] font-semibold !px-1 rounded ${
                   skin.owned ? RARITY_COLORS[skin.rarity] : 'text-slate-400'
                 }`}
               >
@@ -398,9 +400,9 @@ export const Shop: React.FC<ShopProps> = ({
       </div>
 
       {/* ━━━ Apple Shop ━━━ */}
-      <div className={`${card} !mt-4 !px-5 !py-4`}>
-        <div className="flex items-center justify-between !mb-3">
-          <h3 className="text-xl font-bold text-slate-700 dark:text-rdark-text flex items-center gap-1.5">
+      <div className={`${card} !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 !mb-3">
+          <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-700 dark:text-rdark-text flex items-center gap-1.5">
             <span>🍎</span> 体力商店
           </h3>
           {/* Stamina bar */}
@@ -418,13 +420,13 @@ export const Shop: React.FC<ShopProps> = ({
                 />
               ))}
             </div>
-            <span className="text-xl text-slate-500 dark:text-rdark-text2 !ml-1">
+            <span className="text-base sm:text-lg md:text-xl text-slate-500 dark:text-rdark-text2 !ml-1">
               {pet.stamina}/{pet.maxStamina}
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 md:gap-3">
           {shopApples.map((item) => {
             const isFull = pet.stamina >= pet.maxStamina;
             const cantAfford = balance < item.price;
@@ -452,15 +454,15 @@ export const Shop: React.FC<ShopProps> = ({
                     className="absolute inset-0 rounded-xl bg-green-400/30"
                   />
                 )}
-                <span className="text-4xl block mb-1">{item.icon}</span>
-                <p className="!mt-2 text-xl font-bold text-slate-700 dark:text-rdark-text">
+                <span className="text-3xl sm:text-4xl block mb-1">{item.icon}</span>
+                <p className="!mt-1.5 sm:!mt-2 text-[15px] sm:text-xl font-bold text-slate-700 dark:text-rdark-text">
                   {item.name}
                 </p>
-                <p className="text-[16px] text-slate-500 dark:text-rdark-text2 !mt-2">
+                <p className="text-[12px] sm:text-[16px] text-slate-500 dark:text-rdark-text2 !mt-1 sm:!mt-2">
                   +{item.effect.value} 体力
                 </p>
-                <div className="!mt-1.5 flex items-center justify-center gap-1 text-xl font-semibold text-amber-600 dark:text-amber-400">
-                  <Coins size={20} /> {item.price}
+                <div className="!mt-1 flex items-center justify-center gap-1 text-[15px] sm:text-xl font-semibold text-amber-600 dark:text-amber-400">
+                  <Coins size={16} className="sm:w-5 sm:h-5" /> {item.price}
                 </div>
               </motion.button>
             );

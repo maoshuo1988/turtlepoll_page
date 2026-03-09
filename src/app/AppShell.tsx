@@ -226,7 +226,7 @@ function App() {
   void handleResolveBattle;
 
   return (
-    <div className={`legacy-fusion-app fixed-sidebar-style h-screen overflow-hidden bg-slate-50 dark:bg-rdark transition-colors ${usePredStyleLayout ? 'home-main-style' : ''}`}>
+    <div className={`legacy-fusion-app fixed-sidebar-style min-h-screen overflow-x-hidden bg-slate-50 dark:bg-rdark transition-colors ${usePredStyleLayout ? 'home-main-style' : ''}`}>
       <AppHeader
         darkMode={darkMode}
         onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
@@ -234,8 +234,33 @@ function App() {
       />
 
       {/* Main layout */}
-      <main className="app-main !px-4 flex h-[calc(100vh-68px)] overflow-hidden gap-4 px-5 py-6">
-        {/* Left sidebar */}
+      <main className="app-main !px-3 md:!px-4 flex flex-col xl:flex-row min-h-[calc(100vh-68px)] xl:h-[calc(100vh-68px)] xl:overflow-hidden gap-3 md:gap-4 px-3 md:px-5 py-3 md:py-6">
+        <div className="xl:hidden w-full overflow-hidden">
+          <Sidebar
+            balance={balance}
+            winStreak={mockUser.winStreak}
+            winRate={0.68}
+            totalPredictions={42}
+            activePredictions={5}
+            pet={currentPet}
+            petDialogue={petDialogue}
+            idleDialogues={petDialogues.idle}
+            onCategoryChange={setActiveCategory}
+            activeView={activeView}
+            onViewChange={handleViewChange}
+            onTopicClick={(topic) => {
+              setSelectedTopic(topic);
+              setSelectedNewsId(null);
+              setActiveView('predictions');
+            }}
+            onTagClick={() => {
+              setSelectedTopic(null);
+              setSelectedNewsId(null);
+              setActiveView('predictions');
+            }}
+          />
+        </div>
+
         <aside className="app-sidebar hidden xl:block shrink-0 self-start sticky top-14 h-[calc(100vh-72px)] overflow-y-auto overscroll-contain w-[420px] min-w-[420px] max-w-[420px]">
           <Sidebar
             balance={balance}
@@ -262,12 +287,11 @@ function App() {
           />
         </aside>
 
-        {/* Divider between sidebar and content */}
         <div className="hidden xl:block w-px shrink-0 bg-slate-200 dark:bg-rdark-border opacity-60" />
 
         {/* Center content */}
         {/* <div>{activeView}---{selectedNewsId}---{JSON.stringify(selectedTopic)}</div> */}
-        <div className="app-content flex-1 min-w-0 h-full overflow-y-auto overscroll-contain pr-1 space-y-6">
+        <div className="app-content flex-1 min-w-0 xl:min-h-0 xl:h-full overflow-visible xl:overflow-y-auto overscroll-contain pr-0 xl:pr-1 space-y-4 md:space-y-6">
           {activeView === 'predictions' ? (
             selectedNewsId ? (
               <section className="view-shell view-rhythm view-event-battle w-full max-w-none mx-0 grid gap-4">

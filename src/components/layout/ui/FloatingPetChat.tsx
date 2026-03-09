@@ -22,7 +22,7 @@ export const FloatingPetChat: React.FC<FloatingPetChatProps> = ({
   onStaminaChange,
 }) => {
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-3 right-3 md:bottom-6 md:right-6 z-50">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -30,7 +30,7 @@ export const FloatingPetChat: React.FC<FloatingPetChatProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="absolute bottom-16 right-0 w-[320px] rounded-2xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-2xl overflow-hidden"
+            className="absolute bottom-14 md:bottom-16 right-0 w-[min(92vw,320px)] rounded-2xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-2xl overflow-hidden"
           >
             <PetChat pet={pet} onClose={onClose} stamina={stamina} onStaminaChange={onStaminaChange} />
           </motion.div>
@@ -41,7 +41,7 @@ export const FloatingPetChat: React.FC<FloatingPetChatProps> = ({
         onClick={onToggle}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="w-14 h-14 rounded-full bg-emerald-500 dark:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 dark:shadow-emerald-900/40 border-0 cursor-pointer flex items-center justify-center transition-colors hover:bg-emerald-600 dark:hover:bg-emerald-500"
+        className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-emerald-500 dark:bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 dark:shadow-emerald-900/40 border-0 cursor-pointer flex items-center justify-center transition-colors hover:bg-emerald-600 dark:hover:bg-emerald-500"
       >
         {open ? <X size={22} /> : <MessageCircle size={22} />}
       </motion.button>

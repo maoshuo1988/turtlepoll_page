@@ -2708,8 +2708,71 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
               {/* <span className="battle-vs-cross-y" /> */}
               <IdleArenaFx active={isIdle} />
               <ActionFxBurst fxList={battleFx} />
-              <div className="flex h-full min-h-[68vh] xl:min-h-0">
-                <div className="flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
+              <div className="xl:hidden px-2 pt-2 pb-1">
+                <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 scroll-smooth">
+                  <div className="snap-start shrink-0 w-full min-w-full h-[56vh] border border-cyan-300/20 bg-black/10 overflow-hidden relative">
+                    <span
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background:
+                          'radial-gradient(900px 520px at 16% 18%, rgba(0,210,255,0.22), transparent 55%), radial-gradient(700px 420px at 60% 80%, rgba(0,210,255,0.12), transparent 58%), linear-gradient(180deg, rgba(0,210,255,0.06), transparent 55%, rgba(0,0,0,0.25))',
+                      }}
+                    />
+                    <div className="h-full min-h-0 flex flex-col">
+                      <SideColumn
+                        side="A"
+                        label={news.optionA}
+                        power={leftPower}
+                        comments={commentsA}
+                        compact={false}
+                        scrollRef={scrollA}
+                        onLike={handleLike}
+                        onStomp={handleStomp}
+                        stompedSet={stompedSet}
+                        poopAnims={poopAnims}
+                        onReply={handleReply}
+                        onLikeReply={handleLikeReply}
+                        dotColor={LC}
+                        textColor={LC}
+                        pushFx={pushFx}
+                        comboCount={comboA}
+                      />
+                    </div>
+                  </div>
+                  <div className="snap-start shrink-0 w-full min-w-full h-[56vh] border border-rose-300/20 bg-black/10 overflow-hidden relative">
+                    <span
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background:
+                          'radial-gradient(900px 520px at 84% 18%, rgba(255,0,85,0.22), transparent 55%), radial-gradient(700px 420px at 40% 80%, rgba(255,0,85,0.12), transparent 58%), linear-gradient(180deg, rgba(255,0,85,0.06), transparent 55%, rgba(0,0,0,0.25))',
+                      }}
+                    />
+                    <div className="h-full min-h-0 flex flex-col">
+                      <SideColumn
+                        side="B"
+                        label={news.optionB}
+                        power={rightPower}
+                        comments={commentsB}
+                        compact={false}
+                        scrollRef={scrollB}
+                        onLike={handleLike}
+                        onStomp={handleStomp}
+                        stompedSet={stompedSet}
+                        poopAnims={poopAnims}
+                        onReply={handleReply}
+                        onLikeReply={handleLikeReply}
+                        dotColor={RC}
+                        textColor={RC}
+                        pushFx={pushFx}
+                        comboCount={comboB}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col xl:flex-row h-full min-h-[68vh] xl:min-h-0">
+                <div className="hidden xl:flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
                   <span
                     className="absolute inset-0 pointer-events-none"
                     style={{
@@ -2737,13 +2800,15 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                   />
                 </div>
 
-                <DynamicDivider
-                  splitRatio={splitPct / 100}
-                  pulse={pulse}
-                  leftPower={leftPower}
-                  rightPower={rightPower}
-                />
-                <aside className="battle-right-stack flex flex-col gap-5 xl:sticky xl:top-4 h-full min-h-0 w-full sm:w-[420px] 2xl:w-[500px] shrink-0 ml-3 xl:ml-6">
+                <div className="hidden xl:block">
+                  <DynamicDivider
+                    splitRatio={splitPct / 100}
+                    pulse={pulse}
+                    leftPower={leftPower}
+                    rightPower={rightPower}
+                  />
+                </div>
+                <aside className="battle-right-stack flex flex-col gap-3 md:gap-5 xl:sticky xl:top-4 h-full min-h-0 w-full xl:w-[420px] 2xl:w-[500px] shrink-0 ml-0 xl:ml-6">
                   <div className={`${card} battle-right-panel battle-live-board p-4 space-y-3`}>
                     <div className="battle-live-head flex items-center justify-between text-[11px]">
                       <span className="battle-live-title text-white/75">实时战况</span>
@@ -3014,7 +3079,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                   </div>
 
                   {onBet && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-2.5 md:gap-3">
                       <motion.button
                         whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${LC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
                         whileTap={{ scale: 0.97 }}
@@ -3047,15 +3112,16 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     </div>
                   )}
                 </aside>
+                <div className="hidden xl:block">
                   <DynamicDivider
-                  splitRatio={splitPct / 100}
-                  pulse={pulse}
-                  leftPower={leftPower}
-                  rightPower={rightPower}
-                />
+                    splitRatio={splitPct / 100}
+                    pulse={pulse}
+                    leftPower={leftPower}
+                    rightPower={rightPower}
+                  />
+                </div>
 
-
-                <div className="flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
+                <div className="hidden xl:flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
                   <span
                     className="absolute inset-0 pointer-events-none"
                     style={{

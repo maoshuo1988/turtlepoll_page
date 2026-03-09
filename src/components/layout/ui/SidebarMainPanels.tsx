@@ -65,7 +65,39 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
 }) => {
   return (
     <>
-      <div className="overflow-hidden shrink-0 flex flex-col gap-3.5 py-1">
+      <div className="xl:hidden -mx-1 px-1 h-[320px] overflow-hidden">
+        <div className="flex h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory gap-3 scroll-smooth pb-0 overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
+            <SidebarProfileCard
+              balance={balance}
+              winStreak={winStreak}
+              winRate={winRate}
+              totalPredictions={totalPredictions}
+              activePredictions={activePredictions}
+              pet={pet}
+              chatOpen={chatOpen}
+              currentDialogue={currentDialogue}
+              dialogueKey={dialogueKey}
+              onOpenChat={onOpenChat}
+              onCloseChat={onCloseChat}
+              onViewPet={onViewPet}
+            />
+          </div>
+          <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
+            <SidebarHotTopicsPanel
+              selectedTag={selectedTag}
+              onTopicClick={onTopicClick}
+              onFallbackTopicClick={onFallbackTopicClick}
+              onTagClick={onTagClick}
+            />
+          </div>
+          <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
+            <SidebarNavMenu navItems={NAV_ITEMS} activeView={activeView} onNavClick={onNavClick} />
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden xl:flex overflow-hidden shrink-0 flex-col gap-3.5 py-1">
         <SidebarProfileCard
           balance={balance}
           winStreak={winStreak}
@@ -89,7 +121,9 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
         />
       </div>
 
-      <SidebarNavMenu navItems={NAV_ITEMS} activeView={activeView} onNavClick={onNavClick} />
+      <div className="hidden xl:block">
+        <SidebarNavMenu navItems={NAV_ITEMS} activeView={activeView} onNavClick={onNavClick} />
+      </div>
     </>
   );
 };

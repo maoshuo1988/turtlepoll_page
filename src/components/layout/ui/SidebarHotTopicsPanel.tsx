@@ -31,7 +31,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
   };
 
   return (
-    <div className="!mb-4 !p-3 h-[300px] rounded-xl bg-white dark:bg-[#101319] border border-slate-200 dark:border-slate-700/70 shadow-[0_4px_14px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.28)]">
+    <div className="!mb-4 !p-2.5 md:!p-3 h-[320px] md:h-[300px] rounded-xl bg-white dark:bg-[#101319] border border-slate-200 dark:border-slate-700/70 shadow-[0_4px_14px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.28)]">
       <div className="mb-2 rounded-lg bg-slate-100 dark:bg-[#0c0e12] border border-slate-200 dark:border-slate-700/60 p-1 grid grid-cols-2 gap-1">
         <button
           onClick={() => {
@@ -61,7 +61,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
         </button>
       </div>
 
-      <div className="min-h-0 h-[calc(300px-56px)] overflow-y-auto overflow-x-hidden pr-1">
+      <div className="min-h-0 h-[calc(320px-52px)] md:h-[calc(300px-56px)] overflow-y-auto overflow-x-hidden pr-1">
       {tab === 'hot' ? (
         <div className="space-y-0.5">
           {rankedTopics.map((topic, i) => {
@@ -76,7 +76,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
                 <span className={`w-4 text-center text-[16px] font-extrabold leading-none ${rank <= 3 ? 'text-orange-400' : 'text-amber-500'}`}>
                   {rank}
                 </span>
-                <span className="flex-1 min-w-0 truncate text-[16px] text-slate-700 group-hover:text-slate-900 dark:text-slate-100 dark:group-hover:text-white">
+                <span className="flex-1 min-w-0 truncate text-[14px] md:text-[16px] text-slate-700 group-hover:text-slate-900 dark:text-slate-100 dark:group-hover:text-white">
                   {topic.title}
                 </span>
                 <span className="text-[12px] text-slate-500 dark:text-slate-400 shrink-0">{fmtHeat(topic.heat)}</span>
@@ -94,7 +94,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
               <button
                 key={t.tag}
                 onClick={() => onTagClick(t)}
-                className={`w-full !my-1 !p-2 rounded-md text-[16px] font-medium cursor-pointer transition-all border text-left truncate 
+                className={`w-full !my-1 !p-2 rounded-md text-[13px] md:text-[16px] font-medium cursor-pointer transition-all border text-left truncate 
                   ${selectedTag === t.tag
                     ? 'bg-[linear-gradient(100deg,rgba(60,142,255,0.14),rgba(16,29,61,0.12))] text-slate-900 border-sky-300/50 font-semibold dark:text-slate-100'
                     : 'bg-slate-100 text-slate-600 border-slate-200 hover:border-sky-300/50 hover:bg-[linear-gradient(100deg,rgba(60,142,255,0.14),rgba(16,29,61,0.12))] hover:text-slate-900 dark:bg-slate-800/35 dark:text-slate-300 dark:border-slate-600/70 dark:hover:text-slate-100'}
