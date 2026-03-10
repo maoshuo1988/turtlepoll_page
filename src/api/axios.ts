@@ -19,7 +19,6 @@ export function axiosCustom({
         data,
       });
       const resData = res.data;
-      console.log("resData --- ", resData);
       console.log({
         cmd: cmd,
         method: method,
@@ -27,11 +26,12 @@ export function axiosCustom({
       });
 
       resolve({
-        code: resData.code,
+        code: resData.errorCode,
         cmd: cmd,
         method: method,
-        msg: resData.msg,
+        msg: resData.message,
         data: resData?.data ?? {},
+        success:resData?.success ?? false
       });
     } catch (e: any) {
       console.log(e.response?.status, "eeeee");
@@ -51,8 +51,9 @@ export function axiosCustom({
       resolve({
         cmd: cmd,
         method: method,
-        code: -1, //失败的code
+        code: 0, //失败的code
         msg: e,
+        success:false
       });
     }
   });

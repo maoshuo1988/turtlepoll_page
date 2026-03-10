@@ -60,13 +60,13 @@ const INIT: GameState = {
 };
 
 const PETS: PetSkin[] = [
-  { id: 'turtle', name: '基础小龟', emoji: '🐢', img: '/legacy/基础小龟.png', ability: 'none', abilityName: '无', owned: true },
-  { id: 'fire', name: '熔岩龟', emoji: '🔥🐢', img: '/legacy/熔岩龟.png', ability: 'slow', abilityName: '🐌 减速10%', owned: true },
-  { id: 'ice', name: '寒冰龟', emoji: '❄️🐢', img: '/legacy/寒冰龟.png', ability: 'small', abilityName: '🔬 体积-20%', owned: true },
-  { id: 'mecha', name: '赛博龟', emoji: '🤖🐢', img: '/legacy/赛博龟.png', ability: 'shield', abilityName: '🛡️ 护盾×1', owned: true },
-  { id: 'golden', name: '宝箱龟', emoji: '✨🐢', img: '/legacy/宝箱龟.png', ability: 'score', abilityName: '💰 得分+25%', owned: true },
-  { id: 'ninja', name: '忍者龟', emoji: '🥷🐢', img: '/legacy/忍者龟.png', ability: 'small', abilityName: '🔬 体积-25%', owned: true },
-  { id: 'shadow', name: '海盗龟', emoji: '🏴‍☠️🐢', img: '/legacy/海盗龟.png', ability: 'none', abilityName: '无', owned: true },
+  { id: 'turtle', name: '基础小龟', emoji: '🐢', img: '/legacy/jichuxiaogui.png', ability: 'none', abilityName: '无', owned: true },
+  { id: 'fire', name: '熔岩龟', emoji: '🔥🐢', img: '/legacy/rongyangui.png', ability: 'slow', abilityName: '🐌 减速10%', owned: true },
+  { id: 'ice', name: '寒冰龟', emoji: '❄️🐢', img: '/legacy/hanbinggui.png', ability: 'small', abilityName: '🔬 体积-20%', owned: true },
+  { id: 'mecha', name: '赛博龟', emoji: '🤖🐢', img: '/legacy/saibogui.png', ability: 'shield', abilityName: '🛡️ 护盾×1', owned: true },
+  { id: 'golden', name: '宝箱龟', emoji: '✨🐢', img: '/legacy/baoxianggui.png', ability: 'score', abilityName: '💰 得分+25%', owned: true },
+  { id: 'ninja', name: '忍者龟', emoji: '🥷🐢', img: '/legacy/renzhegui.png', ability: 'small', abilityName: '🔬 体积-25%', owned: true },
+  { id: 'shadow', name: '海盗龟', emoji: '🏴‍☠️🐢', img: '/legacy/haidaogui.png', ability: 'none', abilityName: '无', owned: true },
 ];
 
 const STYLE = `

@@ -12,6 +12,8 @@ import { FloatingPetChat } from '../components/layout/ui/FloatingPetChat';
 import { AppFooter } from './AppFooter';
 import { AppHeader } from './AppHeader';
 import { GuideTourModal } from './GuideTourModal';
+import { FloatingGuideButton } from './FloatingGuideButton';
+import { AuthModal } from '../components/auth';
 import type { NewsItem, ForumPost, Battle, BattleSide, PetSkin, HotTopic } from '../data/mock_data';
 import {
   mockUser,
@@ -22,6 +24,8 @@ import {
   mockBattles,
   mockPetSkins,
 } from '../data/mock_data';
+import { clearInfo } from '@/utils/authStorage';
+import { useRequestSignout } from '@/hook/useRequest';
 
 // Bet cost per action
 const BET_COST = 100;
@@ -57,9 +61,13 @@ function App() {
   const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);
   const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);
   const [selectedTopic, setSelectedTopic] = useState<HotTopic | null>(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const isEventBattleActive = activeView === 'predictions' && !!selectedNewsId;
   const usePredStyleLayout = true;
   const darkMode = theme === 'dark';
+
+  //退出登录请求
+  const signOutMutation = useRequestSignout();
 
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
@@ -230,7 +238,7 @@ function App() {
       <AppHeader
         darkMode={darkMode}
         onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-        onOpenGuide={() => setGuideOpen(true)}
+        onOpenAuth={() => setAuthModalOpen(true)}
       />
 
       {/* Main layout */}
@@ -393,6 +401,8 @@ function App() {
         <AppFooter />
       )}
 
+      <FloatingGuideButton onClick={() => setGuideOpen(true)} sizeClassName="w-13 h-13" />
+
       {/* ━━━ 浮动宠物聊天入口 ━━━ */}
       <FloatingPetChat
         open={floatingChatOpen}
@@ -404,6 +414,16 @@ function App() {
       />
 
       <GuideTourModal open={guideOpen} onClose={() => setGuideOpen(false)} />
+
+      <AuthModal
+        open={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onSignOut={async () => {
+          await signOutMutation.mutateAsync()
+          clearInfo()
+          setAuthModalOpen(false);
+        }}
+      />
     </div>
   );
 }
