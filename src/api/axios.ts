@@ -1,11 +1,3 @@
-/*
- * @Author: Evan 360313191@qq.com
- * @Date: 2024-10-03 23:31:55
- * @LastEditors: Evan 360313191@qq.com
- * @LastEditTime: 2024-10-18 16:40:58
- * @FilePath: \tox-website-frontend\src\API\axios.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import { SERVER_API } from "@/constant";
 import axios from "axios";
 

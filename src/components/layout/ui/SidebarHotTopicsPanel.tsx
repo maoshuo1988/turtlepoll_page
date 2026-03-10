@@ -31,7 +31,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
   };
 
   return (
-    <div className="!mb-4 !p-2.5 md:!p-3 h-[320px] md:h-[300px] rounded-xl bg-white dark:bg-[#101319] border border-slate-200 dark:border-slate-700/70 shadow-[0_4px_14px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.28)]">
+    <div className="xl:!mb-4 !p-2.5 md:!p-3 h-[300px] md:h-[328px] rounded-xl bg-white dark:bg-[#101319] border border-slate-200 dark:border-slate-700/70 shadow-[0_4px_14px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.28)]">
       <div className="mb-2 rounded-lg bg-slate-100 dark:bg-[#0c0e12] border border-slate-200 dark:border-slate-700/60 p-1 grid grid-cols-2 gap-1">
         <button
           onClick={() => {
@@ -61,7 +61,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
         </button>
       </div>
 
-      <div className="min-h-0 h-[calc(320px-52px)] md:h-[calc(300px-56px)] overflow-y-auto overflow-x-hidden pr-1">
+      <div className="min-h-0 h-[calc(300px-52px)] md:h-[calc(300px-56px)] overflow-y-auto overflow-x-hidden pr-1">
       {tab === 'hot' ? (
         <div className="space-y-0.5">
           {rankedTopics.map((topic, i) => {

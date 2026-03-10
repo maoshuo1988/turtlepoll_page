@@ -65,7 +65,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
 }) => {
   return (
     <>
-      <div className="xl:hidden -mx-1 px-1 h-[320px] overflow-hidden">
+      <div className="xl:hidden -mx-1 px-1 h-[300px] overflow-hidden">
         <div className="flex h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory gap-3 scroll-smooth pb-0 overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
             <SidebarProfileCard
@@ -121,7 +121,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
         />
       </div>
 
-      <div className="hidden xl:block">
+      <div className="hidden xl:block flex-1 min-h-0 overflow-hidden">
         <SidebarNavMenu navItems={NAV_ITEMS} activeView={activeView} onNavClick={onNavClick} />
       </div>
     </>

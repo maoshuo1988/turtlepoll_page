@@ -234,7 +234,7 @@ function App() {
       />
 
       {/* Main layout */}
-      <main className="app-main !px-3 md:!px-4 flex flex-col xl:flex-row min-h-[calc(100vh-68px)] xl:h-[calc(100vh-68px)] xl:overflow-hidden gap-3 md:gap-4 px-3 md:px-5 py-3 md:py-6">
+      <main className="app-main !px-3 md:!px-4 flex flex-col xl:flex-row min-h-[calc(100vh-78px)] xl:h-[calc(100vh-78px)] xl:overflow-hidden gap-3 md:gap-4 px-3 md:px-5 py-3 md:py-6">
         <div className="xl:hidden w-full overflow-hidden">
           <Sidebar
             balance={balance}

@@ -30,7 +30,7 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
     'border-cyan-300/60 bg-[linear-gradient(100deg,rgba(0,215,255,0.24),rgba(13,53,96,0.26))] text-emerald-700 dark:text-emerald-400 shadow-[inset_0_0_0_1px_rgba(0,215,255,0.24),0_0_20px_rgba(0,215,255,0.18)] before:h-6 before:opacity-100';
 
   return (
-    <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden !p-2 border border-slate-200 dark:border-rdark-border/70 rounded-xl bg-white dark:bg-[#101319] shadow-[0_4px_14px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.28)]">
+    <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden !p-2 border border-slate-200 dark:border-rdark-border/70 rounded-xl bg-white dark:bg-[#101319] shadow-[0_4px_14px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.28)]">
       <div className="legacy-sidebar-nav grid gap-2">
         {navItems.map((item) => {
           const isActive = item.view ? activeView === item.view : false;
