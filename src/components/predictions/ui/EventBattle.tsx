@@ -4,6 +4,7 @@ import { ThumbsUp, Send, Flame, X, Sparkles, Zap, MessageCircleReply } from 'luc
 import CountUp from 'react-countup';
 import type { NewsItem, EventComment, EventReply, CommentSide } from '../../../data/mock_data';
 import { mockEventComments } from '../../../data/mock_data';
+import { BattleReport } from './BattleReport';
 
 interface EventBattleProps {
   news: NewsItem;
@@ -2808,7 +2809,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     rightPower={rightPower}
                   />
                 </div>
-                <aside className="battle-right-stack flex flex-col gap-3 md:gap-5 xl:sticky xl:top-4 h-full min-h-0 w-full xl:w-[420px] 2xl:w-[500px] shrink-0 ml-0 xl:ml-6">
+                {/* <aside className="battle-right-stack flex flex-col gap-3 md:gap-5 xl:sticky xl:top-4 h-full min-h-0 w-full xl:w-[420px] 2xl:w-[500px] shrink-0 ml-0 xl:ml-6">
                   <div className={`${card} battle-right-panel battle-live-board p-4 space-y-3`}>
                     <div className="battle-live-head flex items-center justify-between text-[11px]">
                       <span className="battle-live-title text-white/75">实时战况</span>
@@ -3111,7 +3112,29 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                       </motion.button>
                     </div>
                   )}
-                </aside>
+                </aside> */}
+                <div
+            className="shrink-0 overflow-hidden rounded-xl"
+            style={{
+              width: 260,
+              background: 'linear-gradient(180deg, rgba(8,8,14,0.95) 0%, rgba(12,12,20,0.92) 100%)',
+              borderLeft: '1px solid rgba(255,255,255,0.06)',
+              borderRight: '1px solid rgba(255,255,255,0.06)',
+            }}
+          >
+            <BattleReport
+              commentsA={commentsA}
+              commentsB={commentsB}
+              leftPower={leftPower}
+              rightPower={rightPower}
+              splitPct={splitPct}
+              optionA={news.optionA}
+              optionB={news.optionB}
+              oddsA={news.oddsA}
+              oddsB={news.oddsB}
+              userSide={userSide}
+            />
+          </div>
                 <div className="hidden xl:block">
                   <DynamicDivider
                     splitRatio={splitPct / 100}
