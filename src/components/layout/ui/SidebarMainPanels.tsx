@@ -97,32 +97,34 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
         </div>
       </div>
 
-      <div className="hidden xl:flex overflow-hidden shrink-0 flex-col gap-3.5 py-1">
-        <SidebarProfileCard
-          balance={balance}
-          winStreak={winStreak}
-          winRate={winRate}
-          totalPredictions={totalPredictions}
-          activePredictions={activePredictions}
-          pet={pet}
-          chatOpen={chatOpen}
-          currentDialogue={currentDialogue}
-          dialogueKey={dialogueKey}
-          onOpenChat={onOpenChat}
-          onCloseChat={onCloseChat}
-          onViewPet={onViewPet}
-        />
+      <div className="hidden xl:flex min-h-0 flex-1 flex-col overflow-y-auto py-1 pr-1">
+        <div className="flex min-h-full flex-col gap-4">
+          <SidebarProfileCard
+            balance={balance}
+            winStreak={winStreak}
+            winRate={winRate}
+            totalPredictions={totalPredictions}
+            activePredictions={activePredictions}
+            pet={pet}
+            chatOpen={chatOpen}
+            currentDialogue={currentDialogue}
+            dialogueKey={dialogueKey}
+            onOpenChat={onOpenChat}
+            onCloseChat={onCloseChat}
+            onViewPet={onViewPet}
+          />
 
-        <SidebarHotTopicsPanel
-          selectedTag={selectedTag}
-          onTopicClick={onTopicClick}
-          onFallbackTopicClick={onFallbackTopicClick}
-          onTagClick={onTagClick}
-        />
-      </div>
+          <SidebarHotTopicsPanel
+            selectedTag={selectedTag}
+            onTopicClick={onTopicClick}
+            onFallbackTopicClick={onFallbackTopicClick}
+            onTagClick={onTagClick}
+          />
 
-      <div className="hidden xl:block flex-1 min-h-0 overflow-hidden">
-        <SidebarNavMenu navItems={NAV_ITEMS} activeView={activeView} onNavClick={onNavClick} />
+          <div className="min-h-0 flex-1">
+            <SidebarNavMenu navItems={NAV_ITEMS} activeView={activeView} onNavClick={onNavClick} />
+          </div>
+        </div>
       </div>
     </>
   );

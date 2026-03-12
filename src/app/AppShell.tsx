@@ -242,7 +242,7 @@ function App() {
       />
 
       {/* Main layout */}
-      <main className="app-main !px-3 md:!px-4 flex flex-col xl:flex-row min-h-[calc(100vh-78px)] xl:h-[calc(100vh-78px)] xl:overflow-hidden gap-3 md:gap-4 px-3 md:px-5 py-3 md:py-6">
+      <main className="app-main flex min-h-[calc(100vh-56px)] flex-col gap-4 px-3 py-3 md:px-6 md:py-6 xl:h-[calc(100vh-56px)] xl:min-h-0 xl:flex-row xl:gap-6 xl:overflow-hidden xl:px-8">
         <div className="xl:hidden w-full overflow-hidden">
           <Sidebar
             balance={balance}
@@ -269,7 +269,7 @@ function App() {
           />
         </div>
 
-        <aside className="app-sidebar hidden xl:block shrink-0 self-start sticky top-14 h-[calc(100vh-72px)] overflow-y-auto overscroll-contain w-[420px] min-w-[420px] max-w-[420px]">
+        <aside className="app-sidebar hidden xl:block h-full w-[260px] shrink-0 self-stretch overflow-hidden">
           <Sidebar
             balance={balance}
             winStreak={mockUser.winStreak}
@@ -295,11 +295,7 @@ function App() {
           />
         </aside>
 
-        <div className="hidden xl:block w-px shrink-0 bg-slate-200 dark:bg-rdark-border opacity-60" />
-
-        {/* Center content */}
-        {/* <div>{activeView}---{selectedNewsId}---{JSON.stringify(selectedTopic)}</div> */}
-        <div className="app-content flex-1 min-w-0 xl:min-h-0 xl:h-full overflow-visible xl:overflow-y-auto overscroll-contain pr-0 xl:pr-1 space-y-4 md:space-y-6">
+        <div className="app-content flex-1 min-w-0 overflow-visible space-y-4 overscroll-contain md:space-y-6 xl:h-full xl:min-h-0 xl:overflow-y-auto xl:pr-1">
           {activeView === 'predictions' ? (
             selectedNewsId ? (
               <section className="view-shell view-rhythm view-event-battle w-full max-w-none mx-0 grid gap-4">

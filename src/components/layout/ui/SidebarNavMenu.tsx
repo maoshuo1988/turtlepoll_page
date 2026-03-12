@@ -22,16 +22,23 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
   onNavClick,
 }) => {
   const navItemBase =
-    'w-full flex items-center gap-2.5 md:gap-3 min-h-[42px] md:min-h-[46px] px-3 py-2 rounded-xl text-[14px] md:text-[16px] font-semibold cursor-pointer transition-all border text-left relative before:content-[\'\'] before:absolute before:left-2 before:top-1/2 before:w-[3px] before:h-0 before:-translate-y-1/2 before:rounded-full before:bg-gradient-to-b before:from-cyan-400 before:to-emerald-400 before:opacity-0 before:transition-all';
-  const navItemDisabled = 'opacity-55 text-slate-300 dark:text-rdark-text2/50 cursor-default';
+    'w-full flex items-center gap-3 min-h-[44px] px-3 py-2 rounded-xl text-[14px] font-semibold cursor-pointer transition-all border text-left relative before:content-[\'\'] before:absolute before:left-1 before:top-1/2 before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-slate-900 before:opacity-0 before:transition-opacity dark:before:bg-white';
+  const navItemDisabled = 'cursor-default opacity-55 text-slate-300 dark:text-rdark-text2/50';
   const navItemIdle =
-    'border-transparent bg-transparent text-slate-600 dark:text-rdark-text hover:border-sky-300/50 hover:bg-[linear-gradient(100deg,rgba(60,142,255,0.14),rgba(16,29,61,0.12))] hover:before:h-[22px] hover:before:opacity-85';
+    'border-transparent bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-rdark-text dark:hover:bg-rdark-input dark:hover:text-rdark-text';
   const navItemActive =
-    'border-cyan-300/60 bg-[linear-gradient(100deg,rgba(0,215,255,0.24),rgba(13,53,96,0.26))] text-emerald-700 dark:text-emerald-400 shadow-[inset_0_0_0_1px_rgba(0,215,255,0.24),0_0_20px_rgba(0,215,255,0.18)] before:h-6 before:opacity-100';
+    'border-slate-200 bg-slate-100 text-slate-900 before:opacity-100 dark:border-rdark-border dark:bg-rdark-input dark:text-rdark-text';
 
   return (
-    <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden !p-2 border border-slate-200 dark:border-rdark-border/70 rounded-xl bg-white dark:bg-[#101319] shadow-[0_4px_14px_rgba(15,23,42,0.08)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.28)]">
-      <div className="legacy-sidebar-nav grid gap-2">
+    <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-sm dark:border-rdark-border dark:bg-rdark-card dark:shadow-none xl:rounded-none xl:border-0 xl:bg-transparent xl:px-0 xl:pb-0 xl:pt-1">
+      <div className="mb-3 px-1 xl:mb-2 xl:px-0">
+        <div className="text-[14px] font-bold text-slate-900 dark:text-rdark-text">功能导航</div>
+        <div className="mt-0.5 text-[11px] text-slate-500 dark:text-rdark-text2">切换主要页面与系统入口</div>
+      </div>
+
+      <div className="mb-3 hidden h-px bg-slate-200 dark:bg-rdark-border xl:block" />
+
+      <div className="legacy-sidebar-nav grid gap-1.5">
         {navItems.map((item) => {
           const isActive = item.view ? activeView === item.view : false;
           return (
@@ -45,7 +52,7 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
                   !item.enabled
                     ? 'text-slate-300 dark:text-rdark-text2/50'
                     : isActive
-                      ? 'text-emerald-600 dark:text-emerald-400'
+                      ? 'text-slate-900 dark:text-rdark-text'
                       : 'text-slate-400 dark:text-rdark-text2'
                 }`}
               >

@@ -43,14 +43,18 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
         dark:border-rdark-border 
         shadow-sm 
         dark:shadow-none 
-        overflow-hidden`
+        overflow-hidden
+        xl:rounded-none
+        xl:border-x-0
+        xl:border-t-0
+        xl:shadow-none`
     }>
       {chatOpen ? (
         <PetChat pet={pet} onClose={onCloseChat} />
       ) : (
         <div>
           <div className="!px-4 !pt-4 !pb-4 border-b border-slate-200 border-white/10 bg-white/90 dark:bg-rdark-card/90">
-            <div className='flex items-center justify-between !mb-4'>
+            <div className='flex flex-col !mb-4'>
               <div className="flex items-center gap-3 mb-3.5">
                 <div className="w-16 h-16 rounded-full bg-white/10 from-emerald-400 to-teal-500 grid place-items-center text-xl text-white font-bold shadow-sm">🦊</div>
                 <div className="flex-1 min-w-0">
