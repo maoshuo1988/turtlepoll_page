@@ -1,7 +1,7 @@
 import { AUTH_TOKEN_STORAGE_KEY, USER_INFO_STORAGE_KEY } from "@/constant";
 
 ///token 相关
-export function getStoredAuthToken() {
+export function getAuthToken() {
   return localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ?? '';
 }
 

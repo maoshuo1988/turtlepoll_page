@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Bell, LogIn, Moon, Search, Sun } from 'lucide-react';
-import { getStoredAuthToken, getStoredUserInfo } from '@/utils/authStorage';
+import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 
 interface AppHeaderProps {
   darkMode: boolean;
@@ -15,7 +15,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onToggleTheme,
   onOpenAuth,
 }) => {
-  const isAuthenticated = getStoredAuthToken();
+  const isAuthenticated = getAuthToken();
   const userInfo = getStoredUserInfo();
 
   return (

@@ -1,15 +1,16 @@
 import {
+  API_Badge_Badges,
   API_Captcha_Request_Angle,
   API_Config_Configs,
   API_Login_Signin,
   API_Login_Signout,
   API_Login_Signup,
+  API_Topic_Topics,
   API_User_Current,
+  API_User_Msg_recent,
 } from "@/api/api";
 import { axiosCustom } from "@/api/axios";
-import type {
-  RequestResult,
-} from "@/hook/types";
+import { getAuthToken, saveUserInfo } from "@/utils/authStorage";
 import { useMutation, useQuery } from "react-query";
 
 ///获取图形
@@ -56,7 +57,7 @@ export function useRequestSignUp() {
 }
 
 ///登录
-export function useRequestSignIn(){
+export function useRequestSignIn() {
   async function fetchData(data: any) {
     const res = (await axiosCustom({
       method: "post",
@@ -79,7 +80,7 @@ export function useRequestSignIn(){
 }
 
 ///退出登录
-export function useRequestSignout(){
+export function useRequestSignout() {
   async function fetchData() {
     const res = (await axiosCustom({
       method: "get",
@@ -97,40 +98,114 @@ export function useRequestSignout(){
   });
 }
 
+//获取用户信息
+export function useRequestUserCurrent() {
+  async function fetchData() {
+    const res = (await axiosCustom({
+      method: "get",
+      cmd: API_User_Current,
+      headers: {
+        "Authorization": `Bearer ${getAuthToken()}`,
+      },
+    }));
 
-
-
-
-
-
-
-
-// export function useConfigConfigs() {
-//   async function fetchData() {
-//     const res = await axiosCustom({
-//       method: "get",
-//       cmd: API_Config_Configs,
-//     });
-//     return res;
-//   }
-//   return useQuery({ queryKey: ["configConfigs"], queryFn: fetchData });
-// }
-
-
-
-
-
-export async function requestCurrentUser<T>(token?: string) {
-  const res = await axiosCustom({
-    method: "get",
-    cmd: API_User_Current,
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    if (res.success !== true) {
+      throw new Error(String(res.msg ?? ""));
+    }
+   saveUserInfo(res.data)
+    return res.data;
+  }
+  return useQuery({
+    queryKey: ["requestUserCurrent"],
+    queryFn: fetchData,
   });
-  return res as RequestResult<T>;
 }
 
-// export async function fetchCurrentUser(token?: string) {
-//   const response = await requestCurrentUser<AuthUser>(token);
-//   return unwrapRequestResult(response);
-// }
+// 话题列表（首页主流）
+// nodeId	number	否	节点 ID：0 最新，-1 推荐，-2 关注，>0 普通节点。
+// odeId=-2 关注流时需要登录
+export function useRequestTopicTopics(params: any) {
+  async function fetchData() {
+    const res = (await axiosCustom({
+      method: "get",
+      cmd: API_Topic_Topics,
+      params,
+      headers: {
+        "Authorization": `Bearer ${getAuthToken()}`,
+      },
+    }));
+
+    if (res.success !== true) {
+      throw new Error(String(res.msg ?? ""));
+    }
+    return res.data;
+  }
+  return useQuery({
+    queryKey: ["requestTopicTopics"],
+    queryFn: fetchData,
+  });
+}
+
+//顶部站点信息/公告
+export function useRequestConfigConfigs() {
+  async function fetchData() {
+    const res = (await axiosCustom({
+      method: "get",
+      cmd: API_Config_Configs,
+    }));
+
+    if (res.success !== true) {
+      throw new Error(String(res.msg ?? ""));
+    }
+    return res.data;
+  }
+  return useQuery({
+    queryKey: ["requestConfigConfigs"],
+    queryFn: fetchData,
+  });
+}
+
+//顶部未读消息摘要
+export function useRequestUserMsgRecent() {
+  async function fetchData() {
+    const res = (await axiosCustom({
+      method: "get",
+      cmd: API_User_Msg_recent,
+      headers: {
+        "Authorization": `Bearer ${getAuthToken()}`,
+      },
+    }));
+
+    if (res.success !== true) {
+      throw new Error(String(res.msg ?? ""));
+    }
+    return res.data;
+  }
+  return useQuery({
+    queryKey: ["requestUserMsgRecent"],
+    queryFn: fetchData,
+  });
+}
+
+//获取用户勋章列表 
+export function useRequestBadgeBadges() {
+  async function fetchData() {
+    const res = (await axiosCustom({
+      method: "get",
+      cmd: API_Badge_Badges,
+      headers: {
+        "Authorization": `Bearer ${getAuthToken()}`,
+      },
+    }));
+
+    if (res.success !== true) {
+      throw new Error(String(res.msg ?? ""));
+    }
+    return res.data;
+  }
+  return useQuery({
+    queryKey: ["requestBadgeBadges"],
+    queryFn: fetchData,
+  });
+}
 

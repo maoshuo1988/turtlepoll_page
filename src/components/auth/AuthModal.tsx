@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { ArrowLeft, ChevronRight, LockKeyhole, LogOut, Mail, X } from 'lucide-react';
 import { RotateCaptchaModal } from './RotateCaptchaModal';
 import { useRequestSignIn, useRequestSignUp } from '@/hook/useRequest';
-import { getStoredAuthToken, getStoredUserInfo, saveAuthToken, saveUserInfo } from '@/utils/authStorage';
+import { getAuthToken, getStoredUserInfo, saveAuthToken, saveUserInfo } from '@/utils/authStorage';
 
 interface AuthModalProps {
   open: boolean;
@@ -491,7 +491,7 @@ export function AuthModal({
     return null;
   }
 
-  const isAuthenticated = getStoredAuthToken()
+  const isAuthenticated = getAuthToken()
   const userinfo = getStoredUserInfo()
 
   return createPortal(

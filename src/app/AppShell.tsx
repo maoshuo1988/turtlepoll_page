@@ -25,7 +25,7 @@ import {
   mockPetSkins,
 } from '../data/mock_data';
 import { clearInfo } from '@/utils/authStorage';
-import { useRequestSignout } from '@/hook/useRequest';
+import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestTopicTopics, useRequestUserCurrent, useRequestUserMsgRecent } from '@/hook/useRequest';
 
 // Bet cost per action
 const BET_COST = 100;
@@ -66,8 +66,32 @@ function App() {
   const usePredStyleLayout = true;
   const darkMode = theme === 'dark';
 
+  //顶部站点信息/公告
+  const configInfo = useRequestConfigConfigs()
+  console.log("configInfo ---- ",configInfo)
+
+  //顶部未读消息摘要
+  const userMsgRecent = useRequestUserMsgRecent()
+  console.log("userMsgRecent ---- ",userMsgRecent)
+
+  //获取用户勋章列表
+  const userBadge = useRequestBadgeBadges()
+  console.log("userBadge ---- ",userBadge)
+
+  //获取用户信息
+  const userInfo = useRequestUserCurrent()
+  console.log("userInfo ---- ",userInfo)
+
   //退出登录请求
   const signOutMutation = useRequestSignout();
+
+  //话题列表
+  const topics = useRequestTopicTopics({cursor:0,nodeId:0});
+  console.log("topics --- ",topics)
+
+  //
+
+
 
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
