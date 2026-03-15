@@ -36,12 +36,12 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   return (
     <div className={
       `rounded-xl 
-        bg-white 
+        bg-[#0f1013] 
         dark:bg-rdark-card 
         border 
-        border-slate-200 
+        border-white/8 
         dark:border-rdark-border 
-        shadow-sm 
+        shadow-[0_12px_28px_rgba(0,0,0,0.24)] 
         dark:shadow-none 
         overflow-hidden
         xl:rounded-none
@@ -53,17 +53,17 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
         <PetChat pet={pet} onClose={onCloseChat} />
       ) : (
         <div>
-          <div className="!px-4 !pt-4 !pb-4 border-b border-slate-200 border-white/10 bg-white/90 dark:bg-rdark-card/90">
+          <div className="!px-4 !pt-4 !pb-4 border-b border-white/8 bg-[#0f1013]/96 dark:bg-rdark-card/90">
             <div className='flex flex-col !mb-4'>
               <div className="flex items-center gap-3 mb-3.5">
-                <div className="w-16 h-16 rounded-full bg-white/10 from-emerald-400 to-teal-500 grid place-items-center text-xl text-white font-bold shadow-sm">🦊</div>
+                <div className="grid h-16 w-16 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-xl font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">🦊</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[15px] font-bold text-slate-700 dark:text-rdark-text">路边社社长</div>
-                  <div className="text-[10px] text-slate-400 dark:text-rdark-text2 mt-0.5">预测达人 · 连续签到 12 天</div>
+                  <div className="text-[15px] font-bold text-white dark:text-rdark-text">路边社社长</div>
+                  <div className="mt-0.5 text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
                 </div>
               </div>
 
-              <div className="rounded-xl bg-slate-50/90 dark:bg-rdark-input/75 px-3 py-2.5 mb-3.5">
+              <div className="mb-3.5 rounded-xl border border-white/6 bg-[#141518] px-3 py-2.5 dark:bg-rdark-input/75">
                 <div className="flex items-center justify-center gap-2">
                   <Coins size={17} className="text-emerald-500 dark:text-emerald-400" />
                   <AnimatePresence mode="popLayout">
@@ -78,36 +78,36 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
                       {balance.toLocaleString()}
                     </motion.span>
                   </AnimatePresence>
-                  <span className="text-[11px] text-slate-400 dark:text-rdark-text2 self-end mb-0.5">龟币</span>
+                  <span className="mb-0.5 self-end text-[11px] text-zinc-500 dark:text-rdark-text2">龟币</span>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-4 gap-2">
-              <div className="bg-slate-50/90 dark:bg-rdark-input rounded-lg !py-2.5 text-center">
-                <div className="text-[15px] font-bold text-slate-700 dark:text-rdark-text leading-none mb-1">{(winRate * 100).toFixed(0)}%</div>
-                <div className="text-[9px] text-slate-400 dark:text-rdark-text2">胜率</div>
+              <div className="rounded-lg bg-[#141518] !py-2.5 text-center dark:bg-rdark-input">
+                <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">{(winRate * 100).toFixed(0)}%</div>
+                <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">胜率</div>
               </div>
-              <div className="bg-slate-50/90 dark:bg-rdark-input rounded-lg !py-2.5 text-center">
-                <div className="text-[15px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-0.5 leading-none mb-1">
+              <div className="rounded-lg bg-[#141518] !py-2.5 text-center dark:bg-rdark-input">
+                <div className="mb-1 flex items-center justify-center gap-0.5 text-[15px] font-bold leading-none text-emerald-600 dark:text-emerald-400">
                   <Flame size={12} className="text-orange-400" />{winStreak}
                 </div>
-                <div className="text-[9px] text-slate-400 dark:text-rdark-text2">连胜</div>
+                <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">连胜</div>
               </div>
-              <div className="bg-slate-50/90 dark:bg-rdark-input rounded-lg !py-2.5 text-center">
-                <div className="text-[15px] font-bold text-slate-700 dark:text-rdark-text leading-none mb-1">{totalPredictions}</div>
-                <div className="text-[9px] text-slate-400 dark:text-rdark-text2">已预测</div>
+              <div className="rounded-lg bg-[#141518] !py-2.5 text-center dark:bg-rdark-input">
+                <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">{totalPredictions}</div>
+                <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">已预测</div>
               </div>
-              <div className="bg-slate-50/90 dark:bg-rdark-input rounded-lg !py-2.5 text-center">
-                <div className="text-[15px] font-bold text-blue-600 dark:text-blue-400 leading-none mb-1">{activePredictions}</div>
-                <div className="text-[9px] text-slate-400 dark:text-rdark-text2">进行中</div>
+              <div className="rounded-lg bg-[#141518] !py-2.5 text-center dark:bg-rdark-input">
+                <div className="mb-1 text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">{activePredictions}</div>
+                <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">进行中</div>
               </div>
             </div>
           </div>
 
           <div className="relative h-[194px] overflow-hidden cursor-pointer group" onClick={onViewPet}>
-            <div className="absolute inset-0 bg-gradient-to-b from-sky-200 via-sky-100 to-emerald-50 dark:from-indigo-950 dark:via-slate-900 dark:to-emerald-950" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(253,230,138,0.25),transparent_60%)] dark:bg-[radial-gradient(ellipse_at_70%_20%,rgba(253,230,138,0.08),transparent_60%)]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#16171b] via-[#111214] to-[#090909]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
 
             <motion.div animate={{ scale: [1, 1.05, 1], opacity: [0.9, 1, 0.9] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} className="absolute top-3 right-6">
               <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-200 to-orange-300 dark:from-slate-300 dark:to-slate-400 shadow-[0_0_12px_rgba(251,191,36,0.4)] dark:shadow-[0_0_12px_rgba(203,213,225,0.2)]" />
@@ -117,13 +117,13 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
             <motion.div animate={{ x: [10, -25, 10] }} transition={{ duration: 22, repeat: Infinity, ease: 'linear' }} className="absolute top-9 right-4"><div className="relative"><div className="w-10 h-3 bg-white/45 dark:bg-white/6 rounded-full" /><div className="absolute -top-1 left-2 w-6 h-3 bg-white/35 dark:bg-white/5 rounded-full" /></div></motion.div>
             <motion.div animate={{ x: [0, 20, 0] }} transition={{ duration: 35, repeat: Infinity, ease: 'linear' }} className="absolute top-14 left-1/4"><div className="w-8 h-2.5 bg-white/30 dark:bg-white/4 rounded-full" /></motion.div>
 
-            <div className="absolute bottom-[52px] left-0 right-0 h-[30px]"><svg viewBox="0 0 260 30" className="w-full h-full" preserveAspectRatio="none"><path d="M0 30 Q30 8 65 18 Q100 5 130 14 Q165 2 195 12 Q225 6 260 16 L260 30 Z" className="fill-emerald-200/60 dark:fill-emerald-900/30" /></svg></div>
-            <div className="absolute bottom-0 left-0 right-0 h-[50px]"><div className="absolute inset-0 bg-gradient-to-t from-emerald-600/30 via-emerald-400/40 to-emerald-200/30 dark:from-emerald-950/80 dark:via-emerald-900/50 dark:to-emerald-900/20" /><svg viewBox="0 0 260 12" className="absolute -top-1 left-0 w-full h-3" preserveAspectRatio="none"><path d="M0 12 Q8 4 16 8 Q24 2 32 7 Q40 3 48 8 Q56 1 64 6 Q72 3 80 8 Q88 2 96 7 Q104 4 112 8 Q120 1 128 6 Q136 3 144 8 Q152 2 160 7 Q168 4 176 8 Q184 1 192 6 Q200 3 208 8 Q216 2 224 7 Q232 4 240 8 Q248 2 260 6 L260 12 Z" className="fill-emerald-300/70 dark:fill-emerald-800/50" /></svg>
-              <div className="absolute bottom-[8px] left-3 flex gap-[2px] items-end"><div className="w-[3px] h-[10px] bg-emerald-500/60 dark:bg-emerald-600/40 rounded-t-full -rotate-6" /><div className="w-[2px] h-[13px] bg-emerald-600/50 dark:bg-emerald-500/35 rounded-t-full" /><div className="w-[3px] h-[9px] bg-emerald-500/55 dark:bg-emerald-600/40 rounded-t-full rotate-6" /></div>
-              <div className="absolute bottom-[8px] left-12 flex gap-[2px] items-end"><div className="w-[2px] h-[8px] bg-emerald-500/50 dark:bg-emerald-600/35 rounded-t-full -rotate-3" /><div className="w-[3px] h-[11px] bg-emerald-600/45 dark:bg-emerald-500/30 rounded-t-full rotate-2" /></div>
-              <div className="absolute bottom-[8px] right-5 flex gap-[2px] items-end"><div className="w-[3px] h-[11px] bg-emerald-500/55 dark:bg-emerald-600/40 rounded-t-full -rotate-4" /><div className="w-[2px] h-[14px] bg-emerald-600/50 dark:bg-emerald-500/35 rounded-t-full rotate-2" /><div className="w-[2px] h-[9px] bg-emerald-500/45 dark:bg-emerald-600/30 rounded-t-full rotate-8" /></div>
-              <div className="absolute bottom-[8px] right-16 flex gap-[2px] items-end"><div className="w-[2px] h-[7px] bg-emerald-600/40 dark:bg-emerald-500/25 rounded-t-full" /><div className="w-[3px] h-[10px] bg-emerald-500/50 dark:bg-emerald-600/35 rounded-t-full -rotate-3" /></div>
-              <div className="absolute bottom-[14px] left-[70px] text-[6px] opacity-70">🌼</div><div className="absolute bottom-[12px] right-[55px] text-[5px] opacity-60">🌸</div><div className="absolute bottom-[6px] left-[45%] w-3 h-1.5 bg-slate-400/30 dark:bg-slate-600/30 rounded-full" /><div className="absolute bottom-[5px] left-[30%] w-2 h-1 bg-slate-400/20 dark:bg-slate-600/20 rounded-full" />
+            <div className="absolute bottom-[52px] left-0 right-0 h-[30px]"><svg viewBox="0 0 260 30" className="w-full h-full" preserveAspectRatio="none"><path d="M0 30 Q30 8 65 18 Q100 5 130 14 Q165 2 195 12 Q225 6 260 16 L260 30 Z" className="fill-white/6" /></svg></div>
+            <div className="absolute bottom-0 left-0 right-0 h-[50px]"><div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-white/5" /><svg viewBox="0 0 260 12" className="absolute -top-1 left-0 w-full h-3" preserveAspectRatio="none"><path d="M0 12 Q8 4 16 8 Q24 2 32 7 Q40 3 48 8 Q56 1 64 6 Q72 3 80 8 Q88 2 96 7 Q104 4 112 8 Q120 1 128 6 Q136 3 144 8 Q152 2 160 7 Q168 4 176 8 Q184 1 192 6 Q200 3 208 8 Q216 2 224 7 Q232 4 240 8 Q248 2 260 6 L260 12 Z" className="fill-white/8" /></svg>
+              <div className="absolute bottom-[8px] left-3 flex gap-[2px] items-end"><div className="h-[10px] w-[3px] rounded-t-full bg-white/10 -rotate-6" /><div className="h-[13px] w-[2px] rounded-t-full bg-white/12" /><div className="h-[9px] w-[3px] rounded-t-full bg-white/10 rotate-6" /></div>
+              <div className="absolute bottom-[8px] left-12 flex gap-[2px] items-end"><div className="h-[8px] w-[2px] rounded-t-full bg-white/9 -rotate-3" /><div className="h-[11px] w-[3px] rounded-t-full bg-white/10 rotate-2" /></div>
+              <div className="absolute bottom-[8px] right-5 flex gap-[2px] items-end"><div className="h-[11px] w-[3px] rounded-t-full bg-white/10 -rotate-4" /><div className="h-[14px] w-[2px] rounded-t-full bg-white/12 rotate-2" /><div className="h-[9px] w-[2px] rounded-t-full bg-white/8 rotate-8" /></div>
+              <div className="absolute bottom-[8px] right-16 flex gap-[2px] items-end"><div className="h-[7px] w-[2px] rounded-t-full bg-white/8" /><div className="h-[10px] w-[3px] rounded-t-full bg-white/10 -rotate-3" /></div>
+              <div className="absolute bottom-[6px] left-[45%] h-1.5 w-3 rounded-full bg-white/12" /><div className="absolute bottom-[5px] left-[30%] h-1 w-2 rounded-full bg-white/8" />
             </div>
 
             <motion.div animate={{ y: [0, 60, 0], x: [0, 8, -5, 0], opacity: [0, 0.7, 0.7, 0] }} transition={{ duration: 6, repeat: Infinity, delay: 0 }} className="absolute top-6 left-[20%] w-1 h-1 rounded-full bg-amber-300/60 dark:bg-amber-400/40" />

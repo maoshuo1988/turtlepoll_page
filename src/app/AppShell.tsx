@@ -25,7 +25,7 @@ import {
   mockPetSkins,
 } from '../data/mock_data';
 import { clearInfo } from '@/utils/authStorage';
-import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestTopicTopics, useRequestUserCurrent, useRequestUserMsgRecent } from '@/hook/useRequest';
+import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestTopicList, useRequestTopicNode, useRequestTopicNodeNavs, useRequestTopicTopics, useRequestUserCurrent, useRequestUserMsgRecent } from '@/hook/useRequest';
 
 // Bet cost per action
 const BET_COST = 100;
@@ -35,7 +35,7 @@ type ThemeMode = 'light' | 'dark';
 function getInitialTheme(): ThemeMode {
   const stored = localStorage.getItem(THEME_KEY);
   if (stored === 'light' || stored === 'dark') return stored;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'dark';
 }
 
 function applyTheme(mode: ThemeMode) {
@@ -89,8 +89,14 @@ function App() {
   const topics = useRequestTopicTopics({cursor:0,nodeId:0});
   console.log("topics --- ",topics)
 
-  //
-
+  //获取节点导航
+  const topicNodeNavs = useRequestTopicNodeNavs();
+  console.log("topicNodeNavs --- ",topicNodeNavs)
+  
+  //话题列表
+  const topicList = useRequestTopicList({cursor:0,nodeId:0});
+  console.log("topicList --- ",topicList)
+  
 
 
   // Derive current pet avatar from equipped skin
@@ -258,7 +264,7 @@ function App() {
   void handleResolveBattle;
 
   return (
-    <div className={`legacy-fusion-app fixed-sidebar-style min-h-screen overflow-x-hidden bg-slate-50 dark:bg-rdark transition-colors ${usePredStyleLayout ? 'home-main-style' : ''}`}>
+    <div className={`legacy-fusion-app fixed-sidebar-style min-h-screen overflow-x-hidden bg-[#080808] text-white dark:bg-rdark transition-colors ${usePredStyleLayout ? 'home-main-style' : ''}`}>
       <AppHeader
         darkMode={darkMode}
         onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}

@@ -20,29 +20,29 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
   return (
     <>
-      <header className="app-header fixed md:sticky top-0 left-0 right-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-rdark-border dark:bg-rdark-card/95">
+      <header className="app-header fixed md:sticky top-0 left-0 right-0 z-50 border-b border-white/8 bg-[#090909]/92 backdrop-blur-xl dark:border-rdark-border dark:bg-rdark-card/95">
         <div className="flex h-[54px] md:h-[56px] items-center gap-3 md:gap-4 px-3 md:px-8">
           <div className="flex items-center gap-2 shrink-0 cursor-pointer group min-w-0">
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white grid place-items-center shadow-[0_8px_20px_rgba(16,185,129,0.25)]">
+            <div className="grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-gradient-to-br from-[#1a1a1d] to-[#0d0d10] text-white shadow-[0_8px_20px_rgba(0,0,0,0.32)]">
               🐢
             </div>
             <div className="min-w-0">
-              <span className="block truncate bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-[19px] font-extrabold tracking-[-0.03em] text-transparent dark:from-emerald-400 dark:to-teal-300 md:text-[22px]">
+              <span className="block truncate bg-gradient-to-r from-white to-[#a3a3a3] bg-clip-text text-[19px] font-extrabold tracking-[-0.03em] text-transparent md:text-[22px]">
                 龟投
               </span>
-              <div className="-mt-0.5 hidden text-[9px] tracking-[0.18em] text-slate-400 dark:text-rdark-text2 md:block">
+              <div className="-mt-0.5 hidden text-[9px] tracking-[0.18em] text-zinc-500 dark:text-rdark-text2 md:block">
                 NEWS · MARKET · PET
               </div>
             </div>
           </div>
 
           <div className="hidden flex-1 max-w-xl md:block">
-            <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-4 py-2 transition-colors hover:border-slate-300 dark:border-rdark-border dark:bg-rdark-input dark:hover:border-rdark-text2">
-              <Search size={16} className="shrink-0 text-slate-400 dark:text-rdark-text2" />
+            <div className="flex items-center gap-2 rounded-full border border-white/8 bg-[#121316] px-4 py-2 transition-colors hover:border-white/14 dark:border-rdark-border dark:bg-rdark-input dark:hover:border-rdark-text2">
+              <Search size={16} className="shrink-0 text-zinc-500 dark:text-rdark-text2" />
               <input
                 type="text"
                 placeholder="搜索热点事件..."
-                className="w-full border-0 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400 dark:text-rdark-text dark:placeholder:text-rdark-text2"
+                className="w-full border-0 bg-transparent text-sm text-zinc-100 outline-none placeholder:text-zinc-500 dark:text-rdark-text dark:placeholder:text-rdark-text2"
               />
             </div>
           </div>
@@ -50,12 +50,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <div className="ml-auto flex items-center gap-1.5 md:gap-2">
             <button
               onClick={onToggleTheme}
-              className="grid h-9 w-9 place-items-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-100 dark:border-rdark-border dark:bg-rdark-card dark:text-rdark-text2 dark:hover:bg-rdark-hover"
+              className="grid h-9 w-9 place-items-center rounded-full border border-white/8 bg-[#111215] text-zinc-400 transition-colors hover:bg-[#18191d] dark:border-rdark-border dark:bg-rdark-card dark:text-rdark-text2 dark:hover:bg-rdark-hover"
             >
               {darkMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
             <button
-              className="relative hidden h-9 w-9 place-items-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-100 dark:border-rdark-border dark:bg-rdark-card dark:text-rdark-text2 dark:hover:bg-rdark-hover md:grid"
+              className="relative hidden h-9 w-9 place-items-center rounded-full border border-white/8 bg-[#111215] text-zinc-400 transition-colors hover:bg-[#18191d] dark:border-rdark-border dark:bg-rdark-card dark:text-rdark-text2 dark:hover:bg-rdark-hover md:grid"
             >
               <Bell size={16} />
               <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500" />
@@ -64,12 +64,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               type="button"
               title={userInfo.avatar}
               onClick={onOpenAuth}
-              className="group relative grid h-9 w-9 place-items-center overflow-hidden rounded-full border border-slate-200 bg-white text-[14px] shadow-[0_10px_24px_rgba(15,23,42,0.08)] md:h-10 md:w-10 md:text-[16px] dark:border-rdark-border dark:bg-rdark-card"
+              className="group relative grid h-9 w-9 place-items-center overflow-hidden rounded-full border border-white/8 bg-[#111215] text-[14px] shadow-[0_10px_24px_rgba(0,0,0,0.2)] md:h-10 md:w-10 md:text-[16px] dark:border-rdark-border dark:bg-rdark-card"
             >
               {userInfo?.avatar?.length > 0 ? (
                 <img src={userInfo.avatar} alt={userInfo.avatar} className="h-full w-full object-cover" />
               ) : isAuthenticated ? (
-                <span className="grid h-full w-full place-items-center bg-gradient-to-br from-cyan-500 via-sky-500 to-emerald-500 font-black text-white">
+                <span className="grid h-full w-full place-items-center bg-gradient-to-br from-[#202227] via-[#15161a] to-[#0d0d10] font-black text-white">
                   {userInfo?.nickname ? userInfo?.nickname.slice(0, 1).toUpperCase() : "g"}
                 </span>
               ) : (

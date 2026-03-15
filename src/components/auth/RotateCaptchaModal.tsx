@@ -189,20 +189,20 @@ export function RotateCaptchaModal({ open, onClose, onSuccess }: RotateCaptchaMo
 
   return createPortal(
     <div className="fixed inset-0 z-[110]">
-      <div className="absolute inset-0 bg-[rgba(2,9,28,0.72)] backdrop-blur-[10px]" onClick={onClose} />
+      <div className="absolute inset-0 bg-[rgba(0,0,0,0.72)] backdrop-blur-[10px]" onClick={onClose} />
       <div className="absolute inset-0 grid place-items-center !p-4">
         <div
-          className="w-full max-w-[640px] overflow-hidden rounded-[42px] border border-[#2950a0] bg-[linear-gradient(180deg,#07173d_0%,#081d4d_52%,#07173b_100%)] shadow-[0_28px_110px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(140,181,255,0.18)]"
+          className="w-full max-w-[640px] overflow-hidden rounded-[42px] border border-white/10 bg-[linear-gradient(180deg,#0b0b0d_0%,#101114_52%,#0c0c0e_100%)] shadow-[0_28px_110px_rgba(0,0,0,0.56),inset_0_1px_0_rgba(255,255,255,0.06)]"
           onClick={(event) => event.stopPropagation()}
         >
             <div className="flex items-start justify-between gap-4 !p-4 ">
               <div>
                 <div className="!mt-3 text-[22px] font-black tracking-[-0.03em] text-white">拖动滑块校正图块方向</div>
-                <div className="!mt-1 text-[13px] text-[#8ea5d7]">把中间碎片旋转到正确角度后确认，完成后会继续登录或注册。</div>
+                <div className="!mt-1 text-[13px] text-zinc-500">把中间碎片旋转到正确角度后确认，完成后会继续登录或注册。</div>
               </div>
               <button
                 type="button"
-                className="grid h-12 w-12 place-items-center rounded-full border border-[#3b5fd4] bg-[radial-gradient(circle_at_35%_30%,#1e3d7e_0%,#17346d_45%,#102858_100%)] text-white shadow-[0_10px_20px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.12)]"
+                className="grid h-12 w-12 place-items-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_35%_30%,#24262c_0%,#17181c_45%,#101114_100%)] text-white shadow-[0_10px_20px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)]"
                 onClick={onClose}
               >
                 <X size={24} />
@@ -210,10 +210,10 @@ export function RotateCaptchaModal({ open, onClose, onSuccess }: RotateCaptchaMo
             </div>
 
           <div className="space-y-4 !px-5 !py-5">
-            <div className="rounded-[26px] border border-[#355aa4] bg-[linear-gradient(180deg,rgba(16,37,88,0.94),rgba(15,41,96,0.92))] p-4 shadow-[inset_0_1px_0_rgba(147,184,255,0.12),0_6px_20px_rgba(0,0,0,0.14)]">
-              <div className="relative flex h-[280px] items-center justify-center overflow-hidden rounded-[22px] border border-[#2e529c] bg-[rgba(5,16,44,0.55)]">
+            <div className="rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(20,21,24,0.98),rgba(15,16,19,0.96))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_6px_20px_rgba(0,0,0,0.24)]">
+              <div className="relative flex h-[280px] items-center justify-center overflow-hidden rounded-[22px] border border-white/8 bg-[rgba(8,8,10,0.82)]">
                 {loading ? (
-                  <div className="text-[13px] text-[#8ea5d7]">正在加载验证码...</div>
+                  <div className="text-[13px] text-zinc-500">正在加载验证码...</div>
                 ) : captcha ? (
                   <>
                     <img
@@ -253,16 +253,16 @@ export function RotateCaptchaModal({ open, onClose, onSuccess }: RotateCaptchaMo
               </div> */}
               <div
                 ref={trackRef}
-                className="relative h-13 overflow-hidden rounded-full border border-[#31569e] bg-[rgba(5,16,44,0.55)]"
+                className="relative h-13 overflow-hidden rounded-full border border-white/10 bg-[rgba(16,17,20,0.96)]"
               >
                 <div
-                  className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-cyan-400/18 via-sky-400/20 to-emerald-400/20"
+                  className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-white/10 via-white/8 to-white/5"
                   style={{ width: `${sliderLeft + (knobRef.current?.clientWidth ?? DEFAULT_KNOB_WIDTH) / 2}px` }}
                 />
                 <button
                   ref={knobRef}
                   type="button"
-                  className="absolute top-[4px] grid h-[42px] w-14 place-items-center rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 text-sm font-black text-white shadow-[0_12px_24px_rgba(14,165,233,0.35)]"
+                  className="absolute top-[4px] grid h-[42px] w-14 place-items-center rounded-full border border-white/10 bg-gradient-to-r from-[#23262b] to-[#121316] text-sm font-black text-white shadow-[0_12px_24px_rgba(0,0,0,0.34)]"
                   style={{ left: `${sliderLeft}px` }}
                   onMouseDown={(event) => beginDrag(event.clientX)}
                   onTouchStart={(event) => {
@@ -275,7 +275,7 @@ export function RotateCaptchaModal({ open, onClose, onSuccess }: RotateCaptchaMo
                   ↔
                 </button>
               </div>
-              <div className="!mt-3 text-[12px] text-[#8ea5d7]">
+              <div className="!mt-3 text-[12px] text-zinc-500">
                 向右拖动时图块会同步旋转，调到正确方向后点击确认。
               </div>
             </div>
@@ -287,14 +287,14 @@ export function RotateCaptchaModal({ open, onClose, onSuccess }: RotateCaptchaMo
             ) : null} */}
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-[#163a7d] !px-5 !py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-[12px] text-[#8ea5d7]">
+          <div className="flex flex-col gap-3 border-t border-white/8 !px-5 !py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-[12px] text-zinc-500">
               验证成功后将自动返回账号流程
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-[18px] border border-[#31569e] bg-[rgba(255,255,255,0.04)] !px-4 text-[13px] font-bold text-white transition"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-[18px] border border-white/10 bg-[rgba(255,255,255,0.04)] !px-4 text-[13px] font-bold text-white transition"
               onClick={() => void loadCaptcha()}
             >
               <RefreshCw size={14} />
@@ -302,14 +302,14 @@ export function RotateCaptchaModal({ open, onClose, onSuccess }: RotateCaptchaMo
             </button>
             <button
               type="button"
-              className="h-11 rounded-[18px] border border-[#31569e] !px-5 text-[13px] font-bold text-[#9ab4e5] transition"
+              className="h-11 rounded-[18px] border border-white/10 !px-5 text-[13px] font-bold text-zinc-300 transition"
               onClick={onClose}
             >
               取消
             </button>
             <button
               type="button"
-              className="h-11 rounded-[18px] bg-gradient-to-r from-cyan-500 via-sky-500 to-emerald-500 !px-5 text-[13px] font-black text-white shadow-[0_12px_28px_rgba(14,165,233,0.28)] transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-11 rounded-[18px] border border-white/10 bg-gradient-to-r from-[#18191c] via-[#23262b] to-[#121316] !px-5 text-[13px] font-black text-white shadow-[0_12px_28px_rgba(0,0,0,0.32)] transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
               disabled={!captcha || loading}
               onClick={handleConfirm}
             >
@@ -323,4 +323,3 @@ export function RotateCaptchaModal({ open, onClose, onSuccess }: RotateCaptchaMo
     document.body,
   );
 }
-

@@ -58,16 +58,16 @@ function Shell({
 }) {
   return (
     <div className="fixed inset-0 z-[100]">
-      <div className="absolute inset-0 bg-[rgba(2,9,28,0.72)] backdrop-blur-[10px]" onClick={onClose} />
+      <div className="absolute inset-0 bg-[rgba(0,0,0,0.72)] backdrop-blur-[10px]" onClick={onClose} />
       <div className="absolute inset-0 grid place-items-center p-4">
         <div
-          className={`relative w-full ${maxWidth} overflow-hidden rounded-[42px] border border-[#2950a0] bg-[linear-gradient(180deg,#07173d_0%,#081d4d_52%,#07173b_100%)] shadow-[0_28px_110px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(140,181,255,0.18)]`}
+          className={`relative w-full ${maxWidth} overflow-hidden rounded-[42px] border border-white/10 bg-[linear-gradient(180deg,#0b0b0d_0%,#101114_52%,#0c0c0e_100%)] shadow-[0_28px_110px_rgba(0,0,0,0.56),inset_0_1px_0_rgba(255,255,255,0.06)]`}
           onClick={(event) => event.stopPropagation()}
         >
           {children}
           <button
             type="button"
-            className="absolute right-[18px] top-[14px] grid h-[56px] w-[56px] place-items-center rounded-full border border-[#3b5fd4] bg-[radial-gradient(circle_at_35%_30%,#1e3d7e_0%,#17346d_45%,#102858_100%)] text-white shadow-[0_10px_20px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.12)]"
+            className="absolute right-[18px] top-[14px] grid h-[56px] w-[56px] place-items-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_35%_30%,#24262c_0%,#17181c_45%,#101114_100%)] text-white shadow-[0_10px_20px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)]"
             onClick={onClose}
           >
             <X size={24} strokeWidth={2.8} />
@@ -95,9 +95,9 @@ function PrimaryInput({
 }) {
   return (
     <label
-      className={`flex h-[48px] items-center rounded-[36px] border border-[#355aa4] bg-[linear-gradient(180deg,rgba(16,37,88,0.94),rgba(15,41,96,0.92))] !px-[12px] shadow-[inset_0_1px_0_rgba(147,184,255,0.12),0_6px_20px_rgba(0,0,0,0.14)] ${className}`}
+      className={`flex h-[48px] items-center rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(20,21,24,0.98),rgba(15,16,19,0.96))] !px-[12px] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_6px_20px_rgba(0,0,0,0.24)] ${className}`}
     >
-      <span className="!mr-[12px] text-[#7f9cdb]">{icon}</span>
+      <span className="!mr-[12px] text-zinc-500">{icon}</span>
       <input
         type={type}
         value={value}
@@ -118,7 +118,7 @@ function LabeledField({
 }) {
   return (
     <label className="block">
-      <div className="!mb-[10px] !pl-[16px] text-[18px] font-medium tracking-[-0.02em] text-[#97acd7]">{label}</div>
+      <div className="!mb-[10px] !pl-[16px] text-[18px] font-medium tracking-[-0.02em] text-zinc-400">{label}</div>
       {children}
     </label>
   );
@@ -174,13 +174,13 @@ function LoginPanel({
               className="inline-flex items-center gap-[14px] text-white"
               onClick={() => setLoginForm((prev) => ({ ...prev, remember: !prev.remember }))}
             >
-              <span className={`grid h-[28px] w-[28px] place-items-center rounded-[6px] border ${loginForm.remember ? 'border-[#69b6ff] bg-[rgba(101,179,255,0.14)] text-[#8dd0ff]' : 'border-[#5273b6] text-transparent'}`}>
+              <span className={`grid h-[28px] w-[28px] place-items-center rounded-[6px] border ${loginForm.remember ? 'border-white/18 bg-white/10 text-white' : 'border-white/12 text-transparent'}`}>
                 ✓
               </span>
               <span className="text-[18px] font-medium tracking-[-0.03em]">记住我</span>
             </button>
 
-            <button type="button" className="inline-flex items-center gap-[8px] text-[18px] font-semibold text-[#00eaff]">
+            <button type="button" className="inline-flex items-center gap-[8px] text-[18px] font-semibold text-zinc-300">
               忘记密码?
               <ChevronRight size={24} strokeWidth={2.6} />
             </button>
@@ -189,20 +189,20 @@ function LoginPanel({
           <ErrorText text={error} />
         </div>
 
-        <div className="border-t border-[#163a7d] !px-[34px] !py-[20px]">
+        <div className="border-t border-white/8 !px-[34px] !py-[20px]">
           <button
             type="button"
             disabled={submitting || status === 'loading'}
-            className="h-[48px] w-full rounded-full bg-[linear-gradient(90deg,#0f52ec_0%,#1194ea_45%,#16c58b_100%)] text-[24px] font-black tracking-[0.08em] text-white shadow-[0_18px_34px_rgba(11,84,237,0.32)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-[48px] w-full rounded-full border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[24px] font-black tracking-[0.08em] text-white shadow-[0_18px_34px_rgba(0,0,0,0.34)] disabled:cursor-not-allowed disabled:opacity-60"
             onClick={onSubmit}
           >
             {submitting ? '登录中' : '登录'}
           </button>
         </div>
 
-        <div className=" !px-[20px] !py-[14px] text-center text-[22px] text-[#7f94c3]">
+        <div className=" !px-[20px] !py-[14px] text-center text-[22px] text-zinc-500">
           还没有账户？
-          <button type="button" className="ml-[14px] inline-flex items-center gap-[6px] font-semibold text-[#00eaff]" onClick={onSwitchToRegister}>
+          <button type="button" className="ml-[14px] inline-flex items-center gap-[6px] font-semibold text-white" onClick={onSwitchToRegister}>
             立即注册
             <ChevronRight size={24} strokeWidth={2.6} />
           </button>
@@ -232,14 +232,14 @@ function RegisterPanel({
       <div className="!pb-[18px] !pl-[10px]">
         <button
           type="button"
-          className="!mb-[14px] inline-flex items-center gap-[8px] rounded-full border border-[#31569e] bg-[rgba(255,255,255,0.04)] !px-[14px] !py-[8px] text-[14px] font-medium text-[#9ab4e5]"
+          className="!mb-[14px] inline-flex items-center gap-[8px] rounded-full border border-white/10 bg-[rgba(255,255,255,0.04)] !px-[14px] !py-[8px] text-[14px] font-medium text-zinc-300"
           onClick={onBackToLogin}
         >
           <ArrowLeft size={24} />
           返回登录
         </button>
         <h2 className="text-[28px] font-bold tracking-[-0.05em] text-white">创建账户</h2>
-        <p className="mt-[8px] text-[14px] tracking-[-0.02em] text-[#8ea5d7]">注册一个新的 Turtle Pass 账户</p>
+        <p className="mt-[8px] text-[14px] tracking-[-0.02em] text-zinc-500">注册一个新的 Turtle Pass 账户</p>
       </div>
 
       <div className="!space-y-[18px] !px-[4px]">
@@ -295,15 +295,15 @@ function RegisterPanel({
           </LabeledField>
         </div>
 
-        <div className="!px-[14px] text-[18px] tracking-[-0.02em] text-[#8398c8]">点击提交后会进入旋转验证码验证</div>
+        <div className="!px-[14px] text-[18px] tracking-[-0.02em] text-zinc-500">点击提交后会进入旋转验证码验证</div>
         <ErrorText text={error} />
       </div>
 
-      <div className="!my-[22px] border-t border-[#163a7d] !px-[10px] !pt-[16px]">
+      <div className="!my-[22px] border-t border-white/8 !px-[10px] !pt-[16px]">
         <button
           type="button"
           disabled={submitting || status === 'loading'}
-          className="h-[48px] w-full rounded-full bg-[linear-gradient(90deg,#0f52ec_0%,#1194ea_45%,#16c58b_100%)] text-[24px] font-black tracking-[0.08em] text-white shadow-[0_18px_34px_rgba(11,84,237,0.32)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-[48px] w-full rounded-full border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[24px] font-black tracking-[0.08em] text-white shadow-[0_18px_34px_rgba(0,0,0,0.34)] disabled:cursor-not-allowed disabled:opacity-60"
           onClick={onSubmit}
         >
           {submitting ? '注册中' : '注册'}
@@ -326,22 +326,22 @@ function UserPanel({
     <div className="!px-[28px] !pb-[28px] !pt-[40px]">
       <div className="rounded-[36px] ! p-[28px] text-white">
         <div className="flex items-center gap-[18px]">
-          <div className="grid h-[92px] w-[92px] place-items-center rounded-full bg-[linear-gradient(135deg,#1b67ff,#1dd49f)] text-[36px] font-black">
+          <div className="grid h-[92px] w-[92px] place-items-center rounded-full border border-white/10 bg-[linear-gradient(135deg,#23252a,#101114)] text-[36px] font-black">
             {userinfo?.nickname ? userinfo.nickname.slice(0, 1).toUpperCase() : "g"}
           </div>
           <div className="min-w-0">
-            <div className="text-[18px] text-[#8ca4d8]">当前已登录</div>
+            <div className="text-[18px] text-zinc-400">当前已登录</div>
             <div className="truncate text-[42px] font-bold tracking-[-0.04em]">{userinfo.nickname}</div>
           </div>
         </div>
 
         <div className="!mt-[24px] grid grid-cols-2 !gap-[14px]">
-          <div className="rounded-[24px] border border-[#31569e] bg-[rgba(255,255,255,0.04)] !px-[20px] !py-[18px]">
-            <div className="text-[16px] text-[#8ca4d8]">用户名</div>
+          <div className="rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] !px-[20px] !py-[18px]">
+            <div className="text-[16px] text-zinc-400">用户名</div>
             <div className="!mt-[10px] text-[28px] font-semibold">{String(userinfo?.username ?? '-')}</div>
           </div>
-          <div className="rounded-[24px] border border-[#31569e] bg-[rgba(255,255,255,0.04)] !px-[20px] !py-[18px]">
-            <div className="text-[16px] text-[#8ca4d8]">昵称</div>
+          <div className="rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] !px-[20px] !py-[18px]">
+            <div className="text-[16px] text-zinc-400">昵称</div>
             <div className="!mt-[10px] text-[28px] font-semibold">{String(userinfo?.nickname ?? '-')}</div>
           </div>
         </div>
@@ -349,14 +349,14 @@ function UserPanel({
         <div className="!mt-[22px] grid grid-cols-2 !gap-[14px]">
           <button
             type="button"
-            className="h-[48px] rounded-[24px] bg-[linear-gradient(90deg,#0f52ec_0%,#1194ea_45%,#16c58b_100%)] text-[18px] font-bold"
+            className="h-[48px] rounded-[24px] border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[18px] font-bold"
             onClick={onClose}
           >
             返回首页
           </button>
           <button
             type="button"
-            className="inline-flex h-[48px] items-center justify-center gap-[10px] rounded-[24px] border border-[#31569e] bg-[rgba(255,255,255,0.04)] text-[18px] font-bold"
+            className="inline-flex h-[48px] items-center justify-center gap-[10px] rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] text-[18px] font-bold"
             onClick={() => void onSignOut()}
           >
             <LogOut size={24} />

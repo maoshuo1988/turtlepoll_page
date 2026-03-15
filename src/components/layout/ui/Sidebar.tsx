@@ -22,7 +22,7 @@ interface SidebarProps {
   onTagClick?: (tag: HotTag) => void;
 }
 
-const card = 'rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
+const card = 'rounded-xl bg-[#0f1013] dark:bg-rdark-card border border-white/8 dark:border-rdark-border shadow-[0_12px_28px_rgba(0,0,0,0.24)] dark:shadow-none';
 
 export const Sidebar: React.FC<SidebarProps> = ({
   balance,
@@ -133,12 +133,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div>
                 <div className="px-4 pt-4 pb-3">
                   <div className="mb-3.5 flex items-center gap-3">
-                    <div className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 text-lg font-bold text-white shadow-sm">
+                    <div className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1d1e22] to-[#0f1013] text-lg font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
                       🦊
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-[14px] font-bold text-slate-700 dark:text-rdark-text">路边社社长</div>
-                      <div className="mt-0.5 text-[10px] text-slate-400 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
+                      <div className="text-[14px] font-bold text-white dark:text-rdark-text">路边社社长</div>
+                      <div className="mt-0.5 text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
                     </div>
                   </div>
 
@@ -156,35 +156,35 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         {balance.toLocaleString()}
                       </motion.span>
                     </AnimatePresence>
-                    <span className="mb-1 self-end text-[11px] text-slate-400 dark:text-rdark-text2">龟币</span>
+                    <span className="mb-1 self-end text-[11px] text-zinc-500 dark:text-rdark-text2">龟币</span>
                   </div>
 
                   <div className="grid grid-cols-4 gap-1.5">
-                    <div className="rounded-lg bg-slate-50 py-2.5 text-center dark:bg-rdark-input">
-                      <div className="mb-1 text-[15px] font-bold leading-none text-slate-700 dark:text-rdark-text">{(winRate * 100).toFixed(0)}%</div>
-                      <div className="text-[9px] text-slate-400 dark:text-rdark-text2">胜率</div>
+                    <div className="rounded-lg bg-[#141518] py-2.5 text-center dark:bg-rdark-input">
+                      <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">{(winRate * 100).toFixed(0)}%</div>
+                      <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">胜率</div>
                     </div>
-                    <div className="rounded-lg bg-slate-50 py-2.5 text-center dark:bg-rdark-input">
+                    <div className="rounded-lg bg-[#141518] py-2.5 text-center dark:bg-rdark-input">
                       <div className="mb-1 flex items-center justify-center gap-0.5 text-[15px] font-bold leading-none text-emerald-600 dark:text-emerald-400">
                         <Flame size={12} className="text-orange-400" />
                         {winStreak}
                       </div>
-                      <div className="text-[9px] text-slate-400 dark:text-rdark-text2">连胜</div>
+                      <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">连胜</div>
                     </div>
-                    <div className="rounded-lg bg-slate-50 py-2.5 text-center dark:bg-rdark-input">
-                      <div className="mb-1 text-[15px] font-bold leading-none text-slate-700 dark:text-rdark-text">{totalPredictions}</div>
-                      <div className="text-[9px] text-slate-400 dark:text-rdark-text2">已预测</div>
+                    <div className="rounded-lg bg-[#141518] py-2.5 text-center dark:bg-rdark-input">
+                      <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">{totalPredictions}</div>
+                      <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">已预测</div>
                     </div>
-                    <div className="rounded-lg bg-slate-50 py-2.5 text-center dark:bg-rdark-input">
-                      <div className="mb-1 text-[15px] font-bold leading-none text-blue-600 dark:text-blue-400">{activePredictions}</div>
-                      <div className="text-[9px] text-slate-400 dark:text-rdark-text2">进行中</div>
+                    <div className="rounded-lg bg-[#141518] py-2.5 text-center dark:bg-rdark-input">
+                      <div className="mb-1 text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">{activePredictions}</div>
+                      <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">进行中</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="relative h-[190px] cursor-pointer overflow-hidden group" onClick={() => onViewChange('pet')}>
-                  <div className="absolute inset-0 bg-gradient-to-b from-sky-200 via-sky-100 to-emerald-50 dark:from-indigo-950 dark:via-slate-900 dark:to-emerald-950" />
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(253,230,138,0.25),transparent_60%)] dark:bg-[radial-gradient(ellipse_at_70%_20%,rgba(253,230,138,0.08),transparent_60%)]" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#16171b] via-[#111214] to-[#090909]" />
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
 
                   <motion.div
                     animate={{ scale: [1, 1.05, 1], opacity: [0.9, 1, 0.9] }}

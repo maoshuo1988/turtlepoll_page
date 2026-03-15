@@ -5,6 +5,9 @@ import {
   API_Login_Signin,
   API_Login_Signout,
   API_Login_Signup,
+  API_Topic_List,
+  API_Topic_Node,
+  API_Topic_Node_Navs,
   API_Topic_Topics,
   API_User_Current,
   API_User_Msg_recent,
@@ -121,31 +124,6 @@ export function useRequestUserCurrent() {
   });
 }
 
-// 话题列表（首页主流）
-// nodeId	number	否	节点 ID：0 最新，-1 推荐，-2 关注，>0 普通节点。
-// odeId=-2 关注流时需要登录
-export function useRequestTopicTopics(params: any) {
-  async function fetchData() {
-    const res = (await axiosCustom({
-      method: "get",
-      cmd: API_Topic_Topics,
-      params,
-      headers: {
-        "Authorization": `Bearer ${getAuthToken()}`,
-      },
-    }));
-
-    if (res.success !== true) {
-      throw new Error(String(res.msg ?? ""));
-    }
-    return res.data;
-  }
-  return useQuery({
-    queryKey: ["requestTopicTopics"],
-    queryFn: fetchData,
-  });
-}
-
 //顶部站点信息/公告
 export function useRequestConfigConfigs() {
   async function fetchData() {
@@ -209,3 +187,94 @@ export function useRequestBadgeBadges() {
   });
 }
 
+/// MARK: 内容域 - 话题/帖子
+/// 基础路径: /api/topic
+
+//获取节点导航
+export function useRequestTopicNodeNavs(){
+  async function fetchData() {
+    const res = (await axiosCustom({
+      method: "get",
+      cmd: API_Topic_Node_Navs,
+      headers: {
+        "Authorization": `Bearer ${getAuthToken()}`,
+      },
+    }));
+
+    if (res.success !== true) {
+      throw new Error(String(res.msg ?? ""));
+    }
+    return res.data;
+  }
+  return useQuery({
+    queryKey: ["requestTopicNodeNavs"],
+    queryFn: fetchData,
+  });
+}
+//获取所有节点
+export function useRequestTopicNode(){
+  async function fetchData() {
+    const res = (await axiosCustom({
+      method: "get",
+      cmd: API_Topic_Node,
+      headers: {
+        "Authorization": `Bearer ${getAuthToken()}`,
+      },
+    }));
+
+    if (res.success !== true) {
+      throw new Error(String(res.msg ?? ""));
+    }
+    return res.data;
+  }
+  return useQuery({
+    queryKey: ["requestTopicNode"],
+    queryFn: fetchData,
+  });
+}
+//获取话题列表
+export function useRequestTopicList(params: any) {
+  async function fetchData() {
+    const res = (await axiosCustom({
+      method: "get",
+      cmd: API_Topic_List,
+      params,
+      headers: {
+        "Authorization": `Bearer ${getAuthToken()}`,
+      },
+    }));
+
+    if (res.success !== true) {
+      throw new Error(String(res.msg ?? ""));
+    }
+    return res.data;
+  }
+  return useQuery({
+    queryKey: ["requestTopicList"],
+    queryFn: fetchData,
+  });
+}
+// 话题列表（首页主流）
+// nodeId	number	否	节点 ID：0 最新，-1 推荐，-2 关注，>0 普通节点。
+// odeId=-2 关注流时需要登录
+export function useRequestTopicTopics(params: any) {
+  async function fetchData() {
+    const res = (await axiosCustom({
+      method: "get",
+      cmd: API_Topic_Topics,
+      params,
+      headers: {
+        "Authorization": `Bearer ${getAuthToken()}`,
+      },
+    }));
+
+    if (res.success !== true) {
+      throw new Error(String(res.msg ?? ""));
+    }
+    return res.data;
+  }
+  return useQuery({
+    queryKey: ["requestTopicTopics"],
+    queryFn: fetchData,
+  });
+}
