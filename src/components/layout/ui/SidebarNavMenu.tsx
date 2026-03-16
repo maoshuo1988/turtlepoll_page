@@ -1,6 +1,6 @@
 import React from 'react';
 
-type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank';
+type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile';
 
 export interface SidebarNavItem {
   key: string;

@@ -17,6 +17,7 @@ interface SidebarProfileCardProps {
   onOpenChat: () => void;
   onCloseChat: () => void;
   onViewPet: () => void;
+  onOpenProfile: () => void;
 }
 
 export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
@@ -32,6 +33,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   onOpenChat,
   onCloseChat,
   onViewPet,
+  onOpenProfile,
 }) => {
   return (
     <div className={
@@ -55,13 +57,16 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
         <div>
           <div className="!px-4 !pt-4 !pb-4 border-b border-white/8 bg-[#0f1013]/96 dark:bg-rdark-card/90">
             <div className='flex flex-col !mb-4'>
-              <div className="flex items-center gap-3 mb-3.5">
+              <button
+                onClick={onOpenProfile}
+                className="mb-3.5 flex w-full items-center gap-3 rounded-2xl border border-transparent bg-transparent p-0 text-left transition-all hover:border-white/8 hover:bg-white/[0.03]"
+              >
                 <div className="grid h-16 w-16 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-xl font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">🦊</div>
                 <div className="flex-1 min-w-0">
                   <div className="text-[15px] font-bold text-white dark:text-rdark-text">路边社社长</div>
                   <div className="mt-0.5 text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
                 </div>
-              </div>
+              </button>
 
               <div className="mb-3.5 rounded-xl border border-white/6 bg-[#141518] px-3 py-2.5 dark:bg-rdark-input/75">
                 <div className="flex items-center justify-center gap-2">

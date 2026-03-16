@@ -5,7 +5,7 @@ import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
 import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
 
-export type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank';
+export type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'predictions', label: '预测市场', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
@@ -37,6 +37,7 @@ interface SidebarMainPanelsProps {
   onOpenChat: () => void;
   onCloseChat: () => void;
   onViewPet: () => void;
+  onOpenProfile: () => void;
   onTopicClick?: (topic: HotTopic) => void;
   onFallbackTopicClick: () => void;
   onTagClick: (tag: HotTag) => void;
@@ -58,6 +59,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
   onOpenChat,
   onCloseChat,
   onViewPet,
+  onOpenProfile,
   onTopicClick,
   onFallbackTopicClick,
   onTagClick,
@@ -81,6 +83,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
               onOpenChat={onOpenChat}
               onCloseChat={onCloseChat}
               onViewPet={onViewPet}
+              onOpenProfile={onOpenProfile}
             />
           </div>
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
@@ -112,6 +115,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
             onOpenChat={onOpenChat}
             onCloseChat={onCloseChat}
             onViewPet={onViewPet}
+            onOpenProfile={onOpenProfile}
           />
 
           <SidebarHotTopicsPanel

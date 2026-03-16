@@ -8,6 +8,8 @@ import { TopicDetail } from '../components/topic';
 import { BattleSquarePixel } from '../components/battle';
 import { TurtleDivePixel } from '../components/lab';
 import { RankPage } from '../components/rank';
+import { PetPage } from '../components/pet';
+import { ProfilePage } from '../components/profile';
 import { FloatingPetChat } from '../components/layout/ui/FloatingPetChat';
 import { AppFooter } from './AppFooter';
 import { AppHeader } from './AppHeader';
@@ -25,7 +27,7 @@ import {
   mockPetSkins,
 } from '../data/mock_data';
 import { clearInfo } from '@/utils/authStorage';
-import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestTopicList, useRequestTopicNode, useRequestTopicNodeNavs, useRequestTopicTopics, useRequestUserCurrent, useRequestUserMsgRecent } from '@/hook/useRequest';
+import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestTopicList, useRequestTopicNodeNavs, useRequestTopicTopics, useRequestUserCurrent, useRequestUserMsgRecent } from '@/hook/useRequest';
 
 // Bet cost per action
 const BET_COST = 100;
@@ -102,6 +104,15 @@ function App() {
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
   const currentPet = { ...mockUser.petInfo, stamina: petStamina, avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar };
+
+  const handleEquipSkin = useCallback((skinId: string) => {
+    setSkins((prev) =>
+      prev.map((skin) => ({
+        ...skin,
+        equipped: skin.id === skinId,
+      })),
+    );
+  }, []);
 
   useEffect(() => {
     applyTheme(theme);
@@ -371,22 +382,34 @@ function App() {
                 onAddComment={handleAddComment}
               />
             </section>
-          )
-          //  : activeView === 'pet' ? (
-          //   <section className="view-shell view-rhythm view-pet w-full max-w-none mx-0 grid gap-4">
-          //     <PetPage
-          //       pet={currentPet}
-          //       balance={balance}
-          //       winRate={0.68}
-          //       winStreak={mockUser.winStreak}
-          //       totalPredictions={42}
-          //       onBack={() => setActiveView('predictions')}
-          //       skins={skins}
-          //       onEquipSkin={handleEquipSkin}
-          //     />
-          //   </section>
-          // ) 
-          : activeView === 'rank' ? (
+          ) : activeView === 'pet' ? (
+            <section className="view-shell view-rhythm view-pet w-full max-w-none mx-0 grid gap-4">
+              <PetPage
+                pet={currentPet}
+                balance={balance}
+                winRate={0.68}
+                winStreak={mockUser.winStreak}
+                totalPredictions={42}
+                onBack={() => setActiveView('predictions')}
+                skins={skins}
+                onEquipSkin={handleEquipSkin}
+              />
+            </section>
+          ) : activeView === 'profile' ? (
+            <section className="view-shell view-rhythm view-profile w-full max-w-none mx-0 grid gap-4">
+              <ProfilePage
+                userName="路边社社长"
+                userHandle="预测达人"
+                avatar="🦊"
+                posts={forumPosts}
+                pet={currentPet}
+                skins={skins}
+                balance={balance}
+                onBack={() => setActiveView('predictions')}
+                onOpenForum={() => setActiveView('forum')}
+              />
+            </section>
+          ) : activeView === 'rank' ? (
             <RankPage />
           ) : activeView === 'lab' ? (
             <section className="view-shell view-rhythm view-lab w-full max-w-none mx-0 grid gap-4">

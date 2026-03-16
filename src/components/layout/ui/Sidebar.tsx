@@ -117,6 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onOpenChat={() => setChatOpen(true)}
           onCloseChat={() => setChatOpen(false)}
           onViewPet={() => onViewChange('pet')}
+          onOpenProfile={() => onViewChange('profile')}
           onTopicClick={onTopicClick}
           onFallbackTopicClick={() => onViewChange('predictions')}
           onTagClick={handleTagClick}
@@ -132,7 +133,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             ) : (
               <div>
                 <div className="px-4 pt-4 pb-3">
-                  <div className="mb-3.5 flex items-center gap-3">
+                  <button
+                    onClick={() => onViewChange('profile')}
+                    className="mb-3.5 flex w-full items-center gap-3 rounded-2xl border border-transparent bg-transparent p-0 text-left transition-all hover:border-white/8 hover:bg-white/[0.03]"
+                  >
                     <div className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1d1e22] to-[#0f1013] text-lg font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
                       🦊
                     </div>
@@ -140,7 +144,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <div className="text-[14px] font-bold text-white dark:text-rdark-text">路边社社长</div>
                       <div className="mt-0.5 text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
                     </div>
-                  </div>
+                  </button>
 
                   <div className="mb-3.5 flex items-center justify-center gap-2">
                     <Coins size={18} className="text-emerald-500 dark:text-emerald-400" />
