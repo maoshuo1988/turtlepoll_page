@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ThumbsUp, Send, Flame, X, Sparkles, Zap, MessageCircleReply } from 'lucide-react';
+import { ThumbsUp, Send, Flame, Sparkles, Zap, MessageCircleReply } from 'lucide-react';
 import CountUp from 'react-countup';
 import type { NewsItem, EventComment, EventReply, CommentSide } from '../../../data/mock_data';
 import { mockEventComments } from '../../../data/mock_data';
@@ -816,33 +816,34 @@ const AnimatedCount: React.FC<{
   );
 };
 
-const FlipNumber: React.FC<{
-  value: number;
-  className?: string;
-}> = ({ value, className }) => (
-  <span
-    className={className}
-    style={{ display: 'inline-block', perspective: '560px', transformStyle: 'preserve-3d' }}
-  >
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.span
-        key={value}
-        initial={{ rotateX: -92, y: 14, opacity: 0 }}
-        animate={{ rotateX: 0, y: 0, opacity: 1 }}
-        exit={{ rotateX: 92, y: -14, opacity: 0 }}
-        transition={{ duration: 0.36, ease: [0.2, 0.7, 0.2, 1] }}
-        style={{
-          display: 'inline-block',
-          transformOrigin: '50% 50% -8px',
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
-        }}
-      >
-        {value.toLocaleString()}
-      </motion.span>
-    </AnimatePresence>
-  </span>
-);
+function renderFlipNumber(value: number, className?: string) {
+  return (
+    <span
+      className={className}
+      style={{ display: 'inline-block', perspective: '560px', transformStyle: 'preserve-3d' }}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={value}
+          initial={{ rotateX: -92, y: 14, opacity: 0 }}
+          animate={{ rotateX: 0, y: 0, opacity: 1 }}
+          exit={{ rotateX: 92, y: -14, opacity: 0 }}
+          transition={{ duration: 0.36, ease: [0.2, 0.7, 0.2, 1] }}
+          style={{
+            display: 'inline-block',
+            transformOrigin: '50% 50% -8px',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+          }}
+        >
+          {value.toLocaleString()}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
+void renderFlipNumber;
 
 const ReelPowerNumber: React.FC<{
   value: number;
@@ -2415,6 +2416,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
   const [comboB, setComboB] = useState(0);
   const [koFx, setKoFx] = useState<KoFx | null>(null);
   const [isIdle, setIsIdle] = useState(false);
+  const hasBetAction = typeof onBet === 'function';
+  void hasBetAction;
 
   const scrollA = useRef<HTMLDivElement>(null);
   const scrollB = useRef<HTMLDivElement>(null);
@@ -2646,13 +2649,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
       ref.current?.scrollTo({ top: ref.current.scrollHeight, behavior: 'smooth' });
     }, 100);
   }, [inputText, selectedSide, news.id, firePulse, replyingTo, pushDanmu, pushFx, markAction]);
-
-  const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
+  void handleSend;
 
   return (
     <div className="battle-shell px-2 md:px-3 py-2 h-full min-h-[calc(100vh-56px)]">
@@ -2862,7 +2859,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                               className="battle-stat-num text-[26px] text-emerald-100 tabular-nums"
                               style={{ textShadow: '0 0 18px rgba(110,231,183,0.95), 0 0 34px rgba(52,211,153,0.75)' }}
                             >
-                              <FlipNumber value={leftSuccess} className="tabular-nums" />
+                              {renderFlipNumber(leftSuccess, 'tabular-nums')}
                             </motion.div>
                           </div>
                           <div className="battle-stat-card battle-stat-fail rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
@@ -2902,7 +2899,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                               className="battle-stat-num text-[26px] text-amber-100 tabular-nums"
                               style={{ textShadow: '0 0 18px rgba(252,211,77,0.95), 0 0 34px rgba(245,158,11,0.75)' }}
                             >
-                              <FlipNumber value={leftFail} className="tabular-nums" />
+                              {renderFlipNumber(leftFail, 'tabular-nums')}
                             </motion.div>
                           </div>
                         </div>
@@ -2953,7 +2950,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                               className="battle-stat-num text-[26px] text-emerald-100 tabular-nums"
                               style={{ textShadow: '0 0 18px rgba(110,231,183,0.95), 0 0 34px rgba(52,211,153,0.75)' }}
                             >
-                              <FlipNumber value={rightSuccess} className="tabular-nums" />
+                              {renderFlipNumber(rightSuccess, 'tabular-nums')}
                             </motion.div>
                           </div>
                           <div className="battle-stat-card battle-stat-fail rounded-none border border-amber-300/40 bg-amber-400/10 px-1.5 py-1">
@@ -2993,7 +2990,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                               className="battle-stat-num text-[26px] text-amber-100 tabular-nums"
                               style={{ textShadow: '0 0 18px rgba(252,211,77,0.95), 0 0 34px rgba(245,158,11,0.75)' }}
                             >
-                              <FlipNumber value={rightFail} className="tabular-nums" />
+                              {renderFlipNumber(rightFail, 'tabular-nums')}
                             </motion.div>
                           </div>
                         </div>
@@ -3021,7 +3018,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                             onClick={() => setReplyingTo(null)}
                             className="ml-auto p-0.5 rounded-none border-0 bg-transparent cursor-pointer text-white/60 hover:text-white transition-colors"
                           >
-                            <X size={12} />
+                            <span className="text-xs leading-none">x</span>
                           </button>
                         </motion.div>
                       )}
@@ -3050,7 +3047,12 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                           type="text"
                           value={inputText}
                           onChange={(e) => setInputText(e.target.value)}
-                          onKeyDown={onKey}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              handleSend();
+                            }
+                          }}
                           placeholder={
                             replyingTo
                               ? `回复 @${replyingTo.authorName}...`
@@ -3079,7 +3081,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     </div>
                   </div>
 
-                  {onBet && (
+                  {hasBetAction && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-2.5 md:gap-3">
                       <motion.button
                         whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${LC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
