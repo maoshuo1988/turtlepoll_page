@@ -27,7 +27,7 @@ import {
   mockPetSkins,
 } from '../data/mock_data';
 import { clearInfo } from '@/utils/authStorage';
-import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestTopicList, useRequestTopicNodeNavs, useRequestTopicTopics, useRequestUserCurrent, useRequestUserMsgRecent } from '@/hook/useRequest';
+import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestUserCurrent, useRequestUserMsgRecent } from '@/hook/useRequest';
 
 // Bet cost per action
 const BET_COST = 100;
@@ -87,20 +87,6 @@ function App() {
   //退出登录请求
   const signOutMutation = useRequestSignout();
 
-  //话题列表
-  const topics = useRequestTopicTopics({cursor:0,nodeId:0});
-  console.log("topics --- ",topics)
-
-  //获取节点导航
-  const topicNodeNavs = useRequestTopicNodeNavs();
-  console.log("topicNodeNavs --- ",topicNodeNavs)
-  
-  //话题列表
-  const topicList = useRequestTopicList({cursor:0,nodeId:0});
-  console.log("topicList --- ",topicList)
-  
-
-
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
   const currentPet = { ...mockUser.petInfo, stamina: petStamina, avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar };
@@ -147,20 +133,6 @@ function App() {
     },
     [balance]
   );
-
-  const handleNewPost = useCallback((content: string, tag: ForumPost['tag'], images: string[]) => {
-    const newPost: ForumPost = {
-      id: `fp-${Date.now()}`,
-      author: { name: '你', handle: '@me_fox', avatar: '🦊' },
-      tag,
-      content,
-      images: images.length > 0 ? images : undefined,
-      time: '刚刚',
-      likes: 0,
-      comments: [],
-    };
-    setForumPosts((prev) => [newPost, ...prev]);
-  }, []);
 
   const handleLikePost = useCallback((postId: string) => {
     setForumPosts((prev) =>
@@ -374,13 +346,7 @@ function App() {
             )
           ) : activeView === 'forum' ? (
             <section className="view-shell view-rhythm view-forum w-full max-w-none mx-0 grid gap-4">
-              <Forum
-                posts={forumPosts}
-                onNewPost={handleNewPost}
-                onLikePost={handleLikePost}
-                onLikeComment={handleLikeComment}
-                onAddComment={handleAddComment}
-              />
+              <Forum />
             </section>
           ) : activeView === 'pet' ? (
             <section className="view-shell view-rhythm view-pet w-full max-w-none mx-0 grid gap-4">

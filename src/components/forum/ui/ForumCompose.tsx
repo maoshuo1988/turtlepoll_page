@@ -4,13 +4,14 @@ import type { ForumPost } from '../../../data/mock_data';
 import { FORUM_TAGS, SAMPLE_IMAGES } from '../../../data/mock_data';
 
 interface ForumComposeProps {
-  onPost: (content: string, tag: ForumPost['tag'], images: string[]) => void;
+  onPost: (content: string, tag: ForumPost['tag'], images: string[]) => Promise<void> | void;
+  posting?: boolean;
 }
 
 const tags: ForumPost['tag'][] = ['讨论', '爆料', '分析'];
 const visibilityOptions = ['所有人可见', '仅自己可见', '所有人不可见'] as const;
 
-export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
+export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost, posting = false }) => {
   const [content, setContent] = useState('');
   const [tag, setTag] = useState<ForumPost['tag']>('讨论');
   const [images, setImages] = useState<string[]>([]);
@@ -19,13 +20,14 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
   const [visibilityOpen, setVisibilityOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const trimmed = content.trim();
     if (!trimmed && images.length === 0) return;
-    onPost(trimmed, tag, images);
+    await onPost(trimmed, tag, images);
     setContent('');
     setImages([]);
     setFocused(false);
+    setVisibilityOpen(false);
   };
 
   const addImage = () => {
@@ -96,7 +98,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost }) => {
             <div className='flex items-end'>
               <button
               onClick={handleSubmit}
-              disabled={!canPost || charCount > MAX_CHARS}
+              disabled={posting || !canPost || charCount > MAX_CHARS}
               className="legacy-forum-compose-submit h-[36px] min-w-[86px] rounded-[8px] border-0 bg-gradient-to-b from-[#33c6bb] to-[#219f95] px-4 text-[14px] font-bold text-[#e8fff9] shadow-[0_0_12px_rgba(35,187,176,0.45)] transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
             >
               发布

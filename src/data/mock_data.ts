@@ -321,6 +321,7 @@ export interface ForumAuthor {
   name: string;
   handle: string;
   avatar: string;
+  avatarUrl?: string;
   verified?: boolean;
   title?: string;
 }
@@ -337,11 +338,19 @@ export interface ForumPost {
   id: string;
   author: ForumAuthor;
   tag: '讨论' | '爆料' | '分析';
+  title?: string;
   content: string;
   images?: string[];
   time: string;
   likes: number;
   comments: ForumComment[];
+  commentCount?: number;
+  viewCount?: number;
+  liked?: boolean;
+  favorited?: boolean;
+  sticky?: boolean;
+  recommend?: boolean;
+  ipLocation?: string;
   relatedNewsId?: string;
 }
 

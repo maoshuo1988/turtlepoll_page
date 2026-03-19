@@ -7,9 +7,11 @@ import { FORUM_TAGS } from '../../../data/mock_data';
 interface ForumPostProps {
   post: ForumPostType;
   index: number;
-  onLike: (postId: string) => void;
-  onLikeComment: (postId: string, commentId: string) => void;
-  onAddComment: (postId: string, content: string) => void;
+  onLike?: (postId: string) => void | Promise<void>;
+  onUnlike?: (postId: string) => void | Promise<void>;
+  onToggleFavorite?: (postId: string, nextFavorited: boolean) => void | Promise<void>;
+  onLikeComment?: (postId: string, commentId: string) => void;
+  onAddComment?: (postId: string, content: string) => void;
 }
 
 const formatCount = (n: number) => {
@@ -101,28 +103,45 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
   post,
   index,
   onLike,
+  onUnlike,
+  onToggleFavorite,
   onLikeComment,
   onAddComment,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [textExpanded, setTextExpanded] = useState(false);
   const [replyText, setReplyText] = useState('');
-  const [liked, setLiked] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
+  const [liked, setLiked] = useState(Boolean(post.liked));
+  const [bookmarked, setBookmarked] = useState(Boolean(post.favorited));
 
-  const handleLike = () => {
-    if (!liked) { onLike(post.id); setLiked(true); }
+  const commentCount = typeof post.commentCount === 'number' ? post.commentCount : post.comments.length;
+  const viewCount = typeof post.viewCount === 'number' ? post.viewCount : post.likes * 14 + post.comments.length * 42;
+  const canReply = typeof onAddComment === 'function';
+  const hasCommentThread = post.comments.length > 0 || canReply;
+
+  const handleLike = async () => {
+    if (liked) {
+      if (!onUnlike) return;
+      await onUnlike(post.id);
+      setLiked(false);
+      return;
+    }
+
+    if (!onLike) return;
+    await onLike(post.id);
+    setLiked(true);
   };
 
   const handleReply = () => {
+    if (!onAddComment) return;
     const trimmed = replyText.trim();
     if (!trimmed) return;
     onAddComment(post.id, trimmed);
     setReplyText('');
   };
 
-  const likeCount = post.likes + (liked ? 1 : 0);
-  const viewCount = post.likes * 14 + post.comments.length * 42;
+  const likeBase = post.likes - (post.liked ? 1 : 0);
+  const likeCount = likeBase + (liked ? 1 : 0);
   const canExpandText = post.content.length > 52;
 
   return (
@@ -136,7 +155,11 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
         {/* Avatar */}
         <div className="shrink-0 pt-0.5">
           <div className="legacy-forum-post-avatar w-15 h-15 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl cursor-pointer hover:opacity-80 transition-opacity">
-            {post.author.avatar}
+            {post.author.avatarUrl ? (
+              <img src={post.author.avatarUrl} alt={post.author.name} className="h-full w-full rounded-full object-cover" />
+            ) : (
+              post.author.avatar
+            )}
           </div>
         </div>
 
@@ -165,7 +188,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           </div>
 
           {/* Tag badge */}
-          <span className={`inline-block text-[10px] md:text-[11px] font-semibold px-2 !py-1 md:!py-2 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[post.tag]}`}>
+          <span className={`inline-block text-[10px] md:text-[11px] font-semibold px-2 !py-1 md:!py-2 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[post.tag] ?? FORUM_TAGS['讨论']}`}>
             #{post.tag}
           </span>
 
@@ -190,9 +213,12 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           <div className="legacy-forum-post-actions flex items-center !mt-3 md:!mt-4 -ml-1 md:-ml-2 max-w-full md:max-w-[450px] gap-1.5 md:gap-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             <ActionBtn
               icon={<MessageCircle size={17} className="group-hover:text-blue-500 transition-colors" />}
-              count={formatCount(post.comments.length)}
+              count={formatCount(commentCount)}
               hoverColor="bg-blue-50 dark:bg-blue-900/20"
-              onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpanded((v) => !v);
+              }}
             />
             <ActionBtn
               icon={<Repeat2 size={17} className="group-hover:text-green-500 transition-colors" />}
@@ -200,7 +226,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
               hoverColor="bg-green-50 dark:bg-green-900/20"
             />
             <button
-              onClick={(e) => { e.stopPropagation(); handleLike(); }}
+              onClick={(e) => { e.stopPropagation(); void handleLike(); }}
               className={`group flex items-center gap-1 cursor-pointer border-0 bg-transparent transition-colors ${
                 liked ? 'text-pink-600' : 'text-slate-500 dark:text-rdark-text2'
               }`}
@@ -220,7 +246,12 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
               hoverColor="bg-blue-50 dark:bg-blue-900/20"
             />
             <button
-              onClick={(e) => { e.stopPropagation(); setBookmarked((b) => !b); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                const nextFavorited = !bookmarked;
+                setBookmarked(nextFavorited);
+                void onToggleFavorite?.(post.id, nextFavorited);
+              }}
               className={`group cursor-pointer border-0 bg-transparent transition-colors ${
                 bookmarked ? 'text-blue-500' : 'text-slate-500 dark:text-rdark-text2'
               }`}
@@ -247,13 +278,20 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
                 className="overflow-hidden"
               >
                 <div className="legacy-forum-comments mt-2 pt-2.5 md:pt-3 border-t border-slate-100 dark:border-rdark-border">
-                  {post.comments.length === 0 && (
+                  {!hasCommentThread && (
+                    <p className="text-[13px] text-slate-400 dark:text-rdark-text2 mb-3">评论详情接口还没接入，这里先展示评论数。</p>
+                  )}
+                  {hasCommentThread && post.comments.length === 0 && (
                     <p className="text-[13px] text-slate-400 dark:text-rdark-text2 mb-3">还没有回复，来抢沙发！</p>
                   )}
                   {post.comments.map((c) => (
                     <div key={c.id} className="flex gap-2.5 py-3 border-b border-slate-50 dark:border-rdark-border/40 last:border-b-0">
                       <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-sm shrink-0 cursor-pointer">
-                        {c.author.avatar}
+                        {c.author.avatarUrl ? (
+                          <img src={c.author.avatarUrl} alt={c.author.name} className="h-full w-full rounded-full object-cover" />
+                        ) : (
+                          c.author.avatar
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1">
@@ -265,7 +303,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
                         <p className="text-[14px] text-slate-800 dark:text-rdark-text leading-snug mt-0.5">{c.content}</p>
                         <div className="flex items-center gap-5 mt-2">
                           <button
-                            onClick={(e) => { e.stopPropagation(); onLikeComment(post.id, c.id); }}
+                            onClick={(e) => { e.stopPropagation(); onLikeComment?.(post.id, c.id); }}
                             className="group flex items-center gap-1 text-[12px] text-slate-400 dark:text-rdark-text2 hover:text-pink-500 cursor-pointer transition-colors border-0 bg-transparent"
                           >
                             <Heart size={13} /> {c.likes}
@@ -279,28 +317,30 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
                   ))}
 
                   {/* Reply compose */}
-                  <div className="flex items-center gap-2 pt-3">
-                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xs md:text-sm shrink-0">
-                      🦊
+                  {canReply && (
+                    <div className="flex items-center gap-2 pt-3">
+                      <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xs md:text-sm shrink-0">
+                        🦊
+                      </div>
+                      <div className="flex-1 flex items-center gap-2 border border-slate-200 dark:border-rdark-border rounded-full px-3 md:px-4 py-1.5 md:py-2 focus-within:border-blue-500 transition-colors">
+                        <input
+                          value={replyText}
+                          onChange={(e) => setReplyText(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && handleReply()}
+                          onClick={(e) => e.stopPropagation()}
+                          placeholder="发布你的回复"
+                          className="flex-1 bg-transparent border-0 outline-none text-[13px] md:text-[14px] text-slate-800 dark:text-rdark-text placeholder:text-slate-400 dark:placeholder:text-rdark-text2"
+                        />
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleReply(); }}
+                          disabled={!replyText.trim()}
+                          className="px-3 md:px-4 py-1 rounded-full text-[12px] md:text-[13px] font-bold bg-blue-500 text-white border-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
+                        >
+                          回复
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex-1 flex items-center gap-2 border border-slate-200 dark:border-rdark-border rounded-full px-3 md:px-4 py-1.5 md:py-2 focus-within:border-blue-500 transition-colors">
-                      <input
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleReply()}
-                        onClick={(e) => e.stopPropagation()}
-                        placeholder="发布你的回复"
-                        className="flex-1 bg-transparent border-0 outline-none text-[13px] md:text-[14px] text-slate-800 dark:text-rdark-text placeholder:text-slate-400 dark:placeholder:text-rdark-text2"
-                      />
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleReply(); }}
-                        disabled={!replyText.trim()}
-                        className="px-3 md:px-4 py-1 rounded-full text-[12px] md:text-[13px] font-bold bg-blue-500 text-white border-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
-                      >
-                        回复
-                      </button>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </motion.div>
             )}

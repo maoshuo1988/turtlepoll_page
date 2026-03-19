@@ -72,8 +72,10 @@ export const API_Topic_Delete = "/api/topic/delete";
 export const API_Topic = "/api/topic";
 //获取话题列表
 export const API_Topic_List = "/api/topic/list";
-//获取话题收藏列表/{topicId}
+//获取话题收藏列表
 export const API_Topic_Favorites = "/api/topic/favorites";
+//收藏话题 /{topicId}
+export const API_Topic_Favorite = "/api/topic/favorite";
 //取消收藏话题 /{topicId}
 export const API_Topic_Unfavorite = "/api/topic/unfavorite";
 //获取话题标签 /{topicId}
