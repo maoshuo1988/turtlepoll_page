@@ -8,18 +8,21 @@ interface NewsFeedProps {
   items: NewsItem[];
   onBet: (newsId: string, option: 'A' | 'B', odds: number) => void;
   onEnterBattle?: (newsId: string) => void;
+  bettingMarketId?: number | null;
 }
 
 
-const NewsCard: React.FC<{ item: NewsItem; index: number; onBet: NewsFeedProps['onBet']; onEnterBattle?: NewsFeedProps['onEnterBattle'] }> = ({
+const NewsCard: React.FC<{ item: NewsItem; index: number; onBet: NewsFeedProps['onBet']; onEnterBattle?: NewsFeedProps['onEnterBattle']; bettingMarketId?: number | null }> = ({
   item,
   index,
   onBet,
   onEnterBattle,
+  bettingMarketId,
 }) => {
   const totalVotes = item.votes.A + item.votes.B;
   const pctANum = totalVotes > 0 ? Math.round((item.votes.A / totalVotes) * 100) : 50;
   const pctBNum = 100 - pctANum;
+  const isBetting = typeof item.marketId === 'number' && bettingMarketId === item.marketId;
 
   return (
     <motion.div
@@ -83,17 +86,19 @@ const NewsCard: React.FC<{ item: NewsItem; index: number; onBet: NewsFeedProps['
         <div className="legacy-pred-card-actions grid grid-cols-2 gap-2">
           <button
             onClick={() => onBet(item.id, 'A', item.oddsA)}
-            className="legacy-pred-card-btn legacy-pred-card-btn-a flex h-[34px] items-center justify-center rounded-full border border-[#0fe2d2]/12 bg-[#102536] px-3 text-center text-[16px] font-black leading-none tracking-[-0.03em] text-[#40ead0] transition-colors hover:bg-[#123045]"
+            disabled={isBetting}
+            className="legacy-pred-card-btn legacy-pred-card-btn-a flex h-[34px] items-center justify-center rounded-full border border-[#0fe2d2]/12 bg-[#102536] px-3 text-center text-[16px] font-black leading-none tracking-[-0.03em] text-[#40ead0] transition-colors hover:bg-[#123045] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <span>{item.optionA}</span>
-            <span className="ml-1.5 text-white/82">{item.oddsA.toFixed(1)}x</span>
+            <span className="ml-1.5 text-white/82">{isBetting ? '下注中...' : `${item.oddsA.toFixed(1)}x`}</span>
           </button>
           <button
             onClick={() => onBet(item.id, 'B', item.oddsB)}
-            className="legacy-pred-card-btn legacy-pred-card-btn-b flex h-[34px] items-center justify-center rounded-full border border-white/8 bg-white/6 px-3 text-center text-[16px] font-black leading-none tracking-[-0.03em] text-white/82 transition-colors hover:bg-white/10"
+            disabled={isBetting}
+            className="legacy-pred-card-btn legacy-pred-card-btn-b flex h-[34px] items-center justify-center rounded-full border border-white/8 bg-white/6 px-3 text-center text-[16px] font-black leading-none tracking-[-0.03em] text-white/82 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <span>{item.optionB}</span>
-            <span className="ml-1.5 text-white/56">{item.oddsB.toFixed(1)}x</span>
+            <span className="ml-1.5 text-white/56">{isBetting ? '下注中...' : `${item.oddsB.toFixed(1)}x`}</span>
           </button>
         </div>
 
@@ -113,7 +118,7 @@ const NewsCard: React.FC<{ item: NewsItem; index: number; onBet: NewsFeedProps['
   );
 };
 
-export const NewsFeed: React.FC<NewsFeedProps> = ({ items, onBet, onEnterBattle }) => {
+export const NewsFeed: React.FC<NewsFeedProps> = ({ items, onBet, onEnterBattle, bettingMarketId }) => {
   return (
     <div className="legacy-news-feed legacy-pred-feed">
       <h2 className="legacy-pred-feed-title !mb-4 flex items-center gap-2 text-base font-bold text-slate-700 dark:text-rdark-text">
@@ -122,7 +127,7 @@ export const NewsFeed: React.FC<NewsFeedProps> = ({ items, onBet, onEnterBattle 
       </h2>
       <div className="legacy-pred-feed-grid grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {items.map((item, i) => (
-          <NewsCard key={item.id} item={item} index={i} onBet={onBet} onEnterBattle={onEnterBattle} />
+          <NewsCard key={item.id} item={item} index={i} onBet={onBet} onEnterBattle={onEnterBattle} bettingMarketId={bettingMarketId} />
         ))}
       </div>
     </div>

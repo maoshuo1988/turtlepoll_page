@@ -11,6 +11,7 @@ interface EventBattleProps {
   onBack: () => void;
   userSide: 'A' | 'B' | null;
   onBet?: (newsId: string, option: 'A' | 'B', odds: number) => void;
+  bettingMarketId?: number | null;
 }
 
 /* ══════════ Constants ══════════ */
@@ -2399,7 +2400,8 @@ const SideColumn = React.memo(({
 });
 
 /* ═══════════════════ Main EventBattle ═══════════════════ */
-export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide, onBet }) => {
+export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide, onBet, bettingMarketId }) => {
+  void bettingMarketId;
   const [comments, setComments] = useState<EventComment[]>(() =>
     mockEventComments.filter((c) => c.newsId === news.id),
   );
@@ -3087,14 +3089,15 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                         whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${LC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
                         whileTap={{ scale: 0.97 }}
                         onClick={() => onBet(news.id, 'A', news.oddsA)}
+                        disabled={typeof news.marketId === 'number' && bettingMarketId === news.marketId}
                         className={`${card} battle-right-panel battle-odds-btn relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
                         style={{ borderColor: LC, boxShadow: `0 0 20px ${LC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
                       >
                         <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, ${LC}, transparent 60%)` }} />
                         <div className="relative text-center">
                           <div className="text-[10px] font-semibold mb-0.5" style={{ color: LC }}>{news.optionA}</div>
-                          <div className="text-lg font-black text-white">{news.oddsA.toFixed(1)}x</div>
-                          <div className="text-[9px] text-white/55">点击下注</div>
+                          <div className="text-lg font-black text-white">{typeof news.marketId === 'number' && bettingMarketId === news.marketId ? '下注中...' : `${news.oddsA.toFixed(1)}x`}</div>
+                          <div className="text-[9px] text-white/55">{typeof news.marketId === 'number' && bettingMarketId === news.marketId ? '正在提交' : '点击下注'}</div>
                         </div>
                       </motion.button>
 
@@ -3102,14 +3105,15 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                         whileHover={{ scale: 1.02, boxShadow: `0 0 28px ${RC}35, inset 0 1px 0 rgba(255,255,255,0.2)` }}
                         whileTap={{ scale: 0.97 }}
                         onClick={() => onBet(news.id, 'B', news.oddsB)}
+                        disabled={typeof news.marketId === 'number' && bettingMarketId === news.marketId}
                         className={`${card} battle-right-panel battle-odds-btn relative py-3.5 px-3 border-2 cursor-pointer overflow-hidden transition-shadow`}
                         style={{ borderColor: RC, boxShadow: `0 0 20px ${RC}18, inset 0 1px 0 rgba(255,255,255,0.12)` }}
                       >
                         <div className="absolute inset-0 opacity-[0.07]" style={{ background: `linear-gradient(135deg, transparent 40%, ${RC})` }} />
                         <div className="relative text-center">
                           <div className="text-[10px] font-semibold mb-0.5" style={{ color: RC }}>{news.optionB}</div>
-                          <div className="text-lg font-black text-white">{news.oddsB.toFixed(1)}x</div>
-                          <div className="text-[9px] text-white/55">点击下注</div>
+                          <div className="text-lg font-black text-white">{typeof news.marketId === 'number' && bettingMarketId === news.marketId ? '下注中...' : `${news.oddsB.toFixed(1)}x`}</div>
+                          <div className="text-[9px] text-white/55">{typeof news.marketId === 'number' && bettingMarketId === news.marketId ? '正在提交' : '点击下注'}</div>
                         </div>
                       </motion.button>
                     </div>

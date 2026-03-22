@@ -13,7 +13,6 @@ import {
   useRequestLikeEntity,
   useRequestTopicNodeNavs,
   useRequestUnlikeEntity,
-  useRequestUnfavoriteTopic,
 } from '../../../hook/useRequest';
 
 dayjs.extend(relativeTime);
@@ -55,7 +54,7 @@ const toForumPost = (topic: TopicResponse): ForumPost => {
     },
     tag: tagFromTopic(topic),
     title: topic.title,
-    content: summaryContent || '该帖子暂无正文内容',
+    content: topic.content || summaryContent || '该帖子暂无正文内容',
     images: topic.imageList?.map((item) => item.url || item.preview).filter(Boolean) as string[] | undefined,
     time: formatTopicTime(topic.createTime),
     likes: topic.likeCount ?? 0,
@@ -81,7 +80,6 @@ export const Forum: React.FC = () => {
   const nodeNavsQuery = useRequestTopicNodeNavs();
   const createTopicMutation = useRequestCreateTopic();
   const favoriteTopicMutation = useRequestFavoriteTopic();
-  const unfavoriteTopicMutation = useRequestUnfavoriteTopic();
   const likeEntityMutation = useRequestLikeEntity();
   const unlikeEntityMutation = useRequestUnlikeEntity();
 
@@ -111,7 +109,7 @@ export const Forum: React.FC = () => {
 
   const handleCreatePost = async (content: string, tag: ForumPost['tag'], images: string[]) => {
     await createTopicMutation.mutateAsync({
-      type: 1,
+      type: 0,
       nodeId: createNodeId,
       title: '',
       content,
@@ -126,12 +124,8 @@ export const Forum: React.FC = () => {
     });
   };
 
-  const handleToggleFavorite = async (postId: string, nextFavorited: boolean) => {
-    if (nextFavorited) {
-      await favoriteTopicMutation.mutateAsync(postId);
-      return;
-    }
-    await unfavoriteTopicMutation.mutateAsync(postId);
+  const handleToggleFavorite = async (postId: string, _nextFavorited: boolean) => {
+    await favoriteTopicMutation.mutateAsync(postId);
   };
 
   const handleLike = async (postId: string) => {

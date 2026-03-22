@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Sidebar } from '../components/layout';
 import type { ViewType } from '../components/layout';
 import { EventBattle, PredictionsView } from '../components/predictions';
@@ -21,13 +21,15 @@ import {
   mockUser,
   mockNews,
   heroNews,
+  mockHotTopics,
   petDialogues,
   mockForumPosts,
   mockBattles,
   mockPetSkins,
 } from '../data/mock_data';
 import { clearInfo } from '@/utils/authStorage';
-import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestUserCurrent, useRequestUserMsgRecent } from '@/hook/useRequest';
+import { useRequestBadgeBadges, useRequestCoinBet, useRequestCoinMe, useRequestConfigConfigs, useRequestFootballMarkets, useRequestFootballPredictContextHot, useRequestSignout, useRequestUserCurrent, useRequestUserMsgRecent } from '@/hook/useRequest';
+import type { FootballMarketAggregate, PredictContext } from '@/hook/types';
 
 // Bet cost per action
 const BET_COST = 100;
@@ -48,6 +50,61 @@ function applyTheme(mode: ThemeMode) {
   root.style.colorScheme = mode;
 }
 
+function inferNewsType(tags?: string, title?: string, detail?: string): NewsItem['type'] {
+  const source = `${tags ?? ''} ${title ?? ''} ${detail ?? ''}`.toLowerCase();
+  if (/(finance|btc|coin|stock|trade|economy|财经|金融|股|币|房价)/.test(source)) return 'finance';
+  if (/(sport|football|nba|wc|final|体育|足球|世界杯|奥运|比赛)/.test(source)) return 'sports';
+  if (/(movie|star|music|娱乐|明星|综艺|电影)/.test(source)) return 'entertainment';
+  if (/(politics|war|election|diplom|时政|政治|外交|战争)/.test(source)) return 'politics';
+  return 'tech';
+}
+
+function mapMarketToNewsItem(item: FootballMarketAggregate): NewsItem {
+  const marketId = item.market.id;
+  const context = item.context ?? {};
+  const votesA = context.proVoteCount ?? 0;
+  const votesB = context.conVoteCount ?? 0;
+  const poolA = item.market.poolA ?? votesA;
+  const poolB = item.market.poolB ?? votesB;
+  const baseA = item.market.baseA ?? 500;
+  const baseB = item.market.baseB ?? 500;
+  const effectiveA = Math.max(1, baseA + poolA);
+  const effectiveB = Math.max(1, baseB + poolB);
+  const total = effectiveA + effectiveB;
+  const oddsA = Number((Math.max(1.2, Math.min(5, total / effectiveA))).toFixed(1));
+  const oddsB = Number((Math.max(1.2, Math.min(5, total / effectiveB))).toFixed(1));
+
+  return {
+    id: `market-${marketId}`,
+    marketId,
+    title: context.eventName || item.market.title || `预测市场 #${marketId}`,
+    summary: context.detail || item.market.title || '查看当前预测双方观点与热度变化。',
+    image: context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
+    type: inferNewsType(context.tags, context.eventName || item.market.title, context.detail),
+    votes: { A: votesA, B: votesB },
+    optionA: context.proText || '正方',
+    optionB: context.conText || '反方',
+    oddsA,
+    oddsB,
+    status: item.market.status === 'OPEN' ? 'open' : 'closed',
+  };
+}
+
+function mapHotContextToTopic(context: PredictContext, newsByMarketId: Map<number, NewsItem>, rank: number) {
+  const relatedNews = newsByMarketId.get(context.marketId);
+  const firstTag = context.tags?.split(',').map((item) => item.trim()).find(Boolean);
+
+  return {
+    rank,
+    title: context.eventName,
+    heat: context.heat ?? 0,
+    tag: firstTag || '热点',
+    change: `热度 ${context.heat ?? 0}`,
+    isHot: rank <= 3,
+    relatedNewsId: relatedNews?.id,
+  };
+}
+
 function App() {
   const [balance, setBalance] = useState(mockUser.balance);
   const [petDialogue, setPetDialogue] = useState<string | null>(null);
@@ -64,9 +121,11 @@ function App() {
   const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);
   const [selectedTopic, setSelectedTopic] = useState<HotTopic | null>(null);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [bettingMarketId, setBettingMarketId] = useState<number | null>(null);
   const isEventBattleActive = activeView === 'predictions' && !!selectedNewsId;
   const usePredStyleLayout = true;
   const darkMode = theme === 'dark';
+  const coinBalanceHydratedRef = useRef(false);
 
   //顶部站点信息/公告
   const configInfo = useRequestConfigConfigs()
@@ -84,12 +143,56 @@ function App() {
   const userInfo = useRequestUserCurrent()
   console.log("userInfo ---- ",userInfo)
 
+  // 我的金币账户
+  const coinMe = useRequestCoinMe()
+  console.log("coinMe ---- ", coinMe)
+
+  // 预测下注
+  const coinBetMutation = useRequestCoinBet();
+
+  // 预测市场
+  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
+  console.log("footballMarkets ---- ", footballMarkets)
+
+  // 预测热榜
+  const footballHotContexts = useRequestFootballPredictContextHot({ limit: 10 });
+  console.log("footballHotContexts ---- ", footballHotContexts)
+
   //退出登录请求
   const signOutMutation = useRequestSignout();
 
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
   const currentPet = { ...mockUser.petInfo, stamina: petStamina, avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar };
+
+  const liveNews = useMemo<NewsItem[]>(() => {
+    const list = footballMarkets.data?.list ?? [];
+    if (!Array.isArray(list) || list.length === 0) {
+      return [heroNews, ...mockNews];
+    }
+    return list.map(mapMarketToNewsItem);
+  }, [footballMarkets.data]);
+
+  const heroNewsItem = useMemo<NewsItem>(() => liveNews[0] ?? heroNews, [liveNews]);
+  const predictionItems = useMemo<NewsItem[]>(() => liveNews.slice(1), [liveNews]);
+  const allNews = useMemo<NewsItem[]>(() => [heroNewsItem, ...predictionItems], [heroNewsItem, predictionItems]);
+  const newsByMarketId = useMemo(() => new Map(allNews.filter((item) => typeof item.marketId === 'number').map((item) => [item.marketId as number, item])), [allNews]);
+
+  const liveHotTopics = useMemo(() => {
+    const list = footballHotContexts.data?.list ?? [];
+    if (!Array.isArray(list) || list.length === 0) {
+      return mockHotTopics;
+    }
+    return list.map((item, index) => mapHotContextToTopic(item, newsByMarketId, index + 1));
+  }, [footballHotContexts.data, newsByMarketId]);
+
+  useEffect(() => {
+    if (coinBalanceHydratedRef.current) return;
+    if (!coinMe.data || typeof coinMe.data.balance !== 'number') return;
+
+    setBalance(coinMe.data.balance);
+    coinBalanceHydratedRef.current = true;
+  }, [coinMe.data]);
 
   const handleEquipSkin = useCallback((skinId: string) => {
     setSkins((prev) =>
@@ -117,21 +220,49 @@ function App() {
   }, []);
 
   const filteredNews = activeCategory === 'all'
-    ? mockNews
-    : mockNews.filter((n) => n.type === activeCategory);
+    ? predictionItems
+    : predictionItems.filter((n) => n.type === activeCategory);
 
   const handleBet = useCallback(
-    (newsId: string, option: 'A' | 'B', _odds: number) => {
-      if (balance < BET_COST) return;
+    async (newsId: string, option: 'A' | 'B', _odds: number) => {
+      const targetNews = allNews.find((item) => item.id === newsId);
+      const marketId = targetNews?.marketId;
 
-      setBalance((b) => b - BET_COST);
-      setUserVotes((prev) => ({ ...prev, [newsId]: option }));
+      if (!marketId) {
+        setPetDialogue('这个预测还没绑定真实 marketId，暂时不能下注。');
+        setTimeout(() => setPetDialogue(null), 3000);
+        return;
+      }
 
-      const msg = petDialogues.bet[Math.floor(Math.random() * petDialogues.bet.length)];
-      setPetDialogue(msg);
-      setTimeout(() => setPetDialogue(null), 3000);
+      if (balance < BET_COST) {
+        setPetDialogue('龟币余额不足，先去赚点金币再来。');
+        setTimeout(() => setPetDialogue(null), 3000);
+        return;
+      }
+
+      try {
+        setBettingMarketId(marketId);
+        const result = await coinBetMutation.mutateAsync({
+          marketId,
+          option,
+          amount: BET_COST,
+        });
+
+        setBalance(result.userCoin.balance);
+        setUserVotes((prev) => ({ ...prev, [newsId]: option }));
+        setPetDialogue(`下注成功，已锁定 ${result.lockedOdds.toFixed(2)}x，余额 ${result.userCoin.balance.toLocaleString()}。`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : '下注失败，请稍后重试。';
+        if (message.includes('NotLogin')) {
+          setAuthModalOpen(true);
+        }
+        setPetDialogue(message);
+      } finally {
+        setBettingMarketId(null);
+        setTimeout(() => setPetDialogue(null), 3000);
+      }
     },
-    [balance]
+    [allNews, balance, coinBetMutation]
   );
 
   const handleLikePost = useCallback((postId: string) => {
@@ -255,7 +386,7 @@ function App() {
       />
 
       {/* Main layout */}
-      <main className="app-main flex min-h-[calc(100vh-56px)] flex-col gap-4 px-3 py-3 md:px-6 md:py-6 xl:h-[calc(100vh-56px)] xl:min-h-0 xl:flex-row xl:gap-6 xl:overflow-hidden xl:px-8">
+      <main className="app-main flex min-h-[calc(100vh-56px)] flex-col gap-4 xl:h-[calc(100vh-56px)] xl:min-h-0 xl:flex-row xl:gap-6 xl:overflow-hidden">
         <div className="xl:hidden w-full overflow-hidden">
           <Sidebar
             balance={balance}
@@ -264,6 +395,7 @@ function App() {
             totalPredictions={42}
             activePredictions={5}
             pet={currentPet}
+            hotTopics={liveHotTopics}
             petDialogue={petDialogue}
             idleDialogues={petDialogues.idle}
             onCategoryChange={setActiveCategory}
@@ -290,6 +422,7 @@ function App() {
             totalPredictions={42}
             activePredictions={5}
             pet={currentPet}
+            hotTopics={liveHotTopics}
             petDialogue={petDialogue}
             idleDialogues={petDialogues.idle}
             onCategoryChange={setActiveCategory}
@@ -313,10 +446,11 @@ function App() {
             selectedNewsId ? (
               <section className="view-shell view-rhythm view-event-battle w-full max-w-none mx-0 grid gap-4">
                 <EventBattle
-                  news={[heroNews, ...mockNews].find((n) => n.id === selectedNewsId) ?? heroNews}
+                  news={allNews.find((n) => n.id === selectedNewsId) ?? heroNewsItem}
                   onBack={() => setSelectedNewsId(null)}
                   userSide={selectedNewsId ? userVotes[selectedNewsId] ?? null : null}
                   onBet={handleBet}
+                  bettingMarketId={bettingMarketId}
                 />
               </section>
             ) : selectedTopic ? (
@@ -325,7 +459,7 @@ function App() {
                   topic={selectedTopic}
                   relatedNews={
                     selectedTopic.relatedNewsId
-                      ? [heroNews, ...mockNews].find((n) => n.id === selectedTopic.relatedNewsId) ?? heroNews
+                      ? allNews.find((n) => n.id === selectedTopic.relatedNewsId) ?? heroNewsItem
                       : null
                   }
                   relatedPosts={
@@ -336,13 +470,14 @@ function App() {
                   onBack={() => setSelectedTopic(null)}
                   onBet={handleBet}
                   onEnterBattle={setSelectedNewsId}
+                  bettingMarketId={bettingMarketId}
                   onLikePost={handleLikePost}
                   onLikeComment={handleLikeComment}
                   onAddComment={handleAddComment}
                 />
               </section>
             ) : (
-              <PredictionsView heroNews={heroNews} items={filteredNews} onBet={handleBet} onEnterBattle={setSelectedNewsId} />
+              <PredictionsView heroNews={heroNewsItem} items={filteredNews} onBet={handleBet} onEnterBattle={setSelectedNewsId} bettingMarketId={bettingMarketId} />
             )
           ) : activeView === 'forum' ? (
             <section className="view-shell view-rhythm view-forum w-full max-w-none mx-0 grid gap-4">

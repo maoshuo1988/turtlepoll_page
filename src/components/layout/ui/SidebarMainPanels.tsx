@@ -29,6 +29,7 @@ interface SidebarMainPanelsProps {
   totalPredictions: number;
   activePredictions: number;
   pet: PetInfo;
+  hotTopics?: HotTopic[];
   chatOpen: boolean;
   currentDialogue: string;
   dialogueKey: number;
@@ -51,6 +52,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
   totalPredictions,
   activePredictions,
   pet,
+  hotTopics,
   chatOpen,
   currentDialogue,
   dialogueKey,
@@ -89,6 +91,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
             <SidebarHotTopicsPanel
               selectedTag={selectedTag}
+              hotTopics={hotTopics}
               onTopicClick={onTopicClick}
               onFallbackTopicClick={onFallbackTopicClick}
               onTagClick={onTagClick}
@@ -120,6 +123,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
 
           <SidebarHotTopicsPanel
             selectedTag={selectedTag}
+            hotTopics={hotTopics}
             onTopicClick={onTopicClick}
             onFallbackTopicClick={onFallbackTopicClick}
             onTagClick={onTagClick}

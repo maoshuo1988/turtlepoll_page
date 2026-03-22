@@ -18,6 +18,7 @@ interface TopicDetailProps {
   onBack: () => void;
   onBet: (newsId: string, option: 'A' | 'B', odds: number) => void;
   onEnterBattle: (newsId: string) => void;
+  bettingMarketId?: number | null;
   onLikePost: (postId: string) => void;
   onLikeComment: (postId: string, commentId: string) => void;
   onAddComment: (postId: string, content: string) => void;
@@ -30,6 +31,7 @@ export const TopicDetail: React.FC<TopicDetailProps> = ({
   onBack,
   onBet,
   onEnterBattle,
+  bettingMarketId,
   onLikePost,
   onLikeComment,
   onAddComment,
@@ -64,6 +66,7 @@ export const TopicDetail: React.FC<TopicDetailProps> = ({
           news={relatedNews}
           onBet={onBet}
           onEnterBattle={onEnterBattle}
+          bettingMarketId={bettingMarketId}
         />
       )}
 

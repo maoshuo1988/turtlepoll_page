@@ -25,6 +25,7 @@ export interface User {
 
 export interface NewsItem {
   id: string;
+  marketId?: number;
   title: string;
   summary: string;
   image: string; // placeholder URL
@@ -108,6 +109,7 @@ export const petDialogues = {
 
 export const heroNews: NewsItem = {
   id: 'hero-1',
+  marketId: 1,
   title: '重磅：某科技巨头被曝将收购知名社交平台',
   summary: '据路边社独家消息，一场改变互联网格局的世纪收购正在秘密谈判中。知情人士透露，交易金额可能高达千亿级别。这将是科技史上最大的并购案之一。',
   image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
@@ -123,6 +125,7 @@ export const heroNews: NewsItem = {
 export const mockNews: NewsItem[] = [
   {
     id: 'n1',
+    marketId: 2,
     title: '全球首款通用人形机器人即将量产？',
     summary: '多位业内人士证实，某头部AI公司的人形机器人已通过最终测试，预计明年Q2开始量产。',
     image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80',
@@ -136,6 +139,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n2',
+    marketId: 3,
     title: '知名导演新片口碑两极分化',
     summary: '该片上映首周票房破10亿，但评分仅5.2。观众吵翻了。',
     image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&q=80',
@@ -149,6 +153,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n3',
+    marketId: 4,
     title: '某顶流明星被曝秘密结婚',
     summary: '路边社情报员在某海岛拍到疑似婚礼照片。经纪公司拒绝回应。',
     image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80',
@@ -162,6 +167,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n4',
+    marketId: 5,
     title: '数字货币监管新规或将落地',
     summary: '据可靠消息来源，监管机构正在制定全新的数字货币管理办法，预计年底前发布。',
     image: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?w=600&q=80',
@@ -175,6 +181,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n5',
+    marketId: 6,
     title: '国足新帅首秀迎来关键之战',
     summary: '新任主教练将在下周的世预赛中完成首秀，对手实力不俗。球迷又开始许愿了。',
     image: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=600&q=80',
@@ -188,6 +195,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n6',
+    marketId: 7,
     title: 'AI写的小说拿了文学大奖，评委全程不知情',
     summary: '某知名文学奖揭晓后，获奖作者承认作品由AI辅助完成。主办方陷入两难，正在紧急讨论是否撤销奖项。',
     image: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80',
@@ -201,6 +209,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n7',
+    marketId: 8,
     title: '某一线城市宣布取消限购政策',
     summary: '继多个二线城市之后，又一超大城市被曝即将全面放开住房限购。地产股闻风大涨。',
     image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80',
@@ -214,6 +223,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n8',
+    marketId: 9,
     title: '奥运会新增电竞为正式比赛项目？',
     summary: '国际奥委会内部文件流出，显示电子竞技有望成为2032年奥运会正式比赛项目。多国电竞协会表态支持。',
     image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&q=80',
@@ -227,6 +237,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n9',
+    marketId: 10,
     title: '某顶级车企宣布全面停产燃油车',
     summary: '该品牌CEO在发布会上语出惊人，宣布2027年前彻底停产所有燃油车型。股价盘后暴跌8%。',
     image: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=600&q=80',
@@ -240,6 +251,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n10',
+    marketId: 11,
     title: '知名综艺节目被曝全面造假',
     summary: '前工作人员实名爆料，称某王牌综艺节目投票数据全部由后台操控，嘉宾排名早已内定。',
     image: 'https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=600&q=80',
@@ -253,6 +265,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n11',
+    marketId: 12,
     title: '某国突然宣布与邻国断交',
     summary: '据外交消息，两国因领土争议谈判破裂，一方率先召回大使并关闭边境。国际社会紧急斡旋。',
     image: 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=600&q=80',
@@ -266,6 +279,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n12',
+    marketId: 13,
     title: 'NBA总决赛：黑马球队能否创造历史？',
     summary: '常规赛排名第八的球队一路过关斩将杀入总决赛，将对阵卫冕冠军。全联盟都在看这场奇迹能否延续。',
     image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&q=80',
@@ -279,6 +293,7 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: 'n13',
+    marketId: 14,
     title: '全球最大加密货币交易所被查',
     summary: '多国监管机构联合行动，冻结该交易所数十亿美元资产。比特币一小时内暴跌15%。',
     image: 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=600&q=80',

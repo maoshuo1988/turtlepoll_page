@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Coins, Flame, Hash, MessageCircle } from 'lucide-react';
 import { PetChat } from '../../pet/ui/PetChat';
 import type { PetInfo, NewsItem, HotTopic, HotTag } from '../../../data/mock_data';
-import { mockHotTags, mockHotTopics, mockRankUsers } from '../../../data/mock_data';
+import { mockHotTags, mockRankUsers } from '../../../data/mock_data';
 import { NAV_ITEMS, SidebarMainPanels, type ViewType } from './SidebarMainPanels';
 
 interface SidebarProps {
@@ -13,6 +13,7 @@ interface SidebarProps {
   totalPredictions: number;
   activePredictions: number;
   pet: PetInfo;
+  hotTopics?: HotTopic[];
   petDialogue: string | null;
   idleDialogues: string[];
   onCategoryChange: (key: NewsItem['type'] | 'all') => void;
@@ -31,6 +32,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   totalPredictions,
   activePredictions,
   pet,
+  hotTopics,
   petDialogue,
   idleDialogues,
   onCategoryChange,
@@ -109,6 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           totalPredictions={totalPredictions}
           activePredictions={activePredictions}
           pet={pet}
+          hotTopics={hotTopics}
           chatOpen={chatOpen}
           currentDialogue={currentDialogue}
           dialogueKey={dialogueKey}
@@ -126,27 +129,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <div className="hidden xl:flex xl:min-h-0 xl:flex-1 xl:flex-col">
-        <div className="overflow-hidden shrink-0 flex flex-col gap-3.5 py-1">
+        <div className="overflow-hidden shrink-0 flex flex-col gap-3.5 ">
           <div className="overflow-hidden">
             {chatOpen ? (
               <PetChat pet={pet} onClose={() => setChatOpen(false)} />
             ) : (
               <div>
-                <div className="px-4 pt-4 pb-3">
+                <div className="">
                   <button
                     onClick={() => onViewChange('profile')}
-                    className="mb-3.5 flex w-full items-center gap-3 rounded-2xl border border-transparent bg-transparent p-0 text-left transition-all hover:border-white/8 hover:bg-white/[0.03]"
+                    className=" flex w-full items-center gap-3 rounded-2xl border border-transparent bg-transparent p-0 text-left transition-all hover:border-white/8 hover:bg-white/[0.03]"
                   >
                     <div className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1d1e22] to-[#0f1013] text-lg font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
                       🦊
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="text-[14px] font-bold text-white dark:text-rdark-text">路边社社长</div>
-                      <div className="mt-0.5 text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
+                      <div className=" text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
                     </div>
                   </button>
 
-                  <div className="mb-3.5 flex items-center justify-center gap-2">
+                  <div className=" flex items-center justify-center gap-2">
                     <Coins size={18} className="text-emerald-500 dark:text-emerald-400" />
                     <AnimatePresence mode="popLayout">
                       <motion.span
@@ -160,27 +163,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         {balance.toLocaleString()}
                       </motion.span>
                     </AnimatePresence>
-                    <span className="mb-1 self-end text-[11px] text-zinc-500 dark:text-rdark-text2">龟币</span>
+                    <span className=" self-end text-[11px] text-zinc-500 dark:text-rdark-text2">龟币</span>
                   </div>
 
                   <div className="grid grid-cols-4 gap-1.5">
-                    <div className="rounded-lg bg-[#141518] py-2.5 text-center dark:bg-rdark-input">
-                      <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">{(winRate * 100).toFixed(0)}%</div>
+                    <div className="rounded-lg bg-[#141518]  text-center dark:bg-rdark-input">
+                      <div className=" text-[15px] font-bold leading-none text-white dark:text-rdark-text">{(winRate * 100).toFixed(0)}%</div>
                       <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">胜率</div>
                     </div>
-                    <div className="rounded-lg bg-[#141518] py-2.5 text-center dark:bg-rdark-input">
-                      <div className="mb-1 flex items-center justify-center gap-0.5 text-[15px] font-bold leading-none text-emerald-600 dark:text-emerald-400">
+                    <div className="rounded-lg bg-[#141518]  text-center dark:bg-rdark-input">
+                      <div className=" flex items-center justify-center gap-0.5 text-[15px] font-bold leading-none text-emerald-600 dark:text-emerald-400">
                         <Flame size={12} className="text-orange-400" />
                         {winStreak}
                       </div>
                       <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">连胜</div>
                     </div>
-                    <div className="rounded-lg bg-[#141518] py-2.5 text-center dark:bg-rdark-input">
-                      <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">{totalPredictions}</div>
+                    <div className="rounded-lg bg-[#141518]  text-center dark:bg-rdark-input">
+                      <div className=" text-[15px] font-bold leading-none text-white dark:text-rdark-text">{totalPredictions}</div>
                       <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">已预测</div>
                     </div>
-                    <div className="rounded-lg bg-[#141518] py-2.5 text-center dark:bg-rdark-input">
-                      <div className="mb-1 text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">{activePredictions}</div>
+                    <div className="rounded-lg bg-[#141518]  text-center dark:bg-rdark-input">
+                      <div className="text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">{activePredictions}</div>
                       <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">进行中</div>
                     </div>
                   </div>
@@ -261,30 +264,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         initial={{ opacity: 0, y: 5, scale: 0.9 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -5, scale: 0.9 }}
-                        className="relative mb-2 max-w-[180px] rounded-xl border border-white/60 bg-white/90 px-3 py-1.5 text-center shadow-lg backdrop-blur-sm dark:border-rdark-border dark:bg-rdark-card/90"
+                        className="relative max-w-[180px] rounded-xl border border-white/60 bg-white/90   text-center shadow-lg backdrop-blur-sm dark:border-rdark-border dark:bg-rdark-card/90"
                       >
                         <span className="block truncate text-[10px] leading-snug text-slate-600 dark:text-rdark-text">{currentDialogue}</span>
                         <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-white/60 bg-white/90 dark:border-rdark-border dark:bg-rdark-card/90" />
                       </motion.div>
                     </AnimatePresence>
                     <div className="select-none text-[48px] leading-none drop-shadow-lg">{pet.avatar}</div>
-                    <div className="mt-1 flex items-center gap-1">
+                    <div className=" flex items-center gap-1">
                       <span className="text-[10px] font-bold text-slate-600 drop-shadow-sm dark:text-slate-300">{pet.name}</span>
-                      <span className="rounded-full bg-emerald-500/80 px-1.5 py-px text-[8px] font-bold text-white shadow-sm">Lv.{pet.level}</span>
+                      <span className="rounded-full bg-emerald-500/80   text-[8px] font-bold text-white shadow-sm">Lv.{pet.level}</span>
                     </div>
                   </motion.div>
 
                   <motion.div animate={{ scale: [1, 0.9, 1], opacity: [0.15, 0.1, 0.15] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className="absolute bottom-[38px] left-1/2 z-0 h-2.5 w-14 -translate-x-1/2 rounded-full bg-black/15 blur-[2px] dark:bg-black/25" />
 
                   <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5">
-                    <div className="flex items-center gap-1.5 rounded-lg border border-white/40 bg-white/70 px-2 py-1 shadow-sm backdrop-blur-sm dark:border-rdark-border/50 dark:bg-rdark-card/70">
+                    <div className="flex items-center gap-1.5 rounded-lg border border-white/40 bg-white/70  shadow-sm backdrop-blur-sm dark:border-rdark-border/50 dark:bg-rdark-card/70">
                       <span className="text-[11px]">😊</span>
                       <div className="flex flex-col">
                         <span className="text-[8px] leading-none text-slate-400 dark:text-rdark-text2">心情</span>
                         <span className="text-[9px] font-bold leading-tight text-amber-500 dark:text-amber-400">开心</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5 rounded-lg border border-white/40 bg-white/70 px-2 py-1 shadow-sm backdrop-blur-sm dark:border-rdark-border/50 dark:bg-rdark-card/70">
+                    <div className="flex items-center gap-1.5 rounded-lg border border-white/40 bg-white/70  shadow-sm backdrop-blur-sm dark:border-rdark-border/50 dark:bg-rdark-card/70">
                       <span className="text-[11px]">⚡</span>
                       <div className="flex flex-col gap-0.5">
                         <span className="text-[8px] leading-none text-slate-400 dark:text-rdark-text2">体力</span>
@@ -303,13 +306,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       e.stopPropagation();
                       setChatOpen(true);
                     }}
-                    className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-emerald-200/60 bg-white/80 px-5 py-2 text-[11px] font-bold text-emerald-600 shadow-lg backdrop-blur-md transition-all hover:scale-105 hover:bg-white hover:shadow-xl dark:border-emerald-800/60 dark:bg-rdark-card/80 dark:text-emerald-400 dark:hover:bg-rdark-card"
+                    className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-emerald-200/60 bg-white/80  text-[11px] font-bold text-emerald-600 shadow-lg backdrop-blur-md transition-all hover:scale-105 hover:bg-white hover:shadow-xl dark:border-emerald-800/60 dark:bg-rdark-card/80 dark:text-emerald-400 dark:hover:bg-rdark-card"
                   >
                     <MessageCircle size={13} /> 和龟仙人聊聊
                   </button>
 
                   <div className="absolute top-2 right-2 z-10 opacity-0 transition-opacity group-hover:opacity-100">
-                    <div className="rounded-md border border-emerald-200/40 bg-white/80 px-2 py-1 text-[9px] font-medium text-emerald-600 shadow-sm backdrop-blur-sm dark:border-emerald-800/40 dark:bg-rdark-card/80 dark:text-emerald-400">
+                    <div className="rounded-md border border-emerald-200/40 bg-white/80  text-[9px] font-medium text-emerald-600 shadow-sm backdrop-blur-sm dark:border-emerald-800/40 dark:bg-rdark-card/80 dark:text-emerald-400">
                       进入宠物空间 →
                     </div>
                   </div>
@@ -318,17 +321,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
             )}
           </div>
 
-          <div className="px-4 py-3.5">
-            <div className="mb-3 flex items-center gap-2 text-[18px] font-bold text-slate-500 dark:text-rdark-text2">
+          <div className="">
+            <div className="flex items-center gap-2 text-[18px] font-bold text-slate-500 dark:text-rdark-text2">
               <Flame size={20} className="text-orange-400" /> 最新热点
             </div>
 
             <div className="flex gap-3">
               <div className="min-w-0 flex-1 space-y-0.5">
-                {mockHotTopics.map((topic) => (
+                {(hotTopics ?? []).map((topic, index) => (
                   <div
-                    key={topic.rank}
-                    className="group flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 transition-colors hover:bg-slate-50 dark:hover:bg-rdark-hover"
+                    key={`${topic.rank}-${topic.title}-${index}`}
+                    className="group flex cursor-pointer items-center gap-2 rounded-md  transition-colors hover:bg-slate-50 dark:hover:bg-rdark-hover"
                     onClick={() => (onTopicClick ? onTopicClick(topic) : onViewChange('predictions'))}
                   >
                     <span
@@ -347,7 +350,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
 
               <div className="w-[90px] shrink-0">
-                <div className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-slate-400 dark:text-rdark-text2">
+                <div className=" flex items-center gap-1 text-[11px] font-bold text-slate-400 dark:text-rdark-text2">
                   <Hash size={11} /> 话题
                 </div>
                 <div className="flex flex-col gap-1">
@@ -355,7 +358,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <button
                       key={tag.tag}
                       onClick={() => handleTagClick(tag)}
-                      className={`w-full truncate rounded-md border px-2 py-1.5 text-left text-[11px] font-medium transition-all ${
+                      className={`w-full truncate rounded-md border  text-left text-[11px] font-medium transition-all ${
                         selectedTag === tag.tag
                           ? 'border-emerald-200 bg-emerald-50 font-semibold text-emerald-600 dark:border-emerald-800 dark:bg-emerald-900/15 dark:text-emerald-400'
                           : 'border-slate-100 bg-transparent text-slate-500 hover:bg-slate-50 dark:border-rdark-border dark:text-rdark-text2 dark:hover:bg-rdark-hover'
@@ -370,7 +373,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-1 py-1">
+        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
           <div className="space-y-1">
             {NAV_ITEMS.map((item) => {
               const isActive = item.view ? activeView === item.view : item.key === 'rank' && rankOpen;
@@ -379,7 +382,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <React.Fragment key={item.key}>
                   <button
                     onClick={() => handleNavClick(item)}
-                    className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-left text-[18px] font-semibold transition-all ${
+                    className={`w-full flex items-center gap-3 rounded-xl  text-left text-[18px] font-semibold transition-all ${
                       !item.enabled
                         ? 'cursor-default text-slate-300 dark:text-rdark-text2/50'
                         : isActive
@@ -413,9 +416,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <div className="mx-2 mb-1 mt-0.5 rounded-lg bg-slate-50/80 py-1 dark:bg-rdark-input/50">
+                      <div className=" rounded-lg bg-slate-50/80  dark:bg-rdark-input/50">
                         {topRankers.map((user, index) => (
-                          <div key={user.rank} className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-1.5 transition-colors hover:bg-white dark:hover:bg-rdark-hover">
+                          <div key={user.rank} className="flex cursor-pointer items-center gap-2 rounded-md  transition-colors hover:bg-white dark:hover:bg-rdark-hover">
                             <span className={`w-4 shrink-0 text-center text-[11px] font-extrabold ${rankColors[index] ?? 'text-slate-400 dark:text-rdark-text2'}`}>
                               {user.rank}
                             </span>

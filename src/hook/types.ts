@@ -6,6 +6,140 @@ export type RequestResult<T> = {
   data: T;
 };
 
+export type UserCoin = {
+  id?: number;
+  userId: number;
+  balance: number;
+  createTime?: number;
+  updateTime?: number;
+};
+
+export type UserCoinLog = {
+  id: number;
+  userId: number;
+  bizType: string;
+  bizId: number;
+  amount: number;
+  balanceAfter: number;
+  remark?: string;
+  createTime: number;
+};
+
+export type PredictMarket = {
+  id: number;
+  status?: string;
+  baseA?: number;
+  baseB?: number;
+  poolA?: number;
+  poolB?: number;
+};
+
+export type PredictBet = {
+  id: number;
+  userId: number;
+  marketId: number;
+  option: "A" | "B";
+  amount: number;
+  odds: number;
+  effA?: number;
+  effB?: number;
+  status?: string;
+  createTime?: number;
+};
+
+export type PlaceBetPayload = {
+  marketId: number;
+  option: "A" | "B";
+  amount: number;
+};
+
+export type PlaceBetResult = {
+  bet: PredictBet;
+  market: PredictMarket;
+  userCoin: UserCoin;
+  lockedOdds: number;
+};
+
+export type AdminCoinMintPayload = {
+  userId: number;
+  amount: number;
+  remark?: string;
+};
+
+export type FootballMarketsParams = {
+  page?: number;
+  limit?: number;
+  sourceModel?: string;
+  sourceModelId?: number;
+};
+
+export type FootballPredictContextHotParams = {
+  limit?: number;
+};
+
+export type PredictContext = {
+  id?: number;
+  marketId: number;
+  eventName: string;
+  imageUrl?: string;
+  participantCount?: number;
+  proText?: string;
+  conText?: string;
+  proVoteCount?: number;
+  conVoteCount?: number;
+  heat?: number;
+  detail?: string;
+  tags?: string;
+  createTime?: number;
+  updateTime?: number;
+};
+
+export type FootballMarket = {
+  id: number;
+  sourceModel?: string;
+  sourceModelId?: number;
+  title?: string;
+  marketType?: string;
+  status?: "OPEN" | "CLOSED" | "SETTLED" | string;
+  closeTime?: number;
+  externalKey?: string;
+  createTime?: number;
+  updateTime?: number;
+  baseA?: number;
+  baseB?: number;
+  poolA?: number;
+  poolB?: number;
+};
+
+export type FootballMarketAggregate = {
+  market: FootballMarket;
+  context: Partial<PredictContext>;
+};
+
+export type FootballMarketsResponse = {
+  list: FootballMarketAggregate[];
+  total: number;
+};
+
+export type PredictContextUpsertPayload = {
+  marketId: number;
+  eventName: string;
+  imageUrl?: string;
+  participantCount?: number;
+  proText?: string;
+  proVoteCount?: number;
+  conText?: string;
+  conVoteCount?: number;
+  heat?: number;
+  detail?: string;
+  tags?: string;
+};
+
+export type FootballPredictContextHotResponse = {
+  list: PredictContext[];
+  limit: number;
+};
+
 export type CaptchaChallenge = {
   id: string;
   imageBase64: string;
@@ -45,6 +179,11 @@ export type TopicNodeNav = {
   description?: string;
 };
 
+export type TopicNodeResponse = TopicNodeNav & {
+  topicCount?: number;
+  sort?: number;
+};
+
 export type TopicTag = {
   id: number;
   name: string;
@@ -62,6 +201,11 @@ export type TopicUser = {
   avatar?: string;
   smallAvatar?: string;
   score?: number;
+};
+
+export type UserInfo = TopicUser & {
+  cover?: string;
+  introduction?: string;
 };
 
 export type TopicResponse = {
@@ -83,6 +227,26 @@ export type TopicResponse = {
   sticky?: boolean;
   favorited?: boolean;
   ipLocation?: string;
+  hideContent?: string;
+  contentType?: string;
+};
+
+export type SimpleTopic = TopicResponse;
+
+export type TopicEditDetail = {
+  id: string;
+  nodeId: number;
+  title: string;
+  content: string;
+  contentType: string;
+  hideContent?: string;
+  tags: string[];
+};
+
+export type TopicHideContentResponse = {
+  exists: boolean;
+  show: boolean;
+  content: string;
 };
 
 export type CreateTopicPayload = {
@@ -98,4 +262,39 @@ export type CreateTopicPayload = {
   captchaId: string;
   captchaCode: string;
   captchaProtocol: number;
+};
+
+export type EditTopicPayload = {
+  nodeId: number;
+  title: string;
+  content: string;
+  hideContent?: string;
+  tags: string[];
+};
+
+export type TopicListParams = {
+  cursor?: number | string;
+  nodeId?: number;
+};
+
+export type UserTopicsParams = {
+  userId: number;
+  cursor?: number | string;
+};
+
+export type TagTopicsParams = {
+  tagId: number;
+  cursor?: number | string;
+};
+
+export type TopicNodeInfoParams = {
+  nodeId: number;
+};
+
+export type TopicHideContentParams = {
+  topicId: number;
+};
+
+export type TopicToggleFlagPayload = {
+  enabled: boolean;
 };

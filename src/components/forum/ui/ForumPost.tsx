@@ -122,14 +122,22 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
   const handleLike = async () => {
     if (liked) {
       if (!onUnlike) return;
-      await onUnlike(post.id);
-      setLiked(false);
+      try {
+        await onUnlike(post.id);
+        setLiked(false);
+      } catch {
+        return;
+      }
       return;
     }
 
     if (!onLike) return;
-    await onLike(post.id);
-    setLiked(true);
+    try {
+      await onLike(post.id);
+      setLiked(true);
+    } catch {
+      return;
+    }
   };
 
   const handleReply = () => {
@@ -250,7 +258,9 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
                 e.stopPropagation();
                 const nextFavorited = !bookmarked;
                 setBookmarked(nextFavorited);
-                void onToggleFavorite?.(post.id, nextFavorited);
+                void Promise.resolve(onToggleFavorite?.(post.id, nextFavorited)).catch(() => {
+                  setBookmarked(!nextFavorited);
+                });
               }}
               className={`group cursor-pointer border-0 bg-transparent transition-colors ${
                 bookmarked ? 'text-blue-500' : 'text-slate-500 dark:text-rdark-text2'

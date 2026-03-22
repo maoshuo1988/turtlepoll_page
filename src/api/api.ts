@@ -53,6 +53,27 @@ export const API_Login_Google_Login_Submit= "/api/login/google_login_submit";
 //Google One Tap 登录
 export const API_Login_Google_One_Tap= "/api/login/google_one_tap";
 
+/// MARK: 金币 / 预测下注
+/// 基础路径: /api/coin
+//我的金币账户
+export const API_Coin_Me = "/api/coin/me";
+//预测下注
+export const API_Coin_Bet = "/api/coin/bet";
+
+/// MARK: 管理后台 - 金币
+/// 基础路径: /api/admin/coin
+//管理员铸币
+export const API_Admin_Coin_Mint = "/api/admin/coin/mint";
+
+/// MARK: 预测事件系统
+/// 基础路径: /api/football
+//查询预测市场（聚合 market + context）
+export const API_Football_Markets = "/api/football/markets";
+//修改/创建 PredictContext
+export const API_Football_Predict_Context_Update = "/api/football/predict_context/update";
+//热度榜
+export const API_Football_Predict_Context_Hot = "/api/football/predict_context/hot";
+
 
 /// MARK: 内容域 - 话题/帖子
 /// 基础路径: /api/topic
@@ -68,37 +89,23 @@ export const API_Topic_Create = "/api/topic/create";
 export const API_Topic_Edit = "/api/topic/edit";
 //删除话题 /${topicId}
 export const API_Topic_Delete = "/api/topic/delete";
+//设置推荐 /{topicId}
+export const API_Topic_Recommend = "/api/topic/recommend";
+//设置置顶 /{topicId}
+export const API_Topic_Sticky = "/api/topic/sticky";
 //获取话题详情 /{topicId}
 export const API_Topic = "/api/topic";
-//获取话题列表
-export const API_Topic_List = "/api/topic/list";
-//获取话题收藏列表
-export const API_Topic_Favorites = "/api/topic/favorites";
+//最近点赞用户 /{topicId}
+export const API_Topic_RecentLikes = "/api/topic/recentlikes";
+//用户帖子列表
+export const API_Topic_User_Topics = "/api/topic/user_topics";
+//标签帖子列表
+export const API_Topic_Tag_Topics = "/api/topic/tag_topics";
 //收藏话题 /{topicId}
 export const API_Topic_Favorite = "/api/topic/favorite";
-//取消收藏话题 /{topicId}
-export const API_Topic_Unfavorite = "/api/topic/unfavorite";
-//获取话题标签 /{topicId}
-export const API_Topic_Tags= "/api/topic/tags";
-//设置话题标签 /{topicId}
-export const API_Topic_Set_Tags= "/api/topic/set_tags";
-//隐藏话题 /{topicId}
-export const API_Topic_Hide= "/api/topic/hide";
-//显示话题 /{topicId}
-export const API_Topic_Show= "/api/topic/show";
-//推荐话题 /{topicId}
-export const API_Topic_Recommend= "/api/topic/recommend";
-//取消推荐话题 /{topicId}
-export const API_Topic_Unrecommend= "/api/topic/unrecommend";
-//删除话题（物理删除） /{topicId}
-export const API_Topic_Permanent_Delete= "/api/topic/permanent_delete";
-//获取话题跳转链接 /{topicId}
-export const API_Topic_Redirect= "/api/topic/redirect";
-//首页焦点卡片（建议）
-export const API_Topic_Focus_Topics= "/api/topic/focus_topics";
 //话题列表（首页主流）
 export const API_Topic_Topics = "/api/topic/topics";
 //最新帖子（可用于“最新热点”）
 export const API_Topic_Recent = "/api/topic/recent";
-//热点榜（建议）
-export const API_Topic_Hot_Topics= "/api/topic/hot_topics";
+//获取隐藏内容
+export const API_Topic_Hide_Content = "/api/topic/hide_content";

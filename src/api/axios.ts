@@ -17,6 +17,7 @@ export function axiosCustom({
         headers,
         params,
         data,
+        withCredentials: true,
       });
       const resData = res.data;
       console.log({
