@@ -397,7 +397,7 @@ function App() {
             />
           </section>)}
           {/* 话题 */}
-          {activeView === 'predictions' && (
+          {activeView === 'predictions' && !selectedTopic && !selectedNewsId && (
             <PredictionsView
               selectedTag={selectedTag}
               onBetSuccess={handlePredictionBetSuccess}
