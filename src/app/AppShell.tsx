@@ -172,9 +172,10 @@ function App() {
   }, []);
 
   const handleBet = useCallback(
-    async (newsId: string, option: 'A' | 'B', _odds: number) => {
+    async (newsId: string, option: 'A' | 'B', _odds: number, amount?: number) => {
       const targetNews = allNews.find((item) => item.id === newsId);
       const marketId = targetNews?.marketId;
+      const wager = Number.isFinite(amount) && typeof amount === 'number' ? Math.floor(amount) : BET_COST;
 
       if (!marketId) {
         setPetDialogue('这个预测还没绑定真实 marketId，暂时不能下注。');
@@ -182,7 +183,13 @@ function App() {
         return;
       }
 
-      if (balance < BET_COST) {
+      if (!Number.isFinite(wager) || wager <= 0) {
+        setPetDialogue('请输入有效的下注金额。');
+        setTimeout(() => setPetDialogue(null), 3000);
+        return;
+      }
+
+      if (balance < wager) {
         setPetDialogue('龟币余额不足，先去赚点金币再来。');
         setTimeout(() => setPetDialogue(null), 3000);
         return;
@@ -193,7 +200,7 @@ function App() {
         const result = await coinBetMutation.mutateAsync({
           marketId,
           option,
-          amount: BET_COST,
+          amount: wager,
         });
 
         setUserVotes((prev) => ({ ...prev, [newsId]: option }));

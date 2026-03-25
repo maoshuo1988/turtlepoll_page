@@ -1,17 +1,51 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ThumbsUp, Send, Flame, Sparkles, Zap, MessageCircleReply } from 'lucide-react';
+import { ThumbsUp, Send, Flame, Sparkles, Zap, MessageCircleReply, Lock, ChevronLeft, MessageSquareText, Coins, Trophy, Clock3, ChevronDown, ChevronUp } from 'lucide-react';
 import CountUp from 'react-countup';
-import type { EventComment, EventReply, CommentSide } from '../../../data/mock_data';
-import { mockEventComments } from '../../../data/mock_data';
 import { BattleReport } from './BattleReport';
 import type { PredictionCardItem } from './predictionCard';
+import { useRequestUserCurrent } from '@/hook/useRequest';
+import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hook/useCommentRequest';
+import { useRequestCoinMe } from '@/hook/useCoinRequest';
+
+dayjs.extend(relativeTime);
+
+type CommentSide = 'A' | 'B';
+type BattleReply = {
+  id: string;
+  side: CommentSide;
+  author: { name: string; avatar: string };
+  content: string;
+  time: string;
+  likes: number;
+};
+
+type BattleComment = {
+  id: string;
+  side: CommentSide;
+  author: { name: string; avatar: string };
+  content: string;
+  time: string;
+  likes: number;
+  dislikes?: number;
+  replyCount: number;
+  ipLocation?: string;
+};
+
+type LatestReplyEvent = {
+  token: number;
+  commentId: string;
+  reply: CommentResponse;
+  side: CommentSide;
+};
 
 interface EventBattleProps {
   news: PredictionCardItem;
   onBack: () => void;
   userSide: 'A' | 'B' | null;
-  onBet?: (newsId: string, option: 'A' | 'B', odds: number) => void;
+  onBet?: (newsId: string, option: 'A' | 'B', odds: number, amount?: number) => void;
   bettingMarketId?: number | null;
 }
 
@@ -22,18 +56,136 @@ const DISLIKE_POWER = 1;
 const LC = '#00D2FF';
 const RC = '#FF0055';
 const randomBattleGain = () => 10 + Math.floor(Math.random() * 91);
+const ENTITY_PREDICT_A = 'predictA';
+const ENTITY_PREDICT_B = 'predictB';
 
 const card =
   'rounded-none border border-white/18 bg-transparent backdrop-blur-none shadow-none ring-0';
 
-function calcPower(items: EventComment[]) {
+const hasValue = (value: unknown) => value !== undefined && value !== null && value !== '';
+
+function formatBattleTime(timestamp?: number) {
+  if (!timestamp) return '刚刚';
+  const value = String(timestamp).length <= 10 ? timestamp * 1000 : timestamp;
+  return dayjs(value).fromNow();
+}
+
+function getBattleUserName(comment?: CommentResponse | null) {
+  return comment?.user?.nickname || comment?.user?.username || `用户${comment?.user?.id ?? ''}` || '匿名用户';
+}
+
+function getBattleAvatarSeed(comment?: CommentResponse | null) {
+  const name = getBattleUserName(comment).trim();
+  return name ? name.slice(0, 1).toUpperCase() : '•';
+}
+
+function mapCommentToBattleComment(comment: CommentResponse, side: CommentSide): BattleComment {
+  return {
+    id: String(comment.id),
+    side,
+    author: {
+      name: getBattleUserName(comment),
+      avatar: getBattleAvatarSeed(comment),
+    },
+    content: comment.content || '',
+    time: formatBattleTime(comment.createTime),
+    likes: comment.likeCount ?? 0,
+    dislikes: 0,
+    replyCount: comment.replyCount ?? 0,
+    ipLocation: comment.ipLocation,
+  };
+}
+
+function mapReplyToBattleReply(reply: CommentResponse, side: CommentSide): BattleReply {
+  return {
+    id: String(reply.id),
+    side,
+    author: {
+      name: getBattleUserName(reply),
+      avatar: getBattleAvatarSeed(reply),
+    },
+    content: reply.content || '',
+    time: formatBattleTime(reply.createTime),
+    likes: reply.likeCount ?? 0,
+  };
+}
+
+function calcPower(items: BattleComment[]) {
   return Math.max(
     1,
     items.reduce(
-      (s, c) => s + COMMENT_POWER + c.likes * LIKE_POWER - (c.dislikes ?? 0) * DISLIKE_POWER,
+      (s, c) => s + COMMENT_POWER + c.likes * LIKE_POWER + c.replyCount * 2 - (c.dislikes ?? 0) * DISLIKE_POWER,
       0,
     ),
   );
+}
+
+function getEventBattleStatusMeta(item: PredictionCardItem) {
+  if (item.status === 'open') {
+    return item.hasBet
+      ? {
+          badgeLabel: '已参与',
+          badgeTone: 'border-[#8fb8a5]/22 bg-[#8fb8a5]/10 text-[#c6ddd2]',
+          hint: '你已经参与本场预测，可以直接加入评论战场。',
+          hintTone: 'text-[#c6ddd2]',
+          stateLabel: '已下注',
+        }
+      : {
+          badgeLabel: '开放下注',
+          badgeTone: 'border-[#8ea8c4]/22 bg-[#8ea8c4]/10 text-[#cad7e6]',
+          hint: '先选择立场下注，再进入对应阵营评论。',
+          hintTone: 'text-[#cad7e6]',
+          stateLabel: '未下注',
+        };
+  }
+
+  if (item.status === 'closed') {
+    return {
+      badgeLabel: '封盘中',
+      badgeTone: 'border-[#bfa57f]/22 bg-[#bfa57f]/10 text-[#dec9ad]',
+      hint: item.hasBet ? '下注已锁定，等待赛果出炉。' : '本场已停止下注，只能围观战况。',
+      hintTone: 'text-[#dec9ad]',
+      stateLabel: '封闭',
+    };
+  }
+
+  if (item.hasBet && item.betSettleResult === 'WIN') {
+    return {
+      badgeLabel: '已结算',
+      badgeTone: 'border-[#8fb8a5]/22 bg-[#8fb8a5]/10 text-[#c6ddd2]',
+      hint: '本场已结算，你已命中结果。',
+      hintTone: 'text-[#c6ddd2]',
+      stateLabel: '结算胜',
+    };
+  }
+
+  if (item.hasBet && item.betSettleResult === 'LOSE') {
+    return {
+      badgeLabel: '已结算',
+      badgeTone: 'border-[#bd8f97]/22 bg-[#bd8f97]/10 text-[#e0c5ca]',
+      hint: '本场已结算，结果未命中。',
+      hintTone: 'text-[#e0c5ca]',
+      stateLabel: '结算负',
+    };
+  }
+
+  if (item.hasBet) {
+    return {
+      badgeLabel: '待结算',
+      badgeTone: 'border-[#c4ad86]/22 bg-[#c4ad86]/10 text-[#e3d3ba]',
+      hint: '赛果已出，等待你完成结算。',
+      hintTone: 'text-[#e3d3ba]',
+      stateLabel: '待结算',
+    };
+  }
+
+  return {
+    badgeLabel: '未参与',
+    badgeTone: 'border-white/12 bg-white/6 text-white/70',
+    hint: '本场预测已结束，可以查看最终战况。',
+    hintTone: 'text-white/64',
+    stateLabel: '未下注',
+  };
 }
 
 /* ══════════ CSS Keyframes ══════════ */
@@ -847,6 +999,94 @@ function renderFlipNumber(value: number, className?: string) {
 
 void renderFlipNumber;
 
+const BattleReplies: React.FC<{
+  commentId: string;
+  side: CommentSide;
+  authorName: string;
+  pushFx: (side: CommentSide, type: BattleFx['type']) => void;
+  latestReplyEvent?: LatestReplyEvent | null;
+}> = ({ commentId, side, authorName, pushFx, latestReplyEvent }) => {
+  const [cursor, setCursor] = useState<number | string>(0);
+  const [replies, setReplies] = useState<BattleReply[]>([]);
+  const repliesQuery = useRequestCommentReplies({ commentId, cursor, enabled: true });
+
+  useEffect(() => {
+    setCursor(0);
+    setReplies([]);
+  }, [commentId]);
+
+  useEffect(() => {
+    const results = repliesQuery.data?.results ?? [];
+    const mapped = results.map((item) => mapReplyToBattleReply(item, side));
+    if (mapped.length === 0) {
+      if (cursor === 0) setReplies([]);
+      return;
+    }
+    setReplies((prev) => {
+      const map = new Map<string, BattleReply>();
+      (cursor === 0 ? mapped : [...prev, ...mapped]).forEach((item) => map.set(item.id, item));
+      return Array.from(map.values());
+    });
+  }, [cursor, repliesQuery.data, side]);
+
+  useEffect(() => {
+    if (!latestReplyEvent || latestReplyEvent.commentId !== commentId) return;
+    const mapped = mapReplyToBattleReply(latestReplyEvent.reply, side);
+    setReplies((prev) => {
+      const exists = prev.some((item) => item.id === mapped.id);
+      if (exists) return prev;
+      return [...prev, mapped];
+    });
+  }, [commentId, latestReplyEvent, side]);
+
+  if (replies.length === 0 && !repliesQuery.isLoading) return null;
+
+  return (
+    <div className="mt-2 ml-0.5 pl-2.5 border-l-2 border-slate-100 dark:border-rdark-border space-y-2">
+      {replies.map((r) => (
+        <div key={r.id} className="flex items-start gap-1.5">
+          <FlameAvatar emoji={r.author.avatar} side={side} compact />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1 mb-0.5">
+              <span className="text-[10px] font-semibold text-slate-700 dark:text-rdark-text">
+                {r.author.name}
+              </span>
+              <span className="text-[8px] text-slate-400 dark:text-rdark-text2">{r.time}</span>
+            </div>
+            <p className="text-[10px] text-slate-600 dark:text-rdark-text leading-relaxed battle-hot-text">
+              <span className="font-medium" style={{ color: side === 'A' ? LC : RC }}>
+                @{authorName}
+              </span>{' '}
+              {r.content}
+            </p>
+            <button
+              onClick={() => {
+                setReplies((prev) => prev.map((item) => (item.id === r.id ? { ...item, likes: item.likes + randomBattleGain() } : item)));
+                pushFx(side, 'like');
+              }}
+              className="flex items-center gap-1 text-[9px] mt-0.5 px-1 py-0.5 rounded border-0 bg-transparent cursor-pointer text-slate-400 dark:text-rdark-text2 hover:opacity-80 transition-colors"
+            >
+              <ThumbsUp size={8} /> <AnimatedCount value={r.likes} duration={0.45} />
+            </button>
+          </div>
+        </div>
+      ))}
+
+      {repliesQuery.data?.hasMore && (
+        <button
+          type="button"
+          onClick={() => setCursor(repliesQuery.data?.cursor ?? 0)}
+          disabled={repliesQuery.isFetching}
+          className="text-[10px] font-semibold border-0 bg-transparent cursor-pointer transition-colors hover:opacity-80"
+          style={{ color: side === 'A' ? LC : RC }}
+        >
+          {repliesQuery.isFetching ? '加载中...' : '更多回复'}
+        </button>
+      )}
+    </div>
+  );
+};
+
 const ReelPowerNumber: React.FC<{
   value: number;
   color: string;
@@ -1364,8 +1604,8 @@ const BattleHeader: React.FC<{
   rightSuccess: number;
   rightFail: number;
   splitPct: number;
-  commentsA: EventComment[];
-  commentsB: EventComment[];
+  commentsA: BattleComment[];
+  commentsB: BattleComment[];
   comboA: number;
   comboB: number;
   shakeKey: number;
@@ -2131,9 +2371,9 @@ const IdleArenaFx: React.FC<{ active: boolean }> = ({ active }) => (
 
 /* ══════════ ArgumentCard ══════════ */
 const ArgumentCard = React.memo(({
-  comment, side, compact, onLike, onStomp, stomped, showPoop, onReply, onLikeReply, accent, pushFx,
+  comment, side, compact, onLike, onStomp, stomped, showPoop, onReply, accent, pushFx, latestReplyEvent, isReplying, replyDraft, onReplyDraftChange, onSubmitReply, onCancelReply, replySubmitting,
 }: {
-  comment: EventComment;
+  comment: BattleComment;
   side: CommentSide;
   compact: boolean;
   onLike: (id: string) => void;
@@ -2141,9 +2381,15 @@ const ArgumentCard = React.memo(({
   stomped: boolean;
   showPoop: boolean;
   onReply: (commentId: string, authorName: string) => void;
-  onLikeReply: (commentId: string, replyId: string) => void;
   accent: string;
   pushFx: (side: CommentSide, type: BattleFx['type']) => void;
+  latestReplyEvent?: LatestReplyEvent | null;
+  isReplying?: boolean;
+  replyDraft?: string;
+  onReplyDraftChange?: (value: string) => void;
+  onSubmitReply?: () => void;
+  onCancelReply?: () => void;
+  replySubmitting?: boolean;
 }) => {
   const [likedPulse, setLikedPulse] = useState(false);
   const [replyPulse, setReplyPulse] = useState(false);
@@ -2193,8 +2439,6 @@ const ArgumentCard = React.memo(({
       </motion.div>
     );
   }
-
-  const replies = comment.replies ?? [];
 
   return (
     <motion.div
@@ -2274,38 +2518,58 @@ const ArgumentCard = React.memo(({
           </div>
 
           {/* Nested replies */}
-          {replies.length > 0 && (
-            <div className="mt-2 ml-0.5 pl-2.5 border-l-2 border-slate-100 dark:border-rdark-border space-y-2">
-              {replies.map((r) => (
-                <div key={r.id} className="flex items-start gap-1.5">
-                  <FlameAvatar emoji={r.author.avatar} side={r.side} compact />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1 mb-0.5">
-                      <span className="text-[10px] font-semibold text-slate-700 dark:text-rdark-text">
-                        {r.author.name}
-                      </span>
-                      <span className="text-[8px] text-slate-400 dark:text-rdark-text2">{r.time}</span>
-                    </div>
-                    <p className="text-[10px] text-slate-600 dark:text-rdark-text leading-relaxed battle-hot-text">
-                      <span className="font-medium" style={{ color: side === 'A' ? LC : RC }}>
-                        @{comment.author.name}
-                      </span>{' '}
-                      {r.content}
-                    </p>
-                    <button
-                      onClick={() => {
-                        onLikeReply(comment.id, r.id);
-                        pushFx(r.side, 'like');
-                      }}
-                      className="flex items-center gap-1 text-[9px] mt-0.5 px-1 py-0.5 rounded border-0 bg-transparent cursor-pointer text-slate-400 dark:text-rdark-text2 hover:opacity-80 transition-colors"
-                    >
-                      <ThumbsUp size={8} /> <AnimatedCount value={r.likes} duration={0.45} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <AnimatePresence initial={false}>
+            {isReplying && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, y: -6 }}
+                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -4 }}
+                transition={{ duration: 0.22, ease: 'easeOut' }}
+                className="mt-2 rounded-none border border-white/12 bg-black/18 p-2.5"
+              >
+              <div className="mb-2 flex items-center justify-between gap-2 text-[10px] text-white/64">
+                <span>回复 @{comment.author.name}</span>
+                <button
+                  type="button"
+                  onClick={onCancelReply}
+                  className="border-0 bg-transparent text-white/50 cursor-pointer hover:text-white"
+                >
+                  取消
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  value={replyDraft ?? ''}
+                  onChange={(e) => onReplyDraftChange?.(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      void onSubmitReply?.();
+                    }
+                  }}
+                  placeholder={`回复 ${comment.author.name}...`}
+                  className="flex-1 bg-transparent border border-white/14 px-3 py-2 outline-none text-[11px] text-white placeholder:text-white/38"
+                  disabled={replySubmitting}
+                />
+                <button
+                  type="button"
+                  onClick={() => void onSubmitReply?.()}
+                  disabled={!replyDraft?.trim() || replySubmitting}
+                  className="px-3 py-2 text-[11px] font-bold border border-emerald-400/22 bg-emerald-500/12 text-emerald-100 disabled:opacity-45 disabled:cursor-not-allowed"
+                >
+                  {replySubmitting ? '发送中...' : '回复'}
+                </button>
+              </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <BattleReplies
+            commentId={comment.id}
+            side={side}
+            authorName={comment.author.name}
+            pushFx={pushFx}
+            latestReplyEvent={latestReplyEvent}
+          />
         </div>
       </div>
     </motion.div>
@@ -2317,7 +2581,7 @@ interface SideColumnProps {
   side: CommentSide;
   label: string;
   power: number;
-  comments: EventComment[];
+  comments: BattleComment[];
   compact: boolean;
   scrollRef: React.RefObject<HTMLDivElement | null>;
   onLike: (id: string) => void;
@@ -2325,11 +2589,20 @@ interface SideColumnProps {
   stompedSet: Set<string>;
   poopAnims: { id: string; commentId: string }[];
   onReply: (commentId: string, authorName: string) => void;
-  onLikeReply: (commentId: string, replyId: string) => void;
   dotColor: string;
   textColor: string;
   pushFx: (side: CommentSide, type: BattleFx['type']) => void;
   comboCount: number;
+  hasMore?: boolean;
+  loadingMore?: boolean;
+  onLoadMore?: () => void;
+  latestReplyEvent?: LatestReplyEvent | null;
+  replyingTo?: { commentId: string; authorName: string; side: CommentSide } | null;
+  replyDraft?: string;
+  onReplyDraftChange?: (value: string) => void;
+  onSubmitReply?: () => void;
+  onCancelReply?: () => void;
+  replySubmitting?: boolean;
 }
 
 const SideColumn = React.memo(({
@@ -2344,11 +2617,20 @@ const SideColumn = React.memo(({
   stompedSet,
   poopAnims,
   onReply,
-  onLikeReply,
   dotColor,
   textColor,
   pushFx,
   comboCount,
+  hasMore,
+  loadingMore,
+  onLoadMore,
+  latestReplyEvent,
+  replyingTo,
+  replyDraft,
+  onReplyDraftChange,
+  onSubmitReply,
+  onCancelReply,
+  replySubmitting,
 }: SideColumnProps) => {
   const poopCommentIds = useMemo(() => new Set(poopAnims.map((a) => a.commentId)), [poopAnims]);
   return (
@@ -2373,7 +2655,7 @@ const SideColumn = React.memo(({
       </div>
       <div
         ref={scrollRef}
-        className="flex-1 overflow-y-auto py-1 space-y-0.5 relative z-10 battle-scroll"
+        className="flex-1 overflow-visible py-1 pr-1 space-y-0.5 relative z-10"
         style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.004) 42%, rgba(0,0,0,0.03))' }}
       >
         {comments.map((c) => (
@@ -2387,13 +2669,32 @@ const SideColumn = React.memo(({
             stomped={stompedSet.has(c.id)}
             showPoop={poopCommentIds.has(c.id)}
             onReply={onReply}
-            onLikeReply={onLikeReply}
             accent={textColor}
             pushFx={pushFx}
+            latestReplyEvent={latestReplyEvent}
+            isReplying={replyingTo?.commentId === c.id}
+            replyDraft={replyDraft}
+            onReplyDraftChange={onReplyDraftChange}
+            onSubmitReply={onSubmitReply}
+            onCancelReply={onCancelReply}
+            replySubmitting={replySubmitting}
           />
         ))}
         {comments.length === 0 && (
           <div className="text-center text-xs text-white/55 py-8">暂无评论</div>
+        )}
+        {hasMore && onLoadMore && (
+          <div className="px-3 pb-3">
+            <button
+              type="button"
+              onClick={onLoadMore}
+              disabled={loadingMore}
+              className="w-full text-center text-[11px] font-semibold border border-white/12 bg-white/5 px-3 py-2 cursor-pointer transition-colors hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ color: textColor }}
+            >
+              {loadingMore ? '加载中...' : `加载更多${label}评论`}
+            </button>
+          </div>
         )}
       </div>
     </>
@@ -2402,15 +2703,32 @@ const SideColumn = React.memo(({
 
 /* ═══════════════════ Main EventBattle ═══════════════════ */
 export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide, onBet, bettingMarketId }) => {
-  void bettingMarketId;
-  const [comments, setComments] = useState<EventComment[]>(() =>
-    mockEventComments.filter((c) => c.newsId === news.id),
-  );
-  const selectedSide: CommentSide = userSide ?? 'A';
+  const battleEntityId = useMemo(() => news.marketId ?? news.id, [news.id, news.marketId]);
+  const currentUserQuery = useRequestUserCurrent();
+  const coinMeQuery = useRequestCoinMe();
+  const createCommentMutation = useRequestCreateComment();
+  const [cursorA, setCursorA] = useState<number | string>(0);
+  const [cursorB, setCursorB] = useState<number | string>(0);
+  const [commentsAState, setCommentsAState] = useState<BattleComment[]>([]);
+  const [commentsBState, setCommentsBState] = useState<BattleComment[]>([]);
+  const commentsAQuery = useRequestCommentComments({
+    entityType: ENTITY_PREDICT_A,
+    entityId: battleEntityId,
+    cursor: cursorA,
+    enabled: hasValue(battleEntityId),
+  });
+  const commentsBQuery = useRequestCommentComments({
+    entityType: ENTITY_PREDICT_B,
+    entityId: battleEntityId,
+    cursor: cursorB,
+    enabled: hasValue(battleEntityId),
+  });
+  const [selectedSide, setSelectedSide] = useState<CommentSide>(userSide ?? 'A');
   const [inputText, setInputText] = useState('');
   const [pulse, setPulse] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
-  const [replyingTo, setReplyingTo] = useState<{ commentId: string; authorName: string } | null>(null);
+  const [replyingTo, setReplyingTo] = useState<{ commentId: string; authorName: string; side: CommentSide } | null>(null);
+  const [replyText, setReplyText] = useState('');
   const [stompedSet, setStompedSet] = useState<Set<string>>(new Set());
   const [poopAnims, setPoopAnims] = useState<{ id: string; commentId: string }[]>([]);
   const [battleFx, setBattleFx] = useState<BattleFx[]>([]);
@@ -2419,26 +2737,41 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
   const [comboB, setComboB] = useState(0);
   const [koFx, setKoFx] = useState<KoFx | null>(null);
   const [isIdle, setIsIdle] = useState(false);
+  const [latestReplyEvent, setLatestReplyEvent] = useState<LatestReplyEvent | null>(null);
+  const [betIntent, setBetIntent] = useState<CommentSide>(userSide ?? 'A');
+  const [betAmount, setBetAmount] = useState('100');
+  const [showBetPanel, setShowBetPanel] = useState(false);
   const hasBetAction = typeof onBet === 'function';
-  void hasBetAction;
+  const canComment = Boolean(currentUserQuery.data?.id);
+  const statusMeta = useMemo(() => getEventBattleStatusMeta(news), [news]);
+  const canPlaceBet = hasBetAction && news.status === 'open' && !news.hasBet;
+  const isBetting = typeof news.marketId === 'number' && bettingMarketId === news.marketId;
+  const activeBetLabel = betIntent === 'A' ? news.optionA : news.optionB;
+  const activeBetOdds = betIntent === 'A' ? news.oddsA : news.oddsB;
+  const balance = coinMeQuery.data?.balance ?? 0;
+  const numericBetAmount = Number(betAmount);
+  const estimatedPayout = Number.isFinite(numericBetAmount) && numericBetAmount > 0
+    ? Math.floor(numericBetAmount * activeBetOdds)
+    : 0;
 
   const scrollA = useRef<HTMLDivElement>(null);
   const scrollB = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const composerRef = useRef<HTMLDivElement>(null);
   const comboTimerA = useRef<number | null>(null);
   const comboTimerB = useRef<number | null>(null);
   const idleTimerRef = useRef<number | null>(null);
 
-  const commentsA = useMemo(() => comments.filter((c) => c.side === 'A'), [comments]);
-  const commentsB = useMemo(() => comments.filter((c) => c.side === 'B'), [comments]);
+  const commentsA = commentsAState;
+  const commentsB = commentsBState;
   const leftPower = useMemo(() => calcPower(commentsA), [commentsA]);
   const rightPower = useMemo(() => calcPower(commentsB), [commentsB]);
   const leftSuccess = useMemo(
-    () => commentsA.reduce((sum, c) => sum + c.likes + (c.replies ?? []).reduce((r, rr) => r + rr.likes, 0), 0),
+    () => commentsA.reduce((sum, c) => sum + c.likes + c.replyCount * 2, 0),
     [commentsA],
   );
   const rightSuccess = useMemo(
-    () => commentsB.reduce((sum, c) => sum + c.likes + (c.replies ?? []).reduce((r, rr) => r + rr.likes, 0), 0),
+    () => commentsB.reduce((sum, c) => sum + c.likes + c.replyCount * 2, 0),
     [commentsB],
   );
   const leftFail = useMemo(
@@ -2452,6 +2785,85 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
 
   const totalPower = leftPower + rightPower;
   const splitPct = totalPower > 0 ? (leftPower / totalPower) * 100 : 50;
+  const reportCommentsA = useMemo(
+    () => commentsA.map((comment) => ({
+      id: comment.id,
+      newsId: news.id,
+      side: comment.side,
+      author: comment.author,
+      content: comment.content,
+      time: comment.time,
+      likes: comment.likes,
+      dislikes: comment.dislikes,
+      replies: [],
+      eggStatus: 'egg' as const,
+      posX: 0,
+      posY: 0,
+    })),
+    [commentsA, news.id],
+  );
+  const reportCommentsB = useMemo(
+    () => commentsB.map((comment) => ({
+      id: comment.id,
+      newsId: news.id,
+      side: comment.side,
+      author: comment.author,
+      content: comment.content,
+      time: comment.time,
+      likes: comment.likes,
+      dislikes: comment.dislikes,
+      replies: [],
+      eggStatus: 'egg' as const,
+      posX: 0,
+      posY: 0,
+    })),
+    [commentsB, news.id],
+  );
+
+  useEffect(() => {
+    setCursorA(0);
+    setCursorB(0);
+    setCommentsAState([]);
+    setCommentsBState([]);
+    setReplyingTo(null);
+    setReplyText('');
+    setBetIntent(userSide ?? 'A');
+    setSelectedSide(userSide ?? 'A');
+    setBetAmount('100');
+  }, [battleEntityId, news.id]);
+
+  useEffect(() => {
+    if (userSide) {
+      setBetIntent(userSide);
+      setSelectedSide(userSide);
+    }
+  }, [userSide]);
+
+  useEffect(() => {
+    const mapped = (commentsAQuery.data?.results ?? []).map((item) => mapCommentToBattleComment(item, 'A'));
+    if (mapped.length === 0) {
+      if (cursorA === 0) setCommentsAState([]);
+      return;
+    }
+    setCommentsAState((prev) => {
+      const map = new Map<string, BattleComment>();
+      (cursorA === 0 ? mapped : [...prev, ...mapped]).forEach((item) => map.set(item.id, item));
+      return Array.from(map.values());
+    });
+  }, [commentsAQuery.data, cursorA]);
+
+  useEffect(() => {
+    const mapped = (commentsBQuery.data?.results ?? []).map((item) => mapCommentToBattleComment(item, 'B'));
+    if (mapped.length === 0) {
+      if (cursorB === 0) setCommentsBState([]);
+      return;
+    }
+    setCommentsBState((prev) => {
+      const map = new Map<string, BattleComment>();
+      (cursorB === 0 ? mapped : [...prev, ...mapped]).forEach((item) => map.set(item.id, item));
+      return Array.from(map.values());
+    });
+  }, [commentsBQuery.data, cursorB]);
 
   const firePulse = useCallback(() => {
     setPulse(true);
@@ -2539,29 +2951,12 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
     return () => window.clearInterval(idleIv);
   }, [isIdle, news.optionA, news.optionB, pushFx, pushDanmu, firePulse]);
 
-  /* Auto-demo */
-  useEffect(() => {
-    const iv = setInterval(() => {
-      setComments((prev) => {
-        const side: CommentSide = Math.random() > 0.5 ? 'A' : 'B';
-        const pool = prev.filter((c) => c.side === side);
-        if (!pool.length) return prev;
-        const pick = pool[Math.floor(Math.random() * pool.length)];
-        const gain = randomBattleGain();
-        pushFx(side, 'like');
-        pushDanmu(side, `@${pick.author.name}: +${gain} 火力`);
-        return prev.map((c) => (c.id === pick.id ? { ...c, likes: c.likes + gain } : c));
-      });
-      firePulse();
-    }, 3000);
-    return () => clearInterval(iv);
-  }, [firePulse, pushDanmu, pushFx]);
-
   const handleLike = useCallback(
     (id: string) => {
       markAction();
       const gain = randomBattleGain();
-      setComments((p) => p.map((c) => (c.id === id ? { ...c, likes: c.likes + gain } : c)));
+      setCommentsAState((prev) => prev.map((c) => (c.id === id ? { ...c, likes: c.likes + gain } : c)));
+      setCommentsBState((prev) => prev.map((c) => (c.id === id ? { ...c, likes: c.likes + gain } : c)));
       firePulse();
     },
     [firePulse, markAction],
@@ -2573,9 +2968,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
       markAction();
       const gain = randomBattleGain();
       setStompedSet((prev) => new Set(prev).add(id));
-      setComments((p) =>
-        p.map((c) => (c.id === id ? { ...c, dislikes: (c.dislikes ?? 0) + gain } : c)),
-      );
+      setCommentsAState((prev) => prev.map((c) => (c.id === id ? { ...c, dislikes: (c.dislikes ?? 0) + gain } : c)));
+      setCommentsBState((prev) => prev.map((c) => (c.id === id ? { ...c, dislikes: (c.dislikes ?? 0) + gain } : c)));
       const animId = `poop-${Date.now()}`;
       setPoopAnims((prev) => [...prev, { id: animId, commentId: id }]);
       setTimeout(() => setPoopAnims((prev) => prev.filter((a) => a.id !== animId)), 1200);
@@ -2586,76 +2980,85 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
 
   const handleReply = useCallback((commentId: string, authorName: string) => {
     markAction();
-    setReplyingTo({ commentId, authorName });
-    pushFx(selectedSide, 'reply');
-    setTimeout(() => inputRef.current?.focus(), 50);
-  }, [pushFx, selectedSide, markAction]);
+    const side = commentsA.some((comment) => comment.id === commentId) ? 'A' : 'B';
+    setReplyingTo({ commentId, authorName, side });
+    setReplyText('');
+    pushFx(side, 'reply');
+    firePulse();
+  }, [commentsA, firePulse, markAction, pushFx]);
 
-  const handleLikeReply = useCallback((commentId: string, replyId: string) => {
-    markAction();
-    const gain = randomBattleGain();
-    setComments((p) =>
-      p.map((c) =>
-        c.id === commentId
-          ? { ...c, replies: (c.replies ?? []).map((r) => (r.id === replyId ? { ...r, likes: r.likes + gain } : r)) }
-          : c,
-      ),
-    );
-  }, [markAction]);
-
-  const handleSend = useCallback(() => {
-    const text = inputText.trim();
-    if (!text) return;
+  const handleSendReply = useCallback(async () => {
+    const text = replyText.trim();
+    if (!text || !currentUserQuery.data?.id || !replyingTo) return;
     markAction();
 
-    if (replyingTo) {
-      const newReply: EventReply = {
-        id: `er-${Date.now()}`,
-        author: { name: '你', avatar: '🦊' },
-        side: selectedSide,
-        content: text,
-        time: '刚刚',
-        likes: 0,
-      };
-      setComments((p) =>
-        p.map((c) =>
-          c.id === replyingTo.commentId
-            ? { ...c, replies: [...(c.replies ?? []), newReply] }
-            : c,
+    const createdReply = await createCommentMutation.mutateAsync({
+      entityType: 'comment',
+      entityId: replyingTo.commentId,
+      content: text,
+    });
+    const replySide = replyingTo.side;
+    setLatestReplyEvent({
+      token: Date.now(),
+      commentId: replyingTo.commentId,
+      reply: createdReply,
+      side: replySide,
+    });
+    if (replySide === 'A') {
+      setCommentsAState((prev) =>
+        prev.map((comment) =>
+          comment.id === replyingTo.commentId
+            ? { ...comment, replyCount: comment.replyCount + 1 }
+            : comment,
         ),
       );
-      setReplyingTo(null);
-      pushDanmu(selectedSide, `回复 @${replyingTo.authorName}: ${text}`);
     } else {
-      const nc: EventComment = {
-        id: `ec-${Date.now()}`,
-        newsId: news.id,
-        side: selectedSide,
-        author: { name: '你', avatar: '🦊' },
-        content: text,
-        time: '刚刚',
-        likes: 0,
-        dislikes: 0,
-        eggStatus: 'egg',
-        posX: 0,
-        posY: 0,
-      };
-      setComments((p) => [...p, nc]);
-      pushDanmu(selectedSide, text);
+      setCommentsBState((prev) =>
+        prev.map((comment) =>
+          comment.id === replyingTo.commentId
+            ? { ...comment, replyCount: comment.replyCount + 1 }
+            : comment,
+        ),
+      );
     }
+    pushDanmu(replySide, `回复 @${replyingTo.authorName}: ${text}`);
+    pushFx(replySide, 'send');
+    firePulse();
+    setReplyingTo(null);
+    setReplyText('');
+    void commentsAQuery.refetch();
+    void commentsBQuery.refetch();
+  }, [commentsAQuery, commentsBQuery, createCommentMutation, currentUserQuery.data?.id, firePulse, markAction, pushDanmu, pushFx, replyText, replyingTo]);
 
+  const handleSend = useCallback(async () => {
+    const text = inputText.trim();
+    if (!text || !currentUserQuery.data?.id) return;
+    markAction();
+    const createdComment = await createCommentMutation.mutateAsync({
+      entityType: selectedSide === 'A' ? ENTITY_PREDICT_A : ENTITY_PREDICT_B,
+      entityId: battleEntityId,
+      content: text,
+    });
+    const mapped = mapCommentToBattleComment(createdComment, selectedSide);
+    if (selectedSide === 'A') {
+      setCursorA(0);
+      setCommentsAState((prev) => [mapped, ...prev.filter((item) => item.id !== mapped.id)]);
+    } else {
+      setCursorB(0);
+      setCommentsBState((prev) => [mapped, ...prev.filter((item) => item.id !== mapped.id)]);
+    }
+    pushDanmu(selectedSide, text);
+
+    void commentsAQuery.refetch();
+    void commentsBQuery.refetch();
     setInputText('');
     pushFx(selectedSide, 'send');
     firePulse();
-    setTimeout(() => {
-      const ref = selectedSide === 'A' ? scrollA : scrollB;
-      ref.current?.scrollTo({ top: ref.current.scrollHeight, behavior: 'smooth' });
-    }, 100);
-  }, [inputText, selectedSide, news.id, firePulse, replyingTo, pushDanmu, pushFx, markAction]);
+  }, [battleEntityId, commentsAQuery, commentsBQuery, createCommentMutation, currentUserQuery.data?.id, firePulse, inputText, markAction, pushDanmu, pushFx, selectedSide]);
   void handleSend;
 
   return (
-    <div className="battle-shell px-2 md:px-3 py-2 h-full min-h-[calc(100vh-56px)]">
+    <div className="battle-shell px-2 md:px-3 py-2 min-h-[calc(100vh-56px)] overflow-x-hidden">
       <style>{BATTLE_CSS}</style>
       <div className="battle-outer-frame relative overflow-hidden">
         <span className="battle-orb w-36 h-36 -left-10 -top-8 bg-cyan-400/20" />
@@ -2664,14 +3067,15 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
         <div className="battle-header-strip">
           <button
             onClick={onBack}
-            className="relative z-10 inline-flex items-center gap-2 text-white/90 text-xs font-semibold bg-transparent border-0 cursor-pointer"
+            className="relative z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 text-white/92 text-xs font-semibold border border-white/14 bg-black/15 cursor-pointer transition-colors hover:bg-black/25 hover:border-white/22"
           >
-            <span className="text-cyan-300">☰</span>
+            <ChevronLeft size={13} className="text-[#e6c889]" />
             返回
           </button>
           <span className="relative z-10 text-white/75 text-xs font-semibold tracking-[0.2em]">LIVE BATTLE</span>
         </div>
-        <div className="relative z-10 w-full h-full min-h-[calc(100vh-56px)] flex flex-col gap-4 md:gap-5 overflow-hidden px-2 md:px-3 py-3">
+        <div className="relative z-10 w-full min-h-[calc(100vh-56px)] flex flex-col gap-4 md:gap-5 overflow-x-hidden px-2 md:px-3 py-3">
+
           <KoFlash fx={koFx} />
 
           <BattleHeader
@@ -2703,15 +3107,238 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
             </div>
           </>}
 
-          <div className="grid grid-cols-1  gap-5 md:gap-6 items-start flex-1 min-h-0">
+          <div className="grid grid-cols-1 gap-5 md:gap-6 items-start flex-1 min-h-0">
             <div className={`${card} battle-main-panel overflow-hidden relative h-full min-h-0`}>
               <div className="battle-arena-grid absolute inset-0 pointer-events-none opacity-[0.07]" />
               {/* <span className="battle-vs-cross-y" /> */}
               <IdleArenaFx active={isIdle} />
               <ActionFxBurst fxList={battleFx} />
-              <div className="xl:hidden px-2 pt-2 pb-1">
-                <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 scroll-smooth">
-                  <div className="snap-start shrink-0 w-full min-w-full h-[56vh] border border-cyan-300/20 bg-black/10 overflow-hidden relative">
+              <div className="border-b border-white/10 bg-black/15 px-2 py-2 md:px-3 md:py-3">
+                <div className="space-y-3">
+                  <div className="border border-white/10 bg-black/18 overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setShowBetPanel((prev) => !prev)}
+                      className="w-full flex items-center justify-between gap-3 px-3 py-3 text-left transition-colors hover:bg-white/[0.03]"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${statusMeta.badgeTone}`}>
+                          {news.status === 'open' ? <Coins size={11} /> : news.status === 'closed' ? <Lock size={11} /> : news.betSettleResult === 'WIN' ? <Trophy size={11} /> : <Clock3 size={11} />}
+                          {statusMeta.badgeLabel}
+                        </span>
+                        <div>
+                          <div className="text-[12px] font-bold text-white">下注面板</div>
+                          <div className="text-[10px] text-white/48">余额 {balance.toLocaleString()} · {activeBetLabel} · {activeBetOdds.toFixed(1)}x</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-white/58">
+                        <span className="text-[11px]">{showBetPanel ? '收起' : '展开'}</span>
+                        {showBetPanel ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                      </div>
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {showBetPanel && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.22, ease: 'easeOut' }}
+                        >
+                          <div className="border-t border-white/8 px-3 py-3 space-y-3">
+                            <p className={`text-[11px] leading-5 ${statusMeta.hintTone}`}>{statusMeta.hint}</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="border border-white/10 bg-white/[0.03] px-3 py-2.5">
+                                <div className="text-[10px] uppercase tracking-[0.12em] text-white/35">我的余额</div>
+                                <div className="mt-1.5 flex items-center gap-1.5 text-[20px] font-black text-emerald-300">
+                                  <Coins size={14} />
+                                  {balance.toLocaleString()}
+                                </div>
+                              </div>
+                              <div className="border border-white/10 bg-white/[0.03] px-3 py-2.5">
+                                <div className="text-[10px] uppercase tracking-[0.12em] text-white/35">预计派奖</div>
+                                <div className="mt-1.5 text-[20px] font-black text-white">{estimatedPayout.toLocaleString()}</div>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <button
+                                type="button"
+                                onClick={() => setBetIntent('A')}
+                                disabled={!canPlaceBet && !userSide}
+                                className={`border px-3 py-2 text-left transition-colors ${betIntent === 'A'
+                                  ? 'border-cyan-300/35 bg-cyan-400/10'
+                                  : 'border-white/10 bg-white/[0.03] hover:bg-white/[0.05]'
+                                  } disabled:opacity-55 disabled:cursor-not-allowed`}
+                              >
+                                <div className="text-[10px] font-semibold text-cyan-100">{news.optionA}</div>
+                                <div className="mt-1 text-lg font-black text-white">{news.oddsA.toFixed(1)}x</div>
+                                <div className="text-[10px] text-white/48">支持正向观点</div>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setBetIntent('B')}
+                                disabled={!canPlaceBet && !userSide}
+                                className={`border px-3 py-2 text-left transition-colors ${betIntent === 'B'
+                                  ? 'border-rose-300/35 bg-rose-400/10'
+                                  : 'border-white/10 bg-white/[0.03] hover:bg-white/[0.05]'
+                                  } disabled:opacity-55 disabled:cursor-not-allowed`}
+                              >
+                                <div className="text-[10px] font-semibold text-rose-100">{news.optionB}</div>
+                                <div className="mt-1 text-lg font-black text-white">{news.oddsB.toFixed(1)}x</div>
+                                <div className="text-[10px] text-white/48">支持反向观点</div>
+                              </button>
+                            </div>
+                            <div className="border border-white/8 bg-white/[0.03] px-3 py-2.5">
+                              <div className="mb-2 flex items-center justify-between gap-2">
+                                <span className="text-[10px] uppercase tracking-[0.12em] text-white/35">下注金额</span>
+                                <span className="text-[10px] text-white/45">可用 {balance.toLocaleString()} 龟币</span>
+                              </div>
+                              <div className="flex items-center border border-white/10 bg-black/20 px-3 py-2">
+                                <span className="mr-2 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">Coins</span>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  step="1"
+                                  value={betAmount}
+                                  onChange={(e) => setBetAmount(e.target.value)}
+                                  placeholder="输入下注金额"
+                                  className="w-full bg-transparent text-[20px] font-black text-white outline-none placeholder:text-white/24"
+                                />
+                              </div>
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                {[100, 300, 500, 1000].map((amount) => (
+                                  <button
+                                    key={amount}
+                                    type="button"
+                                    onClick={() => setBetAmount(String(amount))}
+                                    className="px-2.5 py-1 text-[10px] font-semibold border border-white/10 bg-white/[0.03] text-white/72 transition-colors hover:bg-white/[0.06]"
+                                  >
+                                    {amount}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between gap-3 border border-white/8 bg-white/[0.03] px-3 py-2">
+                              <div>
+                                <div className="text-[10px] uppercase tracking-[0.16em] text-white/35">当前选择</div>
+                                <div className="mt-1 text-[14px] font-black text-white">{activeBetLabel}</div>
+                                <div className="text-[11px] text-white/52">赔率 {activeBetOdds.toFixed(1)}x · 金额 {Number.isFinite(numericBetAmount) && numericBetAmount > 0 ? numericBetAmount.toLocaleString() : 0}</div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => onBet?.(news.id, betIntent, activeBetOdds, numericBetAmount)}
+                                disabled={!canPlaceBet || isBetting || !Number.isFinite(numericBetAmount) || numericBetAmount <= 0 || numericBetAmount > balance}
+                                className={`inline-flex min-w-[92px] items-center justify-center gap-1 border px-3 py-2 text-[12px] font-bold transition-colors ${betIntent === 'A'
+                                  ? 'border-cyan-300/26 bg-cyan-400/10 text-cyan-100 hover:bg-cyan-400/16'
+                                  : 'border-rose-300/26 bg-rose-400/10 text-rose-100 hover:bg-rose-400/16'
+                                  } disabled:opacity-45 disabled:cursor-not-allowed`}
+                              >
+                                <Zap size={12} />
+                                {isBetting ? '下注中...' : news.hasBet ? '已参与' : news.status === 'open' ? '确认下注' : '不可下注'}
+                              </button>
+                            </div>
+                            {Number.isFinite(numericBetAmount) && numericBetAmount > balance && (
+                              <div className="text-[11px] text-rose-300">余额不足，当前无法完成这笔下注。</div>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* <div className="border border-white/10 bg-black/12 px-3 py-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <MessageSquareText size={13} className="text-[#e6c889]" />
+                        <span className="text-[12px] font-bold text-white">评论战场</span>
+                      </div>
+                      <span className="text-[10px] text-white/46">支持胜负观点，回复在列表原位展开</span>
+                    </div>
+                  </div> */}
+
+                  <div ref={composerRef} className="border border-white/10 bg-black/16 overflow-hidden">
+                    <div className="flex flex-wrap items-center gap-2 border-b border-white/8 px-3 py-2 text-[11px] text-white/70">
+                      {canComment ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedSide('A')}
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-none font-bold transition-colors ${selectedSide === 'A' ? 'text-white' : 'text-cyan-100/72'}`}
+                            style={selectedSide === 'A'
+                              ? { backgroundColor: LC, boxShadow: `0 0 14px ${LC}44` }
+                              : { backgroundColor: 'rgba(0,210,255,0.08)', border: '1px solid rgba(0,210,255,0.18)' }}
+                          >
+                            <MessageSquareText size={11} />
+                            评论胜方: {news.optionA}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedSide('B')}
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-none font-bold transition-colors ${selectedSide === 'B' ? 'text-white' : 'text-rose-100/72'}`}
+                            style={selectedSide === 'B'
+                              ? { backgroundColor: RC, boxShadow: `0 0 14px ${RC}44` }
+                              : { backgroundColor: 'rgba(255,0,85,0.08)', border: '1px solid rgba(255,0,85,0.18)' }}
+                          >
+                            <MessageSquareText size={11} />
+                            评论负方: {news.optionB}
+                          </button>
+                        </>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-none border border-white/15 text-white/60">
+                          <Lock size={11} />
+                          登录后可评论胜方或负方
+                        </span>
+                      )}
+                      <span className="ml-auto text-white/52">
+                        主评论发到上面选中的阵营，回复请直接在列表里操作
+                      </span>
+                    </div>
+                    <div className="px-3 py-3 flex items-center gap-2">
+                      <div className="flex-1 flex items-center gap-2 rounded-none px-3 py-2 border border-white/20 bg-transparent focus-within:border-emerald-300/70 transition-colors relative overflow-hidden">
+                        <span
+                          className="absolute inset-y-0 w-14 pointer-events-none"
+                          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', animation: 'neon-sweep 2.4s linear infinite' }}
+                        />
+                        <input
+                          ref={inputRef}
+                          type="text"
+                          value={inputText}
+                          onChange={(e) => setInputText(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              void handleSend();
+                            }
+                          }}
+                          placeholder={
+                            canComment
+                              ? `为${selectedSide === 'A' ? news.optionA : news.optionB}阵营加火...`
+                              : '登录后可加入战场'
+                          }
+                          disabled={!canComment || createCommentMutation.isLoading}
+                          className="flex-1 bg-transparent border-0 outline-none text-xs text-white placeholder:text-white/45 disabled:cursor-not-allowed disabled:opacity-45"
+                        />
+                        <motion.button
+                          onClick={() => void handleSend()}
+                          disabled={!inputText.trim() || !canComment || createCommentMutation.isLoading}
+                          whileTap={inputText.trim() && canComment ? { scale: 0.92 } : {}}
+                          whileHover={inputText.trim() && canComment ? { scale: 1.06 } : {}}
+                          className={`p-1.5 rounded-none border-0 cursor-pointer transition-colors ${inputText.trim() && canComment
+                            ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                            : 'bg-transparent border border-white/20 text-white/45 cursor-not-allowed'
+                            }`}
+                        >
+                          <span className="inline-flex items-center gap-1">
+                            <Send size={12} style={{ animation: inputText.trim() && canComment ? 'hot-icon-spin 0.9s ease-in-out infinite' : undefined }} />
+                            {inputText.trim() && canComment && <Sparkles size={10} />}
+                          </span>
+                        </motion.button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="xl:hidden px-2 pt-2 pb-1 space-y-3">
+                  <div className="w-full border border-cyan-300/20 bg-black/10 overflow-hidden relative">
                     <span
                       className="absolute inset-0 pointer-events-none"
                       style={{
@@ -2719,7 +3346,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                           'radial-gradient(900px 520px at 16% 18%, rgba(0,210,255,0.22), transparent 55%), radial-gradient(700px 420px at 60% 80%, rgba(0,210,255,0.12), transparent 58%), linear-gradient(180deg, rgba(0,210,255,0.06), transparent 55%, rgba(0,0,0,0.25))',
                       }}
                     />
-                    <div className="h-full min-h-0 flex flex-col">
+                    <div className="flex flex-col">
                       <SideColumn
                         side="A"
                         label={news.optionA}
@@ -2732,15 +3359,27 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                         stompedSet={stompedSet}
                         poopAnims={poopAnims}
                         onReply={handleReply}
-                        onLikeReply={handleLikeReply}
                         dotColor={LC}
                         textColor={LC}
                         pushFx={pushFx}
                         comboCount={comboA}
+                        hasMore={commentsAQuery.data?.hasMore}
+                        loadingMore={commentsAQuery.isFetching}
+                        onLoadMore={() => setCursorA(commentsAQuery.data?.cursor ?? 0)}
+                        latestReplyEvent={latestReplyEvent}
+                        replyingTo={replyingTo}
+                        replyDraft={replyText}
+                        onReplyDraftChange={setReplyText}
+                        onSubmitReply={handleSendReply}
+                        onCancelReply={() => {
+                          setReplyingTo(null);
+                          setReplyText('');
+                        }}
+                        replySubmitting={createCommentMutation.isLoading}
                       />
                     </div>
                   </div>
-                  <div className="snap-start shrink-0 w-full min-w-full h-[56vh] border border-rose-300/20 bg-black/10 overflow-hidden relative">
+                  <div className="w-full border border-rose-300/20 bg-black/10 overflow-hidden relative">
                     <span
                       className="absolute inset-0 pointer-events-none"
                       style={{
@@ -2748,7 +3387,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                           'radial-gradient(900px 520px at 84% 18%, rgba(255,0,85,0.22), transparent 55%), radial-gradient(700px 420px at 40% 80%, rgba(255,0,85,0.12), transparent 58%), linear-gradient(180deg, rgba(255,0,85,0.06), transparent 55%, rgba(0,0,0,0.25))',
                       }}
                     />
-                    <div className="h-full min-h-0 flex flex-col">
+                    <div className="flex flex-col">
                       <SideColumn
                         side="B"
                         label={news.optionB}
@@ -2761,19 +3400,30 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                         stompedSet={stompedSet}
                         poopAnims={poopAnims}
                         onReply={handleReply}
-                        onLikeReply={handleLikeReply}
                         dotColor={RC}
                         textColor={RC}
                         pushFx={pushFx}
                         comboCount={comboB}
+                        hasMore={commentsBQuery.data?.hasMore}
+                        loadingMore={commentsBQuery.isFetching}
+                        onLoadMore={() => setCursorB(commentsBQuery.data?.cursor ?? 0)}
+                        latestReplyEvent={latestReplyEvent}
+                        replyingTo={replyingTo}
+                        replyDraft={replyText}
+                        onReplyDraftChange={setReplyText}
+                        onSubmitReply={handleSendReply}
+                        onCancelReply={() => {
+                          setReplyingTo(null);
+                          setReplyText('');
+                        }}
+                        replySubmitting={createCommentMutation.isLoading}
                       />
                     </div>
                   </div>
-                </div>
               </div>
 
-              <div className="flex flex-col xl:flex-row h-full min-h-[68vh] xl:min-h-0">
-                <div className="hidden xl:flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
+              <div className="flex flex-col xl:flex-row gap-0">
+                <div className="hidden xl:flex flex-col relative flex-1 min-w-0">
                   <span
                     className="absolute inset-0 pointer-events-none"
                     style={{
@@ -2793,11 +3443,23 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     stompedSet={stompedSet}
                     poopAnims={poopAnims}
                     onReply={handleReply}
-                    onLikeReply={handleLikeReply}
                     dotColor={LC}
                     textColor={LC}
                     pushFx={pushFx}
                     comboCount={comboA}
+                    hasMore={commentsAQuery.data?.hasMore}
+                    loadingMore={commentsAQuery.isFetching}
+                    onLoadMore={() => setCursorA(commentsAQuery.data?.cursor ?? 0)}
+                    latestReplyEvent={latestReplyEvent}
+                    replyingTo={replyingTo}
+                    replyDraft={replyText}
+                    onReplyDraftChange={setReplyText}
+                    onSubmitReply={handleSendReply}
+                    onCancelReply={() => {
+                      setReplyingTo(null);
+                      setReplyText('');
+                    }}
+                    replySubmitting={createCommentMutation.isLoading}
                   />
                 </div>
 
@@ -3121,27 +3783,27 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                   )}
                 </aside> */}
                 <div
-            className="shrink-0 overflow-hidden rounded-xl"
-            style={{
-              width: 260,
-              background: 'linear-gradient(180deg, rgba(8,8,14,0.95) 0%, rgba(12,12,20,0.92) 100%)',
-              borderLeft: '1px solid rgba(255,255,255,0.06)',
-              borderRight: '1px solid rgba(255,255,255,0.06)',
-            }}
-          >
-            <BattleReport
-              commentsA={commentsA}
-              commentsB={commentsB}
-              leftPower={leftPower}
-              rightPower={rightPower}
-              splitPct={splitPct}
-              optionA={news.optionA}
-              optionB={news.optionB}
-              oddsA={news.oddsA}
-              oddsB={news.oddsB}
-              userSide={userSide}
-            />
-          </div>
+                  className="shrink-0 overflow-hidden rounded-xl"
+                  style={{
+                    width: 220,
+                    background: 'linear-gradient(180deg, rgba(8,8,14,0.95) 0%, rgba(12,12,20,0.92) 100%)',
+                    borderLeft: '1px solid rgba(255,255,255,0.06)',
+                    borderRight: '1px solid rgba(255,255,255,0.06)',
+                  }}
+                >
+                  <BattleReport
+                    commentsA={reportCommentsA}
+                    commentsB={reportCommentsB}
+                    leftPower={leftPower}
+                    rightPower={rightPower}
+                    splitPct={splitPct}
+                    optionA={news.optionA}
+                    optionB={news.optionB}
+                    oddsA={news.oddsA}
+                    oddsB={news.oddsB}
+                    userSide={userSide}
+                  />
+                </div>
                 <div className="hidden xl:block">
                   <DynamicDivider
                     splitRatio={splitPct / 100}
@@ -3151,7 +3813,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                   />
                 </div>
 
-                <div className="hidden xl:flex flex-col overflow-hidden relative flex-1 min-w-0 min-h-0">
+                <div className="hidden xl:flex flex-col relative flex-1 min-w-0">
                   <span
                     className="absolute inset-0 pointer-events-none"
                     style={{
@@ -3171,14 +3833,27 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     stompedSet={stompedSet}
                     poopAnims={poopAnims}
                     onReply={handleReply}
-                    onLikeReply={handleLikeReply}
                     dotColor={RC}
                     textColor={RC}
                     pushFx={pushFx}
                     comboCount={comboB}
+                    hasMore={commentsBQuery.data?.hasMore}
+                    loadingMore={commentsBQuery.isFetching}
+                    onLoadMore={() => setCursorB(commentsBQuery.data?.cursor ?? 0)}
+                    latestReplyEvent={latestReplyEvent}
+                    replyingTo={replyingTo}
+                    replyDraft={replyText}
+                    onReplyDraftChange={setReplyText}
+                    onSubmitReply={handleSendReply}
+                    onCancelReply={() => {
+                      setReplyingTo(null);
+                      setReplyText('');
+                    }}
+                    replySubmitting={createCommentMutation.isLoading}
                   />
                 </div>
               </div>
+
             </div>
           </div>
         </div>

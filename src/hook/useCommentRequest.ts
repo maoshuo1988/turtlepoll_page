@@ -42,11 +42,13 @@ export type CommentListParams = {
   cursor?: number | string;
   entityType: string;
   entityId: number | string;
+  enabled?: boolean;
 };
 
 export type CommentRepliesParams = {
   cursor?: number | string;
   commentId: number | string;
+  enabled?: boolean;
 };
 
 export type CreateCommentPayload = {
@@ -88,18 +90,20 @@ const buildCreateCommentForm = (payload: CreateCommentPayload) => {
 
 // 评论列表（cursor 分页）
 export function useRequestCommentComments(params: CommentListParams) {
+  const { enabled = true, ...queryParams } = params;
+
   return useQuery<CursorResult<CommentResponse>>({
     queryKey: ["requestCommentComments", params],
     queryFn: async () => {
       const res = await axiosCustom({
         method: "get",
         cmd: API_Comment_Comments,
-        params,
+        params: queryParams,
         headers: getAuthorizationHeaders(),
       });
       return assertSuccess(res);
     },
-    enabled: Boolean(params?.entityType) && hasValue(params?.entityId),
+    enabled: enabled && Boolean(params?.entityType) && hasValue(params?.entityId),
   });
 }
 
@@ -122,18 +126,20 @@ export function useInfiniteRequestCommentComments(params: Omit<CommentListParams
 
 // 回复列表（cursor 分页）
 export function useRequestCommentReplies(params: CommentRepliesParams) {
+  const { enabled = true, ...queryParams } = params;
+
   return useQuery<CursorResult<CommentResponse>>({
     queryKey: ["requestCommentReplies", params],
     queryFn: async () => {
       const res = await axiosCustom({
         method: "get",
         cmd: API_Comment_Replies,
-        params,
+        params: queryParams,
         headers: getAuthorizationHeaders(),
       });
       return assertSuccess(res);
     },
-    enabled: hasValue(params?.commentId),
+    enabled: enabled && hasValue(params?.commentId),
   });
 }
 

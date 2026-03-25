@@ -734,7 +734,7 @@ export const BattleReport: React.FC<BattleReportProps> = ({
 
   /* ══════════ Render ══════════ */
   return (
-    <div className="flex flex-col h-full relative overflow-hidden">
+    <div className="flex flex-col relative overflow-hidden">
       {/* ── Alert mode full flash ── */}
       <AnimatePresence>
         {isAlertMode && (
@@ -904,7 +904,7 @@ export const BattleReport: React.FC<BattleReportProps> = ({
 
       {/* ── Personal Battle Report ── */}
       <div
-        className="mt-auto shrink-0 overflow-y-auto battle-scroll"
+        className="shrink-0"
         style={{
           background: 'linear-gradient(180deg, rgba(10,10,15,0.5) 0%, rgba(16,16,28,0.8) 100%)',
           borderTop: '1px solid rgba(255,255,255,0.06)',
