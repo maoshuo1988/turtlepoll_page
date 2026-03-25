@@ -2500,8 +2500,6 @@ const ArgumentCard = React.memo(({
               <button
                 onClick={() => {
                   onReply(comment.id, comment.author.name);
-                  triggerPulse('reply');
-                  pushFx(side, 'reply');
                 }}
                 className="text-[10px] px-1.5 py-0.5 rounded-none border-0 bg-transparent cursor-pointer transition-colors text-slate-400 dark:text-rdark-text2 hover:text-emerald-500 dark:hover:text-emerald-400 font-medium inline-flex items-center gap-1"
               >
@@ -2983,9 +2981,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
     const side = commentsA.some((comment) => comment.id === commentId) ? 'A' : 'B';
     setReplyingTo({ commentId, authorName, side });
     setReplyText('');
-    pushFx(side, 'reply');
-    firePulse();
-  }, [commentsA, firePulse, markAction, pushFx]);
+  }, [commentsA, markAction]);
 
   const handleSendReply = useCallback(async () => {
     const text = replyText.trim();

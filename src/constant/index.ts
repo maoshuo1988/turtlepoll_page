@@ -1,4 +1,7 @@
-export const SERVER_API = "http://52.77.212.173:8082";
+const rawServerApi = import.meta.env.VITE_SERVER_API?.trim() ?? "";
+
+// Empty string means "use the current origin", which works well with reverse proxies.
+export const SERVER_API = rawServerApi.replace(/\/+$/, "");
 
 
 
