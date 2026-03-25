@@ -68,6 +68,11 @@ export function useRequestCoinBet() {
     },
     onSuccess: (result) => {
       updateCoinMeCache(queryClient, result.userCoin);
+      void Promise.all([
+        queryClient.invalidateQueries(["requestFootballMarkets"]),
+        queryClient.invalidateQueries(["requestFootballMarketsByTag"]),
+        queryClient.invalidateQueries(["requestFootballPredictContextHot"]),
+      ]);
     },
   });
 }
@@ -98,6 +103,11 @@ export function useRequestCoinSettle() {
       if (latestUserCoin) {
         updateCoinMeCache(queryClient, latestUserCoin);
       }
+      void Promise.all([
+        queryClient.invalidateQueries(["requestFootballMarkets"]),
+        queryClient.invalidateQueries(["requestFootballMarketsByTag"]),
+        queryClient.invalidateQueries(["requestFootballPredictContextHot"]),
+      ]);
     },
   });
 }

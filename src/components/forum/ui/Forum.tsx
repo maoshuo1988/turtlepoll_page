@@ -72,18 +72,18 @@ export const Forum: React.FC = () => {
 
   const handleCreatePost = async (content: string, tag: TopicPostTag, images: string[]) => {
     await createTopicMutation.mutateAsync({
-      type: 0,
+      type: 1,
       nodeId: createNodeId,
       title: content.slice(0, 40),
       content,
-      contentType: 'markdown',
+      contentType: 'text',
       hideContent: '',
       tags: [tag],
       imageList: images.map((url) => ({ url })),
       vote: null,
       captchaId: '',
       captchaCode: '',
-      captchaProtocol: 0,
+      captchaProtocol: 2,
     });
 
     await topicFeedQuery.refetch();

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Image, X, Smile, BarChart3, MapPin } from 'lucide-react';
 import type { TopicPostTag } from './TopicPostCard';
 import { FORUM_TAGS } from '../../../data/mock_data';
+import { useRequestUploadImage } from '@/hook/useRequest';
 
 interface ForumComposeProps {
   onPost: (content: string, tag: TopicPostTag, images: string[]) => Promise<void> | void;
@@ -21,6 +22,7 @@ type LocalComposeImage = {
 };
 
 export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost, posting = false }) => {
+  const uploadImageMutation = useRequestUploadImage();
   const [content, setContent] = useState('');
   const [tag, setTag] = useState<TopicPostTag>('讨论');
   const [images, setImages] = useState<LocalComposeImage[]>([]);
@@ -44,16 +46,14 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({ onPost, posting = fa
       setSubmitting(true);
       setToolbarHint('正在发布帖子...');
 
-      // const uploadedImageUrls = await Promise.all(
-      //   images.map(async (item) => {
-      //     const result = await uploadImageMutation.mutateAsync(item.file);
-      //     return result.url;
-      //   }),
-      // );
-      //
-      // await onPost(trimmed, tag, uploadedImageUrls.filter(Boolean));
+      const uploadedImageUrls = await Promise.all(
+        images.map(async (item) => {
+          const result = await uploadImageMutation.mutateAsync(item.file);
+          return result.url;
+        }),
+      );
 
-      await onPost(trimmed, tag, []);
+      await onPost(trimmed, tag, uploadedImageUrls.filter(Boolean));
       images.forEach((item) => URL.revokeObjectURL(item.previewUrl));
       setContent('');
       setImages([]);

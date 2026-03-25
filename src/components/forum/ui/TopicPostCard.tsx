@@ -6,6 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
 import type { TopicResponse } from '@/hook/topicType';
 import { FORUM_TAGS } from '../../../data/mock_data';
+import { SERVER_API } from '@/constant';
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
@@ -72,50 +73,35 @@ const resolveTag = (post: TopicPostCardData): TopicPostTag => {
   return '讨论';
 };
 
-/* ── Image Grid (X / Twitter style) ── */
+const resolveAssetUrl = (src?: string) => {
+  if (!src) return '';
+  if (/^(https?:)?\/\//.test(src) || src.startsWith('data:') || src.startsWith('blob:')) {
+    return src;
+  }
+  if (src.startsWith('/')) {
+    return `${SERVER_API}${src}`;
+  }
+  return `${SERVER_API}/${src}`;
+};
+
+/* ── Image Grid ── */
 const ImageGrid: React.FC<{ images: string[] }> = ({ images }) => {
   const count = images.length;
   if (count === 0) return null;
 
-  const baseClass = 'w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity';
-
-  if (count === 1) {
-    return (
-      <div className="mt-2.5 md:mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border">
-        <img src={images[0]} alt="" loading="lazy" className={`${baseClass} max-h-[220px] sm:max-h-[320px] md:max-h-[510px]`} />
-      </div>
-    );
-  }
-
-  if (count === 2) {
-    return (
-      <div className="mt-2.5 md:mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 gap-0.5 h-[156px] sm:h-[220px] md:h-[286px]">
-        <img src={images[0]} alt="" loading="lazy" className={baseClass} />
-        <img src={images[1]} alt="" loading="lazy" className={baseClass} />
-      </div>
-    );
-  }
-
-  if (count === 3) {
-    return (
-      <div className="mt-2.5 md:mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 grid-rows-2 gap-0.5 h-[156px] sm:h-[220px] md:h-[286px]">
-        <div className="row-span-2">
-          <img src={images[0]} alt="" loading="lazy" className={`${baseClass} h-full`} />
-        </div>
-        <img src={images[1]} alt="" loading="lazy" className={baseClass} />
-        <img src={images[2]} alt="" loading="lazy" className={baseClass} />
-      </div>
-    );
-  }
-
   return (
-    <div className="mt-2.5 md:mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-rdark-border grid grid-cols-2 grid-rows-2 gap-0.5 h-[156px] sm:h-[220px] md:h-[286px]">
-      {images.slice(0, 4).map((src, i) => (
-        <div key={i} className="relative overflow-hidden">
-          <img src={src} alt="" loading="lazy" className={baseClass} />
-          {i === 3 && images.length > 4 && (
+    <div className="mt-2.5 md:mt-3 grid grid-cols-3 gap-2 overflow-hidden rounded-2xl border border-slate-200 dark:border-rdark-border md:grid-cols-4">
+      {images.slice(0, 8).map((src, i) => (
+        <div key={i} className="relative aspect-square overflow-hidden bg-[#09182f]">
+          <img
+            src={resolveAssetUrl(src)}
+            alt=""
+            loading="lazy"
+            className="h-full w-full cursor-pointer object-cover transition-opacity hover:opacity-95"
+          />
+          {i === 7 && images.length > 8 && (
             <div className="absolute inset-0 bg-black/50 grid place-items-center text-white text-2xl font-bold cursor-pointer">
-              +{images.length - 4}
+              +{images.length - 8}
             </div>
           )}
         </div>
@@ -170,7 +156,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const handleSeed = post.user?.username || post.user?.id || post.author?.handle || nickname;
   const handle = handleSeed.startsWith('@') ? handleSeed : `@${handleSeed}`;
   const avatarText = post.author?.avatar || nickname.slice(0, 1).toUpperCase();
-  const avatarUrl = post.user?.avatar || post.user?.smallAvatar || post.author?.avatarUrl;
+  const avatarUrl = resolveAssetUrl(post.user?.avatar || post.user?.smallAvatar || post.author?.avatarUrl);
   const content = post.content || [post.title, post.summary].filter(Boolean).join('\n').trim() || '该帖子暂无正文内容';
   const images =
     post.images ??

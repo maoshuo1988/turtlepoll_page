@@ -66,7 +66,7 @@ function App() {
   const [petDialogue, setPetDialogue] = useState<string | null>(null);
   
   const [activeView, setActiveView] = useState<ViewType>('predictions');
-  const [communityPosts, setCommunityPosts] = useState<MockForumEntry[]>(mockCommunityPosts);
+  const [communityPosts] = useState<MockForumEntry[]>(mockCommunityPosts);
   const [battles, setBattles] = useState<Battle[]>(mockBattles);
   const [floatingChatOpen, setFloatingChatOpen] = useState(false);
   const [selectedNewsId, setSelectedNewsId] = useState<string | null>(null);
@@ -212,38 +212,6 @@ function App() {
     [allNews, balance, coinBetMutation]
   );
 
-  const handleLikePost = useCallback((postId: string) => {
-    setCommunityPosts((prev) =>
-      prev.map((p) => (p.id === postId ? { ...p, likes: p.likes + 1 } : p))
-    );
-  }, []);
-
-  const handleLikeComment = useCallback((postId: string, commentId: string) => {
-    setCommunityPosts((prev) =>
-      prev.map((p) =>
-        p.id === postId
-          ? { ...p, comments: p.comments.map((c) => (c.id === commentId ? { ...c, likes: c.likes + 1 } : c)) }
-          : p
-      )
-    );
-  }, []);
-
-  const handleAddComment = useCallback((postId: string, content: string) => {
-    setCommunityPosts((prev) =>
-      prev.map((p) =>
-        p.id === postId
-          ? {
-            ...p,
-            comments: [
-              ...p.comments,
-              { id: `c-${Date.now()}`, author: { name: '你', handle: '@me_fox', avatar: '🦊' }, content, time: '刚刚', likes: 0 },
-            ],
-          }
-          : p
-      )
-    );
-  }, []);
-
   const handleViewChange = useCallback((view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag | null) => {
     setActiveView(view);
     if (view === 'predictions') {
@@ -377,23 +345,10 @@ function App() {
           {activeView === 'predictions' && selectedTopic && (<section className="view-shell view-rhythm view-topic w-full max-w-none mx-0 grid gap-4">
             <TopicDetail
               topic={selectedTopic}
-              relatedNews={
-                selectedTopic.relatedNewsId
-                  ? allNews.find((n) => n.id === selectedTopic.relatedNewsId) ?? heroNewsItem
-                  : null
-              }
-              relatedPosts={
-                selectedTopic.relatedNewsId
-                  ? communityPosts.filter((p) => p.relatedNewsId === selectedTopic.relatedNewsId)
-                  : []
-              }
               onBack={() => setSelectedTopic(null)}
               onBetSuccess={handlePredictionBetSuccess}
               onRequireAuth={() => setAuthModalOpen(true)}
               onEnterBattle={setSelectedNewsId}
-              onLikePost={handleLikePost}
-              onLikeComment={handleLikeComment}
-              onAddComment={handleAddComment}
             />
           </section>)}
           {/* 话题 */}

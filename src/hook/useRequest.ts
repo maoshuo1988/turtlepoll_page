@@ -148,7 +148,7 @@ export function useRequestUploadImage() {
     mutationKey: ["requestUploadImage"],
     mutationFn: async (file: File) => {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("image", file);
 
       const res = await axiosCustom({
         method: "post",

@@ -59,7 +59,7 @@ export const API_Login_Google_One_Tap= "/api/login/google_one_tap";
 
 
 //上传图片
-export const API_Upload_Image= "/api/upload/image";
+export const API_Upload_Image= "/api/upload";
 //上传文件
 export const API_Upload_File = "/api/upload/file";
 

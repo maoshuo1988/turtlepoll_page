@@ -16,7 +16,7 @@ export type PredictionCardItem = {
   optionB: string;
   oddsA: number;
   oddsB: number;
-  status: 'open' | 'closed';
+  status: 'open' | 'closed' | 'settled';
   hasBet?: boolean;
   betSettleResult?: 'WIN' | 'LOSE' | string;
 };
@@ -63,7 +63,12 @@ export function mapMarketToPredictionCard(item: FootballMarketAggregate): Predic
     optionB: context.conText || '反方',
     oddsA,
     oddsB,
-    status: item.market.status === 'OPEN' ? 'open' : 'closed',
+    status:
+      item.market.status === 'OPEN'
+        ? 'open'
+        : item.market.status === 'SETTLED'
+          ? 'settled'
+          : 'closed',
     hasBet: item.hasBet ?? false,
     betSettleResult: item.betSettleResult,
   };

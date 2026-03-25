@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Users, MessageSquare } from 'lucide-react';
+import { ShieldCheck, Users, MessageSquare, Trophy, Clock3, Lock, Coins } from 'lucide-react';
 import type { PlaceBetResult } from '@/hook/coinType';
 import { usePredictionCardItems, type PredictionCardItem } from './predictionCard';
 import { PredictionBetModal } from './PredictionBetModal';
+import { useRequestCoinSettle } from '@/hook/useCoinRequest';
 
 interface NewsFeedProps {
   selectedTag: string | null;
@@ -12,6 +13,124 @@ interface NewsFeedProps {
   onEnterBattle?: (newsId: string) => void;
 }
 
+type CardStatusMeta = {
+  badgeLabel: string;
+  badgeClassName: string;
+  hintLabel: string;
+  hintClassName: string;
+  panelClassName: string;
+  stripeClassName: string;
+  stateLabel: string;
+  stateValueClassName: string;
+};
+
+function getCardStatusMeta(item: PredictionCardItem): CardStatusMeta {
+  if (item.status === 'open') {
+    return item.hasBet
+      ? {
+          badgeLabel: '已参与',
+          badgeClassName: 'border-[#8fb8a5]/22 bg-[#8fb8a5]/10 text-[#c6ddd2]',
+          hintLabel: '你已参与本场预测，可继续围观赔率变化',
+          hintClassName: 'text-[#c6ddd2]',
+          panelClassName: 'border-[#8fb8a5]/16 bg-[#8fb8a5]/[0.05]',
+          stripeClassName: 'bg-[#8fb8a5]',
+          stateLabel: '已下注',
+          stateValueClassName: 'text-[#c6ddd2]',
+        }
+      : {
+          badgeLabel: '开放下注',
+          badgeClassName: 'border-[#8ea8c4]/22 bg-[#8ea8c4]/10 text-[#cad7e6]',
+          hintLabel: '当前市场开放，你还未下注',
+          hintClassName: 'text-[#cad7e6]',
+          panelClassName: 'border-[#8ea8c4]/16 bg-[#8ea8c4]/[0.05]',
+          stripeClassName: 'bg-[#8ea8c4]',
+          stateLabel: '未下注',
+          stateValueClassName: 'text-[#cad7e6]',
+        };
+  }
+
+  if (item.status === 'closed') {
+    return {
+      badgeLabel: '封盘中',
+      badgeClassName: 'border-[#bfa57f]/22 bg-[#bfa57f]/10 text-[#dec9ad]',
+      hintLabel: item.hasBet ? '你已下注，等待赛果出炉' : '已停止下注，等待最终结果',
+      hintClassName: 'text-[#dec9ad]',
+      panelClassName: 'border-[#bfa57f]/16 bg-[#bfa57f]/[0.05]',
+      stripeClassName: 'bg-[#bfa57f]',
+      stateLabel: '封闭',
+      stateValueClassName: 'text-[#dec9ad]',
+    };
+  }
+
+  if (item.hasBet && item.betSettleResult === 'WIN') {
+    return {
+      badgeLabel: '已结算',
+      badgeClassName: 'border-[#8fb8a5]/22 bg-[#8fb8a5]/10 text-[#c6ddd2]',
+      hintLabel: '本场已赢，收益已结算到账',
+      hintClassName: 'text-[#c6ddd2]',
+      panelClassName: 'border-[#8fb8a5]/16 bg-[#8fb8a5]/[0.05]',
+      stripeClassName: 'bg-[#8fb8a5]',
+      stateLabel: '已结算',
+      stateValueClassName: 'text-[#c6ddd2]',
+    };
+  }
+
+  if (item.hasBet && item.betSettleResult === 'LOSE') {
+    return {
+      badgeLabel: '已结算',
+      badgeClassName: 'border-[#bd8f97]/22 bg-[#bd8f97]/10 text-[#e0c5ca]',
+      hintLabel: '本场已结算，结果未命中',
+      hintClassName: 'text-[#e0c5ca]',
+      panelClassName: 'border-[#bd8f97]/16 bg-[#bd8f97]/[0.05]',
+      stripeClassName: 'bg-[#bd8f97]',
+      stateLabel: '已结算',
+      stateValueClassName: 'text-[#e0c5ca]',
+    };
+  }
+
+  if (item.hasBet) {
+    return {
+      badgeLabel: '待结算',
+      badgeClassName: 'border-[#c4ad86]/22 bg-[#c4ad86]/10 text-[#e3d3ba]',
+      hintLabel: '赛果已出，可立即结算我的下注',
+      hintClassName: 'text-[#e3d3ba]',
+      panelClassName: 'border-[#c4ad86]/16 bg-[#c4ad86]/[0.05]',
+      stripeClassName: 'bg-[#c4ad86]',
+      stateLabel: '等待结算',
+      stateValueClassName: 'text-[#e3d3ba]',
+    };
+  }
+
+  return {
+    badgeLabel: '未参与',
+    badgeClassName: 'border-white/12 bg-white/6 text-white/70',
+    hintLabel: '本场预测已结束，可查看最终结果',
+    hintClassName: 'text-white/64',
+    panelClassName: 'border-white/10 bg-white/[0.04]',
+    stripeClassName: 'bg-white/30',
+    stateLabel: '未下注',
+    stateValueClassName: 'text-white/72',
+  };
+}
+
+function getPrimaryAction(item: PredictionCardItem) {
+  if (item.status === 'open') {
+    return { label: '立即下注', disabled: false };
+  }
+  if (item.status === 'closed') {
+    return { label: '等待结果', disabled: true };
+  }
+  if (item.hasBet && !item.betSettleResult) {
+    return { label: '立即结算', disabled: false };
+  }
+  if (item.hasBet && item.betSettleResult === 'WIN') {
+    return { label: '已结算 · 胜', disabled: true };
+  }
+  if (item.hasBet && item.betSettleResult === 'LOSE') {
+    return { label: '已结算 · 负', disabled: true };
+  }
+  return { label: '赛果已出', disabled: true };
+}
 
 const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess?: NewsFeedProps['onBetSuccess']; onRequireAuth?: NewsFeedProps['onRequireAuth']; onEnterBattle?: NewsFeedProps['onEnterBattle'] }> = ({
   item,
@@ -21,9 +140,29 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
   onEnterBattle,
 }) => {
   const [betModalOption, setBetModalOption] = useState<'A' | 'B' | null>(null);
+  const coinSettleMutation = useRequestCoinSettle();
   const totalVotes = item.votes.A + item.votes.B;
   const pctANum = totalVotes > 0 ? Math.round((item.votes.A / totalVotes) * 100) : 50;
   const pctBNum = 100 - pctANum;
+  const statusMeta = getCardStatusMeta(item);
+  const primaryAction = getPrimaryAction(item);
+  const canOpenBet = item.status === 'open';
+  const canSettle = item.status === 'settled' && item.hasBet && !item.betSettleResult;
+
+  const handlePrimaryAction = async () => {
+    if (canOpenBet) {
+      setBetModalOption('A');
+      return;
+    }
+
+    if (canSettle) {
+      try {
+        await coinSettleMutation.mutateAsync({ marketId: item.marketId });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <>
@@ -48,6 +187,10 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
               <Users size={12} />
               {totalVotes.toLocaleString()} 参与
             </div>
+            <div className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${statusMeta.badgeClassName}`}>
+              {item.status === 'open' ? <Coins size={11} /> : item.status === 'closed' ? <Lock size={11} /> : item.betSettleResult === 'WIN' ? <Trophy size={11} /> : <Clock3 size={11} />}
+              {statusMeta.badgeLabel}
+            </div>
           </div>
 
           <div className="absolute inset-x-3 bottom-3">
@@ -66,7 +209,7 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
               <ShieldCheck size={12} />
               路边社事实核查已通过
             </div>
-            <div className="text-white/44">{item.optionB} {pctBNum}%</div>
+            <div className={statusMeta.hintClassName}>{statusMeta.hintLabel}</div>
           </div>
 
           <div className="mb-2.5">
@@ -82,24 +225,57 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
             </div>
           </div>
 
+          <div className={`mb-2 overflow-hidden rounded-[16px] border ${statusMeta.panelClassName}`}>
+            <div className={`h-[3px] w-full ${statusMeta.stripeClassName}`} />
+            <div className="px-3 py-2">
+              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.12em] text-white/38">
+                <span>当前状态</span>
+                <span>{item.status.toUpperCase()}</span>
+              </div>
+              <div className="mt-1.5 flex items-center justify-between gap-3">
+                <div className={`text-[14px] font-black ${statusMeta.stateValueClassName}`}>{statusMeta.stateLabel}</div>
+                <div className="text-[13px] font-semibold text-white/84">
+                  {item.hasBet ? '你已参与本场预测' : '你还未参与本场预测'}
+                </div>
+              </div>
+              {item.hasBet && item.betSettleResult && (
+                <div className={`mt-1 text-[12px] font-bold ${item.betSettleResult === 'WIN' ? 'text-emerald-300' : 'text-rose-300'}`}>
+                  {item.betSettleResult === 'WIN' ? '结算结果：已获胜' : '结算结果：未命中'}
+                </div>
+              )}
+              {item.hasBet && item.status === 'settled' && !item.betSettleResult && (
+                <div className="mt-1 text-[12px] font-bold text-[#f1c27d]">结算结果已生成，等待你手动结算</div>
+              )}
+            </div>
+          </div>
+
           <div className="legacy-pred-card-actions grid grid-cols-2 gap-2">
             <button
               onClick={() => setBetModalOption('A')}
-              className="legacy-pred-card-btn legacy-pred-card-btn-a flex h-[34px] items-center justify-center rounded-full border border-[#0fe2d2]/12 bg-[#102536] px-3 text-center text-[16px] font-black leading-none tracking-[-0.03em] text-[#40ead0] transition-colors hover:bg-[#123045]"
+              disabled={!canOpenBet}
+              className="legacy-pred-card-btn legacy-pred-card-btn-a flex h-[34px] items-center justify-center rounded-full border border-[#0fe2d2]/12 bg-[#102536] px-3 text-center text-[16px] font-black leading-none tracking-[-0.03em] text-[#40ead0] transition-colors hover:bg-[#123045] disabled:cursor-not-allowed disabled:opacity-35"
             >
               <span>{item.optionA}</span>
               <span className="ml-1.5 text-white/82">{`${item.oddsA.toFixed(1)}x`}</span>
             </button>
             <button
               onClick={() => setBetModalOption('B')}
-              className="legacy-pred-card-btn legacy-pred-card-btn-b flex h-[34px] items-center justify-center rounded-full border border-white/8 bg-white/6 px-3 text-center text-[16px] font-black leading-none tracking-[-0.03em] text-white/82 transition-colors hover:bg-white/10"
+              disabled={!canOpenBet}
+              className="legacy-pred-card-btn legacy-pred-card-btn-b flex h-[34px] items-center justify-center rounded-full border border-white/8 bg-white/6 px-3 text-center text-[16px] font-black leading-none tracking-[-0.03em] text-white/82 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35"
             >
               <span>{item.optionB}</span>
               <span className="ml-1.5 text-white/56">{`${item.oddsB.toFixed(1)}x`}</span>
             </button>
           </div>
 
-          <div className="legacy-pred-card-foot mt-2 flex items-center justify-end">
+          <div className="legacy-pred-card-foot mt-2 flex items-center justify-between gap-2">
+            <button
+              onClick={() => void handlePrimaryAction()}
+              disabled={primaryAction.disabled || coinSettleMutation.isLoading}
+              className="flex h-[28px] items-center justify-center rounded-full border border-[#5d5245] bg-[#181716] px-3 text-[11px] font-semibold text-[#ecd0a7] transition hover:border-[#8a7457] hover:bg-[#211f1d] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {coinSettleMutation.isLoading ? '处理中...' : primaryAction.label}
+            </button>
             {onEnterBattle && (
               <button
                 onClick={() => onEnterBattle(item.id)}
@@ -114,7 +290,7 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
       </motion.div>
 
       <PredictionBetModal
-        open={Boolean(betModalOption)}
+        open={canOpenBet && Boolean(betModalOption)}
         item={item}
         option={betModalOption}
         onClose={() => setBetModalOption(null)}
