@@ -1,22 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Flame, MessageSquare, Users } from 'lucide-react';
-import type { NewsItem } from '../../../data/mock_data';
+import type { PlaceBetResult } from '@/hook/coinType';
+import { usePredictionCardItems, type PredictionCardItem } from './predictionCard';
+import { PredictionBetModal } from './PredictionBetModal';
 
 interface HeroPredictionProps {
-  news: NewsItem;
-  onBet: (newsId: string, option: 'A' | 'B', odds: number) => void;
+  news?: PredictionCardItem | null;
+  selectedTag: string | null;
+  onBetSuccess?: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
+  onRequireAuth?: () => void;
   onEnterBattle?: (newsId: string) => void;
-  bettingMarketId?: number | null;
 }
 
-export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news, onBet, onEnterBattle, bettingMarketId }) => {
+export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news: newsOverride, selectedTag, onBetSuccess, onRequireAuth, onEnterBattle }) => {
+  const { heroItem } = usePredictionCardItems(selectedTag);
+  const news = newsOverride ?? heroItem;
+  const [betModalOption, setBetModalOption] = useState<'A' | 'B' | null>(null);
+
+  if (!news) return null;
+
   const totalVotes = news.votes.A + news.votes.B;
   const pctANum = totalVotes > 0 ? Math.round((news.votes.A / totalVotes) * 100) : 50;
   const pctBNum = 100 - pctANum;
-  const isBetting = typeof news.marketId === 'number' && bettingMarketId === news.marketId;
 
   return (
+    <>
     <div className="!my-3 md:!my-4 legacy-hero-card legacy-pred-hero relative h-[520px] sm:h-[500px] lg:h-[420px] overflow-hidden rounded-xl border border-slate-700/70 bg-[#0a111f] dark:border-slate-700/60">
       <img src={news.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#091121]/95 via-[#0b1426]/82 to-[#0f1a2a]/35" />
@@ -26,7 +35,7 @@ export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news, onBet, onE
       <div className="relative z-10 flex h-full flex-col !px-3 sm:!px-4 lg:!px-6 !py-3 sm:!py-4">
         <div className="inline-flex w-fit items-center gap-1.5 text-[30px] sm:text-[34px] lg:text-[38px] font-black leading-none text-[#eab268]">
           <Flame size={16} className="text-[#ff9f43] sm:w-[18px] sm:h-[18px] lg:w-5 lg:h-5" />
-          <span className="text-[18px] sm:text-[20px] lg:text-[24px] tracking-[-0.03em]">热门预测</span>
+          <span className="text-[18px] sm:text-[20px] lg:text-[24px] tracking-[-0.03em]">{selectedTag ? `${selectedTag} 热门预测` : '热门预测'}</span>
         </div>
 
         <h2 className="!mt-2.5 sm:!mt-3 lg:!mt-4 max-w-[760px] text-[24px] sm:text-[30px] lg:text-[36px] font-black leading-[1.08] lg:leading-[1.06] tracking-[-0.03em] text-white">
@@ -64,22 +73,20 @@ export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news, onBet, onE
             <motion.button
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => onBet(news.id, 'A', news.oddsA)}
-              disabled={isBetting}
+              onClick={() => setBetModalOption('A')}
               className="flex items-center justify-center h-[64px] sm:h-[72px] lg:h-[84px] rounded-[14px] border border-[#48ddc2]/58 bg-gradient-to-b from-[#2fdbbc]/42 to-[#1a7d75]/28 px-3 sm:px-4 py-2 text-center shadow-[0_0_20px_rgba(45,207,178,0.28),inset_0_0_0_1px_rgba(86,255,222,0.24)] transition-colors hover:from-[#39e8c8]/48 hover:to-[#1d8e84]/34"
             >
               <div className="text-[18px] sm:text-[20px] lg:text-[24px] font-black leading-none tracking-[-0.02em] text-[#dcfff8]">{news.optionA}</div>
-              <div className="!ml-3 sm:!ml-4 text-[18px] sm:text-[20px] lg:text-[24px] font-black leading-none tracking-[-0.03em] text-[#2de4c3]">{isBetting ? '下注中...' : `${news.oddsA.toFixed(1)}x`}</div>
+              <div className="!ml-3 sm:!ml-4 text-[18px] sm:text-[20px] lg:text-[24px] font-black leading-none tracking-[-0.03em] text-[#2de4c3]">{`${news.oddsA.toFixed(1)}x`}</div>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => onBet(news.id, 'B', news.oddsB)}
-              disabled={isBetting}
+              onClick={() => setBetModalOption('B')}
               className="flex items-center justify-center h-[64px] sm:h-[72px] lg:h-[84px] rounded-[14px] border border-[#a8b8d9]/28 bg-gradient-to-b bg-gradient-to-b from-[#A2343B]/42 to-[#894F4F]/28 px-3 sm:px-4 py-2 text-center shadow-[inset_0_0_0_1px_rgba(170,189,220,0.18)] transition-colors hover:from-[#34436a]/62 hover:to-[#273958]/55"
             >
               <div className="text-[18px] sm:text-[20px] lg:text-[24px] font-black leading-none tracking-[-0.02em] text-[#eef2fb]">{news.optionB}</div>
-              <div className="!ml-3 sm:!ml-4 text-[18px] sm:text-[20px] lg:text-[24px] font-black leading-none tracking-[-0.02em] text-[#ff4f75]">{isBetting ? '下注中...' : `${news.oddsB.toFixed(1)}x`}</div>
+              <div className="!ml-3 sm:!ml-4 text-[18px] sm:text-[20px] lg:text-[24px] font-black leading-none tracking-[-0.02em] text-[#ff4f75]">{`${news.oddsB.toFixed(1)}x`}</div>
             </motion.button>
           </div>
 
@@ -104,5 +111,14 @@ export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news, onBet, onE
         </div>
       </div>
     </div>
+    <PredictionBetModal
+      open={Boolean(betModalOption)}
+      item={news}
+      option={betModalOption}
+      onClose={() => setBetModalOption(null)}
+      onSuccess={onBetSuccess}
+      onRequireAuth={onRequireAuth}
+    />
+    </>
   );
 };

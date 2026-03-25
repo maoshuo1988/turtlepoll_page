@@ -23,21 +23,6 @@ export interface User {
   petInfo: PetInfo;
 }
 
-export interface NewsItem {
-  id: string;
-  marketId?: number;
-  title: string;
-  summary: string;
-  image: string; // placeholder URL
-  type: 'politics' | 'tech' | 'sports' | 'entertainment' | 'finance';
-  votes: { A: number; B: number };
-  optionA: string;
-  optionB: string;
-  oddsA: number;
-  oddsB: number;
-  status: 'open' | 'closed';
-}
-
 export interface RankUser {
   rank: number;
   name: string;
@@ -46,16 +31,6 @@ export interface RankUser {
   winRate: number;
   streak?: number;
   isMe?: boolean;
-}
-
-export interface HotTopic {
-  rank: number;
-  title: string;
-  heat: number;
-  tag: string;
-  change: string;
-  isHot?: boolean;
-  relatedNewsId?: string;
 }
 
 export const mockUser: User = {
@@ -107,7 +82,7 @@ export const petDialogues = {
   ],
 };
 
-export const heroNews: NewsItem = {
+export const heroNews = {
   id: 'hero-1',
   marketId: 1,
   title: '重磅：某科技巨头被曝将收购知名社交平台',
@@ -122,7 +97,7 @@ export const heroNews: NewsItem = {
   status: 'open',
 };
 
-export const mockNews: NewsItem[] = [
+export const mockNews = [
   {
     id: 'n1',
     marketId: 2,
@@ -318,19 +293,6 @@ export const mockRankUsers: RankUser[] = [
   { rank: 12, name: '你', avatar: '🦊', coins: 2480, winRate: 0.68, streak: 5, isMe: true },
 ];
 
-export const mockHotTopics: HotTopic[] = [
-  { rank: 1, title: '科技巨头收购案', heat: 12847, tag: '科技', change: '+2.1k/h', isHot: true, relatedNewsId: 'hero-1' },
-  { rank: 2, title: '顶流结婚瓜', heat: 8901, tag: '娱乐', change: '+890/h', isHot: true, relatedNewsId: 'n3' },
-  { rank: 3, title: '人形机器人量产', heat: 7234, tag: '科技', change: '+340/h', relatedNewsId: 'n1' },
-  { rank: 4, title: '国足世预赛', heat: 6543, tag: '体育', change: '+210/h', relatedNewsId: 'n5' },
-  { rank: 5, title: '数字货币新规', heat: 5432, tag: '财经', change: '+180/h', relatedNewsId: 'n4' },
-  { rank: 6, title: '伊朗局势升级', heat: 4876, tag: '时政', change: '+150/h' },
-  { rank: 7, title: 'AI大模型价格战', heat: 4210, tag: '科技', change: '+130/h' },
-  { rank: 8, title: '世界杯亚洲区名额', heat: 3654, tag: '体育', change: '+95/h' },
-  { rank: 9, title: '新能源车降价潮', heat: 3120, tag: '财经', change: '+78/h' },
-  { rank: 10, title: '春节档票房预测', heat: 2890, tag: '娱乐', change: '+65/h' },
-];
-
 /* ── Forum types ── */
 export interface ForumAuthor {
   name: string;
@@ -349,10 +311,12 @@ export interface ForumComment {
   likes: number;
 }
 
-export interface ForumPost {
+export type ForumTag = '讨论' | '爆料' | '分析';
+
+export interface MockForumEntry {
   id: string;
   author: ForumAuthor;
-  tag: '讨论' | '爆料' | '分析';
+  tag: ForumTag;
   title?: string;
   content: string;
   images?: string[];
@@ -368,8 +332,7 @@ export interface ForumPost {
   ipLocation?: string;
   relatedNewsId?: string;
 }
-
-export const FORUM_TAGS: Record<ForumPost['tag'], string> = {
+export const FORUM_TAGS: Record<ForumTag, string> = {
   讨论: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
   爆料: 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400',
   分析: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
@@ -384,7 +347,7 @@ export const SAMPLE_IMAGES = [
   'https://images.unsplash.com/photo-1569025690938-a00729c9e1f9?w=600&q=80',
 ];
 
-export const mockForumPosts: ForumPost[] = [
+export const mockCommunityPosts: MockForumEntry[] = [
   {
     id: 'fp1',
     author: { name: 'LionMaster', handle: '@lion_master', avatar: '🦁', verified: true, title: '龟币榜 TOP1' },
@@ -458,80 +421,13 @@ export const mockForumPosts: ForumPost[] = [
       'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=600&q=80',
     ],
     time: '3小时前',
-    likes: 203,
-    comments: [
-      { id: 'c7', author: { name: 'CryptoWolf', handle: '@crypto_wolf', avatar: '🐺' }, content: '每次都有人说"这次不一样"...然后都一样 😂', time: '2小时前', likes: 89 },
-    ],
+    likes: 231,
+    comments: [],
     relatedNewsId: 'n5',
   },
-  {
-    id: 'fp6',
-    author: { name: 'TechInsider', handle: '@tech_insider', avatar: '🔍', verified: true, title: '科技圈内人' },
-    tag: '爆料',
-    content: '独家爆料！据接近交易的人士透露，这次收购的估值在 800-1000 亿美元之间，买方已经聘请了三家顶级投行做顾问。目前双方在员工安置方案上还有分歧，但整体进展比外界想象的更快。预计下个月可能会有正式公告。',
-    images: [
-      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80',
-      'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&q=80',
-    ],
-    time: '15分钟前',
-    likes: 127,
-    comments: [
-      { id: 'c8', author: { name: 'LionMaster', handle: '@lion_master', avatar: '🦁' }, content: '消息源靠谱吗？800亿这个数字比之前传的高很多啊', time: '12分钟前', likes: 18 },
-      { id: 'c9', author: { name: '吃瓜群众小王', handle: '@wang_melon', avatar: '🍉' }, content: '如果是真的，那押"会成功"的赔率太香了！', time: '10分钟前', likes: 9 },
-      { id: 'c10', author: { name: 'CryptoWolf', handle: '@crypto_wolf', avatar: '🐺' }, content: '员工安置分歧才是关键问题，很多大型并购都是在这个环节黄的', time: '8分钟前', likes: 14 },
-    ],
-    relatedNewsId: 'hero-1',
-  },
-  {
-    id: 'fp7',
-    author: { name: '互联网观察员', handle: '@web_watcher', avatar: '👁️' },
-    tag: '讨论',
-    content: '如果这次收购真的成功了，作为社交平台的用户我们会受到什么影响？历史上每次科技巨头收购社交平台，最后都是广告变多、隐私条款变长。大家觉得这次会不同吗？我已经开始备份我的数据了...',
-    images: [
-      'https://images.unsplash.com/photo-1563986768609-322da13575f2?w=600&q=80',
-    ],
-    time: '40分钟前',
-    likes: 89,
-    comments: [
-      { id: 'c11', author: { name: 'DragonSeer', handle: '@dragon_seer', avatar: '🐉' }, content: '每次都说不会变，最后都变了。已经做好跑路准备。', time: '35分钟前', likes: 22 },
-      { id: 'c12', author: { name: '你', handle: '@me_fox', avatar: '🦊' }, content: '关键看收购方的态度，如果是战略收购可能还好', time: '30分钟前', likes: 6 },
-    ],
-    relatedNewsId: 'hero-1',
-  },
-  {
-    id: 'fp8',
-    author: { name: '法律达人老张', handle: '@lawyer_zhang', avatar: '⚖️', verified: true, title: '认证律师' },
-    tag: '分析',
-    content: '从反垄断法角度来分析这次收购案。根据目前的市场份额数据，买方+卖方在社交领域的合并市占率将超过60%，这在多数法域都会触发反垄断审查。欧盟那边大概率会要求剥离部分业务。美国FTC的态度也值得关注。我的判断：即使通过审查，至少需要12-18个月。',
-    images: [
-      'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80',
-      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80',
-    ],
-    time: '1.5小时前',
-    likes: 203,
-    comments: [
-      { id: 'c13', author: { name: 'EagleEye', handle: '@eagle_eye', avatar: '🦅' }, content: '分析得太专业了！所以短期押"不会成功"更稳？', time: '1小时前', likes: 31 },
-      { id: 'c14', author: { name: 'TechInsider', handle: '@tech_insider', avatar: '🔍' }, content: '听说买方已经提前准备了剥离方案，可能会加速审查流程', time: '50分钟前', likes: 17 },
-      { id: 'c15', author: { name: 'SharkFin', handle: '@shark_fin', avatar: '🦈' }, content: '12-18个月...那预测市场结算时间够不够？', time: '45分钟前', likes: 8 },
-    ],
-    relatedNewsId: 'hero-1',
-  },
-  {
-    id: 'fp9',
-    author: { name: '量化小王子', handle: '@quant_prince', avatar: '📊' },
-    tag: '讨论',
-    content: '收购消息出来后，被收购方股价已经涨了37%，但距离传闻的收购价还有约15%的上涨空间。这个差价就是市场对交易失败风险的定价。和我们预测市场的赔率对比一下，套利空间还挺大的。有没有人两边同时操作？',
-    images: [
-      'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=80',
-    ],
-    time: '2小时前',
-    likes: 76,
-    comments: [
-      { id: 'c16', author: { name: 'CryptoWolf', handle: '@crypto_wolf', avatar: '🐺' }, content: '思路清晰！但龟币和真金白银不太一样吧哈哈', time: '1.5小时前', likes: 42 },
-    ],
-    relatedNewsId: 'hero-1',
-  },
 ];
+
+
 
 /* ── Battle types ── */
 export type BattleSide = 'A' | 'B';
@@ -638,22 +534,7 @@ export const mockAnnouncements: Announcement[] = [
   { id: 'a3', icon: '🏆', text: '本周排行榜奖励已发放' },
 ];
 
-/* ── Hot tags ── */
-export interface HotTag {
-  tag: string;
-  category?: NewsItem['type'];
-}
-
-export const mockHotTags: HotTag[] = [
-  { tag: '#世界杯', category: 'sports' },
-  { tag: '#伊朗局势', category: 'politics' },
-  { tag: '#AI模型', category: 'tech' },
-  { tag: '#股票市场', category: 'finance' },
-  { tag: '#人形机器人', category: 'tech' },
-  { tag: '#数字货币', category: 'finance' },
-];
-
-export const TYPE_LABELS: Record<NewsItem['type'], string> = {
+export const TYPE_LABELS = {
   politics: '时政',
   tech: '科技',
   sports: '体育',
@@ -661,7 +542,7 @@ export const TYPE_LABELS: Record<NewsItem['type'], string> = {
   finance: '财经',
 };
 
-export const TYPE_COLORS: Record<NewsItem['type'], string> = {
+export const TYPE_COLORS = {
   politics: 'bg-red-100/70 text-red-600',
   tech: 'bg-blue-100/70 text-blue-600',
   sports: 'bg-green-100/70 text-green-600',

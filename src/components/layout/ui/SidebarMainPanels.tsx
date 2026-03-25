@@ -1,11 +1,13 @@
 import React from 'react';
 import { MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, FlaskConical } from 'lucide-react';
-import type { HotTag, HotTopic, PetInfo } from '../../../data/mock_data';
+import type { PetInfo } from '../../../data/mock_data';
 import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
 import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
+import type { SidebarHotTag, SidebarHotTopic } from './sidebarHotData';
+import type { PredictionCardItem } from '../../predictions/ui/predictionCard';
 
-export type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile';
+export type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'predictions', label: '预测市场', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
@@ -23,13 +25,12 @@ export const NAV_ITEMS: SidebarNavItem[] = [
 ];
 
 interface SidebarMainPanelsProps {
-  balance: number;
   winStreak: number;
   winRate: number;
   totalPredictions: number;
   activePredictions: number;
   pet: PetInfo;
-  hotTopics?: HotTopic[];
+  newsByMarketId: Map<number, PredictionCardItem>;
   chatOpen: boolean;
   currentDialogue: string;
   dialogueKey: number;
@@ -39,20 +40,17 @@ interface SidebarMainPanelsProps {
   onCloseChat: () => void;
   onViewPet: () => void;
   onOpenProfile: () => void;
-  onTopicClick?: (topic: HotTopic) => void;
-  onFallbackTopicClick: () => void;
-  onTagClick: (tag: HotTag) => void;
+  onViewChange: (view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag) => void;
   onNavClick: (item: SidebarNavItem) => void;
 }
 
 export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
-  balance,
   winStreak,
   winRate,
   totalPredictions,
   activePredictions,
   pet,
-  hotTopics,
+  newsByMarketId,
   chatOpen,
   currentDialogue,
   dialogueKey,
@@ -62,9 +60,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
   onCloseChat,
   onViewPet,
   onOpenProfile,
-  onTopicClick,
-  onFallbackTopicClick,
-  onTagClick,
+  onViewChange,
   onNavClick,
 }) => {
   return (
@@ -73,7 +69,6 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
         <div className="flex h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory gap-3 scroll-smooth pb-0 overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
             <SidebarProfileCard
-              balance={balance}
               winStreak={winStreak}
               winRate={winRate}
               totalPredictions={totalPredictions}
@@ -91,10 +86,8 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
             <SidebarHotTopicsPanel
               selectedTag={selectedTag}
-              hotTopics={hotTopics}
-              onTopicClick={onTopicClick}
-              onFallbackTopicClick={onFallbackTopicClick}
-              onTagClick={onTagClick}
+              newsByMarketId={newsByMarketId}
+              onViewChange={onViewChange}
             />
           </div>
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
@@ -106,7 +99,6 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
       <div className="hidden xl:flex min-h-0 flex-1 flex-col overflow-y-auto py-1 pr-1">
         <div className="flex min-h-full flex-col gap-4">
           <SidebarProfileCard
-            balance={balance}
             winStreak={winStreak}
             winRate={winRate}
             totalPredictions={totalPredictions}
@@ -123,10 +115,8 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
 
           <SidebarHotTopicsPanel
             selectedTag={selectedTag}
-            hotTopics={hotTopics}
-            onTopicClick={onTopicClick}
-            onFallbackTopicClick={onFallbackTopicClick}
-            onTagClick={onTagClick}
+            newsByMarketId={newsByMarketId}
+            onViewChange={onViewChange}
           />
 
           <div className="min-h-0 flex-1">

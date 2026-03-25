@@ -1,21 +1,21 @@
 import React from 'react';
 import { HeroPrediction } from './HeroPrediction';
 import { NewsFeed } from './NewsFeed';
-import type { NewsItem } from '../../../data/mock_data';
+import type { PredictionCardItem } from './predictionCard';
+import type { PlaceBetResult } from '@/hook/coinType';
 
 interface PredictionsViewProps {
-  heroNews: NewsItem;
-  items: NewsItem[];
-  onBet: (newsId: string, option: 'A' | 'B', odds: number) => void;
+  selectedTag: string | null;
+  onBetSuccess?: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
+  onRequireAuth?: () => void;
   onEnterBattle?: (newsId: string) => void;
-  bettingMarketId?: number | null;
 }
 
-export const PredictionsView: React.FC<PredictionsViewProps> = ({ heroNews, items, onBet, onEnterBattle, bettingMarketId }) => {
+export const PredictionsView: React.FC<PredictionsViewProps> = ({ selectedTag, onBetSuccess, onRequireAuth, onEnterBattle }) => {
   return (
     <section className="view-shell view-rhythm view-predictions w-full max-w-none mx-0 grid gap-4">
-      <HeroPrediction news={heroNews} onBet={onBet} onEnterBattle={onEnterBattle} bettingMarketId={bettingMarketId} />
-      <NewsFeed items={items} onBet={onBet} onEnterBattle={onEnterBattle} bettingMarketId={bettingMarketId} />
+      <HeroPrediction selectedTag={selectedTag} onBetSuccess={onBetSuccess} onRequireAuth={onRequireAuth} onEnterBattle={onEnterBattle} />
+      <NewsFeed selectedTag={selectedTag} onBetSuccess={onBetSuccess} onRequireAuth={onRequireAuth} onEnterBattle={onEnterBattle} />
     </section>
   );
 };

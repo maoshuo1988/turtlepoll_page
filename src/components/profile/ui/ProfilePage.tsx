@@ -8,8 +8,11 @@ import {
   Plus,
   Settings2,
 } from 'lucide-react';
+import type { TopicResponse } from '@/hook/topicType';
+import { useInfiniteRequestTopicUserTopics } from '@/hook/useTopicRequest';
 import {
-  type ForumPost,
+  type MockForumEntry,
+  type ForumComment,
   type PetInfo,
   type PetSkin,
 } from '../../../data/mock_data';
@@ -19,10 +22,11 @@ type ProfileTab = 'overview' | 'posts' | 'comments' | 'saved' | 'history' | 'hid
 type FeedSort = 'new' | 'hot';
 
 interface ProfilePageProps {
+  userId: number | string ;
   userName: string;
   userHandle: string;
   avatar: string;
-  posts: ForumPost[];
+  posts: MockForumEntry[];
   pet: PetInfo;
   skins: PetSkin[];
   balance: number;
@@ -95,6 +99,7 @@ const ProfileTabButton: React.FC<{
 );
 
 export const ProfilePage: React.FC<ProfilePageProps> = ({
+  userId,
   userName,
   userHandle,
   avatar,
@@ -107,18 +112,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
   const [sort, setSort] = useState<FeedSort>('new');
+  console.log("userId ----- ",userId)
+  const userPostsQuery = useInfiniteRequestTopicUserTopics({ userId: userId, cursor: 0 });
 
   const userPosts = useMemo(
     () => posts.filter((post) => post.author.name === '你' || post.author.handle === '@me_fox'),
     [posts],
   );
 
+  const profileTopics = useMemo<TopicResponse[]>(
+    () => (userPostsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
+    [userPostsQuery.data],
+  );
+
   const userComments = useMemo(
     () =>
       posts.flatMap((post) =>
         post.comments
-          .filter((comment) => comment.author.name === '你' || comment.author.handle === '@me_fox')
-          .map((comment) => ({ ...comment, postTitle: post.content })),
+          .filter((comment: ForumComment) => comment.author.name === '你' || comment.author.handle === '@me_fox')
+          .map((comment: ForumComment) => ({ ...comment, postTitle: post.content })),
       ),
     [posts],
   );
@@ -222,7 +234,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </button>
       </div>
 
-      {userPosts.length === 0 ? (
+      {userPostsQuery.isLoading && profileTopics.length === 0 ? (
+        <div className="!mt-6 rounded-[20px] border border-white/8 bg-white/[0.03] !p-6 text-[14px] text-[#8fa0b2]">
+          正在加载帖子...
+        </div>
+      ) : userPostsQuery.isError && profileTopics.length === 0 ? (
+        <div className="!mt-6 rounded-[20px] border border-rose-400/20 bg-rose-500/8 !p-6 text-[14px] text-rose-200">
+          {userPostsQuery.error instanceof Error ? userPostsQuery.error.message : '帖子加载失败'}
+        </div>
+      ) : profileTopics.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
           <EmptyState
             title="你还没有任何帖子"
@@ -233,18 +253,38 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </div>
       ) : (
         <div className="!mt-6 grid gap-4">
-          {userPosts.map((post) => (
+          {profileTopics.map((post) => (
             <article key={post.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] !p-5">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
-                  <span className="rounded-full bg-white/8 !px-2 !py-1 text-[11px] text-white/80">{post.tag}</span>
-                  <span>{post.time}</span>
+                  {post.node?.name && (
+                    <span className="rounded-full bg-white/8 !px-2 !py-1 text-[11px] text-white/80">{post.node.name}</span>
+                  )}
+                  <span>{post.createTime ? new Date(post.createTime).toLocaleString() : '刚刚'}</span>
                 </div>
-                <span className="text-[12px] text-[#7e8790]">{post.comments.length} 条评论</span>
+                <span className="text-[12px] text-[#7e8790]">{post.commentCount ?? 0} 条评论</span>
               </div>
-              <p className="!mt-3 text-[15px] leading-7 text-[#d9dee3]">{post.content}</p>
+              {post.title && <div className="!mt-3 text-[16px] font-semibold text-white">{post.title}</div>}
+              <p className="!mt-3 text-[15px] leading-7 text-[#d9dee3]">{post.summary || post.content || '暂无正文内容'}</p>
+              {post.imageList && post.imageList.length > 0 && (
+                <div className="!mt-4 flex items-center gap-2 text-[12px] text-[#7e8790]">
+                  <ImageIcon size={14} />
+                  <span>{post.imageList.length} 张配图</span>
+                </div>
+              )}
             </article>
           ))}
+
+          {userPostsQuery.hasNextPage && (
+            <button
+              type="button"
+              onClick={() => userPostsQuery.fetchNextPage()}
+              disabled={userPostsQuery.isFetchingNextPage}
+              className="rounded-full border border-white/10 bg-white/[0.04] !px-4 !py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {userPostsQuery.isFetchingNextPage ? '加载中...' : '加载更多'}
+            </button>
+          )}
         </div>
       )}
     </>

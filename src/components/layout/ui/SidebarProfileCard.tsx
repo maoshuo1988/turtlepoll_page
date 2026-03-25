@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Coins, Flame, MessageCircle } from 'lucide-react';
 import { PetChat } from '../../pet/ui/PetChat';
 import type { PetInfo } from '../../../data/mock_data';
+import { useRequestCoinMe } from '@/hook/useCoinRequest';
 
 interface SidebarProfileCardProps {
-  balance: number;
   winStreak: number;
   winRate: number;
   totalPredictions: number;
@@ -21,7 +21,6 @@ interface SidebarProfileCardProps {
 }
 
 export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
-  balance,
   winStreak,
   winRate,
   totalPredictions,
@@ -35,6 +34,10 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   onViewPet,
   onOpenProfile,
 }) => {
+  // 直接订阅全局金币缓存，其他地方只要更新 coinMe，这里会自动同步
+  const coinMe = useRequestCoinMe();
+  const displayBalance = coinMe.data?.balance ?? 0;
+
   return (
     <div className={
       `rounded-xl 
@@ -73,14 +76,14 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
                   <Coins size={17} className="text-emerald-500 dark:text-emerald-400" />
                   <AnimatePresence mode="popLayout">
                     <motion.span
-                      key={balance}
+                      key={displayBalance}
                       initial={{ y: -8, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ y: 8, opacity: 0 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                       className="text-[32px] font-extrabold text-emerald-700 dark:text-emerald-400 tracking-tight leading-none"
                     >
-                      {balance.toLocaleString()}
+                      {displayBalance.toLocaleString()}
                     </motion.span>
                   </AnimatePresence>
                   <span className="mb-0.5 self-end text-[11px] text-zinc-500 dark:text-rdark-text2">龟币</span>

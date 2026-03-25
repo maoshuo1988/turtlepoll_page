@@ -1,8 +1,11 @@
 import React from 'react';
 import { ArrowLeft, Flame, MessageSquare } from 'lucide-react';
 import { HeroPrediction } from '../../predictions/ui/HeroPrediction';
-import { ForumPostCard } from '../../forum/ui/ForumPost';
-import type { HotTopic, NewsItem, ForumPost } from '../../../data/mock_data';
+import { TopicPostCard } from '../../forum/ui/TopicPostCard';
+import type { TopicPostCardData } from '../../forum/ui/TopicPostCard';
+import type { PlaceBetResult } from '@/hook/coinType';
+import type { SidebarHotTopic } from '../../layout/ui/sidebarHotData';
+import type { PredictionCardItem } from '../../predictions/ui/predictionCard';
 
 const card =
   '!p-4 rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
@@ -12,13 +15,13 @@ function fmtHeat(n: number): string {
 }
 
 interface TopicDetailProps {
-  topic: HotTopic | null;
-  relatedNews: NewsItem | null;
-  relatedPosts: ForumPost[];
+  topic: SidebarHotTopic | null;
+  relatedNews: PredictionCardItem | null;
+  relatedPosts: TopicPostCardData[];
   onBack: () => void;
-  onBet: (newsId: string, option: 'A' | 'B', odds: number) => void;
+  onBetSuccess?: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
+  onRequireAuth?: () => void;
   onEnterBattle: (newsId: string) => void;
-  bettingMarketId?: number | null;
   onLikePost: (postId: string) => void;
   onLikeComment: (postId: string, commentId: string) => void;
   onAddComment: (postId: string, content: string) => void;
@@ -29,9 +32,9 @@ export const TopicDetail: React.FC<TopicDetailProps> = ({
   relatedNews,
   relatedPosts,
   onBack,
-  onBet,
+  onBetSuccess,
+  onRequireAuth,
   onEnterBattle,
-  bettingMarketId,
   onLikePost,
   onLikeComment,
   onAddComment,
@@ -64,9 +67,10 @@ export const TopicDetail: React.FC<TopicDetailProps> = ({
       {relatedNews && (
         <HeroPrediction
           news={relatedNews}
-          onBet={onBet}
+          selectedTag={null}
+          onBetSuccess={onBetSuccess}
+          onRequireAuth={onRequireAuth}
           onEnterBattle={onEnterBattle}
-          bettingMarketId={bettingMarketId}
         />
       )}
 
@@ -85,7 +89,7 @@ export const TopicDetail: React.FC<TopicDetailProps> = ({
         {relatedPosts.length > 0 ? (
           <div>
             {relatedPosts.map((post, i) => (
-              <ForumPostCard
+              <TopicPostCard
                 key={post.id}
                 post={post}
                 index={i}

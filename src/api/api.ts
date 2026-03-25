@@ -53,59 +53,13 @@ export const API_Login_Google_Login_Submit= "/api/login/google_login_submit";
 //Google One Tap 登录
 export const API_Login_Google_One_Tap= "/api/login/google_one_tap";
 
-/// MARK: 金币 / 预测下注
-/// 基础路径: /api/coin
-//我的金币账户
-export const API_Coin_Me = "/api/coin/me";
-//预测下注
-export const API_Coin_Bet = "/api/coin/bet";
-
-/// MARK: 管理后台 - 金币
-/// 基础路径: /api/admin/coin
-//管理员铸币
-export const API_Admin_Coin_Mint = "/api/admin/coin/mint";
-
-/// MARK: 预测事件系统
-/// 基础路径: /api/football
-//查询预测市场（聚合 market + context）
-export const API_Football_Markets = "/api/football/markets";
-//修改/创建 PredictContext
-export const API_Football_Predict_Context_Update = "/api/football/predict_context/update";
-//热度榜
-export const API_Football_Predict_Context_Hot = "/api/football/predict_context/hot";
 
 
-/// MARK: 内容域 - 话题/帖子
-/// 基础路径: /api/topic
-//节点导航
-export const API_Topic_Node_Navs = "/api/topic/node_navs";
-//获取所有节点
-export const API_Topic_Nodes = "/api/topic/nodes";
-//获取节点信息
-export const API_Topic_Node = "/api/topic/node";
-//发表话题
-export const API_Topic_Create = "/api/topic/create";
-//获取编辑话题详情 / 编辑话题 /{topicId}
-export const API_Topic_Edit = "/api/topic/edit";
-//删除话题 /${topicId}
-export const API_Topic_Delete = "/api/topic/delete";
-//设置推荐 /{topicId}
-export const API_Topic_Recommend = "/api/topic/recommend";
-//设置置顶 /{topicId}
-export const API_Topic_Sticky = "/api/topic/sticky";
-//获取话题详情 /{topicId}
-export const API_Topic = "/api/topic";
-//最近点赞用户 /{topicId}
-export const API_Topic_RecentLikes = "/api/topic/recentlikes";
-//用户帖子列表
-export const API_Topic_User_Topics = "/api/topic/user_topics";
-//标签帖子列表
-export const API_Topic_Tag_Topics = "/api/topic/tag_topics";
-//收藏话题 /{topicId}
-export const API_Topic_Favorite = "/api/topic/favorite";
-//话题列表（首页主流）
-export const API_Topic_Topics = "/api/topic/topics";
-//最新帖子（可用于“最新热点”）
-export const API_Topic_Recent = "/api/topic/recent";
-//获取隐藏内容
-export const API_Topic_Hide_Content = "/api/topic/hide_content";
+
+
+
+//上传图片
+export const API_Upload_Image= "/api/upload/image";
+//上传文件
+export const API_Upload_File = "/api/upload/file";
+

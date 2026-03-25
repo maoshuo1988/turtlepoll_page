@@ -1,11 +1,49 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Repeat2, Share, BarChart2, MoreHorizontal, BadgeCheck, Bookmark } from 'lucide-react';
-import type { ForumPost as ForumPostType } from '../../../data/mock_data';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/zh-cn';
+import type { TopicResponse } from '@/hook/topicType';
 import { FORUM_TAGS } from '../../../data/mock_data';
 
-interface ForumPostProps {
-  post: ForumPostType;
+dayjs.extend(relativeTime);
+dayjs.locale('zh-cn');
+
+export type TopicPostTag = '讨论' | '爆料' | '分析';
+
+type ForumComment = {
+  id: string;
+  content: string;
+  likes: number;
+  time: string;
+  author: {
+    name: string;
+    handle: string;
+    avatar: string;
+    avatarUrl?: string;
+  };
+};
+
+export type TopicPostCardData = Partial<TopicResponse> & {
+  id: string;
+  tag?: TopicPostTag;
+  likes?: number;
+  content?: string;
+  time?: string;
+  images?: string[];
+  comments?: ForumComment[];
+  author?: {
+    name: string;
+    handle: string;
+    avatar: string;
+    avatarUrl?: string;
+    verified?: boolean;
+  };
+};
+
+interface TopicPostCardProps {
+  post: TopicPostCardData;
   index: number;
   onLike?: (postId: string) => void | Promise<void>;
   onUnlike?: (postId: string) => void | Promise<void>;
@@ -18,6 +56,20 @@ const formatCount = (n: number) => {
   if (n >= 10000) return `${(n / 10000).toFixed(1)}万`;
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
   return n > 0 ? String(n) : '';
+};
+
+const formatTopicTime = (createTime?: number, fallbackTime?: string) => {
+  if (fallbackTime) return fallbackTime;
+  if (!createTime) return '刚刚';
+  return dayjs(createTime).fromNow();
+};
+
+const resolveTag = (post: TopicPostCardData): TopicPostTag => {
+  if (post.tag) return post.tag;
+  const firstTag = post.tags?.[0]?.name ?? '';
+  if (post.recommend || /爆料|独家|快讯/.test(firstTag)) return '爆料';
+  if (/分析|研判|复盘/.test(firstTag)) return '分析';
+  return '讨论';
 };
 
 /* ── Image Grid (X / Twitter style) ── */
@@ -99,7 +151,7 @@ const ActionBtn: React.FC<{
 );
 
 /* ── Main Post Card ── */
-export const ForumPostCard: React.FC<ForumPostProps> = ({
+export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   post,
   index,
   onLike,
@@ -114,10 +166,24 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
   const [liked, setLiked] = useState(Boolean(post.liked));
   const [bookmarked, setBookmarked] = useState(Boolean(post.favorited));
 
-  const commentCount = typeof post.commentCount === 'number' ? post.commentCount : post.comments.length;
-  const viewCount = typeof post.viewCount === 'number' ? post.viewCount : post.likes * 14 + post.comments.length * 42;
+  const nickname = post.user?.nickname || post.user?.username || post.author?.name || '匿名用户';
+  const handleSeed = post.user?.username || post.user?.id || post.author?.handle || nickname;
+  const handle = handleSeed.startsWith('@') ? handleSeed : `@${handleSeed}`;
+  const avatarText = post.author?.avatar || nickname.slice(0, 1).toUpperCase();
+  const avatarUrl = post.user?.avatar || post.user?.smallAvatar || post.author?.avatarUrl;
+  const content = post.content || [post.title, post.summary].filter(Boolean).join('\n').trim() || '该帖子暂无正文内容';
+  const images =
+    post.images ??
+    post.imageList?.map((item) => item.url || item.preview).filter((item): item is string => Boolean(item)) ??
+    [];
+  const comments = post.comments ?? [];
+  const tag = resolveTag(post);
+  const displayTime = formatTopicTime(post.createTime, post.time);
+  const displayLikes = post.likeCount ?? post.likes ?? 0;
+  const commentCount = typeof post.commentCount === 'number' ? post.commentCount : comments.length;
+  const viewCount = typeof post.viewCount === 'number' ? post.viewCount : displayLikes * 14 + comments.length * 42;
   const canReply = typeof onAddComment === 'function';
-  const hasCommentThread = post.comments.length > 0 || canReply;
+  const hasCommentThread = comments.length > 0 || canReply;
 
   const handleLike = async () => {
     if (liked) {
@@ -148,9 +214,9 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
     setReplyText('');
   };
 
-  const likeBase = post.likes - (post.liked ? 1 : 0);
+  const likeBase = displayLikes - (post.liked ? 1 : 0);
   const likeCount = likeBase + (liked ? 1 : 0);
-  const canExpandText = post.content.length > 52;
+  const canExpandText = content.length > 52;
 
   return (
     <motion.article
@@ -163,10 +229,10 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
         {/* Avatar */}
         <div className="shrink-0 pt-0.5">
           <div className="legacy-forum-post-avatar w-15 h-15 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl cursor-pointer hover:opacity-80 transition-opacity">
-            {post.author.avatarUrl ? (
-              <img src={post.author.avatarUrl} alt={post.author.name} className="h-full w-full rounded-full object-cover" />
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={nickname} className="h-full w-full rounded-full object-cover" />
             ) : (
-              post.author.avatar
+              avatarText
             )}
           </div>
         </div>
@@ -177,17 +243,17 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2 min-w-0 flex-wrap">
               <span className="text-[15px] font-bold text-slate-900 dark:text-rdark-text truncate cursor-pointer hover:underline">
-                {post.author.name}
+                {nickname}
               </span>
-              {post.author.verified && (
+              {Boolean(post.recommend || post.author?.verified) && (
                 <BadgeCheck size={16} className="text-blue-500 shrink-0" fill="currentColor" stroke="white" />
               )}
               <span className="text-[14px] text-slate-500 dark:text-rdark-text2 truncate">
-                {post.author.handle}
+                {handle}
               </span>
               <span className="text-slate-400 dark:text-rdark-text2">·</span>
               <span className="text-[14px] text-slate-500 dark:text-rdark-text2 cursor-pointer hover:underline shrink-0">
-                {post.time}
+                {displayTime}
               </span>
             </div>
             <button className="p-1.5 -mr-1.5 -mt-0.5 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-slate-400 dark:text-rdark-text2 hover:text-blue-500 cursor-pointer border-0 bg-transparent transition-colors shrink-0">
@@ -196,13 +262,19 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           </div>
 
           {/* Tag badge */}
-          <span className={`inline-block text-[10px] md:text-[11px] font-semibold px-2 !py-1 md:!py-2 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[post.tag] ?? FORUM_TAGS['讨论']}`}>
-            #{post.tag}
+          <span className={`inline-block text-[10px] md:text-[11px] font-semibold px-2 !py-1 md:!py-2 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[tag] ?? FORUM_TAGS['讨论']}`}>
+            #{tag}
           </span>
+
+          {post.title && (
+            <div className="text-[15px] font-semibold text-slate-900 dark:text-rdark-text">
+              {post.title}
+            </div>
+          )}
 
           {/* Post text */}
           <p className={`legacy-forum-post-text !py-1.5 md:!py-2 text-[14px] md:text-[15px] text-slate-900 dark:text-rdark-text leading-[1.5] whitespace-pre-wrap ${textExpanded ? '' : 'line-clamp-2 md:line-clamp-none'}`}>
-            {post.content}
+            {content}
           </p>
           {canExpandText && (
             <button
@@ -215,7 +287,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
           )}
 
           {/* Images */}
-          {post.images && post.images.length > 0 && <ImageGrid images={post.images} />}
+          {images.length > 0 && <ImageGrid images={images} />}
 
           {/* Action bar */}
           <div className="legacy-forum-post-actions flex items-center !mt-3 md:!mt-4 -ml-1 md:-ml-2 max-w-full md:max-w-[450px] gap-1.5 md:gap-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
@@ -230,7 +302,7 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
             />
             <ActionBtn
               icon={<Repeat2 size={17} className="group-hover:text-green-500 transition-colors" />}
-              count={formatCount(Math.floor(post.likes * 0.3))}
+              count={formatCount(Math.floor(displayLikes * 0.3))}
               hoverColor="bg-green-50 dark:bg-green-900/20"
             />
             <button
@@ -291,10 +363,10 @@ export const ForumPostCard: React.FC<ForumPostProps> = ({
                   {!hasCommentThread && (
                     <p className="text-[13px] text-slate-400 dark:text-rdark-text2 mb-3">评论详情接口还没接入，这里先展示评论数。</p>
                   )}
-                  {hasCommentThread && post.comments.length === 0 && (
+                  {hasCommentThread && comments.length === 0 && (
                     <p className="text-[13px] text-slate-400 dark:text-rdark-text2 mb-3">还没有回复，来抢沙发！</p>
                   )}
-                  {post.comments.map((c) => (
+                  {comments.map((c) => (
                     <div key={c.id} className="flex gap-2.5 py-3 border-b border-slate-50 dark:border-rdark-border/40 last:border-b-0">
                       <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-sm shrink-0 cursor-pointer">
                         {c.author.avatarUrl ? (

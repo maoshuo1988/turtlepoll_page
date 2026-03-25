@@ -331,7 +331,7 @@ function UserPanel({
           </div>
           <div className="min-w-0">
             <div className="text-[18px] text-zinc-400">当前已登录</div>
-            <div className="truncate text-[42px] font-bold tracking-[-0.04em]">{userinfo.nickname}</div>
+            <div className="truncate text-[24px] font-bold tracking-[-0.04em]">{userinfo.email}</div>
           </div>
         </div>
 

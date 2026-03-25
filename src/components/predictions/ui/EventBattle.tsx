@@ -2,12 +2,13 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThumbsUp, Send, Flame, Sparkles, Zap, MessageCircleReply } from 'lucide-react';
 import CountUp from 'react-countup';
-import type { NewsItem, EventComment, EventReply, CommentSide } from '../../../data/mock_data';
+import type { EventComment, EventReply, CommentSide } from '../../../data/mock_data';
 import { mockEventComments } from '../../../data/mock_data';
 import { BattleReport } from './BattleReport';
+import type { PredictionCardItem } from './predictionCard';
 
 interface EventBattleProps {
-  news: NewsItem;
+  news: PredictionCardItem;
   onBack: () => void;
   userSide: 'A' | 'B' | null;
   onBet?: (newsId: string, option: 'A' | 'B', odds: number) => void;
@@ -1355,7 +1356,7 @@ const MvpAvatar = React.memo(({
 
 /* ══════════ BattleHeader (hero image + PK bar merged) ══════════ */
 const BattleHeader: React.FC<{
-  news: NewsItem;
+  news: PredictionCardItem;
   leftPower: number;
   rightPower: number;
   leftSuccess: number;

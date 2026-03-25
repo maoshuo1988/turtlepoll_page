@@ -3,117 +3,80 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
 import { ForumCompose } from './ForumCompose';
-import { ForumPostCard } from './ForumPost';
-import type { ForumPost } from '../../../data/mock_data';
-import type { TopicNodeNav, TopicResponse } from '../../../hook/types';
-import {
-  useInfiniteRequestTopicTopics,
-  useRequestCreateTopic,
-  useRequestFavoriteTopic,
-  useRequestLikeEntity,
-  useRequestTopicNodeNavs,
-  useRequestUnlikeEntity,
-} from '../../../hook/useRequest';
+import { TopicPostCard } from './TopicPostCard';
+import type { TopicPostTag } from './TopicPostCard';
+import type { TopicNodeNav } from '@/hook/topicType';
+import { useInfiniteRequestTopicTopics, useRequestCreateTopic, useRequestFavoriteTopic, useRequestLikeEntity, useRequestTopicNodeNavs, useRequestUnlikeEntity } from '@/hook/useTopicRequest';
+
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
 
-type FeedTab = 'recommend' | 'following';
-
-const tagFromTopic = (topic: TopicResponse): ForumPost['tag'] => {
-  const firstTag = topic.tags?.[0]?.name ?? '';
-  if (topic.recommend || /爆料|独家|快讯/.test(firstTag)) return '爆料';
-  if (/分析|研判|复盘/.test(firstTag)) return '分析';
-  return '讨论';
-};
-
-const formatTopicTime = (createTime?: number) => {
-  if (!createTime) return '刚刚';
-  return dayjs.unix(createTime).fromNow();
-};
-
-const toForumPost = (topic: TopicResponse): ForumPost => {
-  const nickname = topic.user?.nickname || topic.user?.username || '匿名用户';
-  const handleSeed = topic.user?.username || topic.user?.id || nickname;
-  const handle = handleSeed.startsWith('@') ? handleSeed : `@${handleSeed}`;
-  const avatarText = nickname.slice(0, 1).toUpperCase();
-  const summaryContent = [topic.title, topic.summary, topic.content]
-    .filter(Boolean)
-    .join('\n')
-    .trim();
-
-  return {
-    id: topic.id,
-    author: {
-      name: nickname,
-      handle,
-      avatar: avatarText,
-      avatarUrl: topic.user?.avatar || topic.user?.smallAvatar,
-      verified: Boolean(topic.recommend),
-      title: topic.node?.name,
-    },
-    tag: tagFromTopic(topic),
-    title: topic.title,
-    content: topic.content || summaryContent || '该帖子暂无正文内容',
-    images: topic.imageList?.map((item) => item.url || item.preview).filter(Boolean) as string[] | undefined,
-    time: formatTopicTime(topic.createTime),
-    likes: topic.likeCount ?? 0,
-    comments: [],
-    commentCount: topic.commentCount ?? 0,
-    viewCount: topic.viewCount ?? 0,
-    liked: Boolean(topic.liked),
-    favorited: Boolean(topic.favorited),
-    sticky: Boolean(topic.sticky),
-    recommend: Boolean(topic.recommend),
-    ipLocation: topic.ipLocation,
-  };
-};
-
-const getCreateNodeId = (navs: TopicNodeNav[] | undefined, activeNodeId: number) => {
-  if (activeNodeId > 0) return activeNodeId;
-  const firstCustomNode = navs?.find((node) => node.id > 0);
-  return firstCustomNode?.id ?? 1;
+type ForumTopTab = TopicNodeNav & {
+  key: string;
+  label: string;
+  nodeId: number;
 };
 
 export const Forum: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<FeedTab>('recommend');
+  const [activeTab, setActiveTab] = useState<string>('latest');
   const nodeNavsQuery = useRequestTopicNodeNavs();
+
+  
   const createTopicMutation = useRequestCreateTopic();
   const favoriteTopicMutation = useRequestFavoriteTopic();
   const likeEntityMutation = useRequestLikeEntity();
   const unlikeEntityMutation = useRequestUnlikeEntity();
 
-  const nodeNavs = useMemo<TopicNodeNav[]>(
-    () => (Array.isArray(nodeNavsQuery.data) ? nodeNavsQuery.data : []),
-    [nodeNavsQuery.data],
-  );
+  const topTabs = useMemo<ForumTopTab[]>(() => {
+    const navs = nodeNavsQuery.data ?? [];
+    const latestNav = navs.find((nav) => nav.id === 0 || nav.name === '最新');
+    const recommendNav = navs.find((nav) => nav.id === -1 || nav.name === '推荐');
+    const followingNav = navs.find((nav) => nav.id === -2 || nav.name === '关注');
 
-  const activeNodeId = activeTab === 'recommend' ? -1 : -2;
+    // 顶部展示内置流和默认节点，接口返回的节点信息完整保留，便于直接使用 logo/description。
+    const builtInTabs: ForumTopTab[] = [
+      { ...(latestNav ?? { id: 0, name: '最新' }), key: 'latest', label: latestNav?.name || '最新', nodeId: 0 },
+      { ...(recommendNav ?? { id: -1, name: '推荐' }), key: 'recommend', label: recommendNav?.name || '推荐', nodeId: -1 },
+      { ...(followingNav ?? { id: -2, name: '关注' }), key: 'following', label: followingNav?.name || '关注', nodeId: -2 },
+    ];
+   
+
+    return [...builtInTabs];
+  }, [nodeNavsQuery.data]);
 
   useEffect(() => {
-    if (nodeNavs.length === 0) return;
-    const stillExists = nodeNavs.some((node) => node.id === activeNodeId);
-    if (!stillExists) {
-      setActiveTab('recommend');
+    if (!topTabs.some((tab) => tab.key === activeTab) && topTabs.length > 0) {
+      setActiveTab(topTabs[0].key);
     }
-  }, [activeNodeId, nodeNavs]);
+  }, [activeTab, topTabs]);
+
+  // tab 只负责切换 nodeId，下面的列表请求会跟着这个值变化。
+  const activeNodeId = topTabs.find((tab) => tab.key === activeTab)?.nodeId ?? 0;
+  const createNodeId = useMemo(() => {
+    // 发帖需要落到真实节点，内置流（最新/推荐/关注）没有可写 nodeId。
+    if (activeNodeId > 0) return activeNodeId;
+    const firstCustomNode = (nodeNavsQuery.data ?? []).find((nav) => nav.id > 0);
+    return firstCustomNode?.id ?? 1;
+  }, [activeNodeId, nodeNavsQuery.data]);
+
+
 
   const topicFeedQuery = useInfiniteRequestTopicTopics(activeNodeId);
 
   const posts = useMemo(
-    () => (topicFeedQuery.data?.pages ?? []).flatMap((page) => page.results ?? []).map(toForumPost),
+    () => (topicFeedQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
     [topicFeedQuery.data],
   );
 
-  const createNodeId = useMemo(() => getCreateNodeId(nodeNavs, activeNodeId), [activeNodeId, nodeNavs]);
 
-  const handleCreatePost = async (content: string, tag: ForumPost['tag'], images: string[]) => {
+  const handleCreatePost = async (content: string, tag: TopicPostTag, images: string[]) => {
     await createTopicMutation.mutateAsync({
       type: 0,
       nodeId: createNodeId,
-      title: '',
+      title: content.slice(0, 40),
       content,
-      contentType: 'text',
+      contentType: 'markdown',
       hideContent: '',
       tags: [tag],
       imageList: images.map((url) => ({ url })),
@@ -122,6 +85,8 @@ export const Forum: React.FC = () => {
       captchaCode: '',
       captchaProtocol: 0,
     });
+
+    await topicFeedQuery.refetch();
   };
 
   const handleToggleFavorite = async (postId: string, _nextFavorited: boolean) => {
@@ -140,18 +105,18 @@ export const Forum: React.FC = () => {
     <div className="legacy-forum relative min-h-screen border-x border-white/8 bg-[#090909] dark:border-rdark-border dark:bg-rdark-card">
       <div className="legacy-forum-tabs sticky top-0 z-30 w-full border-b border-white/8 bg-[radial-gradient(circle_at_30%_0%,rgba(255,255,255,0.05),transparent_44%),linear-gradient(180deg,#0b0b0c_0%,#101114_100%)] backdrop-blur-xl dark:border-rdark-border">
         <div className="legacy-forum-tabs-row mx-auto flex h-[50px]">
-          {(['recommend', 'following'] as const).map((tab) => (
+          {topTabs.map((tab) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
               className={`legacy-forum-tab relative flex-1 cursor-pointer border-0 bg-transparent py-3.5 text-[16px] tracking-[0.02em] transition-colors ${
-                activeTab === tab
+                activeTab === tab.key
                   ? 'legacy-forum-tab-on font-extrabold text-[#e6f7ff]'
                   : 'font-semibold text-zinc-500 hover:text-zinc-300'
               }`}
             >
-              {tab === 'recommend' ? '推荐' : '关注'}
-              {activeTab === tab && (
+              {tab.label}
+              {activeTab === tab.key && (
                 <div className="!mt-2 legacy-forum-tab-indicator absolute bottom-0 left-1/2 h-[3px] w-[112px] -translate-x-1/2 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.28)]" />
               )}
             </button>
@@ -167,6 +132,10 @@ export const Forum: React.FC = () => {
       </div>
 
       <div>
+        {topicFeedQuery.isFetching && posts.length > 0 && (
+          <div className="px-5 py-3 text-center text-[13px] text-zinc-500">正在刷新当前分区...</div>
+        )}
+
         {topicFeedQuery.isLoading && posts.length === 0 && (
           <div className="px-5 py-8 text-center text-[14px] text-zinc-400">正在加载社区广场...</div>
         )}
@@ -182,7 +151,7 @@ export const Forum: React.FC = () => {
         )}
 
         {posts.map((post, i) => (
-          <ForumPostCard
+          <TopicPostCard
             key={post.id}
             post={post}
             index={i}

@@ -1,13 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import type { HotTag, HotTopic } from '../../../data/mock_data';
-import { mockHotTags } from '../../../data/mock_data';
+import type { PredictionCardItem } from '../../predictions/ui/predictionCard';
+import { useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type SidebarHotTopic } from './sidebarHotData';
 
 interface SidebarHotTopicsPanelProps {
   selectedTag: string | null;
-  hotTopics?: HotTopic[];
-  onTopicClick?: (topic: HotTopic) => void;
-  onFallbackTopicClick: () => void;
-  onTagClick: (tag: HotTag) => void;
+  newsByMarketId: Map<number, PredictionCardItem>;
+  onViewChange: (view: 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory', topic?: SidebarHotTopic, tag?: SidebarHotTag) => void;
   onTabChange?: (tab: 'hot' | 'mine') => void;
 }
 
@@ -17,13 +15,13 @@ function fmtHeat(n: number): string {
 
 export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
   selectedTag,
-  hotTopics,
-  onTopicClick,
-  onFallbackTopicClick,
-  onTagClick,
+  newsByMarketId,
+  onViewChange,
   onTabChange,
 }) => {
   const [tab, setTab] = useState<'mine' | 'hot'>('hot');
+  const hotTopics = useSidebarHotTopics(newsByMarketId);
+  const hotTags = useSidebarHotTags();
   const rankedTopics = useMemo(() => [...(hotTopics ?? [])].sort((a, b) => b.heat - a.heat), [hotTopics]);
 
   const heatBadge = (rank: number) => {
@@ -110,7 +108,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
               <div
                 key={topic.rank}
                 className="group flex items-center gap-3 rounded-xl border border-transparent  transition-colors hover:border-white/8 hover:bg-[#15161a] dark:hover:border-rdark-border dark:hover:bg-rdark-input/70 xl:hover:border-transparent xl:hover:bg-transparent"
-                onClick={() => (onTopicClick ? onTopicClick(topic) : onFallbackTopicClick())}
+                onClick={() => onViewChange('predictions', topic)}
               >
                 <span className={`w-5 text-center text-[16px] font-extrabold leading-none ${rank <= 3 ? 'text-orange-400' : 'text-slate-400 dark:text-rdark-text2'}`}>
                   {rank}
@@ -129,10 +127,10 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
       ) : (
         <div className="space-y-1">
           <div className="grid gap-2">
-            {mockHotTags.map((t) => (
+            {hotTags.map((t) => (
               <button
                 key={t.tag}
-                onClick={() => onTagClick(t)}
+                onClick={() => onViewChange('predictions', undefined, t)}
                 className={`w-full rounded-xl border  text-left text-[13px] font-medium truncate transition-all
                   ${selectedTag === t.tag
                     ? 'border-slate-300 bg-slate-100 text-slate-900 dark:border-rdark-border dark:bg-rdark-input dark:text-rdark-text'
