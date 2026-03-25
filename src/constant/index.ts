@@ -1,4 +1,4 @@
-export const SERVER_API = "http://52.77.212.173:8082";
+export const SERVER_API = "https://turtle.cloud-ip.cc";
 
 
 
