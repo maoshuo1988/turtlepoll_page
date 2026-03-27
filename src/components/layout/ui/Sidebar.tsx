@@ -131,6 +131,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onCloseChat={() => setChatOpen(false)}
           onViewPet={() => onViewChange('pet')}
           onOpenProfile={() => onViewChange('profile')}
+          onOpenActivePredictions={() => onViewChange('activePredictions')}
           onViewChange={handlePanelViewChange}
           onNavClick={handleNavClick}
         />
@@ -152,6 +153,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onCloseChat={() => setChatOpen(false)}
               onViewPet={() => onViewChange('pet')}
               onOpenProfile={() => onViewChange('profile')}
+              onOpenActivePredictions={() => onViewChange('activePredictions')}
             />
           </div>
 

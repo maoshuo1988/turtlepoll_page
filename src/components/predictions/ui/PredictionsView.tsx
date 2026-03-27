@@ -13,7 +13,7 @@ interface PredictionsViewProps {
 
 export const PredictionsView: React.FC<PredictionsViewProps> = ({ selectedTag, onBetSuccess, onRequireAuth, onEnterBattle }) => {
   return (
-    <section className="view-shell view-rhythm view-predictions w-full max-w-none mx-0 grid gap-4">
+    <section className="view-shell view-rhythm view-predictions w-full max-w-none mx-0 grid gap-4 px-3 pb-1 md:gap-4 md:px-0 md:pb-0">
       <HeroPrediction selectedTag={selectedTag} onBetSuccess={onBetSuccess} onRequireAuth={onRequireAuth} onEnterBattle={onEnterBattle} />
       <NewsFeed selectedTag={selectedTag} onBetSuccess={onBetSuccess} onRequireAuth={onRequireAuth} onEnterBattle={onEnterBattle} />
     </section>

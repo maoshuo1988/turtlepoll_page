@@ -19,6 +19,7 @@ export type PredictionCardItem = {
   status: 'open' | 'closed' | 'settled';
   hasBet?: boolean;
   betSettleResult?: 'WIN' | 'LOSE' | string;
+  closeTime?: number;
 };
 
 export const PREDICTION_TYPE_LABELS: Record<PredictionCardType, string> = {
@@ -71,6 +72,7 @@ export function mapMarketToPredictionCard(item: FootballMarketAggregate): Predic
           : 'closed',
     hasBet: item.hasBet ?? false,
     betSettleResult: item.betSettleResult,
+    closeTime: item.market.closeTime,
   };
 }
 

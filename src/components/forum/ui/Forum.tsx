@@ -7,6 +7,7 @@ import { TopicPostCard } from './TopicPostCard';
 import type { TopicPostTag } from './TopicPostCard';
 import type { TopicNodeNav } from '@/hook/topicType';
 import { useInfiniteRequestTopicTopics, useRequestCreateTopic, useRequestFavoriteTopic, useRequestLikeEntity, useRequestTopicNodeNavs, useRequestUnlikeEntity } from '@/hook/useTopicRequest';
+import type { PredictionCardItem } from '../../predictions/ui/predictionCard';
 
 
 dayjs.extend(relativeTime);
@@ -18,7 +19,49 @@ type ForumTopTab = TopicNodeNav & {
   nodeId: number;
 };
 
-export const Forum: React.FC = () => {
+interface ForumProps {
+  newsByMarketId?: Map<number, PredictionCardItem>;
+  onOpenLinkedPrediction?: (item: PredictionCardItem) => void;
+}
+
+type PredictionContextLike = {
+  marketId?: number;
+  eventName?: string;
+  detail?: string;
+  imageUrl?: string;
+  proText?: string;
+  conText?: string;
+  proVoteCount?: number;
+  conVoteCount?: number;
+};
+
+function buildLinkedPrediction(
+  post: { title?: string; summary?: string; context?: PredictionContextLike | null },
+  matched?: PredictionCardItem,
+): PredictionCardItem | null {
+  if (matched) return matched;
+  const context = post.context;
+  if (!context || typeof context.marketId !== 'number') return null;
+
+  return {
+    id: `market-${context.marketId}`,
+    marketId: context.marketId,
+    title: context.eventName || post.title || `事件 #${context.marketId}`,
+    summary: context.detail || post.summary || '进入事件页查看最新赔率、讨论和下注入口。',
+    image: context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
+    votes: {
+      A: context.proVoteCount ?? 0,
+      B: context.conVoteCount ?? 0,
+    },
+    optionA: context.proText || '支持',
+    optionB: context.conText || '反对',
+    oddsA: 1.8,
+    oddsB: 1.8,
+    status: 'open',
+  };
+}
+
+export const Forum: React.FC<ForumProps> = ({ newsByMarketId, onOpenLinkedPrediction }) => {
   const [activeTab, setActiveTab] = useState<string>('latest');
   const nodeNavsQuery = useRequestTopicNodeNavs();
 
@@ -102,36 +145,36 @@ export const Forum: React.FC = () => {
   };
 
   return (
-    <div className="legacy-forum relative min-h-screen border-x border-white/8 bg-[#090909] dark:border-rdark-border dark:bg-rdark-card">
-      <div className="legacy-forum-tabs sticky top-0 z-30 w-full border-b border-white/8 bg-[radial-gradient(circle_at_30%_0%,rgba(255,255,255,0.05),transparent_44%),linear-gradient(180deg,#0b0b0c_0%,#101114_100%)] backdrop-blur-xl dark:border-rdark-border">
-        <div className="legacy-forum-tabs-row mx-auto flex h-[50px]">
+    <div className="legacy-forum relative min-h-screen bg-[#080808] md:border-x md:border-white/8 md:bg-[#090909] dark:md:border-rdark-border dark:md:bg-rdark-card">
+      <div className="legacy-forum-tabs sticky top-[54px] z-30 w-full bg-[#080808]/94 px-3 pb-2 backdrop-blur-xl md:top-0 md:border-b md:border-white/8 md:bg-[radial-gradient(circle_at_30%_0%,rgba(255,255,255,0.05),transparent_44%),linear-gradient(180deg,#0b0b0c_0%,#101114_100%)] md:px-0 md:pb-0 dark:md:border-rdark-border">
+        <div className="legacy-forum-tabs-row mx-auto flex h-[46px] rounded-full border border-white/8 bg-[#111214]/92 p-1 shadow-[0_8px_20px_rgba(0,0,0,0.28)] md:h-[50px] md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none">
           {topTabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`legacy-forum-tab relative flex-1 cursor-pointer border-0 bg-transparent py-3.5 text-[16px] tracking-[0.02em] transition-colors ${
+              className={`legacy-forum-tab relative flex-1 cursor-pointer rounded-full border-0 bg-transparent py-2 text-[15px] tracking-[0.01em] transition-colors md:py-3.5 md:text-[16px] md:rounded-none ${
                 activeTab === tab.key
-                  ? 'legacy-forum-tab-on font-extrabold text-[#e6f7ff]'
+                  ? 'legacy-forum-tab-on bg-white/8 font-extrabold text-[#e6f7ff] md:bg-transparent md:text-[#e6f7ff]'
                   : 'font-semibold text-zinc-500 hover:text-zinc-300'
               }`}
             >
               {tab.label}
               {activeTab === tab.key && (
-                <div className="!mt-2 legacy-forum-tab-indicator absolute bottom-0 left-1/2 h-[3px] w-[112px] -translate-x-1/2 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.28)]" />
+                <div className="!mt-2 legacy-forum-tab-indicator absolute bottom-0 left-1/2 hidden h-[3px] w-[112px] -translate-x-1/2 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.28)] md:block" />
               )}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="border-b border-white/8 bg-[radial-gradient(circle_at_25%_0%,rgba(255,255,255,0.04),transparent_42%),linear-gradient(180deg,#101114_0%,#0d0d0f_100%)] px-3 py-2.5">
+      <div className="px-3 pb-2 pt-0 md:border-b md:border-white/8 md:bg-[radial-gradient(circle_at_25%_0%,rgba(255,255,255,0.04),transparent_42%),linear-gradient(180deg,#101114_0%,#0d0d0f_100%)] md:px-3 md:py-2.5">
         <ForumCompose
           onPost={handleCreatePost}
           posting={createTopicMutation.isLoading}
         />
       </div>
 
-      <div>
+      <div className="space-y-3 pb-3 md:space-y-0 md:pb-0">
         {topicFeedQuery.isFetching && posts.length > 0 && (
           <div className="px-5 py-3 text-center text-[13px] text-zinc-500">正在刷新当前分区...</div>
         )}
@@ -150,16 +193,25 @@ export const Forum: React.FC = () => {
           <div className="px-5 py-10 text-center text-[14px] text-zinc-500">这个分区还没有内容，发第一条试试。</div>
         )}
 
-        {posts.map((post, i) => (
-          <TopicPostCard
-            key={post.id}
-            post={post}
-            index={i}
-            onLike={handleLike}
-            onUnlike={handleUnlike}
-            onToggleFavorite={handleToggleFavorite}
-          />
-        ))}
+        {posts.map((post, i) => {
+          const linkedPrediction = buildLinkedPrediction(
+            post,
+            typeof post.context?.marketId === 'number' ? newsByMarketId?.get(post.context.marketId) : undefined,
+          );
+
+          return (
+            <TopicPostCard
+              key={post.id}
+              post={post}
+              index={i}
+              linkedPrediction={linkedPrediction}
+              onOpenLinkedPrediction={onOpenLinkedPrediction}
+              onLike={handleLike}
+              onUnlike={handleUnlike}
+              onToggleFavorite={handleToggleFavorite}
+            />
+          );
+        })}
 
         <div className="legacy-forum-loadmore py-8 text-center">
           {topicFeedQuery.hasNextPage ? (

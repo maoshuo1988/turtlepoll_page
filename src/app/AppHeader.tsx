@@ -30,6 +30,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <span className="block truncate bg-gradient-to-r from-white to-[#a3a3a3] bg-clip-text text-[19px] font-extrabold tracking-[-0.03em] text-transparent md:text-[22px]">
                 龟投
               </span>
+              <div className="-mt-0.5 text-[9px] tracking-[0.12em] text-zinc-500 md:hidden">
+                社区广场
+              </div>
               <div className="-mt-0.5 hidden text-[9px] tracking-[0.18em] text-zinc-500 dark:text-rdark-text2 md:block">
                 NEWS · MARKET · PET
               </div>

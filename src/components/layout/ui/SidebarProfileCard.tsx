@@ -18,6 +18,7 @@ interface SidebarProfileCardProps {
   onCloseChat: () => void;
   onViewPet: () => void;
   onOpenProfile: () => void;
+  onOpenActivePredictions: () => void;
 }
 
 export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
@@ -33,6 +34,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   onCloseChat,
   onViewPet,
   onOpenProfile,
+  onOpenActivePredictions,
 }) => {
   // 直接订阅全局金币缓存，其他地方只要更新 coinMe，这里会自动同步
   const coinMe = useRequestCoinMe();
@@ -106,10 +108,14 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
                 <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">{totalPredictions}</div>
                 <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">已预测</div>
               </div>
-              <div className="rounded-lg bg-[#141518] !py-2.5 text-center dark:bg-rdark-input">
+              <button
+                type="button"
+                onClick={onOpenActivePredictions}
+                className="rounded-lg bg-[#141518] !py-2.5 text-center transition-colors hover:bg-[#1a1c20] dark:bg-rdark-input dark:hover:bg-rdark-hover"
+              >
                 <div className="mb-1 text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">{activePredictions}</div>
                 <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">进行中</div>
-              </div>
+              </button>
             </div>
           </div>
 

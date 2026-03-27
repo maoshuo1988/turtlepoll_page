@@ -127,7 +127,7 @@ export const Shop: React.FC<ShopProps> = ({
   const ownedSkins = skins.filter((s) => s.owned);
 
   return (
-    <div className="legacy-shop-page space-y-4 md:space-y-5 !mt-3 md:!mt-4">
+    <div className="legacy-shop-page space-y-3 px-4 md:space-y-5 md:px-0 !mt-3 md:!mt-4">
       {/* ━━━ Header ━━━ */}
       <div className={`${card} !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
         <div className="flex items-center justify-between gap-2">
@@ -137,20 +137,218 @@ export const Shop: React.FC<ShopProps> = ({
           >
             <ArrowLeft size={16} className="sm:w-[18px] sm:h-[18px]" /> 返回
           </button>
-          <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-semibold text-xs sm:text-sm shrink-0 rounded-lg bg-amber-50/80 dark:bg-amber-900/20 px-2 py-1">
+          <div className="hidden md:flex items-center gap-1 text-amber-600 dark:text-amber-400 font-semibold text-xs sm:text-sm shrink-0 rounded-lg bg-amber-50/80 dark:bg-amber-900/20 px-2 py-1">
             <Coins size={14} className="sm:w-4 sm:h-4" /> {balance.toLocaleString()}
           </div>
         </div>
         <h2 className="!mt-2 text-base sm:text-lg md:text-lg font-bold text-slate-800 dark:text-rdark-text text-center">
           抽奖 & 商店
         </h2>
+        <div className="mt-3 grid grid-cols-2 gap-2 md:hidden">
+          <div className="rounded-[18px] border border-slate-200 bg-[#f8fafc] px-3 py-2.5 dark:border-white/10 dark:bg-[#121820]">
+            <div className="text-[11px] font-semibold text-slate-500 dark:text-rdark-text2">当前龟币</div>
+            <div className="mt-1 flex items-center gap-1 text-[17px] font-black text-amber-600 dark:text-amber-400">
+              <Coins size={15} /> {balance.toLocaleString()}
+            </div>
+          </div>
+          <div className="rounded-[18px] border border-slate-200 bg-[#f8fafc] px-3 py-2.5 dark:border-white/10 dark:bg-[#121820]">
+            <div className="text-[11px] font-semibold text-slate-500 dark:text-rdark-text2">宠物体力</div>
+            <div className="mt-1 flex items-center gap-1 text-[17px] font-black text-rose-500 dark:text-rose-300">
+              <Heart size={15} /> {pet.stamina}/{pet.maxStamina}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:hidden">
+        <section className={`${card} overflow-hidden !px-0 !py-0`}>
+          <div className="border-b border-slate-100 px-4 py-3 dark:border-white/6">
+            <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">今日扭蛋</div>
+            <div className="mt-1 text-[12px] text-slate-500 dark:text-rdark-text2">像微博移动端卡片一样，主操作放中间，信息收在下面。</div>
+          </div>
+
+          <div className="px-4 py-4">
+            <div className="flex items-center gap-3">
+              <div className="grid h-[88px] w-[88px] shrink-0 place-items-center rounded-[24px] bg-gradient-to-br from-amber-100 via-orange-50 to-white text-[56px] shadow-[0_10px_24px_rgba(251,191,36,0.18)] dark:from-amber-900/30 dark:via-orange-900/15 dark:to-transparent">
+                {phase === 'reveal' && result ? result.avatar : '🥚'}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-[16px] font-black text-slate-800 dark:text-rdark-text">
+                  {phase === 'reveal' && result ? result.name : '孵化稀有龟皮肤'}
+                </div>
+                <div className="mt-1 text-[12px] leading-5 text-slate-500 dark:text-rdark-text2">
+                  {phase === 'reveal' && result
+                    ? isDuplicate
+                      ? `重复皮肤已返还 ${refundCoins} 龟币`
+                      : `恭喜获得 ${result.rarity} 品质新皮肤`
+                    : `每次消耗 ${GACHA_COST} 龟币，可能开出 N / R / SR / SSR。`}
+                </div>
+                <div className="mt-2 flex flex-wrap gap-1.5 text-[11px]">
+                  <span className="rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-600 dark:bg-white/[0.05] dark:text-rdark-text2">N 50%</span>
+                  <span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-blue-500 dark:bg-blue-500/10">R 30%</span>
+                  <span className="rounded-full bg-violet-50 px-2.5 py-1 font-semibold text-violet-500 dark:bg-violet-500/10">SR 15%</span>
+                  <span className="rounded-full bg-amber-50 px-2.5 py-1 font-semibold text-amber-500 dark:bg-amber-500/10">SSR 5%</span>
+                </div>
+              </div>
+            </div>
+
+            {(phase === 'heating' || phase === 'cracking') && (
+              <div className="mt-4">
+                <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-slate-500 dark:text-rdark-text2">
+                  <span>孵化进度</span>
+                  <span>{tempGlow}%</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                  <motion.div
+                    className="h-full rounded-full"
+                    style={{
+                      background: 'linear-gradient(90deg, #3b82f6 0%, #ef4444 100%)',
+                      width: `${tempGlow}%`,
+                    }}
+                    transition={{ duration: 0.05 }}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto] gap-2.5">
+              {phase === 'idle' ? (
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  onClick={doGacha}
+                  disabled={balance < GACHA_COST}
+                  className={`flex h-12 items-center justify-center rounded-2xl px-4 text-[15px] font-black text-white transition ${
+                    balance >= GACHA_COST
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 shadow-[0_10px_24px_rgba(245,158,11,0.28)]'
+                      : 'bg-slate-400 cursor-not-allowed'
+                  }`}
+                >
+                  <Coins size={15} className="mr-1.5" />
+                  花 {GACHA_COST} 龟币孵化
+                </motion.button>
+              ) : phase === 'reveal' ? (
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  onClick={resetGacha}
+                  className="flex h-12 items-center justify-center rounded-2xl bg-cyan-500 px-4 text-[15px] font-black text-white shadow-[0_10px_24px_rgba(6,182,212,0.24)]"
+                >
+                  继续孵化
+                </motion.button>
+              ) : (
+                <div className="flex h-12 items-center justify-center rounded-2xl bg-slate-100 text-[14px] font-bold text-amber-600 dark:bg-white/[0.05] dark:text-amber-400">
+                  孵化中...
+                </div>
+              )}
+
+              <div className="flex h-12 items-center rounded-2xl border border-slate-200 bg-[#f8fafc] px-3 text-[12px] font-bold text-slate-600 dark:border-white/10 dark:bg-[#121820] dark:text-rdark-text2">
+                已拥有 {ownedSkins.length}
+              </div>
+            </div>
+
+            {balance < GACHA_COST && phase === 'idle' && (
+              <p className="mt-2 text-[12px] text-rose-500">龟币不足，需要 {GACHA_COST} 龟币</p>
+            )}
+          </div>
+        </section>
+
+        <section className={`${card} overflow-hidden !px-0 !py-0`}>
+          <div className="border-b border-slate-100 px-4 py-3 dark:border-white/6">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">已获得形象</div>
+              <div className="text-[12px] font-semibold text-slate-500 dark:text-rdark-text2">{ownedSkins.length}/{skins.length}</div>
+            </div>
+          </div>
+          <div className="flex gap-3 overflow-x-auto px-4 py-4 snap-x snap-mandatory">
+            {skins.map((skin) => (
+              <div
+                key={skin.id}
+                className={`w-[112px] shrink-0 snap-start rounded-[22px] border px-3 py-4 text-center ${
+                  skin.owned
+                    ? 'border-slate-200 bg-[#fafbfd] dark:border-white/10 dark:bg-[#121820]'
+                    : 'border-slate-200/80 bg-slate-50/70 opacity-55 dark:border-white/8 dark:bg-white/[0.03]'
+                } ${skin.equipped ? 'ring-2 ring-cyan-400/70' : ''}`}
+              >
+                <div className="text-5xl">{skin.owned ? skin.avatar : '?'}</div>
+                <div className="mt-3 truncate text-[13px] font-bold text-slate-700 dark:text-rdark-text">
+                  {skin.owned ? skin.name : '未解锁'}
+                </div>
+                <div className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ${skin.owned ? RARITY_COLORS[skin.rarity] : 'text-slate-400'}`}>
+                  {skin.rarity}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className={`${card} overflow-hidden !px-0 !py-0`}>
+          <div className="border-b border-slate-100 px-4 py-3 dark:border-white/6">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">体力商店</div>
+              <div className="flex items-center gap-1 text-[12px] font-semibold text-rose-500 dark:text-rose-300">
+                <Heart size={13} />
+                {pet.stamina}/{pet.maxStamina}
+              </div>
+            </div>
+          </div>
+          <div className="px-4 py-4">
+            <div className="grid gap-3">
+              {shopApples.map((item) => {
+                const isFull = pet.stamina >= pet.maxStamina;
+                const cantAfford = balance < item.price;
+                const disabled = isFull || cantAfford;
+
+                return (
+                  <motion.button
+                    key={item.id}
+                    whileTap={disabled ? {} : { scale: 0.98 }}
+                    onClick={() => buyApple(item)}
+                    disabled={disabled}
+                    className={`relative overflow-hidden rounded-[20px] border px-3 py-3 text-left ${
+                      disabled
+                        ? 'border-slate-200 bg-slate-100/80 opacity-55 dark:border-white/8 dark:bg-white/[0.03]'
+                        : 'border-slate-200 bg-[#fafbfd] dark:border-white/10 dark:bg-[#121820]'
+                    }`}
+                  >
+                    {buyFlash === item.id && (
+                      <motion.div
+                        initial={{ opacity: 0.6 }}
+                        animate={{ opacity: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="absolute inset-0 rounded-[20px] bg-green-400/20"
+                      />
+                    )}
+                    <div className="flex items-center gap-3">
+                      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white text-[28px] shadow-sm dark:bg-white/[0.05]">
+                        {item.icon}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">{item.name}</div>
+                        <div className="mt-1 text-[12px] text-slate-500 dark:text-rdark-text2">补充 {item.effect.value} 点体力</div>
+                        <div className="mt-2 flex items-center gap-1 text-[13px] font-bold text-amber-600 dark:text-amber-400">
+                          <Coins size={14} />
+                          {item.price}
+                        </div>
+                      </div>
+                      <div className={`rounded-full px-3 py-1.5 text-[11px] font-bold ${disabled ? 'bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-300' : 'bg-[#ff8200] text-white'}`}>
+                        {isFull ? '已满' : cantAfford ? '不足' : '购买'}
+                      </div>
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </div>
+            {pet.stamina >= pet.maxStamina && (
+              <p className="mt-3 text-center text-[12px] text-green-600 dark:text-green-400">体力已满</p>
+            )}
+          </div>
+        </section>
       </div>
 
       {/* ━━━ Gacha Section ━━━ */}
-      <div className={`${card} !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-4 md:!py-6`}>
+      <div className={`${card} hidden md:block !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-4 md:!py-6`}>
         <div className="flex flex-col items-center text-center">
           {/* ── Egg / Result Area ── */}
-          <div className="relative w-36 h-44 sm:w-44 sm:h-52 md:w-48 md:h-56 flex items-center justify-center mb-3 md:mb-4">
+          <div className="relative mb-3 flex h-40 w-full max-w-[220px] items-center justify-center sm:h-52 sm:w-44 md:h-56 md:w-48 md:max-w-none md:mb-4">
             <AnimatePresence mode="wait">
               {phase === 'reveal' && result ? (
                 /* ── Reveal: show new skin ── */
@@ -333,7 +531,7 @@ export const Shop: React.FC<ShopProps> = ({
               whileTap={{ scale: 0.96 }}
               onClick={doGacha}
               disabled={balance < GACHA_COST}
-              className={`w-full sm:w-auto !px-4 sm:!px-6 !py-2.5 rounded-xl font-bold text-white text-xs sm:text-sm transition
+              className={`w-full !px-4 sm:w-auto sm:!px-6 !py-3 rounded-2xl font-bold text-white text-sm transition
                 ${
                   balance >= GACHA_COST
                     ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-amber-500/25'
@@ -349,7 +547,7 @@ export const Shop: React.FC<ShopProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               onClick={resetGacha}
-              className="w-full sm:w-auto !px-4 sm:!px-6 !py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-cyan-500 hover:bg-cyan-600 text-white transition shadow-lg shadow-cyan-500/25"
+              className="w-full !px-4 sm:w-auto sm:!px-6 !py-3 rounded-2xl font-bold text-sm bg-cyan-500 hover:bg-cyan-600 text-white transition shadow-lg shadow-cyan-500/25"
             >
               继续孵化
             </motion.button>
@@ -374,15 +572,15 @@ export const Shop: React.FC<ShopProps> = ({
       </div>
 
       {/* ━━━ Skin Collection ━━━ */}
-      <div className={`${card} !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
+      <div className={`${card} hidden md:block !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
         <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-700 dark:text-rdark-text !mb-2.5 md:!mb-3">
           已获得形象 ({ownedSkins.length}/{skins.length})
         </h3>
-        <div className="grid grid-cols-3 gap-2 sm:gap-2.5 md:flex md:gap-3 md:overflow-x-auto !pb-2">
+        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-2 snap-x snap-mandatory md:mx-0 md:grid md:grid-cols-3 md:gap-2.5 md:px-0 lg:flex lg:gap-3 lg:overflow-x-auto">
           {skins.map((skin) => (
             <div
               key={skin.id}
-              className={`w-full h-28 sm:h-32 md:flex-shrink-0 md:w-32 md:h-40 rounded-lg border-2 flex flex-col items-center justify-center gap-1 transition
+              className={`h-28 w-[96px] shrink-0 snap-start rounded-2xl border-2 flex flex-col items-center justify-center gap-1 transition sm:h-32 sm:w-[108px] md:h-40 md:w-full md:flex-shrink-0 lg:w-32
                 ${skin.owned ? RARITY_BORDER_COLORS[skin.rarity] : 'border-slate-200 dark:border-slate-700 opacity-40'}
                 ${skin.equipped ? 'ring-2 ring-cyan-400' : ''}`}
             >
@@ -400,7 +598,7 @@ export const Shop: React.FC<ShopProps> = ({
       </div>
 
       {/* ━━━ Apple Shop ━━━ */}
-      <div className={`${card} !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
+      <div className={`${card} hidden md:block !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 !mb-3">
           <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-700 dark:text-rdark-text flex items-center gap-1.5">
             <span>🍎</span> 体力商店
@@ -426,7 +624,7 @@ export const Shop: React.FC<ShopProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 md:gap-3">
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3 md:gap-3">
           {shopApples.map((item) => {
             const isFull = pet.stamina >= pet.maxStamina;
             const cantAfford = balance < item.price;
@@ -439,7 +637,7 @@ export const Shop: React.FC<ShopProps> = ({
                 whileTap={disabled ? {} : { scale: 0.97 }}
                 onClick={() => buyApple(item)}
                 disabled={disabled}
-                className={`relative rounded-xl !p-3 text-center transition border
+                className={`relative overflow-hidden rounded-[20px] !p-3 text-left transition border
                   ${
                     disabled
                       ? 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 opacity-50 cursor-not-allowed'
@@ -454,15 +652,22 @@ export const Shop: React.FC<ShopProps> = ({
                     className="absolute inset-0 rounded-xl bg-green-400/30"
                   />
                 )}
-                <span className="text-3xl sm:text-4xl block mb-1">{item.icon}</span>
-                <p className="!mt-1.5 sm:!mt-2 text-[15px] sm:text-xl font-bold text-slate-700 dark:text-rdark-text">
-                  {item.name}
-                </p>
-                <p className="text-[12px] sm:text-[16px] text-slate-500 dark:text-rdark-text2 !mt-1 sm:!mt-2">
-                  +{item.effect.value} 体力
-                </p>
-                <div className="!mt-1 flex items-center justify-center gap-1 text-[15px] sm:text-xl font-semibold text-amber-600 dark:text-amber-400">
-                  <Coins size={16} className="sm:w-5 sm:h-5" /> {item.price}
+                <div className="flex items-center gap-3">
+                  <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/60 text-3xl shadow-sm dark:bg-white/[0.05]">{item.icon}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[15px] font-bold text-slate-700 dark:text-rdark-text">
+                      {item.name}
+                    </p>
+                    <p className="mt-1 text-[12px] text-slate-500 dark:text-rdark-text2">
+                      +{item.effect.value} 体力
+                    </p>
+                    <div className="mt-2 flex items-center gap-1 text-[14px] font-semibold text-amber-600 dark:text-amber-400">
+                      <Coins size={15} /> {item.price}
+                    </div>
+                  </div>
+                  <div className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-bold ${disabled ? 'bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-300' : 'bg-amber-500 text-white'}`}>
+                    {isFull ? '已满' : cantAfford ? '不足' : '购买'}
+                  </div>
                 </div>
               </motion.button>
             );

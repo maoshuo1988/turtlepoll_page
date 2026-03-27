@@ -314,6 +314,15 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   }, [flip]);
 
   const handleTap = useCallback(() => flip(), [flip]);
+  const handleMobilePrimaryAction = useCallback(() => {
+    if (state.phase === 'START' || state.phase === 'GAMEOVER') {
+      dispatch({ type: 'START' });
+      return;
+    }
+    if (state.phase === 'PLAYING') {
+      flip();
+    }
+  }, [flip, state.phase]);
 
   // Game loop
   useEffect(() => {
@@ -530,8 +539,8 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const sign = state.phase === 'GAMEOVER' ? mockSign(state.score, state.sessionId, duration) : '';
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className={`${card} px-4 py-2.5 flex items-center gap-3`}>
+    <div className="flex flex-col gap-2 md:gap-3">
+      <div className={`${card} px-3 py-3 md:px-4 md:py-2.5 flex flex-wrap items-center gap-2.5 md:gap-3`}>
         <button
           onClick={onBack}
           className="text-slate-500 dark:text-[#5b7a8a] hover:text-slate-800 dark:hover:text-[#e8e6f0] transition-colors border-0 bg-transparent cursor-pointer inline-flex items-center gap-1 text-sm"
@@ -539,21 +548,21 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           <ArrowLeft size={16} />
           返回龟投
         </button>
-        <div className="text-sky-600 dark:text-[#4cc9f0] font-bold text-[18px]">🐢 龟龟跳海</div>
-        <div className="ml-auto text-amber-500 dark:text-[#ffd93d] text-sm font-bold">🪙 {state.coins.toLocaleString()}</div>
+        <div className="min-w-0 flex-1 text-sky-600 dark:text-[#4cc9f0] font-bold text-[17px] md:text-[18px]">🐢 龟龟跳海</div>
+        <div className="ml-auto rounded-full border border-amber-300/35 bg-amber-50/70 px-3 py-1 text-sm font-bold text-amber-500 dark:border-[#ffd93d]/15 dark:bg-[#ffd93d]/10 dark:text-[#ffd93d]">🪙 {state.coins.toLocaleString()}</div>
       </div>
 
-      <div ref={containerRef} className={`${card} overflow-hidden relative flex justify-center`}>
+      <div ref={containerRef} className={`${card} relative flex justify-center overflow-hidden rounded-[22px] md:rounded-xl`}>
         <canvas
           ref={canvasRef}
           width={CW}
           height={CH}
           onPointerDown={handleTap}
-          className="block cursor-pointer touch-none select-none"
+          className="block h-[min(60vh,560px)] w-full cursor-pointer touch-none select-none md:h-auto md:w-auto"
           style={{ maxWidth: '100%' }}
         />
 
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[6] px-4 py-2 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/85 dark:bg-[#0c1a28cc] backdrop-blur-sm flex items-center gap-5 text-xs">
+        <div className="absolute left-3 right-3 top-3 z-[6] grid grid-cols-3 gap-2 rounded-2xl border border-slate-200/80 bg-white/88 px-3 py-2 text-xs backdrop-blur-sm dark:border-white/10 dark:bg-[#0c1a28cc] md:left-1/2 md:right-auto md:w-auto md:-translate-x-1/2 md:grid-cols-none md:flex md:items-center md:gap-5 md:rounded-xl md:px-4 md:py-2">
           <div className="text-center">
             <div className="text-slate-500 dark:text-[#5b7a8a] text-[9px] uppercase tracking-wider">得分</div>
             <div className="text-emerald-500 dark:text-[#06d6a0] text-lg font-bold leading-none">{state.score}</div>
@@ -568,7 +577,7 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
         </div>
 
-        <div className="absolute top-3 right-3 z-[6] w-[170px] rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/90 dark:bg-[#0c1a28d9] px-3 py-2 text-[11px]">
+        <div className="absolute top-3 right-3 z-[6] hidden w-[170px] rounded-xl border border-slate-200/80 bg-white/90 px-3 py-2 text-[11px] dark:border-white/10 dark:bg-[#0c1a28d9] md:block">
           <div className="text-amber-500 dark:text-[#ffd93d] font-bold text-center mb-1">🏆 排行榜</div>
           <div className="space-y-1 text-slate-700 dark:text-[#e8e6f0]">
             <div className="flex items-center gap-2"><span className="w-4 text-center text-amber-500 dark:text-[#ffd93d]">1</span><span className="flex-1">LionMaster</span><span className="text-sky-500 dark:text-[#4cc9f0] font-bold">3280</span></div>
@@ -579,28 +588,28 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
         {/* Start overlay */}
         {state.phase === 'START' && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 dark:bg-[#06111ae0] backdrop-blur-sm z-10">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/90 px-4 text-center backdrop-blur-sm dark:bg-[#06111ae0]">
             <div className="text-6xl mb-3" style={{ animation: 'bounce 1s infinite' }}>🐢</div>
-            <h2 className="text-3xl font-black text-sky-600 dark:text-[#4cc9f0] mb-2">龟龟跳海</h2>
-            <div className="text-sm text-slate-500 dark:text-[#5b7a8a] space-y-1 text-center mb-5 px-6">
+            <h2 className="mb-2 text-[28px] font-black text-sky-600 dark:text-[#4cc9f0] md:text-3xl">龟龟跳海</h2>
+            <div className="mb-5 space-y-1 px-2 text-sm text-slate-500 dark:text-[#5b7a8a] md:px-6">
               <p>小龟龟正在跳入深海！</p>
               <p>左右躲避障碍物，越深分越高</p>
               <p>速度会越来越快，你能坚持多久？</p>
             </div>
             <button
               onClick={() => dispatch({ type: 'START' })}
-              className="px-10 py-3 rounded-xl border-0 bg-gradient-to-r from-[#06d6a0] to-[#4cc9f0] text-[#06111a] font-black text-lg cursor-pointer"
+              className="w-full max-w-[240px] rounded-xl border-0 bg-gradient-to-r from-[#06d6a0] to-[#4cc9f0] px-10 py-3 text-lg font-black text-[#06111a] cursor-pointer"
             >
               开始跳海!
             </button>
-            <p className="text-[11px] text-slate-500 dark:text-[#5b7a8a] mt-3">← → 或 A/D 移动 · 空格键切换方向</p>
+            <p className="mt-3 text-[11px] text-slate-500 dark:text-[#5b7a8a]">← → 或 A/D 移动 · 空格键切换方向</p>
           </div>
         )}
 
         {/* Game Over — 号外新闻报纸风格 */}
         {state.phase === 'GAMEOVER' && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10">
-            <div className="bg-amber-50 dark:bg-amber-950/90 border-2 border-amber-800/60 dark:border-amber-600/40 rounded-lg p-5 max-w-sm w-full mx-4 shadow-2xl" style={{ fontFamily: 'serif' }}>
+            <div className="mx-3 w-full max-w-sm rounded-lg border-2 border-amber-800/60 bg-amber-50 p-4 shadow-2xl dark:border-amber-600/40 dark:bg-amber-950/90 md:mx-4 md:p-5" style={{ fontFamily: 'serif' }}>
               {/* Newspaper header */}
               <div className="text-center border-b-2 border-double border-amber-800/50 dark:border-amber-600/40 pb-2 mb-3">
                 <div className="text-[10px] text-amber-700/60 dark:text-amber-400/50 tracking-[0.3em] uppercase font-bold">
@@ -665,8 +674,70 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         )}
       </div>
 
-      <div className={`${card} px-4 py-2.5`}>
-        <div className="flex items-center justify-center gap-4 text-[11px] text-slate-500 dark:text-[#5b7a8a] flex-wrap">
+      <div className="sticky bottom-[92px] z-20 md:hidden">
+        <div className={`${card} px-3 py-3`}>
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-3 py-2.5 dark:border-white/10 dark:bg-white/[0.03]">
+            <div className="min-w-0">
+              <div className="text-[12px] font-bold text-slate-700 dark:text-[#e8e6f0]">
+                {state.phase === 'PLAYING' ? '点击按钮切换方向' : state.phase === 'GAMEOVER' ? '本轮结束，继续挑战' : '准备好就开始跳海'}
+              </div>
+              <div className="mt-1 text-[10px] leading-4 text-slate-500 dark:text-[#5b7a8a]">
+                {state.phase === 'PLAYING' ? '不用再去点画布，单手按下面这个大按钮就能操作。' : state.phase === 'GAMEOVER' ? '重新开始会立刻进入下一局。' : '开始后用大按钮控制小龟切换方向。'}
+              </div>
+            </div>
+            <div className="rounded-full border border-sky-200/70 bg-sky-50 px-2.5 py-1 text-[10px] font-bold text-sky-600 dark:border-[#4cc9f0]/15 dark:bg-[#4cc9f0]/10 dark:text-[#4cc9f0]">
+              {state.phase === 'PLAYING' ? '进行中' : state.phase === 'GAMEOVER' ? '已结束' : '待开始'}
+            </div>
+          </div>
+
+          <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+            <button
+              onClick={handleMobilePrimaryAction}
+              className="flex h-12 items-center justify-center rounded-2xl border-0 bg-gradient-to-r from-[#06d6a0] to-[#4cc9f0] px-4 text-[15px] font-black text-[#06111a] shadow-[0_10px_24px_rgba(76,201,240,0.22)]"
+            >
+              {state.phase === 'PLAYING' ? '切换方向' : state.phase === 'GAMEOVER' ? '再来一次' : '开始跳海'}
+            </button>
+            <button
+              onClick={onBack}
+              className="flex h-12 items-center justify-center rounded-2xl border border-slate-200/80 bg-white/80 px-4 text-[13px] font-bold text-slate-600 dark:border-white/10 dark:bg-white/[0.03] dark:text-[#c7d3e2]"
+            >
+              返回
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-2 md:hidden">
+        <div className={`${card} px-3 py-2.5`}>
+          <div className="mb-2 text-center text-xs font-bold text-amber-500 dark:text-[#ffd93d]">🏆 排行榜</div>
+          <div className="grid grid-cols-3 gap-2 text-[10px] text-slate-700 dark:text-[#e8e6f0]">
+            <div className="rounded-xl border border-slate-200/80 bg-white/75 px-2 py-2 text-center dark:border-white/10 dark:bg-white/[0.03]">
+              <div className="text-amber-500 dark:text-[#ffd93d] font-bold">1</div>
+              <div className="mt-1 truncate">LionMaster</div>
+              <div className="mt-1 font-bold text-sky-500 dark:text-[#4cc9f0]">3280</div>
+            </div>
+            <div className="rounded-xl border border-slate-200/80 bg-white/75 px-2 py-2 text-center dark:border-white/10 dark:bg-white/[0.03]">
+              <div className="font-bold text-slate-400">2</div>
+              <div className="mt-1 truncate">DragonSeer</div>
+              <div className="mt-1 font-bold text-sky-500 dark:text-[#4cc9f0]">2750</div>
+            </div>
+            <div className="rounded-xl border border-slate-200/80 bg-white/75 px-2 py-2 text-center dark:border-white/10 dark:bg-white/[0.03]">
+              <div className="font-bold text-amber-700">3</div>
+              <div className="mt-1 truncate">EagleEye</div>
+              <div className="mt-1 font-bold text-sky-500 dark:text-[#4cc9f0]">2140</div>
+            </div>
+          </div>
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-1.5 text-[10px] text-slate-500 dark:text-[#5b7a8a]">
+            <span className="rounded-full border border-slate-200/80 bg-white/70 px-2 py-1 dark:border-white/10 dark:bg-white/[0.03]">▲ 崖壁刺 <b className="text-red-500 dark:text-[#ff6b6b]">致命</b></span>
+            <span className="rounded-full border border-slate-200/80 bg-white/70 px-2 py-1 dark:border-white/10 dark:bg-white/[0.03]">🪼 水母 <b className="text-red-500 dark:text-[#ff6b6b]">致命</b></span>
+            <span className="rounded-full border border-slate-200/80 bg-white/70 px-2 py-1 dark:border-white/10 dark:bg-white/[0.03]">🪙 龟币 <b className="text-amber-500 dark:text-[#ffd93d]">+1币</b></span>
+            <span className="rounded-full border border-slate-200/80 bg-white/70 px-2 py-1 dark:border-white/10 dark:bg-white/[0.03]">⚡ 连击×{COMBO_TARGET} <b className="text-emerald-500 dark:text-[#06d6a0]">冲刺</b></span>
+          </div>
+        </div>
+      </div>
+
+      <div className={`${card} hidden px-3 py-3 md:block md:px-4 md:py-2.5`}>
+        <div className="flex items-center justify-center gap-3 text-center text-[11px] text-slate-500 dark:text-[#5b7a8a] flex-wrap md:gap-4">
           <span>▲ 崖壁刺 <b className="text-red-500 dark:text-[#ff6b6b]">致命</b></span>
           <span>🪼 水母 <b className="text-red-500 dark:text-[#ff6b6b]">致命</b></span>
           <span>🪙 龟币 <b className="text-amber-500 dark:text-[#ffd93d]">+1币</b></span>

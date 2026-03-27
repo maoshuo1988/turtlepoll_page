@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, Shield, Zap, Trophy, TrendingUp, AlertTriangle, Coins, ThumbsUp, MessageSquare, Sparkles, Bot, Heart, Anchor } from 'lucide-react';
-import type { EventComment } from '@/data/mock_data';
+import { getBattlePetSkillsForSkin, type EventComment } from '@/data/mock_data';
 
 /* ══════════ Types ══════════ */
 type ReportType = 'fire' | 'defense' | 'turtle' | 'alert' | 'gold';
@@ -44,6 +44,7 @@ interface BattleReportProps {
   oddsA: number;
   oddsB: number;
   userSide: 'A' | 'B' | null;
+  equippedSkinId?: string;
   onHighlightComment?: (commentId: string) => void;
 }
 
@@ -460,6 +461,7 @@ export const BattleReport: React.FC<BattleReportProps> = ({
   oddsA,
   oddsB,
   userSide,
+  equippedSkinId,
   onHighlightComment,
 }) => {
   /* ── Display Queue (the core of the new system) ── */
@@ -723,14 +725,24 @@ export const BattleReport: React.FC<BattleReportProps> = ({
   const myPotentialWin = Math.round(myContribution * myOdds * 1.5);
 
   const petSkills = useMemo(() => {
-    const skills = [];
-    if (myCommentCount >= 3) skills.push({ name: '话术增幅', desc: '评论火力+20%', icon: '🗣️', active: true });
-    else skills.push({ name: '话术增幅', desc: '发3条评论解锁', icon: '🗣️', active: false });
-    if (myLikes >= 5) skills.push({ name: '龟甲护盾', desc: '抵挡1次踩踏', icon: '🛡️', active: true });
-    else skills.push({ name: '龟甲护盾', desc: '获5赞解锁', icon: '🛡️', active: false });
-    skills.push({ name: '预言之眼', desc: '赔率洞察+10%', icon: '🔮', active: myContribution >= 50 });
-    return skills;
-  }, [myCommentCount, myLikes, myContribution]);
+    return getBattlePetSkillsForSkin(equippedSkinId).map((skill) => {
+      const metric =
+        skill.activation === 'comments'
+          ? myCommentCount
+          : skill.activation === 'likes'
+            ? myLikes
+            : myContribution;
+
+      const active = metric >= skill.threshold;
+
+      return {
+        name: skill.name,
+        icon: skill.icon,
+        desc: active ? skill.activeDesc : skill.inactiveDesc,
+        active,
+      };
+    });
+  }, [equippedSkinId, myCommentCount, myContribution, myLikes]);
 
   /* ══════════ Render ══════════ */
   return (

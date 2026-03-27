@@ -87,48 +87,51 @@ export function PredictionBetModal({
   return createPortal(
     <div className="fixed inset-0 z-[120]">
       <div className="absolute inset-0 bg-[rgba(0,0,0,0.72)] backdrop-blur-[10px]" onClick={onClose} />
-      <div className="absolute inset-0 grid place-items-center p-4">
+      <div className="absolute inset-0 grid items-end p-0 md:place-items-center md:p-4">
         <div
-          className="relative w-full max-w-[520px] overflow-hidden rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,#0b0d12_0%,#101521_58%,#0b0e14_100%)] shadow-[0_28px_110px_rgba(0,0,0,0.56),inset_0_1px_0_rgba(255,255,255,0.06)]"
+          className="relative w-full max-w-[520px] overflow-hidden rounded-t-[30px] md:rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,#0b0d12_0%,#101521_58%,#0b0e14_100%)] shadow-[0_-18px_48px_rgba(0,0,0,0.46)] md:shadow-[0_28px_110px_rgba(0,0,0,0.56),inset_0_1px_0_rgba(255,255,255,0.06)]"
           onClick={(event) => event.stopPropagation()}
         >
+          <div className="flex justify-center pt-2.5 md:hidden">
+            <div className="h-1.5 w-12 rounded-full bg-white/16" />
+          </div>
           <button
             type="button"
-            className="absolute right-[18px] top-[14px] grid h-[48px] w-[48px] place-items-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_35%_30%,#24262c_0%,#17181c_45%,#101114_100%)] text-white shadow-[0_10px_20px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)]"
+            className="absolute right-[14px] top-[12px] md:right-[18px] md:top-[14px] grid h-[42px] w-[42px] md:h-[48px] md:w-[48px] place-items-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_35%_30%,#24262c_0%,#17181c_45%,#101114_100%)] text-white shadow-[0_10px_20px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)]"
             onClick={onClose}
           >
             <X size={20} strokeWidth={2.6} />
           </button>
 
-          <div className="border-b border-white/8 px-[24px] pb-[18px] pt-[24px]">
+          <div className="border-b border-white/8 px-[18px] pb-[16px] pt-[18px] md:px-[24px] md:pb-[18px] md:pt-[24px]">
             <div className="mb-[10px] inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-[14px] py-[6px] text-[12px] font-semibold text-emerald-300">
               <TrendingUp size={14} />
               下注确认
             </div>
-            <h3 className="max-w-[420px] text-[28px] font-black tracking-[-0.04em] text-white">{item.title}</h3>
-            <p className="mt-[8px] text-[14px] leading-[1.45] text-zinc-400">
+            <h3 className="max-w-[420px] pr-10 text-[22px] md:text-[28px] font-black tracking-[-0.04em] text-white">{item.title}</h3>
+            <p className="mt-[8px] text-[13px] md:text-[14px] leading-[1.45] text-zinc-400">
               你正在选择 <span className="font-bold text-white">{selectedLabel}</span>，确认金额后将立即提交下注。
             </p>
           </div>
 
-          <div className="space-y-[16px] px-[24px] py-[22px]">
-            <div className="grid grid-cols-2 gap-[14px]">
+          <div className="space-y-[14px] px-[18px] py-[18px] md:space-y-[16px] md:px-[24px] md:py-[22px]">
+            <div className="grid grid-cols-2 gap-[10px] md:gap-[14px]">
               <div className="rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,rgba(20,23,30,0.96),rgba(12,14,18,0.96))] px-[18px] py-[16px]">
                 <div className="text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-500">我的余额</div>
-                <div className="mt-[10px] flex items-center gap-[8px] text-[26px] font-black tracking-[-0.04em] text-emerald-300">
-                  <Coins size={20} />
+                <div className="mt-[10px] flex items-center gap-[8px] text-[20px] md:text-[26px] font-black tracking-[-0.04em] text-emerald-300">
+                  <Coins size={18} />
                   {balance.toLocaleString()}
                 </div>
               </div>
               <div className="rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,rgba(20,23,30,0.96),rgba(12,14,18,0.96))] px-[18px] py-[16px]">
                 <div className="text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-500">当前赔率</div>
-                <div className="mt-[10px] text-[26px] font-black tracking-[-0.04em] text-cyan-300">{selectedOdds.toFixed(1)}x</div>
+                <div className="mt-[10px] text-[20px] md:text-[26px] font-black tracking-[-0.04em] text-cyan-300">{selectedOdds.toFixed(1)}x</div>
               </div>
             </div>
 
             <div className="rounded-[30px] border border-white/8 bg-[linear-gradient(180deg,rgba(20,23,30,0.96),rgba(12,14,18,0.96))] px-[18px] py-[18px]">
               <div className="mb-[10px] text-[14px] font-semibold tracking-[-0.02em] text-zinc-300">下注金额</div>
-              <label className="flex h-[58px] items-center rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(13,15,20,0.98),rgba(9,11,15,0.96))] px-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_6px_20px_rgba(0,0,0,0.24)]">
+              <label className="flex h-[54px] md:h-[58px] items-center rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(13,15,20,0.98),rgba(9,11,15,0.96))] px-[18px] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_6px_20px_rgba(0,0,0,0.24)]">
                 <span className="mr-[12px] text-[14px] font-bold uppercase tracking-[0.14em] text-zinc-500">Coins</span>
                 <input
                   type="number"
@@ -137,14 +140,14 @@ export function PredictionBetModal({
                   value={amount}
                   onChange={(event) => setAmount(event.target.value)}
                   placeholder="请输入下注金额"
-                  className="h-full w-full bg-transparent text-[26px] font-black tracking-[-0.03em] text-white outline-none placeholder:text-white/30"
+                  className="h-full w-full bg-transparent text-[22px] md:text-[26px] font-black tracking-[-0.03em] text-white outline-none placeholder:text-white/30"
                 />
               </label>
 
               <div className="mt-[14px] flex items-center justify-between rounded-[22px] border border-cyan-400/12 bg-cyan-400/5 px-[16px] py-[14px]">
                 <div>
                   <div className="text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-500">预计派奖</div>
-                  <div className="mt-[6px] text-[24px] font-black tracking-[-0.04em] text-white">{expectedPayout.toLocaleString()}</div>
+                  <div className="mt-[6px] text-[20px] md:text-[24px] font-black tracking-[-0.04em] text-white">{expectedPayout.toLocaleString()}</div>
                 </div>
                 <div className="text-right">
                   <div className="text-[12px] text-zinc-500">选择阵营</div>
@@ -160,10 +163,10 @@ export function PredictionBetModal({
             ) : null}
           </div>
 
-          <div className="grid grid-cols-2 gap-[14px] border-t border-white/8 px-[24px] py-[20px]">
+          <div className="grid grid-cols-2 gap-[10px] md:gap-[14px] border-t border-white/8 px-[18px] py-[16px] pb-[max(16px,env(safe-area-inset-bottom))] md:px-[24px] md:py-[20px]">
             <button
               type="button"
-              className="h-[52px] rounded-full border border-white/10 bg-[rgba(255,255,255,0.03)] text-[18px] font-semibold text-zinc-300 transition-colors hover:bg-[rgba(255,255,255,0.06)]"
+              className="h-[46px] md:h-[52px] rounded-full border border-white/10 bg-[rgba(255,255,255,0.03)] text-[16px] md:text-[18px] font-semibold text-zinc-300 transition-colors hover:bg-[rgba(255,255,255,0.06)]"
               onClick={onClose}
             >
               取消
@@ -171,7 +174,7 @@ export function PredictionBetModal({
             <button
               type="button"
               disabled={coinBetMutation.isLoading}
-              className="h-[52px] rounded-full border border-emerald-400/20 bg-[linear-gradient(90deg,#0f766e_0%,#14b8a6_48%,#0b8f84_100%)] text-[18px] font-black tracking-[0.04em] text-white shadow-[0_18px_34px_rgba(16,185,129,0.22)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-[46px] md:h-[52px] rounded-full border border-emerald-400/20 bg-[linear-gradient(90deg,#0f766e_0%,#14b8a6_48%,#0b8f84_100%)] text-[16px] md:text-[18px] font-black tracking-[0.04em] text-white shadow-[0_18px_34px_rgba(16,185,129,0.22)] disabled:cursor-not-allowed disabled:opacity-60"
               onClick={handleSubmit}
             >
               {coinBetMutation.isLoading ? '下注中...' : '确认下注'}

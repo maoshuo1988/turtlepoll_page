@@ -21,6 +21,7 @@ interface ProfilePetRailProps {
   pet: PetInfo;
   skins: PetSkin[];
   balance: number;
+  compact?: boolean;
 }
 
 const panelClass = 'rounded-[22px] border border-white/8 bg-white/[0.03] !p-2';
@@ -43,6 +44,7 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
   pet,
   skins,
   balance,
+  compact = false,
 }) => {
   const equippedSkin = useMemo(
     () => skins.find((skin) => skin.equipped) ?? skins.find((skin) => skin.owned) ?? null,
@@ -64,11 +66,11 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
   const nextTask = dailyTasks.find((task) => !task.completed) ?? dailyTasks[0];
 
   return (
-    <div className="grid gap-4 !px-4 !py-4">
+    <div className={`grid ${compact ? 'gap-3 px-0 py-0' : 'gap-4 !px-4 !py-4'}`}>
       <PetPanel title="宠物档案" icon={<Sparkles size={15} />}>
-        <div className="overflow-hidden rounded-[20px] border border-emerald-400/10 bg-[radial-gradient(circle_at_top,rgba(70,180,120,0.18),transparent_46%),linear-gradient(180deg,rgba(18,24,20,1)_0%,rgba(11,14,13,1)_100%)] !p-5">
-          <div className="flex items-start gap-4">
-            <div className="relative grid h-20 w-20 place-items-center rounded-[24px] border border-white/10 bg-white/[0.04] text-[42px] shadow-[inset_0_0_24px_rgba(255,255,255,0.03)]">
+        <div className={`overflow-hidden rounded-[20px] border border-emerald-400/10 bg-[radial-gradient(circle_at_top,rgba(70,180,120,0.18),transparent_46%),linear-gradient(180deg,rgba(18,24,20,1)_0%,rgba(11,14,13,1)_100%)] ${compact ? 'p-4' : '!p-5'}`}>
+          <div className={`flex ${compact ? 'items-center gap-3' : 'items-start gap-4'}`}>
+            <div className={`relative grid place-items-center rounded-[24px] border border-white/10 bg-white/[0.04] text-[42px] shadow-[inset_0_0_24px_rgba(255,255,255,0.03)] ${compact ? 'h-16 w-16 text-[34px]' : 'h-20 w-20'}`}>
               {pet.avatar}
               <div className="absolute -bottom-2 left-1/2 h-3 w-12 -translate-x-1/2 rounded-full bg-black/30 blur-md" />
             </div>
@@ -80,7 +82,7 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
                 </span>
               </div>
               <p className="!mt-1 text-[13px] text-[#92a19a]">{pet.status}</p>
-              <div className="!mt-4 grid grid-cols-2 gap-3">
+              <div className={`grid grid-cols-2 gap-3 ${compact ? 'mt-3' : '!mt-4'}`}>
                 <div className="rounded-2xl border border-white/6 bg-white/[0.03] !px-3 !py-3">
                   <div className="text-[11px] text-[#81909a]">体力</div>
                   <div className="!mt-2 flex items-center gap-2">
@@ -101,7 +103,7 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
             </div>
           </div>
 
-          {equippedSkin && (
+          {equippedSkin && !compact && (
             <div className="!mt-4 rounded-[18px] border border-white/6 bg-black/30 !px-4 !py-3">
               <div className="flex items-center gap-3">
                 <div className="grid h-12 w-12 place-items-center rounded-2xl bg-white/[0.04] text-[28px]">
@@ -122,6 +124,50 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
         </div>
       </PetPanel>
 
+      {compact ? (
+        <div className="grid grid-cols-3 gap-3">
+          <section className={panelClass}>
+            <div className="text-[11px] text-[#82919a]">皮肤</div>
+            <div className="mt-2 text-[20px] font-black text-white">{ownedSkins.length}</div>
+          </section>
+          <section className={panelClass}>
+            <div className="text-[11px] text-[#82919a]">技能</div>
+            <div className="mt-2 text-[20px] font-black text-white">{unlockedSkills.length}</div>
+          </section>
+          <section className={panelClass}>
+            <div className="text-[11px] text-[#82919a]">任务</div>
+            <div className="mt-2 text-[20px] font-black text-white">{dailyTasks.length}</div>
+          </section>
+        </div>
+      ) : null}
+
+      {compact ? (
+        <PetPanel title="当前任务" icon={<Star size={15} />}>
+          <div className="rounded-2xl border border-white/8 bg-black/25 px-4 py-3">
+            <div className="flex items-start gap-3">
+              <div className="grid h-9 w-9 place-items-center rounded-2xl bg-white/[0.05] text-[18px]">{nextTask.icon}</div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="text-[13px] font-bold text-white">{nextTask.title}</div>
+                  <div className="text-[11px] font-bold text-emerald-300">
+                    {nextTask.progress}/{nextTask.total}
+                  </div>
+                </div>
+                <div className="mt-1 text-[12px] text-[#8e9ca6]">{nextTask.description}</div>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/8">
+                  <div
+                    className={`h-full rounded-full ${nextTask.completed ? 'bg-emerald-400' : 'bg-sky-400'}`}
+                    style={{ width: `${(nextTask.progress / nextTask.total) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </PetPanel>
+      ) : null}
+
+      {!compact && (
+      <>
       <PetPanel title="宠物成长" icon={<Leaf size={15} />}>
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-2xl border border-white/8 bg-black/25 !px-4 !py-4">
@@ -257,6 +303,8 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
           ))}
         </div>
       </PetPanel>
+      </>
+      )}
 
       <PetPanel title="当前宠物焦点" icon={<MessageCircle size={15} />}>
         <div className="rounded-2xl border border-emerald-400/10 bg-emerald-400/[0.05] !px-4 !py-4">

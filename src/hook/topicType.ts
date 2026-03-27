@@ -1,3 +1,5 @@
+import type { PredictContext } from './predictType';
+
 export type CreateTopicPayload = {
   type: number;
   nodeId: number;
@@ -84,6 +86,7 @@ export type TopicResponse = {
   type: number;
   user?: TopicUser | null;
   node?: TopicNodeNav | null;
+  context?: Partial<PredictContext> | null;
   tags?: TopicTag[] | null;
   title?: string;
   summary?: string;
@@ -132,7 +135,6 @@ export type UserTopicsParams = {
   userId: number | string ;
   cursor?: number | string;
 };
-
 
 
 

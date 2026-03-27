@@ -68,14 +68,14 @@ const EmptyState: React.FC<{
   actionLabel?: string;
   onAction?: () => void;
 }> = ({ title, description, actionLabel, onAction }) => (
-  <div className="flex min-h-[420px] flex-col items-center justify-center !px-6 !py-10 text-center">
+  <div className="flex min-h-[280px] flex-col items-center justify-center px-5 py-8 text-center md:min-h-[420px] md:!px-6 md:!py-10">
     {emptyArt}
-    <h3 className="!mt-7 text-[24px] font-black tracking-[-0.02em] text-white">{title}</h3>
-    {description && <p className="!mt-3 max-w-[560px] text-[14px] leading-7 text-[#7e8790]">{description}</p>}
+    <h3 className="mt-6 text-[22px] font-black tracking-[-0.02em] text-white md:!mt-7 md:text-[24px]">{title}</h3>
+    {description && <p className="mt-3 max-w-[560px] text-[13px] leading-6 text-[#7e8790] md:text-[14px] md:leading-7">{description}</p>}
     {actionLabel && onAction && (
       <button
         onClick={onAction}
-        className="!mt-5 rounded-full bg-[#115bdb] !px-5 !py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-[#1d67e5]"
+        className="mt-5 rounded-full bg-[#115bdb] px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-[#1d67e5]"
       >
         {actionLabel}
       </button>
@@ -90,7 +90,7 @@ const ProfileTabButton: React.FC<{
 }> = ({ active, label, onClick }) => (
   <button
     onClick={onClick}
-    className={`rounded-full !px-4 !py-2.5 text-[14px] font-bold transition-all ${
+    className={`shrink-0 rounded-full !px-4 !py-2.5 text-[14px] font-bold transition-all ${
       active ? 'bg-[#3a4348] text-white' : 'text-[#d8dde2] hover:bg-white/6'
     }`}
   >
@@ -112,7 +112,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
   const [sort, setSort] = useState<FeedSort>('new');
-  console.log("userId ----- ",userId)
   const userPostsQuery = useInfiniteRequestTopicUserTopics({ userId: userId, cursor: 0 });
 
   const userPosts = useMemo(
@@ -143,10 +142,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     ],
     [userComments, userPosts],
   );
+  const equippedSkin = useMemo(
+    () => skins.find((skin) => skin.equipped) ?? skins.find((skin) => skin.owned) ?? null,
+    [skins],
+  );
 
   const renderOverview = () => (
     <>
-      <div className="rounded-[18px] bg-black/70 !px-4 !py-4 text-white">
+      <div className="rounded-[20px] bg-black/70 px-4 py-4 text-white">
         <button className="flex w-full items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <Eye size={18} className="text-[#cad2d9]" />
@@ -156,10 +159,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </button>
       </div>
 
-      <div className="!mt-4 flex flex-wrap items-center gap-3">
+      <div className="mt-4 hidden flex-wrap items-center gap-3 xl:flex">
         <button
           onClick={onOpenForum}
-          className="inline-flex items-center gap-2 rounded-full border border-white/30 !px-4 !py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-white/6"
+          className="inline-flex items-center gap-2 rounded-full border border-white/30 px-4 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-white/6"
         >
           <Plus size={18} />
           创建帖子
@@ -169,11 +172,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </button>
       </div>
 
-      <div className="!mt-8 grid gap-3 sm:grid-cols-3">
+      <div className="mt-6 hidden gap-3 sm:grid-cols-3 md:grid">
         {overviewStats.map((item) => (
-          <div key={item.label} className="rounded-[18px] border border-white/8 bg-white/[0.03] !px-4 !py-4">
+          <div key={item.label} className="rounded-[18px] border border-white/8 bg-white/[0.03] px-4 py-4">
             <div className="text-[13px] text-[#7e8790]">{item.label}</div>
-            <div className="!mt-2 text-[28px] font-black text-white">{item.value}</div>
+            <div className="mt-2 text-[28px] font-black text-white">{item.value}</div>
           </div>
         ))}
       </div>
@@ -188,16 +191,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           />
         </div>
       ) : (
-        <div className="!mt-6 grid gap-4">
+        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
           {userPosts.slice(0, 3).map((post) => (
-            <article key={post.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] !p-5">
+            <article key={post.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] p-4 md:p-5">
               <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
-                <span className="rounded-full bg-white/8 !px-2 !py-1 text-[11px] text-white/80">{post.tag}</span>
+                <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">{post.tag}</span>
                 <span>{post.time}</span>
               </div>
-              <p className="!mt-3 line-clamp-3 text-[15px] leading-7 text-[#d9dee3]">{post.content}</p>
+              <p className="mt-3 line-clamp-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.content}</p>
               {post.images?.[0] && (
-                <div className="!mt-4 flex items-center gap-2 text-[12px] text-[#7e8790]">
+                <div className="mt-4 flex items-center gap-2 text-[12px] text-[#7e8790]">
                   <ImageIcon size={14} />
                   <span>{post.images.length} 张配图</span>
                 </div>
@@ -211,7 +214,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderPosts = () => (
     <>
-      <div className="rounded-[18px] bg-black/70 !px-4 !py-4 text-white">
+      <div className="rounded-[20px] bg-black/70 px-4 py-4 text-white">
         <button className="flex w-full items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <Eye size={18} className="text-[#cad2d9]" />
@@ -221,10 +224,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </button>
       </div>
 
-      <div className="!mt-4 flex flex-wrap items-center gap-3">
+      <div className="mt-4 hidden flex-wrap items-center gap-3 xl:flex">
         <button
           onClick={onOpenForum}
-          className="inline-flex items-center gap-2 rounded-full border border-white/30 !px-4 !py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-white/6"
+          className="inline-flex items-center gap-2 rounded-full border border-white/30 px-4 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-white/6"
         >
           <Plus size={18} />
           创建帖子
@@ -235,11 +238,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       </div>
 
       {userPostsQuery.isLoading && profileTopics.length === 0 ? (
-        <div className="!mt-6 rounded-[20px] border border-white/8 bg-white/[0.03] !p-6 text-[14px] text-[#8fa0b2]">
+        <div className="mt-5 rounded-[20px] border border-white/8 bg-white/[0.03] p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6">
           正在加载帖子...
         </div>
       ) : userPostsQuery.isError && profileTopics.length === 0 ? (
-        <div className="!mt-6 rounded-[20px] border border-rose-400/20 bg-rose-500/8 !p-6 text-[14px] text-rose-200">
+        <div className="mt-5 rounded-[20px] border border-rose-400/20 bg-rose-500/8 p-5 text-[14px] text-rose-200 md:mt-6 md:p-6">
           {userPostsQuery.error instanceof Error ? userPostsQuery.error.message : '帖子加载失败'}
         </div>
       ) : profileTopics.length === 0 ? (
@@ -252,22 +255,22 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           />
         </div>
       ) : (
-        <div className="!mt-6 grid gap-4">
+        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
           {profileTopics.map((post) => (
-            <article key={post.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] !p-5">
+            <article key={post.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] p-4 md:p-5">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
                   {post.node?.name && (
-                    <span className="rounded-full bg-white/8 !px-2 !py-1 text-[11px] text-white/80">{post.node.name}</span>
+                    <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">{post.node.name}</span>
                   )}
                   <span>{post.createTime ? new Date(post.createTime).toLocaleString() : '刚刚'}</span>
                 </div>
                 <span className="text-[12px] text-[#7e8790]">{post.commentCount ?? 0} 条评论</span>
               </div>
-              {post.title && <div className="!mt-3 text-[16px] font-semibold text-white">{post.title}</div>}
-              <p className="!mt-3 text-[15px] leading-7 text-[#d9dee3]">{post.summary || post.content || '暂无正文内容'}</p>
+              {post.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{post.title}</div>}
+              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.summary || post.content || '暂无正文内容'}</p>
               {post.imageList && post.imageList.length > 0 && (
-                <div className="!mt-4 flex items-center gap-2 text-[12px] text-[#7e8790]">
+                <div className="mt-4 flex items-center gap-2 text-[12px] text-[#7e8790]">
                   <ImageIcon size={14} />
                   <span>{post.imageList.length} 张配图</span>
                 </div>
@@ -280,7 +283,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               type="button"
               onClick={() => userPostsQuery.fetchNextPage()}
               disabled={userPostsQuery.isFetchingNextPage}
-              className="rounded-full border border-white/10 bg-white/[0.04] !px-4 !py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {userPostsQuery.isFetchingNextPage ? '加载中...' : '加载更多'}
             </button>
@@ -292,7 +295,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderComments = () => (
     <>
-      <div className="rounded-[18px] bg-black/70 !px-4 !py-4 text-white">
+      <div className="rounded-[20px] bg-black/70 px-4 py-4 text-white">
         <button className="flex w-full items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <Eye size={18} className="text-[#cad2d9]" />
@@ -302,16 +305,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </button>
       </div>
 
-      <div className="!mt-4 flex items-center gap-2 text-[13px] text-[#8e98a0]">
+      <div className="mt-4 flex items-center gap-2 text-[13px] text-[#8e98a0]">
         <button
           onClick={() => setSort('new')}
-          className={`rounded-full !px-3 !py-1.5 transition-colors ${sort === 'new' ? 'bg-white/8 text-white' : 'hover:bg-white/6'}`}
+          className={`rounded-full px-3 py-1.5 transition-colors ${sort === 'new' ? 'bg-white/8 text-white' : 'hover:bg-white/6'}`}
         >
           新
         </button>
         <button
           onClick={() => setSort('hot')}
-          className={`rounded-full !px-3 !py-1.5 transition-colors ${sort === 'hot' ? 'bg-white/8 text-white' : 'hover:bg-white/6'}`}
+          className={`rounded-full px-3 py-1.5 transition-colors ${sort === 'hot' ? 'bg-white/8 text-white' : 'hover:bg-white/6'}`}
         >
           热
         </button>
@@ -327,15 +330,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           />
         </div>
       ) : (
-        <div className="mt-6 grid gap-4">
+        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
           {(sort === 'hot'
             ? [...userComments].sort((a, b) => b.likes - a.likes)
             : userComments
           ).map((comment) => (
-            <article key={comment.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] !p-5">
+            <article key={comment.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] p-4 md:p-5">
               <div className="text-[12px] text-[#7e8790]">{comment.time}</div>
-              <p className="!mt-3 text-[15px] leading-7 text-[#d9dee3]">{comment.content}</p>
-              <p className="!mt-3 line-clamp-2 text-[13px] leading-6 text-[#7e8790]">原帖：{comment.postTitle}</p>
+              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{comment.content}</p>
+              <p className="mt-3 line-clamp-2 text-[13px] leading-6 text-[#7e8790]">原帖：{comment.postTitle}</p>
             </article>
           ))}
         </div>
@@ -376,60 +379,150 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   };
 
   return (
-    <section className={`flex h-[calc(100vh-88px)] w-full flex-col overflow-hidden ${cardClass} !px-5 !py-5 text-white !md:px-8 !md:py-7`}>
-      <div className="flex items-start gap-4">
-        <button
-          onClick={onBack}
-          className="!mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-black/35 text-[#b8c0c7] transition-colors hover:bg-white/8 hover:text-white"
-        >
-          <ArrowLeft size={18} />
-        </button>
+    <section className={`w-full min-w-0 overflow-x-hidden text-white ${cardClass}`}>
+      <div className="xl:hidden min-w-0 overflow-x-hidden px-4 py-4">
+        <div className="min-w-0 rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] px-4 py-4">
+          <div className="flex items-start justify-between gap-3">
+            <button
+              onClick={onBack}
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-black/35 text-[#b8c0c7]"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <button className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-black/35 text-[#b8c0c7]">
+              <Settings2 size={18} />
+            </button>
+          </div>
 
-        <div className="flex min-w-0 flex-1 items-start gap-4">
-          <div className="relative shrink-0">
-            <div className="grid h-18 w-18 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-xl font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
-              {avatar}
+          <div className="mt-4 flex min-w-0 items-start gap-3">
+            <div className="relative shrink-0">
+              <div className="grid h-[72px] w-[72px] place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-[26px] font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
+                {avatar}
+              </div>
+              <div className="absolute bottom-0 right-0 grid h-7 w-7 place-items-center rounded-full border-4 border-[#101214] bg-[#252a2f] text-[#dde4ea]">
+                <ImageIcon size={14} />
+              </div>
             </div>
-            <div className="absolute bottom-0 right-0 grid h-8 w-8 place-items-center rounded-full border-4 border-[#101214] bg-[#252a2f] text-[#dde4ea]">
-              <ImageIcon size={14} />
+
+            <div className="min-w-0 flex-1 pt-1">
+              <h1 className="truncate text-[24px] font-black tracking-[-0.03em] text-[#d5dee5]">{userName}</h1>
+              <div className="mt-1 text-[13px] font-semibold text-[#8a949d]">{userHandle}</div>
+              <div className="mt-2 text-[12px] leading-5 text-[#8a949d]">
+                在社区里记录观点、评论和宠物日常。
+              </div>
             </div>
           </div>
 
-          <div className="min-w-0 !pt-1">
-            <h1 className="truncate text-[28px] font-black tracking-[-0.03em] text-[#d5dee5]">{userName}</h1>
-            <div className="!mt-1 text-[14px] font-semibold text-[#8a949d]">{userHandle}</div>
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {overviewStats.map((item) => (
+              <div key={item.label} className="rounded-[18px] bg-black/25 px-2 py-2.5 text-center">
+                <div className="text-[10px] text-[#7e8790]">{item.label}</div>
+                <div className="mt-1 text-[16px] font-black text-white">{item.value}</div>
+              </div>
+            ))}
           </div>
+
+          <div className="mt-4 grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-2">
+            <button
+              onClick={onOpenForum}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#f3f4f6] px-4 text-[14px] font-bold text-[#111315]"
+            >
+              <MessageSquarePlus size={18} />
+              发微博式帖子
+            </button>
+            <div className="inline-flex h-11 max-w-[42vw] min-w-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-4 text-[12px] font-bold text-[#d5dee5]">
+              <span className="truncate">
+              {equippedSkin ? `${equippedSkin.avatar} ${equippedSkin.name}` : '未装备皮肤'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-3 min-w-0 rounded-[24px] border border-white/8 bg-white/[0.03] px-4 py-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="text-[14px] font-bold text-white">{pet.name}</div>
+              <div className="mt-1 text-[12px] text-[#8a949d]">{pet.status}</div>
+            </div>
+            <div className="rounded-full bg-emerald-400/12 px-3 py-1 text-[11px] font-bold text-emerald-300">
+              Lv.{pet.level}
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="rounded-[18px] bg-black/25 px-3 py-3">
+              <div className="text-[11px] text-[#7e8790]">体力</div>
+              <div className="mt-2 text-[18px] font-black text-white">{pet.stamina}/{pet.maxStamina}</div>
+            </div>
+            <div className="rounded-[18px] bg-black/25 px-3 py-3">
+              <div className="text-[11px] text-[#7e8790]">龟币</div>
+              <div className="mt-2 text-[18px] font-black text-white">{balance.toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 overflow-x-auto overflow-y-hidden [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.18)_transparent] [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/15">
+          <div className="flex min-w-max gap-2 pb-1">
+            {PROFILE_TABS.map((tab) => (
+              <ProfileTabButton
+                key={tab.key}
+                active={activeTab === tab.key}
+                label={tab.label}
+                onClick={() => setActiveTab(tab.key)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5 min-w-0 border-t border-white/10 pt-4">
+          {renderContent()}
         </div>
       </div>
 
-      <div className="!mt-8 flex flex-wrap gap-2">
-        {PROFILE_TABS.map((tab) => (
-          <ProfileTabButton
-            key={tab.key}
-            active={activeTab === tab.key}
-            label={tab.label}
-            onClick={() => setActiveTab(tab.key)}
-          />
-        ))}
-      </div>
+      <div className="hidden xl:flex xl:min-h-[calc(100vh-140px)] xl:w-full xl:flex-col xl:overflow-hidden xl:px-8 xl:py-7">
+        <div className="flex items-start gap-4">
+          <button
+            onClick={onBack}
+            className="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-black/35 text-[#b8c0c7] transition-colors hover:bg-white/8 hover:text-white"
+          >
+            <ArrowLeft size={18} />
+          </button>
 
-      <div className="!mt-8 flex min-h-0 flex-1 flex-col border-t border-white/10 !pt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6">
-        <div className="min-w-0 min-h-0 overflow-y-auto !pr-1">{renderContent()}</div>
-        <aside className="!mt-8 min-h-0 overflow-y-auto !lg:mt-0 !lg:px-4 !lg:py-4">
-          <div>
-            <ProfilePetRail pet={pet} skins={skins} balance={balance} />
+          <div className="flex min-w-0 flex-1 items-start gap-4">
+            <div className="relative shrink-0">
+              <div className="grid h-18 w-18 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-xl font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
+                {avatar}
+              </div>
+              <div className="absolute bottom-0 right-0 grid h-8 w-8 place-items-center rounded-full border-4 border-[#101214] bg-[#252a2f] text-[#dde4ea]">
+                <ImageIcon size={14} />
+              </div>
+            </div>
+
+            <div className="min-w-0 pt-1">
+              <h1 className="truncate text-[28px] font-black tracking-[-0.03em] text-[#d5dee5]">{userName}</h1>
+              <div className="mt-1 text-[14px] font-semibold text-[#8a949d]">{userHandle}</div>
+            </div>
           </div>
-        </aside>
-      </div>
+        </div>
 
-      <div className="!mt-10 flex justify-center md:hidden">
-        <button
-          onClick={onOpenForum}
-          className="inline-flex items-center gap-2 rounded-full bg-white/6 !px-5 !py-3 text-[14px] font-semibold text-white"
-        >
-          <MessageSquarePlus size={18} />
-          去社区发帖
-        </button>
+        <div className="mt-8 flex flex-wrap gap-2">
+          {PROFILE_TABS.map((tab) => (
+            <ProfileTabButton
+              key={tab.key}
+              active={activeTab === tab.key}
+              label={tab.label}
+              onClick={() => setActiveTab(tab.key)}
+            />
+          ))}
+        </div>
+
+        <div className="mt-8 flex min-h-0 flex-1 flex-col border-t border-white/10 pt-8 xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-6">
+          <div className="min-w-0 min-h-0 overflow-y-auto pr-1">{renderContent()}</div>
+          <aside className="mt-8 min-h-0 overflow-y-auto xl:mt-0 xl:px-4 xl:py-4">
+            <div>
+              <ProfilePetRail pet={pet} skins={skins} balance={balance} />
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
   );

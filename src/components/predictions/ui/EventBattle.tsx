@@ -9,6 +9,7 @@ import type { PredictionCardItem } from './predictionCard';
 import { useRequestUserCurrent } from '@/hook/useRequest';
 import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hook/useCommentRequest';
 import { useRequestCoinMe } from '@/hook/useCoinRequest';
+import type { PetSkin } from '@/data/mock_data';
 
 dayjs.extend(relativeTime);
 
@@ -47,6 +48,7 @@ interface EventBattleProps {
   userSide: 'A' | 'B' | null;
   onBet?: (newsId: string, option: 'A' | 'B', odds: number, amount?: number) => void;
   bettingMarketId?: number | null;
+  equippedSkin?: PetSkin | null;
 }
 
 /* ══════════ Constants ══════════ */
@@ -2700,7 +2702,7 @@ const SideColumn = React.memo(({
 });
 
 /* ═══════════════════ Main EventBattle ═══════════════════ */
-export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide, onBet, bettingMarketId }) => {
+export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide, onBet, bettingMarketId, equippedSkin }) => {
   const battleEntityId = useMemo(() => news.marketId ?? news.id, [news.id, news.marketId]);
   const currentUserQuery = useRequestUserCurrent();
   const coinMeQuery = useRequestCoinMe();
@@ -3798,6 +3800,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     oddsA={news.oddsA}
                     oddsB={news.oddsB}
                     userSide={userSide}
+                    equippedSkinId={equippedSkin?.id}
                   />
                 </div>
                 <div className="hidden xl:block">

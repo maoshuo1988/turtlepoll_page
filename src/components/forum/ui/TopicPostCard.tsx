@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, MessageCircle, Repeat2, Share, BarChart2, MoreHorizontal, BadgeCheck, Bookmark, CornerDownRight, SendHorizonal } from 'lucide-react';
+import { Heart, MessageCircle, Repeat2, Share, BarChart2, MoreHorizontal, BadgeCheck, Bookmark, CornerDownRight, SendHorizonal, TrendingUp, Flame, X } from 'lucide-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
@@ -9,6 +9,7 @@ import { FORUM_TAGS } from '../../../data/mock_data';
 import { SERVER_API } from '@/constant';
 import { useRequestUserCurrent } from '@/hook/useRequest';
 import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hook/useCommentRequest';
+import type { PredictionCardItem } from '../../predictions/ui/predictionCard';
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
@@ -34,6 +35,8 @@ export type TopicPostCardData = Partial<TopicResponse> & {
 interface TopicPostCardProps {
   post: TopicPostCardData;
   index: number;
+  linkedPrediction?: PredictionCardItem | null;
+  onOpenLinkedPrediction?: (item: PredictionCardItem) => void;
   onLike?: (postId: string) => void | Promise<void>;
   onUnlike?: (postId: string) => void | Promise<void>;
   onToggleFavorite?: (postId: string, nextFavorited: boolean) => void | Promise<void>;
@@ -91,7 +94,7 @@ const ImageGrid: React.FC<{ images: string[] }> = ({ images }) => {
   if (images.length === 0) return null;
 
   return (
-    <div className="mt-2.5 md:mt-3 grid grid-cols-3 gap-2 overflow-hidden rounded-2xl border border-slate-200 dark:border-rdark-border md:grid-cols-4">
+    <div className="mt-2.5 md:mt-3 grid grid-cols-3 gap-2 overflow-hidden rounded-[20px] border border-white/8 bg-[#11161d] md:rounded-2xl md:border-slate-200 dark:md:border-rdark-border md:grid-cols-4">
       {images.slice(0, 8).map((src, i) => (
         <div key={i} className="relative aspect-square overflow-hidden bg-[#09182f]">
           <img
@@ -121,7 +124,7 @@ const ActionBtn: React.FC<{
 }> = ({ icon, count, hoverColor, active, activeColor, onClick }) => (
   <button
     onClick={onClick}
-    className={`group flex items-center gap-1 cursor-pointer border-0 bg-transparent transition-colors ${
+    className={`group flex min-w-0 flex-1 items-center justify-center gap-1 cursor-pointer rounded-full border-0 bg-transparent py-1 transition-colors md:flex-none md:justify-start md:rounded-none md:py-0 ${
       active && activeColor ? activeColor : 'text-slate-500 dark:text-rdark-text2'
     }`}
   >
@@ -129,7 +132,7 @@ const ActionBtn: React.FC<{
       {icon}
     </div>
     {count && (
-      <span className={`text-[13px] -ml-0.5 transition-colors ${active ? '' : `group-hover:${hoverColor.replace('bg-', 'text-').replace('/20', '').replace('/10', '').replace('50', '500')}`}`}>
+      <span className={`min-w-0 truncate text-[12px] md:text-[13px] -ml-0.5 transition-colors ${active ? '' : `group-hover:${hoverColor.replace('bg-', 'text-').replace('/20', '').replace('/10', '').replace('50', '500')}`}`}>
         {count}
       </span>
     )}
@@ -156,7 +159,7 @@ const CommentComposer: React.FC<ComposerProps> = ({ compact = false, disabled = 
 
   return (
     <div className={`rounded-2xl border border-white/8 bg-[#111111] ${compact ? '!p-3' : '!p-4'}`}>
-      <div className="flex items-center gap-2">
+      <div className={`flex gap-2 ${compact ? 'flex-col md:flex-row md:items-center' : 'items-center'}`}>
         <input
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -168,13 +171,13 @@ const CommentComposer: React.FC<ComposerProps> = ({ compact = false, disabled = 
           }}
           disabled={disabled}
           placeholder={placeholder}
-          className="h-[40px] flex-1 rounded-full border border-white/8 bg-black/20 px-4 text-[13px] text-[#ece7de] outline-none placeholder:text-[#7d766d] disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-[40px] min-w-0 flex-1 rounded-full border border-white/8 bg-black/20 px-4 text-[13px] text-[#ece7de] outline-none placeholder:text-[#7d766d] disabled:cursor-not-allowed disabled:opacity-45"
         />
         <button
           type="button"
           onClick={() => void handleSubmit()}
           disabled={disabled || submitting || content.trim().length === 0}
-          className="inline-flex h-[40px] items-center gap-1 rounded-full border border-[#5d5245] bg-[#181716] !px-4 text-[12px] font-bold text-[#f1e6d2] transition hover:border-[#8a7457] hover:text-[#fff0d7] disabled:cursor-not-allowed disabled:opacity-40"
+          className={`inline-flex h-[40px] items-center justify-center gap-1 rounded-full border border-[#5d5245] bg-[#181716] px-4 text-[12px] font-bold text-[#f1e6d2] transition hover:border-[#8a7457] hover:text-[#fff0d7] disabled:cursor-not-allowed disabled:opacity-40 ${compact ? 'w-full md:w-auto' : ''}`}
         >
           <SendHorizonal size={13} />
           {submitting ? '发送中' : compact ? '回复' : '评论'}
@@ -327,6 +330,8 @@ const ReplyThread: React.FC<ReplyThreadProps> = ({ comment, canComment }) => {
 export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   post,
   index,
+  linkedPrediction,
+  onOpenLinkedPrediction,
   onLike,
   onUnlike,
   onToggleFavorite,
@@ -337,6 +342,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const [bookmarked, setBookmarked] = useState(Boolean(post.favorited));
   const [cursor, setCursor] = useState<number | string>(0);
   const [comments, setComments] = useState<CommentResponse[]>([]);
+  const [commentComposerOpen, setCommentComposerOpen] = useState(false);
   const currentUserQuery = useRequestUserCurrent();
   const createCommentMutation = useRequestCreateComment();
   const commentsQuery = useRequestCommentComments({
@@ -351,6 +357,12 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
     setCursor(0);
     setComments([]);
   }, [expanded, post.id]);
+
+  useEffect(() => {
+    if (!expanded) {
+      setCommentComposerOpen(false);
+    }
+  }, [expanded]);
 
   useEffect(() => {
     const results = commentsQuery.data?.results ?? [];
@@ -419,65 +431,164 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const likeBase = displayLikes - (post.liked ? 1 : 0);
   const likeCount = likeBase + (liked ? 1 : 0);
   const canExpandText = content.length > 52;
+  const renderCommentsPanel = (className: string) => (
+    <div className={className}>
+      <div className="md:hidden">
+        <button
+          type="button"
+          onClick={() => setCommentComposerOpen(true)}
+          className="flex w-full items-center gap-3 rounded-2xl border border-white/8 bg-[#17191d] px-3 py-3 text-left"
+        >
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#14212d] text-sm text-cyan-300">
+            💬
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-[13px] font-semibold text-white">写评论</div>
+            <div className="mt-0.5 text-[12px] text-zinc-500">
+              {canComment ? '说说你的判断、观点或补充信息' : '登录后即可参与评论'}
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <div className="hidden md:block">
+        <CommentComposer
+          disabled={!canComment}
+          placeholder={canComment ? '写下你的评论...' : '登录后可参与评论'}
+          submitting={createCommentMutation.isLoading}
+          onSubmit={handleCreateComment}
+        />
+      </div>
+
+      {commentsQuery.isLoading && comments.length === 0 && (
+        <p className="!mt-3 text-[13px] text-[#8a8278]">正在加载评论...</p>
+      )}
+
+      {!commentsQuery.isLoading && comments.length === 0 && (
+        <p className="!mt-3 text-[13px] text-[#8a8278]">还没有评论，来抢沙发！</p>
+      )}
+
+      {comments.length > 0 && (
+        <div className="!mt-3 space-y-3">
+          {comments.map((comment) => {
+            const authorName = getUserDisplayName(comment);
+            const commentAvatar = resolveAssetUrl(comment.user?.avatar || comment.user?.smallAvatar);
+            return (
+              <div key={String(comment.id)} className="rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(24,24,24,0.98)_0%,rgba(13,13,13,0.98)_100%)] !p-4 shadow-[0_10px_26px_rgba(0,0,0,0.24)]">
+                <div className="flex gap-3">
+                  <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-[#24201c] text-sm font-bold text-[#f0e4d3]">
+                    {commentAvatar ? (
+                      <img src={commentAvatar} alt={authorName} className="h-full w-full object-cover" />
+                    ) : (
+                      authorName.slice(0, 1).toUpperCase()
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[13px] font-bold text-[#f5efe6]">{authorName}</span>
+                      <span className="text-[11px] text-[#8f877d]">{formatCommentTime(comment.createTime)}</span>
+                      {comment.ipLocation && <span className="text-[11px] text-[#746d65]">{comment.ipLocation}</span>}
+                    </div>
+
+                    {comment.quote?.content && (
+                      <div className="!mt-2 rounded-xl border border-[#5d5245]/35 bg-[#201d19] !px-3 !py-2 text-[12px] leading-5 text-[#b7aa99]">
+                        @{getUserDisplayName(comment.quote)}：{comment.quote.content}
+                      </div>
+                    )}
+
+                    <div className="!mt-2 whitespace-pre-wrap text-[14px] leading-6 text-[#e8dfd3]">
+                      {comment.content || '这条评论暂时没有正文。'}
+                    </div>
+
+                    {Array.isArray(comment.imageList) && comment.imageList.length > 0 && (
+                      <div className="!mt-3 grid grid-cols-3 gap-2 overflow-hidden rounded-2xl border border-white/8 md:grid-cols-4">
+                        {comment.imageList.map((image, imageIndex) => (
+                          <div key={`${String(comment.id)}-${imageIndex}`} className="aspect-square overflow-hidden bg-[#111111]">
+                            <img src={resolveAssetUrl(image.url || image.preview)} alt="" className="h-full w-full object-cover" />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <ReplyThread comment={comment} canComment={canComment} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {commentsQuery.data?.hasMore && (
+        <button
+          type="button"
+          onClick={() => setCursor(commentsQuery.data?.cursor ?? 0)}
+          disabled={commentsQuery.isFetching}
+          className="!mt-3 border-0 bg-transparent text-[12px] font-semibold text-[#d0b38a] transition hover:text-[#ecd0a7] disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {commentsQuery.isFetching ? '加载中...' : '加载更多评论'}
+        </button>
+      )}
+    </div>
+  );
 
   return (
     <motion.article
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: index * 0.03, duration: 0.15 }}
-      className="legacy-forum-post !py-3 border-b border-slate-100 dark:border-rdark-border hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+      className="legacy-forum-post mx-3 rounded-[24px] border border-white/8 bg-[#0f1013] px-4 py-3 shadow-[0_16px_36px_rgba(0,0,0,0.24)] transition-colors md:mx-0 md:rounded-none md:border-x-0 md:border-b md:border-t-0 md:border-slate-100 md:bg-transparent md:px-0 md:shadow-none md:hover:bg-black/[0.02] dark:md:border-rdark-border dark:md:hover:bg-white/[0.02]"
     >
-      <div className="legacy-forum-post-row flex gap-3">
-        <div className="shrink-0 pt-0.5">
-          <div className="legacy-forum-post-avatar w-15 h-15 rounded-full bg-slate-100 dark:bg-rdark-input grid place-items-center text-xl cursor-pointer hover:opacity-80 transition-opacity">
-            {avatarUrl ? (
-              <img src={avatarUrl} alt={nickname} className="h-full w-full rounded-full object-cover" />
-            ) : (
-              avatarText
-            )}
-          </div>
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-2 min-w-0 flex-wrap">
-              <span className="text-[15px] font-bold text-slate-900 dark:text-rdark-text truncate cursor-pointer hover:underline">
+      <div className="legacy-forum-post-row">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="legacy-forum-post-avatar grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#14212d] text-xl text-cyan-300 cursor-pointer transition-opacity hover:opacity-80 md:h-15 md:w-15 md:bg-slate-100 dark:md:bg-rdark-input">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={nickname} className="h-full w-full rounded-full object-cover" />
+              ) : (
+                avatarText
+              )}
+            </div>
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <span className="text-[15px] font-bold text-white dark:text-rdark-text truncate cursor-pointer hover:underline">
                 {nickname}
               </span>
               {Boolean(post.recommend || post.author?.verified) && (
                 <BadgeCheck size={16} className="text-blue-500 shrink-0" fill="currentColor" stroke="white" />
               )}
-              <span className="text-[14px] text-slate-500 dark:text-rdark-text2 truncate">
+              <span className="text-[13px] text-zinc-500 dark:text-rdark-text2 truncate md:text-[14px]">
                 {handle}
               </span>
               <span className="text-slate-400 dark:text-rdark-text2">·</span>
-              <span className="text-[14px] text-slate-500 dark:text-rdark-text2 cursor-pointer hover:underline shrink-0">
+              <span className="text-[13px] text-zinc-500 dark:text-rdark-text2 cursor-pointer hover:underline shrink-0 md:text-[14px]">
                 {displayTime}
               </span>
             </div>
-            <button className="p-1.5 -mr-1.5 -mt-0.5 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-slate-400 dark:text-rdark-text2 hover:text-blue-500 cursor-pointer border-0 bg-transparent transition-colors shrink-0">
-              <MoreHorizontal size={17} />
-            </button>
           </div>
+          <button className="rounded-full border-0 bg-transparent p-1.5 text-zinc-500 transition-colors hover:bg-white/6 hover:text-cyan-300 md:-mr-1.5 md:-mt-0.5 md:hover:bg-blue-50 md:hover:text-blue-500 dark:md:text-rdark-text2 dark:md:hover:bg-blue-900/20 shrink-0">
+            <MoreHorizontal size={17} />
+          </button>
+        </div>
 
-          <span className={`inline-block text-[10px] md:text-[11px] font-semibold px-2 !py-1 md:!py-2 rounded-full mt-0.5 mb-1 ${FORUM_TAGS[tag] ?? FORUM_TAGS['讨论']}`}>
+        <div className="mt-2 min-w-0">
+          <span className={`inline-block text-[10px] md:text-[11px] font-semibold px-2 !py-1 md:!py-2 rounded-full mt-1 mb-1.5 ${FORUM_TAGS[tag] ?? FORUM_TAGS['讨论']}`}>
             #{tag}
           </span>
 
           {post.title && (
-            <div className="text-[15px] font-semibold text-slate-900 dark:text-rdark-text">
+            <div className="text-[15px] font-semibold leading-6 text-white dark:text-rdark-text">
               {post.title}
             </div>
           )}
 
-          <p className={`legacy-forum-post-text !py-1.5 md:!py-2 text-[14px] md:text-[15px] text-slate-900 dark:text-rdark-text leading-[1.5] whitespace-pre-wrap ${textExpanded ? '' : 'line-clamp-2 md:line-clamp-none'}`}>
+          <p className={`legacy-forum-post-text py-1.5 md:!py-2 text-[15px] md:text-[15px] text-[#e7e9ec] dark:text-rdark-text leading-[1.65] whitespace-pre-wrap ${textExpanded ? '' : 'line-clamp-3 md:line-clamp-none'}`}>
             {content}
           </p>
           {canExpandText && (
             <button
               type="button"
               onClick={() => setTextExpanded((v) => !v)}
-              className="md:hidden text-[12px] font-semibold text-blue-500 hover:text-blue-600 bg-transparent border-0 p-0"
+              className="border-0 bg-transparent p-0 text-[12px] font-semibold text-cyan-300 hover:text-cyan-200 md:hidden"
             >
               {textExpanded ? '收起' : '展开'}
             </button>
@@ -485,7 +596,56 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
 
           {images.length > 0 && <ImageGrid images={images} />}
 
-          <div className="legacy-forum-post-actions flex items-center !mt-3 md:!mt-4 -ml-1 md:-ml-2 max-w-full md:max-w-[450px] gap-1.5 md:gap-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {linkedPrediction && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenLinkedPrediction?.(linkedPrediction);
+              }}
+              className="mt-3 w-full overflow-hidden rounded-[22px] border border-emerald-400/15 bg-[linear-gradient(135deg,rgba(11,17,26,0.96)_0%,rgba(10,24,22,0.98)_52%,rgba(9,13,16,0.98)_100%)] text-left shadow-[0_16px_36px_rgba(0,0,0,0.2)] transition-all hover:border-emerald-400/25 hover:shadow-[0_20px_44px_rgba(0,0,0,0.28)]"
+            >
+              <div className="flex items-start justify-between gap-3 border-b border-white/6 px-4 py-3">
+                <div className="min-w-0 flex-1">
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold tracking-[0.08em] text-emerald-300">
+                    <TrendingUp size={12} />
+                    关联事件
+                  </div>
+                  <div className="mt-2 line-clamp-2 text-[15px] font-black leading-5 text-white">
+                    {linkedPrediction.title}
+                  </div>
+                  <div className="mt-1 line-clamp-2 text-[12px] leading-5 text-zinc-400">
+                    这条帖子正在讨论该事件，点击可直接进入下注页。
+                  </div>
+                </div>
+
+                <div className="shrink-0 rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-2 text-right">
+                  <div className="text-[10px] text-zinc-500">最高赔率</div>
+                  <div className="mt-1 text-[16px] font-black text-white">
+                    {Math.max(linkedPrediction.oddsA, linkedPrediction.oddsB).toFixed(1)}x
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 px-4 py-3">
+                <div className="rounded-2xl border border-emerald-400/14 bg-emerald-500/8 px-3 py-3">
+                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-300">
+                    <Flame size={12} />
+                    正方入口
+                  </div>
+                  <div className="mt-1 text-[13px] font-bold text-white">{linkedPrediction.optionA}</div>
+                  <div className="mt-1 text-[12px] text-emerald-200/75">{linkedPrediction.oddsA.toFixed(1)}x</div>
+                </div>
+                <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3">
+                  <div className="text-[11px] font-semibold text-zinc-400">反方入口</div>
+                  <div className="mt-1 text-[13px] font-bold text-white">{linkedPrediction.optionB}</div>
+                  <div className="mt-1 text-[12px] text-zinc-400">{linkedPrediction.oddsB.toFixed(1)}x</div>
+                </div>
+              </div>
+            </button>
+          )}
+
+          <div className="legacy-forum-post-actions mt-3 grid max-w-full grid-cols-6 gap-1 border-t border-white/8 pt-2.5 md:!mt-4 md:-ml-2 md:flex md:max-w-[450px] md:border-t-0 md:pt-0">
             <ActionBtn
               icon={<MessageCircle size={17} className="group-hover:text-blue-500 transition-colors" />}
               count={formatCount(commentCount)}
@@ -502,7 +662,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
             />
             <button
               onClick={(e) => { e.stopPropagation(); void handleLike(); }}
-              className={`group flex items-center gap-1 cursor-pointer border-0 bg-transparent transition-colors ${
+              className={`group flex min-w-0 items-center justify-center gap-1 rounded-full py-1 cursor-pointer border-0 bg-transparent transition-colors md:flex-none md:justify-start md:rounded-none md:py-0 ${
                 liked ? 'text-pink-600' : 'text-slate-500 dark:text-rdark-text2'
               }`}
             >
@@ -511,7 +671,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                   <Heart size={17} fill={liked ? 'currentColor' : 'none'} className={liked ? '' : 'group-hover:text-pink-600 transition-colors'} />
                 </motion.div>
               </div>
-              <span className={`text-[13px] -ml-0.5 transition-colors ${liked ? '' : 'group-hover:text-pink-600'}`}>
+              <span className={`min-w-0 truncate text-[12px] md:text-[13px] -ml-0.5 transition-colors ${liked ? '' : 'group-hover:text-pink-600'}`}>
                 {formatCount(likeCount)}
               </span>
             </button>
@@ -529,7 +689,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                   setBookmarked(!nextFavorited);
                 });
               }}
-              className={`group cursor-pointer border-0 bg-transparent transition-colors ${
+              className={`group flex items-center justify-center rounded-full py-1 cursor-pointer border-0 bg-transparent transition-colors md:block md:rounded-none md:py-0 ${
                 bookmarked ? 'text-blue-500' : 'text-slate-500 dark:text-rdark-text2'
               }`}
             >
@@ -537,7 +697,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                 <Bookmark size={17} fill={bookmarked ? 'currentColor' : 'none'} className={bookmarked ? '' : 'group-hover:text-blue-500 transition-colors'} />
               </div>
             </button>
-            <button className="group cursor-pointer border-0 bg-transparent text-slate-500 dark:text-rdark-text2 transition-colors">
+            <button className="group flex items-center justify-center rounded-full py-1 cursor-pointer border-0 bg-transparent text-slate-500 dark:text-rdark-text2 transition-colors md:block md:rounded-none md:py-0">
               <div className="p-2 rounded-full group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
                 <Share size={17} className="group-hover:text-blue-500 transition-colors" />
               </div>
@@ -553,83 +713,55 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="legacy-forum-comments mt-2 pt-2.5 md:pt-3 border-t border-slate-100 dark:border-rdark-border">
-                  <CommentComposer
-                    disabled={!canComment}
-                    placeholder={canComment ? '写下你的评论...' : '登录后可参与评论'}
-                    submitting={createCommentMutation.isLoading}
-                    onSubmit={handleCreateComment}
-                  />
+                {renderCommentsPanel('legacy-forum-comments mt-3 rounded-[20px] border border-white/8 bg-[#111318] p-3 md:mt-2 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:pt-3 md:border-t md:border-slate-100 dark:md:border-rdark-border')}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-                  {commentsQuery.isLoading && comments.length === 0 && (
-                    <p className="!mt-3 text-[13px] text-[#8a8278]">正在加载评论...</p>
-                  )}
-
-                  {!commentsQuery.isLoading && comments.length === 0 && (
-                    <p className="!mt-3 text-[13px] text-[#8a8278]">还没有评论，来抢沙发！</p>
-                  )}
-
-                  {comments.length > 0 && (
-                    <div className="!mt-3 space-y-3">
-                      {comments.map((comment) => {
-                        const authorName = getUserDisplayName(comment);
-                        const commentAvatar = resolveAssetUrl(comment.user?.avatar || comment.user?.smallAvatar);
-                        return (
-                          <div key={String(comment.id)} className="rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(24,24,24,0.98)_0%,rgba(13,13,13,0.98)_100%)] !p-4 shadow-[0_10px_26px_rgba(0,0,0,0.24)]">
-                            <div className="flex gap-3">
-                              <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-[#24201c] text-sm font-bold text-[#f0e4d3]">
-                                {commentAvatar ? (
-                                  <img src={commentAvatar} alt={authorName} className="h-full w-full object-cover" />
-                                ) : (
-                                  authorName.slice(0, 1).toUpperCase()
-                                )}
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <span className="text-[13px] font-bold text-[#f5efe6]">{authorName}</span>
-                                  <span className="text-[11px] text-[#8f877d]">{formatCommentTime(comment.createTime)}</span>
-                                  {comment.ipLocation && <span className="text-[11px] text-[#746d65]">{comment.ipLocation}</span>}
-                                </div>
-
-                                {comment.quote?.content && (
-                                  <div className="!mt-2 rounded-xl border border-[#5d5245]/35 bg-[#201d19] !px-3 !py-2 text-[12px] leading-5 text-[#b7aa99]">
-                                    @{getUserDisplayName(comment.quote)}：{comment.quote.content}
-                                  </div>
-                                )}
-
-                                <div className="!mt-2 whitespace-pre-wrap text-[14px] leading-6 text-[#e8dfd3]">
-                                  {comment.content || '这条评论暂时没有正文。'}
-                                </div>
-
-                                {Array.isArray(comment.imageList) && comment.imageList.length > 0 && (
-                                  <div className="!mt-3 grid grid-cols-3 gap-2 overflow-hidden rounded-2xl border border-white/8 md:grid-cols-4">
-                                    {comment.imageList.map((image, imageIndex) => (
-                                      <div key={`${String(comment.id)}-${imageIndex}`} className="aspect-square overflow-hidden bg-[#111111]">
-                                        <img src={resolveAssetUrl(image.url || image.preview)} alt="" className="h-full w-full object-cover" />
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-
-                                <ReplyThread comment={comment} canComment={canComment} />
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
+          <AnimatePresence>
+            {commentComposerOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm md:hidden"
+              >
+                <div className="flex h-full items-end">
+                  <motion.div
+                    initial={{ y: '100%' }}
+                    animate={{ y: 0 }}
+                    exit={{ y: '100%' }}
+                    transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+                    className="flex max-h-[82vh] w-full flex-col overflow-hidden rounded-t-[28px] border border-white/8 bg-[#0d0e11] shadow-[0_-20px_60px_rgba(0,0,0,0.45)]"
+                  >
+                    <div className="flex justify-center pt-2.5">
+                      <div className="h-1.5 w-12 rounded-full bg-white/16" />
                     </div>
-                  )}
-
-                  {commentsQuery.data?.hasMore && (
-                    <button
-                      type="button"
-                      onClick={() => setCursor(commentsQuery.data?.cursor ?? 0)}
-                      disabled={commentsQuery.isFetching}
-                      className="!mt-3 border-0 bg-transparent text-[12px] font-semibold text-[#d0b38a] transition hover:text-[#ecd0a7] disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      {commentsQuery.isFetching ? '加载中...' : '加载更多评论'}
-                    </button>
-                  )}
+                    <div className="flex items-center justify-between border-b border-white/8 px-4 py-3">
+                      <div className="flex items-center gap-2 text-[15px] font-bold text-white">
+                        <MessageCircle size={16} />
+                        发布评论
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCommentComposerOpen(false)}
+                        className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/5 text-zinc-300"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                    <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 pb-[max(16px,env(safe-area-inset-bottom))]">
+                      <CommentComposer
+                        disabled={!canComment}
+                        placeholder={canComment ? '写下你的评论...' : '登录后可参与评论'}
+                        submitting={createCommentMutation.isLoading}
+                        onSubmit={async (value) => {
+                          await handleCreateComment(value);
+                          setCommentComposerOpen(false);
+                        }}
+                      />
+                    </div>
+                  </motion.div>
                 </div>
               </motion.div>
             )}

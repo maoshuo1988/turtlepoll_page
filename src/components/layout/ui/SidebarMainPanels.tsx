@@ -7,7 +7,7 @@ import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
 import type { SidebarHotTag, SidebarHotTopic } from './sidebarHotData';
 import type { PredictionCardItem } from '../../predictions/ui/predictionCard';
 
-export type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory';
+export type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'predictions', label: '预测市场', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
@@ -40,6 +40,7 @@ interface SidebarMainPanelsProps {
   onCloseChat: () => void;
   onViewPet: () => void;
   onOpenProfile: () => void;
+  onOpenActivePredictions: () => void;
   onViewChange: (view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag) => void;
   onNavClick: (item: SidebarNavItem) => void;
 }
@@ -60,6 +61,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
   onCloseChat,
   onViewPet,
   onOpenProfile,
+  onOpenActivePredictions,
   onViewChange,
   onNavClick,
 }) => {
@@ -81,6 +83,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
               onCloseChat={onCloseChat}
               onViewPet={onViewPet}
               onOpenProfile={onOpenProfile}
+              onOpenActivePredictions={onOpenActivePredictions}
             />
           </div>
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
@@ -111,6 +114,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
             onCloseChat={onCloseChat}
             onViewPet={onViewPet}
             onOpenProfile={onOpenProfile}
+            onOpenActivePredictions={onOpenActivePredictions}
           />
 
           <SidebarHotTopicsPanel

@@ -18,6 +18,7 @@ interface SidebarDesktopProfilePanelProps {
   onCloseChat: () => void;
   onViewPet: () => void;
   onOpenProfile: () => void;
+  onOpenActivePredictions: () => void;
 }
 
 // 桌面侧边栏顶部个人卡片：资料、金币、战绩和宠物入口
@@ -35,6 +36,7 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
   onCloseChat,
   onViewPet,
   onOpenProfile,
+  onOpenActivePredictions,
 }) => {
   const coinMe = useRequestCoinMe();
   const displayBalance = coinMe.data?.balance ?? 0;
@@ -92,10 +94,14 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
             <div className=" text-[15px] font-bold leading-none text-white dark:text-rdark-text">{totalPredictions}</div>
             <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">已预测</div>
           </div>
-          <div className="rounded-lg bg-[#141518]  text-center dark:bg-rdark-input">
+          <button
+            type="button"
+            onClick={onOpenActivePredictions}
+            className="rounded-lg bg-[#141518] text-center transition-colors hover:bg-[#1a1c20] dark:bg-rdark-input dark:hover:bg-rdark-hover"
+          >
             <div className="text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">{activePredictions}</div>
             <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">进行中</div>
-          </div>
+          </button>
         </div>
       </div>
 
