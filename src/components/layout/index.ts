@@ -1,2 +1,2 @@
-export { Sidebar } from './ui/Sidebar';
-export type { ViewType } from './ui/Sidebar';
+export { Sidebar } from '../pc/layout';
+export type { ViewType } from '../pc/layout';

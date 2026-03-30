@@ -1,23 +1,22 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Sidebar } from '../components/layout';
 import type { ViewType } from '../components/layout';
-import { ActivePredictionsPage, EventBattle, PredictionsView } from '../components/predictions';
-import { Forum } from '../components/forum';
-import { Shop } from '../components/shop';
-import { TopicDetail } from '../components/topic';
-import { BattleSquarePixel } from '../components/battle';
-import { TurtleDivePixel } from '../components/lab';
-import { RankPage } from '../components/rank';
-import { PetPage } from '../components/pet';
-import { ProfilePage } from '../components/profile';
-import { FloatingPetChat } from '../components/layout/ui/FloatingPetChat';
-import { AppFooter } from './AppFooter';
-import { AppHeader } from './AppHeader';
+import { ActivePredictionsPage, EventBattle, PredictionsView } from '../components/shared/predictions';
+import { Forum } from '../components/shared/forum';
+import { Shop } from '../components/shared/shop';
+import { TopicDetail } from '../components/shared/topic';
+import { BattleSquarePixel } from '../components/shared/battle';
+import { TurtleDivePixel } from '../components/shared/lab';
+import { RankPage } from '../components/shared/rank';
+import { PetPage } from '../components/shared/pet';
+import { ProfilePage } from '../components/shared/profile';
+import { FloatingPetChat } from '../components/shared/layout';
+import { AppFooter, AppHeader, FloatingGuideButton } from './pc';
+import { MobileTopBar, MobilePredictionTopTabs, type MobilePredictionTopTabKey } from './mobile/home';
+import { MobileFloatingActions } from './mobile/pet';
+import { MobileTabBar } from './mobile/shared';
 import { GuideTourModal } from './GuideTourModal';
-import { FloatingGuideButton } from './FloatingGuideButton';
-import { MobileBottomNav } from './MobileBottomNav';
-import { MobileHomePanels } from './MobileHomePanels';
-import { AuthModal } from '../components/auth';
+import { AuthModal } from '../components/shared/auth';
 import type { MockForumEntry, Battle, BattleSide, PetSkin } from '../data/mock_data';
 import {
   mockUser,
@@ -33,8 +32,8 @@ import type { PlaceBetResult } from '@/hook/coinType';
 import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestUserMsgRecent } from '@/hook/useRequest';
 import { useRequestFootballMarkets } from '@/hook/usePredictRequest';
 import { useAppSession } from '@/hook/useAppSession';
-import { mapMarketToPredictionCard, type PredictionCardItem } from '../components/predictions/ui/predictionCard';
-import type { SidebarHotTag, SidebarHotTopic } from '../components/layout/ui/sidebarHotData';
+import { mapMarketToPredictionCard, type PredictionCardItem } from '../components/shared/predictions/ui/predictionCard';
+import type { SidebarHotTag, SidebarHotTopic } from '../components/shared/layout';
 import { useRequestCoinBet } from '@/hook/useCoinRequest';
 
 // Bet cost per action
@@ -81,6 +80,18 @@ function App() {
   const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);
   const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);
   const [selectedTopic, setSelectedTopic] = useState<SidebarHotTopic | null>(null);
+  /**
+   * Mobile home tabs:
+   * 手机端“首页”顶部固定的五个分类。
+   * 这里统一管理首页频道顺序，避免以后顶部分类和底部发布按钮互相干扰。
+   */
+  const [mobileHomeTab, setMobileHomeTab] = useState<MobilePredictionTopTabKey>('latest_feed');
+  /**
+   * Mobile forum compose:
+   * 手机端底部中间“发布”按钮只负责拉起发帖面板。
+   * 这里用 signal 做一次性打开触发，让 ForumCompose 在 mobile 模式下从底部弹出。
+   */
+  const [mobileForumComposeSignal, setMobileForumComposeSignal] = useState(0);
   
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bettingMarketId, setBettingMarketId] = useState<number | null>(null);
@@ -322,8 +333,6 @@ function App() {
     );
   }, []);
 
-  const showMobileHomePanels = activeView === 'predictions' && !selectedTopic && !selectedNewsId && !selectedBattleItem;
-
   const renderActiveView = () => (
     <>
       {activeView === 'predictions' && (selectedNewsId || selectedBattleItem) && (
@@ -370,6 +379,9 @@ function App() {
           <Forum
             newsByMarketId={newsByMarketId}
             onOpenLinkedPrediction={handleOpenLinkedPrediction}
+            showComposer
+            composerOpenSignal={mobileForumComposeSignal}
+            mobileBottomSheetComposer={typeof window !== 'undefined' ? window.innerWidth < 1280 : false}
           />
         </section>
       )}
@@ -400,8 +412,11 @@ function App() {
             pet={currentPet}
             skins={skins}
             balance={balance}
+            darkMode={darkMode}
             onBack={() => setActiveView('predictions')}
             onOpenForum={() => setActiveView('forum')}
+            onOpenAuth={() => setAuthModalOpen(true)}
+            onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
           />
         </section>
       )}
@@ -454,6 +469,109 @@ function App() {
     </>
   );
 
+  /**
+   * Mobile home landing:
+   * 手机端首页统一从这里切分类内容。
+   * - 排行榜：复用 RankPage
+   * - 推荐 / 最新 / 关注：复用 Forum 帖子流，但隐藏 Forum 自己内部的顶部 tab
+   * - 预测市场：复用 PredictionsView
+   *
+   * 这样首页顶部分类统一收口在一个地方，中间“发布”按钮就只管发帖。
+   */
+  const renderMobileHomeView = () => {
+    if (mobileHomeTab === 'rank_board') {
+      return <RankPage />;
+    }
+
+    if (mobileHomeTab === 'prediction_market') {
+      return (
+        <PredictionsView
+          selectedTag={selectedTag}
+          onBetSuccess={handlePredictionBetSuccess}
+          onRequireAuth={() => setAuthModalOpen(true)}
+          onEnterBattle={handleEnterBattle}
+        />
+      );
+    }
+
+    const forumTabMap: Record<'recommend_feed' | 'latest_feed' | 'following_feed', 'recommend' | 'latest' | 'following'> = {
+      recommend_feed: 'recommend',
+      latest_feed: 'latest',
+      following_feed: 'following',
+    };
+
+    return (
+      <Forum
+        newsByMarketId={newsByMarketId}
+        onOpenLinkedPrediction={handleOpenLinkedPrediction}
+        showComposer
+        composerOpenSignal={mobileForumComposeSignal}
+        forcedActiveTab={forumTabMap[mobileHomeTab as 'recommend_feed' | 'latest_feed' | 'following_feed']}
+        hideTopTabs
+        mobileBottomSheetComposer
+      />
+    );
+  };
+
+  const mobileShell = (
+    <div className="bg-[#080808] xl:hidden">
+      <MobileTopBar onOpenLab={() => handleViewChange('lab')} />
+      <main className="min-h-[calc(100vh-58px)] pb-[104px] pt-3">
+        {/*
+          Mobile edge spacing rule:
+          手机端主内容统一保留 12px 的左右安全边距。
+          以后新增 mobile 页面时，优先走这层容器，不要再让内容直接贴屏幕边缘。
+        */}
+        <div className="space-y-3 px-3">
+          {activeView === 'forum' ? (
+            <>
+              <MobilePredictionTopTabs
+                activeTab={mobileHomeTab}
+                onChange={setMobileHomeTab}
+              />
+              {renderMobileHomeView()}
+            </>
+          ) : (
+            renderActiveView()
+          )}
+        </div>
+      </main>
+
+      <MobileTabBar
+        activeView={activeView}
+        onChange={(view) => handleViewChange(view)}
+        onCompose={() => {
+          setMobileHomeTab('recommend_feed');
+          setMobileForumComposeSignal((value) => value + 1);
+          handleViewChange('forum');
+        }}
+      />
+    </div>
+  );
+
+  const desktopShell = (
+    <main className="app-main hidden min-h-[calc(100vh-56px)] flex-col gap-4 xl:flex xl:h-[calc(100vh-56px)] xl:min-h-0 xl:flex-row xl:gap-6 xl:overflow-hidden">
+      <aside className="app-sidebar hidden h-full w-[260px] shrink-0 self-stretch overflow-hidden xl:block">
+        <Sidebar
+          balance={balance}
+          winStreak={mockUser.winStreak}
+          winRate={0.68}
+          totalPredictions={42}
+          activePredictions={activePredictionItems.length}
+          pet={currentPet}
+          newsByMarketId={newsByMarketId}
+          petDialogue={petDialogue}
+          idleDialogues={petDialogues.idle}
+          activeView={activeView}
+          onViewChange={handleViewChange}
+        />
+      </aside>
+
+      <div className="app-content flex-1 min-w-0 overflow-visible space-y-4 overscroll-contain md:space-y-6 xl:h-full xl:min-h-0 xl:overflow-y-auto xl:pr-1">
+        {renderActiveView()}
+      </div>
+    </main>
+  );
 
   return (
     <div className={`legacy-fusion-app fixed-sidebar-style min-h-screen overflow-x-hidden bg-[#080808] text-white dark:bg-rdark transition-colors ${usePredStyleLayout ? 'home-main-style' : ''}`}>
@@ -463,69 +581,40 @@ function App() {
         onOpenAuth={() => setAuthModalOpen(true)}
       />
 
-      <div className="bg-[#080808] xl:hidden">
-        <main className="min-h-[calc(100vh-54px)] pb-[104px] pt-3">
-          <div className="space-y-3">
-            {showMobileHomePanels && (
-              <MobileHomePanels
-                winStreak={mockUser.winStreak}
-                winRate={0.68}
-                totalPredictions={42}
-                activePredictions={activePredictionItems.length}
-                pet={currentPet}
-                newsByMarketId={newsByMarketId}
-                petDialogue={petDialogue}
-                idleDialogues={petDialogues.idle}
-                selectedTag={selectedTag}
-                onViewChange={handleViewChange}
-              />
-            )}
+      {mobileShell}
 
-            {renderActiveView()}
-          </div>
-        </main>
-
-        <MobileBottomNav activeView={activeView} onChange={(view) => handleViewChange(view)} />
-      </div>
-
-      <main className="app-main hidden min-h-[calc(100vh-56px)] flex-col gap-4 xl:flex xl:h-[calc(100vh-56px)] xl:min-h-0 xl:flex-row xl:gap-6 xl:overflow-hidden">
-        <aside className="app-sidebar hidden h-full w-[260px] shrink-0 self-stretch overflow-hidden xl:block">
-          <Sidebar
-            balance={balance}
-            winStreak={mockUser.winStreak}
-            winRate={0.68}
-            totalPredictions={42}
-            activePredictions={activePredictionItems.length}
-            pet={currentPet}
-            newsByMarketId={newsByMarketId}
-            petDialogue={petDialogue}
-            idleDialogues={petDialogues.idle}
-            activeView={activeView}
-            onViewChange={handleViewChange}
-          />
-        </aside>
-
-        <div className="app-content flex-1 min-w-0 overflow-visible space-y-4 overscroll-contain md:space-y-6 xl:h-full xl:min-h-0 xl:overflow-y-auto xl:pr-1">
-          {renderActiveView()}
-        </div>
-      </main>
+      {desktopShell}
 
       {/* Footer */}
       {!isEventBattleActive && (
         <AppFooter />
       )}
 
-      <FloatingGuideButton onClick={() => setGuideOpen(true)} sizeClassName="w-13 h-13" />
+      <div className="hidden xl:block">
+        <FloatingGuideButton onClick={() => setGuideOpen(true)} sizeClassName="w-13 h-13" />
+      </div>
 
-      {/* ━━━ 浮动宠物聊天入口 ━━━ */}
-      <FloatingPetChat
-        open={floatingChatOpen}
+      <MobileFloatingActions
+        chatOpen={floatingChatOpen}
         pet={currentPet}
         stamina={petStamina}
-        onToggle={() => setFloatingChatOpen((v) => !v)}
-        onClose={() => setFloatingChatOpen(false)}
+        onOpenGuide={() => setGuideOpen(true)}
+        onToggleChat={() => setFloatingChatOpen((v) => !v)}
+        onCloseChat={() => setFloatingChatOpen(false)}
         onStaminaChange={setPetStamina}
       />
+
+      {/* ━━━ 浮动宠物聊天入口 ━━━ */}
+      <div className="hidden xl:block">
+        <FloatingPetChat
+          open={floatingChatOpen}
+          pet={currentPet}
+          stamina={petStamina}
+          onToggle={() => setFloatingChatOpen((v) => !v)}
+          onClose={() => setFloatingChatOpen(false)}
+          onStaminaChange={setPetStamina}
+        />
+      </div>
 
       <GuideTourModal open={guideOpen} onClose={() => setGuideOpen(false)} />
 
