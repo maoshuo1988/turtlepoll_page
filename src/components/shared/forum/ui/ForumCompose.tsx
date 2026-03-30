@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Image, X } from 'lucide-react';
+import { Image, Smile, X } from 'lucide-react';
 import type { TopicPostTag } from './TopicPostCard';
 import { FORUM_TAGS } from '@/data/mock_data';
 import { useRequestUploadImage } from '@/hook/useRequest';
@@ -15,6 +15,9 @@ interface ForumComposeProps {
 }
 
 const tags: TopicPostTag[] = ['讨论', '爆料', '分析'];
+const visibilityOptions = ['所有人可见', '仅自己可见', '所有人不可见'] as const;
+const emojiOptions = ['😀', '🔥', '🐢', '🎯', '💡', '🚀', '👏', '🍉'] as const;
+const topicOptions = ['# 我心中引进最成功的外援', '# 大热必聊'] as const;
 const MAX_IMAGES = 9;
 const MAX_CHARS = 280;
 
@@ -33,24 +36,36 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
 }) => {
   const uploadImageMutation = useRequestUploadImage();
   const [content, setContent] = useState('');
-  const [detailContent, setDetailContent] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState('');
   const [tag, setTag] = useState<TopicPostTag>('讨论');
   const [images, setImages] = useState<LocalComposeImage[]>([]);
   const [focused, setFocused] = useState(false);
   const [mobileComposerOpen, setMobileComposerOpen] = useState(false);
+  const [visibility, setVisibility] = useState<(typeof visibilityOptions)[number]>('所有人可见');
+  const [visibilityOpen, setVisibilityOpen] = useState(false);
+  const [emojiOpen, setEmojiOpen] = useState(false);
   const [toolbarHint, setToolbarHint] = useState('支持本地上传最多 9 张图片');
   const [submitting, setSubmitting] = useState(false);
+  const previousOpenSignalRef = useRef<number | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /**
    * Mobile publish entry:
    * 当手机端底部中间“发布”按钮被点击时，外层会递增 openSignal。
-   * 这里只监听这个 signal，把原本页面顶部的发帖面板直接展开。
+   * 这里只有 signal 相比上一次“真的变大”时才打开。
+   * 这样刷新、初始化挂载、同值重渲染都不会误触发发布弹层。
    * 这样中间发布按钮就只负责“发帖子”，不会混入其他导航含义。
    */
   useEffect(() => {
     if (typeof openSignal !== 'number') return;
+    if (previousOpenSignalRef.current === null) {
+      previousOpenSignalRef.current = openSignal;
+      return;
+    }
+    const hasIncreased = openSignal > previousOpenSignalRef.current;
+    previousOpenSignalRef.current = openSignal;
+    if (!hasIncreased) return;
     setMobileComposerOpen(true);
     setFocused(true);
   }, [openSignal]);
@@ -69,9 +84,8 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
   };
 
   const handleSubmit = async () => {
-    const mainContent = content.trim();
-    const extraContent = detailContent.trim();
-    const mergedContent = [mainContent, extraContent].filter(Boolean).join('\n\n');
+    const trimmedContent = content.trim();
+    const mergedContent = [selectedTopic.trim(), trimmedContent].filter(Boolean).join(' ');
     if (!mergedContent && images.length === 0) return;
 
     try {
@@ -88,10 +102,12 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
       await onPost(mergedContent, tag, uploadedImageUrls.filter(Boolean));
       images.forEach((item) => URL.revokeObjectURL(item.previewUrl));
       setContent('');
-      setDetailContent('');
+      setSelectedTopic('');
       setImages([]);
       setFocused(false);
       setMobileComposerOpen(false);
+      setVisibilityOpen(false);
+      setEmojiOpen(false);
       setToolbarHint('发布成功');
       onCloseComposer?.();
     } catch (error) {
@@ -148,8 +164,31 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
     });
   };
 
-  const canPost = content.trim().length > 0 || detailContent.trim().length > 0 || images.length > 0;
-  const charCount = content.length + detailContent.length;
+  /**
+   * appendEmoji:
+   * 手机端发帖层的表情插入入口。
+   * 这里统一把表情追加到正文末尾，避免以后在多个按钮里分散维护插入逻辑。
+   */
+  const appendEmoji = (emoji: string) => {
+    setContent((prev) => `${prev}${emoji}`);
+    setEmojiOpen(false);
+    setFocused(true);
+    textareaRef.current?.focus();
+  };
+
+  /**
+   * prependTopic:
+   * 话题和正文分开维护。
+   * 点击话题时只替换当前话题，不把话题混进输入框正文里。
+   */
+  const prependTopic = (topic: string) => {
+    setSelectedTopic(topic);
+    setFocused(true);
+    textareaRef.current?.focus();
+  };
+
+  const canPost = content.trim().length > 0 || images.length > 0;
+  const charCount = content.length;
 
   /**
    * mobileSheetComposer:
@@ -204,65 +243,119 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 pb-4 pt-4">
+              <div className="mb-4 flex items-center gap-2">
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setVisibilityOpen((prev) => !prev);
+                      setEmojiOpen(false);
+                    }}
+                    className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-zinc-300"
+                  >
+                    {visibility}
+                  </button>
+                  {visibilityOpen && (
+                    <div className="absolute left-0 top-[calc(100%+8px)] z-20 min-w-[150px] overflow-hidden rounded-2xl border border-white/10 bg-[#15161a] shadow-xl">
+                      {visibilityOptions.map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => {
+                            setVisibility(option);
+                            setVisibilityOpen(false);
+                          }}
+                          className={`block w-full px-4 py-3 text-left text-[13px] transition-colors ${
+                            visibility === option
+                              ? 'bg-emerald-500/12 text-emerald-300'
+                              : 'text-zinc-300 hover:bg-white/[0.04]'
+                          }`}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmojiOpen((prev) => !prev);
+                      setVisibilityOpen(false);
+                    }}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-zinc-300"
+                  >
+                    <Smile size={16} />
+                    表情
+                  </button>
+                  {emojiOpen && (
+                    <div className="absolute left-0 top-[calc(100%+8px)] z-20 grid w-[188px] grid-cols-4 gap-2 rounded-2xl border border-white/10 bg-[#15161a] p-3 shadow-xl">
+                      {emojiOptions.map((emoji) => (
+                        <button
+                          key={emoji}
+                          type="button"
+                          onClick={() => appendEmoji(emoji)}
+                          className="grid h-10 w-10 place-items-center rounded-xl bg-white/[0.04] text-[20px] transition-colors hover:bg-emerald-500/12"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="rounded-[24px] border border-white/8 bg-white/[0.02] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+                {selectedTopic ? (
+                  <div className="mb-2 inline-flex items-center rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-[14px] font-semibold text-emerald-300">
+                    {selectedTopic}
+                  </div>
+                ) : null}
                 <textarea
                   ref={textareaRef}
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
+                  onChange={(e) => setContent(e.target.value.slice(0, MAX_CHARS))}
                   onFocus={() => setFocused(true)}
                   placeholder="分享你的心情、观点和经历..."
                   rows={4}
-                  className="w-full resize-none border-0 bg-transparent text-[28px] leading-[1.45] tracking-[-0.03em] text-white outline-none placeholder:text-zinc-500"
+                  className="w-full resize-none border-0 bg-transparent text-[18px] leading-[1.7] tracking-[-0.01em] text-white outline-none placeholder:text-zinc-500"
                 />
-                <div className="mt-3 h-px bg-white/8" />
-                <textarea
-                  value={detailContent}
-                  onChange={(e) => setDetailContent(e.target.value)}
-                  placeholder="补充说明（选填）"
-                  rows={5}
-                  className="mt-4 w-full resize-none border-0 bg-transparent text-[16px] leading-7 text-zinc-300 outline-none placeholder:text-zinc-500"
-                />
+                <div className="mt-3 flex items-center justify-end">
+                  <div className={`text-[11px] ${charCount > MAX_CHARS ? 'text-rose-300' : 'text-zinc-500'}`}>{charCount}/{MAX_CHARS}</div>
+                </div>
               </div>
 
               <div className="mt-4">
-                {images.length > 0 ? (
-                  <div className="grid grid-cols-3 gap-3">
-                    {images.map((image, index) => (
-                      <div key={index} className="relative aspect-square overflow-hidden rounded-[22px] border border-white/10 bg-[#111215]">
-                        <img src={image.previewUrl} alt="" className="h-full w-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                          className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/70 text-white"
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    ))}
-                    {images.length < MAX_IMAGES && (
+                <div className="flex flex-wrap gap-3">
+                  {images.map((image, index) => (
+                    <div key={index} className="relative h-[104px] w-[104px] overflow-hidden rounded-[22px] border border-white/10 bg-[#111215]">
+                      <img src={image.previewUrl} alt="" className="h-full w-full object-cover" />
                       <button
                         type="button"
-                        onClick={openFilePicker}
-                        className="flex aspect-square flex-col items-center justify-center rounded-[22px] border border-dashed border-white/12 bg-white/[0.03] text-zinc-400"
+                        onClick={() => removeImage(index)}
+                        className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/70 text-white"
                       >
-                        <Image size={26} />
-                        <span className="mt-3 text-[13px] font-medium">添加图片</span>
+                        <X size={14} />
                       </button>
-                    )}
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={openFilePicker}
-                    className="flex h-[168px] w-full flex-col items-center justify-center rounded-[24px] border border-dashed border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] text-zinc-400 transition-colors hover:bg-white/[0.05]"
-                  >
-                    <Image size={34} />
-                    <span className="mt-4 text-[15px] font-medium">添加图片或视频</span>
-                  </button>
-                )}
+                    </div>
+                  ))}
+                  {images.length < MAX_IMAGES && (
+                    <button
+                      type="button"
+                      onClick={openFilePicker}
+                      className="flex h-[104px] w-[104px] flex-col items-center justify-center rounded-[22px] border border-dashed border-white/12 bg-white/[0.03] text-zinc-400"
+                    >
+                      <Image size={24} />
+                      <span className="mt-2 text-[12px] font-medium">添加图片</span>
+                    </button>
+                  )}
+                </div>
+                <div className="mt-3 text-[12px] text-zinc-500">已添加 {images.length}/{MAX_IMAGES} 张图片</div>
               </div>
 
-              <div className="mt-5 flex flex-wrap items-center gap-2">
+              {/* <div className="mt-5 flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-[14px] font-semibold text-zinc-200"
@@ -281,17 +374,21 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
                 >
                   帖子
                 </button>
-              </div>
+              </div> */}
 
               <div className="mt-4 rounded-[22px] border border-white/8 bg-white/[0.02] p-4">
                 <div className="mb-3 text-[15px] font-semibold text-zinc-200">添加话题</div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] font-medium text-zinc-300">
-                    # 我心中引进最成功的外援
-                  </span>
-                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] font-medium text-zinc-300">
-                    # 大热必聊
-                  </span>
+                  {topicOptions.map((topic) => (
+                    <button
+                      key={topic}
+                      type="button"
+                      onClick={() => prependTopic(topic)}
+                      className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] font-medium text-zinc-300 transition-colors hover:bg-emerald-500/10 hover:text-emerald-300"
+                    >
+                      {topic}
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -314,18 +411,6 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
             </div>
 
             <div className="border-t border-white/8 bg-[#0b0c0f]/96 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
-              <div className="mb-3 flex items-center justify-between">
-                <div className="flex items-center gap-6 text-zinc-400">
-                  <button type="button" className="relative text-[17px] font-bold text-white">
-                    帖子
-                    <span className="absolute -bottom-2 left-0 h-[3px] w-full rounded-full bg-white" />
-                  </button>
-                  <button type="button" className="text-[17px] font-semibold text-zinc-500">投票</button>
-                  <button type="button" className="text-[17px] font-semibold text-zinc-500">模板</button>
-                </div>
-                <div className={`text-[11px] ${charCount > MAX_CHARS ? 'text-rose-300' : 'text-zinc-500'}`}>{charCount}/{MAX_CHARS}</div>
-              </div>
-
               <button
                 type="button"
                 onClick={handleSubmit}
@@ -334,6 +419,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
               >
                 {submitting ? '发布中...' : '发布'}
               </button>
+              <div className="mt-3 text-[12px] text-zinc-500">{toolbarHint}</div>
             </div>
           </motion.div>
         </motion.div>

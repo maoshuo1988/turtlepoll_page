@@ -170,6 +170,18 @@ const STYLE = `
   min-height:calc(100vh - 56px);overflow:hidden;border-radius:20px;border:1px solid rgba(255,255,255,.06);
   box-shadow:0 18px 40px rgba(0,0,0,.28);position:relative;
 }
+.ttd-root-mobile{
+  min-height:100vh;
+  border-radius:0;
+  border:0;
+  box-shadow:none;
+}
+.ttd-root-mobile .ttd-nav{
+  padding-top:calc(env(safe-area-inset-top, 0px) + 10px);
+}
+.ttd-root-mobile .ttd-game-wrap{
+  height:calc(100vh - 70px - env(safe-area-inset-top, 0px));
+}
 .ttd-root *,.ttd-root *::before,.ttd-root *::after{box-sizing:border-box}
 .ttd-nav{display:flex;align-items:center;gap:12px;padding:10px 20px;background:rgba(12,26,40,.95);border-bottom:1px solid rgba(255,255,255,.06);position:relative;z-index:10;}
 .ttd-nav-back{text-decoration:none;color:var(--muted);font-size:14px;font-weight:600;display:flex;align-items:center;gap:4px;transition:.15s;cursor:pointer;background:none;border:0}
@@ -251,6 +263,9 @@ const STYLE = `
   .ttd-go-stat{padding:8px 10px}
   .ttd-hud{top:58px;max-width:calc(100% - 20px);overflow-x:auto}
   .ttd-pause-btn{top:10px;left:12px}
+  .ttd-root-mobile .ttd-nav{padding:calc(env(safe-area-inset-top, 0px) + 10px) 12px 10px}
+  .ttd-root-mobile .ttd-game-wrap{height:calc(100vh - 91px - env(safe-area-inset-top, 0px))}
+  .ttd-root-mobile .ttd-go-sub{max-width:none}
 }
 `;
 
@@ -288,7 +303,7 @@ function updateOwnedFromStorage(storage: PetStorageState | null) {
   return { ownedPetIds, activePetId, ownedFrameIds, activeFrameId };
 }
 
-export const TurtleDivePixel: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+export const TurtleDivePixel: React.FC<{ onBack: () => void; mobileMode?: boolean }> = ({ onBack, mobileMode = false }) => {
   const [phase, setPhase] = useState<Phase>('idle');
   const [hud, setHud] = useState<HudState>(INITIAL_HUD);
   const [activePetId, setActivePetId] = useState('basic');
@@ -880,7 +895,7 @@ export const TurtleDivePixel: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   };
 
   return (
-    <div className="ttd-root">
+    <div className={`ttd-root ${mobileMode ? 'ttd-root-mobile' : ''}`}>
       <style>{STYLE}</style>
 
       <div className="ttd-nav">

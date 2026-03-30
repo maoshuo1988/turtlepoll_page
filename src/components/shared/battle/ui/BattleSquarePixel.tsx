@@ -569,6 +569,198 @@ html.dark #page-battle-square .dm-stake-input {
   #page-battle-square .duel-my-challenge-box.confirm { display:block; }
   #page-battle-square .duel-my-challenge-actions { margin-top:10px; }
 }
+
+@media (max-width: 1279px) {
+  /* Mobile battle shell:
+     手机端开战页统一压成黑色系，避免继续沿用这套偏蓝的旧视觉。 */
+  #page-battle-square {
+    --red:#f87171; --red-dim:rgba(248,113,113,.10); --red-glow:rgba(248,113,113,.16);
+    --blue:#22c55e; --blue-dim:rgba(34,197,94,.10); --blue-glow:rgba(34,197,94,.16);
+    --gold:#f59e0b; --gold-dim:rgba(245,158,11,.10);
+    --green:#22c55e; --orange:#fb923c; --purple:#a1a1aa;
+    --surface:rgba(15,16,19,.98);
+    --surface2:rgba(255,255,255,.04);
+    --surface3:rgba(255,255,255,.08);
+    --border:rgba(255,255,255,.08);
+    --border2:rgba(255,255,255,.12);
+    --ink:#f5f5f5;
+    --muted:rgba(161,161,170,.82);
+    background:transparent;
+  }
+  #page-battle-square .bp-wrap {
+    gap:12px;
+    padding:0 0 24px;
+  }
+  #page-battle-square .page-hero-battle {
+    background:
+      radial-gradient(circle at 18% 0%, rgba(34,197,94,.08), transparent 28%),
+      radial-gradient(circle at 86% 18%, rgba(255,255,255,.03), transparent 24%),
+      linear-gradient(145deg, rgba(15,16,19,.99), rgba(12,13,15,.99)) !important;
+    border-color:rgba(255,255,255,.08) !important;
+    box-shadow:0 18px 40px rgba(0,0,0,.28) !important;
+  }
+  #page-battle-square .phb-label,
+  #page-battle-square .phb-sub { color:rgba(212,212,216,.82); }
+  #page-battle-square .phb-stat {
+    background:rgba(255,255,255,.04);
+    border-color:rgba(255,255,255,.08);
+    color:#e4e4e7;
+  }
+  #page-battle-square .page-hero-battle::before {
+    opacity:.04;
+  }
+  #page-battle-square .phb-title span {
+    color:#22c55e;
+  }
+  #page-battle-square .dc-header {
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  }
+  #page-battle-square .dc-btn {
+    background:linear-gradient(135deg,#1a1b1f,#0f1013);
+    box-shadow:0 10px 24px rgba(0,0,0,.32);
+  }
+  #page-battle-square .dc-submit,
+  #page-battle-square .dm-cta {
+    background:linear-gradient(135deg,#34d399,#10b981);
+    color:#04130c;
+    box-shadow:0 10px 24px rgba(16,185,129,.24);
+  }
+  #page-battle-square .invite-entry,
+  #page-battle-square .challenger-tips,
+  #page-battle-square .duel-challenger-opinion,
+  #page-battle-square .duel-my-challenge-box,
+  #page-battle-square .duel-my-challenge-box.confirm,
+  #page-battle-square .duel-foot-join,
+  #page-battle-square .dbadge-settled,
+  #page-battle-square .bside-b,
+  #page-battle-square .bcat-ai,
+  #page-battle-square .bcat-wc,
+  #page-battle-square .duel-ch-ava {
+    border-color:rgba(255,255,255,.10);
+  }
+  #page-battle-square .invite-entry,
+  #page-battle-square .challenger-tips,
+  #page-battle-square .duel-challenger-opinion,
+  #page-battle-square .duel-my-challenge-box,
+  #page-battle-square .duel-my-challenge-box.confirm,
+  #page-battle-square .duel-foot-join,
+  #page-battle-square .dbadge-settled,
+  #page-battle-square .bside-b,
+  #page-battle-square .bcat-ai,
+  #page-battle-square .bcat-wc {
+    background:rgba(255,255,255,.04);
+    color:#e4e4e7;
+  }
+  #page-battle-square .duel-card,
+  #page-battle-square .plaza-rules,
+  #page-battle-square .duel-compose,
+  #page-battle-square .invite-entry,
+  #page-battle-square .banker-tips,
+  #page-battle-square .challenger-tips,
+  #page-battle-square .empty-state,
+  #page-battle-square .bo-item {
+    background:#111214;
+    border-color:rgba(255,255,255,.08);
+    box-shadow:0 18px 40px rgba(0,0,0,.28);
+  }
+  #page-battle-square .duel-status-bar,
+  #page-battle-square .duel-banker-area,
+  #page-battle-square .duel-capacity,
+  #page-battle-square .duel-challengers,
+  #page-battle-square .duel-cmt-thread,
+  #page-battle-square .plaza-rules-header {
+    background:#111214;
+    border-color:rgba(255,255,255,.08);
+  }
+  #page-battle-square .duel-opinion-box,
+  #page-battle-square .duel-challenger-opinion,
+  #page-battle-square .duel-callout,
+  #page-battle-square .duel-my-challenge-box,
+  #page-battle-square .duel-ch-row,
+  #page-battle-square .bcmt-text {
+    background:rgba(255,255,255,.03);
+    border-color:rgba(255,255,255,.08);
+  }
+  #page-battle-square .bcat-wc,
+  #page-battle-square .bcat-ai,
+  #page-battle-square .bcat-ent,
+  #page-battle-square .bcat-tech {
+    background:rgba(255,255,255,.05);
+    color:#d4d4d8;
+    border-color:rgba(255,255,255,.10);
+  }
+  #page-battle-square .dbadge-settled,
+  #page-battle-square .dbadge-private {
+    background:rgba(255,255,255,.05);
+    color:#d4d4d8;
+    border-color:rgba(255,255,255,.10);
+  }
+  #page-battle-square .ct-title,
+  #page-battle-square .duel-challenger-label,
+  #page-battle-square .duel-my-challenge-label {
+    color:#e4e4e7;
+  }
+  #page-battle-square .dc-input,
+  #page-battle-square .dc-textarea,
+  #page-battle-square .invite-entry-input,
+  #page-battle-square .badd-cmt-inp,
+  #page-battle-square .dm-stake-input,
+  #page-battle-square .pr-item,
+  #page-battle-square .rules-steps,
+  #page-battle-square .dm-info-item,
+  #page-battle-square .dm-fee-note {
+    background:rgba(255,255,255,.04);
+    border-color:rgba(255,255,255,.08);
+    color:#f5f5f5;
+  }
+  #page-battle-square .invite-entry-input,
+  #page-battle-square .dc-input,
+  #page-battle-square .dc-textarea,
+  #page-battle-square .dm-stake-input,
+  #page-battle-square .badd-cmt-inp {
+    color:#f5f5f5;
+  }
+  #page-battle-square .invite-entry-input::placeholder,
+  #page-battle-square .dc-input::placeholder,
+  #page-battle-square .dc-textarea::placeholder,
+  #page-battle-square .dm-stake-input::placeholder,
+  #page-battle-square .badd-cmt-inp::placeholder {
+    color:rgba(161,161,170,.72);
+  }
+  #page-battle-square .dc-stake-opt,
+  #page-battle-square .dc-vis-btn,
+  #page-battle-square .bst,
+  #page-battle-square .my-duel-tab,
+  #page-battle-square .dm-amt,
+  #page-battle-square .duel-foot-btn {
+    background:rgba(255,255,255,.03);
+    border-color:rgba(255,255,255,.08);
+    color:#a1a1aa;
+  }
+  #page-battle-square .dc-stake-opt.on,
+  #page-battle-square .dc-vis-btn.on,
+  #page-battle-square .dm-amt.on,
+  #page-battle-square .my-duel-tab.on,
+  #page-battle-square .bst.on {
+    background:rgba(34,197,94,.12);
+    border-color:rgba(34,197,94,.28);
+    color:#86efac;
+  }
+  #page-battle-square .duel-cap-fill {
+    background:linear-gradient(90deg,#3f3f46,#22c55e);
+  }
+  #page-battle-square .duel-ch-ava {
+    background:rgba(255,255,255,.04);
+  }
+  #page-battle-square .duel-foot-join,
+  #page-battle-square .duel-foot-join.orange,
+  #page-battle-square .duel-foot-join.gold,
+  #page-battle-square .duel-foot-join.red {
+    background:#16181c;
+    color:#f5f5f5;
+    border-color:rgba(255,255,255,.10);
+  }
+}
 `;
 
 function formatCoins(value: number) {
@@ -1089,7 +1281,7 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
       <style>{PAGE_STYLES}</style>
       <div
         id="page-battle-square"
-        className="legacy-battle-square relative min-h-full border-x border-slate-200 bg-slate-50 px-3 py-3 dark:border-rdark-border dark:bg-rdark-card"
+        className="legacy-battle-square relative min-h-full bg-transparent px-0 py-0 md:rounded-none md:border-x md:border-slate-200 md:bg-slate-50 dark:md:border-rdark-border dark:md:bg-rdark-card"
       >
         <div className="bp-wrap">
           {/* <span className="bp-back">← 返回龟投首页</span> */}

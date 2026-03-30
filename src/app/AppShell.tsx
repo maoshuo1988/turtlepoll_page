@@ -3,6 +3,8 @@ import { Sidebar } from '../components/layout';
 import type { ViewType } from '../components/layout';
 import { ActivePredictionsPage, EventBattle, PredictionsView } from '../components/shared/predictions';
 import { Forum } from '../components/shared/forum';
+import { ForumCompose } from '../components/shared/forum/ui/ForumCompose';
+import type { TopicPostTag } from '../components/shared/forum/ui/TopicPostCard';
 import { Shop } from '../components/shared/shop';
 import { TopicDetail } from '../components/shared/topic';
 import { BattleSquarePixel } from '../components/shared/battle';
@@ -13,6 +15,8 @@ import { ProfilePage } from '../components/shared/profile';
 import { FloatingPetChat } from '../components/shared/layout';
 import { AppFooter, AppHeader, FloatingGuideButton } from './pc';
 import { MobileTopBar, MobilePredictionTopTabs, type MobilePredictionTopTabKey } from './mobile/home';
+import { MobilePredictionMarketDetail, MobilePredictionMarketList } from './mobile/predictionMarket';
+import { MobileProfileAuthPage, MobileProfileHome, MobileProfileSettingsPage } from './mobile/profile';
 import { MobileFloatingActions } from './mobile/pet';
 import { MobileTabBar } from './mobile/shared';
 import { GuideTourModal } from './GuideTourModal';
@@ -31,6 +35,7 @@ import { clearInfo } from '@/utils/authStorage';
 import type { PlaceBetResult } from '@/hook/coinType';
 import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestUserMsgRecent } from '@/hook/useRequest';
 import { useRequestFootballMarkets } from '@/hook/usePredictRequest';
+import { useRequestCreateTopic, useRequestTopicNodeNavs } from '@/hook/useTopicRequest';
 import { useAppSession } from '@/hook/useAppSession';
 import { mapMarketToPredictionCard, type PredictionCardItem } from '../components/shared/predictions/ui/predictionCard';
 import type { SidebarHotTag, SidebarHotTopic } from '../components/shared/layout';
@@ -39,7 +44,10 @@ import { useRequestCoinBet } from '@/hook/useCoinRequest';
 // Bet cost per action
 const BET_COST = 100;
 const THEME_KEY = 'theme';
+const MOBILE_PUSH_SETTING_KEY = 'mobile_push_enabled';
+const MOBILE_MOTION_SETTING_KEY = 'mobile_motion_enabled';
 type ThemeMode = 'light' | 'dark';
+type MobileProfilePageKey = 'home' | 'auth' | 'settings';
 
 function getInitialTheme(): ThemeMode {
   const stored = localStorage.getItem(THEME_KEY);
@@ -53,6 +61,13 @@ function applyTheme(mode: ThemeMode) {
   root.classList.toggle('dark', isDark);
   root.setAttribute('data-theme', mode);
   root.style.colorScheme = mode;
+}
+
+function getInitialBooleanSetting(key: string, fallback: boolean) {
+  const stored = localStorage.getItem(key);
+  if (stored === 'true') return true;
+  if (stored === 'false') return false;
+  return fallback;
 }
 
 function App() {
@@ -80,6 +95,9 @@ function App() {
   const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);
   const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);
   const [selectedTopic, setSelectedTopic] = useState<SidebarHotTopic | null>(null);
+  const [selectedMobilePredictionItem, setSelectedMobilePredictionItem] = useState<PredictionCardItem | null>(null);
+  const [mobilePredictionBattleReturnMode, setMobilePredictionBattleReturnMode] = useState<'list' | 'detail' | null>(null);
+  const [mobilePredictionBattleReturnItem, setMobilePredictionBattleReturnItem] = useState<PredictionCardItem | null>(null);
   /**
    * Mobile home tabs:
    * 手机端“首页”顶部固定的五个分类。
@@ -87,11 +105,25 @@ function App() {
    */
   const [mobileHomeTab, setMobileHomeTab] = useState<MobilePredictionTopTabKey>('latest_feed');
   /**
-   * Mobile forum compose:
-   * 手机端底部中间“发布”按钮只负责拉起发帖面板。
-   * 这里用 signal 做一次性打开触发，让 ForumCompose 在 mobile 模式下从底部弹出。
+   * Mobile global compose:
+   * 手机端发布层从首页帖子流里彻底独立出来。
+   * 后面无论停留在首页、开战、宠物还是我的页面，只有中间加号才会打开这个全局弹层。
    */
-  const [mobileForumComposeSignal, setMobileForumComposeSignal] = useState(0);
+  const [mobileGlobalComposeSignal, setMobileGlobalComposeSignal] = useState(0);
+  /**
+   * Mobile lab return view:
+   * 手机端从顶部游戏入口进入小游戏时，记录进入前所在主页面。
+   * 这样返回时就能回到原来的页面，而不是写死跳回某个默认页。
+   */
+  const [mobileLabReturnView, setMobileLabReturnView] = useState<ViewType>('predictions');
+  /**
+   * Mobile profile route:
+   * 手机端“我的”页内子路由。
+   * 这里把首页、登录模块、设置页拆开管理，避免再把所有东西塞回一个 shared profile 页面。
+   */
+  const [mobileProfilePage, setMobileProfilePage] = useState<MobileProfilePageKey>('home');
+  const [mobilePushEnabled, setMobilePushEnabled] = useState<boolean>(() => getInitialBooleanSetting(MOBILE_PUSH_SETTING_KEY, true));
+  const [mobileMotionEnabled, setMobileMotionEnabled] = useState<boolean>(() => getInitialBooleanSetting(MOBILE_MOTION_SETTING_KEY, true));
   
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bettingMarketId, setBettingMarketId] = useState<number | null>(null);
@@ -125,6 +157,8 @@ function App() {
 
   //退出登录请求
   const signOutMutation = useRequestSignout();
+  const createTopicMutation = useRequestCreateTopic();
+  const topicNodeNavsQuery = useRequestTopicNodeNavs();
 
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
@@ -147,6 +181,16 @@ function App() {
   );
   const newsByMarketId = useMemo(() => new Map(allNews.filter((item) => typeof item.marketId === 'number').map((item) => [item.marketId as number, item])), [allNews]);
 
+  /**
+   * Mobile create node:
+   * 手机端全局发布层需要一个默认可发布节点。
+   * “最新 / 推荐 / 关注”这些首页分类本身不是可写节点，所以这里选第一个真实节点作为落点。
+   */
+  const mobileCreateNodeId = useMemo(() => {
+    const firstCustomNode = (topicNodeNavsQuery.data ?? []).find((nav) => nav.id > 0);
+    return firstCustomNode?.id ?? 1;
+  }, [topicNodeNavsQuery.data]);
+
   // 余额跟随 coinMe 缓存同步，下注/结算成功后会自动联动到这里
   useEffect(() => {
     if (typeof coinMe.data?.balance !== 'number') return;
@@ -166,6 +210,14 @@ function App() {
     applyTheme(theme);
     localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem(MOBILE_PUSH_SETTING_KEY, String(mobilePushEnabled));
+  }, [mobilePushEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem(MOBILE_MOTION_SETTING_KEY, String(mobileMotionEnabled));
+  }, [mobileMotionEnabled]);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -243,6 +295,12 @@ function App() {
   const handleViewChange = useCallback((view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag | null) => {
     setActiveView(view);
     setBattleOriginView(view);
+    if (view !== 'profile') {
+      setMobileProfilePage('home');
+    }
+    if (view !== 'forum') {
+      setSelectedMobilePredictionItem(null);
+    }
     if (view === 'predictions') {
       setSelectedTopic(topic ?? null);
       setSelectedTag(tag?.tag ?? null);
@@ -255,6 +313,22 @@ function App() {
     setBattleOriginView('predictions');
     setSelectedBattleItem(null);
     setSelectedNewsId(newsId);
+    setActiveView('predictions');
+  }, []);
+
+  /**
+   * handleOpenMobilePredictionBattle:
+   * 手机端预测市场专用的“进入评论战场”入口。
+   * 这里会记住用户是从列表还是详情进来的，后面从战场返回时才能准确回到当前 mobile 页面。
+   */
+  const handleOpenMobilePredictionBattle = useCallback((item: PredictionCardItem, returnMode: 'list' | 'detail') => {
+    setBattleOriginView('forum');
+    setMobileHomeTab('prediction_market');
+    setSelectedNewsId(item.id);
+    setSelectedBattleItem(item);
+    setMobilePredictionBattleReturnMode(returnMode);
+    setMobilePredictionBattleReturnItem(item);
+    setSelectedMobilePredictionItem(returnMode === 'detail' ? item : null);
     setActiveView('predictions');
   }, []);
 
@@ -333,6 +407,38 @@ function App() {
     );
   }, []);
 
+  /**
+   * handleMobileCreatePost:
+   * 手机端全局发布弹层的统一发帖提交入口。
+   * 发布成功后，topic 相关列表会通过 mutation 自带的 invalidation 自动刷新。
+   */
+  const handleMobileCreatePost = useCallback(async (content: string, tag: TopicPostTag, images: string[]) => {
+    await createTopicMutation.mutateAsync({
+      type: 1,
+      nodeId: mobileCreateNodeId,
+      title: content.slice(0, 40),
+      content,
+      contentType: 'text',
+      hideContent: '',
+      tags: [tag],
+      imageList: images.map((url) => ({ url })),
+      vote: null,
+      captchaId: '',
+      captchaCode: '',
+      captchaProtocol: 2,
+    });
+  }, [createTopicMutation, mobileCreateNodeId]);
+
+  /**
+   * handleOpenMobileLab:
+   * 手机端顶部“游戏”按钮统一从这里进入小游戏。
+   * 进入前记住当前 activeView，后面从游戏返回时直接回到这个页面。
+   */
+  const handleOpenMobileLab = useCallback(() => {
+    setMobileLabReturnView(activeView);
+    setActiveView('lab');
+  }, [activeView]);
+
   const renderActiveView = () => (
     <>
       {activeView === 'predictions' && (selectedNewsId || selectedBattleItem) && (
@@ -342,7 +448,17 @@ function App() {
             onBack={() => {
               setSelectedNewsId(null);
               setSelectedBattleItem(null);
-              setActiveView(battleOriginView === 'forum' ? 'forum' : 'predictions');
+              if (mobilePredictionBattleReturnMode) {
+                setActiveView('forum');
+                setMobileHomeTab('prediction_market');
+                setSelectedMobilePredictionItem(
+                  mobilePredictionBattleReturnMode === 'detail' ? mobilePredictionBattleReturnItem : null,
+                );
+                setMobilePredictionBattleReturnMode(null);
+                setMobilePredictionBattleReturnItem(null);
+              } else {
+                setActiveView(battleOriginView === 'forum' ? 'forum' : 'predictions');
+              }
               setBattleOriginView('predictions');
             }}
             userSide={selectedNewsId ? userVotes[selectedNewsId] ?? null : null}
@@ -380,8 +496,7 @@ function App() {
             newsByMarketId={newsByMarketId}
             onOpenLinkedPrediction={handleOpenLinkedPrediction}
             showComposer
-            composerOpenSignal={mobileForumComposeSignal}
-            mobileBottomSheetComposer={typeof window !== 'undefined' ? window.innerWidth < 1280 : false}
+            mobileBottomSheetComposer={false}
           />
         </section>
       )}
@@ -474,7 +589,7 @@ function App() {
    * 手机端首页统一从这里切分类内容。
    * - 排行榜：复用 RankPage
    * - 推荐 / 最新 / 关注：复用 Forum 帖子流，但隐藏 Forum 自己内部的顶部 tab
-   * - 预测市场：复用 PredictionsView
+   * - 预测市场：走 mobile 专用列表和详情页
    *
    * 这样首页顶部分类统一收口在一个地方，中间“发布”按钮就只管发帖。
    */
@@ -484,12 +599,25 @@ function App() {
     }
 
     if (mobileHomeTab === 'prediction_market') {
+      if (selectedMobilePredictionItem) {
+        return (
+          <MobilePredictionMarketDetail
+            item={selectedMobilePredictionItem}
+            onBack={() => setSelectedMobilePredictionItem(null)}
+            onOpenBattle={(item) => handleOpenMobilePredictionBattle(item, 'detail')}
+            onBetSuccess={handlePredictionBetSuccess}
+            onRequireAuth={() => setAuthModalOpen(true)}
+          />
+        );
+      }
+
       return (
-        <PredictionsView
-          selectedTag={selectedTag}
+        <MobilePredictionMarketList
+          items={allNews}
+          onOpenDetail={setSelectedMobilePredictionItem}
+          onOpenBattle={(item) => handleOpenMobilePredictionBattle(item, 'list')}
           onBetSuccess={handlePredictionBetSuccess}
           onRequireAuth={() => setAuthModalOpen(true)}
-          onEnterBattle={handleEnterBattle}
         />
       );
     }
@@ -504,26 +632,93 @@ function App() {
       <Forum
         newsByMarketId={newsByMarketId}
         onOpenLinkedPrediction={handleOpenLinkedPrediction}
-        showComposer
-        composerOpenSignal={mobileForumComposeSignal}
+        showComposer={false}
         forcedActiveTab={forumTabMap[mobileHomeTab as 'recommend_feed' | 'latest_feed' | 'following_feed']}
         hideTopTabs
-        mobileBottomSheetComposer
+      />
+    );
+  };
+
+  /**
+   * renderMobileProfileView:
+   * 手机端“我的”页面专用渲染入口。
+   * 以后移动端账号中心、设置、隐私、通知等二级页面都从这里继续分发，不再回头修改桌面的 ProfilePage。
+   */
+  const renderMobileProfileView = () => {
+    if (mobileProfilePage === 'auth') {
+      return (
+        <MobileProfileAuthPage
+          onBack={() => setMobileProfilePage('home')}
+          onAuthSuccess={() => {
+            void userInfo.refetch();
+            void coinMe.refetch();
+            setMobileProfilePage('home');
+          }}
+          onSignOut={async () => {
+            await signOutMutation.mutateAsync();
+            clearInfo();
+            void userInfo.refetch();
+            void coinMe.refetch();
+            setMobileProfilePage('home');
+          }}
+        />
+      );
+    }
+
+    if (mobileProfilePage === 'settings') {
+      return (
+        <MobileProfileSettingsPage
+          darkMode={darkMode}
+          pushEnabled={mobilePushEnabled}
+          motionEnabled={mobileMotionEnabled}
+          onBack={() => setMobileProfilePage('home')}
+          onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+          onTogglePush={() => setMobilePushEnabled((value) => !value)}
+          onToggleMotion={() => setMobileMotionEnabled((value) => !value)}
+          onOpenAuth={() => setMobileProfilePage('auth')}
+          onSignOut={() => {
+            void (async () => {
+              await signOutMutation.mutateAsync();
+              clearInfo();
+              void userInfo.refetch();
+              void coinMe.refetch();
+              setMobileProfilePage('home');
+            })();
+          }}
+        />
+      );
+    }
+
+    return (
+      <MobileProfileHome
+        balance={balance}
+        pet={currentPet}
+        darkMode={darkMode}
+        onOpenAuth={() => setMobileProfilePage('auth')}
+        onOpenSettings={() => setMobileProfilePage('settings')}
+        onOpenPet={() => handleViewChange('pet')}
+        onOpenForum={() => handleViewChange('forum')}
       />
     );
   };
 
   const mobileShell = (
-    <div className="bg-[#080808] xl:hidden">
-      <MobileTopBar onOpenLab={() => handleViewChange('lab')} />
-      <main className="min-h-[calc(100vh-58px)] pb-[104px] pt-3">
+    <div className={`xl:hidden ${darkMode ? 'bg-[#080808] text-white' : 'bg-[#f4f7f4] text-slate-900'}`}>
+      {activeView !== 'lab' ? <MobileTopBar darkMode={darkMode} onOpenLab={handleOpenMobileLab} /> : null}
+      <main className={`${activeView === 'lab' ? 'min-h-screen pb-0 pt-0' : 'min-h-[calc(100vh-58px)] pb-[104px] pt-3'} ${darkMode ? 'bg-[#080808]' : 'bg-[#f4f7f4]'}`}>
         {/*
           Mobile edge spacing rule:
           手机端主内容统一保留 12px 的左右安全边距。
           以后新增 mobile 页面时，优先走这层容器，不要再让内容直接贴屏幕边缘。
         */}
-        <div className="space-y-3 px-3">
-          {activeView === 'forum' ? (
+        <div className={`${activeView === 'lab' ? 'space-y-0 px-0' : 'space-y-3 px-3'}`}>
+          {activeView === 'lab' ? (
+            <TurtleDivePixel mobileMode onBack={() => setActiveView(mobileLabReturnView)} />
+          ) : activeView === 'profile' ? (
+            renderMobileProfileView()
+          ) : activeView === 'forum' && mobileHomeTab === 'prediction_market' && selectedMobilePredictionItem ? (
+            renderMobileHomeView()
+          ) : activeView === 'forum' ? (
             <>
               <MobilePredictionTopTabs
                 activeTab={mobileHomeTab}
@@ -537,15 +732,23 @@ function App() {
         </div>
       </main>
 
-      <MobileTabBar
-        activeView={activeView}
-        onChange={(view) => handleViewChange(view)}
-        onCompose={() => {
-          setMobileHomeTab('recommend_feed');
-          setMobileForumComposeSignal((value) => value + 1);
-          handleViewChange('forum');
-        }}
+      <ForumCompose
+        onPost={handleMobileCreatePost}
+        posting={createTopicMutation.isLoading}
+        openSignal={mobileGlobalComposeSignal}
+        showEntryButton={false}
+        mobileBottomSheet
       />
+
+      {!(activeView === 'forum' && mobileHomeTab === 'prediction_market' && selectedMobilePredictionItem) && !(activeView === 'profile' && mobileProfilePage !== 'home') && activeView !== 'lab' && (
+        <MobileTabBar
+          activeView={activeView}
+          onChange={(view) => handleViewChange(view)}
+          onCompose={() => {
+            setMobileGlobalComposeSignal((value) => value + 1);
+          }}
+        />
+      )}
     </div>
   );
 
