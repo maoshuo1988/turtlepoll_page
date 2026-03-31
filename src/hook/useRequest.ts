@@ -1,6 +1,7 @@
 import {
   API_Badge_Badges,
   API_Captcha_Request_Angle,
+  API_Captcha_Request_Image,
   API_Config_Configs,
   API_Login_Signin,
   API_Login_Signout,
@@ -14,7 +15,7 @@ import { axiosCustom } from "@/api/axios";
 import { saveUserInfo } from "@/utils/authStorage";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { useMutation, useQuery } from "react-query";
-import type { UploadFileResponse, UploadImageResponse } from "./types";
+import type { ImageCaptchaChallenge, UploadFileResponse, UploadImageResponse } from "./types";
 
 ///获取图形
 export function useRequestRotateCaptcha() {
@@ -24,6 +25,20 @@ export function useRequestRotateCaptcha() {
       const res = await axiosCustom({
         method: "get",
         cmd: API_Captcha_Request_Angle,
+      });
+      return assertSuccess(res);
+    },
+  });
+}
+
+///获取数字验证码
+export function useRequestImageCaptcha() {
+  return useMutation<ImageCaptchaChallenge>({
+    mutationKey: ["requestImageCaptcha"],
+    mutationFn: async () => {
+      const res = await axiosCustom({
+        method: "get",
+        cmd: API_Captcha_Request_Image,
       });
       return assertSuccess(res);
     },

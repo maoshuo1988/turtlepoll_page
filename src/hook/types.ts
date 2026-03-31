@@ -24,6 +24,11 @@ export type CaptchaChallenge = {
   thumbSize?: number;
 };
 
+export type ImageCaptchaChallenge = {
+  captchaId: string;
+  captchaBase64: string;
+};
+
 export type CaptchaVerification = {
   captchaId: string;
   captchaCode: string;

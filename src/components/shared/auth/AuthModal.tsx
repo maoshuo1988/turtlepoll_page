@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowLeft, ChevronRight, LockKeyhole, LogOut, Mail, X } from 'lucide-react';
-import { RotateCaptchaModal } from './RotateCaptchaModal';
+import { ImageCaptchaModal } from './ImageCaptchaModal';
 import { useRequestSignIn, useRequestSignUp } from '@/hook/useRequest';
 import { getAuthToken, getStoredUserInfo, saveAuthToken, saveUserInfo } from '@/utils/authStorage';
 
@@ -192,7 +192,7 @@ function LoginPanel({
         <div className="border-t border-white/8 !px-[34px] !py-[20px]">
           <button
             type="button"
-            disabled={submitting || status === 'loading'}
+            disabled={submitting}
             className="h-[48px] w-full rounded-full border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[24px] font-black tracking-[0.08em] text-white shadow-[0_18px_34px_rgba(0,0,0,0.34)] disabled:cursor-not-allowed disabled:opacity-60"
             onClick={onSubmit}
           >
@@ -295,14 +295,14 @@ function RegisterPanel({
           </LabeledField>
         </div>
 
-        <div className="!px-[14px] text-[18px] tracking-[-0.02em] text-zinc-500">点击提交后会进入旋转验证码验证</div>
+        <div className="!px-[14px] text-[18px] tracking-[-0.02em] text-zinc-500">点击提交后会进入数字验证码验证</div>
         <ErrorText text={error} />
       </div>
 
       <div className="!my-[22px] border-t border-white/8 !px-[10px] !pt-[16px]">
         <button
           type="button"
-          disabled={submitting || status === 'loading'}
+          disabled={submitting}
           className="h-[48px] w-full rounded-full border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[24px] font-black tracking-[0.08em] text-white shadow-[0_18px_34px_rgba(0,0,0,0.34)] disabled:cursor-not-allowed disabled:opacity-60"
           onClick={onSubmit}
         >
@@ -384,6 +384,7 @@ export function AuthModal({
   const signUpMutation = useRequestSignUp();
   //登录请求
   const signInMutation = useRequestSignIn()
+  const isMutating = signUpMutation.isLoading || signInMutation.isLoading || submitting;
 
   function resetFeedback() {
     setError('');
@@ -434,12 +435,6 @@ export function AuthModal({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
-
-  useEffect(() => {
-    if (open && status === 'authenticated') {
-      resetFeedback();
-    }
-  }, [open, status]);
 
   async function submitWithCaptcha(captcha: CaptchaPayload) {
     setCaptchaMode(null);
@@ -504,7 +499,7 @@ export function AuthModal({
             loginForm={loginForm}
             setLoginForm={setLoginForm}
             error={error}
-            submitting={submitting}
+            submitting={isMutating}
             onSubmit={() => {
               resetFeedback();
               if (!validateActiveForm()) {
@@ -522,7 +517,7 @@ export function AuthModal({
             registerForm={registerForm}
             setRegisterForm={setRegisterForm}
             error={error}
-            submitting={submitting}
+            submitting={isMutating}
             onBackToLogin={() => {
               setTab('login');
               resetFeedback();
@@ -538,7 +533,7 @@ export function AuthModal({
         )}
       </Shell>
 
-      <RotateCaptchaModal
+      <ImageCaptchaModal
         open={captchaMode !== null}
         onClose={() => setCaptchaMode(null)}
         onSuccess={(payload) => {

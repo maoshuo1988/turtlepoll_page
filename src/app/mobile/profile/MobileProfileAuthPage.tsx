@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ArrowLeft, ChevronRight, LockKeyhole, LogOut, Mail, UserRound } from 'lucide-react';
-import { RotateCaptchaModal } from '@/components/shared/auth/RotateCaptchaModal';
+import { ImageCaptchaModal } from '@/components/shared/auth/ImageCaptchaModal';
 import type { CaptchaVerification } from '@/hook/types';
 import { useRequestSignIn, useRequestSignUp } from '@/hook/useRequest';
 import { getAuthToken, getStoredUserInfo, saveAuthToken, saveUserInfo } from '@/utils/authStorage';
@@ -320,7 +320,7 @@ export function MobileProfileAuthPage({
         )}
       </div>
 
-      <RotateCaptchaModal
+      <ImageCaptchaModal
         open={captchaMode !== null}
         onClose={() => setCaptchaMode(null)}
         onSuccess={(payload: CaptchaVerification) => {

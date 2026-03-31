@@ -26,6 +26,8 @@ export const API_Search_Topic= "/api/search/topic";
 export const API_Captcha_Request_Angle= "/api/captcha/request_angle";
 //图片验证码（兼容）
 export const API_Captcha_Request= "/api/captcha/request";
+//图片验证码（数字验证码）
+export const API_Captcha_Request_Image= "/api/captcha/request_image";
 //图片验证码校验（兼容）
 export const API_Captcha_Verify= "/api/captcha/verify";
 //用户注册
@@ -62,4 +64,3 @@ export const API_Login_Google_One_Tap= "/api/login/google_one_tap";
 export const API_Upload_Image= "/api/upload";
 //上传文件
 export const API_Upload_File = "/api/upload/file";
-
