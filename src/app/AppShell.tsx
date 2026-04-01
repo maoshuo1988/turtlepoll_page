@@ -21,14 +21,13 @@ import { MobileFloatingActions } from './mobile/pet';
 import { MobileTabBar } from './mobile/shared';
 import { GuideTourModal } from './GuideTourModal';
 import { AuthModal } from '../components/shared/auth';
-import type { MockForumEntry, Battle, BattleSide, PetSkin } from '../data/mock_data';
+import type { MockForumEntry, PetSkin } from '../data/mock_data';
 import {
   mockUser,
   mockNews,
   heroNews,
   petDialogues,
   mockCommunityPosts,
-  mockBattles,
   mockPetSkins,
 } from '../data/mock_data';
 import { clearInfo } from '@/utils/authStorage';
@@ -85,7 +84,6 @@ function App() {
     typeof window !== 'undefined' && window.innerWidth < 1280 ? 'forum' : 'predictions',
   );
   const [communityPosts] = useState<MockForumEntry[]>(mockCommunityPosts);
-  const [battles, setBattles] = useState<Battle[]>(mockBattles);
   const [floatingChatOpen, setFloatingChatOpen] = useState(false);
   const [selectedNewsId, setSelectedNewsId] = useState<string | null>(null);
   const [selectedBattleItem, setSelectedBattleItem] = useState<PredictionCardItem | null>(null);
@@ -341,72 +339,6 @@ function App() {
     setActiveView('predictions');
   }, []);
 
-  const handleCreateBattle = useCallback(
-    (topic: string, optionA: string, optionB: string, side: BattleSide, wager: number) => {
-      if (balance < wager) return;
-      setBalance((b) => b - wager);
-      const newBattle: Battle = {
-        id: `bt-${Date.now()}`,
-        topic,
-        optionA,
-        optionB,
-        creator: { name: '你', avatar: '🦊', side },
-        challenger: null,
-        wager,
-        status: 'waiting',
-        winner: null,
-        createdTime: '刚刚',
-      };
-      setBattles((prev) => [newBattle, ...prev]);
-      const msg = petDialogues.battle[Math.floor(Math.random() * petDialogues.battle.length)];
-      setPetDialogue(msg);
-      setTimeout(() => setPetDialogue(null), 3000);
-    },
-    [balance]
-  );
-
-  const handleAcceptBattle = useCallback(
-    (battleId: string) => {
-      const battle = battles.find((b) => b.id === battleId);
-      if (!battle || battle.status !== 'waiting' || balance < battle.wager) return;
-      setBalance((b) => b - battle.wager);
-      setBattles((prev) =>
-        prev.map((b) =>
-          b.id === battleId
-            ? {
-              ...b,
-              status: 'active' as const,
-              challenger: {
-                name: '你',
-                avatar: '🦊',
-                side: (b.creator.side === 'A' ? 'B' : 'A') as BattleSide,
-              },
-            }
-            : b
-        )
-      );
-      const msg = petDialogues.battle[Math.floor(Math.random() * petDialogues.battle.length)];
-      setPetDialogue(msg);
-      setTimeout(() => setPetDialogue(null), 3000);
-    },
-    [balance, battles]
-  );
-
-  const handleResolveBattle = useCallback((battleId: string, winningSide: BattleSide) => {
-    setBattles((prev) =>
-      prev.map((b) => {
-        if (b.id !== battleId || b.status !== 'active') return b;
-        const isCreator = b.creator.name === '你';
-        const isChallenger = b.challenger?.name === '你';
-        const userSide = isCreator ? b.creator.side : isChallenger ? b.challenger!.side : null;
-        if (userSide === winningSide) {
-          setBalance((bal) => bal + b.wager * 2);
-        }
-        return { ...b, status: 'resolved' as const, winner: winningSide };
-      })
-    );
-  }, []);
-
   /**
    * handleMobileCreatePost:
    * 手机端全局发布弹层的统一发帖提交入口。
@@ -572,13 +504,7 @@ function App() {
 
       {activeView === 'battle' && (
         <section className="view-shell view-rhythm view-battle-square mx-0 grid w-full max-w-none gap-4">
-          <BattleSquarePixel
-            battles={battles}
-            userBalance={balance}
-            onCreateBattle={handleCreateBattle}
-            onAcceptBattle={handleAcceptBattle}
-            onResolveBattle={handleResolveBattle}
-          />
+          <BattleSquarePixel />
         </section>
       )}
     </>

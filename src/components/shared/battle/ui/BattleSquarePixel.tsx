@@ -1,29 +1,24 @@
-import React, { useMemo, useState } from 'react';
-import type { Battle, BattleSide } from '@/data/mock_data';
-
-interface BattleSquarePixelProps {
-  battles: Battle[];
-  userBalance: number;
-  onCreateBattle: (
-    topic: string,
-    optionA: string,
-    optionB: string,
-    side: BattleSide,
-    wager: number,
-  ) => void;
-  onAcceptBattle: (battleId: string) => void;
-  onResolveBattle: (battleId: string, winningSide: BattleSide) => void;
-}
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useQueries } from 'react-query';
+import { battleQueryKeys, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleJoin, useRequestBattleList, useRequestBattleWithdraw } from '@/hook/useBattleRequest';
+import { createBattleRequestId, getBattleActionPermissions, getBattleErrorMessage, type Battle, type BattleDetailResponse, type BattleListItem, type BattleMyAction } from '@/hook/battleType';
+import { useAppSession } from '@/hook/useAppSession';
+import { axiosCustom } from '@/api/axios';
+import { API_Battle_By } from '@/api/battle_api';
+import { assertSuccess, getAuthorizationHeaders } from '@/utils/requestUtils';
+import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
+import type { CommentResponse } from '@/hook/useCommentRequest';
+import { useRequestCreateComment } from '@/hook/useCommentRequest';
+import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hook/useTopicRequest';
+import { API_Comment_Comments } from '@/api/comment_api';
 
 type PlazaTab = 'plaza' | 'my-banker' | 'my-challenger';
 type PlazaSort =
-  | '🔥 热门'
-  | '⚡ 最新'
-  | '💰 大额'
-  | '⏱ 快结算'
-  | '📖 进行中'
-  | '🔒 已封盘'
-  | '⏳ 等结果';
+  | '最新'
+  | '大额'
+  | '进行中'
+  | '待结果'
+  | '已结算';
 type DuelStatus = 'open' | 'sealed' | 'pending' | 'settled' | 'private' | 'disputing';
 type DuelCategory = 'wc' | 'hot' | 'ai' | 'ent' | 'finance' | 'tech';
 
@@ -48,6 +43,7 @@ interface DuelChallenger {
 
 interface DuelItem {
   id: string;
+  battleId: number;
   topic: string;
   category: DuelCategory;
   banker: {
@@ -73,23 +69,35 @@ interface DuelItem {
   footerActionTone?: 'blue' | 'orange' | 'gold' | 'red';
   myChallengeInfo?: string;
   myChallengeState?: 'info' | 'confirm';
+  myAction?: BattleMyAction;
+  canJoin?: boolean;
+  canBankerAddStake?: boolean;
+  canDeclare?: boolean;
+  canConfirm?: boolean;
+  canDispute?: boolean;
+  canWithdraw?: boolean;
+  rawStatus?: Battle['status'];
+  createdAt?: number;
 }
 
 type JoinModalState = {
-  duelId: string;
+  duelId: number;
   title: string;
   max: number;
   visibility: 'public' | 'private';
 };
 
+type AddStakeModalState = {
+  duelId: number;
+  title: string;
+};
+
 const PLAZA_SORTS: PlazaSort[] = [
-  '🔥 热门',
-  '⚡ 最新',
-  '💰 大额',
-  '⏱ 快结算',
-  '📖 进行中',
-  '🔒 已封盘',
-  '⏳ 等结果',
+  '最新',
+  '大额',
+  '进行中',
+  '待结果',
+  '已结算',
 ];
 
 const WAGER_OPTIONS = [100, 500, 1000, 2000, 5000, 10000];
@@ -111,156 +119,6 @@ const STATUS_META: Record<DuelStatus, { label: string; className: string }> = {
   private: { label: '🔒 私人', className: 'dbadge-private' },
   disputing: { label: '⚠️ 争议中', className: 'dbadge-disputing' },
 };
-
-const SAMPLE_DUELS: DuelItem[] = [
-  {
-    id: 'sample-wc',
-    topic: '2026世界杯决赛 - 巴西能夺冠吗？',
-    category: 'wc',
-    banker: {
-      name: 'LionMaster',
-      avatar: '🦁',
-      stance: '巴西阵容深度冠绝全球，维尼修斯+罗德里戈攻击组合无人能挡。2022失利教训已被吸收，这次必拿冠军。',
-    },
-    challengerSideText: '巴西历史大赛心理素质存疑，法国/阿根廷实力更均衡，巴西拿不到冠军。',
-    status: 'open',
-    wager: 5000,
-    currentPool: 3200,
-    challengerCount: 4,
-    visibility: 'public',
-    settleText: '⏱ 结算 2026-07-19',
-    likes: 48,
-    challengerList: [
-      { id: 'c1', avatar: '🐉', name: 'DragonSeer', amount: 1200, feeText: '(-60 入场费)' },
-      { id: 'c2', avatar: '🐺', name: 'CryptoWolf', amount: 800, feeText: '(-40 入场费)' },
-      { id: 'c3', avatar: '🦅', name: 'EagleEye', amount: 700, feeText: '(-35 入场费)' },
-      { id: 'c4', avatar: '🐼', name: 'PandaPredict', amount: 500, feeText: '(-25 入场费)' },
-    ],
-    comments: [
-      {
-        id: 'cm1',
-        avatar: '🐉',
-        name: 'DragonSeer',
-        side: 'challenger',
-        time: '1h',
-        text: '巴西在大赛心理关上从未完全过关，我看好法国夺冠。',
-        likes: 14,
-      },
-    ],
-  },
-  {
-    id: 'sample-ai',
-    topic: 'Claude 5 会在 2026 年底前发布吗？',
-    category: 'ai',
-    banker: {
-      name: 'CryptoWolf',
-      avatar: '🐺',
-      stance: 'Anthropic 研发节奏非常快，Claude 4.6 已出，Claude 5 在年底前发布完全可能。',
-    },
-    challengerSideText: '大模型代际跨越需要更长时间，2026 年底之前不可能出 Claude 5。',
-    status: 'sealed',
-    wager: 2000,
-    currentPool: 2000,
-    challengerCount: 3,
-    visibility: 'public',
-    settleText: '⏱ 结算 2026-12-31 · 已封盘等待结果',
-    likes: 31,
-    challengerList: [
-      { id: 'c5', avatar: '🦈', name: 'SharkTrader', amount: 1000, feeText: '(-50 入场费)' },
-      { id: 'c6', avatar: '🦋', name: 'ButterFly88', amount: 600, feeText: '(-30 入场费)' },
-      { id: 'c7', avatar: '🐸', name: 'FrogKing', amount: 400, feeText: '(-20 入场费)' },
-    ],
-    comments: [],
-  },
-  {
-    id: 'sample-finance',
-    topic: '上证指数 3 月底能站上 3500 吗？',
-    category: 'finance',
-    banker: {
-      name: 'TigerQuant',
-      avatar: '🐯',
-      stance: '政策底已明确，外资持续回流，3 月底站上 3500 没问题。',
-    },
-    challengerSideText: '消费疲软 + 外部风险，3500 根本守不住。',
-    status: 'pending',
-    wager: 3000,
-    currentPool: 2400,
-    challengerCount: 3,
-    visibility: 'public',
-    settleText: '⚠️ 庄家需在 24h 内宣布结果',
-    likes: 63,
-    footerActionLabel: '📢 宣布结果',
-    footerActionTone: 'orange',
-    comments: [],
-  },
-  {
-    id: 'sample-private',
-    topic: '周杰伦 2026 年会出新专辑吗？',
-    category: 'ent',
-    banker: {
-      name: '你',
-      avatar: '🦊',
-      stance: '不会出。他 2022 年出了「最伟大的作品」，这种级别后至少沉淀 3 年。',
-      isMe: true,
-    },
-    challengerSideText: '会出新专辑。录音棚照片频频曝光，已准备好了。',
-    status: 'private',
-    wager: 1000,
-    currentPool: 500,
-    challengerCount: 1,
-    visibility: 'private',
-    settleText: '⏱ 结算 2026-12-31',
-    likes: 8,
-    inviteCode: 'JKF2026',
-    footerActionLabel: '🔒 手动封盘',
-    footerActionTone: 'orange',
-    challengerList: [
-      { id: 'c8', avatar: '🐼', name: 'PandaPredict', amount: 500, feeText: '(无入场费)', highlight: '好友' },
-    ],
-    comments: [],
-  },
-  {
-    id: 'sample-settled',
-    topic: '比特币 3 月突破 10 万美元？',
-    category: 'hot',
-    banker: {
-      name: 'SharkTrader',
-      avatar: '🦈',
-      stance: '比特币在减半效应和 ETF 资金持续流入下，3 月必破 10 万。',
-    },
-    challengerSideText: '',
-    status: 'settled',
-    wager: 3000,
-    currentPool: 1200,
-    challengerCount: 2,
-    visibility: 'public',
-    settleText: '✅ 2026-03-08 结算完毕',
-    likes: 91,
-    resultText: '庄家赢 · 获得 +4,200🪙（本金退回 + 挑战者冻结额 + 入场费）',
-    comments: [],
-  },
-  {
-    id: 'sample-dispute',
-    topic: '苹果 2026 年会发布折叠屏 iPhone 吗？',
-    category: 'tech',
-    banker: {
-      name: 'DragonSeer',
-      avatar: '🐉',
-      stance: '庄家宣布「庄家赢」· 1 位挑战者提出异议 · 等管理员仲裁。',
-    },
-    challengerSideText: '',
-    status: 'disputing',
-    wager: 1500,
-    currentPool: 1100,
-    challengerCount: 2,
-    visibility: 'public',
-    settleText: '⚠️ 管理员仲裁中',
-    likes: 56,
-    disputeText:
-      '挑战者 EagleEye 提出异议：「苹果发布的是 iPad 折叠屏，不是 iPhone 折叠屏，议题说的是 iPhone，庄家不应赢」。',
-    comments: [],
-  },
-];
 
 const PAGE_STYLES = `
 #page-battle-square {
@@ -335,7 +193,13 @@ const PAGE_STYLES = `
 #page-battle-square .pr-warn { margin-top:14px; background:rgba(255,60,60,.06); border:1px solid rgba(255,60,60,.12); border-radius:10px; padding:10px 14px; }
 #page-battle-square .pr-warn-title { font-size:13px; font-weight:700; color:var(--red); margin-bottom:4px; }
 #page-battle-square .duel-compose { overflow:hidden; margin-bottom:0; }
-#page-battle-square .dc-header { padding:16px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); background:linear-gradient(180deg,rgba(255,255,255,.52),rgba(255,255,255,.2)); }
+#page-battle-square .dc-header {
+  padding:16px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(245,158,11,.10), transparent 26%),
+    radial-gradient(circle at 100% 0%, rgba(37,99,235,.10), transparent 24%),
+    linear-gradient(180deg, rgba(15,23,42,.08), rgba(255,255,255,.02));
+}
 #page-battle-square .dc-ava,
 #page-battle-square .badd-cmt-ava { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--red),var(--orange)); display:grid; place-items:center; font-size:16px; flex-shrink:0; }
 #page-battle-square .dc-placeholder { flex:1; font-size:15px; color:var(--muted); cursor:pointer; }
@@ -344,7 +208,10 @@ const PAGE_STYLES = `
 #page-battle-square .dc-submit,
 #page-battle-square .duel-foot-join,
 #page-battle-square .dm-cta { border:none; cursor:pointer; transition:.15s; font-weight:700; }
-#page-battle-square .dc-btn { padding:8px 16px; border-radius:12px; background:linear-gradient(135deg,#2563eb,#7c3aed); color:#fff; font-size:13px; box-shadow:0 10px 24px rgba(37,99,235,.2); }
+#page-battle-square .dc-btn {
+  padding:8px 16px; border-radius:12px; background:linear-gradient(135deg,#f59e0b,#f97316);
+  color:#fff; font-size:13px; box-shadow:0 10px 24px rgba(249,115,22,.22);
+}
 #page-battle-square .dc-btn:hover,
 #page-battle-square .dc-submit:hover { filter:brightness(1.04); }
 #page-battle-square .dc-form { padding:18px; }
@@ -398,6 +265,7 @@ const PAGE_STYLES = `
 #page-battle-square .battle-sort { align-items:center; background:var(--surface); border-radius:18px; padding:8px; border:1px solid var(--border2); overflow-x:auto; margin-bottom:14px; flex-wrap:nowrap; box-shadow:var(--legacy-shadow); }
 #page-battle-square .battle-sort::-webkit-scrollbar { display:none; }
 #page-battle-square .bsort-sep { width:1px; height:18px; background:var(--border); flex-shrink:0; }
+@keyframes bp-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 #page-battle-square .banker-tips,
 #page-battle-square .challenger-tips { padding:14px 18px; margin-bottom:0; }
 #page-battle-square .banker-tips { background:linear-gradient(135deg,rgba(255,201,77,.06),rgba(255,123,44,.06)); border-color:rgba(255,201,77,.12); }
@@ -544,6 +412,12 @@ html.dark #page-battle-square .page-hero-battle {
     radial-gradient(circle at 86% 20%, rgba(236,72,153,.14), transparent 34%),
     linear-gradient(145deg, rgba(10,17,32,.94), rgba(11,20,39,.92));
 }
+html.dark #page-battle-square .dc-header {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(245,158,11,.12), transparent 28%),
+    radial-gradient(circle at 100% 0%, rgba(34,197,94,.08), transparent 24%),
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+}
 html.dark #page-battle-square .phb-label { color:#8fb3d4; }
 html.dark #page-battle-square .phb-sub,
 html.dark #page-battle-square .phb-stat { color:#c6d8ec; }
@@ -613,11 +487,14 @@ html.dark #page-battle-square .dm-stake-input {
     color:#22c55e;
   }
   #page-battle-square .dc-header {
-    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+    background:
+      radial-gradient(circle at 0% 0%, rgba(34,197,94,.10), transparent 26%),
+      radial-gradient(circle at 100% 0%, rgba(245,158,11,.08), transparent 22%),
+      linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
   }
   #page-battle-square .dc-btn {
-    background:linear-gradient(135deg,#1a1b1f,#0f1013);
-    box-shadow:0 10px 24px rgba(0,0,0,.32);
+    background:linear-gradient(135deg,#f59e0b,#ea580c);
+    box-shadow:0 10px 24px rgba(234,88,12,.24);
   }
   #page-battle-square .dc-submit,
   #page-battle-square .dm-cta {
@@ -767,6 +644,33 @@ function formatCoins(value: number) {
   return value.toLocaleString('zh-CN');
 }
 
+function clampAmount(value: number, min: number, max: number) {
+  if (!Number.isFinite(value)) return min;
+  return Math.min(max, Math.max(min, Math.floor(value)));
+}
+
+// battle 后端给的是秒级时间戳，这里统一转成页面里的短时间文案。
+function formatTimestampLabel(timestamp?: number) {
+  if (!timestamp) return '待定';
+  const date = new Date(timestamp * 1000);
+  if (Number.isNaN(date.getTime())) return '待定';
+  return new Intl.DateTimeFormat('zh-CN', {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(date);
+}
+
+function getDefaultBankerName(battle: Battle, currentUserId?: number | string | null) {
+  return String(battle.bankerUserId) === String(currentUserId ?? '') ? '你' : `庄家 #${battle.bankerUserId}`;
+}
+
+function getDefaultBankerAvatar(battle: Battle, currentUserId?: number | string | null) {
+  return String(battle.bankerUserId) === String(currentUserId ?? '') ? '🦊' : '🎲';
+}
+
 function deriveCategory(topic: string): DuelCategory {
   if (topic.includes('世界杯')) return 'wc';
   if (topic.includes('AI') || topic.includes('Claude') || topic.includes('GPT')) return 'ai';
@@ -776,64 +680,160 @@ function deriveCategory(topic: string): DuelCategory {
   return 'hot';
 }
 
-function mapBattleToDuel(battle: Battle): DuelItem {
-  const currentPool = battle.challenger ? Math.floor(battle.wager * 0.78) : Math.floor(battle.wager * 0.2);
-  const status: DuelStatus =
-    battle.status === 'waiting' ? 'open' : battle.status === 'active' ? 'sealed' : 'settled';
+function getCommentAuthorName(comment?: CommentResponse | null) {
+  return comment?.user?.nickname || comment?.user?.username || `用户 ${comment?.user?.id ?? ''}`.trim() || '匿名用户';
+}
+
+function getCommentAvatarSeed(comment?: CommentResponse | null) {
+  const name = getCommentAuthorName(comment).trim();
+  return name.slice(0, 1).toUpperCase() || '评';
+}
+
+function formatCommentTime(timestamp?: number) {
+  if (!timestamp) return '刚刚';
+  const diff = Math.max(0, Math.floor(Date.now() / 1000) - timestamp);
+  if (diff < 60) return '刚刚';
+  if (diff < 3600) return `${Math.floor(diff / 60)}分钟前`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}小时前`;
+  return `${Math.floor(diff / 86400)}天前`;
+}
+
+function mapCommentToDuelComment(comment: CommentResponse): DuelComment {
+  return {
+    id: String(comment.id),
+    avatar: getCommentAvatarSeed(comment),
+    name: getCommentAuthorName(comment),
+    side: 'challenger',
+    time: formatCommentTime(comment.createTime),
+    text: comment.content || '这条评论暂时没有正文。',
+    likes: comment.likeCount ?? 0,
+  };
+}
+
+// 真实 battle 接口字段和旧页面的 DuelCard 展示结构并不一致。
+// 这里集中做一次映射，后面页面 UI 只消费 DuelItem。
+function mapBattleToDuel(
+  item: BattleListItem,
+  currentUserId?: number | string | null,
+  detail?: BattleDetailResponse,
+  comments: DuelComment[] = [],
+  liked = false,
+): DuelItem {
+  const battle = item.battle;
+  const settlementItem = detail?.settlement?.myItem ?? null;
+  const permissions = getBattleActionPermissions({
+    battle,
+    myAction: item.myAction,
+    currentUserId,
+    settlementItem,
+  });
+
+  // 页面视觉状态和后端状态不是 1:1 命名，这里做一层展示态转换。
+  let status: DuelStatus;
+  switch (battle.status) {
+    case 'open':
+      status = battle.isPublic ? 'open' : 'private';
+      break;
+    case 'sealed':
+      status = 'sealed';
+      break;
+    case 'pending':
+      status = 'pending';
+      break;
+    case 'disputed':
+      status = 'disputing';
+      break;
+    case 'settled':
+    default:
+      status = 'settled';
+      break;
+  }
+
+  const resultText =
+    battle.status === 'settled'
+      ? battle.result === 'banker_wins'
+        ? '结果已生效：庄家获胜'
+        : battle.result === 'banker_loses'
+          ? '结果已生效：挑战者获胜'
+          : '结果已生效：本局作废'
+      : settlementItem?.payoutAmount
+        ? `你可提取 ${formatCoins(settlementItem.payoutAmount)}🪙`
+        : undefined;
+
+  const myChallengeInfo =
+    !permissions.isBanker
+      ? battle.status === 'pending'
+        ? item.myAction
+          ? `你已提交${item.myAction === 'confirm' ? '确认' : '异议'}，等待系统处理。`
+          : '庄家已宣判，当前等待你确认结果或发起异议。'
+        : battle.status === 'settled'
+          ? settlementItem
+            ? settlementItem.withdrawn
+              ? `你的结算奖励已提取，到账 ${formatCoins(settlementItem.payoutAmount)}🪙。`
+              : `你有 ${formatCoins(settlementItem.payoutAmount)}🪙 可提取。`
+            : '本局已结算。'
+          : battle.status === 'disputed'
+            ? '你已参与本局，当前进入争议仲裁阶段。'
+            : '你已参与本局，等待后续结算流程。'
+      : undefined;
 
   return {
-    id: battle.id,
-    topic: battle.topic,
-    category: deriveCategory(battle.topic),
+    id: String(battle.id),
+    battleId: battle.id,
+    topic: battle.title,
+    category: deriveCategory(battle.title),
     banker: {
-      name: battle.creator.name,
-      avatar: battle.creator.avatar,
-      stance: battle.optionA,
-      isMe: battle.creator.name === '你',
+      name: getDefaultBankerName(battle, currentUserId),
+      avatar: getDefaultBankerAvatar(battle, currentUserId),
+      stance: battle.bankerSide,
+      isMe: permissions.isBanker,
     },
-    challengerSideText: battle.optionB,
+    challengerSideText: battle.challengerSide,
     status,
-    wager: battle.wager,
-    currentPool,
-    challengerCount: battle.challenger ? 1 : 0,
-    visibility: 'public',
+    wager: battle.bankerStakeTotal,
+    currentPool: battle.challengerStakeTotal,
+    challengerCount: battle.challengerStakeTotal > 0 ? 1 : 0,
+    visibility: battle.isPublic ? 'public' : 'private',
+    comments,
+    likes: Math.max(0, Math.floor((battle.entryFeeTotal + battle.poolPrincipalTotal) / 100)) + (liked ? 1 : 0),
     settleText:
-      battle.status === 'resolved'
-        ? `✅ ${battle.createdTime} 结算完毕`
-        : battle.status === 'active'
-          ? `⏱ ${battle.createdTime} · 已匹配对手`
-          : `⏱ ${battle.createdTime} · 等待挑战者`,
-    likes: 12 + battle.wager / 20,
-    resultText:
-      battle.status === 'resolved'
-        ? battle.winner === battle.creator.side
-          ? `庄家赢 · 获得 +${formatCoins(Math.floor(battle.wager * 1.8))}🪙`
-          : `庄家输 · 挑战者分走 ${formatCoins(battle.wager)}🪙`
+      battle.status === 'settled'
+        ? `✅ ${formatTimestampLabel(battle.resultTime || detail?.settlement?.settlement?.createdAt)} 结算完毕`
+        : battle.status === 'pending'
+          ? `⏱ 确认截止 ${formatTimestampLabel(battle.confirmDeadline)}`
+          : battle.status === 'disputed'
+            ? `⚠️ 仲裁截止 ${formatTimestampLabel(battle.disputeDeadline)}`
+            : battle.status === 'sealed'
+              ? `🔒 已封盘 · 结算时间 ${formatTimestampLabel(battle.settleTime)}`
+              : `⏱ 结算时间 ${formatTimestampLabel(battle.settleTime)}`,
+    resultText,
+    disputeText:
+      battle.status === 'disputed'
+        ? '本局存在挑战者异议，当前等待管理员裁决。'
         : undefined,
-    challengerList: battle.challenger
+    inviteCode: battle.isPublic ? undefined : battle.inviteCode,
+    challengerList: battle.challengerStakeTotal > 0
       ? [
           {
             id: `${battle.id}-challenger`,
-            avatar: battle.challenger.avatar,
-            name: battle.challenger.name,
-            amount: Math.floor(battle.wager * 0.95),
-            feeText: '(-5% 入场费)',
+            avatar: permissions.isBanker ? '⚔️' : '🧿',
+            name: battle.challengerStakeTotal >= battle.bankerStakeTotal ? '挑战方已满额' : '已有挑战者加入',
+            amount: battle.challengerStakeTotal,
+            feeText: battle.isPublic ? '公开场累计挑战额' : '私密场累计挑战额',
           },
         ]
       : [],
-    comments: [
-      {
-        id: `${battle.id}-comment`,
-        avatar: battle.challenger?.avatar ?? '🐢',
-        name: battle.challenger?.name ?? '围观群众',
-        side: battle.challenger ? 'challenger' : 'banker',
-        time: battle.createdTime,
-        text: battle.challenger
-          ? `我站「${battle.optionB}」，这局有得打。`
-          : '题目还不错，等一个对手入场。',
-        likes: 3,
-      },
-    ],
+    myChallengeInfo,
+    myChallengeState: permissions.canConfirm || permissions.canDispute ? 'confirm' : myChallengeInfo ? 'info' : undefined,
+    myAction: item.myAction,
+    canJoin: permissions.canJoin,
+    canBankerAddStake: permissions.canBankerAddStake,
+    canDeclare: permissions.canDeclare,
+    canConfirm: permissions.canConfirm,
+    canDispute: permissions.canDispute,
+    canWithdraw: permissions.canWithdraw,
+    rawStatus: battle.status,
+    createdAt: battle.createTime,
   };
 }
 
@@ -856,7 +856,15 @@ function DuelCard({
   onToggleLike,
   onJoin,
   onCopyInvite,
-  onResolve,
+  onAddStake,
+  onDeclare,
+  onConfirm,
+  onDispute,
+  onWithdraw,
+  commentDraft,
+  onCommentDraftChange,
+  onSubmitComment,
+  commentSubmitting,
 }: {
   duel: DuelItem;
   commentsOpen: boolean;
@@ -865,9 +873,18 @@ function DuelCard({
   onToggleLike: () => void;
   onJoin: () => void;
   onCopyInvite: (code: string) => void;
-  onResolve: (side: BattleSide) => void;
+  onAddStake: () => void;
+  onDeclare: (result: 'banker_wins' | 'banker_loses') => void;
+  onConfirm: () => void;
+  onDispute: () => void;
+  onWithdraw: () => void;
+  commentDraft: string;
+  onCommentDraftChange: (value: string) => void;
+  onSubmitComment: () => void;
+  commentSubmitting: boolean;
 }) {
-  const capacityPct = Math.min(100, Math.round((duel.currentPool / duel.wager) * 100));
+  // 庄家押注额就是挑战池上限，所以容量条直接按 challengerStakeTotal / bankerStakeTotal 算。
+  const capacityPct = duel.wager > 0 ? Math.min(100, Math.round((duel.currentPool / duel.wager) * 100)) : 0;
   const category = CATEGORY_META[duel.category];
   const status = STATUS_META[duel.status];
 
@@ -975,10 +992,10 @@ function DuelCard({
               <div className="duel-my-challenge-label">你的挑战信息</div>
               <div className="duel-my-challenge-text">{duel.myChallengeInfo}</div>
             </div>
-            {duel.myChallengeState === 'confirm' ? (
+            {duel.myChallengeState === 'confirm' && (duel.canConfirm || duel.canDispute) ? (
               <div className="duel-my-challenge-actions">
-                <div className="duel-mini-btn">✅ 同意</div>
-                <div className="duel-dispute-btn">⚠️ 提出异议</div>
+                {duel.canConfirm ? <div className="duel-mini-btn" onClick={onConfirm}>✅ 同意</div> : null}
+                {duel.canDispute ? <div className="duel-dispute-btn" onClick={onDispute}>⚠️ 提出异议</div> : null}
               </div>
             ) : null}
           </div>
@@ -1038,26 +1055,36 @@ function DuelCard({
         >
           {liked ? '❤️' : '🤍'} <span>{duel.likes + (liked ? 1 : 0)}</span>
         </div>
-        {duel.status === 'open' || duel.status === 'sealed' || duel.status === 'private' || duel.footerActionLabel ? (
+        {duel.canWithdraw ? (
+          <button className="duel-foot-join gold" onClick={onWithdraw}>
+            💰 提取奖励
+          </button>
+        ) : null}
+        {duel.canJoin ? (
           <button
             className={`duel-foot-join ${duel.footerActionTone ?? ''}`}
             onClick={onJoin}
           >
-            {duel.footerActionLabel ?? (duel.banker.isMe && duel.status === 'private' ? '🔒 手动封盘' : '⚔️ 挑战庄家')}
+            {duel.footerActionLabel ?? '⚔️ 挑战庄家'}
           </button>
         ) : null}
-        {duel.banker.isMe && duel.status === 'pending' && !duel.footerActionLabel ? (
+        {duel.canBankerAddStake ? (
+          <button className="duel-foot-join orange" onClick={onAddStake}>
+            ➕ 庄家加注
+          </button>
+        ) : null}
+        {duel.canDeclare ? (
           <>
             <button
               className="duel-foot-join"
-              onClick={() => onResolve('A')}
+              onClick={() => onDeclare('banker_wins')}
               style={{ background: 'rgba(255,123,44,.12)', color: 'var(--orange)', borderColor: 'rgba(255,123,44,.3)' }}
             >
               📢 宣布庄家赢
             </button>
             <button
               className="duel-foot-join"
-              onClick={() => onResolve('B')}
+              onClick={() => onDeclare('banker_loses')}
               style={{ background: 'rgba(255,60,60,.12)', color: 'var(--red)', borderColor: 'rgba(255,60,60,.3)' }}
             >
               📢 宣布庄家输
@@ -1092,8 +1119,21 @@ function DuelCard({
             ) : null}
             <div className="badd-cmt">
               <div className="badd-cmt-ava">🦊</div>
-              <input className="badd-cmt-inp" placeholder="加入讨论…" />
-              <button className="badd-cmt-send" type="button">↑</button>
+              <input
+                className="badd-cmt-inp"
+                placeholder="加入讨论…"
+                value={commentDraft}
+                onChange={(e) => onCommentDraftChange(e.target.value)}
+              />
+              <button
+                className="badd-cmt-send"
+                type="button"
+                onClick={onSubmitComment}
+                disabled={commentSubmitting}
+                style={commentSubmitting ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
+              >
+                ↑
+              </button>
             </div>
           </div>
         </div>
@@ -1102,17 +1142,31 @@ function DuelCard({
   );
 }
 
-export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
-  battles,
-  userBalance,
-  onCreateBattle,
-  onAcceptBattle,
-  onResolveBattle,
-}) => {
-  const [rulesOpen, setRulesOpen] = useState(true);
+export const BattleSquarePixel: React.FC = () => {
+  const { user, coin } = useAppSession();
+  const authToken = getAuthToken();
+  const storedUser = getStoredUserInfo() as { id?: number | string };
+  const currentUserId = user?.id ?? storedUser?.id ?? null;
+  const userBalance = coin?.balance ?? 0;
+  // 登录提示按 token 判断，避免“已登录但 userInfo 还在加载”时误闪未登录提示。
+  const isAuthenticated = Boolean(authToken);
+  const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 });
+  const myBattleQuery = useRequestBattleList({ page: 1, pageSize: 50, mine: 1 });
+  const createBattleMutation = useRequestBattleCreate();
+  const joinBattleMutation = useRequestBattleJoin();
+  const addStakeMutation = useRequestBattleBankerAddStake();
+  const declareBattleMutation = useRequestBattleDeclare();
+  const confirmBattleMutation = useRequestBattleChallengerConfirm();
+  const disputeBattleMutation = useRequestBattleChallengerDispute();
+  const withdrawBattleMutation = useRequestBattleWithdraw();
+  const createCommentMutation = useRequestCreateComment();
+  const likeBattleMutation = useRequestLikeEntity();
+  const unlikeBattleMutation = useRequestUnlikeEntity();
+
+  const [rulesOpen, setRulesOpen] = useState(false);
   const [composeOpen, setComposeOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<PlazaTab>('plaza');
-  const [activeSort, setActiveSort] = useState<PlazaSort>('🔥 热门');
+  const [activeSort, setActiveSort] = useState<PlazaSort>('最新');
   const [topic, setTopic] = useState('');
   const [bankerOpinion, setBankerOpinion] = useState('');
   const [challengerOpinion, setChallengerOpinion] = useState('');
@@ -1122,117 +1176,399 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
   const [inviteInput, setInviteInput] = useState('');
   const [joinAmount, setJoinAmount] = useState(500);
   const [joinModal, setJoinModal] = useState<JoinModalState | null>(null);
+  const [addStakeAmount, setAddStakeAmount] = useState(500);
+  const [addStakeModal, setAddStakeModal] = useState<AddStakeModalState | null>(null);
   const [commentOpen, setCommentOpen] = useState<Record<string, boolean>>({});
+  const [commentDraftMap, setCommentDraftMap] = useState<Record<string, string>>({});
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
+  const [feedback, setFeedback] = useState<{ tone: 'success' | 'error' | 'info'; text: string } | null>(null);
+  const lastPopupMessageRef = useRef<string>('');
 
-  const battleDuels = useMemo(() => battles.map(mapBattleToDuel), [battles]);
-  const plazaDuels = useMemo(() => [...battleDuels, ...SAMPLE_DUELS], [battleDuels]);
-  const myBankerDuels = useMemo(
-    () =>
-      [
-        plazaDuels.find((duel) => duel.id === 'sample-private'),
-        {
-          ...plazaDuels.find((duel) => duel.id === 'sample-settled'),
-          id: 'my-settled',
-          topic: '特斯拉 3 月发布 Model 2？',
-          banker: {
-            name: '你',
-            avatar: '🦊',
-            stance: '产品线下沉和市场窗口都对上了，3 月发布概率极高。',
-            isMe: true,
-          },
-          wager: 2000,
-          currentPool: 940,
-          resultText: '你赢了 · 获得 +2,800🪙（本金退回 + 挑战者冻结额 + 入场费 140🪙）',
-          settleText: '✅ 2026-03-05 结算完毕',
-        } as DuelItem,
-        {
-          ...plazaDuels.find((duel) => duel.id === 'sample-finance'),
-          id: 'my-pending',
-          topic: 'GPT-5 在 3 月之前发布？',
-          banker: {
-            name: '你',
-            avatar: '🦊',
-            stance: 'OpenAI 已经进入发布窗口，3 月前落地是大概率事件。',
-            isMe: true,
-          },
-          category: 'ai',
-          currentPool: 1200,
-          wager: 1500,
-          settleText: '⚠️ 剩余 18h32m',
-          footerActionLabel: '📢 宣布结果',
-          footerActionTone: 'orange',
-        } as DuelItem,
-      ].filter(Boolean) as DuelItem[],
-    [plazaDuels],
+  // 列表接口不带 settlement，只有“我的庄局 / 我的挑战”页才补详情查询。
+  // 这样可以保住首页请求量，同时又能在我的页面正确计算 withdraw / confirm / dispute 按钮态。
+  const myDetailQueries = useQueries(
+    (myBattleQuery.data?.list ?? []).map((item) => ({
+      queryKey: battleQueryKeys.detail(item.battle.id),
+      queryFn: async () => {
+        const res = await axiosCustom({
+          method: 'get',
+          cmd: API_Battle_By,
+          params: { battleId: item.battle.id },
+          headers: getAuthorizationHeaders(),
+        });
+        return assertSuccess(res) as BattleDetailResponse;
+      },
+      enabled: activeTab !== 'plaza',
+    })),
+  ) as Array<{ data?: BattleDetailResponse }>;
+
+  const allBattleItems = useMemo(() => {
+    const map = new Map<number, BattleListItem>();
+    [...(plazaQuery.data?.list ?? []), ...(myBattleQuery.data?.list ?? [])].forEach((item) => {
+      map.set(item.battle.id, item);
+    });
+    return Array.from(map.values());
+  }, [myBattleQuery.data?.list, plazaQuery.data?.list]);
+
+  const commentQueries = useQueries(
+    allBattleItems.map((item) => {
+      const isOpen = Boolean(commentOpen[String(item.battle.id)]);
+
+      return {
+        queryKey: ['requestCommentComments', { entityType: 'battle', entityId: item.battle.id }],
+        queryFn: async () => {
+          const res = await axiosCustom({
+            method: 'get',
+            cmd: API_Comment_Comments,
+            params: {
+              entityType: 'battle',
+              entityId: item.battle.id,
+            },
+            headers: getAuthorizationHeaders(),
+          });
+          return assertSuccess(res) as { results?: CommentResponse[] };
+        },
+        enabled: isOpen,
+        staleTime: 10 * 1000,
+      };
+    }),
+  ) as Array<{ data?: { results?: CommentResponse[] } }>;
+
+  const commentMap = useMemo(() => {
+    const map = new Map<number, DuelComment[]>();
+    allBattleItems.forEach((item, index) => {
+      const results = commentQueries[index]?.data?.results ?? [];
+      map.set(item.battle.id, results.map(mapCommentToDuelComment));
+    });
+    return map;
+  }, [allBattleItems, commentQueries]);
+
+  const detailMap = useMemo(() => {
+    const map = new Map<number, BattleDetailResponse>();
+    (myBattleQuery.data?.list ?? []).forEach((item, index) => {
+      const detail = myDetailQueries[index]?.data;
+      if (detail) map.set(item.battle.id, detail);
+    });
+    return map;
+  }, [myBattleQuery.data?.list, myDetailQueries]);
+
+  // 广场与“我的”两个 tab 共享同一套 DuelItem 映射，保证 PC/手机端展示逻辑一致。
+  const plazaDuels = useMemo(
+    () => (plazaQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], Boolean(likedMap[String(item.battle.id)]))),
+    [plazaQuery.data?.list, currentUserId, detailMap, commentMap, likedMap],
   );
-  const myChallengerDuels = useMemo(
-    () => [
-      {
-        ...(plazaDuels.find((duel) => duel.id === 'sample-finance') as DuelItem),
-        id: 'my-challenge-confirm',
-        settleText: '⏳ 庄家已宣布，等你确认',
-        myChallengeInfo: '押注 800🪙 · 冻结 760🪙 · 入场费 40🪙 · 确认截止还剩 16h',
-        myChallengeState: 'confirm' as const,
-      },
-      {
-        ...(plazaDuels.find((duel) => duel.id === 'sample-wc') as DuelItem),
-        id: 'my-challenge-open',
-        myChallengeInfo: '押注 1,000🪙 · 冻结 950🪙 · 入场费 50🪙 · 你站反方：巴西拿不到冠军',
-        myChallengeState: 'info' as const,
-      },
-      {
-        ...(plazaDuels.find((duel) => duel.id === 'sample-ai') as DuelItem),
-        id: 'my-challenge-sealed',
-        myChallengeInfo: '押注 600🪙 · 冻结 570🪙 · 入场费 30🪙 · 已封盘，等待结算时间到达',
-        myChallengeState: 'info' as const,
-      },
-    ],
-    [plazaDuels],
+  const myAllDuels = useMemo(
+    () => (myBattleQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], Boolean(likedMap[String(item.battle.id)]))),
+    [myBattleQuery.data?.list, currentUserId, detailMap, commentMap, likedMap],
   );
+  const myBankerDuels = useMemo(() => myAllDuels.filter((duel) => duel.banker.isMe), [myAllDuels]);
+  const myChallengerDuels = useMemo(() => myAllDuels.filter((duel) => !duel.banker.isMe), [myAllDuels]);
 
   const sortedPlazaDuels = useMemo(() => {
     const list = [...plazaDuels];
     switch (activeSort) {
-      case '💰 大额':
+      case '大额':
         return list.sort((a, b) => b.wager - a.wager);
-      case '⚡ 最新':
-        return list.reverse();
-      case '📖 进行中':
-        return list.filter((duel) => duel.status === 'open' || duel.status === 'private');
-      case '🔒 已封盘':
-        return list.filter((duel) => duel.status === 'sealed');
-      case '⏳ 等结果':
-        return list.filter((duel) => duel.status === 'pending');
-      case '⏱ 快结算':
-        return list.sort((a, b) => a.currentPool - b.currentPool);
+      case '最新':
+        return list.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
+      case '进行中':
+        return list.filter((duel) => duel.rawStatus === 'open');
+      case '待结果':
+        return list.filter((duel) => duel.rawStatus === 'pending');
+      case '已结算':
+        return list.filter((duel) => duel.rawStatus === 'settled');
       default:
-        return list.sort((a, b) => b.likes - a.likes);
+        return list.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
     }
   }, [activeSort, plazaDuels]);
 
   const totalFrozen = useMemo(
-    () => plazaDuels.reduce((sum, duel) => sum + duel.wager + duel.currentPool, 0),
-    [plazaDuels],
+    () => (plazaQuery.data?.list ?? []).reduce((sum, item) => sum + item.battle.poolPrincipalTotal, 0),
+    [plazaQuery.data?.list],
+  );
+  const totalPendingCount = useMemo(
+    () => (plazaQuery.data?.list ?? []).filter((item) => item.battle.status === 'pending').length,
+    [plazaQuery.data?.list],
   );
 
-  const handleCreate = () => {
-    if (!topic.trim() || !bankerOpinion.trim() || !challengerOpinion.trim()) {
+  const joinModalMax = joinModal ? Math.max(100, Math.min(joinModal.max, userBalance)) : 100;
+  const normalizedJoinAmount = joinModal ? clampAmount(joinAmount, 100, joinModalMax) : 100;
+  const normalizedAddStakeAmount = clampAmount(addStakeAmount, 100, Math.max(100, userBalance));
+  const canSubmitCreate =
+    isAuthenticated &&
+    !createBattleMutation.isLoading &&
+    topic.trim().length > 0 &&
+    bankerOpinion.trim().length > 0 &&
+    challengerOpinion.trim().length > 0 &&
+    Number.isFinite(wager) &&
+    wager >= 100 &&
+    wager <= userBalance &&
+    Boolean(settleTime) &&
+    (visibility === 'public' || inviteInput.trim().length > 0);
+  const canSubmitJoin =
+    isAuthenticated &&
+    !joinBattleMutation.isLoading &&
+    Boolean(joinModal) &&
+    normalizedJoinAmount >= 100 &&
+    normalizedJoinAmount <= joinModalMax &&
+    normalizedJoinAmount <= userBalance &&
+    (joinModal?.visibility !== 'private' || inviteInput.trim().length > 0);
+  const canSubmitAddStake =
+    isAuthenticated &&
+    !addStakeMutation.isLoading &&
+    Boolean(addStakeModal) &&
+    normalizedAddStakeAmount >= 100 &&
+    normalizedAddStakeAmount <= userBalance;
+
+  const pushFeedback = (tone: 'success' | 'error' | 'info', text: string) => {
+    setFeedback({ tone, text });
+    if (tone === 'error' && typeof window !== 'undefined' && lastPopupMessageRef.current !== text) {
+      lastPopupMessageRef.current = text;
+      window.alert(text);
+      window.setTimeout(() => {
+        if (lastPopupMessageRef.current === text) {
+          lastPopupMessageRef.current = '';
+        }
+      }, 0);
+    }
+  };
+
+  const setMappedError = (error: unknown) => {
+    const message = error instanceof Error ? error.message : '';
+    pushFeedback('error', getBattleErrorMessage(message));
+  };
+
+  useEffect(() => {
+    if (!plazaQuery.isError) return;
+    setMappedError(plazaQuery.error);
+  }, [plazaQuery.error, plazaQuery.isError]);
+
+  useEffect(() => {
+    if (!myBattleQuery.isError || activeTab === 'plaza') return;
+    setMappedError(myBattleQuery.error);
+  }, [activeTab, myBattleQuery.error, myBattleQuery.isError]);
+
+  // 创建前先在页面层挡一轮基础校验，避免无意义请求直接打后端。
+  const handleCreate = async () => {
+    if (!isAuthenticated) {
+      pushFeedback('error', '请先登录后再创建赌局。');
       return;
     }
-    onCreateBattle(
-      topic.trim(),
-      bankerOpinion.trim(),
-      challengerOpinion.trim(),
-      'A',
-      wager,
-    );
-    setTopic('');
-    setBankerOpinion('');
-    setChallengerOpinion('');
-    setSettleTime('');
-    setVisibility('public');
-    setComposeOpen(false);
+    if (!topic.trim() || !bankerOpinion.trim() || !challengerOpinion.trim()) {
+      pushFeedback('error', '请先完整填写议题和双方立场。');
+      return;
+    }
+    if (!settleTime) {
+      pushFeedback('error', '请选择结算时间。');
+      return;
+    }
+
+    const settleTimestamp = Math.floor(new Date(settleTime).getTime() / 1000);
+    if (!Number.isFinite(settleTimestamp) || settleTimestamp <= 0) {
+      pushFeedback('error', '结算时间格式不正确。');
+      return;
+    }
+    if (wager < 100) {
+      pushFeedback('error', '开战金额不能低于 100。');
+      return;
+    }
+    if (wager > userBalance) {
+      pushFeedback('error', '当前余额不足，无法创建该赌局。');
+      return;
+    }
+    if (visibility === 'private' && inviteInput.trim().length === 0) {
+      pushFeedback('error', '私密场必须填写邀请码。');
+      return;
+    }
+    if (settleTimestamp <= Math.floor(Date.now() / 1000)) {
+      pushFeedback('error', '结算时间必须晚于当前时间。');
+      return;
+    }
+
+    try {
+      await createBattleMutation.mutateAsync({
+        title: topic.trim(),
+        bankerSide: bankerOpinion.trim(),
+        challengerSide: challengerOpinion.trim(),
+        stakeAmount: wager,
+        isPublic: visibility === 'public',
+        inviteCode: visibility === 'private' ? inviteInput.trim() : '',
+        settleTime: settleTimestamp,
+        requestId: createBattleRequestId('battle-create'),
+      });
+      setTopic('');
+      setBankerOpinion('');
+      setChallengerOpinion('');
+      setSettleTime('');
+      setVisibility('public');
+      setComposeOpen(false);
+      pushFeedback('success', '赌局已创建，广场列表已刷新。');
+    } catch (error) {
+      setMappedError(error);
+    }
+  };
+
+  const handleJoinBattle = async () => {
+    if (!joinModal) return;
+    if (!isAuthenticated) {
+      pushFeedback('error', '请先登录后再加入赌局。');
+      return;
+    }
+    if (joinModal.visibility === 'private' && inviteInput.trim().length === 0) {
+      pushFeedback('error', '私密赌局需要先填写邀请码。');
+      return;
+    }
+    if (normalizedJoinAmount > userBalance) {
+      pushFeedback('error', '余额不足，无法完成挑战。');
+      return;
+    }
+    if (normalizedJoinAmount > joinModal.max) {
+      pushFeedback('error', `挑战金额超过剩余额度，当前最多 ${formatCoins(joinModal.max)}🪙。`);
+      return;
+    }
+    try {
+      await joinBattleMutation.mutateAsync({
+        battleId: joinModal.duelId,
+        amount: normalizedJoinAmount,
+        requestId: createBattleRequestId(`battle-join-${joinModal.duelId}`),
+        inviteCode: joinModal.visibility === 'private' ? inviteInput.trim() : '',
+      });
+      setJoinModal(null);
+      pushFeedback('success', '已成功加入赌局。');
+    } catch (error) {
+      setMappedError(error);
+    }
+  };
+
+  const handleBankerAddStake = async () => {
+    if (!addStakeModal) return;
+    if (!isAuthenticated) {
+      pushFeedback('error', '请先登录后再追加押注。');
+      return;
+    }
+    if (normalizedAddStakeAmount > userBalance) {
+      pushFeedback('error', '余额不足，无法追加押注。');
+      return;
+    }
+    try {
+      await addStakeMutation.mutateAsync({
+        battleId: addStakeModal.duelId,
+        amount: normalizedAddStakeAmount,
+        requestId: createBattleRequestId(`battle-banker-add-${addStakeModal.duelId}`),
+      });
+      setAddStakeModal(null);
+      pushFeedback('success', '庄家追加押注成功。');
+    } catch (error) {
+      setMappedError(error);
+    }
+  };
+
+  const handleDeclareResult = async (duel: DuelItem, result: 'banker_wins' | 'banker_loses') => {
+    if (!isAuthenticated) {
+      pushFeedback('error', '请先登录后再进行宣判。');
+      return;
+    }
+    try {
+      await declareBattleMutation.mutateAsync({ battleId: duel.battleId, result });
+      pushFeedback('success', '宣判结果已提交。');
+    } catch (error) {
+      setMappedError(error);
+    }
+  };
+
+  const handleChallengeConfirm = async (duel: DuelItem) => {
+    if (!isAuthenticated) {
+      pushFeedback('error', '请先登录后再确认结果。');
+      return;
+    }
+    try {
+      await confirmBattleMutation.mutateAsync({
+        battleId: duel.battleId,
+        requestId: createBattleRequestId(`battle-confirm-${duel.battleId}`),
+        remark: '前端确认结果',
+      });
+      pushFeedback('success', '你已确认本局结果。');
+    } catch (error) {
+      setMappedError(error);
+    }
+  };
+
+  const handleChallengeDispute = async (duel: DuelItem) => {
+    if (!isAuthenticated) {
+      pushFeedback('error', '请先登录后再发起异议。');
+      return;
+    }
+    try {
+      await disputeBattleMutation.mutateAsync({
+        battleId: duel.battleId,
+        requestId: createBattleRequestId(`battle-dispute-${duel.battleId}`),
+        remark: '前端发起异议',
+      });
+      pushFeedback('success', '异议已提交，等待管理员仲裁。');
+    } catch (error) {
+      setMappedError(error);
+    }
+  };
+
+  const handleWithdraw = async (duel: DuelItem) => {
+    if (!isAuthenticated) {
+      pushFeedback('error', '请先登录后再提取奖励。');
+      return;
+    }
+    try {
+      await withdrawBattleMutation.mutateAsync({
+        battleId: duel.battleId,
+        requestId: createBattleRequestId(`battle-withdraw-${duel.battleId}`),
+      });
+      pushFeedback('success', '奖励已提取到你的龟币账户。');
+    } catch (error) {
+      setMappedError(error);
+    }
+  };
+
+  const handleToggleBattleLike = async (duel: DuelItem) => {
+    if (!isAuthenticated) {
+      pushFeedback('error', '请先登录后再点赞。');
+      return;
+    }
+
+    const nextLiked = !likedMap[duel.id];
+    setLikedMap((prev) => ({ ...prev, [duel.id]: nextLiked }));
+
+    try {
+      if (nextLiked) {
+        await likeBattleMutation.mutateAsync({ entityType: 'battle', entityId: duel.battleId });
+      } else {
+        await unlikeBattleMutation.mutateAsync({ entityType: 'battle', entityId: duel.battleId });
+      }
+    } catch (error) {
+      setLikedMap((prev) => ({ ...prev, [duel.id]: !nextLiked }));
+      setMappedError(error);
+    }
+  };
+
+  const handleCreateBattleComment = async (duel: DuelItem) => {
+    const draft = commentDraftMap[duel.id]?.trim() ?? '';
+    if (!isAuthenticated) {
+      pushFeedback('error', '请先登录后再发表评论。');
+      return;
+    }
+    if (!draft) {
+      pushFeedback('error', '评论内容不能为空。');
+      return;
+    }
+
+    try {
+      await createCommentMutation.mutateAsync({
+        entityType: 'battle',
+        entityId: duel.battleId,
+        content: draft,
+      });
+      setCommentDraftMap((prev) => ({ ...prev, [duel.id]: '' }));
+      pushFeedback('success', '评论已发布。');
+    } catch (error) {
+      setMappedError(error);
+    }
   };
 
   const renderList = (items: DuelItem[]) =>
@@ -1244,28 +1580,32 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
           commentsOpen={!!commentOpen[duel.id]}
           liked={!!likedMap[duel.id]}
           onToggleComments={() => setCommentOpen((prev) => ({ ...prev, [duel.id]: !prev[duel.id] }))}
-          onToggleLike={() => setLikedMap((prev) => ({ ...prev, [duel.id]: !prev[duel.id] }))}
+          onToggleLike={() => void handleToggleBattleLike(duel)}
           onJoin={() => {
-            if (duel.footerActionLabel?.includes('宣布')) {
-              if (!duel.id.startsWith('sample-') && !duel.id.startsWith('my-')) {
-                onResolveBattle(duel.id, 'A');
-              }
-              return;
-            }
-            if (duel.id.startsWith('sample-')) {
-              setJoinModal({ duelId: duel.id, title: duel.topic, max: duel.wager - duel.currentPool, visibility: duel.visibility });
-              return;
-            }
-            onAcceptBattle(duel.id);
+            setJoinModal({
+              duelId: duel.battleId,
+              title: duel.topic,
+              max: Math.max(0, duel.wager - duel.currentPool),
+              visibility: duel.visibility,
+            });
           }}
           onCopyInvite={(code) => {
             void navigator.clipboard?.writeText(code);
           }}
-          onResolve={(side) => {
-            if (!duel.id.startsWith('sample-')) {
-              onResolveBattle(duel.id, side);
-            }
+          onAddStake={() => {
+            setAddStakeModal({
+              duelId: duel.battleId,
+              title: duel.topic,
+            });
           }}
+          onDeclare={(result) => void handleDeclareResult(duel, result)}
+          onConfirm={() => void handleChallengeConfirm(duel)}
+          onDispute={() => void handleChallengeDispute(duel)}
+          onWithdraw={() => void handleWithdraw(duel)}
+          commentDraft={commentDraftMap[duel.id] ?? ''}
+          onCommentDraftChange={(value) => setCommentDraftMap((prev) => ({ ...prev, [duel.id]: value }))}
+          onSubmitComment={() => void handleCreateBattleComment(duel)}
+          commentSubmitting={createCommentMutation.isLoading}
         />
       ))
     ) : (
@@ -1284,19 +1624,53 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
         className="legacy-battle-square relative min-h-full bg-transparent px-0 py-0 md:rounded-none md:border-x md:border-slate-200 md:bg-slate-50 dark:md:border-rdark-border dark:md:bg-rdark-card"
       >
         <div className="bp-wrap">
-          {/* <span className="bp-back">← 返回龟投首页</span> */}
+          {!isAuthenticated ? (
+            <div
+              className="duel-compose"
+              style={{
+                borderColor: 'rgba(245,158,11,.22)',
+                background: 'linear-gradient(135deg, rgba(24,24,27,.96), rgba(15,23,42,.94))',
+                boxShadow: '0 18px 40px rgba(0,0,0,.28)',
+              }}
+            >
+              <div
+                className="dc-header"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(245,158,11,.08), rgba(255,255,255,.02))',
+                  borderBottom: '1px solid rgba(245,158,11,.14)',
+                }}
+              >
+                <div className="dc-ava">🔐</div>
+                <div className="dc-placeholder" style={{ cursor: 'default', color: '#f8d27a' }}>
+                  当前未登录。开战广场浏览正常，但创建、挑战、宣判、确认、异议和提取都需要先登录。
+                </div>
+              </div>
+            </div>
+          ) : null}
 
           <div className="page-hero-battle">
             <div className="phb-label">⚔️ 庄家赌局</div>
             <div className="phb-title">开<span>战</span>广场</div>
             <div className="phb-sub">做庄开局 · 挑战接战 · 龟币对赌</div>
             <div className="phb-stats">
-              <div className="phb-stat">🔥 今日 {plazaDuels.length + 17} 场赌局</div>
+              <div className="phb-stat">🔥 当前 {plazaDuels.length} 场赌局</div>
               <div className="phb-stat">💰 冻结 {formatCoins(totalFrozen)} 龟币</div>
-              <div className="phb-stat">👥 {battles.length + 127} 位庄家</div>
-              <div className="phb-stat">⚡ {plazaDuels.filter((duel) => duel.status === 'pending').length || 1} 场等待结算</div>
+              <div className="phb-stat">👥 {plazaDuels.length} 位庄家</div>
+              <div className="phb-stat">⚡ {totalPendingCount} 场等待结算</div>
             </div>
           </div>
+
+          {feedback ? (
+            <div className="duel-compose" style={{ borderColor: feedback.tone === 'error' ? 'rgba(239,68,68,.22)' : feedback.tone === 'success' ? 'rgba(16,185,129,.22)' : undefined }}>
+              <div className="dc-header">
+                <div className="dc-ava">{feedback.tone === 'error' ? '⚠️' : feedback.tone === 'success' ? '✅' : 'ℹ️'}</div>
+                <div className="dc-placeholder" style={{ cursor: 'default', color: feedback.tone === 'error' ? 'var(--red)' : feedback.tone === 'success' ? 'var(--green)' : 'var(--ink)' }}>
+                  {feedback.text}
+                </div>
+                <button className="dc-cancel" onClick={() => setFeedback(null)}>关闭</button>
+              </div>
+            </div>
+          ) : null}
 
           <div className="plaza-rules">
             <div className="plaza-rules-header" onClick={() => setRulesOpen((prev) => !prev)}>
@@ -1309,47 +1683,17 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
                 <div className="rules-section">
                   <div className="rules-title">基本机制</div>
                   <div className="pr-grid">
-                    <RuleCard
-                      title="🎲 做庄（1v多）"
-                      text="庄家自定议题和双方立场，押注 100~10,000🪙。所有加入的人自动站对立面，形成一个庄家 vs 多个挑战者。赌局分公开和私人。"
-                    />
-                    <RuleCard
-                      title="⚔️ 挑战庄家"
-                      text="公开赌局收 5% 入场费给庄家，私人赌局无入场费。挑战者冻结总额不得超过庄家押注，满额自动封盘。"
-                    />
+                    <RuleCard title="🎲 做庄（1v多）" text="庄家自定议题和双方立场，押注 100 起。所有加入的人自动站对立面，形成一个庄家对多个挑战者。" />
+                    <RuleCard title="⚔️ 挑战庄家" text="公开赌局收 5% 入场费给庄家，私人赌局无入场费。挑战者冻结总额不得超过庄家押注，满额自动封盘。" />
                   </div>
                 </div>
-
                 <div className="rules-section">
                   <div className="rules-title">结算流程</div>
                   <div className="rules-steps">
-                    1. 到达结算时间后自动封盘，不再接受新挑战者。<br />
-                    2. 庄家 24h 内宣布结果，超时未宣布则系统判庄家输。<br />
+                    1. 到达结算时间后自动封盘。<br />
+                    2. 庄家 24h 内宣布结果，超时系统自动判庄家输。<br />
                     3. 挑战者 24h 内确认，未操作视为同意。<br />
-                    4. 全部通过立即结算，任一人异议则进入管理员仲裁。
-                  </div>
-                </div>
-
-                <div className="rules-section">
-                  <div className="rules-title">赢输计算</div>
-                  <div className="pr-grid">
-                    <RuleCard
-                      title="🏆 庄家赢"
-                      text="庄家获得本金退回 + 全部挑战者冻结额。公开赌局还保留已收的入场费。"
-                      accent="rgba(0,214,143,.15)"
-                    />
-                    <RuleCard
-                      title="😞 庄家输"
-                      text="每位挑战者获得冻结额退回 + 庄家押注按自己的冻结占比分配。庄家仍保留已收入场费。"
-                      accent="rgba(255,60,60,.15)"
-                    />
-                  </div>
-                </div>
-
-                <div className="pr-warn">
-                  <div className="pr-warn-title">⚠️ 违规处罚</div>
-                  <div className="pr-item-text">
-                    庄家虚报结果、议题模糊导致作废、挑战者恶意异议，都会触发 10% 罚金和对应限制。罚金直接销毁，不归任何一方。
+                    4. 任一人异议则进入管理员仲裁。
                   </div>
                 </div>
               </div>
@@ -1359,9 +1703,7 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
           <div className="duel-compose">
             <div className="dc-header">
               <div className="dc-ava">🦊</div>
-              <div className="dc-placeholder" onClick={() => setComposeOpen(true)}>
-                想开一局？点击做庄，设定议题和押注…
-              </div>
+              <div className="dc-placeholder" onClick={() => setComposeOpen(true)}>想开一局？点击做庄，设定议题和押注…</div>
               <button className="dc-btn" onClick={() => setComposeOpen(true)}>🎲 我要做庄</button>
             </div>
             {composeOpen && (
@@ -1371,16 +1713,16 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
                   <input className="dc-input" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="例：2026 世界杯决赛巴西夺冠" />
                 </div>
                 <div className="dc-row">
-                  <div className="dc-label">🔴 庄家立场（你认为会发生的结果）</div>
+                  <div className="dc-label">🔴 庄家立场</div>
                   <textarea className="dc-textarea" value={bankerOpinion} onChange={(e) => setBankerOpinion(e.target.value)} placeholder="写出你的立场和理由…" />
                 </div>
                 <div className="dc-row">
-                  <div className="dc-label">🔵 挑战者立场（对立面，自动填充给挑战者）</div>
+                  <div className="dc-label">🔵 挑战者立场</div>
                   <textarea className="dc-textarea" value={challengerOpinion} onChange={(e) => setChallengerOpinion(e.target.value)} placeholder="反方立场…" />
                 </div>
                 <div className="dc-inline">
                   <div className="dc-row">
-                    <div className="dc-label">押注金额（100~10,000 🪙）</div>
+                    <div className="dc-label">押注金额</div>
                     <div className="dc-stake-opts">
                       {WAGER_OPTIONS.map((amount) => (
                         <div key={amount} className={`dc-stake-opt ${wager === amount ? 'on' : ''}`} onClick={() => setWager(amount)}>
@@ -1398,19 +1740,28 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
                   </div>
                 </div>
                 <div className="dc-row" style={{ marginTop: 12 }}>
-                  <div className="dc-label">结算时间（到期自动封盘）</div>
+                  <div className="dc-label">结算时间</div>
                   <input className="dc-input" type="datetime-local" value={settleTime} onChange={(e) => setSettleTime(e.target.value)} />
                 </div>
+                {visibility === 'private' ? (
+                  <div className="dc-row">
+                    <div className="dc-label">邀请码</div>
+                    <input className="dc-input" value={inviteInput} onChange={(e) => setInviteInput(e.target.value.toUpperCase())} placeholder="私密场必须填写邀请码" />
+                  </div>
+                ) : null}
                 <div className="dc-footer">
                   <div className="dc-fee-hint">
-                    {visibility === 'public'
-                      ? '公开赌局：挑战者将支付押注额 5% 入场费给庄家'
-                      : '私人赌局：挑战者无入场费，100% 金额冻结'}
+                    {visibility === 'public' ? '公开赌局：挑战者支付 5% 入场费给庄家' : '私人赌局：挑战者无入场费'}
                     {` · 当前余额 ${formatCoins(userBalance)}🪙`}
                   </div>
                   <button className="dc-cancel" onClick={() => setComposeOpen(false)}>取消</button>
-                  <button className="dc-submit" onClick={handleCreate}>
-                    🎲 确认开局 · 冻结 {formatCoins(wager)}🪙
+                  <button
+                    className="dc-submit"
+                    onClick={() => void handleCreate()}
+                    disabled={!canSubmitCreate}
+                    style={!canSubmitCreate ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
+                  >
+                    {createBattleMutation.isLoading ? '提交中...' : `🎲 确认开局 · 冻结 ${formatCoins(wager)}🪙`}
                   </button>
                 </div>
               </div>
@@ -1421,16 +1772,10 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
             <div style={{ fontSize: 28 }}>🔒</div>
             <div className="invite-entry-info">
               <div className="invite-entry-title">加入私人赌局</div>
-              <div className="invite-entry-sub">输入庄家发给你的邀请码</div>
+              <div className="invite-entry-sub">在挑战私密场时，会优先使用这里填写的邀请码</div>
             </div>
-            <input
-              className="invite-entry-input"
-              value={inviteInput}
-              onChange={(e) => setInviteInput(e.target.value.toUpperCase())}
-              placeholder="邀请码"
-              maxLength={8}
-            />
-            <div className="invite-entry-btn" onClick={() => setInviteInput('')}>加入</div>
+            <input className="invite-entry-input" value={inviteInput} onChange={(e) => setInviteInput(e.target.value.toUpperCase())} placeholder="邀请码" maxLength={20} />
+            <div className="invite-entry-btn" onClick={() => pushFeedback('info', '邀请码已保存，点击具体私密赌局时会自动带上。')}>保存</div>
           </div>
 
           <div className="my-duel-bar">
@@ -1442,19 +1787,46 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
           {activeTab === 'plaza' && (
             <>
               <div className="battle-sort">
-                {PLAZA_SORTS.slice(0, 4).map((sort) => (
-                  <div key={sort} className={`bst ${activeSort === sort ? 'on' : ''}`} onClick={() => setActiveSort(sort)}>
-                    {sort}
-                  </div>
+                {PLAZA_SORTS.map((sort) => (
+                  <div key={sort} className={`bst ${activeSort === sort ? 'on' : ''}`} onClick={() => setActiveSort(sort)}>{sort}</div>
                 ))}
                 <div className="bsort-sep" />
-                {PLAZA_SORTS.slice(4).map((sort) => (
-                  <div key={sort} className={`bst ${activeSort === sort ? 'on' : ''}`} onClick={() => setActiveSort(sort)}>
-                    {sort}
-                  </div>
-                ))}
+                <div
+                  className="bst"
+                  onClick={() => {
+                    void plazaQuery.refetch();
+                    void myBattleQuery.refetch();
+                  }}
+                >
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontWeight: 700 }}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        animation: (plazaQuery.isFetching || myBattleQuery.isFetching) ? 'bp-spin 0.9s linear infinite' : undefined,
+                        fontSize: 14,
+                      }}
+                    >
+                      ⟳
+                    </span>
+                    <span>{(plazaQuery.isFetching || myBattleQuery.isFetching) ? '刷新中' : '刷新'}</span>
+                  </span>
+                </div>
               </div>
-              {renderList(sortedPlazaDuels)}
+              {plazaQuery.isLoading ? (
+                <div className="empty-state">
+                  <div className="empty-ico">⏳</div>
+                  <div className="empty-title">开战广场加载中</div>
+                  <div className="empty-sub">正在同步最新赌局数据…</div>
+                </div>
+              ) : plazaQuery.isError ? (
+                <div className="empty-state">
+                  <div className="empty-ico">⚠️</div>
+                  <div className="empty-title">广场加载失败</div>
+                  <div className="empty-sub">请稍后重试，或刷新页面重新拉取 battle 列表。</div>
+                </div>
+              ) : (
+                renderList(sortedPlazaDuels)
+              )}
             </>
           )}
 
@@ -1474,9 +1846,23 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
               <div className="banker-overview">
                 <div className="bo-item"><div className="bo-num">{myBankerDuels.filter((d) => d.status !== 'settled').length}</div><div className="bo-label">进行中</div></div>
                 <div className="bo-item"><div className="bo-num">{myBankerDuels.filter((d) => d.status === 'settled').length}</div><div className="bo-label">已结算</div></div>
-                <div className="bo-item"><div className="bo-num">+3,420</div><div className="bo-label">累计盈亏</div></div>
+                <div className="bo-item"><div className="bo-num">{formatCoins(myBankerDuels.reduce((sum, duel) => sum + duel.currentPool, 0))}</div><div className="bo-label">挑战总额</div></div>
               </div>
-              {renderList(myBankerDuels)}
+              {myBattleQuery.isLoading ? (
+                <div className="empty-state">
+                  <div className="empty-ico">⏳</div>
+                  <div className="empty-title">正在加载我的庄局</div>
+                  <div className="empty-sub">稍等一下，我们正在拉取你的做庄记录。</div>
+                </div>
+              ) : myBattleQuery.isError ? (
+                <div className="empty-state">
+                  <div className="empty-ico">⚠️</div>
+                  <div className="empty-title">我的庄局加载失败</div>
+                  <div className="empty-sub">当前无法同步你的 battle 数据，请稍后再试。</div>
+                </div>
+              ) : (
+                renderList(myBankerDuels)
+              )}
             </>
           )}
 
@@ -1489,7 +1875,21 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
                   <div className="bt-tip"><div>⚠️</div><div>异议要有理有据，恶意异议会被扣冻结额 10% 罚金。</div></div>
                 </div>
               </div>
-              {renderList(myChallengerDuels)}
+              {myBattleQuery.isLoading ? (
+                <div className="empty-state">
+                  <div className="empty-ico">⏳</div>
+                  <div className="empty-title">正在加载我的挑战</div>
+                  <div className="empty-sub">稍等一下，我们正在拉取你参与过的赌局。</div>
+                </div>
+              ) : myBattleQuery.isError ? (
+                <div className="empty-state">
+                  <div className="empty-ico">⚠️</div>
+                  <div className="empty-title">我的挑战加载失败</div>
+                  <div className="empty-sub">当前无法同步你的 challenge 记录，请稍后再试。</div>
+                </div>
+              ) : (
+                renderList(myChallengerDuels)
+              )}
             </>
           )}
         </div>
@@ -1503,7 +1903,7 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
               <div className="dm-info-grid">
                 <div className="dm-info-item">
                   <div className="dm-info-label">剩余可挑战</div>
-                  <div className="dm-info-value gold">{formatCoins(Math.max(100, joinModal.max))} 🪙</div>
+                  <div className="dm-info-value gold">{formatCoins(joinModalMax)} 🪙</div>
                 </div>
                 <div className="dm-info-item">
                   <div className="dm-info-label">模式</div>
@@ -1511,26 +1911,66 @@ export const BattleSquarePixel: React.FC<BattleSquarePixelProps> = ({
                 </div>
               </div>
               <div className="dm-label">押注金额</div>
-              <input
-                className="dm-stake-input"
-                type="number"
-                value={joinAmount}
-                onChange={(e) => setJoinAmount(Number(e.target.value || 0))}
-              />
+              <input className="dm-stake-input" type="number" min={100} max={joinModalMax} value={joinAmount} onChange={(e) => setJoinAmount(Number(e.target.value || 0))} />
               <div className="dm-amts">
                 {[100, 500, 1000, 2000].map((amount) => (
-                  <div key={amount} className={`dm-amt ${joinAmount === amount ? 'on' : ''}`} onClick={() => setJoinAmount(amount)}>
+                  <div key={amount} className={`dm-amt ${normalizedJoinAmount === amount ? 'on' : ''}`} onClick={() => setJoinAmount(clampAmount(amount, 100, joinModalMax))}>
                     {amount}
                   </div>
                 ))}
               </div>
               <div className="dm-fee-note">
-                {joinModal.visibility === 'public'
-                  ? '公开赌局会收取 5% 入场费，剩余 95% 进入冻结池。'
-                  : '私人赌局不收取入场费，全部金额进入冻结池。'}
+                {joinModal.visibility === 'public' ? '公开赌局会收取 5% 入场费，剩余 95% 进入冻结池。' : '私人赌局不收取入场费，全部金额进入冻结池。'}
+                {` 当前将提交 ${formatCoins(normalizedJoinAmount)}🪙。`}
               </div>
-              <button className="dm-cta" onClick={() => setJoinModal(null)}>
-                ⚔️ 确认挑战 {formatCoins(joinAmount)} 龟币
+              <button
+                className="dm-cta"
+                onClick={() => void handleJoinBattle()}
+                disabled={!canSubmitJoin}
+                style={!canSubmitJoin ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
+              >
+                {joinBattleMutation.isLoading ? '提交中...' : `⚔️ 确认挑战 ${formatCoins(normalizedJoinAmount)} 龟币`}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {addStakeModal && (
+          <div className="duel-overlay" onClick={() => setAddStakeModal(null)}>
+            <div className="duel-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="dm-close" onClick={() => setAddStakeModal(null)}>✕</div>
+              <div className="dm-title">庄家追加押注</div>
+              <div className="dm-sub">{addStakeModal.title}</div>
+              <div className="dm-info-grid">
+                <div className="dm-info-item">
+                  <div className="dm-info-label">当前余额</div>
+                  <div className="dm-info-value gold">{formatCoins(userBalance)} 🪙</div>
+                </div>
+                <div className="dm-info-item">
+                  <div className="dm-info-label">说明</div>
+                  <div className="dm-info-value">扩大可挑战额度</div>
+                </div>
+              </div>
+              <div className="dm-label">追加金额</div>
+              <input className="dm-stake-input" type="number" min={100} max={Math.max(100, userBalance)} value={addStakeAmount} onChange={(e) => setAddStakeAmount(Number(e.target.value || 0))} />
+              <div className="dm-amts">
+                {[100, 500, 1000, 2000].map((amount) => (
+                  <div key={amount} className={`dm-amt ${normalizedAddStakeAmount === amount ? 'on' : ''}`} onClick={() => setAddStakeAmount(clampAmount(amount, 100, Math.max(100, userBalance)))}>
+                    {amount}
+                  </div>
+                ))}
+              </div>
+              <div className="dm-fee-note">
+                追加押注只允许庄家在 `open` 阶段操作，成功后 battle 容量会同步扩大。
+                {` 当前将追加 ${formatCoins(normalizedAddStakeAmount)}🪙。`}
+              </div>
+              <button
+                className="dm-cta"
+                onClick={() => void handleBankerAddStake()}
+                disabled={!canSubmitAddStake}
+                style={!canSubmitAddStake ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
+              >
+                {addStakeMutation.isLoading ? '提交中...' : `➕ 确认加注 ${formatCoins(normalizedAddStakeAmount)} 龟币`}
               </button>
             </div>
           </div>
