@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useQueries } from 'react-query';
-import { battleQueryKeys, fetchBattleDetail, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleWithdraw } from '@/hook/useBattleRequest';
+import { battleQueryKeys, fetchBattleDetail, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleStats, useRequestBattleWithdraw } from '@/hook/useBattleRequest';
 import { createBattleRequestId, getBattleActionPermissions, getBattleErrorMessage, type Battle, type BattleDetailResponse, type BattleListItem, type BattleMyAction } from '@/hook/battleType';
 import { useAppSession } from '@/hook/useAppSession';
 import { axiosCustom } from '@/api/axios';
@@ -58,6 +58,7 @@ interface DuelItem {
   challengerCount: number;
   visibility: 'public' | 'private';
   comments: DuelComment[];
+  commentCount: number;
   likes: number;
   settleText: string;
   resultText?: string;
@@ -113,7 +114,7 @@ const CATEGORY_META: Record<DuelCategory, { label: string; className: string }> 
 const STATUS_META: Record<DuelStatus, { label: string; className: string }> = {
   open: { label: '🟢 进行中', className: 'dbadge-open' },
   sealed: { label: '🔒 已封盘', className: 'dbadge-sealed' },
-  pending: { label: '⏳ 等庄家宣布', className: 'dbadge-pending' },
+  pending: { label: '⏳ 待宣布', className: 'dbadge-pending' },
   settled: { label: '✅ 已结算', className: 'dbadge-settled' },
   private: { label: '🔒 私人', className: 'dbadge-private' },
   disputing: { label: '⚠️ 争议中', className: 'dbadge-disputing' },
@@ -716,7 +717,6 @@ function mapBattleToDuel(
   currentUserId?: number | string | null,
   detail?: BattleDetailResponse,
   comments: DuelComment[] = [],
-  liked = false,
   roleHint?: 'banker' | 'challenger',
 ): DuelItem {
   const battle = detail?.battle ? { ...item.battle, ...detail.battle } : item.battle;
@@ -764,19 +764,23 @@ function mapBattleToDuel(
 
   const myChallengeInfo =
     !permissions.isBanker
-      ? battle.status === 'pending'
-        ? myAction
-          ? `你已提交${myAction === 'confirm' ? '确认' : '异议'}，等待系统处理。`
-          : '庄家已宣判，当前等待你确认结果或发起异议。'
-        : battle.status === 'settled'
-          ? settlementItem
-            ? settlementItem.withdrawn
-              ? `你的结算奖励已提取，到账 ${formatCoins(settlementItem.payoutAmount)}🪙。`
-              : `你有 ${formatCoins(settlementItem.payoutAmount)}🪙 可提取。`
-            : '本局已结算。'
-          : battle.status === 'disputed'
-            ? '你已参与本局，当前进入争议仲裁阶段。'
-            : '你已参与本局，等待后续结算流程。'
+      ? battle.status === 'sealed'
+        ? '本局已封盘，不再接受新的挑战者加入。'
+        : battle.status === 'pending'
+          ? battle.result
+            ? myAction
+              ? `你已提交${myAction === 'confirm' ? '确认' : '异议'}，等待系统处理。`
+              : '庄家已宣判，当前等待你确认结果或发起异议。'
+            : '结算时间已到，当前等待庄家在 24h 内宣布结果。'
+          : battle.status === 'settled'
+            ? settlementItem
+              ? settlementItem.withdrawn
+                ? `你的结算奖励已提取，到账 ${formatCoins(settlementItem.payoutAmount)}🪙。`
+                : `你有 ${formatCoins(settlementItem.payoutAmount)}🪙 可提取。`
+              : '本局已结算。'
+            : battle.status === 'disputed'
+              ? '你已参与本局，当前进入争议仲裁阶段。'
+              : '你已参与本局，等待后续结算流程。'
       : undefined;
 
   return {
@@ -785,7 +789,7 @@ function mapBattleToDuel(
     topic: battle.title,
     category: deriveCategory(battle.title),
     banker: {
-      name: permissions.isBanker ? '你' : getDefaultBankerName(battle, currentUserId),
+      name: permissions.isBanker ? '你' : item.bankerNickname || getDefaultBankerName(battle, currentUserId),
       avatar: permissions.isBanker ? '🦊' : getDefaultBankerAvatar(battle, currentUserId),
       stance: battle.bankerSide,
       isMe: permissions.isBanker,
@@ -797,15 +801,18 @@ function mapBattleToDuel(
     challengerCount: battle.challengerStakeTotal > 0 ? 1 : 0,
     visibility: battle.isPublic ? 'public' : 'private',
     comments,
-    likes: Math.max(0, Math.floor((battle.entryFeeTotal + battle.poolPrincipalTotal) / 100)) + (liked ? 1 : 0),
+    commentCount: Math.max(item.commentCount ?? 0, comments.length),
+    likes: Math.max(0, item.likeCount ?? 0),
     settleText:
       battle.status === 'settled'
         ? `✅ ${formatTimestampLabel(battle.resultTime || detail?.settlement?.settlement?.createdAt)} 结算完毕`
         : battle.status === 'pending'
-          ? `⏱ 确认截止 ${formatTimestampLabel(battle.confirmDeadline)}`
+          ? battle.result
+            ? `⏱ 确认截止 ${formatTimestampLabel(battle.confirmDeadline)}`
+            : `⏱ 宣布截止 ${formatTimestampLabel(battle.pendingDeadline)}`
           : battle.status === 'disputed'
             ? `⚠️ 仲裁截止 ${formatTimestampLabel(battle.disputeDeadline)}`
-            : battle.status === 'sealed'
+          : battle.status === 'sealed'
               ? `🔒 已封盘 · 结算时间 ${formatTimestampLabel(battle.settleTime)}`
               : `⏱ 结算时间 ${formatTimestampLabel(battle.settleTime)}`,
     resultText,
@@ -1051,7 +1058,7 @@ function DuelCard({
       )}
 
       <div className="duel-foot">
-        <div className="duel-foot-btn" onClick={onToggleComments}>💬 <span>{duel.comments.length}</span></div>
+        <div className="duel-foot-btn" onClick={onToggleComments}>💬 <span>{duel.commentCount}</span></div>
         <div
           className="duel-foot-btn"
           onClick={onToggleLike}
@@ -1156,6 +1163,7 @@ export const BattleSquarePixel: React.FC = () => {
   // 登录提示按 token 判断，避免“已登录但 userInfo 还在加载”时误闪未登录提示。
   const isAuthenticated = Boolean(authToken);
   const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 });
+  const battleStatsQuery = useRequestBattleStats({ enabled: isAuthenticated });
   const myBankerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'banker' });
   const myChallengerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'challenger' });
   const createBattleMutation = useRequestBattleCreate();
@@ -1199,6 +1207,14 @@ export const BattleSquarePixel: React.FC = () => {
     });
     return Array.from(map.values());
   }, [myBankerQuery.data?.list, myChallengerQuery.data?.list]);
+  const myBankerBattleIds = useMemo(
+    () => new Set((myBankerQuery.data?.list ?? []).map((item) => item.battle.id)),
+    [myBankerQuery.data?.list],
+  );
+  const myChallengerBattleIds = useMemo(
+    () => new Set((myChallengerQuery.data?.list ?? []).map((item) => item.battle.id)),
+    [myChallengerQuery.data?.list],
+  );
 
   // 列表接口不带 settlement，只有“我的庄局 / 我的挑战”页才补详情查询。
   // 这样可以保住首页请求量，同时又能在我的页面正确计算 withdraw / confirm / dispute 按钮态。
@@ -1262,16 +1278,25 @@ export const BattleSquarePixel: React.FC = () => {
 
   // 广场与“我的”两个 tab 共享同一套 DuelItem 映射，保证 PC/手机端展示逻辑一致。
   const plazaDuels = useMemo(
-    () => (plazaQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], Boolean(likedMap[String(item.battle.id)]))),
-    [plazaQuery.data?.list, currentUserId, detailMap, commentMap, likedMap],
+    () =>
+      (plazaQuery.data?.list ?? []).map((item) =>
+        mapBattleToDuel(
+          item,
+          currentUserId,
+          detailMap.get(item.battle.id),
+          commentMap.get(item.battle.id) ?? [],
+          myBankerBattleIds.has(item.battle.id) ? 'banker' : myChallengerBattleIds.has(item.battle.id) ? 'challenger' : undefined,
+        ),
+      ),
+    [plazaQuery.data?.list, currentUserId, detailMap, commentMap, myBankerBattleIds, myChallengerBattleIds],
   );
   const myBankerDuels = useMemo(
-    () => (myBankerQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], Boolean(likedMap[String(item.battle.id)]), 'banker')),
-    [myBankerQuery.data?.list, currentUserId, detailMap, commentMap, likedMap],
+    () => (myBankerQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], 'banker')),
+    [myBankerQuery.data?.list, currentUserId, detailMap, commentMap],
   );
   const myChallengerDuels = useMemo(
-    () => (myChallengerQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], Boolean(likedMap[String(item.battle.id)]), 'challenger')),
-    [myChallengerQuery.data?.list, currentUserId, detailMap, commentMap, likedMap],
+    () => (myChallengerQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], 'challenger')),
+    [myChallengerQuery.data?.list, currentUserId, detailMap, commentMap],
   );
 
   const sortedPlazaDuels = useMemo(() => {
@@ -1292,14 +1317,27 @@ export const BattleSquarePixel: React.FC = () => {
     }
   }, [activeSort, plazaDuels]);
 
-  const totalFrozen = useMemo(
-    () => (plazaQuery.data?.list ?? []).reduce((sum, item) => sum + item.battle.poolPrincipalTotal, 0),
+  const fallbackUnsettledItems = useMemo(
+    () => (plazaQuery.data?.list ?? []).filter((item) => item.battle.status !== 'settled'),
     [plazaQuery.data?.list],
   );
-  const totalPendingCount = useMemo(
+  const fallbackPoolTotal = useMemo(
+    () => fallbackUnsettledItems.reduce((sum, item) => sum + item.battle.poolPrincipalTotal, 0),
+    [fallbackUnsettledItems],
+  );
+  const fallbackPendingCount = useMemo(
     () => (plazaQuery.data?.list ?? []).filter((item) => item.battle.status === 'pending').length,
     [plazaQuery.data?.list],
   );
+  const fallbackUnsettledCount = fallbackUnsettledItems.length;
+  const fallbackBankerCount = useMemo(
+    () => new Set(fallbackUnsettledItems.map((item) => item.battle.bankerUserId)).size,
+    [fallbackUnsettledItems],
+  );
+  const totalFrozen = battleStatsQuery.data?.poolTotal ?? fallbackPoolTotal;
+  const totalPendingCount = battleStatsQuery.data?.pendingCount ?? fallbackPendingCount;
+  const totalBattleCount = battleStatsQuery.data?.unsettledCount ?? fallbackUnsettledCount;
+  const totalBankerCount = battleStatsQuery.data?.bankerCount ?? fallbackBankerCount;
 
   const joinModalMax = joinModal ? Math.max(100, Math.min(joinModal.max, userBalance)) : 100;
   const normalizedJoinAmount = joinModal ? clampAmount(joinAmount, 100, joinModalMax) : 100;
@@ -1638,7 +1676,7 @@ export const BattleSquarePixel: React.FC = () => {
   const detailMyAction = detailBattleQuery.data?.myAction ?? '';
   const detailStatusLabel = detailBattle
     ? detailBattle.status === 'pending'
-      ? '等待确认'
+      ? '待宣布'
       : detailBattle.status === 'settled'
         ? '已结算'
         : detailBattle.status === 'disputed'
@@ -1693,9 +1731,9 @@ export const BattleSquarePixel: React.FC = () => {
             <div className="phb-title">开<span>战</span>广场</div>
             <div className="phb-sub">做庄开局 · 挑战接战 · 龟币对赌</div>
             <div className="phb-stats">
-              <div className="phb-stat">🔥 当前 {plazaDuels.length} 场赌局</div>
+              <div className="phb-stat">🔥 当前 {totalBattleCount} 场赌局</div>
               <div className="phb-stat">💰 冻结 {formatCoins(totalFrozen)} 龟币</div>
-              <div className="phb-stat">👥 {plazaDuels.length} 位庄家</div>
+              <div className="phb-stat">👥 {totalBankerCount} 位庄家</div>
               <div className="phb-stat">⚡ {totalPendingCount} 场等待结算</div>
             </div>
           </div>
@@ -1835,6 +1873,9 @@ export const BattleSquarePixel: React.FC = () => {
                   className="bst"
                   onClick={() => {
                     void plazaQuery.refetch();
+                    if (isAuthenticated) {
+                      void battleStatsQuery.refetch();
+                    }
                     void myBankerQuery.refetch();
                     void myChallengerQuery.refetch();
                   }}
@@ -1843,13 +1884,13 @@ export const BattleSquarePixel: React.FC = () => {
                     <span
                       style={{
                         display: 'inline-block',
-                        animation: (plazaQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching) ? 'bp-spin 0.9s linear infinite' : undefined,
+                        animation: (plazaQuery.isFetching || battleStatsQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching) ? 'bp-spin 0.9s linear infinite' : undefined,
                         fontSize: 14,
                       }}
                     >
                       ⟳
                     </span>
-                    <span>{(plazaQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching) ? '刷新中' : '刷新'}</span>
+                    <span>{(plazaQuery.isFetching || battleStatsQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching) ? '刷新中' : '刷新'}</span>
                   </span>
                 </div>
               </div>

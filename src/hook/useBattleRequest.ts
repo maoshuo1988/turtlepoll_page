@@ -9,6 +9,7 @@ import {
   API_Battle_Declare,
   API_Battle_Join,
   API_Battle_List,
+  API_Battle_Stats,
   API_Battle_Withdraw,
 } from "@/api/battle_api";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
@@ -22,6 +23,7 @@ import type {
   BattleDetailResponse,
   BattleListParams,
   BattleListResponse,
+  BattleStatsResponse,
   BattleSettlementItem,
   BattleWithdrawPayload,
   CreateBattlePayload,
@@ -34,6 +36,7 @@ export const battleQueryKeys = {
   all: ["battle"] as const,
   lists: () => [...battleQueryKeys.all, "list"] as const,
   list: (params: BattleListParams = {}) => [...battleQueryKeys.lists(), params] as const,
+  stats: () => [...battleQueryKeys.all, "stats"] as const,
   details: () => [...battleQueryKeys.all, "detail"] as const,
   detail: (battleId?: number) => [...battleQueryKeys.details(), battleId] as const,
 };
@@ -54,18 +57,23 @@ export async function fetchBattleDetail(battleId?: number) {
 
 // battle 的 mutation 会同时影响列表、详情和金币余额，所以统一在这里失效缓存。
 async function invalidateBattleQueries(queryClient: ReturnType<typeof useQueryClient>, battleId?: number) {
-  const tasks: Promise<unknown>[] = [
+  await Promise.all([
     queryClient.invalidateQueries(battleQueryKeys.lists()),
+    queryClient.invalidateQueries(battleQueryKeys.stats()),
     queryClient.invalidateQueries(COIN_ME_QUERY_KEY),
-  ];
+    typeof battleId === "number"
+      ? queryClient.invalidateQueries(battleQueryKeys.detail(battleId))
+      : queryClient.invalidateQueries(battleQueryKeys.details()),
+  ]);
 
-  if (typeof battleId === "number") {
-    tasks.push(queryClient.invalidateQueries(battleQueryKeys.detail(battleId)));
-  } else {
-    tasks.push(queryClient.invalidateQueries(battleQueryKeys.details()));
-  }
-
-  await Promise.all(tasks);
+  await Promise.all([
+    queryClient.refetchQueries(battleQueryKeys.lists()),
+    queryClient.refetchQueries(battleQueryKeys.stats()),
+    queryClient.refetchQueries(COIN_ME_QUERY_KEY),
+    typeof battleId === "number"
+      ? queryClient.refetchQueries(battleQueryKeys.detail(battleId))
+      : queryClient.refetchQueries(battleQueryKeys.details()),
+  ]);
 }
 
 /// MARK: 开战广场 / Battle Square
@@ -85,6 +93,24 @@ export function useRequestBattleList(params: BattleListParams = {}, options: Bat
           status: params.status,
           role: params.role,
         },
+        headers: getAuthorizationHeaders(),
+      });
+      return assertSuccess(res);
+    },
+    staleTime: 5 * 1000,
+    enabled: options.enabled ?? true,
+    refetchOnWindowFocus: true,
+  });
+}
+
+// 赌局统计
+export function useRequestBattleStats(options: BattleQueryOptions = {}) {
+  return useQuery<BattleStatsResponse>({
+    queryKey: battleQueryKeys.stats(),
+    queryFn: async () => {
+      const res = await axiosCustom({
+        method: "get",
+        cmd: API_Battle_Stats,
         headers: getAuthorizationHeaders(),
       });
       return assertSuccess(res);

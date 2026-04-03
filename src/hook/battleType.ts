@@ -78,6 +78,9 @@ export type BattleSettlementItem = {
 export type BattleListItem = {
   battle: Battle;
   myAction: BattleMyAction;
+  bankerNickname?: string;
+  commentCount?: number;
+  likeCount?: number;
 };
 
 export type BattleListParams = {
@@ -92,6 +95,13 @@ export type BattleListResponse = {
   count: number;
   page: number;
   pageSize: number;
+};
+
+export type BattleStatsResponse = {
+  unsettledCount?: number;
+  bankerCount?: number;
+  pendingCount?: number;
+  poolTotal?: number;
 };
 
 export type BattleDetailResponse = {
@@ -238,7 +248,13 @@ export function getBattleActionPermissions(params: {
   const bankerUserIdText = String(battle.bankerUserId);
   const matchedBankerById = currentUserIdText !== "" && bankerUserIdText === currentUserIdText;
   const isBanker = roleHint === "banker" ? true : roleHint === "challenger" ? false : matchedBankerById;
-  const isChallenger = roleHint === "challenger" ? true : roleHint === "banker" ? false : currentUserIdText !== "" && !isBanker;
+  const hasChallengeFootprint = myAction !== "" || Boolean(settlementItem);
+  const isChallenger =
+    roleHint === "challenger"
+      ? true
+      : roleHint === "banker"
+        ? false
+        : currentUserIdText !== "" && !isBanker && hasChallengeFootprint;
   const inPendingWindow = typeof battle.pendingDeadline === "number" ? now <= battle.pendingDeadline : true;
   const inConfirmWindow = typeof battle.confirmDeadline === "number" ? now <= battle.confirmDeadline : true;
 
@@ -247,9 +263,9 @@ export function getBattleActionPermissions(params: {
     isChallenger,
     canJoin: battle.status === "open" && !isBanker,
     canBankerAddStake: isBanker && battle.status === "open",
-    canDeclare: isBanker && battle.status === "pending" && inPendingWindow,
-    canConfirm: isChallenger && battle.status === "pending" && myAction === "" && inConfirmWindow,
-    canDispute: isChallenger && battle.status === "pending" && myAction === "" && inConfirmWindow,
+    canDeclare: isBanker && battle.status === "pending" && !battle.result && inPendingWindow,
+    canConfirm: isChallenger && battle.status === "pending" && Boolean(battle.result) && myAction === "" && inConfirmWindow,
+    canDispute: isChallenger && battle.status === "pending" && Boolean(battle.result) && myAction === "" && inConfirmWindow,
     canWithdraw: battle.status === "settled" && Boolean(settlementItem) && settlementItem?.withdrawn === false,
   };
 

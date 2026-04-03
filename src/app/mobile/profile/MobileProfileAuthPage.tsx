@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { ArrowLeft, ChevronRight, LockKeyhole, LogOut, Mail, UserRound } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Eye, EyeOff, LockKeyhole, LogOut, Mail, UserRound } from 'lucide-react';
 import { ImageCaptchaModal } from '@/components/shared/auth/ImageCaptchaModal';
 import type { CaptchaVerification } from '@/hook/types';
 import { useRequestSignIn, useRequestSignUp } from '@/hook/useRequest';
@@ -51,23 +51,39 @@ function MobileAuthInput({
   onChange,
   placeholder,
   type = 'text',
+  revealed = false,
+  onToggleReveal,
 }: {
   icon: ReactNode;
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
   type?: 'text' | 'email' | 'password';
+  revealed?: boolean;
+  onToggleReveal?: () => void;
 }) {
+  const actualType = type === 'password' ? (revealed ? 'text' : 'password') : type;
+
   return (
     <label className="flex h-12 items-center rounded-[18px] border border-white/8 bg-[#111315] px-4">
       <span className="mr-3 text-[#6f7881]">{icon}</span>
       <input
-        type={type}
+        type={actualType}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         className="h-full w-full bg-transparent text-[15px] font-medium text-white outline-none placeholder:text-[#66707a]"
       />
+      {type === 'password' && onToggleReveal ? (
+        <button
+          type="button"
+          onClick={onToggleReveal}
+          className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-[#8b949e] transition-colors hover:text-white"
+          aria-label={revealed ? '隐藏密码' : '显示密码'}
+        >
+          {revealed ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      ) : null}
     </label>
   );
 }
@@ -83,6 +99,9 @@ export function MobileProfileAuthPage({
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [captchaMode, setCaptchaMode] = useState<MobileAuthTab | null>(null);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showRegisterRePassword, setShowRegisterRePassword] = useState(false);
 
   const signInMutation = useRequestSignIn();
   const signUpMutation = useRequestSignUp();
@@ -261,6 +280,8 @@ export function MobileProfileAuthPage({
                   onChange={(value) => setLoginForm((prev) => ({ ...prev, password: value }))}
                   placeholder="请输入密码"
                   type="password"
+                  revealed={showLoginPassword}
+                  onToggleReveal={() => setShowLoginPassword((prev) => !prev)}
                 />
               </div>
             ) : (
@@ -290,6 +311,8 @@ export function MobileProfileAuthPage({
                   onChange={(value) => setRegisterForm((prev) => ({ ...prev, password: value }))}
                   placeholder="请输入密码"
                   type="password"
+                  revealed={showRegisterPassword}
+                  onToggleReveal={() => setShowRegisterPassword((prev) => !prev)}
                 />
                 <MobileAuthInput
                   icon={<LockKeyhole size={18} />}
@@ -297,6 +320,8 @@ export function MobileProfileAuthPage({
                   onChange={(value) => setRegisterForm((prev) => ({ ...prev, rePassword: value }))}
                   placeholder="请再次输入密码"
                   type="password"
+                  revealed={showRegisterRePassword}
+                  onToggleReveal={() => setShowRegisterRePassword((prev) => !prev)}
                 />
               </div>
             )}

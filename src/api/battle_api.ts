@@ -4,6 +4,8 @@
 // 用户侧 battle 接口常量统一放在这里，页面和 hooks 都只引用这一层。
 // 赌局列表：支持分页、按状态筛选、只看我参与的 battle。
 export const API_Battle_List = "/api/battle/list";
+// 赌局统计：顶部广场统计卡片。
+export const API_Battle_Stats = "/api/battle/stats";
 // 赌局详情：返回 battle 基础信息、我的动作状态、我的结算明细。
 export const API_Battle_By = "/api/battle/by";
 // 创建赌局：庄家发起一场新的开战广场 battle。

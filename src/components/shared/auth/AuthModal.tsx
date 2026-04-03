@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowLeft, ChevronRight, LockKeyhole, LogOut, Mail, X } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Eye, EyeOff, LockKeyhole, LogOut, Mail, X } from 'lucide-react';
 import { ImageCaptchaModal } from './ImageCaptchaModal';
 import { useRequestSignIn, useRequestSignUp } from '@/hook/useRequest';
 import { getAuthToken, getStoredUserInfo, saveAuthToken, saveUserInfo } from '@/utils/authStorage';
@@ -84,6 +84,8 @@ function PrimaryInput({
   onChange,
   placeholder,
   type = 'text',
+  revealed = false,
+  onToggleReveal,
   className = '',
 }: {
   icon: React.ReactNode;
@@ -91,20 +93,34 @@ function PrimaryInput({
   onChange: (value: string) => void;
   placeholder: string;
   type?: 'text' | 'email' | 'password';
+  revealed?: boolean;
+  onToggleReveal?: () => void;
   className?: string;
 }) {
+  const actualType = type === 'password' ? (revealed ? 'text' : 'password') : type;
+
   return (
     <label
       className={`flex h-[48px] items-center rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(20,21,24,0.98),rgba(15,16,19,0.96))] !px-[12px] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_6px_20px_rgba(0,0,0,0.24)] ${className}`}
     >
       <span className="!mr-[12px] text-zinc-500">{icon}</span>
       <input
-        type={type}
+        type={actualType}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         className="h-full w-full bg-transparent text-[18px] font-medium tracking-[-0.02em] text-white outline-none placeholder:text-white/54"
       />
+      {type === 'password' && onToggleReveal ? (
+        <button
+          type="button"
+          onClick={onToggleReveal}
+          className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:text-white"
+          aria-label={revealed ? '隐藏密码' : '显示密码'}
+        >
+          {revealed ? <EyeOff size={18} strokeWidth={2.1} /> : <Eye size={18} strokeWidth={2.1} />}
+        </button>
+      ) : null}
     </label>
   );
 }
@@ -147,6 +163,8 @@ function LoginPanel({
   onSubmit: () => void;
   onSwitchToRegister: () => void;
 }) {
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+
   return (
     <div className="!px-[22px] !pb-[10px] !pt-[22px]">
       <div className="rounded-[38px]">
@@ -165,6 +183,8 @@ function LoginPanel({
               onChange={(value) => setLoginForm((prev) => ({ ...prev, password: value }))}
               placeholder="请输入密码"
               type="password"
+              revealed={showLoginPassword}
+              onToggleReveal={() => setShowLoginPassword((prev) => !prev)}
             />
           </div>
 
@@ -227,6 +247,9 @@ function RegisterPanel({
   onSubmit: () => void;
   onBackToLogin: () => void;
 }) {
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showRegisterRePassword, setShowRegisterRePassword] = useState(false);
+
   return (
     <div className="!px-[28px] !pb-[12px] !pt-[28px]">
       <div className="!pb-[18px] !pl-[10px]">
@@ -280,6 +303,8 @@ function RegisterPanel({
               onChange={(value) => setRegisterForm((prev) => ({ ...prev, password: value }))}
               placeholder="请输入密码"
               type="password"
+              revealed={showRegisterPassword}
+              onToggleReveal={() => setShowRegisterPassword((prev) => !prev)}
               className="px-[28px]"
             />
           </LabeledField>
@@ -290,6 +315,8 @@ function RegisterPanel({
               onChange={(value) => setRegisterForm((prev) => ({ ...prev, rePassword: value }))}
               placeholder="请再次输入密码"
               type="password"
+              revealed={showRegisterRePassword}
+              onToggleReveal={() => setShowRegisterRePassword((prev) => !prev)}
               className="px-[28px]"
             />
           </LabeledField>
