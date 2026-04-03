@@ -42,6 +42,16 @@ type BattleQueryOptions = {
   enabled?: boolean;
 };
 
+export async function fetchBattleDetail(battleId?: number) {
+  const res = await axiosCustom({
+    method: "get",
+    cmd: API_Battle_By,
+    params: { battleId },
+    headers: getAuthorizationHeaders(),
+  });
+  return assertSuccess(res) as BattleDetailResponse;
+}
+
 // battle 的 mutation 会同时影响列表、详情和金币余额，所以统一在这里失效缓存。
 async function invalidateBattleQueries(queryClient: ReturnType<typeof useQueryClient>, battleId?: number) {
   const tasks: Promise<unknown>[] = [
@@ -73,7 +83,7 @@ export function useRequestBattleList(params: BattleListParams = {}, options: Bat
           page: params.page ?? 1,
           pageSize: params.pageSize ?? 20,
           status: params.status,
-          mine: params.mine,
+          role: params.role,
         },
         headers: getAuthorizationHeaders(),
       });
@@ -89,15 +99,7 @@ export function useRequestBattleList(params: BattleListParams = {}, options: Bat
 export function useRequestBattleDetail(battleId?: number, options: BattleQueryOptions = {}) {
   return useQuery<BattleDetailResponse>({
     queryKey: battleQueryKeys.detail(battleId),
-    queryFn: async () => {
-      const res = await axiosCustom({
-        method: "get",
-        cmd: API_Battle_By,
-        params: { battleId },
-        headers: getAuthorizationHeaders(),
-      });
-      return assertSuccess(res);
-    },
+    queryFn: async () => fetchBattleDetail(battleId),
     enabled: (options.enabled ?? true) && typeof battleId === "number",
     staleTime: 5 * 1000,
     refetchOnWindowFocus: true,

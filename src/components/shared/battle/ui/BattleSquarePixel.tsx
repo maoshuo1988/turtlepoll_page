@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useQueries } from 'react-query';
-import { battleQueryKeys, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleJoin, useRequestBattleList, useRequestBattleWithdraw } from '@/hook/useBattleRequest';
+import { battleQueryKeys, fetchBattleDetail, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleWithdraw } from '@/hook/useBattleRequest';
 import { createBattleRequestId, getBattleActionPermissions, getBattleErrorMessage, type Battle, type BattleDetailResponse, type BattleListItem, type BattleMyAction } from '@/hook/battleType';
 import { useAppSession } from '@/hook/useAppSession';
 import { axiosCustom } from '@/api/axios';
-import { API_Battle_By } from '@/api/battle_api';
 import { assertSuccess, getAuthorizationHeaders } from '@/utils/requestUtils';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 import type { CommentResponse } from '@/hook/useCommentRequest';
@@ -718,14 +717,17 @@ function mapBattleToDuel(
   detail?: BattleDetailResponse,
   comments: DuelComment[] = [],
   liked = false,
+  roleHint?: 'banker' | 'challenger',
 ): DuelItem {
-  const battle = item.battle;
+  const battle = detail?.battle ? { ...item.battle, ...detail.battle } : item.battle;
+  const myAction = detail?.myAction ?? item.myAction;
   const settlementItem = detail?.settlement?.myItem ?? null;
   const permissions = getBattleActionPermissions({
     battle,
-    myAction: item.myAction,
+    myAction,
     currentUserId,
     settlementItem,
+    roleHint,
   });
 
   // 页面视觉状态和后端状态不是 1:1 命名，这里做一层展示态转换。
@@ -763,8 +765,8 @@ function mapBattleToDuel(
   const myChallengeInfo =
     !permissions.isBanker
       ? battle.status === 'pending'
-        ? item.myAction
-          ? `你已提交${item.myAction === 'confirm' ? '确认' : '异议'}，等待系统处理。`
+        ? myAction
+          ? `你已提交${myAction === 'confirm' ? '确认' : '异议'}，等待系统处理。`
           : '庄家已宣判，当前等待你确认结果或发起异议。'
         : battle.status === 'settled'
           ? settlementItem
@@ -783,8 +785,8 @@ function mapBattleToDuel(
     topic: battle.title,
     category: deriveCategory(battle.title),
     banker: {
-      name: getDefaultBankerName(battle, currentUserId),
-      avatar: getDefaultBankerAvatar(battle, currentUserId),
+      name: permissions.isBanker ? '你' : getDefaultBankerName(battle, currentUserId),
+      avatar: permissions.isBanker ? '🦊' : getDefaultBankerAvatar(battle, currentUserId),
       stance: battle.bankerSide,
       isMe: permissions.isBanker,
     },
@@ -825,7 +827,7 @@ function mapBattleToDuel(
       : [],
     myChallengeInfo,
     myChallengeState: permissions.canConfirm || permissions.canDispute ? 'confirm' : myChallengeInfo ? 'info' : undefined,
-    myAction: item.myAction,
+    myAction,
     canJoin: permissions.canJoin,
     canBankerAddStake: permissions.canBankerAddStake,
     canDeclare: permissions.canDeclare,
@@ -857,6 +859,7 @@ function DuelCard({
   onJoin,
   onCopyInvite,
   onAddStake,
+  onViewDetail,
   onDeclare,
   onConfirm,
   onDispute,
@@ -874,6 +877,7 @@ function DuelCard({
   onJoin: () => void;
   onCopyInvite: (code: string) => void;
   onAddStake: () => void;
+  onViewDetail: () => void;
   onDeclare: (result: 'banker_wins' | 'banker_loses') => void;
   onConfirm: () => void;
   onDispute: () => void;
@@ -1055,6 +1059,7 @@ function DuelCard({
         >
           {liked ? '❤️' : '🤍'} <span>{duel.likes + (liked ? 1 : 0)}</span>
         </div>
+        <div className="duel-foot-btn" onClick={onViewDetail}>📄 <span>详情</span></div>
         {duel.canWithdraw ? (
           <button className="duel-foot-join gold" onClick={onWithdraw}>
             💰 提取奖励
@@ -1151,7 +1156,8 @@ export const BattleSquarePixel: React.FC = () => {
   // 登录提示按 token 判断，避免“已登录但 userInfo 还在加载”时误闪未登录提示。
   const isAuthenticated = Boolean(authToken);
   const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 });
-  const myBattleQuery = useRequestBattleList({ page: 1, pageSize: 50, mine: 1 });
+  const myBankerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'banker' });
+  const myChallengerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'challenger' });
   const createBattleMutation = useRequestBattleCreate();
   const joinBattleMutation = useRequestBattleJoin();
   const addStakeMutation = useRequestBattleBankerAddStake();
@@ -1178,37 +1184,39 @@ export const BattleSquarePixel: React.FC = () => {
   const [joinModal, setJoinModal] = useState<JoinModalState | null>(null);
   const [addStakeAmount, setAddStakeAmount] = useState(500);
   const [addStakeModal, setAddStakeModal] = useState<AddStakeModalState | null>(null);
+  const [detailBattleId, setDetailBattleId] = useState<number | null>(null);
   const [commentOpen, setCommentOpen] = useState<Record<string, boolean>>({});
   const [commentDraftMap, setCommentDraftMap] = useState<Record<string, string>>({});
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [feedback, setFeedback] = useState<{ tone: 'success' | 'error' | 'info'; text: string } | null>(null);
   const lastPopupMessageRef = useRef<string>('');
+  const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, { enabled: detailBattleId !== null });
+
+  const myRoleBattleItems = useMemo(() => {
+    const map = new Map<number, BattleListItem>();
+    [...(myBankerQuery.data?.list ?? []), ...(myChallengerQuery.data?.list ?? [])].forEach((item) => {
+      map.set(item.battle.id, item);
+    });
+    return Array.from(map.values());
+  }, [myBankerQuery.data?.list, myChallengerQuery.data?.list]);
 
   // 列表接口不带 settlement，只有“我的庄局 / 我的挑战”页才补详情查询。
   // 这样可以保住首页请求量，同时又能在我的页面正确计算 withdraw / confirm / dispute 按钮态。
   const myDetailQueries = useQueries(
-    (myBattleQuery.data?.list ?? []).map((item) => ({
+    myRoleBattleItems.map((item) => ({
       queryKey: battleQueryKeys.detail(item.battle.id),
-      queryFn: async () => {
-        const res = await axiosCustom({
-          method: 'get',
-          cmd: API_Battle_By,
-          params: { battleId: item.battle.id },
-          headers: getAuthorizationHeaders(),
-        });
-        return assertSuccess(res) as BattleDetailResponse;
-      },
+      queryFn: async () => fetchBattleDetail(item.battle.id),
       enabled: activeTab !== 'plaza',
     })),
   ) as Array<{ data?: BattleDetailResponse }>;
 
   const allBattleItems = useMemo(() => {
     const map = new Map<number, BattleListItem>();
-    [...(plazaQuery.data?.list ?? []), ...(myBattleQuery.data?.list ?? [])].forEach((item) => {
+    [...(plazaQuery.data?.list ?? []), ...myRoleBattleItems].forEach((item) => {
       map.set(item.battle.id, item);
     });
     return Array.from(map.values());
-  }, [myBattleQuery.data?.list, plazaQuery.data?.list]);
+  }, [myRoleBattleItems, plazaQuery.data?.list]);
 
   const commentQueries = useQueries(
     allBattleItems.map((item) => {
@@ -1245,24 +1253,26 @@ export const BattleSquarePixel: React.FC = () => {
 
   const detailMap = useMemo(() => {
     const map = new Map<number, BattleDetailResponse>();
-    (myBattleQuery.data?.list ?? []).forEach((item, index) => {
+    myRoleBattleItems.forEach((item, index) => {
       const detail = myDetailQueries[index]?.data;
       if (detail) map.set(item.battle.id, detail);
     });
     return map;
-  }, [myBattleQuery.data?.list, myDetailQueries]);
+  }, [myDetailQueries, myRoleBattleItems]);
 
   // 广场与“我的”两个 tab 共享同一套 DuelItem 映射，保证 PC/手机端展示逻辑一致。
   const plazaDuels = useMemo(
     () => (plazaQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], Boolean(likedMap[String(item.battle.id)]))),
     [plazaQuery.data?.list, currentUserId, detailMap, commentMap, likedMap],
   );
-  const myAllDuels = useMemo(
-    () => (myBattleQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], Boolean(likedMap[String(item.battle.id)]))),
-    [myBattleQuery.data?.list, currentUserId, detailMap, commentMap, likedMap],
+  const myBankerDuels = useMemo(
+    () => (myBankerQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], Boolean(likedMap[String(item.battle.id)]), 'banker')),
+    [myBankerQuery.data?.list, currentUserId, detailMap, commentMap, likedMap],
   );
-  const myBankerDuels = useMemo(() => myAllDuels.filter((duel) => duel.banker.isMe), [myAllDuels]);
-  const myChallengerDuels = useMemo(() => myAllDuels.filter((duel) => !duel.banker.isMe), [myAllDuels]);
+  const myChallengerDuels = useMemo(
+    () => (myChallengerQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], Boolean(likedMap[String(item.battle.id)]), 'challenger')),
+    [myChallengerQuery.data?.list, currentUserId, detailMap, commentMap, likedMap],
+  );
 
   const sortedPlazaDuels = useMemo(() => {
     const list = [...plazaDuels];
@@ -1344,9 +1354,14 @@ export const BattleSquarePixel: React.FC = () => {
   }, [plazaQuery.error, plazaQuery.isError]);
 
   useEffect(() => {
-    if (!myBattleQuery.isError || activeTab === 'plaza') return;
-    setMappedError(myBattleQuery.error);
-  }, [activeTab, myBattleQuery.error, myBattleQuery.isError]);
+    if (activeTab !== 'my-banker' || !myBankerQuery.isError) return;
+    setMappedError(myBankerQuery.error);
+  }, [activeTab, myBankerQuery.error, myBankerQuery.isError]);
+
+  useEffect(() => {
+    if (activeTab !== 'my-challenger' || !myChallengerQuery.isError) return;
+    setMappedError(myChallengerQuery.error);
+  }, [activeTab, myChallengerQuery.error, myChallengerQuery.isError]);
 
   // 创建前先在页面层挡一轮基础校验，避免无意义请求直接打后端。
   const handleCreate = async () => {
@@ -1598,6 +1613,7 @@ export const BattleSquarePixel: React.FC = () => {
               title: duel.topic,
             });
           }}
+          onViewDetail={() => setDetailBattleId(duel.battleId)}
           onDeclare={(result) => void handleDeclareResult(duel, result)}
           onConfirm={() => void handleChallengeConfirm(duel)}
           onDispute={() => void handleChallengeDispute(duel)}
@@ -1615,6 +1631,30 @@ export const BattleSquarePixel: React.FC = () => {
         <div className="empty-sub">切换其他 Tab 或先发起一场赌局。</div>
       </div>
     );
+
+  const detailBattle = detailBattleQuery.data?.battle ?? null;
+  const detailSettlement = detailBattleQuery.data?.settlement?.settlement ?? null;
+  const detailMyItem = detailBattleQuery.data?.settlement?.myItem ?? null;
+  const detailMyAction = detailBattleQuery.data?.myAction ?? '';
+  const detailStatusLabel = detailBattle
+    ? detailBattle.status === 'pending'
+      ? '等待确认'
+      : detailBattle.status === 'settled'
+        ? '已结算'
+        : detailBattle.status === 'disputed'
+          ? '争议中'
+          : detailBattle.status === 'sealed'
+            ? '已封盘'
+            : '进行中'
+    : '';
+  const detailResultLabel =
+    detailBattle?.result === 'banker_wins'
+      ? '庄家获胜'
+      : detailBattle?.result === 'banker_loses'
+        ? '挑战者获胜'
+        : detailBattle?.result === 'void'
+          ? '本局作废'
+          : '待宣布';
 
   return (
     <>
@@ -1795,20 +1835,21 @@ export const BattleSquarePixel: React.FC = () => {
                   className="bst"
                   onClick={() => {
                     void plazaQuery.refetch();
-                    void myBattleQuery.refetch();
+                    void myBankerQuery.refetch();
+                    void myChallengerQuery.refetch();
                   }}
                 >
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontWeight: 700 }}>
                     <span
                       style={{
                         display: 'inline-block',
-                        animation: (plazaQuery.isFetching || myBattleQuery.isFetching) ? 'bp-spin 0.9s linear infinite' : undefined,
+                        animation: (plazaQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching) ? 'bp-spin 0.9s linear infinite' : undefined,
                         fontSize: 14,
                       }}
                     >
                       ⟳
                     </span>
-                    <span>{(plazaQuery.isFetching || myBattleQuery.isFetching) ? '刷新中' : '刷新'}</span>
+                    <span>{(plazaQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching) ? '刷新中' : '刷新'}</span>
                   </span>
                 </div>
               </div>
@@ -1848,13 +1889,13 @@ export const BattleSquarePixel: React.FC = () => {
                 <div className="bo-item"><div className="bo-num">{myBankerDuels.filter((d) => d.status === 'settled').length}</div><div className="bo-label">已结算</div></div>
                 <div className="bo-item"><div className="bo-num">{formatCoins(myBankerDuels.reduce((sum, duel) => sum + duel.currentPool, 0))}</div><div className="bo-label">挑战总额</div></div>
               </div>
-              {myBattleQuery.isLoading ? (
+              {myBankerQuery.isLoading ? (
                 <div className="empty-state">
                   <div className="empty-ico">⏳</div>
                   <div className="empty-title">正在加载我的庄局</div>
                   <div className="empty-sub">稍等一下，我们正在拉取你的做庄记录。</div>
                 </div>
-              ) : myBattleQuery.isError ? (
+              ) : myBankerQuery.isError ? (
                 <div className="empty-state">
                   <div className="empty-ico">⚠️</div>
                   <div className="empty-title">我的庄局加载失败</div>
@@ -1875,13 +1916,13 @@ export const BattleSquarePixel: React.FC = () => {
                   <div className="bt-tip"><div>⚠️</div><div>异议要有理有据，恶意异议会被扣冻结额 10% 罚金。</div></div>
                 </div>
               </div>
-              {myBattleQuery.isLoading ? (
+              {myChallengerQuery.isLoading ? (
                 <div className="empty-state">
                   <div className="empty-ico">⏳</div>
                   <div className="empty-title">正在加载我的挑战</div>
                   <div className="empty-sub">稍等一下，我们正在拉取你参与过的赌局。</div>
                 </div>
-              ) : myBattleQuery.isError ? (
+              ) : myChallengerQuery.isError ? (
                 <div className="empty-state">
                   <div className="empty-ico">⚠️</div>
                   <div className="empty-title">我的挑战加载失败</div>
@@ -1893,6 +1934,76 @@ export const BattleSquarePixel: React.FC = () => {
             </>
           )}
         </div>
+
+        {detailBattleId !== null && (
+          <div className="duel-overlay" onClick={() => setDetailBattleId(null)}>
+            <div className="duel-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="dm-close" onClick={() => setDetailBattleId(null)}>✕</div>
+              <div className="dm-title">赌局详情</div>
+              <div className="dm-sub">Battle #{detailBattleId}</div>
+
+              {detailBattleQuery.isLoading ? (
+                <div className="dm-fee-note">正在加载详情…</div>
+              ) : detailBattleQuery.isError ? (
+                <div className="dm-fee-note" style={{ color: 'var(--red)' }}>
+                  详情加载失败，请稍后重试。
+                </div>
+              ) : detailBattle ? (
+                <>
+                  <div className="dm-info-grid">
+                    <div className="dm-info-item">
+                      <div className="dm-info-label">当前状态</div>
+                      <div className="dm-info-value">{detailStatusLabel}</div>
+                    </div>
+                    <div className="dm-info-item">
+                      <div className="dm-info-label">当前结果</div>
+                      <div className="dm-info-value">{detailResultLabel}</div>
+                    </div>
+                    <div className="dm-info-item">
+                      <div className="dm-info-label">我的动作</div>
+                      <div className="dm-info-value">{detailMyAction ? detailMyAction : '未操作'}</div>
+                    </div>
+                    <div className="dm-info-item">
+                      <div className="dm-info-label">宣判方式</div>
+                      <div className="dm-info-value">{detailBattle.resultBy || '待判定'}</div>
+                    </div>
+                  </div>
+
+                  <div className="dm-fee-note">
+                    {detailBattle.pendingDeadline ? `庄家宣判截止：${formatTimestampLabel(detailBattle.pendingDeadline)}` : '当前没有庄家宣判截止时间。'}
+                    <br />
+                    {detailBattle.confirmDeadline ? `挑战者确认截止：${formatTimestampLabel(detailBattle.confirmDeadline)}` : '当前没有挑战者确认截止时间。'}
+                    <br />
+                    {detailBattle.resultTime ? `结果生效时间：${formatTimestampLabel(detailBattle.resultTime)}` : '结果尚未生效。'}
+                  </div>
+
+                  <div className="dm-info-grid">
+                    <div className="dm-info-item">
+                      <div className="dm-info-label">结算记录</div>
+                      <div className="dm-info-value">
+                        {detailSettlement ? `${detailSettlement.result} · ${formatTimestampLabel(detailSettlement.createdAt || detailSettlement.createTime)}` : '未结算'}
+                      </div>
+                    </div>
+                    <div className="dm-info-item">
+                      <div className="dm-info-label">我的奖金</div>
+                      <div className="dm-info-value gold">{detailMyItem ? `${formatCoins(detailMyItem.payoutAmount)} 🪙` : '暂无'}</div>
+                    </div>
+                    <div className="dm-info-item">
+                      <div className="dm-info-label">提取状态</div>
+                      <div className="dm-info-value">{detailMyItem ? (detailMyItem.withdrawn ? '已提取' : '待提取') : '无'}</div>
+                    </div>
+                    <div className="dm-info-item">
+                      <div className="dm-info-label">提取时间</div>
+                      <div className="dm-info-value">{detailMyItem?.withdrawTime ? formatTimestampLabel(detailMyItem.withdrawTime) : '未提取'}</div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="dm-fee-note">当前没有可展示的详情。</div>
+              )}
+            </div>
+          </div>
+        )}
 
         {joinModal && (
           <div className="duel-overlay" onClick={() => setJoinModal(null)}>

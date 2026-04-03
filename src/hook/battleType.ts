@@ -84,7 +84,7 @@ export type BattleListParams = {
   page?: number;
   pageSize?: number;
   status?: BattleStatus;
-  mine?: "1" | "0" | 1 | 0;
+  role?: "banker" | "challenger";
 };
 
 export type BattleListResponse = {
@@ -221,6 +221,7 @@ export function getBattleActionPermissions(params: {
   myAction?: BattleMyAction;
   currentUserId?: number | string | null;
   settlementItem?: BattleSettlementItem | null;
+  roleHint?: "banker" | "challenger";
   now?: number;
 }) {
   const {
@@ -228,14 +229,16 @@ export function getBattleActionPermissions(params: {
     myAction = "",
     currentUserId,
     settlementItem,
+    roleHint,
     now = Math.floor(Date.now() / 1000),
   } = params;
 
   // 这里把文档里的按钮态规则收敛成一个函数，PC/手机端都走同一套判断。
   const currentUserIdText = currentUserId === undefined || currentUserId === null || currentUserId === "" ? "" : String(currentUserId);
   const bankerUserIdText = String(battle.bankerUserId);
-  const isBanker = currentUserIdText !== "" && bankerUserIdText === currentUserIdText;
-  const isChallenger = currentUserIdText !== "" && !isBanker;
+  const matchedBankerById = currentUserIdText !== "" && bankerUserIdText === currentUserIdText;
+  const isBanker = roleHint === "banker" ? true : roleHint === "challenger" ? false : matchedBankerById;
+  const isChallenger = roleHint === "challenger" ? true : roleHint === "banker" ? false : currentUserIdText !== "" && !isBanker;
   const inPendingWindow = typeof battle.pendingDeadline === "number" ? now <= battle.pendingDeadline : true;
   const inConfirmWindow = typeof battle.confirmDeadline === "number" ? now <= battle.confirmDeadline : true;
 
