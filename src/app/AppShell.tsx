@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useQueryClient } from 'react-query';
 import { Sidebar } from '../components/layout';
 import type { ViewType } from '../components/layout';
 import { ActivePredictionsPage, EventBattle, PredictionsView } from '../components/shared/predictions';
@@ -34,11 +35,24 @@ import { clearInfo } from '@/utils/authStorage';
 import type { PlaceBetResult } from '@/hook/coinType';
 import { useRequestBadgeBadges, useRequestConfigConfigs, useRequestSignout, useRequestUserMsgRecent } from '@/hook/useRequest';
 import { useRequestFootballMarkets } from '@/hook/usePredictRequest';
+import {
+  PET_EQUIP_QUERY_KEY,
+  PET_OWNED_QUERY_KEY,
+  PET_STATUS_QUERY_KEY,
+  PET_STAMINA_QUERY_KEY,
+  findEquippedOwnedPet,
+  useRequestPetEquip,
+  useRequestPetEquipUpdate,
+  useRequestPetOwned,
+  useRequestPetStamina,
+  useRequestPetStatus,
+} from '@/hook/usePetRequest';
 import { useRequestCreateTopic, useRequestTopicNodeNavs } from '@/hook/useTopicRequest';
 import { useAppSession } from '@/hook/useAppSession';
 import { mapMarketToPredictionCard, type PredictionCardItem } from '../components/shared/predictions/ui/predictionCard';
 import type { SidebarHotTag, SidebarHotTopic } from '../components/shared/layout';
-import { useRequestCoinBet } from '@/hook/useCoinRequest';
+import { COIN_ME_QUERY_KEY, useRequestCoinBet } from '@/hook/useCoinRequest';
+import { getPetMoodLabel } from '../components/shared/pet/ui/petDisplay';
 
 // Bet cost per action
 const BET_COST = 100;
@@ -127,8 +141,14 @@ function App() {
   const [bettingMarketId, setBettingMarketId] = useState<number | null>(null);
   const isEventBattleActive = activeView === 'predictions' && !!(selectedNewsId || selectedBattleItem);
   const usePredStyleLayout = true;
+  const queryClient = useQueryClient();
   // 当前登录用户 + 金币账户
   const { userInfo, coinMe } = useAppSession();
+  const petEquipQuery = useRequestPetEquip();
+  const petOwnedQuery = useRequestPetOwned();
+  const petStaminaQuery = useRequestPetStamina();
+  const petStatusQuery = useRequestPetStatus();
+  const petEquipMutation = useRequestPetEquipUpdate();
 
   //顶部站点信息/公告
   const configInfo = useRequestConfigConfigs()
@@ -160,7 +180,24 @@ function App() {
 
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
-  const currentPet = { ...mockUser.petInfo, stamina: petStamina, avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar };
+  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);
+  const currentPet = useMemo(() => ({
+    ...mockUser.petInfo,
+    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,
+    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,
+    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,
+    stamina: petStamina,
+    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,
+    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,
+  }), [
+    equippedOwnedPet?.level,
+    equippedSkin?.avatar,
+    petEquipQuery.data?.level,
+    petEquipQuery.data?.petName,
+    petStamina,
+    petStaminaQuery.data?.cap,
+    petStatusQuery.data?.moodState,
+  ]);
 
   const liveNews = useMemo<PredictionCardItem[]>(() => {
     const list = footballMarkets.data?.list ?? [];
@@ -195,6 +232,11 @@ function App() {
     setBalance(coinMe.data.balance);
   }, [coinMe.data?.balance]);
 
+  useEffect(() => {
+    if (typeof petStaminaQuery.data?.current !== 'number') return;
+    setPetStamina(petStaminaQuery.data.current);
+  }, [petStaminaQuery.data?.current]);
+
   const handleEquipSkin = useCallback((skinId: string) => {
     setSkins((prev) =>
       prev.map((skin) => ({
@@ -203,6 +245,55 @@ function App() {
       })),
     );
   }, []);
+
+  const refreshSessionData = useCallback(async () => {
+    await Promise.all([
+      userInfo.refetch(),
+      coinMe.refetch(),
+      petEquipQuery.refetch(),
+      petOwnedQuery.refetch(),
+      petStaminaQuery.refetch(),
+      petStatusQuery.refetch(),
+    ]);
+  }, [coinMe, petEquipQuery, petOwnedQuery, petStaminaQuery, petStatusQuery, userInfo]);
+
+  const clearSessionCaches = useCallback(() => {
+    queryClient.removeQueries(["requestUserCurrent"]);
+    queryClient.removeQueries(["requestBadgeBadges"]);
+    queryClient.removeQueries(["requestUserMsgRecent"]);
+    queryClient.removeQueries(["requestFootballMarkets"]);
+    queryClient.removeQueries(COIN_ME_QUERY_KEY);
+    queryClient.removeQueries(PET_EQUIP_QUERY_KEY);
+    queryClient.removeQueries(PET_OWNED_QUERY_KEY);
+    queryClient.removeQueries(PET_STAMINA_QUERY_KEY);
+    queryClient.removeQueries(PET_STATUS_QUERY_KEY);
+    setBalance(mockUser.balance);
+    setPetStamina(mockUser.petInfo.stamina);
+  }, [queryClient]);
+
+  const handleSessionSignOut = useCallback(async () => {
+    try {
+      await signOutMutation.mutateAsync();
+    } finally {
+      clearInfo();
+      clearSessionCaches();
+      setAuthModalOpen(false);
+      setMobileProfilePage('home');
+    }
+  }, [clearSessionCaches, signOutMutation]);
+
+  const handleSessionAuthSuccess = useCallback(() => {
+    void refreshSessionData();
+    setAuthModalOpen(false);
+    setMobileProfilePage('home');
+  }, [refreshSessionData]);
+
+  const handleEquipPet = useCallback(async (petId: number | string) => {
+    const result = await petEquipMutation.mutateAsync({ petId });
+    setPetDialogue(`已切换为 ${result.pet.petName ?? '新龟种'}。`);
+    setTimeout(() => setPetDialogue(null), 3000);
+    return result;
+  }, [petEquipMutation]);
 
   useEffect(() => {
     applyTheme(theme);
@@ -234,6 +325,9 @@ function App() {
   void userMsgRecent;
   void userBadge;
   void predictionItems;
+  void petEquipQuery;
+  void petOwnedQuery;
+  void petStatusQuery;
 
   // 预测卡片下注成功后的 UI 联动：更新本地投票态并提示用户
   const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => {
@@ -444,6 +538,16 @@ function App() {
             onBack={() => setActiveView('predictions')}
             skins={skins}
             onEquipSkin={handleEquipSkin}
+            equippedPet={petEquipQuery.data ?? null}
+            ownedPets={petOwnedQuery.data?.list ?? []}
+            petStatus={petStatusQuery.data ?? null}
+            onEquipPet={handleEquipPet}
+            equippingPetId={
+              petEquipMutation.isLoading
+                ? (petEquipMutation.variables?.petId ?? petEquipMutation.variables?.petKey ?? null)
+                : null
+            }
+            onStaminaChange={setPetStamina}
           />
         </section>
       )}
@@ -488,16 +592,10 @@ function App() {
         <section className="view-shell view-rhythm view-shop mx-0 grid w-full max-w-none gap-4">
           <Shop
             balance={balance}
-            onBalanceChange={(delta) => setBalance((b) => b + delta)}
             pet={currentPet}
-            onStaminaChange={setPetStamina}
-            skins={skins}
-            onSkinUnlock={(skinId) =>
-              setSkins((prev) =>
-                prev.map((s) => (s.id === skinId ? { ...s, owned: true } : s)),
-              )
-            }
+            ownedPets={petOwnedQuery.data?.list ?? []}
             onBack={() => setActiveView('predictions')}
+            onRequireAuth={() => setAuthModalOpen(true)}
           />
         </section>
       )}
@@ -575,18 +673,8 @@ function App() {
       return (
         <MobileProfileAuthPage
           onBack={() => setMobileProfilePage('home')}
-          onAuthSuccess={() => {
-            void userInfo.refetch();
-            void coinMe.refetch();
-            setMobileProfilePage('home');
-          }}
-          onSignOut={async () => {
-            await signOutMutation.mutateAsync();
-            clearInfo();
-            void userInfo.refetch();
-            void coinMe.refetch();
-            setMobileProfilePage('home');
-          }}
+          onAuthSuccess={handleSessionAuthSuccess}
+          onSignOut={handleSessionSignOut}
         />
       );
     }
@@ -603,13 +691,7 @@ function App() {
           onToggleMotion={() => setMobileMotionEnabled((value) => !value)}
           onOpenAuth={() => setMobileProfilePage('auth')}
           onSignOut={() => {
-            void (async () => {
-              await signOutMutation.mutateAsync();
-              clearInfo();
-              void userInfo.refetch();
-              void coinMe.refetch();
-              setMobileProfilePage('home');
-            })();
+            void handleSessionSignOut();
           }}
         />
       );
@@ -750,11 +832,8 @@ function App() {
       <AuthModal
         open={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
-        onSignOut={async () => {
-          await signOutMutation.mutateAsync()
-          clearInfo()
-          setAuthModalOpen(false);
-        }}
+        onSignOut={handleSessionSignOut}
+        onAuthSuccess={handleSessionAuthSuccess}
       />
     </div>
   );

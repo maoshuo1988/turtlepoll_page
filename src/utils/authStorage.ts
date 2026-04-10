@@ -1,4 +1,5 @@
-import { AUTH_TOKEN_STORAGE_KEY, USER_INFO_STORAGE_KEY } from "@/constant";
+import { AUTH_TOKEN_STORAGE_KEY, DAILY_SETTLE_STORAGE_KEY, USER_INFO_STORAGE_KEY } from "@/constant";
+import type { DailySettleSummary } from "@/hook/types";
 
 ///token 相关
 export function getAuthToken() {
@@ -28,7 +29,24 @@ export function saveUserInfo(data: unknown) {
   }
 }
 
+export function getStoredDailySettle(): DailySettleSummary | null {
+  const raw = localStorage.getItem(DAILY_SETTLE_STORAGE_KEY);
+
+  try {
+    return raw ? (JSON.parse(raw) as DailySettleSummary) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveDailySettle(data?: DailySettleSummary | null) {
+  if (data) {
+    localStorage.setItem(DAILY_SETTLE_STORAGE_KEY, JSON.stringify(data));
+  }
+}
+
 export function clearInfo() {
   localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
   localStorage.removeItem(USER_INFO_STORAGE_KEY);
+  localStorage.removeItem(DAILY_SETTLE_STORAGE_KEY);
 }

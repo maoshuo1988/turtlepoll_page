@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Sparkles } from 'lucide-react';
+import { useRequestPetStaminaConsume } from '@/hook/usePetRequest';
 import type { PetInfo } from '@/data/mock_data';
 import { heroNews, mockNews, petDialogues } from '@/data/mock_data';
+import { getAuthToken } from '@/utils/authStorage';
 
 interface ChatMessage {
   id: string;
@@ -60,12 +62,14 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, stam
   const [typing, setTyping] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const consumeMutation = useRequestPetStaminaConsume();
+  const isAuthenticated = Boolean(getAuthToken());
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typing]);
 
-  const handleSend = useCallback(() => {
+  const handleSend = useCallback(async () => {
     const text = input.trim();
     if (!text || typing) return;
 
@@ -86,8 +90,26 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, stam
     setTyping(true);
 
     // Consume 2 stamina
-    if (stamina !== undefined && onStaminaChange) {
-      onStaminaChange(Math.max(0, stamina - 2));
+    if (stamina !== undefined) {
+      if (isAuthenticated) {
+        try {
+          await consumeMutation.mutateAsync({ amount: 2 });
+          if (onStaminaChange) {
+            onStaminaChange(Math.max(0, stamina - 2));
+          }
+        } catch (error) {
+          const warnMsg: ChatMessage = {
+            id: `sys-${Date.now()}`,
+            role: 'pet',
+            text: error instanceof Error ? error.message : '体力扣减失败，请稍后再试。',
+          };
+          setMessages((prev) => [...prev, warnMsg]);
+          setTyping(false);
+          return;
+        }
+      } else if (onStaminaChange) {
+        onStaminaChange(Math.max(0, stamina - 2));
+      }
     }
 
     const delay = 600 + Math.random() * 800;
@@ -97,7 +119,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, stam
       setMessages((prev) => [...prev, petMsg]);
       setTyping(false);
     }, delay);
-  }, [input, typing, stamina, onStaminaChange]);
+  }, [consumeMutation, input, isAuthenticated, onStaminaChange, stamina, typing]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

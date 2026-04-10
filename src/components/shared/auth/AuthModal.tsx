@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowLeft, ChevronRight, Eye, EyeOff, LockKeyhole, LogOut, Mail, X } from 'lucide-react';
+import { AuthDailySettleCard } from './AuthDailySettleCard';
 import { ImageCaptchaModal } from './ImageCaptchaModal';
 import { useRequestSignIn, useRequestSignUp } from '@/hook/useRequest';
-import { getAuthToken, getStoredUserInfo, saveAuthToken, saveUserInfo } from '@/utils/authStorage';
+import type { AuthUser, DailySettleSummary } from '@/hook/types';
+import { getAuthToken, getStoredDailySettle, getStoredUserInfo, saveAuthToken, saveDailySettle, saveUserInfo } from '@/utils/authStorage';
 
 interface AuthModalProps {
   open: boolean;
   onClose: () => void;
   onSignOut: () => Promise<void>;
+  onAuthSuccess?: () => void;
 }
 
 type AuthTab = 'login' | 'register';
@@ -342,10 +345,12 @@ function RegisterPanel({
 
 function UserPanel({
   userinfo,
+  dailySettle,
   onClose,
   onSignOut,
 }: {
-  userinfo:any
+  userinfo: AuthUser;
+  dailySettle?: DailySettleSummary | null;
   onClose: () => void;
   onSignOut: () => Promise<void>;
 }) {
@@ -390,6 +395,10 @@ function UserPanel({
             退出登录
           </button>
         </div>
+
+        <div className="!mt-[22px]">
+          <AuthDailySettleCard dailySettle={dailySettle} />
+        </div>
       </div>
     </div>
   );
@@ -399,6 +408,7 @@ export function AuthModal({
   open,
   onClose,
   onSignOut,
+  onAuthSuccess,
 }: AuthModalProps) {
   const [tab, setTab] = useState<AuthTab>('login');
   const [loginForm, setLoginForm] = useState(initialLoginForm);
@@ -479,7 +489,11 @@ export function AuthModal({
         });
         if (signInResult?.token) {
           saveAuthToken(signInResult.token);
-          saveUserInfo(signInResult.user)
+          if (signInResult.user) {
+            saveUserInfo(signInResult.user);
+          }
+          saveDailySettle(signInResult.dailySettle);
+          onAuthSuccess?.();
           onClose();
         }
         return;
@@ -497,6 +511,12 @@ export function AuthModal({
       });
 
       if (signUpResult?.token) {
+        saveAuthToken(signUpResult.token);
+        if (signUpResult.user) {
+          saveUserInfo(signUpResult.user);
+        }
+        saveDailySettle(signUpResult.dailySettle);
+        onAuthSuccess?.();
         onClose();
         return;
       }
@@ -515,12 +535,13 @@ export function AuthModal({
 
   const isAuthenticated = getAuthToken()
   const userinfo = getStoredUserInfo()
+  const dailySettle = getStoredDailySettle()
 
   return createPortal(
     <>
       <Shell onClose={onClose} maxWidth={isAuthenticated ? 'max-w-[560px]' : tab === 'login' ? 'max-w-[560px]' : 'max-w-[640px]'}>
         {isAuthenticated && userinfo ? (
-          <UserPanel userinfo={userinfo} onClose={onClose} onSignOut={onSignOut} />
+          <UserPanel userinfo={userinfo} dailySettle={dailySettle} onClose={onClose} onSignOut={onSignOut} />
         ) : tab === 'login' ? (
           <LoginPanel
             loginForm={loginForm}

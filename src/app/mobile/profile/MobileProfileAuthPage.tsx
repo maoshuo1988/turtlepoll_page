@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ArrowLeft, ChevronRight, Eye, EyeOff, LockKeyhole, LogOut, Mail, UserRound } from 'lucide-react';
+import { AuthDailySettleCard } from '@/components/shared/auth/AuthDailySettleCard';
 import { ImageCaptchaModal } from '@/components/shared/auth/ImageCaptchaModal';
 import type { CaptchaVerification } from '@/hook/types';
 import { useRequestSignIn, useRequestSignUp } from '@/hook/useRequest';
-import { getAuthToken, getStoredUserInfo, saveAuthToken, saveUserInfo } from '@/utils/authStorage';
+import { getAuthToken, getStoredDailySettle, getStoredUserInfo, saveAuthToken, saveDailySettle, saveUserInfo } from '@/utils/authStorage';
 
 type MobileAuthTab = 'login' | 'register';
 
@@ -107,6 +108,7 @@ export function MobileProfileAuthPage({
   const signUpMutation = useRequestSignUp();
   const isAuthenticated = Boolean(getAuthToken());
   const storedUser = getStoredUserInfo();
+  const storedDailySettle = getStoredDailySettle();
   const isMutating = signInMutation.isLoading || signUpMutation.isLoading || submitting;
 
   const panelTitle = useMemo(() => {
@@ -156,7 +158,10 @@ export function MobileProfileAuthPage({
 
         if (signInResult?.token) {
           saveAuthToken(signInResult.token);
-          saveUserInfo(signInResult.user);
+          if (signInResult.user) {
+            saveUserInfo(signInResult.user);
+          }
+          saveDailySettle(signInResult.dailySettle);
           onAuthSuccess();
         }
         return;
@@ -177,6 +182,7 @@ export function MobileProfileAuthPage({
         if (signUpResult.user) {
           saveUserInfo(signUpResult.user);
         }
+        saveDailySettle(signUpResult.dailySettle);
         onAuthSuccess();
         return;
       }
@@ -236,6 +242,8 @@ export function MobileProfileAuthPage({
                 <div className="mt-2 truncate text-[15px] font-bold text-white">{String(storedUser?.nickname ?? '-')}</div>
               </div>
             </div>
+
+            <AuthDailySettleCard dailySettle={storedDailySettle} compact />
 
             <button
               type="button"

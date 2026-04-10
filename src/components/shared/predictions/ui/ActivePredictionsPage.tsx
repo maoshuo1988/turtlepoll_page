@@ -10,20 +10,23 @@ interface ActivePredictionsPageProps {
 
 const WARNING_WINDOW_MS = 10 * 60 * 1000;
 
-function resolveCloseTime(item: PredictionCardItem, index: number) {
-  if (typeof item.closeTime === 'number' && item.closeTime > 0) {
-    return String(item.closeTime).length <= 10 ? item.closeTime * 1000 : item.closeTime;
-  }
-
-  return Date.now() + (index + 1) * 20 * 60 * 1000;
+function normalizeCloseTime(closeTime?: number) {
+  if (typeof closeTime !== 'number' || closeTime <= 0) return null;
+  return String(closeTime).length <= 10 ? closeTime * 1000 : closeTime;
 }
 
 function formatRemaining(ms: number) {
   if (ms <= 0) return '即将封盘';
   const totalSeconds = Math.floor(ms / 1000);
+  const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor(totalSeconds / 3600);
+  const displayHours = days > 0 ? Math.floor((totalSeconds % 86400) / 3600) : hours;
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
+
+  if (days > 0) {
+    return `${days}天 ${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
 
   if (hours > 0) {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
@@ -38,11 +41,40 @@ export const ActivePredictionsPage: React.FC<ActivePredictionsPageProps> = ({
   onEnterBattle,
 }) => {
   const [now, setNow] = React.useState(() => Date.now());
+  const fallbackBaseTimeRef = React.useRef(Date.now());
+  const fallbackCloseTimesRef = React.useRef(new Map<string, number>());
 
   React.useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+
+  const closeTimes = React.useMemo(() => {
+    const activeIds = new Set(items.map((item) => item.id));
+
+    fallbackCloseTimesRef.current.forEach((_, id) => {
+      if (!activeIds.has(id)) {
+        fallbackCloseTimesRef.current.delete(id);
+      }
+    });
+
+    return items.map((item, index) => {
+      const normalized = normalizeCloseTime(item.closeTime);
+      if (normalized) {
+        fallbackCloseTimesRef.current.set(item.id, normalized);
+        return normalized;
+      }
+
+      const existingFallback = fallbackCloseTimesRef.current.get(item.id);
+      if (existingFallback) {
+        return existingFallback;
+      }
+
+      const fallback = fallbackBaseTimeRef.current + (index + 1) * 20 * 60 * 1000;
+      fallbackCloseTimesRef.current.set(item.id, fallback);
+      return fallback;
+    });
+  }, [items]);
 
   return (
     <section className="mx-0 grid w-full max-w-none gap-4">
@@ -72,7 +104,7 @@ export const ActivePredictionsPage: React.FC<ActivePredictionsPageProps> = ({
       ) : (
         <div className="grid gap-3">
           {items.map((item, index) => {
-            const closeTime = resolveCloseTime(item, index);
+            const closeTime = closeTimes[index];
             const remainingMs = closeTime - now;
             const urgent = remainingMs > 0 && remainingMs <= WARNING_WINDOW_MS;
 

@@ -5,9 +5,18 @@ export const getAuthorizationHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-export const assertSuccess = (res: any) => {
+export const assertSuccess = <T>(res: {
+  success?: boolean;
+  msg?: unknown;
+  code?: unknown;
+  data: T;
+}) => {
   if (res.success !== true) {
-    throw new Error(String(res.msg ?? ""));
+    const error = new Error(String(res.msg ?? res.code ?? "Request failed")) as Error & {
+      code?: unknown;
+    };
+    error.code = res.code;
+    throw error;
   }
   return res.data;
 };

@@ -6,6 +6,40 @@ export type RequestResult<T> = {
   data: T;
 };
 
+export type DailySettleItem = {
+  type: string;
+  amount: number;
+  desc: string;
+  meta?: Record<string, unknown>;
+};
+
+export type DailySettleSummary = {
+  date: string;
+  alreadySettled: boolean;
+  balanceBefore?: number;
+  balanceAfter?: number;
+  items?: DailySettleItem[];
+  streak?: {
+    loginStreak?: number;
+  };
+  pet?: {
+    petId?: number | string;
+    petKey?: string;
+    level?: number;
+  };
+  errorCode?: string;
+  errorMsg?: string;
+};
+
+export type AuthUser = {
+  id?: string;
+  username?: string;
+  nickname?: string;
+  email?: string;
+  avatar?: string;
+  [key: string]: unknown;
+};
+
 export type UserCoinLog = {
   id: number;
   userId: number;
@@ -38,7 +72,15 @@ export type CaptchaVerification = {
 export type SignInPayload = {
   username: string;
   password: string;
+  redirect?: string;
 } & CaptchaVerification;
+
+export type SignInResponse = {
+  token?: string;
+  user?: AuthUser;
+  dailySettle?: DailySettleSummary;
+  [key: string]: unknown;
+};
 
 export type SignUpPayload = {
   email: string;
@@ -46,7 +88,15 @@ export type SignUpPayload = {
   nickname: string;
   password: string;
   rePassword: string;
+  redirect?: string;
 } & CaptchaVerification;
+
+export type SignUpResponse = {
+  token?: string;
+  user?: AuthUser;
+  dailySettle?: DailySettleSummary;
+  [key: string]: unknown;
+};
 
 export type UploadImageResponse = {
   url: string;

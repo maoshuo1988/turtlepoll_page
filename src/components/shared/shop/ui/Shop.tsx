@@ -1,14 +1,13 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Coins, Heart } from 'lucide-react';
-import type { PetInfo, PetSkin, ShopItem, PetRarity } from '@/data/mock_data';
+import type { PetInfo, ShopItem } from '@/data/mock_data';
 import {
   shopApples,
-  mockPetSkins,
-  RARITY_COLORS,
-  RARITY_BORDER_COLORS,
-  DUPE_REFUND,
 } from '@/data/mock_data';
+import { useRequestPetEggHatch, useRequestPetStaminaFeed } from '@/hook/usePetRequest';
+import type { OwnedPetItem, PetEggHatchResponse } from '@/hook/petType';
+import { getPetDisplayAvatar } from '../../pet/ui/petDisplay';
 
 const card =
   'rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
@@ -18,42 +17,50 @@ type HatchPhase = 'idle' | 'heating' | 'cracking' | 'breaking' | 'reveal';
 
 interface ShopProps {
   balance: number;
-  onBalanceChange: (delta: number) => void;
   pet: PetInfo;
-  onStaminaChange: (newStamina: number) => void;
-  skins: PetSkin[];
-  onSkinUnlock: (skinId: string) => void;
+  ownedPets?: OwnedPetItem[];
   onBack: () => void;
-}
-
-/* ── Gacha probability ── */
-function rollRarity(): PetRarity {
-  const r = Math.random();
-  if (r < 0.05) return 'SSR';
-  if (r < 0.20) return 'SR';
-  if (r < 0.50) return 'R';
-  return 'N';
+  onRequireAuth?: () => void;
 }
 
 const GACHA_COST = 100;
+const FEED_COUNT_BY_ITEM: Record<string, number> = {
+  apple1: 1,
+  apple2: 2,
+  apple3: 3,
+};
+
+function getRarityBadgeClass(rarity?: string) {
+  switch (rarity) {
+    case 'SSR':
+    case 'SS':
+    case 'SSS':
+      return 'bg-amber-50 text-amber-500 dark:bg-amber-500/10';
+    case 'SR':
+      return 'bg-violet-50 text-violet-500 dark:bg-violet-500/10';
+    case 'R':
+      return 'bg-blue-50 text-blue-500 dark:bg-blue-500/10';
+    default:
+      return 'bg-slate-100 text-slate-500 dark:bg-white/[0.05] dark:text-rdark-text2';
+  }
+}
 
 /* ═══════════════════════ Main Component ═══════════════════════ */
 export const Shop: React.FC<ShopProps> = ({
   balance,
-  onBalanceChange,
   pet,
-  onStaminaChange,
-  skins,
-  onSkinUnlock,
+  ownedPets,
   onBack,
+  onRequireAuth,
 }) => {
   const [phase, setPhase] = useState<HatchPhase>('idle');
-  const [result, setResult] = useState<PetSkin | null>(null);
-  const [isDuplicate, setIsDuplicate] = useState(false);
-  const [refundCoins, setRefundCoins] = useState(0);
+  const [hatchResult, setHatchResult] = useState<PetEggHatchResponse | null>(null);
   const [tempGlow, setTempGlow] = useState(0); // 0-100 temperature bar
   const timerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [buyFlash, setBuyFlash] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const hatchMutation = useRequestPetEggHatch();
+  const feedMutation = useRequestPetStaminaFeed();
 
   const clearTimers = useCallback(() => {
     timerRef.current.forEach(clearTimeout);
@@ -62,19 +69,10 @@ export const Shop: React.FC<ShopProps> = ({
 
   /* ── Gacha logic ── */
   const doGacha = useCallback(() => {
-    if (balance < GACHA_COST || phase !== 'idle') return;
-    onBalanceChange(-GACHA_COST);
+    if (balance < GACHA_COST || phase !== 'idle' || hatchMutation.isLoading) return;
     clearTimers();
-
-    // Pick result
-    const rarity = rollRarity();
-    const pool = mockPetSkins.filter((s) => s.rarity === rarity);
-    const picked = pool[Math.floor(Math.random() * pool.length)];
-    const dup = skins.find((s) => s.id === picked.id)?.owned ?? false;
-
-    setResult(picked);
-    setIsDuplicate(dup);
-    setRefundCoins(dup ? DUPE_REFUND[rarity] : 0);
+    setActionError(null);
+    setHatchResult(null);
 
     // Phase sequence
     setPhase('heating');
@@ -91,40 +89,53 @@ export const Shop: React.FC<ShopProps> = ({
     timerRef.current.push(setTimeout(() => setPhase('cracking'), 1000));
     timerRef.current.push(setTimeout(() => setPhase('breaking'), 2000));
     timerRef.current.push(
-      setTimeout(() => {
+      setTimeout(async () => {
         setPhase('reveal');
-        if (dup) {
-          onBalanceChange(DUPE_REFUND[rarity]);
-        } else {
-          onSkinUnlock(picked.id);
+        try {
+          const result = await hatchMutation.mutateAsync();
+          setHatchResult(result);
+        } catch (error) {
+          setPhase('idle');
+          setActionError(error instanceof Error ? error.message : '开蛋失败，请稍后重试。');
+          if (error instanceof Error && error.message.includes('NotLogin')) {
+            onRequireAuth?.();
+          }
         }
       }, 2500),
     );
-  }, [balance, phase, skins, onBalanceChange, onSkinUnlock, clearTimers]);
+  }, [balance, clearTimers, hatchMutation, onRequireAuth, phase]);
 
   const resetGacha = useCallback(() => {
     clearTimers();
     setPhase('idle');
-    setResult(null);
-    setIsDuplicate(false);
-    setRefundCoins(0);
+    setHatchResult(null);
     setTempGlow(0);
+    setActionError(null);
   }, [clearTimers]);
 
   /* ── Buy apple ── */
   const buyApple = useCallback(
-    (item: ShopItem) => {
-      if (balance < item.price) return;
-      onBalanceChange(-item.price);
-      const newStamina = Math.min(pet.stamina + item.effect.value, pet.maxStamina);
-      onStaminaChange(newStamina);
-      setBuyFlash(item.id);
-      setTimeout(() => setBuyFlash(null), 600);
+    async (item: ShopItem) => {
+      if (balance < item.price || feedMutation.isLoading) return;
+      setActionError(null);
+
+      try {
+        await feedMutation.mutateAsync({
+          count: FEED_COUNT_BY_ITEM[item.id] ?? 1,
+        });
+        setBuyFlash(item.id);
+        setTimeout(() => setBuyFlash(null), 600);
+      } catch (error) {
+        setActionError(error instanceof Error ? error.message : '喂食失败，请稍后重试。');
+        if (error instanceof Error && error.message.includes('NotLogin')) {
+          onRequireAuth?.();
+        }
+      }
     },
-    [balance, pet.stamina, pet.maxStamina, onBalanceChange, onStaminaChange],
+    [balance, feedMutation, onRequireAuth],
   );
 
-  const ownedSkins = skins.filter((s) => s.owned);
+  const ownedPetList = ownedPets ?? [];
 
   return (
     <div className="legacy-shop-page space-y-3 px-4 md:space-y-5 md:px-0 !mt-3 md:!mt-4">
@@ -170,18 +181,18 @@ export const Shop: React.FC<ShopProps> = ({
           <div className="px-4 py-4">
             <div className="flex items-center gap-3">
               <div className="grid h-[88px] w-[88px] shrink-0 place-items-center rounded-[24px] bg-gradient-to-br from-amber-100 via-orange-50 to-white text-[56px] shadow-[0_10px_24px_rgba(251,191,36,0.18)] dark:from-amber-900/30 dark:via-orange-900/15 dark:to-transparent">
-                {phase === 'reveal' && result ? result.avatar : '🥚'}
+                {phase === 'reveal' && hatchResult ? getPetDisplayAvatar(hatchResult.pet.petKey, hatchResult.pet.name) : '🥚'}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="text-[16px] font-black text-slate-800 dark:text-rdark-text">
-                  {phase === 'reveal' && result ? result.name : '孵化稀有龟皮肤'}
+                  {phase === 'reveal' && hatchResult ? hatchResult.pet.name ?? hatchResult.pet.petKey ?? '神秘龟种' : '孵化稀有龟种'}
                 </div>
                 <div className="mt-1 text-[12px] leading-5 text-slate-500 dark:text-rdark-text2">
-                  {phase === 'reveal' && result
-                    ? isDuplicate
-                      ? `重复皮肤已返还 ${refundCoins} 龟币`
-                      : `恭喜获得 ${result.rarity} 品质新皮肤`
-                    : `每次消耗 ${GACHA_COST} 龟币，可能开出 N / R / SR / SSR。`}
+                  {phase === 'reveal' && hatchResult
+                    ? hatchResult.isDuplicate
+                      ? `重复龟种已返还 ${hatchResult.refund} 龟币`
+                      : `恭喜获得 ${hatchResult.pet.rarity ?? '稀有'} 品质新龟种`
+                    : `每次开蛋由后端统一扣费与返还，当前展示成本约 ${GACHA_COST} 龟币。`}
                 </div>
                 <div className="mt-2 flex flex-wrap gap-1.5 text-[11px]">
                   <span className="rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-600 dark:bg-white/[0.05] dark:text-rdark-text2">N 50%</span>
@@ -241,39 +252,38 @@ export const Shop: React.FC<ShopProps> = ({
               )}
 
               <div className="flex h-12 items-center rounded-2xl border border-slate-200 bg-[#f8fafc] px-3 text-[12px] font-bold text-slate-600 dark:border-white/10 dark:bg-[#121820] dark:text-rdark-text2">
-                已拥有 {ownedSkins.length}
+                已拥有 {ownedPetList.length}
               </div>
             </div>
 
             {balance < GACHA_COST && phase === 'idle' && (
               <p className="mt-2 text-[12px] text-rose-500">龟币不足，需要 {GACHA_COST} 龟币</p>
             )}
+            {actionError ? (
+              <p className="mt-2 text-[12px] text-rose-500">{actionError}</p>
+            ) : null}
           </div>
         </section>
 
         <section className={`${card} overflow-hidden !px-0 !py-0`}>
           <div className="border-b border-slate-100 px-4 py-3 dark:border-white/6">
             <div className="flex items-center justify-between gap-2">
-              <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">已获得形象</div>
-              <div className="text-[12px] font-semibold text-slate-500 dark:text-rdark-text2">{ownedSkins.length}/{skins.length}</div>
+              <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">已拥有龟种</div>
+              <div className="text-[12px] font-semibold text-slate-500 dark:text-rdark-text2">{ownedPetList.length}</div>
             </div>
           </div>
           <div className="flex gap-3 overflow-x-auto px-4 py-4 snap-x snap-mandatory">
-            {skins.map((skin) => (
+            {ownedPetList.map((petItem) => (
               <div
-                key={skin.id}
-                className={`w-[112px] shrink-0 snap-start rounded-[22px] border px-3 py-4 text-center ${
-                  skin.owned
-                    ? 'border-slate-200 bg-[#fafbfd] dark:border-white/10 dark:bg-[#121820]'
-                    : 'border-slate-200/80 bg-slate-50/70 opacity-55 dark:border-white/8 dark:bg-white/[0.03]'
-                } ${skin.equipped ? 'ring-2 ring-cyan-400/70' : ''}`}
+                key={String(petItem.petId)}
+                className={`w-[112px] shrink-0 snap-start rounded-[22px] border px-3 py-4 text-center border-slate-200 bg-[#fafbfd] dark:border-white/10 dark:bg-[#121820] ${petItem.isEquipped ? 'ring-2 ring-cyan-400/70' : ''}`}
               >
-                <div className="text-5xl">{skin.owned ? skin.avatar : '?'}</div>
+                <div className="text-5xl">{getPetDisplayAvatar(petItem.petKey, petItem.petName)}</div>
                 <div className="mt-3 truncate text-[13px] font-bold text-slate-700 dark:text-rdark-text">
-                  {skin.owned ? skin.name : '未解锁'}
+                  {petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}
                 </div>
-                <div className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ${skin.owned ? RARITY_COLORS[skin.rarity] : 'text-slate-400'}`}>
-                  {skin.rarity}
+                <div className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ${getRarityBadgeClass(petItem.rarity)}`}>
+                  {petItem.rarity ?? 'N'}
                 </div>
               </div>
             ))}
@@ -350,7 +360,7 @@ export const Shop: React.FC<ShopProps> = ({
           {/* ── Egg / Result Area ── */}
           <div className="relative mb-3 flex h-40 w-full max-w-[220px] items-center justify-center sm:h-52 sm:w-44 md:h-56 md:w-48 md:max-w-none md:mb-4">
             <AnimatePresence mode="wait">
-              {phase === 'reveal' && result ? (
+              {phase === 'reveal' && hatchResult ? (
                 /* ── Reveal: show new skin ── */
                 <motion.div
                   key="reveal"
@@ -360,7 +370,7 @@ export const Shop: React.FC<ShopProps> = ({
                   className="flex flex-col items-center"
                 >
                   {/* SSR glow ring */}
-                  {result.rarity === 'SSR' && (
+                  {hatchResult.pet.rarity === 'SSR' && (
                     <motion.div
                       className="absolute inset-0 rounded-full"
                       style={{
@@ -373,7 +383,7 @@ export const Shop: React.FC<ShopProps> = ({
                       transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
                     />
                   )}
-                  {result.rarity === 'SR' && (
+                  {hatchResult.pet.rarity === 'SR' && (
                     <motion.div
                       className="absolute inset-0 rounded-full"
                       style={{
@@ -386,19 +396,19 @@ export const Shop: React.FC<ShopProps> = ({
                       transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
                     />
                   )}
-                  <span className="text-6xl sm:text-8xl relative z-10 drop-shadow-lg">{result.avatar}</span>
+                  <span className="text-6xl sm:text-8xl relative z-10 drop-shadow-lg">{getPetDisplayAvatar(hatchResult.pet.petKey, hatchResult.pet.name)}</span>
                   <div className="!mt-2 sm:!mt-3 text-center relative z-10 max-w-[220px]">
                     <p className="font-bold text-base sm:text-lg text-slate-800 dark:text-rdark-text">
-                      {result.name}
+                      {hatchResult.pet.name ?? hatchResult.pet.petKey ?? '神秘龟种'}
                     </p>
                     <span
-                      className={`inline-block !mt-1 !px-2 py-0.5 text-xs font-semibold rounded-full ${RARITY_COLORS[result.rarity]}`}
+                      className={`inline-block !mt-1 !px-2 py-0.5 text-xs font-semibold rounded-full ${getRarityBadgeClass(hatchResult.pet.rarity)}`}
                     >
-                      {result.rarity}
+                      {hatchResult.pet.rarity ?? 'N'}
                     </span>
-                    {isDuplicate && (
+                    {hatchResult.isDuplicate && (
                       <p className="mt-2 text-sm text-amber-600 dark:text-amber-400">
-                        已拥有，转换为 +{refundCoins} 龟币
+                        已拥有，转换为 +{hatchResult.refund} 龟币
                       </p>
                     )}
                   </div>
@@ -560,6 +570,9 @@ export const Shop: React.FC<ShopProps> = ({
           {balance < GACHA_COST && phase === 'idle' && (
             <p className="mt-2 text-xs text-red-500">龟币不足，需要 {GACHA_COST} 龟币</p>
           )}
+          {actionError ? (
+            <p className="mt-2 text-xs text-red-500">{actionError}</p>
+          ) : null}
         </div>
 
         {/* ── Probability hint ── */}
@@ -574,24 +587,21 @@ export const Shop: React.FC<ShopProps> = ({
       {/* ━━━ Skin Collection ━━━ */}
       <div className={`${card} hidden md:block !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
         <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-700 dark:text-rdark-text !mb-2.5 md:!mb-3">
-          已获得形象 ({ownedSkins.length}/{skins.length})
+          已拥有龟种 ({ownedPetList.length})
         </h3>
         <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-2 snap-x snap-mandatory md:mx-0 md:grid md:grid-cols-3 md:gap-2.5 md:px-0 lg:flex lg:gap-3 lg:overflow-x-auto">
-          {skins.map((skin) => (
+          {ownedPetList.map((petItem) => (
             <div
-              key={skin.id}
-              className={`h-28 w-[96px] shrink-0 snap-start rounded-2xl border-2 flex flex-col items-center justify-center gap-1 transition sm:h-32 sm:w-[108px] md:h-40 md:w-full md:flex-shrink-0 lg:w-32
-                ${skin.owned ? RARITY_BORDER_COLORS[skin.rarity] : 'border-slate-200 dark:border-slate-700 opacity-40'}
-                ${skin.equipped ? 'ring-2 ring-cyan-400' : ''}`}
+              key={String(petItem.petId)}
+              className={`h-28 w-[96px] shrink-0 snap-start rounded-2xl border-2 flex flex-col items-center justify-center gap-1 transition sm:h-32 sm:w-[108px] md:h-40 md:w-full md:flex-shrink-0 lg:w-32 border-slate-200 dark:border-slate-700 ${petItem.isEquipped ? 'ring-2 ring-cyan-400' : ''}`}
             >
-              <span className="text-5xl sm:text-6xl">{skin.owned ? skin.avatar : '?'}</span>
+              <span className="text-5xl sm:text-6xl">{getPetDisplayAvatar(petItem.petKey, petItem.petName)}</span>
               <span
-                className={`!mt-2.5 sm:!mt-4 text-[13px] sm:text-[16px] font-semibold !px-1 rounded ${
-                  skin.owned ? RARITY_COLORS[skin.rarity] : 'text-slate-400'
-                }`}
+                className={`!mt-2.5 sm:!mt-4 text-[13px] sm:text-[16px] font-semibold !px-2 !py-0.5 rounded-full ${getRarityBadgeClass(petItem.rarity)}`}
               >
-                {skin.rarity}
+                {petItem.rarity ?? 'N'}
               </span>
+              <span className="text-[11px] font-bold text-slate-700 dark:text-rdark-text">{petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}</span>
             </div>
           ))}
         </div>
@@ -603,20 +613,13 @@ export const Shop: React.FC<ShopProps> = ({
           <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-700 dark:text-rdark-text flex items-center gap-1.5">
             <span>🍎</span> 体力商店
           </h3>
-          {/* Stamina bar */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex min-w-[180px] items-center gap-2">
             <Heart size={14} className="text-red-500" />
-            <div className="flex gap-0.5">
-              {Array.from({ length: pet.maxStamina }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`w-2.5 h-2.5 rounded-sm transition-colors ${
-                    i < pet.stamina
-                      ? 'bg-red-500'
-                      : 'bg-slate-200 dark:bg-slate-700'
-                  }`}
-                />
-              ))}
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-rose-400 to-orange-400"
+                style={{ width: `${Math.max(0, Math.min(100, (pet.stamina / Math.max(pet.maxStamina, 1)) * 100))}%` }}
+              />
             </div>
             <span className="text-base sm:text-lg md:text-xl text-slate-500 dark:text-rdark-text2 !ml-1">
               {pet.stamina}/{pet.maxStamina}

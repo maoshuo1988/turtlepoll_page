@@ -31,6 +31,8 @@ import {
   RARITY_BORDER_COLORS,
   petDialogues,
 } from '@/data/mock_data';
+import type { OwnedPetItem, PetEquipInfo, PetStatusResponse } from '@/hook/petType';
+import { getPetDisplayAvatar, getPetMoodLabel } from './petDisplay';
 
 type PetTab = 'status' | 'abilities' | 'tasks' | 'cosmetics' | 'memory';
 
@@ -53,6 +55,12 @@ interface PetPageProps {
   onBack: () => void;
   skins?: PetSkin[];
   onEquipSkin?: (skinId: string) => void;
+  equippedPet?: PetEquipInfo | null;
+  ownedPets?: OwnedPetItem[];
+  petStatus?: PetStatusResponse | null;
+  onEquipPet?: (petId: number | string) => Promise<unknown>;
+  equippingPetId?: number | string | null;
+  onStaminaChange?: (newStamina: number) => void;
 }
 
 /* ── Rarity badge ── */
@@ -63,39 +71,80 @@ const RarityBadge: React.FC<{ rarity: PetRarity }> = ({ rarity }) => (
 );
 
 /* ━━━━━━━━━━━━━━━ Status Tab ━━━━━━━━━━━━━━━ */
-const StatusTab: React.FC<{ winRate: number; winStreak: number; totalPredictions: number; balance: number }> = ({
-  winRate, winStreak, totalPredictions, balance,
+const StatusTab: React.FC<{
+  pet: PetInfo;
+  winRate: number;
+  winStreak: number;
+  totalPredictions: number;
+  balance: number;
+  equippedPet?: PetEquipInfo | null;
+  petStatus?: PetStatusResponse | null;
+  equippedPetXp?: number;
+}> = ({
+  pet,
+  winRate,
+  winStreak,
+  totalPredictions,
+  balance,
+  equippedPet,
+  petStatus,
+  equippedPetXp,
 }) => {
   const dailyTasks = mockPetTasks.filter((t) => t.category === 'daily');
   const completedDaily = dailyTasks.filter((t) => t.completed).length;
+  const moodLabel = getPetMoodLabel(petStatus?.moodState);
+  const staminaPct = Math.max(0, Math.min(100, Math.round((pet.stamina / Math.max(pet.maxStamina, 1)) * 100)));
 
   return (
     <div className="space-y-4">
       {/* 心情 & 体力 */}
       <div className={`${card} p-4`}>
         <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-3">今日状态</div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div className="bg-amber-50 dark:bg-amber-950/20 rounded-lg p-3 border border-amber-100 dark:border-amber-900/30">
             <div className="flex items-center gap-2 mb-1.5">
               <span className="text-lg">😊</span>
-              <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">开心</span>
+              <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">{moodLabel}</span>
             </div>
-            <div className="text-[10px] text-slate-500 dark:text-rdark-text2">今日预测顺利，心情大好！</div>
+            <div className="text-[10px] text-slate-500 dark:text-rdark-text2">
+              {petStatus?.daily?.alreadySettled ? '今日登录结算已完成。' : '今日登录结算尚未完成。'}
+            </div>
           </div>
           <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-lg p-3 border border-emerald-100 dark:border-emerald-900/30">
             <div className="flex items-center gap-2 mb-1.5">
               <span className="text-lg">⚡</span>
-              <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">78 / 100</span>
+              <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">{pet.stamina} / {pet.maxStamina}</span>
             </div>
             <div className="w-full h-1.5 bg-slate-200/80 dark:bg-rdark-border rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: '78%' }}
+                animate={{ width: `${staminaPct}%` }}
                 transition={{ duration: 1, delay: 0.2 }}
                 className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full"
               />
             </div>
             <div className="text-[10px] text-slate-500 dark:text-rdark-text2 mt-1">体力值</div>
+          </div>
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-rdark-border dark:bg-rdark-input/40">
+            <div className="text-[10px] text-slate-400 dark:text-rdark-text2">当前龟种</div>
+            <div className="mt-1 text-[12px] font-bold text-slate-700 dark:text-rdark-text">
+              {equippedPet?.petName ?? pet.name}
+            </div>
+            <div className="mt-1 text-[10px] text-slate-500 dark:text-rdark-text2">
+              {equippedPet?.rarity ?? '默认'} · Lv.{equippedPet?.level ?? pet.level}
+            </div>
+          </div>
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-rdark-border dark:bg-rdark-input/40">
+            <div className="text-[10px] text-slate-400 dark:text-rdark-text2">成长与火花</div>
+            <div className="mt-1 text-[12px] font-bold text-slate-700 dark:text-rdark-text">
+              Spark {petStatus?.spark ?? 0}
+            </div>
+            <div className="mt-1 text-[10px] text-slate-500 dark:text-rdark-text2">
+              累计 XP {typeof equippedPetXp === 'number' ? equippedPetXp.toLocaleString() : '-'}
+            </div>
           </div>
         </div>
       </div>
@@ -306,14 +355,113 @@ const TasksTab: React.FC = () => {
 };
 
 /* ━━━━━━━━━━━━━━━ Cosmetics Tab ━━━━━━━━━━━━━━━ */
-const CosmeticsTab: React.FC<{ skins: PetSkin[]; onEquip?: (skinId: string) => void }> = ({ skins, onEquip }) => {
+const CosmeticsTab: React.FC<{
+  skins: PetSkin[];
+  ownedPets?: OwnedPetItem[];
+  equippedPet?: PetEquipInfo | null;
+  equippingPetId?: number | string | null;
+  onEquip?: (skinId: string) => void;
+  onEquipPet?: (petId: number | string) => Promise<unknown>;
+}> = ({
+  skins,
+  ownedPets,
+  equippedPet,
+  equippingPetId,
+  onEquip,
+  onEquipPet,
+}) => {
   const allSkins = skins.length > 0 ? skins : mockPetSkins;
   const equippedSkin = allSkins.find((s) => s.equipped);
   const ownedSkins = allSkins.filter((s) => s.owned);
   const shopSkins = allSkins.filter((s) => !s.owned);
+  const [petActionMessage, setPetActionMessage] = useState<string | null>(null);
+
+  const handleEquipPetClick = async (petId: number | string) => {
+    if (!onEquipPet) return;
+
+    try {
+      await onEquipPet(petId);
+      setPetActionMessage('龟种切换成功，已同步到当前装备。');
+    } catch (error) {
+      setPetActionMessage(error instanceof Error ? error.message : '切换失败，请稍后重试。');
+    }
+  };
 
   return (
     <div className="space-y-4">
+      {equippedPet && (
+        <div className={`${card} p-4`}>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-3">当前龟种</div>
+          <div className="flex items-center gap-4 bg-gradient-to-r from-cyan-50 to-sky-50 dark:from-cyan-950/20 dark:to-sky-950/20 rounded-lg p-4 border border-cyan-100 dark:border-cyan-900/30">
+            <div className="w-16 h-16 rounded-xl bg-white dark:bg-rdark-card grid place-items-center text-3xl shadow-sm border border-cyan-100 dark:border-cyan-900/30">
+              {getPetDisplayAvatar(equippedPet.petKey, equippedPet.petName)}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="truncate text-[13px] font-bold text-slate-700 dark:text-rdark-text">{equippedPet.petName ?? '当前装备'}</span>
+                {equippedPet.rarity ? <RarityBadge rarity={equippedPet.rarity as PetRarity} /> : null}
+              </div>
+              <div className="text-[10px] text-slate-500 dark:text-rdark-text2 mb-1">
+                petKey: {equippedPet.petKey ?? '-'} · Lv.{equippedPet.level ?? 1}
+              </div>
+              <div className="text-[9px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                <Check size={10} /> 装备中
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {petActionMessage ? (
+        <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-[12px] text-zinc-200">
+          {petActionMessage}
+        </div>
+      ) : null}
+
+      {ownedPets && ownedPets.length > 0 ? (
+        <div className={`${card} p-4`}>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-3">龟种仓库 ({ownedPets.length})</div>
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
+            {ownedPets.map((pet) => {
+              const isPending = equippingPetId === pet.petId;
+              const isEquipped = Boolean(pet.isEquipped);
+
+              return (
+                <button
+                  key={String(pet.petId)}
+                  type="button"
+                  onClick={() => {
+                    void handleEquipPetClick(pet.petId);
+                  }}
+                  disabled={isPending || isEquipped}
+                  className={`rounded-lg p-3 border text-left transition-all ${
+                    isEquipped
+                      ? 'border-emerald-300 bg-emerald-50/70 dark:border-emerald-900/30 dark:bg-emerald-950/10'
+                      : 'border-slate-200 bg-white hover:bg-slate-50 dark:border-rdark-border dark:bg-rdark-card dark:hover:bg-rdark-hover'
+                  } disabled:cursor-not-allowed disabled:opacity-70`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-rdark-input grid place-items-center text-2xl shrink-0">
+                      {getPetDisplayAvatar(pet.petKey, pet.petName)}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-[12px] font-bold text-slate-700 dark:text-rdark-text">{pet.petName ?? pet.petKey ?? `宠物 ${pet.petId}`}</div>
+                      <div className="mt-1 text-[9px] text-slate-500 dark:text-rdark-text2">Lv.{pet.level ?? 1} · XP {pet.xp ?? 0}</div>
+                      <div className="mt-1 flex items-center gap-1.5">
+                        {pet.rarity ? <RarityBadge rarity={pet.rarity as PetRarity} /> : null}
+                        <span className={`text-[8px] font-bold ${isEquipped ? 'text-emerald-500' : 'text-cyan-500'}`}>
+                          {isEquipped ? '已装备' : isPending ? '切换中...' : '点击装备'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
       {/* Current outfit */}
       <div className={`${card} p-4`}>
         <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-3">当前装扮</div>
@@ -453,12 +601,30 @@ const MemoryTab: React.FC = () => {
 
 /* ━━━━━━━━━━━━━━━ Main PetPage ━━━━━━━━━━━━━━━ */
 export const PetPage: React.FC<PetPageProps> = ({
-  pet, balance, winRate, winStreak, totalPredictions, onBack, skins, onEquipSkin,
+  pet,
+  balance,
+  winRate,
+  winStreak,
+  totalPredictions,
+  onBack,
+  skins,
+  onEquipSkin,
+  equippedPet,
+  ownedPets,
+  petStatus,
+  onEquipPet,
+  equippingPetId,
+  onStaminaChange,
 }) => {
   const [activeTab, setActiveTab] = useState<PetTab>('status');
   const [chatOpen, setChatOpen] = useState(false);
   const [currentDialogue, setCurrentDialogue] = useState(petDialogues.idle[0]);
   const [dialogueKey, setDialogueKey] = useState(0);
+  const equippedOwnedPet = ownedPets?.find((item) => item.isEquipped) ?? null;
+  const staminaPct = Math.max(0, Math.min(100, Math.round((pet.stamina / Math.max(pet.maxStamina, 1)) * 100)));
+  const xpValue = equippedOwnedPet?.xp ?? 0;
+  const xpBarWidth = xpValue > 0 ? Math.max(12, Math.min(100, (xpValue % 1000) / 10)) : 8;
+  const heroAvatar = getPetDisplayAvatar(equippedPet?.petKey, equippedPet?.petName) || pet.avatar;
 
   useEffect(() => {
     const iv = setInterval(() => {
@@ -475,7 +641,7 @@ export const PetPage: React.FC<PetPageProps> = ({
       {/* ━━━ 上半：宠物形象 & 空间 ━━━ */}
       <div className={`${card} overflow-hidden`}>
         {chatOpen ? (
-          <PetChat pet={pet} onClose={() => setChatOpen(false)} />
+          <PetChat pet={pet} onClose={() => setChatOpen(false)} stamina={pet.stamina} onStaminaChange={onStaminaChange} />
         ) : (
           <>
             {/* 返回按钮浮层 */}
@@ -630,7 +796,7 @@ export const PetPage: React.FC<PetPageProps> = ({
 
                 {/* Pet emoji — larger */}
                 <div className="text-[88px] leading-none select-none drop-shadow-lg">
-                  {pet.avatar}
+                  {heroAvatar}
                 </div>
 
                 {/* Name + level */}
@@ -655,7 +821,7 @@ export const PetPage: React.FC<PetPageProps> = ({
                   <span className="text-[14px]">😊</span>
                   <div className="flex flex-col">
                     <span className="text-[8px] text-slate-400 dark:text-rdark-text2 leading-none">心情</span>
-                    <span className="text-[11px] font-bold text-amber-500 dark:text-amber-400 leading-tight">开心</span>
+                    <span className="text-[11px] font-bold text-amber-500 dark:text-amber-400 leading-tight">{getPetMoodLabel(petStatus?.moodState)}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 bg-white/70 dark:bg-rdark-card/70 backdrop-blur-sm rounded-lg px-3 py-2 shadow-sm border border-white/40 dark:border-rdark-border/50">
@@ -666,12 +832,12 @@ export const PetPage: React.FC<PetPageProps> = ({
                       <div className="w-[48px] h-[6px] bg-slate-200/80 dark:bg-rdark-border rounded-full overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
-                          animate={{ width: '78%' }}
+                          animate={{ width: `${staminaPct}%` }}
                           transition={{ duration: 1, delay: 0.3 }}
                           className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full"
                         />
                       </div>
-                      <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 leading-none">78</span>
+                      <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 leading-none">{pet.stamina}</span>
                     </div>
                   </div>
                 </div>
@@ -682,17 +848,17 @@ export const PetPage: React.FC<PetPageProps> = ({
                 <div className="bg-white/70 dark:bg-rdark-card/70 backdrop-blur-sm rounded-lg px-3 py-2 shadow-sm border border-white/40 dark:border-rdark-border/50 flex items-center gap-3">
                   <div>
                     <div className="text-[8px] text-slate-400 dark:text-rdark-text2 leading-none mb-0.5">稀有度</div>
-                    <RarityBadge rarity="SR" />
+                    <RarityBadge rarity={(equippedPet?.rarity as PetRarity) ?? 'N'} />
                   </div>
                   <div className="w-px h-6 bg-slate-200/60 dark:bg-rdark-border/40" />
                   <div>
                     <div className="text-[8px] text-slate-400 dark:text-rdark-text2 leading-none mb-0.5">性格</div>
-                    <span className="text-[10px] font-bold text-slate-700 dark:text-rdark-text">智慧型</span>
+                    <span className="text-[10px] font-bold text-slate-700 dark:text-rdark-text">{getPetMoodLabel(petStatus?.moodState)}</span>
                   </div>
                   <div className="w-px h-6 bg-slate-200/60 dark:bg-rdark-border/40" />
                   <div>
                     <div className="text-[8px] text-slate-400 dark:text-rdark-text2 leading-none mb-0.5">天赋</div>
-                    <span className="text-[10px] font-bold text-purple-600 dark:text-purple-400">分析</span>
+                    <span className="text-[10px] font-bold text-purple-600 dark:text-purple-400">Spark {petStatus?.spark ?? 0}</span>
                   </div>
                 </div>
               </div>
@@ -710,12 +876,12 @@ export const PetPage: React.FC<PetPageProps> = ({
                 <div className="bg-white/60 dark:bg-rdark-card/60 backdrop-blur-sm rounded-full px-3 py-1.5 border border-white/30 dark:border-rdark-border/30 shadow-sm">
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="text-[8px] text-slate-500 dark:text-rdark-text2">EXP</span>
-                    <span className="text-[8px] font-bold text-emerald-600 dark:text-emerald-400">3,240 / 5,000</span>
+                    <span className="text-[8px] font-bold text-emerald-600 dark:text-emerald-400">{xpValue.toLocaleString()} XP</span>
                   </div>
                   <div className="w-full h-1.5 bg-slate-200/60 dark:bg-rdark-border rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
-                      animate={{ width: '64.8%' }}
+                      animate={{ width: `${xpBarWidth}%` }}
                       transition={{ duration: 1.2, delay: 0.3 }}
                       className="h-full bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 rounded-full"
                     />
@@ -757,11 +923,29 @@ export const PetPage: React.FC<PetPageProps> = ({
             transition={{ duration: 0.2 }}
           >
             {activeTab === 'status' && (
-              <StatusTab winRate={winRate} winStreak={winStreak} totalPredictions={totalPredictions} balance={balance} />
+              <StatusTab
+                pet={pet}
+                winRate={winRate}
+                winStreak={winStreak}
+                totalPredictions={totalPredictions}
+                balance={balance}
+                equippedPet={equippedPet}
+                petStatus={petStatus}
+                equippedPetXp={equippedOwnedPet?.xp}
+              />
             )}
             {activeTab === 'abilities' && <AbilitiesTab />}
             {activeTab === 'tasks' && <TasksTab />}
-            {activeTab === 'cosmetics' && <CosmeticsTab skins={skins ?? mockPetSkins} onEquip={onEquipSkin} />}
+            {activeTab === 'cosmetics' && (
+              <CosmeticsTab
+                skins={skins ?? mockPetSkins}
+                ownedPets={ownedPets}
+                equippedPet={equippedPet}
+                equippingPetId={equippingPetId}
+                onEquip={onEquipSkin}
+                onEquipPet={onEquipPet}
+              />
+            )}
             {activeTab === 'memory' && <MemoryTab />}
           </motion.div>
         </AnimatePresence>

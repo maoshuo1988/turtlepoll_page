@@ -15,18 +15,28 @@ import { axiosCustom } from "@/api/axios";
 import { saveUserInfo } from "@/utils/authStorage";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { useMutation, useQuery } from "react-query";
-import type { ImageCaptchaChallenge, UploadFileResponse, UploadImageResponse } from "./types";
+import type {
+  AuthUser,
+  CaptchaChallenge,
+  ImageCaptchaChallenge,
+  SignInPayload,
+  SignInResponse,
+  SignUpPayload,
+  SignUpResponse,
+  UploadFileResponse,
+  UploadImageResponse,
+} from "./types";
 
 ///获取图形
 export function useRequestRotateCaptcha() {
-  return useMutation({
+  return useMutation<CaptchaChallenge>({
     mutationKey: ["requestRotateCaptcha"],
     mutationFn: async () => {
       const res = await axiosCustom({
         method: "get",
         cmd: API_Captcha_Request_Angle,
       });
-      return assertSuccess(res);
+      return assertSuccess<CaptchaChallenge>(res);
     },
   });
 }
@@ -47,9 +57,9 @@ export function useRequestImageCaptcha() {
 
 ///注册
 export function useRequestSignUp() {
-  return useMutation({
+  return useMutation<SignUpResponse, Error, SignUpPayload>({
     mutationKey: ["requestSignUp"],
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: SignUpPayload) => {
       const res = await axiosCustom({
         method: "post",
         cmd: API_Login_Signup,
@@ -65,9 +75,9 @@ export function useRequestSignUp() {
 
 ///登录
 export function useRequestSignIn() {
-  return useMutation({
+  return useMutation<SignInResponse, Error, SignInPayload>({
     mutationKey: ["requestSignIn"],
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: SignInPayload) => {
       const res = await axiosCustom({
         method: "post",
         cmd: API_Login_Signin,
@@ -97,7 +107,7 @@ export function useRequestSignout() {
 
 //获取用户信息
 export function useRequestUserCurrent() {
-  return useQuery({
+  return useQuery<AuthUser | null>({
     queryKey: ["requestUserCurrent"],
     queryFn: async () => {
       const res = await axiosCustom({
@@ -106,8 +116,10 @@ export function useRequestUserCurrent() {
         headers: getAuthorizationHeaders(),
       });
 
-      const data = assertSuccess(res);
-      saveUserInfo(data);
+      const data = assertSuccess<AuthUser | null>(res);
+      if (data) {
+        saveUserInfo(data);
+      }
       return data;
     },
   });
