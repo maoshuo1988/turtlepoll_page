@@ -1,10 +1,17 @@
 import React from 'react';
-import { Lab } from './Lab';
+import { TurtleDivePixel as LegacyTurtleJumpPixel } from './LegacyTurtleJumpPixel';
 
 interface TurtleJumpPixelProps {
   onBack?: () => void;
+  mobileMode?: boolean;
 }
 
 export const TurtleJumpPixel: React.FC<TurtleJumpPixelProps> = ({
   onBack,
-}) => <Lab onBack={onBack ?? (() => undefined)} />;
+  mobileMode = false,
+}) => (
+  <LegacyTurtleJumpPixel
+    onBack={onBack ?? (() => undefined)}
+    mobileMode={mobileMode}
+  />
+);

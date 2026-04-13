@@ -8,6 +8,7 @@ type StaticGameHostProps = {
   htmlPath: string;
   standalonePath?: string;
   stripSelectors?: string[];
+  onFrameLoad?: (doc: Document, win: Window) => void;
   onBack?: () => void;
   balance?: number;
   ownedPets?: OwnedPetItem[];
@@ -134,6 +135,7 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
   htmlPath,
   standalonePath,
   stripSelectors = [],
+  onFrameLoad,
   onBack,
   balance,
   ownedPets,
@@ -176,12 +178,16 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
       doc.body.style.background = '#000';
       doc.body.style.overflow = 'auto';
 
+      if (frame.contentWindow) {
+        onFrameLoad?.(doc, frame.contentWindow);
+      }
+
       setStatus('ready');
     } catch (error) {
       setStatus('error');
       setErrorText(error instanceof Error ? error.message : '未知错误');
     }
-  }, [stripSelectors]);
+  }, [onFrameLoad, stripSelectors]);
 
   const hostHeight = mobileMode ? 'calc(100vh - 78px)' : 'calc(100vh - 220px)';
 

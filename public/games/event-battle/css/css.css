@@ -1,0 +1,670 @@
+ :root {
+            --red-core: #ff003c;
+            --red-glow: rgba(255, 0, 60, 0.6);
+            --blue-core: #00e5ff;
+            --blue-glow: rgba(0, 229, 255, 0.6);
+            --bg-dark: #0a0a0a;
+        }
+.main-pc{width: 100%;min-width: 1300px;margin: auto;}
+body{background-color: #05091b;}
+.top-banner{}
+.top-img{
+	width:100%;height:100%;object-fit:cover;transform-origin:center center;display: block;
+}
+.top-header{position: absolute;left: 0;right: 0;bottom: 0;top: 0;color: #fff;padding-top: 150px;} 
+.top-header h2{font-size: 54px;}
+
+.kuang{width: 999px;margin:40px auto;height: 265px;margin-top: -50px;}
+.kuang-img{
+	width:100%;height:100%;object-fit:cover;transform-origin:center center;display: block;
+}
+.kuang-con{left: 0;right: 0;bottom: 0;top: 0;font-size: 18px;color: #c2c0bc;padding: 56px 40px 50px;line-height: 1.8;}
+.team-group{width:750px;height: 211px;background-image: url('../img/vs.png');background-position: center; background-repeat: no-repeat;margin: auto;display: flex;align-items: center;justify-content: space-between;color: #fff;}
+
+.team-group .team-red,.team-group .team-blue{display: flex;align-items: center;height: 100%;gap: 30px;}
+.team-group .team_tx{width: 138px;height: 138px;border-radius: 50%;overflow: hidden;border: 2px solid transparent;}
+.team-group .team_tx img{width: 136px;height: 136px;}
+.team-group .team-red .team_tx{border-color: #892025;}
+.team-group .team-blue .team_tx{border-color: #0f65dd;}
+.team-group .t_name{font-size: 24px;font-weight: bold;margin-bottom: 8px;}
+.team-group span{opacity: 0.6;}
+
+ /* 内容容器 */
+ .pk-container {
+     width: 85%; max-width: 1300px;margin:0 auto 120px;
+     /* display: flex; flex-direction: column; */
+ }
+ 
+ /* 队名展示区域 */
+ .team-names-row {
+     display: flex;
+     justify-content: space-between;
+     align-items: flex-end;
+     margin-bottom: 10px;
+     padding: 0 10px;
+ }
+ 
+ .team-label {
+     font-size: 28px;
+     font-weight: 900;
+     text-transform: uppercase;
+     letter-spacing: 2px;
+ }
+ 
+ /* 左队名样式 */
+ .name-red {
+     color: #fff;
+     text-shadow: 0 0 15px var(--red-core), 0 0 30px var(--red-core);
+   /*  transform: skewX(-10deg); */
+     
+ }
+ 
+ /* 右队名样式 */
+ .name-blue {
+     color: #fff;
+     text-shadow: 0 0 15px var(--blue-core), 0 0 30px var(--blue-core);
+     /* transform: skewX(10deg); */
+    text-align: right;
+ }
+ 
+ /* 进度条外壳 */
+ .bar-outer {
+     height: 32px;
+     background: rgba(0,0,0,0.8);
+     border: 1px solid rgba(255,255,255,0.1);
+     padding: 4px;
+     border-radius: 4px;
+     display: flex;
+     position: relative;
+     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+ }
+ 
+ /* 红色进度 */
+ .bar-red {
+     width: 65%; /* 动态值 */
+     background: linear-gradient(90deg, #900, var(--red-core));
+     clip-path: polygon(0 0, 100% 0, calc(100% - 15px) 100%, 0 100%);
+     box-shadow: 0 0 20px var(--red-glow);
+     transition: width 0.5s ease;
+     position: relative;
+     z-index: 2;border-radius: 20px 0 0 20px;
+ }
+ 
+ /* 蓝色进度 */
+ .bar-blue {
+     flex-grow: 1;
+     background: linear-gradient(90deg, #0076ff, var(--blue-core));
+     box-shadow: 0 0 20px var(--blue-glow);
+     margin-left: -15px;border-radius: 0 20px 20px 0;
+ }
+ 
+ /* 中间交界高亮线 */
+ .divider-line {
+     position: absolute;
+     left: 65%; /* 需与bar-red宽度一致 */
+         top: -23px;
+         z-index: 5;
+         transform: translateX(-28px);width: 46px;height: 68px;
+ }
+ 
+ /* 分数行 */
+ .score-row {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-top: 15px;
+ }
+ 
+ .score-val {
+     font-size: 36px;
+     font-weight: 900;
+     color: #fff;
+     line-height: 1;
+ }
+ 
+ .score-red {
+     text-shadow: 0 0 20px var(--red-core);
+ }
+ 
+ .score-blue {
+     text-shadow: 0 0 20px var(--blue-core);
+ }
+ 
+ .vs-tag {
+     background: #fff;
+     color: #000;
+     padding: 2px 15px;
+     font-weight: 900;
+     font-style: italic;
+     transform: skewX(-15deg);
+     box-shadow: 0 0 20px rgba(255,255,255,0.4);
+ }
+ 
+ .team-group-main{background-image: url('../img/bj.png');background-position:top center;background-repeat: no-repeat;background-size: 100% auto;margin-bottom: 120px;}
+ 
+/* .pinglun-main{border: 1px solid #646464;border-radius: 30px;height: 800px;background-color: #171920;width:96%; max-width: 1300px;margin:50px auto;display: flex;align-items: stretch;justify-content: space-between;overflow: hidden;}
+ .pl-box{width: 420px;height: 100%;}
+ .red_left{
+	 background: linear-gradient(135deg, #300 0%, #1a0005 100%);
+ }
+ 
+ .blue_right{
+ 	background: linear-gradient(-45deg, #001a33 0%, #000810 100%);
+ }
+ */
+
+ 
+ .pinglun-main {
+     width: 96%;
+     max-width: 1300px;
+     height: 800px;
+     margin: 50px auto;
+     display: flex;
+     justify-content: space-between;
+     align-items: stretch;
+     background-color: var(--bg-main);
+     border: 1px solid #333;
+     border-radius: 30px;
+     overflow: hidden;
+     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+ }
+ 
+ .pl-box {
+     width: 400px;
+     height: 100%;
+     padding: 15px;
+     display: flex;
+     flex-direction: column;
+     box-sizing: border-box;
+    /* position: relative; */
+ }
+ 
+ /* 分队背景 */
+ .red_left { 
+     background: linear-gradient(135deg, #2a0005 0%, #171920 50%); 
+     border-right: 1px solid rgba(255,0,0,0.1); 
+ }
+ .blue_right { 
+     background: linear-gradient(-45deg, #001226 0%, #171920 50%); 
+     border-left: 1px solid rgba(0,229,255,0.1); 
+ }
+ .pl-header { margin-bottom: 12px; }
+ .pinglun-main .team-info { display: flex; justify-content: space-between; align-items: center; }
+ .team-name { font-size: 16px; font-weight: 900; color: #fff; font-style: italic; letter-spacing: 1px; }
+ .team-score { font-size: 24px; font-weight: 900; font-family: 'Arial Black'; }
+ 
+ /* 红蓝分数发光 */
+ .red_left .team-score { color: var(--red-core); text-shadow: 0 0 15px var(--red-glow); }
+ .blue_right .team-score { color: var(--blue-core); text-shadow: 0 0 15px var(--blue-glow); }
+ .pl-users-section {
+     background: var(--box-bg);
+     border: 1px solid rgba(255,255,255,0.05);
+     border-radius: 15px;
+     padding: 10px;
+     margin-bottom: 15px;
+     height: 95px; /* 初始一行 */
+     transition: height 0.3s ease;
+     overflow: hidden;
+     display: flex;
+     flex-direction: column;
+ }
+ 
+ .pl-users-section:hover { height: 160px; }
+ 
+ .section-title { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-bottom: 8px; }
+ .user-count { color: #fff; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 10px; }
+ 
+ .users-scroll-area { flex: 1; overflow: hidden; }
+ 
+ .user-grid {
+     display: grid;
+     grid-template-columns: repeat(5, 1fr);
+     gap: 12px 8px;
+     padding: 2px;
+ }
+ 
+ /* 头像与排名角标 */
+ .avatar-wrap { position: relative; width: 32px; height: 32px; margin: auto; }
+ .avatar-wrap img { width: 100%; height: 100%; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); object-fit: cover; }
+ 
+ .badge {
+     position: absolute; top: -4px; right: -4px; width: 14px; height: 14px;
+     font-size: 9px; font-weight: bold; border-radius: 50%;
+     display: flex; align-items: center; justify-content: center; color: #000;
+ }
+ 
+ /* 排名色值 */
+ .rank-1 .avatar-wrap img { border-color: #ffd700; box-shadow: 0 0 8px rgba(255,215,0,0.5); }
+ .rank-1 .badge { background: linear-gradient(135deg, #fff, #ffd700); }
+ .rank-2 .avatar-wrap img { border-color: #c0c0c0; box-shadow: 0 0 5px rgba(192,192,192,0.4); }
+ .rank-2 .badge { background: linear-gradient(135deg, #fff, #c0c0c0); }
+ .rank-3 .avatar-wrap img { border-color: #cd7f32; box-shadow: 0 0 5px rgba(205,127,50,0.4); }
+ .rank-3 .badge { background: linear-gradient(135deg, #fff, #cd7f32); }
+ .pl-comment-area { flex: 1; height: 0; min-height: 0; }
+ 
+ .comment-item { display: flex; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+ 
+ /* 头像阵营发光 */
+ .c-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; transition: 0.3s; }
+ .red_left .c-avatar { border-color: rgba(255,46,77,0.4); box-shadow: 0 0 10px var(--red-glow); }
+ .blue_right .c-avatar { border-color: rgba(0,229,255,0.4); box-shadow: 0 0 10px var(--blue-glow); }
+ 
+ /* 评论文字内容 */
+ .c-content { width: 323px; }
+ .c-user-info { display: flex; justify-content: space-between; margin-bottom: 2px; }
+ .c-nickname { color: #fff; font-size: 12px; font-weight: bold; }
+ .c-time { color: #bdbdbd; font-size: 10px; opacity: 0.6; }
+ .c-text { font-size: 12.5px; line-height: 1.35; color: rgba(255,255,255,0.85); margin: 0; }
+ 
+ /* 互动按钮与回复 */
+ .c-actions { display: flex; gap: 12px; margin-top: 5px; font-size: 11px; color: #666; }
+ .action-btn:hover { color: #aaa; cursor: pointer; }
+ .action-btn.active { color: var(--red-core); }
+ 
+ .sup-tag { font-size: 9px; padding: 1px 3px; border-radius: 4px; color: #fff; font-weight: bold; transform: scale(0.9); }
+ .sup-tag.red { background: var(--red-core); }
+ .sup-tag.blue { background: var(--blue-core); }
+ 
+ .reply-box { background: rgba(0,0,0,0.2); border-radius: 8px; padding: 6px 8px; margin-top: 6px; font-size: 12px; }
+ .r-item { margin-bottom: 2px; color: #aaa; }
+ .r-user { color: #888; font-weight: bold; }
+ 
+ /* SimpleBar 滚动条配色 */
+ .red_left .simplebar-scrollbar::before { background: var(--red-core); }
+ .blue_right .simplebar-scrollbar::before { background: var(--blue-core); }
+ 
+ 
+ /* --- 中心区域布局 --- */
+ .pl-center {
+     flex: 1; /* 占据中间剩余空间 */
+     display: flex;
+     flex-direction: column;
+     padding: 20px;
+     background: rgba(0, 0, 0, 0.2);
+     border-left: 1px solid rgba(255,255,255,0.05);
+     border-right: 1px solid rgba(255,255,255,0.05);
+ }
+ 
+ /* --- 第一部分：脉搏动画 --- */
+ .live-status {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     gap: 10px;
+     margin-bottom: 30px;
+ }
+ 
+ .pulse-icon {
+     width: 12px;
+     height: 12px;
+     background: #ff003c;
+     border-radius: 50%;
+     position: relative;
+ }
+ 
+ .pulse-icon::after {
+     content: '';
+     position: absolute;
+     width: 100%;
+     height: 100%;
+     background: #ff003c;
+     border-radius: 50%;
+     animation: pulse 1.5s infinite;
+ }
+ 
+ @keyframes pulse {
+     0% { transform: scale(1); opacity: 0.8; }
+     100% { transform: scale(3); opacity: 0; }
+ }
+ 
+ .live-text { color: #fff; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+ 
+ /* --- 第二部分：战报 (滚动区) --- */
+ .battle-report {
+     height: 120px;
+     background: rgba(255,255,255,0.02);
+     border-radius: 10px;
+     padding: 10px;
+     font-size: 12px;
+     margin-bottom: 40px;
+ }
+ 
+ .report-item { color: #888; margin-bottom: 8px; line-height: 1.4; }
+ .r-name { color: #ccc; font-weight: bold; }
+ .r-red { color: var(--red-core); }
+ .r-blue { color: var(--blue-core); }
+ 
+ /* --- 第三部分：对峙头像 --- */
+ .vs-players {
+     display: flex;
+     justify-content: space-around;
+     align-items: center;
+     flex: 1;
+ }
+ 
+ .p-card { text-align: center; }
+ .p-avatar-wrap { position: relative; width: 80px; height: 80px; margin-bottom: 10px; }
+ .p-avatar-wrap img { 
+     width: 100%; height: 100%; border-radius: 50%; border: 3px solid #333; 
+ }
+ 
+ .red-p img { border-color: var(--red-core); box-shadow: 0 0 20px var(--red-glow); }
+ .blue-p img { border-color: var(--blue-core); box-shadow: 0 0 20px var(--blue-glow); }
+ 
+ .mvp-icon{position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);width: 101px;height: 53px;background-image: url('../img/mvp.png');background-position: center;background-repeat: no-repeat;background-size: contain;}
+ .p-level {
+     /* position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); */
+     background: #ffd700; color: #000; font-size: 10px; font-weight: bold;
+     padding: 2px 6px; border-radius: 10px; white-space: nowrap;margin-top:8px;
+ }
+ 
+ .p-name { color: #fff; font-size: 14px; font-weight: bold; }
+ .vs-mid-icon img{width:140px;}
+ 
+ /* --- 底部：输入框与图标 --- */
+ .center-footer {
+     display: flex;
+     align-items: center;
+     gap: 15px;
+     padding-top: 20px;
+     border-top: 1px solid rgba(255,255,255,0.05);
+ }
+ 
+ .input-wrap {
+     flex: 1;
+     display: flex;
+     background: rgba(255,255,255,0.05);
+     border-radius: 20px;
+     padding: 5px 5px 5px 15px;
+     border: 1px solid #333;
+ }
+ 
+ .input-wrap input {
+     background: none; border: none; color: #fff; flex: 1; outline: none; font-size: 13px;
+ }
+ 
+ .send-btn {
+     background: var(--red-core); color: #fff; border: none;
+     padding: 6px 15px; border-radius: 18px; font-size: 12px; cursor: pointer;
+ }
+ 
+ .footer-icons { display: flex; gap: 10px; }
+ .f-icon {
+     width: 36px; height: 36px; background: rgba(255,255,255,0.05);
+     display: flex; align-items: center; justify-content: center;
+     border-radius: 50%; cursor: pointer; transition: 0.3s;
+ }
+ .f-icon:hover { background: rgba(255,255,255,0.15); transform: translateY(-3px); }
+ .f-icon-img{width: 26px;height: auto;}
+ /* --- 战报容器增强 --- */
+ .battle-report {
+     position: relative;
+     height: 70px;
+     background: rgba(255, 255, 255, 0.02);
+     border-radius: 10px;
+     padding: 10px;
+     margin-bottom: 20px;
+     border: 1px solid rgba(255, 255, 255, 0.05);
+     overflow: hidden;
+     /* 呼吸灯效果 */
+     animation: report-glow 3s infinite alternate;
+ }
+ 
+ @keyframes report-glow {
+     0% { border-color: rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 5px rgba(255,255,255,0.02); }
+     100% { border-color: rgba(255, 255, 255, 0.15); box-shadow: inset 0 0 15px rgba(255,255,255,0.05); }
+ }
+ 
+ /* --- 动态扫描线 --- */
+ .scan-line {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 2px;
+     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+     z-index: 2;
+     animation: scan 2s linear infinite;
+ }
+ 
+ @keyframes scan {
+     0% { top: -2%; }
+     100% { top: 100%; }
+ }
+ 
+ /* --- 内部滚动容器 --- */
+ .report-scroll-content {
+     height: 100%;
+ }
+ 
+ /* --- 条目入场动画 --- */
+ .report-item {
+     color: #888;
+     margin-bottom: 8px;
+     font-size: 12px;
+     line-height: 1.4;
+     display: flex;
+     align-items: center;
+     gap: 5px;
+ }
+ 
+ /* 模拟新消息进入的动画 */
+ .new-entry {
+     animation: item-in 0.5s ease-out forwards;
+     transform-origin: left;
+ }
+ 
+ @keyframes item-in {
+     0% { 
+         opacity: 0; 
+         transform: translateX(-10px) scale(0.9); 
+         filter: blur(2px);
+     }
+     100% { 
+         opacity: 1; 
+         transform: translateX(0) scale(1);
+         filter: blur(0);
+     }
+ }
+ 
+ /* 战报文字颜色微调 */
+ .r-name { color: #aaa; font-weight: bold; }
+ .r-red { 
+     color: var(--red-core); 
+     text-shadow: 0 0 5px var(--red-glow); 
+ }
+ .r-blue { 
+     color: var(--blue-core); 
+     text-shadow: 0 0 5px var(--blue-glow); 
+ }
+ .battle-tishi{width: 100%;}
+.battle-tishi .ts-bj{width:100%;height:100%;object-fit:cover;transform-origin:center center;display: block;}
+.battle-ts-box{left: 0;right: 0;bottom: 0;top: 0;padding: 20px;display:flex;justify-content: center;align-items: center;flex-direction: column;}
+.battle-ts-box h5{font-size: 18px;font-weight: bold;color: #0a0501;margin-top: 10px;}
+.battle-ts-box p{color: #0a0501;font-weight: bold;margin-bottom:0}
+.battle-ts-box p span{color: #ffd2af;}
+
+/* --- 图标容器定位 --- */
+.f-icon.has-popup {
+    position: relative; /* 为弹出层提供定位基准 */
+}
+
+/* --- 弹出层通用样式 --- */
+.footer-popup {
+    position: absolute;
+    bottom: 50px;      /* 位于图标上方，留出一点间距 */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px); /* 初始位置稍微靠下，用于动画 */
+    width: 350px;
+    background: rgba(20, 22, 28, 0.95);
+    backdrop-filter: blur(10px); /* 毛玻璃效果 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 100;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+/* 鼠标指向图标时展示弹出层 */
+.has-popup:hover .footer-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* --- 弹出层内容细节 --- */
+.popup-header {
+    font-size: 11px;
+    color: #888;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.popup-body {
+    max-height: 120px;
+    font-size: 12px;
+    color: #eee;
+    line-height: 1.6;
+}
+
+.fi_nums {
+   font-weight: bold;font-style: 16;
+}
+.fi_text{font-size: 10px;opacity: 0.8;margin-top: 6px;}
+
+/* 战报文字颜色继承之前定义的变量 */
+.p-msg .r-red { color: var(--red-core); font-weight: bold; }
+.p-msg .r-blue { color: var(--blue-core); font-weight: bold; }
+
+/* --- 下方小箭头 --- */
+.popup-arrow {
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(20, 22, 28, 0.95);
+}
+
+/* --- 防止闪烁的透明占位区 --- */
+/* 在弹出层和图标之间加一个透明的“桥梁”，确保鼠标向上移动时弹出层不会消失 */
+.footer-popup::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+}
+
+/* --- 道具网格容器 --- */
+.props-section {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 15px;
+    margin: 15px 0;
+}
+
+.props-title {
+    font-size: 11px;
+    color: #555;
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+.props-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 依然是一行三列 */
+    gap: 10px;
+}
+
+/* --- 单个道具卡片 (上下结构) --- */
+.prop-card {
+    display: flex;
+    flex-direction: column; /* 核心：上下排列 */
+    align-items: center;    /* 水平居中 */
+    padding: 12px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.prop-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* --- 图标盒子 --- */
+.prop-icon-box {
+    position: relative;
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px; /* 图标与文字的间距 */
+}
+
+.prop-icon-box .emoji {
+    font-size: 22px;
+}
+
+/* 道具角标 (RED/BLUE) */
+.prop-tag {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 8px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    font-weight: bold;
+    transform: scale(0.85);
+}
+
+/* --- 文字内容 --- */
+.prop-info {
+    text-align: center;
+}
+
+.prop-name {
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+
+.prop-desc {
+    font-size: 10px;
+    color: #777;
+    line-height: 1.3;
+}
+
+/* --- 阵营风格强化 --- */
+/* 红队风格 */
+.red-prop .prop-icon-box { box-shadow: 0 0 15px var(--red-glow); border: 1px solid var(--red-core); }
+.red-prop .prop-name { color: var(--red-core); }
+.red-prop .prop-tag { background: var(--red-core); color: #fff; }
+
+/* 蓝队风格 */
+.blue-prop .prop-icon-box { box-shadow: 0 0 15px var(--blue-glow); border: 1px solid var(--blue-core); }
+.blue-prop .prop-name { color: var(--blue-core); }
+.blue-prop .prop-tag { background: var(--blue-core); color: #fff; }
+
+/* 中立风格 */
+.neutral-prop .prop-icon-box { box-shadow: 0 0 15px rgba(155, 89, 182, 0.3); border: 1px solid #9b59b6; }
+.neutral-prop .prop-name { color: #9b59b6; }
+.neutral-prop .prop-tag { background: #9b59b6; color: #fff; }

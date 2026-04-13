@@ -740,6 +740,7 @@ function App() {
         <div className={`${activeView === 'lab' || activeView === 'jump' ? 'space-y-0 px-0' : 'space-y-3 px-3'}`}>
           {activeView === 'jump' ? (
             <TurtleJumpPixel
+              mobileMode
               onBack={() => setActiveView(mobileLabReturnView)}
             />
           ) : activeView === 'lab' ? (
