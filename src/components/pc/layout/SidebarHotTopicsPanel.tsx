@@ -5,7 +5,7 @@ import { useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type Sideba
 interface SidebarHotTopicsPanelProps {
   selectedTag: string | null;
   newsByMarketId: Map<number, PredictionCardItem>;
-  onViewChange: (view: 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory', topic?: SidebarHotTopic, tag?: SidebarHotTag) => void;
+  onViewChange: (view: 'predictions' | 'forum' | 'jump' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory', topic?: SidebarHotTopic, tag?: SidebarHotTag) => void;
   onTabChange?: (tab: 'hot' | 'mine') => void;
 }
 
@@ -31,7 +31,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
   };
 
   return (
-    <div className="h-[300px] rounded-xl border border-white/8 bg-[#0f1013] p-3 shadow-[0_12px_28px_rgba(0,0,0,0.24)] dark:border-rdark-border dark:bg-rdark-card dark:shadow-none xl:h-[282px] xl:rounded-none xl:border-0 xl:border-b xl:border-white/8 xl:bg-transparent ">
+    <div className="h-[300px] rounded-xl border border-white/8 bg-[#0f1013] p-3 shadow-[0_12px_28px_rgba(0,0,0,0.24)] dark:border-rdark-border dark:bg-rdark-card dark:shadow-none lg:h-[282px] lg:rounded-none lg:border-0 lg:border-b lg:border-white/8 lg:bg-transparent ">
       <div className=" flex items-center justify-between">
         <div>
           <div className="text-[14px] font-bold text-white dark:text-rdark-text">热点追踪</div>
@@ -67,9 +67,9 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
         </div>
       </div>
 
-      <div className=" hidden h-px bg-white/6 dark:bg-rdark-border xl:block" />
+      <div className=" hidden h-px bg-white/6 dark:bg-rdark-border lg:block" />
 
-      <div className=" grid grid-cols-2 gap-1 rounded-lg border border-white/8 bg-[#151619] p-1 dark:bg-[#0c0e12] dark:border-slate-700/60 xl:hidden">
+      <div className=" grid grid-cols-2 gap-1 rounded-lg border border-white/8 bg-[#151619] p-1 dark:bg-[#0c0e12] dark:border-slate-700/60 lg:hidden">
         <button
           onClick={() => {
             setTab('hot');
@@ -98,7 +98,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
         </button>
       </div>
 
-      <div className="min-h-0 h-[calc(300px-96px)] overflow-y-auto overflow-x-hidden pr-1 xl:h-[calc(282px-70px)]">
+      <div className="min-h-0 h-[calc(300px-96px)] overflow-y-auto overflow-x-hidden pr-1 lg:h-[calc(282px-70px)]">
       {tab === 'hot' ? (
         <div className="space-y-0.5">
           {rankedTopics.map((topic, i) => {
@@ -107,7 +107,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
             return (
               <div
                 key={topic.rank}
-                className="group flex items-center gap-3 rounded-xl border border-transparent  transition-colors hover:border-white/8 hover:bg-[#15161a] dark:hover:border-rdark-border dark:hover:bg-rdark-input/70 xl:hover:border-transparent xl:hover:bg-transparent"
+                className="group flex items-center gap-3 rounded-xl border border-transparent  transition-colors hover:border-white/8 hover:bg-[#15161a] dark:hover:border-rdark-border dark:hover:bg-rdark-input/70 lg:hover:border-transparent lg:hover:bg-transparent"
                 onClick={() => onViewChange('predictions', topic)}
               >
                 <span className={`w-5 text-center text-[16px] font-extrabold leading-none ${rank <= 3 ? 'text-orange-400' : 'text-slate-400 dark:text-rdark-text2'}`}>
@@ -117,7 +117,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
                   {topic.title}
                 </span>
                 <span className="shrink-0 text-[11px] text-zinc-500 dark:text-rdark-text2">{fmtHeat(topic.heat)}</span>
-                <span className={`hidden shrink-0 h-4 items-center rounded border  text-[9px] font-bold xl:inline-flex ${badge.cls}`}>
+                <span className={`hidden shrink-0 h-4 items-center rounded border  text-[9px] font-bold lg:inline-flex ${badge.cls}`}>
                   {badge.label}
                 </span>
               </div>

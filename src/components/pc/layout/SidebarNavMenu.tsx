@@ -1,6 +1,6 @@
 import React from 'react';
 
-type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile';
+type ViewType = 'predictions' | 'forum' | 'jump' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile';
 
 export interface SidebarNavItem {
   key: string;
@@ -30,13 +30,13 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
     'border-white/10 bg-[#141518] text-white before:opacity-100 dark:border-rdark-border dark:bg-rdark-input dark:text-rdark-text';
 
   return (
-    <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden rounded-xl border border-white/8 bg-[#0f1013] p-2 shadow-[0_12px_28px_rgba(0,0,0,0.24)] dark:border-rdark-border dark:bg-rdark-card dark:shadow-none xl:rounded-none xl:border-0 xl:bg-transparent xl:px-0 xl:pb-0 xl:pt-1">
-      <div className="mb-3 px-1 xl:mb-2 xl:px-0">
+    <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden rounded-xl border border-white/8 bg-[#0f1013] p-2 shadow-[0_12px_28px_rgba(0,0,0,0.24)] dark:border-rdark-border dark:bg-rdark-card dark:shadow-none lg:rounded-none lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-1">
+      <div className="mb-3 px-1 lg:mb-2 lg:px-0">
         <div className="text-[14px] font-bold text-white dark:text-rdark-text">功能导航</div>
         <div className="mt-0.5 text-[11px] text-zinc-500 dark:text-rdark-text2">切换主要页面与系统入口</div>
       </div>
 
-      <div className="mb-3 hidden h-px bg-white/6 dark:bg-rdark-border xl:block" />
+      <div className="mb-3 hidden h-px bg-white/6 dark:bg-rdark-border lg:block" />
 
       <div className="legacy-sidebar-nav grid gap-1.5">
         {navItems.map((item) => {

@@ -9,7 +9,7 @@ import type { TopicPostTag } from '../components/shared/forum/ui/TopicPostCard';
 import { Shop } from '../components/shared/shop';
 import { TopicDetail } from '../components/shared/topic';
 import { BattleSquarePixel } from '../components/shared/battle';
-import { TurtleDivePixel } from '../components/shared/lab';
+import { TurtleDivePixel, TurtleJumpPixel } from '../components/shared/lab';
 import { RankPage } from '../components/shared/rank';
 import { PetPage } from '../components/shared/pet';
 import { ProfilePage } from '../components/shared/profile';
@@ -95,7 +95,7 @@ function App() {
   const [petDialogue, setPetDialogue] = useState<string | null>(null);
   
   const [activeView, setActiveView] = useState<ViewType>(() =>
-    typeof window !== 'undefined' && window.innerWidth < 1280 ? 'forum' : 'predictions',
+    typeof window !== 'undefined' && window.innerWidth < 1024 ? 'forum' : 'predictions',
   );
   const [communityPosts] = useState<MockForumEntry[]>(mockCommunityPosts);
   const [floatingChatOpen, setFloatingChatOpen] = useState(false);
@@ -582,9 +582,22 @@ function App() {
         />
       )}
 
+      {activeView === 'jump' && (
+        <section className="view-shell view-rhythm view-lab mx-0 grid w-full max-w-none gap-4">
+          <TurtleJumpPixel
+            onBack={() => setActiveView('predictions')}
+          />
+        </section>
+      )}
+
       {activeView === 'lab' && (
         <section className="view-shell view-rhythm view-lab mx-0 grid w-full max-w-none gap-4">
-          <TurtleDivePixel onBack={() => setActiveView('predictions')} />
+          <TurtleDivePixel
+            onBack={() => setActiveView('predictions')}
+            balance={balance}
+            ownedPets={petOwnedQuery.data?.list ?? []}
+            equippedPet={petEquipQuery.data ?? null}
+          />
         </section>
       )}
 
@@ -602,7 +615,12 @@ function App() {
 
       {activeView === 'battle' && (
         <section className="view-shell view-rhythm view-battle-square mx-0 grid w-full max-w-none gap-4">
-          <BattleSquarePixel />
+          <BattleSquarePixel
+            onBack={() => setActiveView('predictions')}
+            balance={balance}
+            ownedPets={petOwnedQuery.data?.list ?? []}
+            equippedPet={petEquipQuery.data ?? null}
+          />
         </section>
       )}
     </>
@@ -711,17 +729,27 @@ function App() {
   };
 
   const mobileShell = (
-    <div className={`xl:hidden ${darkMode ? 'bg-[#080808] text-white' : 'bg-[#f4f7f4] text-slate-900'}`}>
-      {activeView !== 'lab' ? <MobileTopBar darkMode={darkMode} onOpenLab={handleOpenMobileLab} /> : null}
-      <main className={`${activeView === 'lab' ? 'min-h-screen pb-0 pt-0' : 'min-h-[calc(100vh-58px)] pb-[104px] pt-3'} ${darkMode ? 'bg-[#080808]' : 'bg-[#f4f7f4]'}`}>
+    <div className={`lg:hidden ${darkMode ? 'bg-[#080808] text-white' : 'bg-[#f4f7f4] text-slate-900'}`}>
+      {activeView !== 'lab' && activeView !== 'jump' ? <MobileTopBar darkMode={darkMode} onOpenLab={handleOpenMobileLab} /> : null}
+      <main className={`${activeView === 'lab' || activeView === 'jump' ? 'min-h-screen pb-0 pt-0' : 'min-h-[calc(100vh-58px)] pb-[104px] pt-3'} ${darkMode ? 'bg-[#080808]' : 'bg-[#f4f7f4]'}`}>
         {/*
           Mobile edge spacing rule:
           手机端主内容统一保留 12px 的左右安全边距。
           以后新增 mobile 页面时，优先走这层容器，不要再让内容直接贴屏幕边缘。
         */}
-        <div className={`${activeView === 'lab' ? 'space-y-0 px-0' : 'space-y-3 px-3'}`}>
-          {activeView === 'lab' ? (
-            <TurtleDivePixel mobileMode onBack={() => setActiveView(mobileLabReturnView)} />
+        <div className={`${activeView === 'lab' || activeView === 'jump' ? 'space-y-0 px-0' : 'space-y-3 px-3'}`}>
+          {activeView === 'jump' ? (
+            <TurtleJumpPixel
+              onBack={() => setActiveView(mobileLabReturnView)}
+            />
+          ) : activeView === 'lab' ? (
+            <TurtleDivePixel
+              mobileMode
+              onBack={() => setActiveView(mobileLabReturnView)}
+              balance={balance}
+              ownedPets={petOwnedQuery.data?.list ?? []}
+              equippedPet={petEquipQuery.data ?? null}
+            />
           ) : activeView === 'profile' ? (
             renderMobileProfileView()
           ) : activeView === 'forum' && mobileHomeTab === 'prediction_market' && selectedMobilePredictionItem ? (
@@ -748,7 +776,7 @@ function App() {
         mobileBottomSheet
       />
 
-      {!(activeView === 'forum' && mobileHomeTab === 'prediction_market' && selectedMobilePredictionItem) && !(activeView === 'profile' && mobileProfilePage !== 'home') && activeView !== 'lab' && (
+      {!(activeView === 'forum' && mobileHomeTab === 'prediction_market' && selectedMobilePredictionItem) && !(activeView === 'profile' && mobileProfilePage !== 'home') && activeView !== 'lab' && activeView !== 'jump' && (
         <MobileTabBar
           activeView={activeView}
           onChange={(view) => handleViewChange(view)}
@@ -761,8 +789,8 @@ function App() {
   );
 
   const desktopShell = (
-    <main className="app-main hidden min-h-[calc(100vh-56px)] flex-col gap-4 xl:flex xl:h-[calc(100vh-56px)] xl:min-h-0 xl:flex-row xl:gap-6 xl:overflow-hidden">
-      <aside className="app-sidebar hidden h-full w-[260px] shrink-0 self-stretch overflow-hidden xl:block">
+    <main className="app-main hidden min-h-[calc(100vh-56px)] flex-col gap-4 lg:flex lg:h-[calc(100vh-56px)] lg:min-h-0 lg:flex-row lg:gap-6 lg:overflow-hidden">
+      <aside className="app-sidebar hidden h-full w-[260px] shrink-0 self-stretch overflow-hidden lg:block">
         <Sidebar
           balance={balance}
           winStreak={mockUser.winStreak}
@@ -778,7 +806,7 @@ function App() {
         />
       </aside>
 
-      <div className="app-content flex-1 min-w-0 overflow-visible space-y-4 overscroll-contain md:space-y-6 xl:h-full xl:min-h-0 xl:overflow-y-auto xl:pr-1">
+      <div className="app-content flex-1 min-w-0 overflow-visible space-y-4 overscroll-contain md:space-y-6 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:pr-1">
         {renderActiveView()}
       </div>
     </main>
@@ -801,7 +829,7 @@ function App() {
         <AppFooter />
       )}
 
-      <div className="hidden xl:block">
+      <div className="hidden lg:block">
         <FloatingGuideButton onClick={() => setGuideOpen(true)} sizeClassName="w-13 h-13" />
       </div>
 
@@ -816,7 +844,7 @@ function App() {
       />
 
       {/* ━━━ 浮动宠物聊天入口 ━━━ */}
-      <div className="hidden xl:block">
+      <div className="hidden lg:block">
         <FloatingPetChat
           open={floatingChatOpen}
           pet={currentPet}

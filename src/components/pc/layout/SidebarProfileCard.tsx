@@ -51,10 +51,10 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
         shadow-[0_12px_28px_rgba(0,0,0,0.24)] 
         dark:shadow-none 
         overflow-hidden
-        xl:rounded-none
-        xl:border-x-0
-        xl:border-t-0
-        xl:shadow-none`
+        lg:rounded-none
+        lg:border-x-0
+        lg:border-t-0
+        lg:shadow-none`
     }>
       {chatOpen ? (
         <PetChat pet={pet} onClose={onCloseChat} />

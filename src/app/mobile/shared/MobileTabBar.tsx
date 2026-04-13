@@ -17,7 +17,7 @@ type MobileTabItem =
 
 const tabs: MobileTabItem[] = [
   { key: 'home', label: '首页', view: 'forum', icon: <House size={18} /> },
-  { key: 'battle', label: '开战', view: 'battle', icon: <Swords size={18} /> },
+  { key: 'battle', label: '对战', view: 'battle', icon: <Swords size={18} /> },
   { key: 'compose', label: '', icon: <Plus size={20} /> },
   { key: 'pet', label: '宠物', view: 'pet', icon: <Turtle size={18} /> },
   { key: 'profile', label: '我的', view: 'profile', icon: <UserRound size={18} /> },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, FlaskConical } from 'lucide-react';
+import { MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, FlaskConical, Turtle } from 'lucide-react';
 import type { PetInfo } from '@/data/mock_data';
 import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
@@ -7,13 +7,14 @@ import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';
 import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCard';
 
-export type ViewType = 'predictions' | 'forum' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
+export type ViewType = 'predictions' | 'forum' | 'jump' | 'lab' | 'battle' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'predictions', label: '预测市场', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
   { key: 'forum', label: '社区广场', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
-  { key: 'battle', label: '开战广场', icon: <Swords size={22} />, view: 'battle', enabled: true },
-  { key: 'lab', label: '龟龟跳海', icon: <FlaskConical size={22} />, view: 'lab', enabled: true },
+  { key: 'jump', label: '龟龟跳海', icon: <Turtle size={22} />, view: 'jump', enabled: true },
+  { key: 'lab', label: '龟龟出海', icon: <FlaskConical size={22} />, view: 'lab', enabled: true },
+  { key: 'battle', label: '龟龟对战', icon: <Swords size={22} />, view: 'battle', enabled: true },
   { key: 'rank', label: '排行榜', icon: <Trophy size={22} />, view: 'rank', enabled: true },
   { key: 'shop', label: '抽奖&商店', icon: <Gift size={22} />, view: 'shop', enabled: true },
   { key: 'inventory', label: '背包&资产', icon: <Backpack size={22} />, enabled: false },
@@ -67,7 +68,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
 }) => {
   return (
     <>
-      <div className="xl:hidden -mx-1 px-1 h-[300px] overflow-hidden">
+      <div className="lg:hidden -mx-1 px-1 h-[300px] overflow-hidden">
         <div className="flex h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory gap-3 scroll-smooth pb-0 overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
             <SidebarProfileCard
@@ -99,7 +100,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
         </div>
       </div>
 
-      <div className="hidden xl:flex min-h-0 flex-1 flex-col overflow-y-auto py-1 pr-1">
+      <div className="hidden lg:flex min-h-0 flex-1 flex-col overflow-y-auto py-1 pr-1">
         <div className="flex min-h-full flex-col gap-4">
           <SidebarProfileCard
             winStreak={winStreak}
