@@ -27,7 +27,7 @@ export const SidebarDesktopNavPanel: React.FC<SidebarDesktopNavPanelProps> = ({
   onNavClick,
 }) => {
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+    <div className="min-h-0 flex-1">
       <div className="space-y-1">
         {NAV_ITEMS.map((item) => {
           const isActive = item.view ? activeView === item.view : item.key === 'rank' && rankOpen;

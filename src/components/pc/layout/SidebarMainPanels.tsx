@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, FlaskConical, Turtle } from 'lucide-react';
+import { MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, FlaskConical, Turtle, Flame } from 'lucide-react';
 import type { PetInfo } from '@/data/mock_data';
 import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
@@ -7,10 +7,11 @@ import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';
 import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCard';
 
-export type ViewType = 'predictions' | 'forum' | 'jump' | 'lab' | 'battle' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
+export type ViewType = 'predictions' | 'rivalry' | 'forum' | 'jump' | 'lab' | 'battle' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'predictions', label: '预测市场', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
+  { key: 'rivalry', label: '开撕台', icon: <Flame size={22} />, view: 'rivalry', enabled: true },
   { key: 'forum', label: '社区广场', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
   { key: 'jump', label: '龟龟跳海', icon: <Turtle size={22} />, view: 'jump', enabled: true },
   { key: 'lab', label: '龟龟出海', icon: <FlaskConical size={22} />, view: 'lab', enabled: true },

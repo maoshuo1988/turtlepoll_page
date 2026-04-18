@@ -91,7 +91,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           </div>
         </div>
       </header>
-      <div className="hidden h-[56px] md:block" />
     </>
   );
 };

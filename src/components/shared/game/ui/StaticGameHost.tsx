@@ -2,9 +2,26 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Coins, ExternalLink } from 'lucide-react';
 import type { OwnedPetItem, PetEquipInfo } from '@/hook/petType';
 
+type StaticGameBadgeTone = 'emerald' | 'sky' | 'amber' | 'rose' | 'violet';
+
+type StaticGameBadge = {
+  label: string;
+  tone?: StaticGameBadgeTone;
+};
+
+type StaticGameStat = {
+  label: string;
+  value: string;
+};
+
 type StaticGameHostProps = {
   title: string;
   subtitle: string;
+  description?: string;
+  badges?: StaticGameBadge[];
+  stats?: StaticGameStat[];
+  tips?: string[];
+  immersive?: boolean;
   htmlPath: string;
   standalonePath?: string;
   stripSelectors?: string[];
@@ -129,9 +146,22 @@ function syncGameStorage(balance?: number, ownedPets?: OwnedPetItem[], equippedP
   window.localStorage.setItem('petState', JSON.stringify(nextState));
 }
 
+const BADGE_TONE_CLASS: Record<StaticGameBadgeTone, string> = {
+  emerald: 'border-emerald-300/25 bg-emerald-400/10 text-emerald-200',
+  sky: 'border-sky-300/25 bg-sky-400/10 text-sky-200',
+  amber: 'border-amber-300/25 bg-amber-400/10 text-amber-200',
+  rose: 'border-rose-300/25 bg-rose-400/10 text-rose-200',
+  violet: 'border-violet-300/25 bg-violet-400/10 text-violet-200',
+};
+
 export const StaticGameHost: React.FC<StaticGameHostProps> = ({
   title,
   subtitle,
+  description,
+  badges = [],
+  stats = [],
+  tips = [],
+  immersive = false,
   htmlPath,
   standalonePath,
   stripSelectors = [],
@@ -189,18 +219,28 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
     }
   }, [onFrameLoad, stripSelectors]);
 
-  const hostHeight = mobileMode ? 'calc(100vh - 78px)' : 'calc(100vh - 220px)';
+  const hostHeight = mobileMode ? 'calc(100vh - 78px)' : immersive ? '100%' : 'calc(100vh - 220px)';
+  const showProjectBrief = !immersive && Boolean(description || badges.length || stats.length || tips.length);
 
   return (
     <div
-      className={`overflow-hidden bg-[#061018] text-white ${
+      className={`relative overflow-hidden bg-[#061018] text-white ${
         mobileMode
           ? 'min-h-screen rounded-none'
-          : 'rounded-[28px] border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.35)]'
+          : immersive
+            ? 'h-full rounded-[28px] border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.35)]'
+            : 'rounded-[28px] border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.35)]'
       }`}
     >
+      {!mobileMode ? (
+        <>
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_top,rgba(76,201,240,0.18),transparent_68%)]" />
+          <div className="pointer-events-none absolute right-0 top-16 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(6,214,160,0.1),transparent_68%)] blur-2xl" />
+        </>
+      ) : null}
+
       <div
-        className={`flex items-center gap-3 border-b border-white/10 bg-[linear-gradient(135deg,rgba(7,18,24,0.96),rgba(11,30,40,0.96))] ${
+        className={`relative flex items-center gap-3 border-b border-white/10 bg-[linear-gradient(135deg,rgba(7,18,24,0.96),rgba(11,30,40,0.96))] ${
           mobileMode ? 'px-4 py-3' : 'px-5 py-4'
         }`}
       >
@@ -216,6 +256,11 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
         ) : null}
 
         <div className="min-w-0 flex-1">
+          {!mobileMode ? (
+            <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#5fbde7]">
+              Turtle Arcade
+            </div>
+          ) : null}
           <div className="truncate text-[18px] font-black tracking-[-0.02em]">{title}</div>
           <div className="truncate text-[12px] text-[#91a7b7]">{subtitle}</div>
         </div>
@@ -227,7 +272,7 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
           </div>
         ) : null}
 
-        {standalonePath ? (
+        {standalonePath && !immersive ? (
           <a
             href={standalonePath}
             target="_blank"
@@ -240,9 +285,69 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
         ) : null}
       </div>
 
-      <div className={mobileMode ? 'px-0 py-0' : 'p-3 sm:p-4'}>
+      <div className={mobileMode ? 'px-0 py-0' : immersive ? 'flex h-[calc(100%-72px)] flex-col p-0' : 'p-3 sm:p-4'}>
+        {showProjectBrief ? (
+          <section className={`mb-3 overflow-hidden rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(12,26,40,0.92),rgba(8,18,28,0.96))] ${
+            mobileMode ? 'mx-3 mt-3 px-3 py-3' : 'px-4 py-4'
+          }`}>
+            <div className={`grid gap-4 ${stats.length > 0 && !mobileMode ? 'lg:grid-cols-[minmax(0,1.3fr)_minmax(280px,0.9fr)]' : ''}`}>
+              <div className="min-w-0">
+                {description ? (
+                  <p className="text-[13px] leading-6 text-[#c8d7e4]">
+                    {description}
+                  </p>
+                ) : null}
+
+                {badges.length > 0 ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {badges.map((badge) => (
+                      <span
+                        key={badge.label}
+                        className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${BADGE_TONE_CLASS[badge.tone ?? 'sky']}`}
+                      >
+                        {badge.label}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+
+                {tips.length > 0 ? (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {tips.map((tip) => (
+                      <span
+                        key={tip}
+                        className="rounded-xl border border-white/8 bg-white/5 px-3 py-2 text-[12px] text-[#9db2c3]"
+                      >
+                        {tip}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+
+              {stats.length > 0 ? (
+                <div className={`grid gap-2 ${mobileMode ? 'grid-cols-3' : 'grid-cols-3 lg:grid-cols-1'}`}>
+                  {stats.map((stat) => (
+                    <div
+                      key={`${stat.label}-${stat.value}`}
+                      className="rounded-2xl border border-white/8 bg-white/5 px-3 py-3"
+                    >
+                      <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#6f8b9f]">
+                        {stat.label}
+                      </div>
+                      <div className="mt-1 text-[13px] font-bold text-white sm:text-[14px]">
+                        {stat.value}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
+
         <div
-          className="overflow-hidden rounded-[22px] border border-white/10 bg-black"
+          className={`overflow-hidden border border-white/10 bg-black ${immersive && !mobileMode ? 'min-h-0 flex-1 rounded-none border-0' : 'rounded-[22px]'}`}
           style={{ minHeight: hostHeight }}
         >
           {status !== 'error' ? (

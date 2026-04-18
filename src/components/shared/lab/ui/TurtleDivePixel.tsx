@@ -19,7 +19,8 @@ export const TurtleDivePixel: React.FC<TurtleDivePixelProps> = ({
 }) => (
   <StaticGameHost
     title="龟龟出海"
-    subtitle="按当前项目组件架构挂载的原项目小游戏"
+    subtitle="从海底连跳 50 层气泡，带上你的龟龟冲回海面"
+    immersive
     htmlPath="/games/turtle-jump/index.html"
     standalonePath="/games/turtle-jump/index.html"
     stripSelectors={['.nav']}

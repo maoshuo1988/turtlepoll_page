@@ -13,6 +13,7 @@ import { TurtleDivePixel, TurtleJumpPixel } from '../components/shared/lab';
 import { RankPage } from '../components/shared/rank';
 import { PetPage } from '../components/shared/pet';
 import { ProfilePage } from '../components/shared/profile';
+import { RivalryPK } from '../components/shared/rivalry';
 import { FloatingPetChat } from '../components/shared/layout';
 import { AppFooter, AppHeader, FloatingGuideButton } from './pc';
 import { MobileTopBar, MobilePredictionTopTabs, type MobilePredictionTopTabKey } from './mobile/home';
@@ -83,10 +84,31 @@ function getInitialBooleanSetting(key: string, fallback: boolean) {
   return fallback;
 }
 
+function getFullscreenGame() {
+  if (typeof window === 'undefined') return null;
+  return new URLSearchParams(window.location.search).get('fullscreen_game');
+}
+
+function openJumpStandalone() {
+  if (typeof window === 'undefined') return;
+  window.location.href = '/?fullscreen_game=jump';
+}
+
+function openLabStandalone() {
+  if (typeof window === 'undefined') return;
+  window.location.href = '/games/turtle-jump/index.html';
+}
+
+function openBattleStandalone() {
+  if (typeof window === 'undefined') return;
+  window.location.href = '/games/turtle-battle/index.html';
+}
+
 function App() {
   // 主题
   const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
   const darkMode = theme === 'dark';
+  const fullscreenGame = getFullscreenGame();
 
   //话题
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -140,6 +162,7 @@ function App() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bettingMarketId, setBettingMarketId] = useState<number | null>(null);
   const isEventBattleActive = activeView === 'predictions' && !!(selectedNewsId || selectedBattleItem);
+  const shouldShowDesktopFooter = !isEventBattleActive && activeView !== 'lab' && activeView !== 'jump';
   const usePredStyleLayout = true;
   const queryClient = useQueryClient();
   // 当前登录用户 + 金币账户
@@ -385,6 +408,18 @@ function App() {
   );
 
   const handleViewChange = useCallback((view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag | null) => {
+    if (view === 'jump') {
+      openJumpStandalone();
+      return;
+    }
+    if (view === 'lab') {
+      openLabStandalone();
+      return;
+    }
+    if (view === 'battle') {
+      openBattleStandalone();
+      return;
+    }
     setActiveView(view);
     setBattleOriginView(view);
     if (view !== 'profile') {
@@ -462,7 +497,7 @@ function App() {
    */
   const handleOpenMobileLab = useCallback(() => {
     setMobileLabReturnView(activeView);
-    setActiveView('lab');
+    openLabStandalone();
   }, [activeView]);
 
   const renderActiveView = () => (
@@ -514,6 +549,12 @@ function App() {
           onRequireAuth={() => setAuthModalOpen(true)}
           onEnterBattle={handleEnterBattle}
         />
+      )}
+
+      {activeView === 'rivalry' && (
+        <section className="view-shell view-rhythm view-rivalry mx-0 grid w-full max-w-none gap-4">
+          <RivalryPK />
+        </section>
       )}
 
       {activeView === 'forum' && (
@@ -583,7 +624,7 @@ function App() {
       )}
 
       {activeView === 'jump' && (
-        <section className="view-shell view-rhythm view-lab mx-0 grid w-full max-w-none gap-4">
+        <section className="view-shell view-rhythm view-lab mx-0 grid w-full max-w-none gap-4 lg:h-full">
           <TurtleJumpPixel
             onBack={() => setActiveView('predictions')}
           />
@@ -591,7 +632,7 @@ function App() {
       )}
 
       {activeView === 'lab' && (
-        <section className="view-shell view-rhythm view-lab mx-0 grid w-full max-w-none gap-4">
+        <section className="view-shell view-rhythm view-lab mx-0 grid w-full max-w-none gap-4 lg:h-full">
           <TurtleDivePixel
             onBack={() => setActiveView('predictions')}
             balance={balance}
@@ -807,14 +848,39 @@ function App() {
         />
       </aside>
 
-      <div className="app-content flex-1 min-w-0 overflow-visible space-y-4 overscroll-contain md:space-y-6 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:pr-1">
-        {renderActiveView()}
+      <div className="app-content relative flex min-w-0 flex-1 flex-col overflow-hidden lg:h-full lg:min-h-0 lg:pr-1">
+        <div className={`min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain space-y-4 ${shouldShowDesktopFooter ? 'pb-20' : 'pb-0'} md:space-y-6`}>
+          {renderActiveView()}
+        </div>
+        {shouldShowDesktopFooter && (
+          <div className="absolute inset-x-0 bottom-0 z-10 hidden border-t border-white/8 bg-[#080808]/96 px-3 py-3 backdrop-blur-md lg:block dark:border-rdark-border dark:bg-rdark/96">
+            <AppFooter />
+          </div>
+        )}
       </div>
     </main>
   );
 
+  if (fullscreenGame === 'jump') {
+    return (
+      <div className={`min-h-screen overflow-hidden ${darkMode ? 'bg-[#080808]' : 'bg-[#f4f7f4]'}`}>
+        <main className="h-screen overflow-hidden">
+          <div className="h-full">
+            <TurtleJumpPixel
+              mobileMode={typeof window !== 'undefined' ? window.innerWidth < 1024 : false}
+              onBack={() => {
+                if (typeof window === 'undefined') return;
+                window.location.href = '/';
+              }}
+            />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
-    <div className={`legacy-fusion-app fixed-sidebar-style min-h-screen overflow-x-hidden bg-[#080808] text-white dark:bg-rdark transition-colors ${usePredStyleLayout ? 'home-main-style' : ''}`}>
+    <div className={`legacy-fusion-app fixed-sidebar-style min-h-screen overflow-x-hidden bg-[#080808] text-white dark:bg-rdark transition-colors lg:h-screen lg:overflow-hidden ${usePredStyleLayout ? 'home-main-style' : ''}`}>
       <AppHeader
         darkMode={darkMode}
         onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
@@ -827,7 +893,9 @@ function App() {
 
       {/* Footer */}
       {!isEventBattleActive && (
-        <AppFooter />
+        <div className="lg:hidden">
+          <AppFooter />
+        </div>
       )}
 
       <div className="hidden lg:block">

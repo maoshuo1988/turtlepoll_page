@@ -138,41 +138,44 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <div className="hidden lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
-        <div className="overflow-hidden shrink-0 flex flex-col gap-3.5 ">
-          <div className="overflow-hidden">
-            <SidebarDesktopProfilePanel
-              winStreak={winStreak}
-              winRate={winRate}
-              totalPredictions={totalPredictions}
-              activePredictions={activePredictions}
-              pet={pet}
-              chatOpen={chatOpen}
-              currentDialogue={currentDialogue}
-              dialogueKey={dialogueKey}
-              onOpenChat={() => setChatOpen(true)}
-              onCloseChat={() => setChatOpen(false)}
-              onViewPet={() => onViewChange('pet')}
-              onOpenProfile={() => onViewChange('profile')}
-              onOpenActivePredictions={() => onViewChange('activePredictions')}
-            />
-          </div>
-
-          <SidebarDesktopHotPanel
-            hotTopics={hotTopics ?? []}
-            hotTags={hotTags}
-            selectedTag={selectedTag}
-            onOpenTopic={(topic) => onViewChange('predictions', topic, null)}
-            onTagClick={handleTagClick}
-            fmtHeat={fmtHeat}
+        <div className="shrink-0 overflow-hidden">
+          <SidebarDesktopProfilePanel
+            winStreak={winStreak}
+            winRate={winRate}
+            totalPredictions={totalPredictions}
+            activePredictions={activePredictions}
+            pet={pet}
+            chatOpen={chatOpen}
+            currentDialogue={currentDialogue}
+            dialogueKey={dialogueKey}
+            onOpenChat={() => setChatOpen(true)}
+            onCloseChat={() => setChatOpen(false)}
+            onViewPet={() => onViewChange('pet')}
+            onOpenProfile={() => onViewChange('profile')}
+            onOpenActivePredictions={() => onViewChange('activePredictions')}
           />
         </div>
-        <SidebarDesktopNavPanel
-          activeView={activeView}
-          rankOpen={rankOpen}
-          topRankers={topRankers}
-          rankColors={rankColors}
-          onNavClick={handleNavClick}
-        />
+
+        <div className="lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overflow-x-hidden">
+          <div className="flex flex-col gap-3.5">
+            <SidebarDesktopHotPanel
+              hotTopics={hotTopics ?? []}
+              hotTags={hotTags}
+              selectedTag={selectedTag}
+              onOpenTopic={(topic) => onViewChange('predictions', topic, null)}
+              onTagClick={handleTagClick}
+              fmtHeat={fmtHeat}
+            />
+
+            <SidebarDesktopNavPanel
+              activeView={activeView}
+              rankOpen={rankOpen}
+              topRankers={topRankers}
+              rankColors={rankColors}
+              onNavClick={handleNavClick}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
