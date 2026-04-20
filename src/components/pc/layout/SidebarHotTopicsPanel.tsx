@@ -5,7 +5,7 @@ import { useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type Sideba
 interface SidebarHotTopicsPanelProps {
   selectedTag: string | null;
   newsByMarketId: Map<number, PredictionCardItem>;
-  onViewChange: (view: 'predictions' | 'forum' | 'jump' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory', topic?: SidebarHotTopic, tag?: SidebarHotTag) => void;
+  onViewChange: (view: 'predictions' | 'forum' | 'games' | 'jump' | 'battle' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory', topic?: SidebarHotTopic, tag?: SidebarHotTag) => void;
   onTabChange?: (tab: 'hot' | 'mine') => void;
 }
 

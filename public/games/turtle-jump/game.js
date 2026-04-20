@@ -518,14 +518,7 @@ function togglePause() {
 }
 
 function quitGame() {
-  isPaused = false;
-  gameState = 'start';
-  document.getElementById('pauseOverlay').classList.remove('show');
-  document.getElementById('hud').style.display = 'none';
-  document.getElementById('pauseBtn').style.display = 'none';
-  document.getElementById('startOverlay').classList.remove('hidden');
-  document.getElementById('lbPanel').style.display = '';
-  bgmStop();
+  window.location.href = '../../?view=games';
 }
 
 // =====================================================

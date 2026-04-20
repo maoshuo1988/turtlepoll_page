@@ -50,7 +50,7 @@ export const MobileHomePanels: React.FC<MobileHomePanelsProps> = ({
   }, [idleDialogues, petDialogue]);
 
   const shortcuts: Array<{ key: ViewType; label: string; hint: string; icon: React.ReactNode }> = [
-    { key: 'battle', label: '开战广场', hint: '发起 PK', icon: <Swords size={16} /> },
+    { key: 'games', label: '游戏管理', hint: '进入游戏', icon: <Swords size={16} /> },
     { key: 'rank', label: '排行榜', hint: '看大神', icon: <Trophy size={16} /> },
     { key: 'pet', label: '宠物空间', hint: '养成互动', icon: <Zap size={16} /> },
   ];

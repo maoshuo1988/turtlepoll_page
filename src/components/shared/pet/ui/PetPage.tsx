@@ -11,7 +11,6 @@ import {
   Clock,
   Lock,
   Check,
-  MessageCircle,
 } from 'lucide-react';
 import { PetChat } from './PetChat';
 import type {
@@ -864,12 +863,12 @@ export const PetPage: React.FC<PetPageProps> = ({
               </div>
 
               {/* Chat button — bottom center */}
-              <button
+              {/* <button
                 onClick={() => setChatOpen(true)}
                 className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 px-6 py-2.5 rounded-full text-[12px] font-bold cursor-pointer transition-all bg-white/80 dark:bg-rdark-card/80 text-emerald-600 dark:text-emerald-400 hover:bg-white dark:hover:bg-rdark-card border border-emerald-200/60 dark:border-emerald-800/60 flex items-center gap-2 shadow-lg backdrop-blur-md hover:scale-105 hover:shadow-xl"
               >
                 <MessageCircle size={14} /> 和{pet.name}聊聊
-              </button>
+              </button> */}
 
               {/* XP bar — bottom overlay */}
               <div className="absolute bottom-14 left-1/2 -translate-x-1/2 z-10 w-[260px]">

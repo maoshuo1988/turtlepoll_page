@@ -2,11 +2,11 @@ import React from 'react';
 import { Search, Sparkles } from 'lucide-react';
 
 interface MobileTopBarProps {
-  onOpenLab: () => void;
+  onOpenGames: () => void;
   darkMode: boolean;
 }
 
-export const MobileTopBar: React.FC<MobileTopBarProps> = ({ onOpenLab, darkMode }) => {
+export const MobileTopBar: React.FC<MobileTopBarProps> = ({ onOpenGames, darkMode }) => {
   return (
     <>
       <header className={`fixed left-0 right-0 top-0 z-50 backdrop-blur-xl xl:hidden ${darkMode ? 'border-b border-white/8 bg-[#090909]/92' : 'border-b border-slate-200 bg-white/92'}`}>
@@ -31,7 +31,7 @@ export const MobileTopBar: React.FC<MobileTopBarProps> = ({ onOpenLab, darkMode 
 
           <button
             type="button"
-            onClick={onOpenLab}
+            onClick={onOpenGames}
             className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 text-[12px] font-semibold text-emerald-300 transition-colors hover:bg-emerald-500/15"
           >
             <Sparkles size={14} />

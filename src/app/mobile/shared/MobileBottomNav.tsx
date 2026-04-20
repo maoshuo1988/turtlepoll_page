@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlaskConical, Gift, MessageSquare, TrendingUp, UserRound } from 'lucide-react';
+import { Gamepad2, Gift, MessageSquare, TrendingUp, UserRound } from 'lucide-react';
 import type { ViewType } from '@/components/layout';
 
 interface MobileBottomNavProps {
@@ -10,13 +10,17 @@ interface MobileBottomNavProps {
 const tabs: Array<{ view: ViewType; label: string; icon: React.ReactNode }> = [
   { view: 'forum', label: '社区', icon: <MessageSquare size={18} /> },
   { view: 'predictions', label: '预测', icon: <TrendingUp size={18} /> },
-  { view: 'lab', label: '实验室', icon: <FlaskConical size={18} /> },
+  { view: 'games', label: '游戏', icon: <Gamepad2 size={18} /> },
   { view: 'shop', label: '商店', icon: <Gift size={18} /> },
   { view: 'profile', label: '我的', icon: <UserRound size={18} /> },
 ];
 
 export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeView, onChange }) => {
-  const highlightedView = activeView === 'pet' ? 'profile' : activeView;
+  const highlightedView = activeView === 'pet'
+    ? 'profile'
+    : activeView === 'jump' || activeView === 'lab' || activeView === 'battle'
+      ? 'games'
+      : activeView;
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[calc(env(safe-area-inset-bottom)+10px)] pt-2 backdrop-blur-xl xl:hidden">

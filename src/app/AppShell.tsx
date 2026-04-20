@@ -9,6 +9,8 @@ import type { TopicPostTag } from '../components/shared/forum/ui/TopicPostCard';
 import { Shop } from '../components/shared/shop';
 import { TopicDetail } from '../components/shared/topic';
 import { BattleSquarePixel } from '../components/shared/battle';
+import { BattleSquarePixel as BattlePlaza6c47700 } from '../components/shared/battlePlaza6c47700';
+import { GameHubPage } from '../components/shared/game';
 import { TurtleDivePixel, TurtleJumpPixel } from '../components/shared/lab';
 import { RankPage } from '../components/shared/rank';
 import { PetPage } from '../components/shared/pet';
@@ -89,6 +91,14 @@ function getFullscreenGame() {
   return new URLSearchParams(window.location.search).get('fullscreen_game');
 }
 
+function getInitialView(): ViewType {
+  if (typeof window === 'undefined') return 'predictions';
+  const view = new URLSearchParams(window.location.search).get('view');
+  if (view === 'games') return 'games';
+  if (view === 'battlePlaza6c47700') return 'battlePlaza6c47700';
+  return window.innerWidth < 1024 ? 'forum' : 'predictions';
+}
+
 function openJumpStandalone() {
   if (typeof window === 'undefined') return;
   window.location.href = '/?fullscreen_game=jump';
@@ -116,9 +126,7 @@ function App() {
   const [balance, setBalance] = useState(mockUser.balance);
   const [petDialogue, setPetDialogue] = useState<string | null>(null);
   
-  const [activeView, setActiveView] = useState<ViewType>(() =>
-    typeof window !== 'undefined' && window.innerWidth < 1024 ? 'forum' : 'predictions',
-  );
+  const [activeView, setActiveView] = useState<ViewType>(() => getInitialView());
   const [communityPosts] = useState<MockForumEntry[]>(mockCommunityPosts);
   const [floatingChatOpen, setFloatingChatOpen] = useState(false);
   const [selectedNewsId, setSelectedNewsId] = useState<string | null>(null);
@@ -491,13 +499,13 @@ function App() {
   }, [createTopicMutation, mobileCreateNodeId]);
 
   /**
-   * handleOpenMobileLab:
-   * 手机端顶部“游戏”按钮统一从这里进入小游戏。
-   * 进入前记住当前 activeView，后面从游戏返回时直接回到这个页面。
+   * handleOpenGamesHub:
+   * 手机端顶部“游戏”按钮统一进入游戏管理页。
+   * 具体进入哪个全屏游戏，由游戏管理页里的卡片再决定。
    */
-  const handleOpenMobileLab = useCallback(() => {
+  const handleOpenGamesHub = useCallback(() => {
     setMobileLabReturnView(activeView);
-    openLabStandalone();
+    setActiveView('games');
   }, [activeView]);
 
   const renderActiveView = () => (
@@ -623,6 +631,16 @@ function App() {
         />
       )}
 
+      {activeView === 'games' && (
+        <section className="view-shell view-rhythm view-games mx-0 grid w-full max-w-none gap-4">
+          <GameHubPage
+            onOpenJump={openJumpStandalone}
+            onOpenLab={openLabStandalone}
+            onOpenBattle={openBattleStandalone}
+          />
+        </section>
+      )}
+
       {activeView === 'jump' && (
         <section className="view-shell view-rhythm view-lab mx-0 grid w-full max-w-none gap-4 lg:h-full">
           <TurtleJumpPixel
@@ -662,6 +680,12 @@ function App() {
             ownedPets={petOwnedQuery.data?.list ?? []}
             equippedPet={petEquipQuery.data ?? null}
           />
+        </section>
+      )}
+
+      {activeView === 'battlePlaza6c47700' && (
+        <section className="view-shell view-rhythm view-battle-plaza mx-0 grid w-full max-w-none gap-4">
+          <BattlePlaza6c47700 />
         </section>
       )}
     </>
@@ -771,7 +795,7 @@ function App() {
 
   const mobileShell = (
     <div className={`lg:hidden ${darkMode ? 'bg-[#080808] text-white' : 'bg-[#f4f7f4] text-slate-900'}`}>
-      {activeView !== 'lab' && activeView !== 'jump' ? <MobileTopBar darkMode={darkMode} onOpenLab={handleOpenMobileLab} /> : null}
+      {activeView !== 'lab' && activeView !== 'jump' ? <MobileTopBar darkMode={darkMode} onOpenGames={handleOpenGamesHub} /> : null}
       <main className={`${activeView === 'lab' || activeView === 'jump' ? 'min-h-screen pb-0 pt-0' : 'min-h-[calc(100vh-58px)] pb-[104px] pt-3'} ${darkMode ? 'bg-[#080808]' : 'bg-[#f4f7f4]'}`}>
         {/*
           Mobile edge spacing rule:
@@ -870,7 +894,7 @@ function App() {
               mobileMode={typeof window !== 'undefined' ? window.innerWidth < 1024 : false}
               onBack={() => {
                 if (typeof window === 'undefined') return;
-                window.location.href = '/';
+                window.location.href = '/?view=games';
               }}
             />
           </div>
