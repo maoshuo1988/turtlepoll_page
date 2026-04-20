@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, FlaskConical, Sparkles, Swords, Turtle } from 'lucide-react';
+import { ExternalLink, FlaskConical, Swords, Turtle } from 'lucide-react';
 
 type GameHubPageProps = {
   onOpenJump: () => void;

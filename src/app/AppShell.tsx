@@ -534,6 +534,7 @@ function App() {
             onBet={handleBet}
             bettingMarketId={bettingMarketId}
             equippedSkin={equippedSkin ?? null}
+            onRequireAuth={() => setAuthModalOpen(true)}
           />
         </section>
       )}
