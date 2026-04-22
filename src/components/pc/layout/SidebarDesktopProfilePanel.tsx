@@ -1,6 +1,6 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Coins, Flame, MessageCircle } from 'lucide-react';
+import { Coins, Flame, MessageCircle, Turtle } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
 import type { PetInfo } from '@/data/mock_data';
 import { useRequestCoinMe } from '@/hook/useCoinRequest';
@@ -59,6 +59,23 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
             <div className="text-[14px] font-bold text-white dark:text-rdark-text">路边社社长</div>
             <div className=" text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
           </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={onViewPet}
+          className="mt-2 flex w-full items-center justify-between rounded-xl border border-emerald-400/18 bg-emerald-500/10 px-3 py-2 text-left transition-colors hover:bg-emerald-500/15 dark:border-emerald-500/18 dark:bg-emerald-500/10"
+        >
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-emerald-500/18 text-emerald-300">
+              <Turtle size={16} />
+            </span>
+            <div className="min-w-0">
+              <div className="text-[12px] font-bold text-emerald-200">宠物空间</div>
+              <div className="text-[10px] text-emerald-200/70">查看龟种资产并切换上阵</div>
+            </div>
+          </div>
+          <span className="shrink-0 text-[10px] font-bold text-emerald-300">进入</span>
         </button>
 
         <div className=" flex items-center justify-center gap-2">

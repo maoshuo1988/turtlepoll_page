@@ -591,6 +591,7 @@ function App() {
             equippedPet={petEquipQuery.data ?? null}
             ownedPets={petOwnedQuery.data?.list ?? []}
             petStatus={petStatusQuery.data ?? null}
+            petStaminaInfo={petStaminaQuery.data ?? null}
             onEquipPet={handleEquipPet}
             equippingPetId={
               petEquipMutation.isLoading
@@ -667,6 +668,7 @@ function App() {
             balance={balance}
             pet={currentPet}
             ownedPets={petOwnedQuery.data?.list ?? []}
+            petStaminaInfo={petStaminaQuery.data ?? null}
             onBack={() => setActiveView('predictions')}
             onRequireAuth={() => setAuthModalOpen(true)}
           />

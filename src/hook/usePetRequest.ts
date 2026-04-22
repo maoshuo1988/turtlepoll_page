@@ -134,7 +134,35 @@ export function useRequestPetEquipUpdate() {
       });
       return assertSuccess<PetEquipMutationResponse>(res);
     },
-    onSuccess: async () => {
+    onSuccess: async (result, payload) => {
+      queryClient.setQueryData<PetEquipInfo | undefined>(PET_EQUIP_QUERY_KEY, result.pet);
+      queryClient.setQueryData<PetOwnedResponse | undefined>(PET_OWNED_QUERY_KEY, (current) => {
+        if (!current?.list?.length) return current;
+
+        const matchedPetId = String(result.pet.petId);
+        const matchedPetKey =
+          'petKey' in payload ? payload.petKey : result.pet.petKey;
+
+        return {
+          ...current,
+          equippedPetId: result.pet.petId,
+          list: current.list.map((item) => {
+            const isTarget =
+              String(item.petId) === matchedPetId ||
+              (!!matchedPetKey && item.petKey === matchedPetKey);
+
+            return {
+              ...item,
+              isEquipped: isTarget,
+              petKey: isTarget ? (result.pet.petKey ?? item.petKey) : item.petKey,
+              petName: isTarget ? (result.pet.petName ?? item.petName) : item.petName,
+              rarity: isTarget ? (result.pet.rarity ?? item.rarity) : item.rarity,
+              level: isTarget ? (result.pet.level ?? item.level) : item.level,
+            };
+          }),
+        };
+      });
+
       await invalidatePetQueries(queryClient);
     },
   });

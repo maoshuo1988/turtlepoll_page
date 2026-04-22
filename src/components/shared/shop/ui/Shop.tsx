@@ -6,8 +6,9 @@ import {
   shopApples,
 } from '@/data/mock_data';
 import { useRequestPetEggHatch, useRequestPetStaminaFeed } from '@/hook/usePetRequest';
-import type { OwnedPetItem, PetEggHatchResponse } from '@/hook/petType';
+import type { OwnedPetItem, PetEggHatchResponse, PetStaminaResponse } from '@/hook/petType';
 import { getPetDisplayAvatar } from '../../pet/ui/petDisplay';
+import { formatBeijingDateTime, getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
 
 const card =
   'rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
@@ -19,6 +20,7 @@ interface ShopProps {
   balance: number;
   pet: PetInfo;
   ownedPets?: OwnedPetItem[];
+  petStaminaInfo?: PetStaminaResponse | null;
   onBack: () => void;
   onRequireAuth?: () => void;
 }
@@ -50,6 +52,7 @@ export const Shop: React.FC<ShopProps> = ({
   balance,
   pet,
   ownedPets,
+  petStaminaInfo,
   onBack,
   onRequireAuth,
 }) => {
@@ -59,6 +62,7 @@ export const Shop: React.FC<ShopProps> = ({
   const timerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [buyFlash, setBuyFlash] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [actionSuccess, setActionSuccess] = useState<string | null>(null);
   const hatchMutation = useRequestPetEggHatch();
   const feedMutation = useRequestPetStaminaFeed();
 
@@ -69,9 +73,10 @@ export const Shop: React.FC<ShopProps> = ({
 
   /* ── Gacha logic ── */
   const doGacha = useCallback(() => {
-    if (balance < GACHA_COST || phase !== 'idle' || hatchMutation.isLoading) return;
+    if (phase !== 'idle' || hatchMutation.isLoading) return;
     clearTimers();
     setActionError(null);
+    setActionSuccess(null);
     setHatchResult(null);
 
     // Phase sequence
@@ -94,16 +99,21 @@ export const Shop: React.FC<ShopProps> = ({
         try {
           const result = await hatchMutation.mutateAsync();
           setHatchResult(result);
+          setActionSuccess(
+            result.isDuplicate
+              ? `开蛋完成，实际扣费 ${result.cost}，重复返还 ${result.refund}，当前余额 ${typeof result.balanceAfter === 'number' ? result.balanceAfter.toLocaleString() : '已更新'}。`
+              : `开蛋完成，获得 ${result.pet.name ?? result.pet.petKey ?? '新龟种'}，实际扣费 ${result.cost}。`,
+          );
         } catch (error) {
           setPhase('idle');
-          setActionError(error instanceof Error ? error.message : '开蛋失败，请稍后重试。');
-          if (error instanceof Error && error.message.includes('NotLogin')) {
+          setActionError(getPetApiErrorMessage(error, '开蛋失败，请稍后重试。'));
+          if (isAuthError(error)) {
             onRequireAuth?.();
           }
         }
       }, 2500),
     );
-  }, [balance, clearTimers, hatchMutation, onRequireAuth, phase]);
+  }, [clearTimers, hatchMutation, onRequireAuth, phase]);
 
   const resetGacha = useCallback(() => {
     clearTimers();
@@ -111,28 +121,35 @@ export const Shop: React.FC<ShopProps> = ({
     setHatchResult(null);
     setTempGlow(0);
     setActionError(null);
+    setActionSuccess(null);
   }, [clearTimers]);
 
   /* ── Buy apple ── */
   const buyApple = useCallback(
     async (item: ShopItem) => {
-      if (balance < item.price || feedMutation.isLoading) return;
+      if (pet.stamina >= pet.maxStamina || feedMutation.isLoading) return;
       setActionError(null);
+      setActionSuccess(null);
 
       try {
-        await feedMutation.mutateAsync({
+        const result = await feedMutation.mutateAsync({
           count: FEED_COUNT_BY_ITEM[item.id] ?? 1,
         });
         setBuyFlash(item.id);
+        setActionSuccess(
+          `喂食成功，当前体力 ${result.current ?? '-'} / ${result.cap ?? '-'}，${
+            typeof result.xp === 'number' ? `获得 XP ${result.xp}` : '成长已同步'
+          }。`,
+        );
         setTimeout(() => setBuyFlash(null), 600);
       } catch (error) {
-        setActionError(error instanceof Error ? error.message : '喂食失败，请稍后重试。');
-        if (error instanceof Error && error.message.includes('NotLogin')) {
+        setActionError(getPetApiErrorMessage(error, '喂食失败，请稍后重试。'));
+        if (isAuthError(error)) {
           onRequireAuth?.();
         }
       }
     },
-    [balance, feedMutation, onRequireAuth],
+    [feedMutation, onRequireAuth, pet.maxStamina, pet.stamina],
   );
 
   const ownedPetList = ownedPets ?? [];
@@ -167,6 +184,11 @@ export const Shop: React.FC<ShopProps> = ({
             <div className="mt-1 flex items-center gap-1 text-[17px] font-black text-rose-500 dark:text-rose-300">
               <Heart size={15} /> {pet.stamina}/{pet.maxStamina}
             </div>
+            {petStaminaInfo?.nextRegenAt ? (
+              <div className="mt-1 text-[10px] text-slate-500 dark:text-rdark-text2">
+                下次恢复 {formatBeijingDateTime(petStaminaInfo.nextRegenAt)}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -192,7 +214,7 @@ export const Shop: React.FC<ShopProps> = ({
                     ? hatchResult.isDuplicate
                       ? `重复龟种已返还 ${hatchResult.refund} 龟币`
                       : `恭喜获得 ${hatchResult.pet.rarity ?? '稀有'} 品质新龟种`
-                    : `每次开蛋由后端统一扣费与返还，当前展示成本约 ${GACHA_COST} 龟币。`}
+                    : `每次开蛋由后端统一扣费与返还，当前展示成本约 ${GACHA_COST} 龟币，实际以接口返回为准。`}
                 </div>
                 <div className="mt-2 flex flex-wrap gap-1.5 text-[11px]">
                   <span className="rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-600 dark:bg-white/[0.05] dark:text-rdark-text2">N 50%</span>
@@ -227,9 +249,9 @@ export const Shop: React.FC<ShopProps> = ({
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={doGacha}
-                  disabled={balance < GACHA_COST}
+                  disabled={hatchMutation.isLoading}
                   className={`flex h-12 items-center justify-center rounded-2xl px-4 text-[15px] font-black text-white transition ${
-                    balance >= GACHA_COST
+                    !hatchMutation.isLoading
                       ? 'bg-gradient-to-r from-amber-500 to-orange-500 shadow-[0_10px_24px_rgba(245,158,11,0.28)]'
                       : 'bg-slate-400 cursor-not-allowed'
                   }`}
@@ -256,11 +278,11 @@ export const Shop: React.FC<ShopProps> = ({
               </div>
             </div>
 
-            {balance < GACHA_COST && phase === 'idle' && (
-              <p className="mt-2 text-[12px] text-rose-500">龟币不足，需要 {GACHA_COST} 龟币</p>
-            )}
             {actionError ? (
               <p className="mt-2 text-[12px] text-rose-500">{actionError}</p>
+            ) : null}
+            {actionSuccess ? (
+              <p className="mt-2 text-[12px] text-emerald-600 dark:text-emerald-400">{actionSuccess}</p>
             ) : null}
           </div>
         </section>
@@ -305,7 +327,7 @@ export const Shop: React.FC<ShopProps> = ({
               {shopApples.map((item) => {
                 const isFull = pet.stamina >= pet.maxStamina;
                 const cantAfford = balance < item.price;
-                const disabled = isFull || cantAfford;
+                const disabled = isFull;
 
                 return (
                   <motion.button
@@ -334,13 +356,13 @@ export const Shop: React.FC<ShopProps> = ({
                       <div className="min-w-0 flex-1">
                         <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">{item.name}</div>
                         <div className="mt-1 text-[12px] text-slate-500 dark:text-rdark-text2">补充 {item.effect.value} 点体力</div>
-                        <div className="mt-2 flex items-center gap-1 text-[13px] font-bold text-amber-600 dark:text-amber-400">
-                          <Coins size={14} />
-                          {item.price}
-                        </div>
+                      <div className="mt-2 flex items-center gap-1 text-[13px] font-bold text-amber-600 dark:text-amber-400">
+                        <Coins size={14} />
+                        {item.price}
+                      </div>
                       </div>
                       <div className={`rounded-full px-3 py-1.5 text-[11px] font-bold ${disabled ? 'bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-300' : 'bg-[#ff8200] text-white'}`}>
-                        {isFull ? '已满' : cantAfford ? '不足' : '购买'}
+                        {isFull ? '已满' : cantAfford ? '试试购买' : '购买'}
                       </div>
                     </div>
                   </motion.button>
@@ -350,6 +372,9 @@ export const Shop: React.FC<ShopProps> = ({
             {pet.stamina >= pet.maxStamina && (
               <p className="mt-3 text-center text-[12px] text-green-600 dark:text-green-400">体力已满</p>
             )}
+            {actionSuccess ? (
+              <p className="mt-3 text-center text-[12px] text-emerald-600 dark:text-emerald-400">{actionSuccess}</p>
+            ) : null}
           </div>
         </section>
       </div>
@@ -540,10 +565,10 @@ export const Shop: React.FC<ShopProps> = ({
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
               onClick={doGacha}
-              disabled={balance < GACHA_COST}
+              disabled={hatchMutation.isLoading}
               className={`w-full !px-4 sm:w-auto sm:!px-6 !py-3 rounded-2xl font-bold text-white text-sm transition
                 ${
-                  balance >= GACHA_COST
+                  !hatchMutation.isLoading
                     ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-amber-500/25'
                     : 'bg-slate-400 cursor-not-allowed'
                 }`}
@@ -567,11 +592,11 @@ export const Shop: React.FC<ShopProps> = ({
             </p>
           )}
 
-          {balance < GACHA_COST && phase === 'idle' && (
-            <p className="mt-2 text-xs text-red-500">龟币不足，需要 {GACHA_COST} 龟币</p>
-          )}
           {actionError ? (
             <p className="mt-2 text-xs text-red-500">{actionError}</p>
+          ) : null}
+          {actionSuccess ? (
+            <p className="mt-2 text-xs text-emerald-600 dark:text-emerald-400">{actionSuccess}</p>
           ) : null}
         </div>
 
@@ -631,7 +656,7 @@ export const Shop: React.FC<ShopProps> = ({
           {shopApples.map((item) => {
             const isFull = pet.stamina >= pet.maxStamina;
             const cantAfford = balance < item.price;
-            const disabled = isFull || cantAfford;
+            const disabled = isFull;
 
             return (
               <motion.button
@@ -664,17 +689,17 @@ export const Shop: React.FC<ShopProps> = ({
                     <p className="mt-1 text-[12px] text-slate-500 dark:text-rdark-text2">
                       +{item.effect.value} 体力
                     </p>
-                    <div className="mt-2 flex items-center gap-1 text-[14px] font-semibold text-amber-600 dark:text-amber-400">
-                      <Coins size={15} /> {item.price}
-                    </div>
-                  </div>
-                  <div className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-bold ${disabled ? 'bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-300' : 'bg-amber-500 text-white'}`}>
-                    {isFull ? '已满' : cantAfford ? '不足' : '购买'}
+                  <div className="mt-2 flex items-center gap-1 text-[14px] font-semibold text-amber-600 dark:text-amber-400">
+                    <Coins size={15} /> {item.price}
                   </div>
                 </div>
-              </motion.button>
-            );
-          })}
+                <div className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-bold ${disabled ? 'bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-300' : 'bg-amber-500 text-white'}`}>
+                    {isFull ? '已满' : cantAfford ? '试试购买' : '购买'}
+                </div>
+              </div>
+            </motion.button>
+          );
+        })}
         </div>
 
         {pet.stamina >= pet.maxStamina && (
@@ -682,6 +707,14 @@ export const Shop: React.FC<ShopProps> = ({
             体力已满!
           </p>
         )}
+        {petStaminaInfo?.nextRegenAt ? (
+          <p className="mt-2 text-center text-xs text-slate-500 dark:text-rdark-text2">
+            下次自动恢复：{formatBeijingDateTime(petStaminaInfo.nextRegenAt)}
+          </p>
+        ) : null}
+        {actionSuccess ? (
+          <p className="mt-2 text-center text-xs text-emerald-600 dark:text-emerald-400">{actionSuccess}</p>
+        ) : null}
       </div>
     </div>
   );

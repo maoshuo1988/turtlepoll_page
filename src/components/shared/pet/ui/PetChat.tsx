@@ -5,6 +5,7 @@ import { useRequestPetStaminaConsume } from '@/hook/usePetRequest';
 import type { PetInfo } from '@/data/mock_data';
 import { heroNews, mockNews, petDialogues } from '@/data/mock_data';
 import { getAuthToken } from '@/utils/authStorage';
+import { getPetApiErrorMessage } from '@/utils/petHelpers';
 
 interface ChatMessage {
   id: string;
@@ -101,7 +102,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, stam
           const warnMsg: ChatMessage = {
             id: `sys-${Date.now()}`,
             role: 'pet',
-            text: error instanceof Error ? error.message : '体力扣减失败，请稍后再试。',
+            text: getPetApiErrorMessage(error, '体力扣减失败，请稍后再试。'),
           };
           setMessages((prev) => [...prev, warnMsg]);
           setTyping(false);
