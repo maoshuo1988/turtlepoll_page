@@ -511,7 +511,7 @@ function App() {
   const renderActiveView = () => (
     <>
       {activeView === 'predictions' && (selectedNewsId || selectedBattleItem) && (
-        <section className="view-shell view-rhythm view-event-battle mx-0 grid w-full max-w-none gap-4">
+        <section className="view-shell view-rhythm view-event-battle mx-0 grid h-full w-full max-w-none gap-0">
           <EventBattle
             news={selectedBattleItem ?? allNews.find((n) => n.id === selectedNewsId) ?? heroNewsItem}
             onBack={() => {
@@ -798,14 +798,14 @@ function App() {
 
   const mobileShell = (
     <div className={`lg:hidden ${darkMode ? 'bg-[#080808] text-white' : 'bg-[#f4f7f4] text-slate-900'}`}>
-      {activeView !== 'lab' && activeView !== 'jump' ? <MobileTopBar darkMode={darkMode} onOpenGames={handleOpenGamesHub} /> : null}
-      <main className={`${activeView === 'lab' || activeView === 'jump' ? 'min-h-screen pb-0 pt-0' : 'min-h-[calc(100vh-58px)] pb-[104px] pt-3'} ${darkMode ? 'bg-[#080808]' : 'bg-[#f4f7f4]'}`}>
+      {activeView !== 'lab' && activeView !== 'jump' && !isEventBattleActive ? <MobileTopBar darkMode={darkMode} onOpenGames={handleOpenGamesHub} /> : null}
+      <main className={`${activeView === 'lab' || activeView === 'jump' || isEventBattleActive ? 'h-screen min-h-screen overflow-hidden pb-0 pt-0' : 'min-h-[calc(100vh-58px)] pb-[104px] pt-3'} ${darkMode ? 'bg-[#080808]' : 'bg-[#f4f7f4]'}`}>
         {/*
           Mobile edge spacing rule:
           手机端主内容统一保留 12px 的左右安全边距。
           以后新增 mobile 页面时，优先走这层容器，不要再让内容直接贴屏幕边缘。
         */}
-        <div className={`${activeView === 'lab' || activeView === 'jump' ? 'space-y-0 px-0' : 'space-y-3 px-3'}`}>
+        <div className={`${activeView === 'lab' || activeView === 'jump' || isEventBattleActive ? 'h-full space-y-0 px-0' : 'space-y-3 px-3'}`}>
           {activeView === 'jump' ? (
             <TurtleJumpPixel
               mobileMode
@@ -845,7 +845,7 @@ function App() {
         mobileBottomSheet
       />
 
-      {!(activeView === 'forum' && mobileHomeTab === 'prediction_market' && selectedMobilePredictionItem) && !(activeView === 'profile' && mobileProfilePage !== 'home') && activeView !== 'lab' && activeView !== 'jump' && (
+      {!(activeView === 'forum' && mobileHomeTab === 'prediction_market' && selectedMobilePredictionItem) && !(activeView === 'profile' && mobileProfilePage !== 'home') && activeView !== 'lab' && activeView !== 'jump' && !isEventBattleActive && (
         <MobileTabBar
           activeView={activeView}
           onChange={(view) => handleViewChange(view)}
@@ -858,7 +858,8 @@ function App() {
   );
 
   const desktopShell = (
-    <main className="app-main hidden min-h-[calc(100vh-56px)] flex-col gap-4 lg:flex lg:h-[calc(100vh-56px)] lg:min-h-0 lg:flex-row lg:gap-6 lg:overflow-hidden">
+    <main className={`app-main hidden flex-col lg:flex lg:min-h-0 lg:overflow-hidden ${isEventBattleActive ? 'min-h-screen gap-0 lg:h-screen lg:flex-col' : 'min-h-[calc(100vh-56px)] gap-4 lg:h-[calc(100vh-56px)] lg:flex-row lg:gap-6'}`}>
+      {!isEventBattleActive ? (
       <aside className="app-sidebar hidden h-full w-[260px] shrink-0 self-stretch overflow-hidden lg:block">
         <Sidebar
           balance={balance}
@@ -874,9 +875,10 @@ function App() {
           onViewChange={handleViewChange}
         />
       </aside>
+      ) : null}
 
-      <div className="app-content relative flex min-w-0 flex-1 flex-col overflow-hidden lg:h-full lg:min-h-0 lg:pr-1">
-        <div className={`min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain space-y-4 ${shouldShowDesktopFooter ? 'pb-20' : 'pb-0'} md:space-y-6`}>
+      <div className={`app-content relative flex min-w-0 flex-1 flex-col overflow-hidden lg:h-full lg:min-h-0 ${isEventBattleActive ? 'lg:pr-0' : 'lg:pr-1'}`}>
+        <div className={`min-h-0 flex-1 overflow-x-hidden overscroll-contain ${isEventBattleActive ? 'overflow-hidden space-y-0 pb-0' : `overflow-y-auto space-y-4 ${shouldShowDesktopFooter ? 'pb-20' : 'pb-0'} md:space-y-6`}`}>
           {renderActiveView()}
         </div>
         {shouldShowDesktopFooter && (
@@ -908,11 +910,13 @@ function App() {
 
   return (
     <div className={`legacy-fusion-app fixed-sidebar-style min-h-screen overflow-x-hidden bg-[#080808] text-white dark:bg-rdark transition-colors lg:h-screen lg:overflow-hidden ${usePredStyleLayout ? 'home-main-style' : ''}`}>
-      <AppHeader
-        darkMode={darkMode}
-        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-        onOpenAuth={() => setAuthModalOpen(true)}
-      />
+      {!isEventBattleActive ? (
+        <AppHeader
+          darkMode={darkMode}
+          onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+          onOpenAuth={() => setAuthModalOpen(true)}
+        />
+      ) : null}
 
       {mobileShell}
 
@@ -925,19 +929,23 @@ function App() {
         </div>
       )}
 
+      {!isEventBattleActive ? (
       <div className="hidden lg:block">
         <FloatingGuideButton onClick={() => setGuideOpen(true)} sizeClassName="w-13 h-13" />
       </div>
+      ) : null}
 
-      <MobileFloatingActions
-        chatOpen={floatingChatOpen}
-        pet={currentPet}
-        stamina={petStamina}
-        onOpenGuide={() => setGuideOpen(true)}
-        onToggleChat={() => setFloatingChatOpen((v) => !v)}
-        onCloseChat={() => setFloatingChatOpen(false)}
-        onStaminaChange={setPetStamina}
-      />
+      {!isEventBattleActive ? (
+        <MobileFloatingActions
+          chatOpen={floatingChatOpen}
+          pet={currentPet}
+          stamina={petStamina}
+          onOpenGuide={() => setGuideOpen(true)}
+          onToggleChat={() => setFloatingChatOpen((v) => !v)}
+          onCloseChat={() => setFloatingChatOpen(false)}
+          onStaminaChange={setPetStamina}
+        />
+      ) : null}
 
       {/* ━━━ 浮动宠物聊天入口 ━━━ */}
       <div className="hidden lg:block">

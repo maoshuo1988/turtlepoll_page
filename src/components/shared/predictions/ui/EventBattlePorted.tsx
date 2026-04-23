@@ -1,5 +1,21 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, ChevronLeft, ChevronUp, MessageCircleReply, Send, Sparkles, ThumbsUp, Zap } from 'lucide-react';
+import {
+  Activity,
+  ChevronDown,
+  ChevronLeft,
+  ChevronUp,
+  Crosshair,
+  Flame,
+  MessageCircleReply,
+  Radio,
+  Send,
+  Shield,
+  Sparkles,
+  Swords,
+  ThumbsUp,
+  Trophy,
+  Zap,
+} from 'lucide-react';
 import { useRequestUserCurrent } from '@/hook/useRequest';
 import { useRequestCoinMe } from '@/hook/useCoinRequest';
 import {
@@ -82,6 +98,10 @@ function clampPct(value: number) {
   return Math.max(8, Math.min(92, value));
 }
 
+function calcSideHeat(comments: BattleComment[]) {
+  return comments.reduce((sum, comment) => sum + comment.likes + comment.replyCount * 2 + 8, 0);
+}
+
 function formatBattleTime(timestamp?: number) {
   if (!timestamp) return '刚刚';
   const ms = String(timestamp).length <= 10 ? timestamp * 1000 : timestamp;
@@ -134,23 +154,15 @@ function mergeById<T extends { id: string }>(base: T[], incoming: T[]) {
   return Array.from(map.values());
 }
 
-function buildFallbackSupporters(seed: string) {
-  return Array.from({ length: 10 }, (_, index) => ({
-    id: `${seed}-${index}`,
-    avatar: FALLBACK_AVATAR,
-    rank: index < 3 ? index + 1 : null,
-    name: `阵营成员${index + 1}`,
-  }));
-}
-
 function buildSupporters(comments: BattleComment[], seed: string): Supporter[] {
   const unique = new Map<string, Supporter & { score: number }>();
 
   comments.forEach((comment) => {
     const score = comment.likes + comment.replyCount * 2;
-    const prev = unique.get(comment.author);
+    const userKey = `${comment.author}-${comment.avatar || FALLBACK_AVATAR}`;
+    const prev = unique.get(userKey);
     if (!prev || prev.score < score) {
-      unique.set(comment.author, {
+      unique.set(userKey, {
         id: `${seed}-${comment.id}`,
         avatar: comment.avatar || FALLBACK_AVATAR,
         rank: null,
@@ -160,7 +172,7 @@ function buildSupporters(comments: BattleComment[], seed: string): Supporter[] {
     }
   });
 
-  const ranked = Array.from(unique.values())
+  return Array.from(unique.values())
     .sort((a, b) => b.score - a.score)
     .slice(0, 10)
     .map((item, index) => ({
@@ -169,9 +181,6 @@ function buildSupporters(comments: BattleComment[], seed: string): Supporter[] {
       rank: index < 3 ? index + 1 : null,
       name: item.name,
     }));
-
-  if (ranked.length >= 10) return ranked;
-  return [...ranked, ...buildFallbackSupporters(seed).slice(0, 10 - ranked.length)];
 }
 
 function buildInitialFeed(news: PredictionCardItem, commentsA: BattleComment[], commentsB: BattleComment[]) {
@@ -243,18 +252,21 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
 
   useEffect(() => {
     const mapped = (repliesQuery.data?.results ?? []).map(mapReplyToBattleReply);
-    if (mapped.length === 0) {
-      if (replyCursor === 0) setRepliesState([]);
-      return;
-    }
-    setRepliesState((prev) => (replyCursor === 0 ? mapped : mergeById(prev, mapped)));
+    if (mapped.length === 0) return;
+    const timer = window.setTimeout(() => {
+      setRepliesState((prev) => (replyCursor === 0 ? mapped : mergeById(prev, mapped)));
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [replyCursor, repliesQuery.data]);
 
   useEffect(() => {
     if (!latestReplyEvent || latestReplyEvent.commentId !== comment.id) return;
-    setShowReplies(true);
     const mapped = mapReplyToBattleReply(latestReplyEvent.reply);
-    setRepliesState((prev) => [mapped, ...prev.filter((item) => item.id !== mapped.id)]);
+    const timer = window.setTimeout(() => {
+      setShowReplies(true);
+      setRepliesState((prev) => [mapped, ...prev.filter((item) => item.id !== mapped.id)]);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [comment.id, latestReplyEvent]);
 
   const totalReplies = Math.max(comment.replyCount, repliesState.length);
@@ -401,7 +413,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const [replyingTo, setReplyingTo] = useState<{ commentId: string; authorName: string; side: CommentSide } | null>(null);
   const [replyDraft, setReplyDraft] = useState('');
   const [latestReplyEvent, setLatestReplyEvent] = useState<LatestReplyEvent | null>(null);
-  const [showBetPanel, setShowBetPanel] = useState(false);
+  const [showBetPanel, setShowBetPanel] = useState(true);
   const [betIntent, setBetIntent] = useState<CommentSide>(userSide ?? 'A');
   const [betAmount, setBetAmount] = useState('100');
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
@@ -481,6 +493,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     setReplyingTo(null);
     setFeedItems([]);
     setLatestReplyEvent(null);
+    setShowBetPanel(true);
   }, [battleEntityId, news.id, userSide]);
 
   useEffect(() => {
@@ -497,6 +510,16 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const rightComments = commentsBState;
   const leftSupporters = useMemo(() => buildSupporters(leftComments, 'left'), [leftComments]);
   const rightSupporters = useMemo(() => buildSupporters(rightComments, 'right'), [rightComments]);
+  const leftHeat = useMemo(() => calcSideHeat(leftComments), [leftComments]);
+  const rightHeat = useMemo(() => calcSideHeat(rightComments), [rightComments]);
+  const totalHeat = Math.max(1, leftHeat + rightHeat);
+  const leftHeatPct = clampPct(Math.round((leftHeat / totalHeat) * 100));
+  const rightHeatPct = 100 - leftHeatPct;
+  const leaderSide: CommentSide = leftHeat >= rightHeat ? 'A' : 'B';
+  const leaderName = leaderSide === 'A' ? news.optionA : news.optionB;
+  const combatDiff = Math.abs(leftHeat - rightHeat);
+  const leftMomentum = Math.min(99, Math.round((leftVotes + leftHeat + leftComments.length * 12) / Math.max(1, totalVotes + totalHeat) * 100));
+  const rightMomentum = Math.min(99, Math.round((rightVotes + rightHeat + rightComments.length * 12) / Math.max(1, totalVotes + totalHeat) * 100));
   const leftRole = userSide === 'A' ? '你当前在红方阵营' : '意见领袖';
   const rightRole = userSide === 'B' ? '你当前在蓝方阵营' : '破光杀手';
   const liveText = replyingTo
@@ -678,13 +701,43 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           返回
         </button>
         <img src="/games/event-battle/img/top.jpg" alt={news.title} className="top-img" />
+        <div className="top-noise" />
+        <div className="battle-hero-copy">
+          <div className="hero-kicker">
+            <Radio size={14} />
+            LIVE CONFLICT ROOM
+          </div>
+          <h1>{news.title}</h1>
+          <p>{news.summary || '选择阵营，下注、发言、回复和点赞都会推动战场声量。'}</p>
+          <div className="hero-stats">
+            <span><Activity size={13} /> 战况差值 {formatVotes(combatDiff)}</span>
+            <span><Trophy size={13} /> 领先阵营 {leaderName}</span>
+            <span><Crosshair size={13} /> 总火力 {formatVotes(leftHeat + rightHeat)}</span>
+          </div>
+        </div>
       </div>
 
       <div className="team-group-main">
+        <div className="arena-ambient" aria-hidden="true">
+          <span className="ambient-beam beam-red" />
+          <span className="ambient-beam beam-blue" />
+          <span className="spark spark-1" />
+          <span className="spark spark-2" />
+          <span className="spark spark-3" />
+          <span className="spark spark-4" />
+          <span className="spark spark-5" />
+          <span className="laser laser-red" />
+          <span className="laser laser-blue" />
+          <span className="shock-ring ring-1" />
+          <span className="shock-ring ring-2" />
+        </div>
         <div className="pk-page-container">
           <div className="kuang">
             <img src="/games/event-battle/img/kuang.png" alt="" className="kuang-img" />
-            <div className="kuang-con">{news.summary || news.title}</div>
+            <div className="kuang-con">
+              <span className="brief-label">BATTLE BRIEF</span>
+              {news.summary || news.title}
+            </div>
           </div>
 
           <div className="team-group">
@@ -693,14 +746,22 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 <img src={FALLBACK_AVATAR} alt={news.optionA} />
               </div>
               <div className="team-info text-start">
+                <span className="team-chip red-chip"><Flame size={12} /> RED SIDE</span>
                 <div className="t_name">{news.optionA}</div>
                 <span>{leftRole}</span>
+                <strong>压制指数 {leftMomentum}</strong>
               </div>
+            </div>
+            <div className="versus-core">
+              <Swords size={30} />
+              <span>VS</span>
             </div>
             <div className="team-blue">
               <div className="team-info text-end">
+                <span className="team-chip blue-chip"><Shield size={12} /> BLUE SIDE</span>
                 <div className="t_name">{news.optionB}</div>
                 <span>{rightRole}</span>
+                <strong>反击指数 {rightMomentum}</strong>
               </div>
               <div className="team_tx">
                 <img src={FALLBACK_AVATAR} alt={news.optionB} />
@@ -710,20 +771,47 @@ export const EventBattle: React.FC<EventBattleProps> = ({
 
           <div className="pk-container">
             <div className="team-names-row">
-              <div className="team-label name-red">{news.optionA}</div>
-              <div className="team-label name-blue">{news.optionB}</div>
+              <div className="team-label-wrap label-red">
+                <div className="top-duel-avatar top-red-avatar">
+                  <img src={FALLBACK_AVATAR} alt={news.optionA} />
+                  <span />
+                </div>
+                <div>
+                  <div className="team-label name-red">{news.optionA}</div>
+                  <div className="team-label-sub">{formatVotes(leftVotes)} 票 · {formatVotes(leftHeat)} 火力</div>
+                </div>
+              </div>
+              <div className="team-label-wrap label-blue">
+                <div>
+                  <div className="team-label name-blue">{news.optionB}</div>
+                  <div className="team-label-sub">{formatVotes(rightVotes)} 票 · {formatVotes(rightHeat)} 火力</div>
+                </div>
+                <div className="top-duel-avatar top-blue-avatar">
+                  <img src={FALLBACK_AVATAR} alt={news.optionB} />
+                  <span />
+                </div>
+              </div>
             </div>
 
             <div className="bar-outer">
+              <div className="bar-energy-bg" />
               <div className="bar-red" style={{ width: `${leftPct}%` }} />
               <div className="divider-line" style={{ left: `${leftPct}%` }}>
                 <img src="/games/event-battle/img/fire.png" alt="" className="divider-fire" />
               </div>
               <div className="bar-blue" />
+              <span className="bar-lightning lightning-one" />
+              <span className="bar-lightning lightning-two" />
+              <span className="bar-impact" style={{ left: `${leftPct}%` }} />
+              <span className="bar-shockwave" style={{ left: `${leftPct}%` }} />
             </div>
 
             <div className="score-row">
               <div className="score-val score-red">{formatVotes(leftVotes)}</div>
+              <div className="score-mid">
+                <span>{formatVotes(leftHeat)} 火力</span>
+                <span>{formatVotes(rightHeat)} 火力</span>
+              </div>
               <div className="score-val score-blue">{formatVotes(rightVotes)}</div>
             </div>
           </div>
@@ -731,6 +819,9 @@ export const EventBattle: React.FC<EventBattleProps> = ({
 
         <div className="title-wrap">
           <img src="/games/event-battle/img/title01.png" alt="评论战场" className="title-img" />
+          <div className="title-copy">
+            <span>声量、回复、点赞实时结算为战场火力</span>
+          </div>
         </div>
 
         <div className="pinglun-main">
@@ -740,6 +831,10 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 <span className="team-name">{news.optionA}</span>
                 <span className="team-score">{formatVotes(leftVotes)}</span>
               </div>
+              <div className="side-pressure">
+                <span>火力占比</span>
+                <strong>{leftHeatPct}%</strong>
+              </div>
             </div>
 
             <div className="pl-users-section">
@@ -748,13 +843,17 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 <span className="user-count">{formatVotes(leftSupporters.length)}</span>
               </div>
               <div className="users-scroll-area">
-                <div className="user-grid">
-                  {leftSupporters.map((supporter) => (
-                    <div key={supporter.id} className="grid-item">
-                      <AvatarStack supporter={supporter} />
-                    </div>
-                  ))}
-                </div>
+                {leftSupporters.length > 0 ? (
+                  <div className="user-grid">
+                    {leftSupporters.map((supporter) => (
+                      <div key={supporter.id} className="grid-item">
+                        <AvatarStack supporter={supporter} />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="member-empty">暂无评论成员</div>
+                )}
               </div>
             </div>
 
@@ -796,6 +895,56 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             <div className="live-status">
               <div className="pulse-icon" />
               <span className="live-text">{liveText}</span>
+            </div>
+
+            <div className={`clash-meter leader-${leaderSide}`}>
+              <div className="clash-meter-head">
+                <div className="clash-side clash-red">
+                  <span>RED STRIKE</span>
+                  <strong>{news.optionA}</strong>
+                </div>
+                <div className="clash-core">
+                  <Swords size={18} />
+                  <span>{leftPct}% : {100 - leftPct}%</span>
+                </div>
+                <div className="clash-side clash-blue">
+                  <span>BLUE COUNTER</span>
+                  <strong>{news.optionB}</strong>
+                </div>
+              </div>
+              <div className="bar-outer arena-bar">
+                <div className="bar-energy-bg" />
+                <div className="bar-red" style={{ width: `${leftPct}%` }} />
+                <div className="divider-line" style={{ left: `${leftPct}%` }}>
+                  <img src="/games/event-battle/img/fire.png" alt="" className="divider-fire" />
+                </div>
+                <div className="bar-blue" />
+                <span className="bar-lightning lightning-one" />
+                <span className="bar-lightning lightning-two" />
+                <span className="bar-impact" style={{ left: `${leftPct}%` }} />
+                <span className="bar-shockwave" style={{ left: `${leftPct}%` }} />
+              </div>
+              <div className="clash-meter-foot">
+                <span>{formatVotes(leftVotes)} 票仓 · {formatVotes(leftHeat)} 火力</span>
+                <span>{formatVotes(rightVotes)} 票仓 · {formatVotes(rightHeat)} 火力</span>
+              </div>
+            </div>
+
+            <div className={`command-deck leader-${leaderSide}`}>
+              <div className="command-card red-command">
+                <span>RED FIREPOWER</span>
+                <strong>{formatVotes(leftHeat)}</strong>
+                <em style={{ width: `${leftHeatPct}%` }} />
+              </div>
+              <div className="command-vs">
+                <Swords size={18} />
+                <span>{leaderName} 正在压场</span>
+              </div>
+              <div className="command-card blue-command">
+                <span>BLUE FIREPOWER</span>
+                <strong>{formatVotes(rightHeat)}</strong>
+                <em style={{ width: `${rightHeatPct}%` }} />
+              </div>
             </div>
 
             <div className="battle-report">
@@ -854,54 +1003,69 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             </div>
 
             <div className="props-section">
-              <div className="props-title">战场实时道具</div>
+              <div className="props-title">战场实时技能</div>
               <div className="props-grid">
                 <div className="prop-card red-prop">
                   <div className="prop-icon-box">
-                    <span className="emoji">🔥</span>
+                    <Flame size={24} />
                     <span className="prop-tag">RED</span>
                   </div>
                   <div className="prop-info">
-                    <div className="prop-name">狂暴药剂</div>
-                    <div className="prop-desc">评论热度抬升<br />红方声量冲刺</div>
+                    <div className="prop-name">爆燃声浪</div>
+                    <div className="prop-desc">新评论入场<br />立刻推高阵营火力</div>
                   </div>
                 </div>
 
                 <div className="prop-card blue-prop">
                   <div className="prop-icon-box">
-                    <span className="emoji">🛡️</span>
+                    <Shield size={24} />
                     <span className="prop-tag">BLUE</span>
                   </div>
                   <div className="prop-info">
-                    <div className="prop-name">寒冰护盾</div>
-                    <div className="prop-desc">回复扩散护城河<br />蓝方韧性反击</div>
+                    <div className="prop-name">棱镜反击</div>
+                    <div className="prop-desc">回复扩散观点<br />形成反打护城河</div>
                   </div>
                 </div>
 
                 <div className="prop-card neutral-prop">
                   <div className="prop-icon-box">
-                    <span className="emoji">⚡</span>
+                    <Zap size={24} />
                     <span className="prop-tag">ALL</span>
                   </div>
                   <div className="prop-info">
-                    <div className="prop-name">电磁干扰</div>
-                    <div className="prop-desc">点赞也会触发战报<br />实时刷新热区</div>
+                    <div className="prop-name">脉冲增幅</div>
+                    <div className="prop-desc">点赞触发战报<br />刷新实时热区</div>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="bet-panel">
-              <button type="button" className="bet-panel-toggle" onClick={() => setShowBetPanel((prev) => !prev)}>
+              <button type="button" className="bet-panel-toggle" onClick={() => setShowBetPanel(true)}>
                 <div>
-                  <div className="bet-title">下注面板</div>
-                  <div className="bet-subtitle">余额 {formatVotes(balance)} · 赔率 {activeBetOdds.toFixed(2)}x</div>
+                  <div className="bet-title">立即下注 · 火控台</div>
+                  <div className="bet-subtitle">
+                    余额 {formatVotes(balance)} · 当前选择 {betIntent === 'A' ? news.optionA : news.optionB} · 赔率 {activeBetOdds.toFixed(2)}x
+                  </div>
                 </div>
-                {showBetPanel ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                <span className="bet-live-pill">下注入口</span>
               </button>
 
-              {showBetPanel ? (
-                <div className="bet-panel-body">
+              <div className={`bet-panel-body ${showBetPanel ? 'bet-panel-open' : ''}`}>
+                  <div className="bet-live-data">
+                    <div>
+                      <span>账户余额</span>
+                      <strong>{formatVotes(balance)}</strong>
+                    </div>
+                    <div>
+                      <span>预计派奖</span>
+                      <strong>{formatVotes(estimatedPayout)}</strong>
+                    </div>
+                    <div>
+                      <span>市场状态</span>
+                      <strong>{canPlaceBet ? '可下注' : '已暂停'}</strong>
+                    </div>
+                  </div>
                   <div className="bet-grid">
                     <button
                       type="button"
@@ -961,7 +1125,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                     <span>{canPlaceBet ? '当前可下注' : '当前不可下注'}</span>
                   </div>
                 </div>
-              ) : null}
             </div>
 
             <div className="center-footer">
@@ -1064,6 +1227,10 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 <span className="team-name">{news.optionB}</span>
                 <span className="team-score">{formatVotes(rightVotes)}</span>
               </div>
+              <div className="side-pressure">
+                <span>火力占比</span>
+                <strong>{rightHeatPct}%</strong>
+              </div>
             </div>
 
             <div className="pl-users-section">
@@ -1072,13 +1239,17 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 <span className="user-count">{formatVotes(rightSupporters.length)}</span>
               </div>
               <div className="users-scroll-area">
-                <div className="user-grid">
-                  {rightSupporters.map((supporter) => (
-                    <div key={supporter.id} className="grid-item">
-                      <AvatarStack supporter={supporter} />
-                    </div>
-                  ))}
-                </div>
+                {rightSupporters.length > 0 ? (
+                  <div className="user-grid">
+                    {rightSupporters.map((supporter) => (
+                      <div key={supporter.id} className="grid-item">
+                        <AvatarStack supporter={supporter} />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="member-empty">暂无评论成员</div>
+                )}
               </div>
             </div>
 
