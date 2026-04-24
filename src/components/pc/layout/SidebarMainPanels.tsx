@@ -10,13 +10,13 @@ import type { PredictionCardItem } from '../../shared/predictions/ui/predictionC
 export type ViewType = 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'lab' | 'battle' | 'battlePlaza6c47700' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
-  { key: 'predictions', label: '预测市场', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
+  { key: 'predictions', label: '暗盘', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
   { key: 'rivalry', label: '开撕台', icon: <Flame size={22} />, view: 'rivalry', enabled: true },
-  { key: 'forum', label: '社区广场', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
+  { key: 'forum', label: '线报', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
   { key: 'games', label: '游戏管理', icon: <Gamepad2 size={22} />, view: 'games', enabled: true },
-  { key: 'battle-plaza-6c47700', label: '对战广场', icon: <Swords size={22} />, view: 'battlePlaza6c47700', enabled: true },
+  { key: 'battle-plaza-6c47700', label: '地下钱庄', icon: <Swords size={22} />, view: 'battlePlaza6c47700', enabled: true },
   { key: 'rank', label: '排行榜', icon: <Trophy size={22} />, view: 'rank', enabled: true },
-  { key: 'shop', label: '抽奖&商店', icon: <Gift size={22} />, view: 'shop', enabled: true },
+  { key: 'shop', label: '黑市', icon: <Gift size={22} />, view: 'shop', enabled: true },
   { key: 'inventory', label: '背包&资产', icon: <Backpack size={22} />, enabled: false },
   { key: 'club', label: '俱乐部&工会', icon: <Users size={22} />, enabled: false },
   { key: 'news', label: '新闻源', icon: <Newspaper size={22} />, enabled: false },

@@ -282,7 +282,7 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
                 className="legacy-pred-card-enter flex h-[28px] md:h-[24px] items-center justify-center gap-1 rounded-full px-2 text-[11px] font-medium whitespace-nowrap text-white/44 transition-colors hover:text-white/66"
               >
                 <MessageSquare size={11} className="text-white/38" />
-                评论战场
+                撕裂带
               </button>
             )}
           </div>

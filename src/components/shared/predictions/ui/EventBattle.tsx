@@ -128,7 +128,7 @@ function getEventBattleStatusMeta(item: PredictionCardItem) {
       ? {
           badgeLabel: '已参与',
           badgeTone: 'border-[#8fb8a5]/22 bg-[#8fb8a5]/10 text-[#c6ddd2]',
-          hint: '你已经参与本场预测，可以直接加入评论战场。',
+          hint: '你已经参与本场预测，可以直接加入撕裂带。',
           hintTone: 'text-[#c6ddd2]',
           stateLabel: '已下注',
         }
@@ -3247,7 +3247,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <MessageSquareText size={13} className="text-[#e6c889]" />
-                        <span className="text-[12px] font-bold text-white">评论战场</span>
+                        <span className="text-[12px] font-bold text-white">撕裂带</span>
                       </div>
                       <span className="text-[10px] text-white/46">支持胜负观点，回复在列表原位展开</span>
                     </div>

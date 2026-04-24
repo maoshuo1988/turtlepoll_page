@@ -103,7 +103,7 @@ export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news: newsOverri
                 className="flex h-[36px] sm:h-[38px] items-center justify-center gap-2 rounded-full border border-[#4f6489]/45 bg-[#10273d]/20 text-[12px] sm:text-[13px] font-bold text-[#ffd7de] transition-colors hover:bg-[#163252]"
               >
                 <MessageSquare size={14} className="text-[#5df3d7]" />
-                进入评论战场
+                进入撕裂带
               </button>
             ) : (
               <div className="hidden md:block" />

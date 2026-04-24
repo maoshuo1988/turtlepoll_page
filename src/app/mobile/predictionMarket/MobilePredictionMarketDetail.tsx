@@ -202,7 +202,7 @@ export const MobilePredictionMarketDetail: React.FC<MobilePredictionMarketDetail
           className="inline-flex items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-500/10 px-4 py-2 text-[13px] font-semibold text-emerald-300"
         >
           <MessageCircleMore size={16} />
-          进入评论战场
+          进入撕裂带
         </button>
         <button
           type="button"
@@ -215,8 +215,10 @@ export const MobilePredictionMarketDetail: React.FC<MobilePredictionMarketDetail
 
       <div className="rounded-[18px] border border-white/8 bg-white/[0.03] px-4 py-3 text-[12px] text-zinc-500">
         {item.status === 'closed' ? <ShieldOff size={14} className="mr-2 inline-block" /> : <ShieldCheck size={14} className="mr-2 inline-block" />}
-        {item.status === 'closed' ? '当前已封盘，不能继续直接下注，但仍可查看详情和评论战场。' : '当前可以继续下注，点击上面的下注按钮会进入现有下注/评论战场。'}
+        {item.status === 'closed' ? '当前已封盘，不能继续直接下注，但仍可查看详情和撕裂带。' : '当前可以继续下注，点击上面的下注按钮会进入现有下注/撕裂带。'}
       </div>
+
+
 
       <PredictionBetModal
         open={Boolean(bettingOption)}

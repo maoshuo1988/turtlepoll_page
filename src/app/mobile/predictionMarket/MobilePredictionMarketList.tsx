@@ -13,7 +13,7 @@ import type { PredictionCardItem } from '@/components/shared/predictions/ui/pred
  * - 左侧封面
  * - 中间标题和两个主要选项
  * - 右侧直接给 Yes / No 操作视觉
- * - 底部额外展示重要状态，比如是否下注、是否封盘、是否已结算、进入评论战场
+ * - 底部额外展示重要状态，比如是否下注、是否封盘、是否已结算、进入撕裂带
  *
  * 如果以后你要继续改手机端预测市场列表，优先从这个文件开始看。
  */
@@ -177,7 +177,7 @@ function MobilePredictionMarketCard({
             className="inline-flex items-center gap-1 text-[12px] font-semibold text-zinc-400"
           >
             <MessageCircleMore size={18} />
-            评论战场
+            撕裂带
           </button>
           <Bookmark size={20} />
         </div>

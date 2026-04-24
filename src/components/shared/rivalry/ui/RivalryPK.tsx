@@ -260,7 +260,7 @@ function HeroPK({
             {onEnterBattle ? (
               <button onClick={() => onEnterBattle(item.id)} className="flex cursor-pointer items-center gap-1.5 rounded-lg border-0 bg-white/10 px-3 py-1.5 text-xs font-bold text-white/90 transition-all hover:bg-white/20">
                 <MessageSquare size={12} />
-                评论战场
+                撕裂带
               </button>
             ) : null}
           </div>
@@ -374,7 +374,7 @@ function PKCard({
           {onEnterBattle ? (
             <button onClick={() => onEnterBattle(item.id)} className="flex cursor-pointer items-center gap-1 border-0 bg-transparent text-[10px] font-medium text-slate-400 transition-colors hover:text-orange-500">
               <MessageSquare size={10} />
-              评论战场
+              撕裂带
             </button>
           ) : null}
         </div>

@@ -453,7 +453,7 @@ function App() {
 
   /**
    * handleOpenMobilePredictionBattle:
-   * 手机端预测市场专用的“进入评论战场”入口。
+   * 手机端预测市场专用的“进入撕裂带”入口。
    * 这里会记住用户是从列表还是详情进来的，后面从战场返回时才能准确回到当前 mobile 页面。
    */
   const handleOpenMobilePredictionBattle = useCallback((item: PredictionCardItem, returnMode: 'list' | 'detail') => {

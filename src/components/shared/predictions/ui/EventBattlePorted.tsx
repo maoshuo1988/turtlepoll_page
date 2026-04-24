@@ -818,7 +818,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         </div>
 
         <div className="title-wrap">
-          <img src="/games/event-battle/img/title01.png" alt="评论战场" className="title-img" />
+          <img src="/games/event-battle/img/title01.png" alt="撕裂带" className="title-img" />
           <div className="title-copy">
             <span>声量、回复、点赞实时结算为战场火力</span>
           </div>
