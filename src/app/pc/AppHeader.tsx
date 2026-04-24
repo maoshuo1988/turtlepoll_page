@@ -21,19 +21,18 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     <>
       <header className="app-header fixed left-0 right-0 top-0 z-50 hidden border-b border-white/8 bg-[#090909]/92 backdrop-blur-xl dark:border-rdark-border dark:bg-rdark-card/95 md:sticky md:block">
         <div className="flex h-[54px] md:h-[56px] items-center gap-3 md:gap-4 px-3 md:px-8">
-          <div className="flex items-center gap-2 shrink-0 cursor-pointer group min-w-0">
-            <div className="grid h-8 w-8 place-items-center overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#1a1a1d] to-[#0d0d10] shadow-[0_8px_20px_rgba(0,0,0,0.32)]">
-              <img src="/logo.png" alt="龟投 Logo" className="h-6 w-6 object-contain" />
+          <div className="flex items-center shrink-0 cursor-pointer group min-w-0">
+            <div className="grid h-8 w-8 rounded-xl place-items-center overflow-hidden">
+              <img src="/logo.png" alt="龟投 Logo" className="h-8 w-8 rounded-xl object-contain" />
             </div>
             <div className="min-w-0">
-              <span className="block truncate bg-gradient-to-r from-white to-[#a3a3a3] bg-clip-text text-[19px] font-extrabold tracking-[-0.03em] text-transparent md:text-[22px]">
-                龟投
-              </span>
+              <img
+                src="/logo-text.png"
+                alt="龟投"
+                className="block h-10 w-auto object-contain md:h-10"
+              />
               <div className="-mt-0.5 text-[9px] tracking-[0.12em] text-zinc-500 md:hidden">
                 社区广场
-              </div>
-              <div className="-mt-0.5 hidden text-[9px] tracking-[0.18em] text-zinc-500 dark:text-rdark-text2 md:block">
-                NEWS · MARKET · PET
               </div>
             </div>
           </div>
