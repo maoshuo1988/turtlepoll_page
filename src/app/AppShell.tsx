@@ -16,6 +16,7 @@ import { RankPage } from '../components/shared/rank';
 import { PetPage } from '../components/shared/pet';
 import { ProfilePage } from '../components/shared/profile';
 import { RivalryPK } from '../components/shared/rivalry';
+import type { RivalryNewsItem } from '../components/shared/rivalry/ui/rivalryMockData';
 import { FloatingPetChat } from '../components/shared/layout';
 import { AppFooter, AppHeader, FloatingGuideButton } from './pc';
 import { MobileTopBar, MobilePredictionTopTabs, type MobilePredictionTopTabKey } from './mobile/home';
@@ -476,6 +477,35 @@ function App() {
     setActiveView('predictions');
   }, []);
 
+  const handleRivalryBet = useCallback((newsId: string, option: 'A' | 'B') => {
+    setUserVotes((prev) => ({ ...prev, [newsId]: option }));
+    setPetDialogue(`已站队${option === 'A' ? '正方' : '反方'}，可以进撕裂带继续输出观点。`);
+    setTimeout(() => setPetDialogue(null), 3000);
+  }, []);
+
+  const handleEnterRivalryBattle = useCallback((item: RivalryNewsItem) => {
+    const battleItem: PredictionCardItem = {
+      id: item.id,
+      marketId: 0,
+      title: item.title,
+      summary: item.summary,
+      image: item.image,
+      votes: item.votes,
+      optionA: item.optionA,
+      optionB: item.optionB,
+      oddsA: item.oddsA,
+      oddsB: item.oddsB,
+      status: item.status,
+    };
+
+    setBattleOriginView('rivalry');
+    setSelectedTopic(null);
+    setSelectedTag(null);
+    setSelectedNewsId(item.id);
+    setSelectedBattleItem(battleItem);
+    setActiveView('predictions');
+  }, []);
+
   /**
    * handleMobileCreatePost:
    * 手机端全局发布弹层的统一发帖提交入口。
@@ -526,7 +556,7 @@ function App() {
                 setMobilePredictionBattleReturnMode(null);
                 setMobilePredictionBattleReturnItem(null);
               } else {
-                setActiveView(battleOriginView === 'forum' ? 'forum' : 'predictions');
+                setActiveView(battleOriginView === 'forum' ? 'forum' : battleOriginView === 'rivalry' ? 'rivalry' : 'predictions');
               }
               setBattleOriginView('predictions');
             }}
@@ -562,7 +592,11 @@ function App() {
 
       {activeView === 'rivalry' && (
         <section className="view-shell view-rhythm view-rivalry mx-0 grid w-full max-w-none gap-4">
-          <RivalryPK />
+          <RivalryPK
+            userVotes={userVotes}
+            onBet={handleRivalryBet}
+            onEnterBattle={handleEnterRivalryBattle}
+          />
         </section>
       )}
 
@@ -667,7 +701,6 @@ function App() {
           <Shop
             balance={balance}
             pet={currentPet}
-            ownedPets={petOwnedQuery.data?.list ?? []}
             petStaminaInfo={petStaminaQuery.data ?? null}
             onBack={() => setActiveView('predictions')}
             onRequireAuth={() => setAuthModalOpen(true)}
@@ -858,8 +891,7 @@ function App() {
   );
 
   const desktopShell = (
-    <main className={`app-main hidden flex-col lg:flex lg:min-h-0 lg:overflow-hidden ${isEventBattleActive ? 'min-h-screen gap-0 lg:h-screen lg:flex-col' : 'min-h-[calc(100vh-56px)] gap-4 lg:h-[calc(100vh-56px)] lg:flex-row lg:gap-6'}`}>
-      {!isEventBattleActive ? (
+    <main className="app-main hidden flex-col gap-4 lg:flex lg:h-[calc(100vh-56px)] lg:min-h-0 lg:flex-row lg:gap-6 lg:overflow-hidden">
       <aside className="app-sidebar hidden h-full w-[260px] shrink-0 self-stretch overflow-hidden lg:block">
         <Sidebar
           balance={balance}
@@ -875,7 +907,6 @@ function App() {
           onViewChange={handleViewChange}
         />
       </aside>
-      ) : null}
 
       <div className={`app-content relative flex min-w-0 flex-1 flex-col overflow-hidden lg:h-full lg:min-h-0 ${isEventBattleActive ? 'lg:pr-0' : 'lg:pr-1'}`}>
         <div className={`min-h-0 flex-1 overflow-x-hidden overscroll-contain ${isEventBattleActive ? 'overflow-hidden space-y-0 pb-0' : `overflow-y-auto space-y-4 ${shouldShowDesktopFooter ? 'pb-20' : 'pb-0'} md:space-y-6`}`}>
@@ -910,13 +941,11 @@ function App() {
 
   return (
     <div className={`legacy-fusion-app fixed-sidebar-style min-h-screen overflow-x-hidden bg-[#080808] text-white dark:bg-rdark transition-colors lg:h-screen lg:overflow-hidden ${usePredStyleLayout ? 'home-main-style' : ''}`}>
-      {!isEventBattleActive ? (
-        <AppHeader
-          darkMode={darkMode}
-          onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-          onOpenAuth={() => setAuthModalOpen(true)}
-        />
-      ) : null}
+      <AppHeader
+        darkMode={darkMode}
+        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+        onOpenAuth={() => setAuthModalOpen(true)}
+      />
 
       {mobileShell}
 
