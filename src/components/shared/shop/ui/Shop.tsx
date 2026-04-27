@@ -6,9 +6,9 @@ import {
   shopApples,
 } from '@/data/mock_data';
 import { useRequestPetEggHatch, useRequestPetOwned, useRequestPetStaminaFeed } from '@/hook/usePetRequest';
-import type { OwnedPetItem, PetEggHatchResponse, PetStaminaResponse } from '@/hook/petType';
+import type { PetEggHatchResponse, PetStaminaResponse } from '@/hook/petType';
 import { getPetDisplayAvatar } from '../../pet/ui/petDisplay';
-import { formatBeijingDateTime, getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
+import { getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
 
 const card =
   'rounded-[24px] border border-cyan-400/18 bg-[linear-gradient(180deg,rgba(7,15,31,0.96),rgba(6,12,24,0.98))] shadow-[0_14px_40px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl';
@@ -79,7 +79,6 @@ function getRarityBadgeClass(rarity?: string) {
 export const Shop: React.FC<ShopProps> = ({
   balance,
   pet,
-  petStaminaInfo,
   onBack,
   onRequireAuth,
 }) => {
@@ -233,7 +232,6 @@ export const Shop: React.FC<ShopProps> = ({
   }, []);
 
   const ownedPetList = ownedPetsQuery.data?.list ?? [];
-  const staminaPercent = Math.max(0, Math.min(100, (pet.stamina / Math.max(pet.maxStamina, 1)) * 100));
   const featuredPets = ownedPetList.slice(0, 5);
   const heroAvatar = hatchResult ? getPetDisplayAvatar(hatchResult.pet.petKey, hatchResult.pet.name) : '🥚';
   const heroName = hatchResult?.pet.name ?? hatchResult?.pet.petKey ?? '极光蛋池';
