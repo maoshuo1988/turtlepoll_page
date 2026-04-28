@@ -936,6 +936,27 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       score: [56232, 45678, 28901, 23456, 18765, 15432, 12345, 11234][index] ?? Math.max(8000, leftHeat + rightHeat - index * 800),
       side: index % 2 === 0 ? 'A' : 'B',
     }));
+  const personalContribution = useMemo(() => {
+    const myName = currentUserName.trim();
+    const mine = [
+      ...leftComments.map((comment) => ({ ...comment, side: 'A' as const })),
+      ...rightComments.map((comment) => ({ ...comment, side: 'B' as const })),
+    ].filter((comment) => comment.author === myName);
+    const commentCount = mine.length;
+    const likeCount = mine.reduce((sum, comment) => sum + comment.likes, 0);
+    const replyCount = mine.reduce((sum, comment) => sum + comment.replyCount, 0);
+    const blueCount = mine.filter((comment) => comment.side === 'A').length;
+    const redCount = commentCount - blueCount;
+    const side = commentCount === 0 ? userSide : blueCount >= redCount ? 'A' : 'B';
+
+    return {
+      side,
+      commentCount,
+      likeCount,
+      replyCount,
+      score: commentCount * 8 + likeCount + replyCount * 2,
+    };
+  }, [currentUserName, leftComments, rightComments, userSide]);
   const fallbackLeaders = ['MessiKing', '罗总裁', 'CR7_GOAT', '巴萨信仰', '曼联传奇', '球王梅西10', '蓝白永不倒', '绝代双骄CR7'];
   const quickAmounts = [100, 520, 1000, 5000];
   const tabs = ['战报', '弹幕 99+', '全部', '热门', '只看我方', '只看对方', '精华'];
@@ -1210,6 +1231,38 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 <strong>{formatVotes(item.score)}</strong>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="eb-side-card eb-personal-card">
+          <div className="eb-side-title">
+            <Shield size={18} /> 个人贡献
+            <span>{personalContribution.side === 'A' ? '蓝方' : personalContribution.side === 'B' ? '红方' : '未站队'}</span>
+          </div>
+          <div className="eb-personal-profile">
+            <img src={FALLBACK_AVATAR} alt={currentUserName} />
+            <div>
+              <b>{currentUserName}</b>
+              <span>本场互动贡献</span>
+            </div>
+            <strong>{formatVotes(personalContribution.score)}</strong>
+          </div>
+          <div className="eb-personal-stats">
+            <div>
+              <MessageCircleReply size={15} />
+              <span>评论数</span>
+              <strong>{formatVotes(personalContribution.commentCount)}</strong>
+            </div>
+            <div>
+              <ThumbsUp size={15} />
+              <span>获赞数</span>
+              <strong>{formatVotes(personalContribution.likeCount)}</strong>
+            </div>
+            <div>
+              <Flame size={15} />
+              <span>回复互动</span>
+              <strong>{formatVotes(personalContribution.replyCount)}</strong>
+            </div>
           </div>
         </section>
 

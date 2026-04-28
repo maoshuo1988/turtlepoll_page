@@ -975,14 +975,29 @@
 }
 
 .eb-sidebar {
-  display: grid;
-  grid-template-rows: 354px 280px 200px minmax(0, 1fr);
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
   gap: 12px;
   padding: 0 0 10px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.eb-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.eb-sidebar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .eb-side-card {
+  flex: 0 0 auto;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
@@ -990,15 +1005,35 @@
   box-shadow: inset 0 0 34px rgba(47, 133, 255, 0.08);
 }
 
+.eb-sidebar > .eb-side-card:first-child {
+  min-height: 286px;
+}
+
+.eb-personal-card {
+  min-height: 154px;
+}
+
+.eb-events-card {
+  min-height: 196px;
+}
+
+.eb-bet-side-card {
+  min-height: 320px;
+}
+
 .eb-side-title {
+  min-width: 0;
   height: 56px;
   padding: 0 20px;
   color: rgba(238, 246, 255, 0.88);
   font-size: 20px;
   font-weight: 1000;
+  gap: 8px;
+  white-space: nowrap;
 }
 
 .eb-side-title span {
+  flex: 0 0 auto;
   margin-left: auto;
   padding: 7px 16px;
   border-radius: 999px;
@@ -1008,7 +1043,7 @@
 }
 
 .eb-side-title span + span {
-  margin-left: 8px;
+  margin-left: 0;
 }
 
 .eb-rank-list,
@@ -1040,6 +1075,106 @@
 
 .eb-rank-item:nth-child(-n+3) i {
   background: linear-gradient(135deg, #ff8b20, #ff572e);
+}
+
+.eb-personal-card {
+  position: relative;
+}
+
+.eb-personal-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 16% 0, rgba(65, 204, 255, 0.18), transparent 32%),
+    radial-gradient(circle at 86% 0, rgba(255, 78, 96, 0.14), transparent 34%);
+}
+
+.eb-personal-profile,
+.eb-personal-stats {
+  position: relative;
+  z-index: 1;
+}
+
+.eb-personal-profile {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px 10px;
+}
+
+.eb-personal-profile img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 14px rgba(47, 185, 255, 0.2);
+}
+
+.eb-personal-profile b {
+  display: block;
+  overflow: hidden;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 1000;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eb-personal-profile span {
+  display: block;
+  margin-top: 2px;
+  color: rgba(238, 246, 255, 0.48);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.eb-personal-profile strong {
+  color: #ffd86d;
+  font-size: 15px;
+  font-weight: 1000;
+  text-shadow: 0 0 12px rgba(255, 216, 109, 0.28);
+}
+
+.eb-personal-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 0 14px 12px;
+}
+
+.eb-personal-stats div {
+  min-width: 0;
+  padding: 9px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.045);
+  text-align: center;
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.035);
+}
+
+.eb-personal-stats svg {
+  color: #72d7ff;
+  filter: drop-shadow(0 0 8px rgba(114, 215, 255, 0.32));
+}
+
+.eb-personal-stats span {
+  display: block;
+  margin-top: 4px;
+  color: rgba(238, 246, 255, 0.52);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.eb-personal-stats strong {
+  display: block;
+  margin-top: 2px;
+  color: #eef6ff;
+  font-size: 14px;
+  font-weight: 1000;
 }
 
 .eb-rank-item img,
@@ -5829,9 +5964,24 @@
 }
 
 .eb-sidebar {
-  grid-template-rows: 202px 128px minmax(238px, 1fr);
   gap: 7px;
   padding: 0 7px 7px 0;
+}
+
+.eb-sidebar > .eb-side-card:first-child {
+  min-height: 146px;
+}
+
+.eb-personal-card {
+  min-height: 108px;
+}
+
+.eb-events-card {
+  min-height: 112px;
+}
+
+.eb-bet-side-card {
+  min-height: 270px;
 }
 
 .eb-side-card {
@@ -5872,6 +6022,53 @@
 .eb-event-item img {
   width: 22px;
   height: 22px;
+}
+
+.eb-personal-profile {
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  gap: 6px;
+  padding: 0 8px 6px;
+}
+
+.eb-personal-profile img {
+  width: 22px;
+  height: 22px;
+}
+
+.eb-personal-profile b {
+  font-size: 10px;
+}
+
+.eb-personal-profile span {
+  font-size: 8px;
+}
+
+.eb-personal-profile strong {
+  font-size: 11px;
+}
+
+.eb-personal-stats {
+  gap: 4px;
+  padding: 0 8px 8px;
+}
+
+.eb-personal-stats div {
+  padding: 5px 3px;
+  border-radius: 7px;
+}
+
+.eb-personal-stats svg {
+  width: 11px;
+  height: 11px;
+}
+
+.eb-personal-stats span {
+  margin-top: 2px;
+  font-size: 8px;
+}
+
+.eb-personal-stats strong {
+  font-size: 10px;
 }
 
 .eb-event-list {
