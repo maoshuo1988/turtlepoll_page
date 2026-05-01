@@ -82,12 +82,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const handleNavClick = (item: (typeof NAV_ITEMS)[number]) => {
     if (!item.enabled) return;
-    if (item.key === 'rank') {
-      setRankOpen((prev) => !prev);
-      return;
-    }
     if (item.key === 'predictions') {
       setSelectedTag(null);
+    }
+    if (item.key === 'rank') {
+      setRankOpen((prev) => !prev);
     }
     if (item.view) onViewChange(item.view);
   };

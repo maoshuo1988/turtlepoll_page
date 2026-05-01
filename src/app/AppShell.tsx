@@ -66,6 +66,23 @@ const MOBILE_MOTION_SETTING_KEY = 'mobile_motion_enabled';
 type ThemeMode = 'light' | 'dark';
 type MobileProfilePageKey = 'home' | 'auth' | 'settings';
 
+const ROUTE_PATHS: Partial<Record<ViewType, string>> = {
+  predictions: '/',
+  rivalry: '/rivalry',
+  forum: '/forum',
+  games: '/games',
+  battlePlaza6c47700: '/battle-plaza',
+  rank: '/rank',
+  shop: '/shop',
+  pet: '/pet',
+  profile: '/profile',
+  activePredictions: '/active-predictions',
+};
+
+interface AppShellProps {
+  routeView?: ViewType;
+}
+
 function getInitialTheme(): ThemeMode {
   const stored = localStorage.getItem(THEME_KEY);
   if (stored === 'light' || stored === 'dark') return stored;
@@ -115,7 +132,13 @@ function openBattleStandalone() {
   window.location.href = '/games/turtle-battle/index.html';
 }
 
-function App() {
+function pushAppRoute(path: string) {
+  if (typeof window === 'undefined') return;
+  window.history.pushState({}, '', path);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+
+function App({ routeView }: AppShellProps) {
   // 主题
   const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
   const darkMode = theme === 'dark';
@@ -127,7 +150,7 @@ function App() {
   const [balance, setBalance] = useState(mockUser.balance);
   const [petDialogue, setPetDialogue] = useState<string | null>(null);
   
-  const [activeView, setActiveView] = useState<ViewType>(() => getInitialView());
+  const [activeView, setActiveView] = useState<ViewType>(() => routeView ?? getInitialView());
   const [communityPosts] = useState<MockForumEntry[]>(mockCommunityPosts);
   const [floatingChatOpen, setFloatingChatOpen] = useState(false);
   const [selectedNewsId, setSelectedNewsId] = useState<string | null>(null);
@@ -209,6 +232,21 @@ function App() {
   const signOutMutation = useRequestSignout();
   const createTopicMutation = useRequestCreateTopic();
   const topicNodeNavsQuery = useRequestTopicNodeNavs();
+
+  useEffect(() => {
+    if (!routeView || routeView === activeView) return;
+    setActiveView(routeView);
+    setSelectedTopic(null);
+    setSelectedTag(null);
+    setSelectedNewsId(null);
+    setSelectedBattleItem(null);
+    setSelectedMobilePredictionItem(null);
+    setMobilePredictionBattleReturnMode(null);
+    setMobilePredictionBattleReturnItem(null);
+    if (routeView !== 'profile') {
+      setMobileProfilePage('home');
+    }
+  }, [activeView, routeView]);
 
   // Derive current pet avatar from equipped skin
   const equippedSkin = skins.find((s) => s.equipped && s.owned);
@@ -429,6 +467,11 @@ function App() {
       openBattleStandalone();
       return;
     }
+    const nextPath = ROUTE_PATHS[view];
+    if (nextPath && !topic && !tag && routeView !== view) {
+      pushAppRoute(nextPath);
+      return;
+    }
     setActiveView(view);
     setBattleOriginView(view);
     if (view !== 'profile') {
@@ -443,7 +486,7 @@ function App() {
       setSelectedNewsId(null);
       setSelectedBattleItem(null);
     }
-  }, []);
+  }, [routeView]);
 
   const handleEnterBattle = useCallback((newsId: string) => {
     setBattleOriginView('predictions');
