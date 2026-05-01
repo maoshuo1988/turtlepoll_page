@@ -17,8 +17,7 @@ import { PetPage } from '../components/shared/pet';
 import { ProfilePage } from '../components/shared/profile';
 import { RivalryPK } from '../components/shared/rivalry';
 import type { RivalryNewsItem } from '../components/shared/rivalry/ui/rivalryMockData';
-import { FloatingPetChat } from '../components/shared/layout';
-import { AppFooter, AppHeader, FloatingGuideButton } from './pc';
+import { AppFooter, AppHeader } from './pc';
 import { MobileTopBar, MobilePredictionTopTabs, type MobilePredictionTopTabKey } from './mobile/home';
 import { MobilePredictionMarketDetail, MobilePredictionMarketList } from './mobile/predictionMarket';
 import { MobileProfileAuthPage, MobileProfileHome, MobileProfileSettingsPage } from './mobile/profile';
@@ -959,12 +958,6 @@ function App() {
       )}
 
       {!isEventBattleActive ? (
-      <div className="hidden lg:block">
-        <FloatingGuideButton onClick={() => setGuideOpen(true)} sizeClassName="w-13 h-13" />
-      </div>
-      ) : null}
-
-      {!isEventBattleActive ? (
         <MobileFloatingActions
           chatOpen={floatingChatOpen}
           pet={currentPet}
@@ -975,18 +968,6 @@ function App() {
           onStaminaChange={setPetStamina}
         />
       ) : null}
-
-      {/* ━━━ 浮动宠物聊天入口 ━━━ */}
-      <div className="hidden lg:block">
-        <FloatingPetChat
-          open={floatingChatOpen}
-          pet={currentPet}
-          stamina={petStamina}
-          onToggle={() => setFloatingChatOpen((v) => !v)}
-          onClose={() => setFloatingChatOpen(false)}
-          onStaminaChange={setPetStamina}
-        />
-      </div>
 
       <GuideTourModal open={guideOpen} onClose={() => setGuideOpen(false)} />
 

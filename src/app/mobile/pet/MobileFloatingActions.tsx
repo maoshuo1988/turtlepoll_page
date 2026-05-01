@@ -71,6 +71,16 @@ export const MobileFloatingActions: React.FC<MobileFloatingActionsProps> = ({
 
   const alignRight = x > viewportRef.current.width / 2;
   const bubbleX = alignRight ? viewportRef.current.width - BUBBLE_SIZE - EDGE_GAP : EDGE_GAP;
+  const handleOpenGuide = React.useCallback(() => {
+    setMenuOpen(false);
+    onCloseChat();
+    onOpenGuide();
+  }, [onCloseChat, onOpenGuide]);
+
+  const handleToggleChat = React.useCallback(() => {
+    setMenuOpen(false);
+    onToggleChat();
+  }, [onToggleChat]);
 
   return (
     <motion.div
@@ -87,7 +97,7 @@ export const MobileFloatingActions: React.FC<MobileFloatingActionsProps> = ({
       }}
       animate={{ x: bubbleX, y }}
       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-      className="fixed left-0 top-0 z-50 xl:hidden"
+      className="fixed left-0 top-0 z-50"
     >
       <AnimatePresence>
         {chatOpen && (
@@ -115,7 +125,7 @@ export const MobileFloatingActions: React.FC<MobileFloatingActionsProps> = ({
             <div className="space-y-2">
               <button
                 type="button"
-                onClick={onOpenGuide}
+                onClick={handleOpenGuide}
                 className="flex w-full items-center gap-3 rounded-[18px] border border-white/10 bg-white px-3 py-3 text-left text-slate-700 transition-colors hover:bg-slate-100"
               >
                 <CircleHelp size={18} />
@@ -124,7 +134,7 @@ export const MobileFloatingActions: React.FC<MobileFloatingActionsProps> = ({
 
               <button
                 type="button"
-                onClick={onToggleChat}
+                onClick={handleToggleChat}
                 className="flex w-full items-center gap-3 rounded-[18px] border border-emerald-400/20 bg-emerald-500/10 px-3 py-3 text-left text-emerald-300 transition-colors hover:bg-emerald-500/15"
               >
                 <MessageCircle size={18} />
