@@ -500,6 +500,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const [countdownLeft, setCountdownLeft] = useState(() => getCountdownSeconds(news.closeTime));
   const [activeTab, setActiveTab] = useState('全部');
   const [betBurst, setBetBurst] = useState<{ side: CommentSide; token: number } | null>(null);
+  const [betDialogSide, setBetDialogSide] = useState<CommentSide | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
   const currentUserName = currentUserQuery.data?.nickname || currentUserQuery.data?.username || '你';
   const pkTopicId = typeof news.marketId === 'number' && news.marketId > 0 ? news.marketId : undefined;
@@ -586,6 +587,11 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const activeBetOdds = betIntent === 'A' ? oddsA : oddsB;
   const estimatedPayout = Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
     ? Math.floor(effectiveBetAmount * activeBetOdds)
+    : 0;
+  const dialogBetOdds = betDialogSide === 'A' ? oddsA : oddsB;
+  const dialogBetName = betDialogSide === 'A' ? optionA : optionB;
+  const dialogEstimatedPayout = Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
+    ? Math.floor(effectiveBetAmount * dialogBetOdds)
     : 0;
   const displayNews = useMemo<PredictionCardItem>(() => ({
     ...news,
@@ -907,6 +913,21 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     shouldUsePkBet,
   ]);
 
+  const openBetDialog = useCallback((side: CommentSide) => {
+    if (!canComment) {
+      ensureAuth();
+      return;
+    }
+    setBetIntent(side);
+    setBetDialogSide(side);
+  }, [canComment, ensureAuth]);
+
+  const confirmBetDialog = useCallback(async () => {
+    if (!betDialogSide) return;
+    await handleBet(betDialogSide);
+    setBetDialogSide(null);
+  }, [betDialogSide, handleBet]);
+
   const countdownText = useMemo(() => {
     const d = Math.floor(countdownLeft / 86400);
     const h = Math.floor((countdownLeft % 86400) / 3600);
@@ -1201,8 +1222,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
               type="button"
               className="eb-support eb-support-blue"
               onClick={() => {
-                setBetIntent('A');
-                void handleBet('A');
+                openBetDialog('A');
               }}
               disabled={!canPlaceBet || isBetting}
             >
@@ -1219,8 +1239,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
               type="button"
               className="eb-support eb-support-red"
               onClick={() => {
-                setBetIntent('B');
-                void handleBet('B');
+                openBetDialog('B');
               }}
               disabled={!canPlaceBet || isBetting}
             >
@@ -1325,6 +1344,53 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           })}
         </section>
       </div>
+
+      {betDialogSide ? (
+        <div className="eb-bet-dialog-mask" role="presentation" onMouseDown={() => setBetDialogSide(null)}>
+          <div
+            className={`eb-bet-dialog ${betDialogSide === 'A' ? 'dialog-blue' : 'dialog-red'}`}
+            role="dialog"
+            aria-modal="true"
+            aria-label="确认下注"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="eb-bet-dialog-head">
+              <span>确认投币助威</span>
+              <button type="button" onClick={() => setBetDialogSide(null)}>×</button>
+            </div>
+            <div className="eb-bet-dialog-side">
+              <small>支持阵营</small>
+              <strong>{dialogBetName}</strong>
+              <em>{dialogBetOdds.toFixed(2)}倍</em>
+            </div>
+            <div className="eb-bet-dialog-grid">
+              <div>
+                <span>下注金额</span>
+                <strong>{formatVotes(effectiveBetAmount)} 龟币</strong>
+              </div>
+              <div>
+                <span>预计派奖</span>
+                <strong>{formatVotes(dialogEstimatedPayout)}</strong>
+              </div>
+              <div>
+                <span>账户余额</span>
+                <strong>{formatVotes(balance)}</strong>
+              </div>
+            </div>
+            <div className="eb-bet-dialog-actions">
+              <button type="button" className="cancel" onClick={() => setBetDialogSide(null)}>再想想</button>
+              <button
+                type="button"
+                className="confirm"
+                onClick={() => void confirmBetDialog()}
+                disabled={isBetting || !canPlaceBet || effectiveBetAmount > balance}
+              >
+                {isBetting ? '下注中...' : '确认下注'}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <aside className="eb-sidebar">
         <section className="eb-side-card">
@@ -1452,7 +1518,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             <button
               type="button"
               className="eb-bet-submit"
-              onClick={() => void handleBet(betIntent)}
+              onClick={() => openBetDialog(betIntent)}
               disabled={!canPlaceBet || isBetting || !Number.isFinite(effectiveBetAmount) || effectiveBetAmount <= 0 || effectiveBetAmount > balance}
             >
               {isBetting ? '下注中...' : `支持${betIntent === 'A' ? displayNews.optionA : displayNews.optionB}`}
