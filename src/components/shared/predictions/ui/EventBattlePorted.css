@@ -1021,6 +1021,151 @@
   min-height: 320px;
 }
 
+.eb-bet-dialog-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(8px);
+}
+
+.eb-bet-dialog {
+  width: min(360px, 92vw);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 0, rgba(255, 196, 90, 0.16), transparent 34%),
+    rgba(5, 12, 24, 0.96);
+  box-shadow:
+    0 22px 68px rgba(0, 0, 0, 0.48),
+    inset 0 0 28px rgba(255, 255, 255, 0.06);
+  animation: eb-bet-dialog-in 0.18s ease-out both;
+}
+
+.eb-bet-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 16px;
+  color: #eef6ff;
+  font-size: 15px;
+  font-weight: 1000;
+}
+
+.eb-bet-dialog-head button {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.eb-bet-dialog-side {
+  margin: 0 16px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.055);
+  text-align: center;
+}
+
+.eb-bet-dialog-side small,
+.eb-bet-dialog-grid span {
+  display: block;
+  color: rgba(238, 246, 255, 0.52);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.eb-bet-dialog-side strong {
+  display: block;
+  margin-top: 6px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 1000;
+}
+
+.eb-bet-dialog-side em {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  color: #07101c;
+  background: linear-gradient(135deg, #fff6bc, var(--eb-gold));
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 1000;
+}
+
+.eb-bet-dialog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.eb-bet-dialog-grid div {
+  min-width: 0;
+  padding: 10px 8px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.045);
+  text-align: center;
+}
+
+.eb-bet-dialog-grid strong {
+  display: block;
+  margin-top: 4px;
+  color: #eef6ff;
+  font-size: 13px;
+  font-weight: 1000;
+  white-space: nowrap;
+}
+
+.eb-bet-dialog-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 10px;
+  padding: 0 16px 16px;
+}
+
+.eb-bet-dialog-actions button {
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 1000;
+}
+
+.eb-bet-dialog-actions .cancel {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.eb-bet-dialog-actions .confirm {
+  background: linear-gradient(135deg, #ffb931, #ff6b2f);
+  box-shadow: 0 0 18px rgba(255, 139, 32, 0.28);
+}
+
+.eb-bet-dialog-actions .confirm:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+  opacity: 0.55;
+}
+
+.eb-bet-dialog.dialog-blue {
+  border-color: rgba(24, 215, 255, 0.26);
+}
+
+.eb-bet-dialog.dialog-red {
+  border-color: rgba(255, 49, 69, 0.28);
+}
+
 .eb-side-title {
   min-width: 0;
   height: 56px;
@@ -6571,6 +6716,17 @@
   0% { opacity: 0; transform: translateY(18px) scale(0.7) rotate(0); }
   18% { opacity: 1; }
   100% { opacity: 0; transform: translateY(-92px) scale(1.18) rotate(320deg); }
+}
+
+@keyframes eb-bet-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 900px) {
