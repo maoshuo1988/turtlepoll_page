@@ -4,16 +4,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Shop } from '@/components/shared/shop';
 import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
-import { mockPetSkins, mockUser, type PetSkin } from '@/data/mock_data';
+import { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';
 import { useHomeLayoutContext } from '@/layouts/context';
-import { useAppSession } from '@/hook/useAppSession';
+import { useAppSession } from '@/hooks/useAppSession';
 import {
   findEquippedOwnedPet,
   useRequestPetEquip,
   useRequestPetOwned,
   useRequestPetStamina,
   useRequestPetStatus,
-} from '@/hook/usePetRequest';
+} from '@/hooks/usePetRequests';
 
 export default function ShopPage() {
   const [balance, setBalance] = useState(mockUser.balance);

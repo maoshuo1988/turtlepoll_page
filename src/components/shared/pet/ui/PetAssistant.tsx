@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
-import type { PetInfo } from '@/data/mock_data';
+import type { PetInfo } from '@/data/mockData';
 
 interface PetAssistantProps {
   pet: PetInfo;

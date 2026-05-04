@@ -4,8 +4,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Flame, MessageSquare, Users } from 'lucide-react';
-import type { PlaceBetResult } from '@/hook/coinType';
-import { usePredictionCardItems, type PredictionCardItem } from './predictionCard';
+import type { PlaceBetResult } from '@/hooks/coinTypes';
+import { usePredictionCardItems, type PredictionCardItem } from './predictionCards';
 import { PredictionBetModal } from './PredictionBetModal';
 
 interface HeroPredictionProps {

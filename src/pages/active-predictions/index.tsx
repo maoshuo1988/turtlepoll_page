@@ -3,9 +3,9 @@
  */
 import { useMemo } from 'react';
 import { ActivePredictionsPage as SharedActivePredictionsPage } from '@/components/shared/predictions';
-import { heroNews, mockNews } from '@/data/mock_data';
-import { useRequestFootballMarkets } from '@/hook/usePredictRequest';
-import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCard';
+import { heroNews, mockNews } from '@/data/mockData';
+import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
+import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCards';
 
 export default function ActivePredictionsPage() {
   const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });

@@ -4,16 +4,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ProfilePage as SharedProfilePage } from '@/components/shared/profile';
 import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
-import { mockCommunityPosts, mockPetSkins, mockUser, type PetSkin } from '@/data/mock_data';
+import { mockCommunityPosts, mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';
 import { useHomeLayoutContext } from '@/layouts/context';
-import { useAppSession } from '@/hook/useAppSession';
+import { useAppSession } from '@/hooks/useAppSession';
 import {
   findEquippedOwnedPet,
   useRequestPetEquip,
   useRequestPetOwned,
   useRequestPetStamina,
   useRequestPetStatus,
-} from '@/hook/usePetRequest';
+} from '@/hooks/usePetRequests';
 import { getStoredUserInfo } from '@/utils/authStorage';
 
 export default function ProfilePage() {

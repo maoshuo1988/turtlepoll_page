@@ -22,7 +22,7 @@ import type {
   PetMemory,
   PetRarity,
   PetSkin,
-} from '@/data/mock_data';
+} from '@/data/mockData';
 import {
   mockPetSkills,
   mockPetTasks,
@@ -32,8 +32,8 @@ import {
   RARITY_COLORS,
   RARITY_BORDER_COLORS,
   petDialogues,
-} from '@/data/mock_data';
-import type { OwnedPetItem, PetEquipInfo, PetStaminaResponse, PetStatusResponse } from '@/hook/petType';
+} from '@/data/mockData';
+import type { OwnedPetItem, PetEquipInfo, PetStaminaResponse, PetStatusResponse } from '@/hooks/petTypes';
 import { getPetDisplayAvatar, getPetMoodLabel } from './petDisplay';
 import {
   formatBeijingDateTime,

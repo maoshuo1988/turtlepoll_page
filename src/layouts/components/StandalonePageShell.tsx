@@ -7,10 +7,10 @@ import { useQueryClient } from 'react-query';
 import { AppPageLayout, type SidebarHotTag, type SidebarHotTopic, type ViewType } from './AppPageLayout';
 import { AuthModal } from '@/components/shared/auth';
 import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
-import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCard';
-import { heroNews, mockNews, mockPetSkins, mockUser, petDialogues } from '@/data/mock_data';
-import { useAppSession } from '@/hook/useAppSession';
-import { COIN_ME_QUERY_KEY } from '@/hook/useCoinRequest';
+import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCards';
+import { heroNews, mockNews, mockPetSkins, mockUser, petDialogues } from '@/data/mockData';
+import { useAppSession } from '@/hooks/useAppSession';
+import { COIN_ME_QUERY_KEY } from '@/hooks/useCoinRequests';
 import {
   PET_EQUIP_QUERY_KEY,
   PET_OWNED_QUERY_KEY,
@@ -21,9 +21,9 @@ import {
   useRequestPetOwned,
   useRequestPetStamina,
   useRequestPetStatus,
-} from '@/hook/usePetRequest';
-import { useRequestFootballMarkets } from '@/hook/usePredictRequest';
-import { useRequestSignout } from '@/hook/useRequest';
+} from '@/hooks/usePetRequests';
+import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
+import { useRequestSignout } from '@/hooks/useAuthRequests';
 import { clearInfo } from '@/utils/authStorage';
 
 const THEME_KEY = 'theme';
@@ -49,7 +49,7 @@ const ROUTE_PATHS: Partial<Record<ViewType, string>> = {
   rivalry: '/rivalry',
   forum: '/forum',
   games: '/games',
-  battlePlaza6c47700: '/battle-plaza',
+  battlePlaza: '/battle-plaza',
   rank: '/rank',
   shop: '/shop',
   pet: '/pet',

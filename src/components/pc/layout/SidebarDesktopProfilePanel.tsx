@@ -5,8 +5,8 @@ import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Coins, Flame, MessageCircle, Turtle } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
-import type { PetInfo } from '@/data/mock_data';
-import { useRequestCoinMe } from '@/hook/useCoinRequest';
+import type { PetInfo } from '@/data/mockData';
+import { useRequestCoinMe } from '@/hooks/useCoinRequests';
 
 interface SidebarDesktopProfilePanelProps {
   winStreak: number;

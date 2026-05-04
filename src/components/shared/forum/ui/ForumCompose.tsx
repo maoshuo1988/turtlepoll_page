@@ -5,8 +5,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Image, Smile, X } from 'lucide-react';
 import type { TopicPostTag } from './TopicPostCard';
-import { FORUM_TAGS } from '@/data/mock_data';
-import { useRequestUploadImage } from '@/hook/useRequest';
+import { FORUM_TAGS } from '@/data/mockData';
+import { useRequestUploadImage } from '@/hooks/useAuthRequests';
 
 interface ForumComposeProps {
   onPost: (content: string, tag: TopicPostTag, images: string[]) => Promise<void> | void;

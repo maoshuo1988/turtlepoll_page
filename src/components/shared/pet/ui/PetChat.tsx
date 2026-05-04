@@ -4,9 +4,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Sparkles } from 'lucide-react';
-import { useRequestPetStaminaConsume } from '@/hook/usePetRequest';
-import type { PetInfo } from '@/data/mock_data';
-import { heroNews, mockNews, petDialogues } from '@/data/mock_data';
+import { useRequestPetStaminaConsume } from '@/hooks/usePetRequests';
+import type { PetInfo } from '@/data/mockData';
+import { heroNews, mockNews, petDialogues } from '@/data/mockData';
 import { getAuthToken } from '@/utils/authStorage';
 import { getPetApiErrorMessage } from '@/utils/petHelpers';
 

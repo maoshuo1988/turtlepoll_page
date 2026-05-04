@@ -7,12 +7,12 @@ import { Heart, MessageCircle, Repeat2, Share, BarChart2, MoreHorizontal, BadgeC
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
-import type { TopicResponse } from '@/hook/topicType';
-import { FORUM_TAGS } from '@/data/mock_data';
-import { SERVER_API } from '@/constant';
-import { useRequestUserCurrent } from '@/hook/useRequest';
-import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hook/useCommentRequest';
-import type { PredictionCardItem } from '../../predictions/ui/predictionCard';
+import type { TopicResponse } from '@/hooks/topicTypes';
+import { FORUM_TAGS } from '@/data/mockData';
+import { SERVER_API } from '@/config';
+import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
+import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hooks/useCommentRequests';
+import type { PredictionCardItem } from '../../predictions/ui/predictionCards';
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');

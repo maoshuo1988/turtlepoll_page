@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, Shield, Zap, Trophy, TrendingUp, AlertTriangle, Coins, ThumbsUp, MessageSquare, Sparkles, Bot, Heart, Anchor } from 'lucide-react';
-import { getBattlePetSkillsForSkin, type EventComment } from '@/data/mock_data';
+import { getBattlePetSkillsForSkin, type EventComment } from '@/data/mockData';
 
 /* ══════════ Types ══════════ */
 type ReportType = 'fire' | 'defense' | 'turtle' | 'alert' | 'gold';

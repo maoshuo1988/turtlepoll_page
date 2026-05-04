@@ -2,7 +2,7 @@
  * 文件说明：Turtle Dive Pixel，实验室小游戏相关共享组件。
  */
 import React from 'react';
-import type { OwnedPetItem, PetEquipInfo } from '@/hook/petType';
+import type { OwnedPetItem, PetEquipInfo } from '@/hooks/petTypes';
 import { StaticGameHost } from '@/components/shared/game/ui/StaticGameHost';
 
 interface TurtleDivePixelProps {

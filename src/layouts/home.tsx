@@ -9,15 +9,25 @@ import { HomeLayoutProvider } from './context';
 // 路由路径和左侧导航状态的映射关系。
 // 这里集中维护，可以避免每个页面自己判断当前高亮菜单。
 const PATH_VIEW_MAP: Record<string, ViewType> = {
+  // 首页：默认展示撕裂带预测信息流。
   '/': 'predictions',
+  // 对抗页：展示龟龟阵营、对抗态势等内容。
   '/rivalry': 'rivalry',
+  // 论坛页：展示话题列表和评论互动。
   '/forum': 'forum',
+  // 游戏管理页：展示龟龟跳海等游戏入口。
   '/games': 'games',
-  '/battle-plaza': 'battlePlaza6c47700',
+  // 撕裂带广场页：展示战斗广场和下注对局。
+  '/battle-plaza': 'battlePlaza',
+  // 排行榜页：展示用户、宠物或战绩排名。
   '/rank': 'rank',
+  // 商城页：展示宠物蛋、体力补给等商品。
   '/shop': 'shop',
+  // 宠物页：展示用户宠物资产和养成状态。
   '/pet': 'pet',
+  // 个人中心页：展示用户资料、资产和历史记录。
   '/profile': 'profile',
+  // 活跃预测页：展示当前正在进行的预测市场。
   '/active-predictions': 'activePredictions',
 };
 

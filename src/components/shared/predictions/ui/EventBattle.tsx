@@ -8,11 +8,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ThumbsUp, Send, Flame, Sparkles, Zap, MessageCircleReply, Lock, ChevronLeft, MessageSquareText, Coins, Trophy, Clock3, ChevronDown, ChevronUp } from 'lucide-react';
 import CountUp from 'react-countup';
 import { BattleReport } from './BattleReport';
-import type { PredictionCardItem } from './predictionCard';
-import { useRequestUserCurrent } from '@/hook/useRequest';
-import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hook/useCommentRequest';
-import { useRequestCoinMe } from '@/hook/useCoinRequest';
-import type { PetSkin } from '@/data/mock_data';
+import type { PredictionCardItem } from './predictionCards';
+import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
+import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hooks/useCommentRequests';
+import { useRequestCoinMe } from '@/hooks/useCoinRequests';
+import type { PetSkin } from '@/data/mockData';
 
 dayjs.extend(relativeTime);
 

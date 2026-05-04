@@ -4,8 +4,8 @@
 import React from 'react';
 import { HeroPrediction } from './HeroPrediction';
 import { NewsFeed } from './NewsFeed';
-import type { PredictionCardItem } from './predictionCard';
-import type { PlaceBetResult } from '@/hook/coinType';
+import type { PredictionCardItem } from './predictionCards';
+import type { PlaceBetResult } from '@/hooks/coinTypes';
 
 interface PredictionsViewProps {
   selectedTag: string | null;

@@ -14,15 +14,15 @@ import {
   Settings2,
   Sun,
 } from 'lucide-react';
-import type { TopicResponse } from '@/hook/topicType';
-import { useInfiniteRequestTopicUserTopics } from '@/hook/useTopicRequest';
+import type { TopicResponse } from '@/hooks/topicTypes';
+import { useInfiniteRequestTopicUserTopics } from '@/hooks/useTopicRequests';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 import {
   type MockForumEntry,
   type ForumComment,
   type PetInfo,
   type PetSkin,
-} from '@/data/mock_data';
+} from '@/data/mockData';
 import { ProfilePetRail } from './ProfilePetRail';
 
 type ProfileTab = 'overview' | 'posts' | 'comments' | 'saved' | 'history' | 'hidden' | 'upvoted' | 'downvoted';

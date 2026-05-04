@@ -7,4 +7,4 @@ export {
   useSidebarHotTopics,
   type SidebarHotTag,
   type SidebarHotTopic,
-} from './sidebarHotData';
+} from './sidebarHotTopics';

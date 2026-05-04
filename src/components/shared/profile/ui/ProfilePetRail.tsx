@@ -18,7 +18,7 @@ import {
   RARITY_COLORS,
   type PetInfo,
   type PetSkin,
-} from '@/data/mock_data';
+} from '@/data/mockData';
 
 interface ProfilePetRailProps {
   pet: PetInfo;

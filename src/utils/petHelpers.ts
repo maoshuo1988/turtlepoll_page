@@ -1,8 +1,8 @@
 /**
  * 文件说明：pet Helpers 工具方法，封装跨模块复用的基础能力。
  */
-import type { DailySettleItem } from '@/hook/types';
-import type { PetStatusAiMessage } from '@/hook/petType';
+import type { DailySettleItem } from '@/hooks/authTypes';
+import type { PetStatusAiMessage } from '@/hooks/petTypes';
 
 const PET_API_ERROR_MESSAGES: Record<string, string> = {
   ALREADY_SETTLED: '今日已结算，无需重复发放。',

@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { RefreshCw, X } from 'lucide-react';
 import { normalizeCaptchaImage } from '@/utils/captcha';
-import type { CaptchaChallenge, CaptchaVerification } from '@/hook/types';
-import { useRequestRotateCaptcha} from '@/hook/useRequest';
+import type { CaptchaChallenge, CaptchaVerification } from '@/hooks/authTypes';
+import { useRequestRotateCaptcha} from '@/hooks/useAuthRequests';
 
 interface RotateCaptchaModalProps {
   open: boolean;

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { ArrowLeft, Clock3, Flame, Swords } from 'lucide-react';
-import type { PredictionCardItem } from './predictionCard';
+import type { PredictionCardItem } from './predictionCards';
 
 interface ActivePredictionsPageProps {
   items: PredictionCardItem[];

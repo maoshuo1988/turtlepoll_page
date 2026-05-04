@@ -6,8 +6,8 @@ import { createPortal } from 'react-dom';
 import { ArrowLeft, ChevronRight, Eye, EyeOff, LockKeyhole, LogOut, Mail, X } from 'lucide-react';
 import { AuthDailySettleCard } from './AuthDailySettleCard';
 import { ImageCaptchaModal } from './ImageCaptchaModal';
-import { useRequestSignIn, useRequestSignUp } from '@/hook/useRequest';
-import type { AuthUser, DailySettleSummary } from '@/hook/types';
+import { useRequestSignIn, useRequestSignUp } from '@/hooks/useAuthRequests';
+import type { AuthUser, DailySettleSummary } from '@/hooks/authTypes';
 import { getAuthToken, getStoredDailySettle, getStoredUserInfo, saveAuthToken, saveDailySettle, saveUserInfo } from '@/utils/authStorage';
 
 interface AuthModalProps {

@@ -4,8 +4,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { RefreshCw, X } from 'lucide-react';
-import { useRequestImageCaptcha } from '@/hook/useRequest';
-import type { CaptchaVerification, ImageCaptchaChallenge } from '@/hook/types';
+import { useRequestImageCaptcha } from '@/hooks/useAuthRequests';
+import type { CaptchaVerification, ImageCaptchaChallenge } from '@/hooks/authTypes';
 import { normalizeCaptchaImage } from '@/utils/captcha';
 
 interface ImageCaptchaModalProps {

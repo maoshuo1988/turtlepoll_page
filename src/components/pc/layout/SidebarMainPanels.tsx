@@ -3,21 +3,21 @@
  */
 import React from 'react';
 import { MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, Gamepad2, Flame } from 'lucide-react';
-import type { PetInfo } from '@/data/mock_data';
+import type { PetInfo } from '@/data/mockData';
 import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
 import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';
-import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCard';
+import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCards';
 
-export type ViewType = 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'lab' | 'battle' | 'battlePlaza6c47700' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
+export type ViewType = 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'lab' | 'battle' | 'battlePlaza' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'predictions', label: '暗盘', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
   { key: 'rivalry', label: '开撕台', icon: <Flame size={22} />, view: 'rivalry', enabled: true },
   { key: 'forum', label: '线报', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
   { key: 'games', label: '游戏管理', icon: <Gamepad2 size={22} />, view: 'games', enabled: true },
-  { key: 'battle-plaza-6c47700', label: '地下钱庄', icon: <Swords size={22} />, view: 'battlePlaza6c47700', enabled: true },
+  { key: 'battle-plaza', label: '地下钱庄', icon: <Swords size={22} />, view: 'battlePlaza', enabled: true },
   { key: 'rank', label: '排行榜', icon: <Trophy size={22} />, view: 'rank', enabled: true },
   { key: 'shop', label: '黑市', icon: <Gift size={22} />, view: 'shop', enabled: true },
   { key: 'inventory', label: '背包&资产', icon: <Backpack size={22} />, enabled: false },

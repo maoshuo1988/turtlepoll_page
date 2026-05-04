@@ -2,7 +2,7 @@
  * 文件说明：Sidebar Hot Topics Panel，PC 左侧栏相关展示组件。
  */
 import React, { useMemo, useState } from 'react';
-import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCard';
+import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCards';
 import { useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type SidebarHotTopic } from '@/components/shared/layout';
 
 interface SidebarHotTopicsPanelProps {

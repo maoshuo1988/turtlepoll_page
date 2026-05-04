@@ -4,12 +4,12 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Coins, Heart } from 'lucide-react';
-import type { PetInfo, ShopItem } from '@/data/mock_data';
+import type { PetInfo, ShopItem } from '@/data/mockData';
 import {
   shopApples,
-} from '@/data/mock_data';
-import { useRequestPetEggHatch, useRequestPetOwned, useRequestPetStaminaFeed } from '@/hook/usePetRequest';
-import type { PetEggHatchResponse, PetStaminaResponse } from '@/hook/petType';
+} from '@/data/mockData';
+import { useRequestPetEggHatch, useRequestPetOwned, useRequestPetStaminaFeed } from '@/hooks/usePetRequests';
+import type { PetEggHatchResponse, PetStaminaResponse } from '@/hooks/petTypes';
 import { getPetDisplayAvatar } from '../../pet/ui/petDisplay';
 import { getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
 

@@ -3,14 +3,14 @@
  */
 import React, { useState, useEffect } from 'react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
-import type { PetInfo } from '@/data/mock_data';
-import { mockRankUsers } from '@/data/mock_data';
+import type { PetInfo } from '@/data/mockData';
+import { mockRankUsers } from '@/data/mockData';
 import { SidebarDesktopHotPanel } from './SidebarDesktopHotPanel';
 import { SidebarDesktopNavPanel } from './SidebarDesktopNavPanel';
 import { SidebarDesktopProfilePanel } from './SidebarDesktopProfilePanel';
 import { NAV_ITEMS, SidebarMainPanels, type ViewType } from './SidebarMainPanels';
 import { useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type SidebarHotTopic } from '@/components/shared/layout';
-import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCard';
+import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCards';
 
 interface SidebarProps {
   balance: number;

@@ -3,7 +3,7 @@
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Coins, ExternalLink } from 'lucide-react';
-import type { OwnedPetItem, PetEquipInfo } from '@/hook/petType';
+import type { OwnedPetItem, PetEquipInfo } from '@/hooks/petTypes';
 
 type StaticGameBadgeTone = 'emerald' | 'sky' | 'amber' | 'rose' | 'violet';
 

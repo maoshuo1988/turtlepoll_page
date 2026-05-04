@@ -8,9 +8,9 @@ import 'dayjs/locale/zh-cn';
 import { ForumCompose } from './ForumCompose';
 import { TopicPostCard } from './TopicPostCard';
 import type { TopicPostTag } from './TopicPostCard';
-import type { TopicNodeNav } from '@/hook/topicType';
-import { useInfiniteRequestTopicTopics, useRequestCreateTopic, useRequestFavoriteTopic, useRequestLikeEntity, useRequestTopicNodeNavs, useRequestUnlikeEntity } from '@/hook/useTopicRequest';
-import type { PredictionCardItem } from '../../predictions/ui/predictionCard';
+import type { TopicNodeNav } from '@/hooks/topicTypes';
+import { useInfiniteRequestTopicTopics, useRequestCreateTopic, useRequestFavoriteTopic, useRequestLikeEntity, useRequestTopicNodeNavs, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
+import type { PredictionCardItem } from '../../predictions/ui/predictionCards';
 
 
 dayjs.extend(relativeTime);

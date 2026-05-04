@@ -4,9 +4,9 @@
 import { useCallback, useState } from 'react';
 import { EventBattle, PredictionsView } from '@/components/shared/predictions';
 import { useHomeLayoutContext } from '@/layouts/context';
-import type { PlaceBetResult } from '@/hook/coinType';
-import { usePredictionCardItems, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCard';
-import { heroNews, mockNews } from '@/data/mock_data';
+import type { PlaceBetResult } from '@/hooks/coinTypes';
+import { usePredictionCardItems, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCards';
+import { heroNews, mockNews } from '@/data/mockData';
 
 export default function HomePage() {
   const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});

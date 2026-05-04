@@ -2,8 +2,8 @@
  * 文件说明：App Page Layout，布局组件层，承接 Header、Footer、Sidebar 和页面内容区域。
  */
 import type React from 'react';
-import { MobileFooter, PcFooter } from '@/components/Footer';
-import { MobileHeader, PcHeader } from '@/components/Header';
+import { MobileFooter, PcFooter } from '@/components/footer';
+import { MobileHeader, PcHeader } from '@/components/header';
 import { Sidebar } from '@/components/layout';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';
 import type { ViewType } from '@/components/layout';

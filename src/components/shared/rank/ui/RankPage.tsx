@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Trophy, Flame } from 'lucide-react';
-import { mockRankUsers } from '@/data/mock_data';
+import { mockRankUsers } from '@/data/mockData';
 
 const medalColor: Record<number, string> = {
   1: 'text-amber-500',

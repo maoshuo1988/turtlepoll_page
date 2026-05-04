@@ -4,9 +4,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Coins, TrendingUp, X } from 'lucide-react';
-import { useRequestCoinBet, useRequestCoinMe } from '@/hook/useCoinRequest';
-import type { PlaceBetResult } from '@/hook/coinType';
-import type { PredictionCardItem } from './predictionCard';
+import { useRequestCoinBet, useRequestCoinMe } from '@/hooks/useCoinRequests';
+import type { PlaceBetResult } from '@/hooks/coinTypes';
+import type { PredictionCardItem } from './predictionCards';
 
 interface PredictionBetModalProps {
   open: boolean;

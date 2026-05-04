@@ -7,12 +7,12 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
 import { ArrowLeft, CornerDownRight, Flame, MessageSquare, SendHorizonal } from 'lucide-react';
 import { HeroPrediction } from '../../predictions/ui/HeroPrediction';
-import type { PlaceBetResult } from '@/hook/coinType';
+import type { PlaceBetResult } from '@/hooks/coinTypes';
 import type { SidebarHotTopic } from '@/components/shared/layout';
-import { usePredictionCardItems, type PredictionCardItem } from '../../predictions/ui/predictionCard';
-import { SERVER_API } from '@/constant';
-import { useRequestUserCurrent } from '@/hook/useRequest';
-import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hook/useCommentRequest';
+import { usePredictionCardItems, type PredictionCardItem } from '../../predictions/ui/predictionCards';
+import { SERVER_API } from '@/config';
+import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
+import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hooks/useCommentRequests';
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');

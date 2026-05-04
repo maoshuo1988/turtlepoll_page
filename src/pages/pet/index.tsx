@@ -4,8 +4,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { PetPage as SharedPetPage } from '@/components/shared/pet';
 import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
-import { mockPetSkins, mockUser, type PetSkin } from '@/data/mock_data';
-import { useAppSession } from '@/hook/useAppSession';
+import { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';
+import { useAppSession } from '@/hooks/useAppSession';
 import {
   findEquippedOwnedPet,
   useRequestPetEquip,
@@ -13,7 +13,7 @@ import {
   useRequestPetOwned,
   useRequestPetStamina,
   useRequestPetStatus,
-} from '@/hook/usePetRequest';
+} from '@/hooks/usePetRequests';
 
 export default function PetPage() {
   const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);

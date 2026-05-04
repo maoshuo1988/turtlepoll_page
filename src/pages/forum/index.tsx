@@ -3,8 +3,8 @@
  */
 import { useMemo } from 'react';
 import { Forum } from '@/components/shared/forum';
-import { useRequestFootballMarkets } from '@/hook/usePredictRequest';
-import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCard';
+import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
+import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCards';
 
 export default function ForumPage() {
   const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
