@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Predictions View，预测市场和撕裂带相关共享组件。
+ */
 import React from 'react';
 import { HeroPrediction } from './HeroPrediction';
 import { NewsFeed } from './NewsFeed';

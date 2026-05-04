@@ -1,3 +1,6 @@
+/**
+ * 文件说明：types，定义通用 Hook 类型或业务辅助类型。
+ */
 export type RequestResult<T> = {
   code: number;
   cmd: string;

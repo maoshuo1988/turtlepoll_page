@@ -1,3 +1,6 @@
+/**
+ * 文件说明：use Request，封装对应业务域的接口请求和缓存更新逻辑。
+ */
 import {
   API_Badge_Badges,
   API_Captcha_Request_Angle,

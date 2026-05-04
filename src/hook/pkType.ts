@@ -1,3 +1,6 @@
+/**
+ * 文件说明：pk Type，定义对应业务域的接口数据类型。
+ */
 import type { CommentResponse } from './useCommentRequest';
 import type { UserCoin } from './coinType';
 

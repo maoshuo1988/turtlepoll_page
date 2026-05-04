@@ -1,3 +1,6 @@
+/**
+ * 文件说明：coin Type，定义对应业务域的接口数据类型。
+ */
 export type AdminCoinMintPayload = {
   userId: number;
   amount: number;

@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Shop，商城黑市相关共享组件。
+ */
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Coins, Heart } from 'lucide-react';

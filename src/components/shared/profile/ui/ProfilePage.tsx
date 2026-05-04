@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Profile Page，个人主页相关共享组件。
+ */
 import React, { useMemo, useState } from 'react';
 import {
   ArrowLeft,

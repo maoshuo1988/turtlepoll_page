@@ -1,3 +1,6 @@
+/**
+ * 文件说明：React Query 客户端实例，统一配置接口缓存行为。
+ */
 import { QueryClient } from 'react-query';
 
 export const queryClient = new QueryClient({

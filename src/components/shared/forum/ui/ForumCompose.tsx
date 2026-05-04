@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Forum Compose，论坛线报相关共享组件。
+ */
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Image, Smile, X } from 'lucide-react';

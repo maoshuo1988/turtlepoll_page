@@ -1,3 +1,6 @@
+/*
+ * 文件说明：全局样式入口，定义主题变量、基础背景和滚动条样式。
+ */
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap');
 @import "tailwindcss";
 

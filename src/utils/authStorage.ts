@@ -1,3 +1,6 @@
+/**
+ * 文件说明：auth Storage 工具方法，封装跨模块复用的基础能力。
+ */
 import { AUTH_TOKEN_STORAGE_KEY, DAILY_SETTLE_STORAGE_KEY, USER_INFO_STORAGE_KEY } from "@/constant";
 import type { DailySettleSummary } from "@/hook/types";
 

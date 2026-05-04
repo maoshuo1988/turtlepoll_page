@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Forum，论坛线报相关共享组件。
+ */
 import React, { useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';

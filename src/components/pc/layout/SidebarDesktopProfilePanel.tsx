@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Sidebar Desktop Profile Panel，PC 左侧栏相关展示组件。
+ */
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Coins, Flame, MessageCircle, Turtle } from 'lucide-react';

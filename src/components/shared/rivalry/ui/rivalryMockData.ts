@@ -1,3 +1,6 @@
+/**
+ * 文件说明：rivalry Mock Data，开撕台相关共享组件和数据。
+ */
 export type RivalryNewsItem = {
   id: string;
   title: string;

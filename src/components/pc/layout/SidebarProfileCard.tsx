@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Sidebar Profile Card，PC 左侧栏相关展示组件。
+ */
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coins, Flame, MessageCircle } from 'lucide-react';

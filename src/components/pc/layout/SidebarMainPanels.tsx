@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Sidebar Main Panels，PC 左侧栏相关展示组件。
+ */
 import React from 'react';
 import { MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, Gamepad2, Flame } from 'lucide-react';
 import type { PetInfo } from '@/data/mock_data';

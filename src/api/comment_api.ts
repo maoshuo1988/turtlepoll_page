@@ -1,3 +1,6 @@
+/**
+ * 文件说明：comment api 接口地址常量，供请求 Hook 统一引用。
+ */
 /// MARK: 内容域 - 评论
 /// 基础路径: /api/comment
 

@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Battle Square Pixel，战斗游戏相关共享组件。
+ */
 import React from 'react';
 import type { OwnedPetItem, PetEquipInfo } from '@/hook/petType';
 import { StaticGameHost } from '@/components/shared/game/ui/StaticGameHost';

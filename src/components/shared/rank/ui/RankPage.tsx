@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Rank Page，排行榜相关共享组件。
+ */
 import React from 'react';
 import { Trophy, Flame } from 'lucide-react';
 import { mockRankUsers } from '@/data/mock_data';

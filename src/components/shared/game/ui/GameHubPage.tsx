@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Game Hub Page，游戏中心和静态游戏宿主相关组件。
+ */
 import React from 'react';
 import { ExternalLink, FlaskConical, Swords, Turtle } from 'lucide-react';
 

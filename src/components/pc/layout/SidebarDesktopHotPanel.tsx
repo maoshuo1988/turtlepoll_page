@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Sidebar Desktop Hot Panel，PC 左侧栏相关展示组件。
+ */
 import React from 'react';
 import { Flame, Hash } from 'lucide-react';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';

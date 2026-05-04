@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Pet Chat，宠物系统相关共享组件。
+ */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Sparkles } from 'lucide-react';

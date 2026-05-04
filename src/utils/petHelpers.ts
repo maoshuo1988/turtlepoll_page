@@ -1,3 +1,6 @@
+/**
+ * 文件说明：pet Helpers 工具方法，封装跨模块复用的基础能力。
+ */
 import type { DailySettleItem } from '@/hook/types';
 import type { PetStatusAiMessage } from '@/hook/petType';
 

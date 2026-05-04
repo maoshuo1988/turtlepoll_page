@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Battle Report，预测市场和撕裂带相关共享组件。
+ */
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, Shield, Zap, Trophy, TrendingUp, AlertTriangle, Coins, ThumbsUp, MessageSquare, Sparkles, Bot, Heart, Anchor } from 'lucide-react';

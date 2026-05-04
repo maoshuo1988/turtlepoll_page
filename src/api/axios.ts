@@ -1,3 +1,6 @@
+/**
+ * 文件说明：axios 接口地址常量，供请求 Hook 统一引用。
+ */
 import { SERVER_API } from "@/constant";
 import axios from "axios";
 

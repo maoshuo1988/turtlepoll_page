@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Battle Square Pixel，地下钱庄/战斗广场相关共享组件。
+ */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useQueries } from 'react-query';
 import { battleQueryKeys, fetchBattleDetail, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleStats, useRequestBattleWithdraw } from '@/hook/useBattleRequest';

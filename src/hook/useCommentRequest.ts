@@ -1,3 +1,6 @@
+/**
+ * 文件说明：use Comment Request，封装对应业务域的接口请求和缓存更新逻辑。
+ */
 import { axiosCustom } from "@/api/axios";
 import { API_Comment_Comments, API_Comment_Create, API_Comment_Replies } from "@/api/comment_api";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
@@ -20,6 +23,9 @@ export type CommentUser = {
 export type CommentQuote = {
   id: string | number;
   content?: string;
+  text?: string;
+  body?: string;
+  commentContent?: string;
   user?: CommentUser | null;
 };
 
@@ -28,11 +34,22 @@ export type CommentResponse = {
   entityType?: string;
   entityId?: string | number;
   content?: string;
+  text?: string;
+  body?: string;
+  message?: string;
+  commentContent?: string;
+  contentText?: string;
+  comment?: CommentResponse | null;
   imageList?: CommentImage[];
   likeCount?: number;
+  likes?: number;
   liked?: boolean;
   replyCount?: number;
+  replies?: number;
   createTime?: number;
+  createdAt?: number | string;
+  createAt?: number | string;
+  updateTime?: number;
   ipLocation?: string;
   user?: CommentUser | null;
   quote?: CommentQuote | null;
@@ -68,6 +85,24 @@ const invalidateCommentQueries = async (queryClient: ReturnType<typeof useQueryC
 
 const hasValue = (value: unknown) => value !== undefined && value !== null && value !== "";
 
+const normalizeCursorResult = <T>(raw: unknown): CursorResult<T> => {
+  const data = raw as {
+    results?: T[];
+    data?: T[];
+    list?: T[];
+    comments?: T[];
+    records?: T[];
+    cursor?: number | string;
+    hasMore?: boolean;
+  };
+
+  return {
+    results: data.results ?? data.data ?? data.list ?? data.comments ?? data.records ?? [],
+    cursor: data.cursor ?? 0,
+    hasMore: Boolean(data.hasMore),
+  };
+};
+
 const buildCreateCommentForm = (payload: CreateCommentPayload) => {
   const data = new URLSearchParams();
   data.append("entityType", payload.entityType);
@@ -101,7 +136,7 @@ export function useRequestCommentComments(params: CommentListParams) {
         params: queryParams,
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeCursorResult<CommentResponse>(assertSuccess(res));
     },
     enabled: enabled && Boolean(params?.entityType) && hasValue(params?.entityId),
   });
@@ -117,7 +152,7 @@ export function useInfiniteRequestCommentComments(params: Omit<CommentListParams
         params: { ...params, cursor: pageParam },
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeCursorResult<CommentResponse>(assertSuccess(res));
     },
     getNextPageParam: (lastPage) => (lastPage?.hasMore ? lastPage.cursor : undefined),
     enabled: Boolean(params?.entityType) && hasValue(params?.entityId),
@@ -137,7 +172,7 @@ export function useRequestCommentReplies(params: CommentRepliesParams) {
         params: queryParams,
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeCursorResult<CommentResponse>(assertSuccess(res));
     },
     enabled: enabled && hasValue(params?.commentId),
   });
@@ -153,7 +188,7 @@ export function useInfiniteRequestCommentReplies(commentId?: number | string) {
         params: { commentId, cursor: pageParam },
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeCursorResult<CommentResponse>(assertSuccess(res));
     },
     getNextPageParam: (lastPage) => (lastPage?.hasMore ? lastPage.cursor : undefined),
     enabled: hasValue(commentId),

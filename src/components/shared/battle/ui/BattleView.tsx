@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Battle View，战斗游戏相关共享组件。
+ */
 import React, { useMemo, useState } from 'react';
 import { Crown, Coins, Flame, MessageCircle, Heart, Clock3 } from 'lucide-react';
 import type { Battle, BattleSide, BattleStatus } from '@/data/mock_data';

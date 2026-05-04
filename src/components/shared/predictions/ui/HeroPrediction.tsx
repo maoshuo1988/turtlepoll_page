@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Hero Prediction，预测市场和撕裂带相关共享组件。
+ */
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Flame, MessageSquare, Users } from 'lucide-react';

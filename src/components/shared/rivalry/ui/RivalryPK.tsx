@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Rivalry PK，开撕台相关共享组件和数据。
+ */
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {

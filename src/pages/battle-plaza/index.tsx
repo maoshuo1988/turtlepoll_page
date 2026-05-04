@@ -1,6 +1,12 @@
-import AppShell from '@/app/AppShell';
+/**
+ * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
+ */
+import { BattleSquarePixel as BattlePlaza6c47700 } from '@/components/shared/battlePlaza6c47700';
 
 export default function BattlePlazaPage() {
-  // 地下钱庄路由入口。
-  return <AppShell routeView="battlePlaza6c47700" />;
+  return (
+    <section className="view-shell view-rhythm view-battle-plaza mx-0 grid w-full max-w-none gap-4">
+      <BattlePlaza6c47700 />
+    </section>
+  );
 }

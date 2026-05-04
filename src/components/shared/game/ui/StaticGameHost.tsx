@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Static Game Host，游戏中心和静态游戏宿主相关组件。
+ */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Coins, ExternalLink } from 'lucide-react';
 import type { OwnedPetItem, PetEquipInfo } from '@/hook/petType';

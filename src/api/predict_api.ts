@@ -1,3 +1,6 @@
+/**
+ * 文件说明：predict api 接口地址常量，供请求 Hook 统一引用。
+ */
 
 /// MARK: 预测事件系统
 /// 基础路径: /api/football

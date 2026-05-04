@@ -1,3 +1,6 @@
+/**
+ * 文件说明：mock data，本地 mock 数据和默认展示数据。
+ */
 export interface PetInfo {
   name: string;
   status: string;

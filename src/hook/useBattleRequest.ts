@@ -1,3 +1,6 @@
+/**
+ * 文件说明：use Battle Request，封装对应业务域的接口请求和缓存更新逻辑。
+ */
 import { axiosCustom } from "@/api/axios";
 import {
   API_Admin_Battle_Resolve,

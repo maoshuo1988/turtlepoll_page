@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Sidebar Desktop Nav Panel，PC 左侧栏相关展示组件。
+ */
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';

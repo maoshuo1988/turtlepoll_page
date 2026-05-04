@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Lab，实验室小游戏相关共享组件。
+ */
 import React, { useReducer, useRef, useEffect, useCallback } from 'react';
 import { ArrowLeft } from 'lucide-react';
 

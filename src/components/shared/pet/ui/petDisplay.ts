@@ -1,3 +1,6 @@
+/**
+ * 文件说明：pet Display，宠物系统相关共享组件。
+ */
 export function getPetDisplayAvatar(petKey?: string | null, petName?: string | null) {
   const source = `${petKey ?? ''} ${petName ?? ''}`.toLowerCase();
 

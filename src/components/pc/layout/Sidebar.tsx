@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Sidebar，PC 左侧栏相关展示组件。
+ */
 import React, { useState, useEffect } from 'react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
 import type { PetInfo } from '@/data/mock_data';

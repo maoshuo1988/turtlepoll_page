@@ -1,3 +1,6 @@
+/**
+ * 文件说明：pet Type，定义对应业务域的接口数据类型。
+ */
 export type PetApiErrorCode =
   | 'ALREADY_SETTLED'
   | 'EQUIP_DAILY_LIMIT'

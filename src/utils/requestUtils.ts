@@ -1,3 +1,6 @@
+/**
+ * 文件说明：request Utils 工具方法，封装跨模块复用的基础能力。
+ */
 import { getAuthToken } from "./authStorage";
 
 export const getAuthorizationHeaders = () => {

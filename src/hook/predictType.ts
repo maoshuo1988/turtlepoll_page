@@ -1,3 +1,6 @@
+/**
+ * 文件说明：predict Type，定义对应业务域的接口数据类型。
+ */
 // Params
 export type FootballMarketsParams = {
   page?: number;

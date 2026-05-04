@@ -1,3 +1,6 @@
+/**
+ * 文件说明：use Pk Request，封装对应业务域的接口请求和缓存更新逻辑。
+ */
 import { axiosCustom } from '@/api/axios';
 import {
   API_PK_Bet,
@@ -49,12 +52,14 @@ const normalizeCursorResult = <T>(raw: unknown): CursorResult<T> => {
     results?: T[];
     data?: T[];
     list?: T[];
+    comments?: T[];
+    records?: T[];
     cursor?: number | string;
     hasMore?: boolean;
   };
 
   return {
-    results: data.results ?? data.data ?? data.list ?? [],
+    results: data.results ?? data.data ?? data.list ?? data.comments ?? data.records ?? [],
     cursor: data.cursor ?? 0,
     hasMore: Boolean(data.hasMore),
   };

@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Auth Daily Settle Card，登录认证和验证码相关共享组件。
+ */
 import type { DailySettleSummary } from '@/hook/types';
 import { formatBeijingDateTime, getDailySettleNetChange } from '@/utils/petHelpers';
 

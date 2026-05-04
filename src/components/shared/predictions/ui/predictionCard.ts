@@ -1,3 +1,6 @@
+/**
+ * 文件说明：prediction Card，预测市场和撕裂带相关共享组件。
+ */
 import { useMemo } from 'react';
 import type { FootballMarketAggregate } from '@/hook/predictType';
 import { useRequestFootballMarkets, useRequestFootballMarketsByTag } from '@/hook/usePredictRequest';

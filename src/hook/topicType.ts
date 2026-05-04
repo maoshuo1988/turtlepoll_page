@@ -1,3 +1,6 @@
+/**
+ * 文件说明：topic Type，定义对应业务域的接口数据类型。
+ */
 import type { PredictContext } from './predictType';
 
 export type CreateTopicPayload = {

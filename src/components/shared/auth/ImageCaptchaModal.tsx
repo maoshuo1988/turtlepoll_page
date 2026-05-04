@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Image Captcha Modal，登录认证和验证码相关共享组件。
+ */
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { RefreshCw, X } from 'lucide-react';

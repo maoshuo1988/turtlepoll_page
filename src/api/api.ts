@@ -1,3 +1,6 @@
+/**
+ * 文件说明：api 接口地址常量，供请求 Hook 统一引用。
+ */
 //获取站点配置
 export const API_Config_Configs = "/api/config/configs";
 //获取当前登录用户

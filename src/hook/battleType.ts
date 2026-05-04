@@ -1,3 +1,6 @@
+/**
+ * 文件说明：battle Type，定义对应业务域的接口数据类型。
+ */
 export type BattleStatus = "open" | "sealed" | "pending" | "disputed" | "settled";
 
 export type BattleResult = "banker_wins" | "banker_loses" | "void";

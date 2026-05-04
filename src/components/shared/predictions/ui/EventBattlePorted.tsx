@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Event Battle Ported，预测市场和撕裂带相关共享组件。
+ */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ChevronDown,
@@ -196,36 +199,74 @@ function formatBattleTime(timestamp?: number) {
   return `${Math.floor(diff / day)}天前`;
 }
 
+function parseCommentTime(value: CommentResponse['createTime'] | CommentResponse['createdAt'] | CommentResponse['createAt']) {
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    const numericValue = Number(value);
+    if (Number.isFinite(numericValue)) return numericValue;
+    const parsed = Date.parse(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  return undefined;
+}
+
+function getCommentBase(comment?: CommentResponse | null) {
+  return comment?.comment ?? comment ?? null;
+}
+
+function getCommentText(comment?: CommentResponse | null) {
+  const base = getCommentBase(comment);
+  return (
+    base?.content ||
+    base?.text ||
+    base?.commentContent ||
+    base?.contentText ||
+    base?.body ||
+    base?.message ||
+    comment?.content ||
+    comment?.text ||
+    comment?.commentContent ||
+    comment?.contentText ||
+    comment?.body ||
+    comment?.message ||
+    ''
+  );
+}
+
 function getCommentUserName(comment?: CommentResponse | null) {
-  return comment?.user?.nickname || comment?.user?.username || `用户${comment?.user?.id ?? ''}` || '匿名用户';
+  const base = getCommentBase(comment);
+  return base?.user?.nickname || base?.user?.username || comment?.user?.nickname || comment?.user?.username || `用户${base?.user?.id ?? comment?.user?.id ?? ''}` || '匿名用户';
 }
 
 function getCommentAvatar(comment?: CommentResponse | null) {
-  return comment?.user?.avatar || comment?.user?.smallAvatar || FALLBACK_AVATAR;
+  const base = getCommentBase(comment);
+  return base?.user?.avatar || base?.user?.smallAvatar || comment?.user?.avatar || comment?.user?.smallAvatar || FALLBACK_AVATAR;
 }
 
 function mapCommentToBattleComment(comment: CommentResponse): BattleComment {
+  const base = getCommentBase(comment);
   return {
-    id: String(comment.id),
+    id: String(base?.id ?? comment.id),
     author: getCommentUserName(comment),
     avatar: getCommentAvatar(comment),
-    time: formatBattleTime(comment.createTime),
-    text: comment.content || '',
-    likes: comment.likeCount ?? 0,
-    liked: Boolean(comment.liked),
-    replyCount: comment.replyCount ?? 0,
-    ipLocation: comment.ipLocation,
+    time: formatBattleTime(parseCommentTime(base?.createTime ?? base?.createdAt ?? base?.createAt ?? comment.createTime ?? comment.createdAt ?? comment.createAt)),
+    text: getCommentText(comment) || '这条评论暂时没有正文。',
+    likes: base?.likeCount ?? comment.likeCount ?? base?.likes ?? comment.likes ?? 0,
+    liked: Boolean(base?.liked ?? comment.liked),
+    replyCount: base?.replyCount ?? comment.replyCount ?? base?.replies ?? comment.replies ?? 0,
+    ipLocation: base?.ipLocation ?? comment.ipLocation,
   };
 }
 
 function mapReplyToBattleReply(comment: CommentResponse): BattleReply {
+  const base = getCommentBase(comment);
   return {
-    id: String(comment.id),
+    id: String(base?.id ?? comment.id),
     author: getCommentUserName(comment),
     avatar: getCommentAvatar(comment),
-    time: formatBattleTime(comment.createTime),
-    text: comment.content || '',
-    likes: comment.likeCount ?? 0,
+    time: formatBattleTime(parseCommentTime(base?.createTime ?? base?.createdAt ?? base?.createAt ?? comment.createTime ?? comment.createdAt ?? comment.createAt)),
+    text: getCommentText(comment) || '这条回复暂时没有正文。',
+    likes: base?.likeCount ?? comment.likeCount ?? base?.likes ?? comment.likes ?? 0,
   };
 }
 
@@ -683,6 +724,10 @@ export const EventBattle: React.FC<EventBattleProps> = ({
 
   const leftComments = commentsAState;
   const rightComments = commentsBState;
+  const hasMoreCommentsA = Boolean(pkCommentsAQuery.data?.hasMore || commentsAQuery.data?.hasMore);
+  const hasMoreCommentsB = Boolean(pkCommentsBQuery.data?.hasMore || commentsBQuery.data?.hasMore);
+  const nextCursorA = pkCommentsAQuery.data?.hasMore ? pkCommentsAQuery.data?.cursor : commentsAQuery.data?.cursor;
+  const nextCursorB = pkCommentsBQuery.data?.hasMore ? pkCommentsBQuery.data?.cursor : commentsBQuery.data?.cursor;
   const leftSupporters = useMemo(() => buildSupporters(leftComments, 'left'), [leftComments]);
   const rightSupporters = useMemo(() => buildSupporters(rightComments, 'right'), [rightComments]);
   const commentLeftHeat = useMemo(() => calcSideHeat(leftComments), [leftComments]);
@@ -1303,17 +1348,17 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                         setReplyingTo(null);
                         setReplyDraft('');
                       }}
-                      replySubmitting={createCommentMutation.isLoading}
+                      replySubmitting={createCommentMutation.isLoading || pkReplyCommentMutation.isLoading}
                       likePending={likePendingIds.has(comment.id)}
                       latestReplyEvent={latestReplyEvent}
                     />
                   </div>
                 ))}
-                {column.side === 'A' && commentsAQuery.data?.hasMore ? (
-                  <button type="button" className="eb-load-more" onClick={() => setCursorA(commentsAQuery.data?.cursor ?? 0)}>加载更多</button>
+                {column.side === 'A' && hasMoreCommentsA ? (
+                  <button type="button" className="eb-load-more" onClick={() => setCursorA(nextCursorA ?? 0)}>加载更多</button>
                 ) : null}
-                {column.side === 'B' && commentsBQuery.data?.hasMore ? (
-                  <button type="button" className="eb-load-more" onClick={() => setCursorB(commentsBQuery.data?.cursor ?? 0)}>加载更多</button>
+                {column.side === 'B' && hasMoreCommentsB ? (
+                  <button type="button" className="eb-load-more" onClick={() => setCursorB(nextCursorB ?? 0)}>加载更多</button>
                 ) : null}
               </div>
               <div className="eb-input-row">
@@ -1414,38 +1459,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           </div>
         </section>
 
-        <section className="eb-side-card eb-personal-card">
-          <div className="eb-side-title">
-            <Shield size={18} /> 个人贡献
-            <span>{personalContribution.side === 'A' ? '蓝方' : personalContribution.side === 'B' ? '红方' : '未站队'}</span>
-          </div>
-          <div className="eb-personal-profile">
-            <img src={FALLBACK_AVATAR} alt={currentUserName} />
-            <div>
-              <b>{currentUserName}</b>
-              <span>本场互动贡献</span>
-            </div>
-            <strong>{formatVotes(personalContribution.score)}</strong>
-          </div>
-          <div className="eb-personal-stats">
-            <div>
-              <MessageCircleReply size={15} />
-              <span>评论数</span>
-              <strong>{formatVotes(personalContribution.commentCount)}</strong>
-            </div>
-            <div>
-              <ThumbsUp size={15} />
-              <span>获赞数</span>
-              <strong>{formatVotes(personalContribution.likeCount)}</strong>
-            </div>
-            <div>
-              <Flame size={15} />
-              <span>回复互动</span>
-              <strong>{formatVotes(personalContribution.replyCount)}</strong>
-            </div>
-          </div>
-        </section>
-
         <section className="eb-side-card eb-events-card">
           <div className="eb-side-title"><Crosshair size={18} /> 直播事件</div>
           <div ref={feedRef} className="eb-event-list">
@@ -1528,6 +1541,38 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 <i>🪙</i><i>🪙</i><i>🪙</i>
               </div>
             ) : null}
+          </div>
+        </section>
+
+        <section className="eb-side-card eb-personal-card">
+          <div className="eb-side-title">
+            <Shield size={18} /> 个人贡献
+            <span>{personalContribution.side === 'A' ? '蓝方' : personalContribution.side === 'B' ? '红方' : '未站队'}</span>
+          </div>
+          <div className="eb-personal-profile">
+            <img src={FALLBACK_AVATAR} alt={currentUserName} />
+            <div>
+              <b>{currentUserName}</b>
+              <span>本场互动贡献</span>
+            </div>
+            <strong>{formatVotes(personalContribution.score)}</strong>
+          </div>
+          <div className="eb-personal-stats">
+            <div>
+              <MessageCircleReply size={15} />
+              <span>评论数</span>
+              <strong>{formatVotes(personalContribution.commentCount)}</strong>
+            </div>
+            <div>
+              <ThumbsUp size={15} />
+              <span>获赞数</span>
+              <strong>{formatVotes(personalContribution.likeCount)}</strong>
+            </div>
+            <div>
+              <Flame size={15} />
+              <span>回复互动</span>
+              <strong>{formatVotes(personalContribution.replyCount)}</strong>
+            </div>
           </div>
         </section>
       </aside>

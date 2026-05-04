@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Floating Pet Chat，共享布局辅助组件和侧栏数据。
+ */
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X } from 'lucide-react';

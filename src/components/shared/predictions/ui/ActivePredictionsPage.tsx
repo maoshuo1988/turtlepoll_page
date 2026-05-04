@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Active Predictions Page，预测市场和撕裂带相关共享组件。
+ */
 import React from 'react';
 import { ArrowLeft, Clock3, Flame, Swords } from 'lucide-react';
 import type { PredictionCardItem } from './predictionCard';

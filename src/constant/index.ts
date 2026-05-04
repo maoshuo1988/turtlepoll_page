@@ -1,3 +1,6 @@
+/**
+ * 文件说明：项目全局常量配置，集中维护服务地址和本地存储键名。
+ */
 export const SERVER_API = "https://turtle.cloud-ip.cc";
 
 

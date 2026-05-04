@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Prediction Bet Modal，预测市场和撕裂带相关共享组件。
+ */
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Coins, TrendingUp, X } from 'lucide-react';

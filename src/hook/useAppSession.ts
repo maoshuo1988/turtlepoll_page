@@ -1,3 +1,6 @@
+/**
+ * 文件说明：use App Session，封装页面或组件复用的业务状态逻辑。
+ */
 import { useRequestCoinMe } from "@/hook/useCoinRequest";
 import { useRequestUserCurrent } from "@/hook/useRequest";
 

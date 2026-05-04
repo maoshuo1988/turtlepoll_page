@@ -1,3 +1,6 @@
+/**
+ * 文件说明：sidebar Hot Data，共享布局辅助组件和侧栏数据。
+ */
 import { useMemo } from 'react';
 import type { PredictContext, PredictTagHotItem } from '@/hook/predictType';
 import { useRequestFootballPredictContextHot, useRequestFootballPredictTagsHot } from '@/hook/usePredictRequest';

@@ -1,3 +1,6 @@
+/**
+ * 文件说明：use Predict Request，封装对应业务域的接口请求和缓存更新逻辑。
+ */
 import {
     API_Football_Bet_Settle_Result,
     API_Football_Markets,

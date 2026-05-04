@@ -1,15 +1,18 @@
+/**
+ * 文件说明：mobile Header 组件，负责对应端的顶部导航展示。
+ */
 import React from 'react';
 import { Search, Sparkles } from 'lucide-react';
 
-interface MobileTopBarProps {
-  onOpenGames: () => void;
+export interface MobileHeaderProps {
   darkMode: boolean;
+  onOpenGames: () => void;
 }
 
-export const MobileTopBar: React.FC<MobileTopBarProps> = ({ onOpenGames, darkMode }) => {
+export const MobileHeader: React.FC<MobileHeaderProps> = ({ darkMode, onOpenGames }) => {
   return (
     <>
-      <header className={`fixed left-0 right-0 top-0 z-50 backdrop-blur-xl xl:hidden ${darkMode ? 'border-b border-white/8 bg-[#090909]/92' : 'border-b border-slate-200 bg-white/92'}`}>
+      <header className={`fixed left-0 right-0 top-0 z-50 backdrop-blur-xl lg:hidden ${darkMode ? 'border-b border-white/8 bg-[#090909]/92' : 'border-b border-slate-200 bg-white/92'}`}>
         <div className="flex h-[58px] items-center gap-3 px-3">
           <div className="flex shrink-0 items-center">
             <img src="/logo.png" alt="龟投 Logo" className="h-8 w-8 rounded-xl object-contain" />
@@ -39,7 +42,8 @@ export const MobileTopBar: React.FC<MobileTopBarProps> = ({ onOpenGames, darkMod
           </button>
         </div>
       </header>
-      <div className="h-[58px] xl:hidden" />
+      <div className="h-[58px] lg:hidden" />
     </>
   );
 };
+

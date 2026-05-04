@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Auth Modal，登录认证和验证码相关共享组件。
+ */
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowLeft, ChevronRight, Eye, EyeOff, LockKeyhole, LogOut, Mail, X } from 'lucide-react';

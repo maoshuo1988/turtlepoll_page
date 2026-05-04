@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Event Battle，预测市场和撕裂带相关共享组件。
+ */
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';

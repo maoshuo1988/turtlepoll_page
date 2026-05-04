@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Turtle Jump Pixel，实验室小游戏相关共享组件。
+ */
 import React from 'react';
 import { TurtleDivePixel as LegacyTurtleJumpPixel } from './LegacyTurtleJumpPixel';
 

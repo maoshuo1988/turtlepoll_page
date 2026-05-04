@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Sidebar Nav Menu，PC 左侧栏相关展示组件。
+ */
 import React from 'react';
 
 type ViewType = 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'battle' | 'battlePlaza6c47700' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile';

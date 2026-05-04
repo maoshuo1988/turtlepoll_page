@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Legacy Turtle Jump Pixel，实验室小游戏相关共享组件。
+ */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 type Phase = 'idle' | 'playing' | 'paused' | 'gameover';

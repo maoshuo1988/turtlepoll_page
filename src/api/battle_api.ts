@@ -1,3 +1,6 @@
+/**
+ * 文件说明：battle api 接口地址常量，供请求 Hook 统一引用。
+ */
 /// MARK: 开战广场 / Battle Square
 /// 基础路径: /api/battle
 

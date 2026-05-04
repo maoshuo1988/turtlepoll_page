@@ -1,3 +1,6 @@
+/**
+ * 文件说明：Topic Post Card，论坛线报相关共享组件。
+ */
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Repeat2, Share, BarChart2, MoreHorizontal, BadgeCheck, Bookmark, CornerDownRight, SendHorizonal, TrendingUp, Flame, X } from 'lucide-react';
