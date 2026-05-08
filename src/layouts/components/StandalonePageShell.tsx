@@ -45,6 +45,7 @@ type StandalonePageShellProps = {
 // 左侧栏点击后跳转到实际路由的表。
 // 游戏类入口有独立处理逻辑，所以这里只放常规页面。
 const ROUTE_PATHS: Partial<Record<ViewType, string>> = {
+  worldCup: '/world-cup',
   predictions: '/',
   rivalry: '/rivalry',
   forum: '/forum',

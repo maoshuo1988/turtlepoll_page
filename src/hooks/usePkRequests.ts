@@ -26,8 +26,11 @@ import type {
   PKCreateCommentPayload,
   PKDownvotePayload,
   PKHeatResponse,
+  PKHistoryResponse,
   PKReplyCommentPayload,
   PKRound,
+  PKSeason,
+  PKSeasonListResponse,
   PKTopicDetailResponse,
   PKTopicListResponse,
 } from './pkTypes';
@@ -260,7 +263,7 @@ export function useRequestPKDownvote() {
 export function useRequestPKHistory(params: { topicId?: number | string; page?: number; pageSize?: number; enabled?: boolean }) {
   const { enabled = true, ...queryParams } = params;
 
-  return useQuery<{ list?: PKRound[]; count?: number }>({
+  return useQuery<PKHistoryResponse>({
     queryKey: ['requestPKHistory', queryParams],
     queryFn: async () => {
       const res = await axiosCustom({
@@ -273,7 +276,20 @@ export function useRequestPKHistory(params: { topicId?: number | string; page?: 
         },
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      const raw = assertSuccess(res) as {
+        list?: PKRound[];
+        data?: PKRound[];
+        results?: PKRound[];
+        records?: PKRound[];
+        rounds?: PKRound[];
+        count?: number;
+        total?: number;
+      };
+      const list = raw.list ?? raw.data ?? raw.results ?? raw.records ?? raw.rounds ?? [];
+      return {
+        list,
+        count: raw.count ?? raw.total ?? list.length,
+      };
     },
     enabled: enabled && hasValue(params.topicId),
   });
@@ -282,7 +298,7 @@ export function useRequestPKHistory(params: { topicId?: number | string; page?: 
 export function useRequestPKSeasons(params: { topicId?: number | string; page?: number; pageSize?: number; enabled?: boolean }) {
   const { enabled = true, ...queryParams } = params;
 
-  return useQuery({
+  return useQuery<PKSeasonListResponse>({
     queryKey: ['requestPKSeasons', queryParams],
     queryFn: async () => {
       const res = await axiosCustom({
@@ -295,7 +311,20 @@ export function useRequestPKSeasons(params: { topicId?: number | string; page?: 
         },
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      const raw = assertSuccess(res) as {
+        list?: PKSeason[];
+        data?: PKSeason[];
+        results?: PKSeason[];
+        records?: PKSeason[];
+        seasons?: PKSeason[];
+        count?: number;
+        total?: number;
+      };
+      const list = raw.list ?? raw.data ?? raw.results ?? raw.records ?? raw.seasons ?? [];
+      return {
+        list,
+        count: raw.count ?? raw.total ?? list.length,
+      };
     },
     enabled: enabled && hasValue(params.topicId),
   });

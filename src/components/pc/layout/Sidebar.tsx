@@ -4,12 +4,11 @@
 import React, { useState, useEffect } from 'react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
 import type { PetInfo } from '@/data/mockData';
-import { mockRankUsers } from '@/data/mockData';
 import { SidebarDesktopHotPanel } from './SidebarDesktopHotPanel';
 import { SidebarDesktopNavPanel } from './SidebarDesktopNavPanel';
 import { SidebarDesktopProfilePanel } from './SidebarDesktopProfilePanel';
 import { NAV_ITEMS, SidebarMainPanels, type ViewType } from './SidebarMainPanels';
-import { useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type SidebarHotTopic } from '@/components/shared/layout';
+import { GuideTourModal, useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type SidebarHotTopic } from '@/components/shared/layout';
 import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCards';
 
 interface SidebarProps {
@@ -44,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [dialogueKey, setDialogueKey] = useState(0);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
-  const [rankOpen, setRankOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
   const hotTopics = useSidebarHotTopics(newsByMarketId);
   const hotTags = useSidebarHotTags();
 
@@ -88,17 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (item.key === 'predictions') {
       setSelectedTag(null);
     }
-    if (item.key === 'rank') {
-      setRankOpen((prev) => !prev);
-    }
     if (item.view) onViewChange(item.view);
-  };
-
-  const topRankers = mockRankUsers.slice(0, 7);
-  const rankColors: Record<number, string> = {
-    0: 'text-amber-500',
-    1: 'text-slate-400',
-    2: 'text-amber-700 dark:text-amber-600',
   };
 
   const fmtHeat = (n: number) =>
@@ -130,6 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           selectedTag={selectedTag}
           activeView={activeView}
           onOpenChat={() => setChatOpen(true)}
+          onOpenGuide={() => setGuideOpen(true)}
           onCloseChat={() => setChatOpen(false)}
           onViewPet={() => onViewChange('pet')}
           onOpenProfile={() => onViewChange('profile')}
@@ -151,7 +141,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               chatOpen={chatOpen}
               currentDialogue={currentDialogue}
               dialogueKey={dialogueKey}
-              onOpenChat={() => setChatOpen(true)}
+              onOpenGuide={() => setGuideOpen(true)}
               onCloseChat={() => setChatOpen(false)}
               onViewPet={() => onViewChange('pet')}
               onOpenProfile={() => onViewChange('profile')}
@@ -170,13 +160,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           <SidebarDesktopNavPanel
             activeView={activeView}
-            rankOpen={rankOpen}
-            topRankers={topRankers}
-            rankColors={rankColors}
             onNavClick={handleNavClick}
           />
         </div>
       </div>
+
+      <GuideTourModal open={guideOpen} onClose={() => setGuideOpen(false)} />
     </div>
   );
 };

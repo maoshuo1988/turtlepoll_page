@@ -21,6 +21,7 @@ export default defineConfig({
       component: '@/layouts/home',
       routes: [
         { path: '/', component: 'home' },
+        { path: '/world-cup', component: 'world-cup' },
         { path: '/rivalry', component: 'rivalry' },
         { path: '/forum', component: 'forum' },
         { path: '/games', component: 'games' },

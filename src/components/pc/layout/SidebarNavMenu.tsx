@@ -3,7 +3,7 @@
  */
 import React from 'react';
 
-type ViewType = 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'battle' | 'battlePlaza' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile';
+type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'battle' | 'battlePlaza' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export interface SidebarNavItem {
   key: string;
@@ -45,8 +45,8 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
         {navItems.map((item) => {
           const isActive = item.view ? activeView === item.view : false;
           return (
+            <React.Fragment key={item.key}>
             <button
-              key={item.key}
               onClick={() => onNavClick(item)}
               className={`sidebar-nav-item ${navItemBase} ${!item.enabled ? navItemDisabled : isActive ? navItemActive : navItemIdle}`}
             >
@@ -64,6 +64,7 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
               <span className="flex-1">{item.label}</span>
               {!item.enabled && <span className="shrink-0 text-[10px] text-zinc-600 dark:text-rdark-text2/50">即将开放</span>}
             </button>
+            </React.Fragment>
           );
         })}
       </div>

@@ -15,6 +15,7 @@ import {
   Sun,
 } from 'lucide-react';
 import type { TopicResponse } from '@/hooks/topicTypes';
+import type { PetEquipInfo } from '@/hooks/petTypes';
 import { useInfiniteRequestTopicUserTopics } from '@/hooks/useTopicRequests';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 import {
@@ -42,6 +43,7 @@ interface ProfilePageProps {
   onOpenForum: () => void;
   onOpenAuth: () => void;
   onToggleTheme: () => void;
+  equippedPet?: PetEquipInfo | null;
 }
 
 const PROFILE_TABS: { key: ProfileTab; label: string }[] = [
@@ -122,6 +124,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   onOpenForum,
   onOpenAuth,
   onToggleTheme,
+  equippedPet,
 }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
   const [sort, setSort] = useState<FeedSort>('new');
@@ -598,7 +601,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <div className="min-w-0 min-h-0 overflow-y-auto pr-1">{renderContent()}</div>
           <aside className="mt-8 min-h-0 overflow-y-auto xl:mt-0 xl:px-4 xl:py-4">
             <div>
-              <ProfilePetRail pet={pet} skins={skins} balance={balance} />
+              <ProfilePetRail pet={pet} skins={skins} balance={balance} equippedPet={equippedPet} />
             </div>
           </aside>
         </div>

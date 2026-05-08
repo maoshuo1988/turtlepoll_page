@@ -2,7 +2,7 @@
  * 文件说明：Sidebar Main Panels，PC 左侧栏相关展示组件。
  */
 import React from 'react';
-import { MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, Gamepad2, Flame } from 'lucide-react';
+import { Flag, MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, Gamepad2, Flame } from 'lucide-react';
 import type { PetInfo } from '@/data/mockData';
 import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
@@ -10,9 +10,10 @@ import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';
 import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCards';
 
-export type ViewType = 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'lab' | 'battle' | 'battlePlaza' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
+export type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'lab' | 'battle' | 'battlePlaza' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
+  { key: 'world-cup', label: '世界杯', icon: <Flag size={22} />, view: 'worldCup', enabled: true },
   { key: 'predictions', label: '暗盘', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
   { key: 'rivalry', label: '开撕台', icon: <Flame size={22} />, view: 'rivalry', enabled: true },
   { key: 'forum', label: '线报', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
@@ -41,6 +42,7 @@ interface SidebarMainPanelsProps {
   selectedTag: string | null;
   activeView: ViewType;
   onOpenChat: () => void;
+  onOpenGuide: () => void;
   onCloseChat: () => void;
   onViewPet: () => void;
   onOpenProfile: () => void;
@@ -62,6 +64,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
   selectedTag,
   activeView,
   onOpenChat,
+  onOpenGuide,
   onCloseChat,
   onViewPet,
   onOpenProfile,
@@ -84,6 +87,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
               currentDialogue={currentDialogue}
               dialogueKey={dialogueKey}
               onOpenChat={onOpenChat}
+              onOpenGuide={onOpenGuide}
               onCloseChat={onCloseChat}
               onViewPet={onViewPet}
               onOpenProfile={onOpenProfile}
@@ -115,6 +119,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
             currentDialogue={currentDialogue}
             dialogueKey={dialogueKey}
             onOpenChat={onOpenChat}
+            onOpenGuide={onOpenGuide}
             onCloseChat={onCloseChat}
             onViewPet={onViewPet}
             onOpenProfile={onOpenProfile}

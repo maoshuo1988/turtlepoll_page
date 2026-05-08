@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Coins, Flame, MessageCircle, Turtle } from 'lucide-react';
+import { BookOpen, Coins, Flame, Turtle } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
 import type { PetInfo } from '@/data/mockData';
 import { useRequestCoinMe } from '@/hooks/useCoinRequests';
@@ -17,7 +17,7 @@ interface SidebarDesktopProfilePanelProps {
   chatOpen: boolean;
   currentDialogue: string;
   dialogueKey: number;
-  onOpenChat: () => void;
+  onOpenGuide: () => void;
   onCloseChat: () => void;
   onViewPet: () => void;
   onOpenProfile: () => void;
@@ -35,7 +35,7 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
   chatOpen,
   currentDialogue,
   dialogueKey,
-  onOpenChat,
+  onOpenGuide,
   onCloseChat,
   onViewPet,
   onOpenProfile,
@@ -61,6 +61,20 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
           <div className="min-w-0 flex-1">
             <div className="text-[14px] font-bold text-white dark:text-rdark-text">路边社社长</div>
             <div className=" text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={onOpenGuide}
+          className="mt-2 flex w-full items-center gap-2.5 rounded-xl border border-amber-300/18 bg-amber-400/10 px-3 py-2 text-left transition-colors hover:border-amber-300/30 hover:bg-amber-400/15"
+        >
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-amber-300/12 text-amber-200">
+            <BookOpen size={16} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="text-[12px] font-bold text-amber-100">新手引导</div>
+            <div className="text-[10px] text-amber-100/60">打开玩法引导弹框</div>
           </div>
         </button>
 
@@ -237,7 +251,7 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
           </div>
         </div>
 
-        <button
+        {/* <button
           onClick={(e) => {
             e.stopPropagation();
             onOpenChat();
@@ -245,13 +259,13 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
           className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-emerald-200/60 bg-white/80  text-[11px] font-bold text-emerald-600 shadow-lg backdrop-blur-md transition-all hover:scale-105 hover:bg-white hover:shadow-xl dark:border-emerald-800/60 dark:bg-rdark-card/80 dark:text-emerald-400 dark:hover:bg-rdark-card"
         >
           <MessageCircle size={13} /> 和龟仙人聊聊
-        </button>
+        </button> */}
 
-        <div className="absolute top-2 right-2 z-10 opacity-0 transition-opacity group-hover:opacity-100">
+        {/* <div className="absolute top-2 right-2 z-10 opacity-0 transition-opacity group-hover:opacity-100">
           <div className="rounded-md border border-emerald-200/40 bg-white/80  text-[9px] font-medium text-emerald-600 shadow-sm backdrop-blur-sm dark:border-emerald-800/40 dark:bg-rdark-card/80 dark:text-emerald-400">
             进入宠物空间 →
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

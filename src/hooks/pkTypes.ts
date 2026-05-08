@@ -44,6 +44,9 @@ export type PKSeason = {
   seasonNo?: number;
   winsA?: number;
   winsB?: number;
+  startTime?: number;
+  endTime?: number;
+  champion?: PKWinner | string | null;
 };
 
 export type PKBet = {
@@ -89,6 +92,16 @@ export type PKTopicDetailResponse = PKTopicSummary & {
   recentRounds?: PKRound[];
 };
 
+export type PKHistoryResponse = {
+  list?: PKRound[];
+  count?: number;
+};
+
+export type PKSeasonListResponse = {
+  list?: PKSeason[];
+  count?: number;
+};
+
 export type PKHeatResponse = {
   roundId?: number | string;
   phase?: PKRoundPhase | string;
@@ -109,6 +122,7 @@ export type PKBetPayload = {
   topicId: number | string;
   side: PKSide;
   requestId: string;
+  amount?: number;
 };
 
 export type PKBetResponse = {

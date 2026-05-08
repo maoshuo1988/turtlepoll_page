@@ -7,34 +7,23 @@ import {
   ArrowLeft,
   Heart,
   Zap,
-  Star,
-  Trophy,
   Shield,
-  Sparkles,
-  Clock,
-  Lock,
   Check,
 } from 'lucide-react';
 import { PetChat } from './PetChat';
 import type {
   PetInfo,
-  PetSkill,
-  PetMemory,
   PetRarity,
   PetSkin,
 } from '@/data/mockData';
 import {
-  mockPetSkills,
   mockPetTasks,
-  mockPetAchievements,
-  mockPetSkins,
-  mockPetMemories,
   RARITY_COLORS,
-  RARITY_BORDER_COLORS,
   petDialogues,
 } from '@/data/mockData';
 import type { OwnedPetItem, PetEquipInfo, PetStaminaResponse, PetStatusResponse } from '@/hooks/petTypes';
 import { getPetDisplayAvatar, getPetMoodLabel } from './petDisplay';
+import { getTurtleAbility } from '../petAbilities';
 import {
   formatBeijingDateTime,
   getPetApiErrorMessage,
@@ -42,15 +31,12 @@ import {
   summarizeVoteStats,
 } from '@/utils/petHelpers';
 
-type PetTab = 'status' | 'species' | 'abilities' | 'tasks' | 'cosmetics' | 'memory';
+type PetTab = 'status' | 'species' | 'abilities';
 
 const TAB_LIST: { key: PetTab; label: string; icon: React.ReactNode }[] = [
   { key: 'status', label: '状态', icon: <Heart size={14} /> },
   { key: 'species', label: '龟种', icon: <Shield size={14} /> },
   { key: 'abilities', label: '能力', icon: <Zap size={14} /> },
-  { key: 'tasks', label: '任务', icon: <Star size={14} /> },
-  { key: 'cosmetics', label: '装扮', icon: <Sparkles size={14} /> },
-  { key: 'memory', label: '记忆', icon: <Clock size={14} /> },
 ];
 
 const card = 'rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
@@ -451,10 +437,10 @@ const SpeciesTab: React.FC<{
                       void handleEquipPetClick(ownedPet.petId);
                     }}
                     disabled={!onEquipPet || isPending || isEquipped}
-                    className={`mt-3 w-full rounded-lg px-3 py-2 text-[11px] font-bold transition-colors ${
+                    className={`mt-3 w-full rounded-lg border px-3 py-2 text-[11px] font-bold shadow-sm transition-all ${
                       isEquipped
-                        ? 'cursor-default bg-emerald-100 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-300'
-                        : 'bg-slate-900 text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'
+                        ? 'cursor-default border-emerald-300/40 bg-emerald-400/14 text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-400/12 dark:text-emerald-300'
+                        : 'border-emerald-300/30 bg-emerald-500 text-white shadow-emerald-900/10 hover:border-emerald-200/50 hover:bg-emerald-400 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none dark:border-emerald-400/20 dark:bg-emerald-500/90 dark:text-white dark:hover:bg-emerald-400 dark:disabled:border-rdark-border dark:disabled:bg-rdark-input dark:disabled:text-rdark-text2'
                     }`}
                   >
                     {isEquipped ? '当前装备' : isPending ? '切换中...' : '装备这只龟'}
@@ -475,309 +461,56 @@ const SpeciesTab: React.FC<{
 };
 
 /* ━━━━━━━━━━━━━━━ Abilities Tab ━━━━━━━━━━━━━━━ */
-const AbilitiesTab: React.FC = () => {
-  const passives = mockPetSkills.filter((s) => s.type === 'passive');
-  const actives = mockPetSkills.filter((s) => s.type === 'active');
-
-  const SkillCard: React.FC<{ skill: PetSkill }> = ({ skill }) => (
-    <div className={`${card} p-3 ${!skill.unlocked ? 'opacity-50' : ''}`}>
-      <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-lg bg-slate-50 dark:bg-rdark-input grid place-items-center text-xl shrink-0">
-          {skill.unlocked ? skill.icon : <Lock size={16} className="text-slate-300 dark:text-rdark-text2" />}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-[12px] font-bold text-slate-700 dark:text-rdark-text">{skill.name}</span>
-            {skill.unlocked && (
-              <span className="text-[9px] px-1.5 py-px rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 font-bold">
-                Lv.{skill.level}/{skill.maxLevel}
-              </span>
-            )}
-          </div>
-          <div className="text-[10px] text-slate-500 dark:text-rdark-text2 mb-1.5">{skill.description}</div>
-          {skill.unlocked && (
-            <div className="flex items-center gap-2">
-              <div className="flex-1 h-1 bg-slate-200 dark:bg-rdark-border rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full transition-all"
-                  style={{ width: `${(skill.level / skill.maxLevel) * 100}%` }}
-                />
-              </div>
-              {skill.cooldown && (
-                <span className="text-[8px] text-slate-400 dark:text-rdark-text2 shrink-0">CD: {skill.cooldown}</span>
-              )}
-            </div>
-          )}
-          {!skill.unlocked && (
-            <div className="text-[9px] text-slate-400 dark:text-rdark-text2 flex items-center gap-1">
-              <Lock size={9} /> 未解锁
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+const AbilitiesTab: React.FC<{
+  pet: PetInfo;
+  equippedPet?: PetEquipInfo | null;
+}> = ({ pet, equippedPet }) => {
+  const currentAbility = getTurtleAbility(equippedPet, pet.name);
+  const avatar = getPetDisplayAvatar(equippedPet?.petKey, currentAbility.displayName) || pet.avatar;
 
   return (
     <div className="space-y-4">
-      <div>
-        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-2.5 flex items-center gap-1.5">
-          <Shield size={11} /> 被动技能
-        </div>
-        <div className="space-y-2">
-          {passives.map((s) => <SkillCard key={s.id} skill={s} />)}
-        </div>
-      </div>
-      <div>
-        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-2.5 flex items-center gap-1.5">
-          <Zap size={11} /> 主动技能
-        </div>
-        <div className="space-y-2">
-          {actives.map((s) => <SkillCard key={s.id} skill={s} />)}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* ━━━━━━━━━━━━━━━ Tasks Tab ━━━━━━━━━━━━━━━ */
-const TasksTab: React.FC = () => {
-  const [taskCategory, setTaskCategory] = useState<'daily' | 'weekly' | 'story'>('daily');
-  const filtered = mockPetTasks.filter((t) => t.category === taskCategory);
-  const categories = [
-    { key: 'daily' as const, label: '每日' },
-    { key: 'weekly' as const, label: '每周' },
-    { key: 'story' as const, label: '成长' },
-  ];
-
-  return (
-    <div className="space-y-4">
-      {/* Task list */}
-      <div className={`${card} p-4`}>
-        <div className="flex items-center gap-2 mb-3">
-          {categories.map((c) => (
-            <button
-              key={c.key}
-              onClick={() => setTaskCategory(c.key)}
-              className={`px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer transition-all border-0 ${
-                taskCategory === c.key
-                  ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-bold'
-                  : 'bg-transparent text-slate-500 dark:text-rdark-text2 hover:bg-slate-50 dark:hover:bg-rdark-hover'
-              }`}
-            >
-              {c.label}
-            </button>
-          ))}
-        </div>
-        <div className="space-y-2">
-          {filtered.map((task) => (
-            <div key={task.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-50/50 dark:bg-rdark-input/30 border border-slate-100 dark:border-rdark-border">
-              <span className="text-lg shrink-0">{task.icon}</span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-[12px] font-bold text-slate-700 dark:text-rdark-text">{task.title}</span>
-                  {task.completed && <Check size={13} className="text-emerald-500" />}
-                </div>
-                <div className="text-[10px] text-slate-400 dark:text-rdark-text2 mb-1">{task.description}</div>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 h-1.5 bg-slate-200 dark:bg-rdark-border rounded-full overflow-hidden max-w-[120px]">
-                    <div
-                      className={`h-full rounded-full transition-all ${task.completed ? 'bg-emerald-400' : 'bg-blue-400'}`}
-                      style={{ width: `${(task.progress / task.total) * 100}%` }}
-                    />
-                  </div>
-                  <span className="text-[9px] text-slate-400 dark:text-rdark-text2">{task.progress}/{task.total}</span>
-                </div>
-              </div>
-              <div className="text-right shrink-0">
-                <div className="text-[11px] font-bold text-amber-600 dark:text-amber-400">+{task.reward}</div>
-                <div className="text-[8px] text-slate-400 dark:text-rdark-text2">
-                  {task.rewardType === 'coin' ? '龟币' : task.rewardType === 'xp' ? '经验' : '道具'}
-                </div>
-              </div>
+      <div className={`${card} overflow-hidden`}>
+        <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-sky-50 p-4 dark:from-emerald-950/24 dark:via-teal-950/16 dark:to-sky-950/20">
+          <div className="flex items-start gap-4">
+            <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl border border-emerald-100 bg-white text-4xl shadow-sm dark:border-emerald-900/30 dark:bg-rdark-card">
+              {avatar}
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Achievement wall */}
-      <div className={`${card} p-4`}>
-        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-3 flex items-center gap-1.5">
-          <Trophy size={11} /> 成就墙
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {mockPetAchievements.map((a) => (
-            <div
-              key={a.id}
-              className={`rounded-lg p-3 border ${
-                a.unlocked
-                  ? `${RARITY_BORDER_COLORS[a.rarity]} bg-white dark:bg-rdark-card`
-                  : 'border-slate-200 dark:border-rdark-border bg-slate-50/50 dark:bg-rdark-input/30 opacity-50'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-lg">{a.unlocked ? a.icon : '🔒'}</span>
-                <RarityBadge rarity={a.rarity} />
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-[16px] font-black text-slate-800 dark:text-rdark-text">{currentAbility.displayName}</h3>
+                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-black text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                  {currentAbility.displayRarity}
+                </span>
+                <span className="rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-bold text-slate-500 dark:bg-white/8 dark:text-rdark-text2">
+                  Lv.{currentAbility.level}
+                </span>
               </div>
-              <div className="text-[11px] font-bold text-slate-700 dark:text-rdark-text mb-0.5">{a.name}</div>
-              <div className="text-[9px] text-slate-400 dark:text-rdark-text2">{a.description}</div>
-              {a.unlockedTime && (
-                <div className="text-[8px] text-slate-300 dark:text-rdark-text2/50 mt-1">{a.unlockedTime}</div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* ━━━━━━━━━━━━━━━ Cosmetics Tab ━━━━━━━━━━━━━━━ */
-const CosmeticsTab: React.FC<{
-  skins: PetSkin[];
-  onEquip?: (skinId: string) => void;
-}> = ({
-  skins,
-  onEquip,
-}) => {
-  const allSkins = skins.length > 0 ? skins : mockPetSkins;
-  const equippedSkin = allSkins.find((s) => s.equipped);
-  const ownedSkins = allSkins.filter((s) => s.owned);
-  const shopSkins = allSkins.filter((s) => !s.owned);
-
-  return (
-    <div className="space-y-4">
-      {/* Current outfit */}
-      <div className={`${card} p-4`}>
-        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-3">当前装扮</div>
-        {equippedSkin && (
-          <div className="flex items-center gap-4 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 rounded-lg p-4 border border-emerald-100 dark:border-emerald-900/30">
-            <div className="w-16 h-16 rounded-xl bg-white dark:bg-rdark-card grid place-items-center text-4xl shadow-sm border border-emerald-100 dark:border-emerald-900/30">
-              {equippedSkin.avatar}
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[13px] font-bold text-slate-700 dark:text-rdark-text">{equippedSkin.name}</span>
-                <RarityBadge rarity={equippedSkin.rarity} />
-              </div>
-              <div className="text-[10px] text-slate-500 dark:text-rdark-text2 mb-1">{equippedSkin.description}</div>
-              <div className="text-[9px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
-                <Check size={10} /> 装备中
+              <div className="mt-1 text-[11px] font-bold text-slate-500 dark:text-rdark-text2">
+                龟种ID：{currentAbility.id}
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* Owned skins */}
-      <div className={`${card} p-4`}>
-        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-3">已拥有 ({ownedSkins.length})</div>
-        <div className="grid grid-cols-3 gap-2">
-          {ownedSkins.map((skin) => (
-            <motion.div
-              key={skin.id}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => !skin.equipped && onEquip?.(skin.id)}
-              className={`rounded-lg p-3 border text-center cursor-pointer transition-all hover:shadow-md ${
-                skin.equipped
-                  ? `${RARITY_BORDER_COLORS[skin.rarity]} ring-2 ring-emerald-400/50 bg-emerald-50/50 dark:bg-emerald-950/10`
-                  : `${RARITY_BORDER_COLORS[skin.rarity]} bg-white dark:bg-rdark-card hover:bg-slate-50 dark:hover:bg-rdark-hover`
-              }`}
-            >
-              <div className="text-3xl mb-1.5">{skin.avatar}</div>
-              <div className="text-[10px] font-bold text-slate-700 dark:text-rdark-text mb-0.5">{skin.name}</div>
-              <RarityBadge rarity={skin.rarity} />
-              {skin.equipped ? (
-                <div className="text-[8px] text-emerald-500 font-bold mt-1">装备中</div>
-              ) : (
-                <div className="text-[8px] text-blue-500 font-bold mt-1">点击装备</div>
-              )}
-            </motion.div>
-          ))}
+        <div className="p-4">
+          <div className="mb-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2">
+            <Zap size={11} /> 特殊能力
+          </div>
+          <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-900/30 dark:bg-emerald-950/14">
+            <div className="text-[13px] font-bold leading-6 text-slate-700 dark:text-rdark-text">
+              {currentAbility.ability}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Shop / Locked skins */}
-      {shopSkins.length > 0 && (
-        <div className={`${card} p-4`}>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-3">未解锁</div>
-          <div className="grid grid-cols-3 gap-2">
-            {shopSkins.map((skin) => (
-              <div
-                key={skin.id}
-                className={`rounded-lg p-3 border text-center opacity-60 ${RARITY_BORDER_COLORS[skin.rarity]} bg-slate-50/50 dark:bg-rdark-input/30`}
-              >
-                <div className="text-3xl mb-1.5 grayscale">{skin.avatar}</div>
-                <div className="text-[10px] font-bold text-slate-700 dark:text-rdark-text mb-0.5">{skin.name}</div>
-                <RarityBadge rarity={skin.rarity} />
-                <div className="text-[8px] text-slate-400 dark:text-rdark-text2 mt-1">
-                  {skin.price ? `${skin.price} 龟币` : skin.source}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-/* ━━━━━━━━━━━━━━━ Memory Tab ━━━━━━━━━━━━━━━ */
-const MemoryTab: React.FC = () => {
-  const typeColors: Record<PetMemory['type'], string> = {
-    prediction: 'border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-950/20',
-    battle: 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950/20',
-    milestone: 'border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/20',
-    dialogue: 'border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-950/20',
-  };
-
-  const dotColors: Record<PetMemory['type'], string> = {
-    prediction: 'bg-blue-400',
-    battle: 'bg-red-400',
-    milestone: 'bg-amber-400',
-    dialogue: 'bg-purple-400',
-  };
-
-  return (
-    <div className="space-y-4">
       <div className={`${card} p-4`}>
-        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2 mb-4 flex items-center gap-1.5">
-          <Clock size={11} /> 龟仙人的回忆录
+        <div className="mb-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2">
+          <Shield size={11} /> 生效说明
         </div>
-
-        {/* Timeline */}
-        <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-[7px] top-1 bottom-1 w-px bg-slate-200 dark:bg-rdark-border" />
-
-          <div className="space-y-3">
-            {mockPetMemories.map((mem, i) => (
-              <motion.div
-                key={mem.id}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="flex gap-3 relative"
-              >
-                {/* Dot */}
-                <div className={`w-[15px] h-[15px] rounded-full shrink-0 z-10 grid place-items-center ${dotColors[mem.type]} ${mem.highlight ? 'ring-2 ring-offset-1 ring-amber-300 dark:ring-amber-600 dark:ring-offset-rdark-card' : ''}`}>
-                  <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                </div>
-
-                {/* Content */}
-                <div className={`flex-1 min-w-0 rounded-lg p-3 border ${typeColors[mem.type]}`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm">{mem.icon}</span>
-                    <span className="text-[11px] font-bold text-slate-700 dark:text-rdark-text">{mem.title}</span>
-                    {mem.highlight && <Sparkles size={10} className="text-amber-400" />}
-                  </div>
-                  <div className="text-[10px] text-slate-500 dark:text-rdark-text2 mb-1">{mem.description}</div>
-                  <div className="text-[8px] text-slate-400 dark:text-rdark-text2/60">{mem.time}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+        <div className="text-[11px] leading-5 text-slate-500 dark:text-rdark-text2">
+          当前页面按正在装备的龟种展示能力。切换龟种后，能力会随装备接口返回的 petKey / petName 自动更新。
         </div>
       </div>
     </div>
@@ -792,8 +525,6 @@ export const PetPage: React.FC<PetPageProps> = ({
   winStreak,
   totalPredictions,
   onBack,
-  skins,
-  onEquipSkin,
   equippedPet,
   ownedPets,
   petStatus,
@@ -1132,15 +863,7 @@ export const PetPage: React.FC<PetPageProps> = ({
                 onEquipPet={onEquipPet}
               />
             )}
-            {activeTab === 'abilities' && <AbilitiesTab />}
-            {activeTab === 'tasks' && <TasksTab />}
-            {activeTab === 'cosmetics' && (
-              <CosmeticsTab
-                skins={skins ?? mockPetSkins}
-                onEquip={onEquipSkin}
-              />
-            )}
-            {activeTab === 'memory' && <MemoryTab />}
+            {activeTab === 'abilities' && <AbilitiesTab pet={pet} equippedPet={equippedPet} />}
           </motion.div>
         </AnimatePresence>
       </div>

@@ -9,6 +9,8 @@ import { HomeLayoutProvider } from './context';
 // 路由路径和左侧导航状态的映射关系。
 // 这里集中维护，可以避免每个页面自己判断当前高亮菜单。
 const PATH_VIEW_MAP: Record<string, ViewType> = {
+  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。
+  '/world-cup': 'worldCup',
   // 首页：默认展示撕裂带预测信息流。
   '/': 'predictions',
   // 对抗页：展示龟龟阵营、对抗态势等内容。

@@ -19,12 +19,15 @@ import {
   type PetInfo,
   type PetSkin,
 } from '@/data/mockData';
+import type { PetEquipInfo } from '@/hooks/petTypes';
+import { getTurtleAbility } from '@/components/shared/pet/petAbilities';
 
 interface ProfilePetRailProps {
   pet: PetInfo;
   skins: PetSkin[];
   balance: number;
   compact?: boolean;
+  equippedPet?: PetEquipInfo | null;
 }
 
 const panelClass = 'rounded-[22px] border border-white/8 bg-white/[0.03] !p-2';
@@ -48,6 +51,7 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
   skins,
   balance,
   compact = false,
+  equippedPet,
 }) => {
   const equippedSkin = useMemo(
     () => skins.find((skin) => skin.equipped) ?? skins.find((skin) => skin.owned) ?? null,
@@ -67,6 +71,7 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
   );
   const staminaPct = Math.round((pet.stamina / pet.maxStamina) * 100);
   const nextTask = dailyTasks.find((task) => !task.completed) ?? dailyTasks[0];
+  const currentAbility = useMemo(() => getTurtleAbility(equippedPet, pet.name), [equippedPet, pet.name]);
 
   return (
     <div className={`grid ${compact ? 'gap-3 px-0 py-0' : 'gap-4 !px-4 !py-4'}`}>
@@ -192,40 +197,25 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
         </div>
       </PetPanel>
 
-      <PetPanel title="技能清单" icon={<Zap size={15} />}>
-        <div className="grid gap-3">
-          {mockPetSkills.map((skill) => (
-            <div
-              key={skill.id}
-              className={`rounded-2xl border !px-4 !py-3 ${
-                skill.unlocked ? 'border-white/8 bg-black/25' : 'border-white/5 bg-white/[0.02] opacity-55'
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white/[0.05] text-[18px]">
-                  {skill.icon}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-[14px] font-bold text-white">{skill.name}</span>
-                    <span className="rounded-full bg-white/[0.06] !px-2 !py-0.5 text-[10px] font-semibold text-[#98a6b0]">
-                      {skill.type === 'active' ? '主动' : '被动'}
-                    </span>
-                    {skill.unlocked && (
-                      <span className="rounded-full bg-emerald-400/14 !px-2 !py-0.5 text-[10px] font-bold text-emerald-300">
-                        Lv.{skill.level}/{skill.maxLevel}
-                      </span>
-                    )}
-                  </div>
-                  <p className="!mt-1 text-[12px] leading-5 text-[#8e9ca6]">{skill.description}</p>
-                  <div className="!mt-2 flex flex-wrap items-center gap-2 text-[11px] text-[#aeb8bf]">
-                    <span>效果：{skill.effect}</span>
-                    {skill.cooldown && <span>冷却：{skill.cooldown}</span>}
-                  </div>
-                </div>
-              </div>
+      <PetPanel title="当前能力" icon={<Zap size={15} />}>
+        <div className="rounded-2xl border border-emerald-400/12 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_44%),rgba(0,0,0,0.25)] !px-4 !py-4">
+          <div className="flex items-start gap-3">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-emerald-400/10 text-[20px]">
+              {pet.avatar}
             </div>
-          ))}
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[14px] font-bold text-white">{currentAbility.displayName}</span>
+                <span className="rounded-full bg-white/[0.06] !px-2 !py-0.5 text-[10px] font-semibold text-[#98a6b0]">
+                  龟种ID：{currentAbility.id}
+                </span>
+                <span className="rounded-full bg-emerald-400/14 !px-2 !py-0.5 text-[10px] font-bold text-emerald-300">
+                  {currentAbility.displayRarity} · Lv.{currentAbility.level}
+                </span>
+              </div>
+              <p className="!mt-2 text-[12px] leading-6 text-[#aeb8bf]">{currentAbility.ability}</p>
+            </div>
+          </div>
         </div>
       </PetPanel>
 

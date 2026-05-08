@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Coins, Flame, MessageCircle } from 'lucide-react';
+import { BookOpen, Coins, Flame, MessageCircle } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
 import type { PetInfo } from '@/data/mockData';
 import { useRequestCoinMe } from '@/hooks/useCoinRequests';
@@ -18,6 +18,7 @@ interface SidebarProfileCardProps {
   currentDialogue: string;
   dialogueKey: number;
   onOpenChat: () => void;
+  onOpenGuide: () => void;
   onCloseChat: () => void;
   onViewPet: () => void;
   onOpenProfile: () => void;
@@ -34,6 +35,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   currentDialogue,
   dialogueKey,
   onOpenChat,
+  onOpenGuide,
   onCloseChat,
   onViewPet,
   onOpenProfile,
@@ -121,6 +123,20 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
               </button>
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={onOpenGuide}
+            className="mx-4 mb-3 flex w-[calc(100%-32px)] items-center gap-3 rounded-xl border border-amber-300/18 bg-amber-400/10 px-3 py-2.5 text-left text-[13px] font-bold text-amber-100 transition-all hover:border-amber-300/30 hover:bg-amber-400/15"
+          >
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-amber-300/12 text-amber-200">
+              <BookOpen size={17} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block leading-tight">新手引导</span>
+              <span className="mt-0.5 block text-[10px] font-semibold text-amber-100/58">打开玩法引导弹框</span>
+            </span>
+          </button>
 
           <div className="relative h-[194px] overflow-hidden cursor-pointer group" onClick={onViewPet}>
             <div className="absolute inset-0 bg-gradient-to-b from-[#16171b] via-[#111214] to-[#090909]" />

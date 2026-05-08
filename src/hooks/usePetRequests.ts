@@ -119,12 +119,9 @@ export function useRequestPetEquipUpdate() {
   return useMutation({
     mutationKey: ["requestPetEquipUpdate"],
     mutationFn: async (payload: PetEquipPayload) => {
-      const data = new URLSearchParams();
-      if ("petId" in payload) {
-        data.append("petId", String(payload.petId));
-      } else {
-        data.append("petKey", payload.petKey);
-      }
+      const data = "petId" in payload
+        ? { petId: payload.petId }
+        : { petKey: payload.petKey };
 
       const res = await axiosCustom({
         method: "post",
@@ -132,7 +129,7 @@ export function useRequestPetEquipUpdate() {
         data,
         headers: {
           ...getAuthorizationHeaders(),
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+          "Content-Type": "application/json",
         },
       });
       return assertSuccess<PetEquipMutationResponse>(res);
