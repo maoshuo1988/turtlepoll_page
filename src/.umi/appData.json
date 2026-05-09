@@ -124,6 +124,8 @@
             0,
             0,
             0,
+            0,
+            0,
             0
           ]
         },
@@ -163,7 +165,11 @@
             5,
             5,
             4,
-            4
+            4,
+            4,
+            6,
+            3,
+            7
           ]
         },
         "register": 1
@@ -191,7 +197,9 @@
             13,
             7,
             10,
-            6
+            6,
+            14,
+            5
           ]
         },
         "register": 12
@@ -208,6 +216,8 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
+            0,
             0,
             0,
             0,
@@ -249,11 +259,15 @@
             0,
             0,
             0,
+            0,
+            0,
             0
           ],
           "onCheckCode": [
             0,
             1,
+            0,
+            0,
             0,
             0,
             0,
@@ -1302,9 +1316,13 @@
             1,
             1,
             0,
-            0
+            0,
+            0,
+            1
           ],
           "addRuntimePlugin": [
+            0,
+            0,
             0,
             0,
             0,
@@ -1395,9 +1413,15 @@
             0,
             0,
             0,
+            0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1456,9 +1480,15 @@
             11,
             25,
             15,
-            5
+            5,
+            17,
+            6
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1509,6 +1539,10 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1527,6 +1561,8 @@
         "hooks": {
           "onGenerateFiles": [
             85,
+            0,
+            0,
             0,
             0,
             0,
@@ -1585,6 +1621,8 @@
             1,
             0,
             0,
+            0,
+            0,
             0
           ],
           "addBeforeMiddlewares": [
@@ -1622,6 +1660,10 @@
             10,
             1,
             5,
+            1,
+            7,
+            1,
+            6,
             1
           ]
         },
@@ -1685,6 +1727,8 @@
             5,
             8,
             4,
+            4,
+            6,
             4
           ]
         },
@@ -1778,7 +1822,9 @@
             0,
             0,
             0,
-            1
+            1,
+            1,
+            0
           ]
         },
         "register": 2
@@ -6007,7 +6053,7 @@
             "format": "esm"
           },
           "src/pages/profile/components/ProfilePage.tsx": {
-            "bytes": 27139,
+            "bytes": 27178,
             "imports": [
               {
                 "path": "react",
@@ -8679,7 +8725,7 @@
                 "bytesInOutput": 7716
               },
               "src/pages/profile/components/ProfilePage.tsx": {
-                "bytesInOutput": 31335
+                "bytesInOutput": 31362
               },
               "src/pages/profile/components/ProfilePageView.tsx": {
                 "bytesInOutput": 323
@@ -8736,7 +8782,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 882318
+            "bytes": 882345
           }
         }
       }
