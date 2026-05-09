@@ -1,0 +1,2405 @@
+{
+  "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+  "pkg": {
+    "name": "turtle",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "umi dev",
+      "build": "tsc -b && umi build",
+      "lint": "eslint .",
+      "preview": "umi preview"
+    },
+    "dependencies": {
+      "@tsparticles/react": "^3.0.0",
+      "animation": "^0.1.3",
+      "antd": "^5.27.6",
+      "axios": "^1.13.6",
+      "dayjs": "^1.11.19",
+      "framer-motion": "^12.35.0",
+      "lottie-react": "^2.4.1",
+      "lucide-react": "^0.575.0",
+      "motion": "^12.35.0",
+      "react": "^19.2.0",
+      "react-countup": "^6.5.3",
+      "react-dom": "^19.2.0",
+      "react-query": "^3.39.3",
+      "tailwindcss": "^4.2.1",
+      "tsparticles": "^3.9.1",
+      "umi": "^4.5.1"
+    },
+    "devDependencies": {
+      "@eslint/js": "^9.39.1",
+      "@tailwindcss/postcss": "^4.2.1",
+      "@types/node": "^24.10.1",
+      "@types/react": "^19.2.7",
+      "@types/react-dom": "^19.2.3",
+      "eslint": "^9.39.1",
+      "eslint-plugin-react-hooks": "^7.0.1",
+      "eslint-plugin-react-refresh": "^0.4.24",
+      "globals": "^16.5.0",
+      "react-refresh": "^0.18.0",
+      "typescript": "~5.9.3",
+      "typescript-eslint": "^8.48.0"
+    }
+  },
+  "pkgPath": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/package.json",
+  "plugins": {
+    "./node_modules/@umijs/core/dist/service/servicePlugin": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "preset",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/core/dist/service/servicePlugin.js",
+      "id": "./node_modules/@umijs/core/dist/service/servicePlugin",
+      "key": "servicePlugin",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "@umijs/preset-umi": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "preset",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/index.js",
+      "id": "@umijs/preset-umi",
+      "key": "umi",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 3
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/registerMethods": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/registerMethods.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/registerMethods",
+      "key": "registerMethods",
+      "config": {},
+      "time": {
+        "hooks": {
+          "onStart": [
+            0
+          ]
+        },
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "@umijs/did-you-know": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/did-you-know/dist/plugin.js",
+      "id": "@umijs/did-you-know",
+      "key": "umijsDidYouKnow",
+      "config": {},
+      "time": {
+        "hooks": {
+          "onStart": [
+            1
+          ]
+        },
+        "register": 2
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/404/404": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/404/404.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/404/404",
+      "key": "404",
+      "config": {},
+      "time": {
+        "hooks": {
+          "modifyRoutes": [
+            0
+          ]
+        },
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/aiDev/aiDev": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/aiDev/aiDev.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/aiDev/aiDev",
+      "key": "aiDev",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/appData/appData": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/appData/appData.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/appData/appData",
+      "key": "appData",
+      "config": {},
+      "time": {
+        "hooks": {
+          "modifyAppData": [
+            10
+          ]
+        },
+        "register": 11
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/appData/umiInfo": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/appData/umiInfo.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/appData/umiInfo",
+      "key": "umiInfo",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/check/check": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/check/check.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/check/check",
+      "key": "check",
+      "config": {},
+      "time": {
+        "hooks": {
+          "onCheckConfig": [
+            1
+          ],
+          "onCheck": [
+            1
+          ]
+        },
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/check/babel722": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/check/babel722.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/check/babel722",
+      "key": "babel722",
+      "config": {},
+      "time": {
+        "hooks": {
+          "onCheck": [
+            0
+          ]
+        },
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/codeSplitting/codeSplitting": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/codeSplitting/codeSplitting.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/codeSplitting/codeSplitting",
+      "key": "codeSplitting",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/configPlugins/configPlugins": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/configPlugins/configPlugins.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/configPlugins/configPlugins",
+      "key": "configPlugins",
+      "config": {},
+      "time": {
+        "hooks": {
+          "modifyConfig": [
+            0
+          ]
+        },
+        "register": 3
+      },
+      "enableBy": "register"
+    },
+    "virtual: config-title": {
+      "id": "virtual: config-title",
+      "key": "title",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-styles": {
+      "id": "virtual: config-styles",
+      "key": "styles",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-scripts": {
+      "id": "virtual: config-scripts",
+      "key": "scripts",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-routes": {
+      "id": "virtual: config-routes",
+      "key": "routes",
+      "config": {
+        "onChange": "regenerateTmpFiles"
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-routeLoader": {
+      "id": "virtual: config-routeLoader",
+      "key": "routeLoader",
+      "config": {
+        "default": {
+          "moduleType": "esm"
+        }
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-reactRouter5Compat": {
+      "id": "virtual: config-reactRouter5Compat",
+      "key": "reactRouter5Compat",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-presets": {
+      "id": "virtual: config-presets",
+      "key": "presets",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-plugins": {
+      "id": "virtual: config-plugins",
+      "key": "plugins",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-npmClient": {
+      "id": "virtual: config-npmClient",
+      "key": "npmClient",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-mountElementId": {
+      "id": "virtual: config-mountElementId",
+      "key": "mountElementId",
+      "config": {
+        "default": "root"
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-metas": {
+      "id": "virtual: config-metas",
+      "key": "metas",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-links": {
+      "id": "virtual: config-links",
+      "key": "links",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-historyWithQuery": {
+      "id": "virtual: config-historyWithQuery",
+      "key": "historyWithQuery",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-history": {
+      "id": "virtual: config-history",
+      "key": "history",
+      "config": {
+        "default": {
+          "type": "browser"
+        }
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-headScripts": {
+      "id": "virtual: config-headScripts",
+      "key": "headScripts",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-esbuildMinifyIIFE": {
+      "id": "virtual: config-esbuildMinifyIIFE",
+      "key": "esbuildMinifyIIFE",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-conventionRoutes": {
+      "id": "virtual: config-conventionRoutes",
+      "key": "conventionRoutes",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-conventionLayout": {
+      "id": "virtual: config-conventionLayout",
+      "key": "conventionLayout",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-base": {
+      "id": "virtual: config-base",
+      "key": "base",
+      "config": {
+        "default": "/"
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-analyze": {
+      "id": "virtual: config-analyze",
+      "key": "analyze",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-writeToDisk": {
+      "id": "virtual: config-writeToDisk",
+      "key": "writeToDisk",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-transformRuntime": {
+      "id": "virtual: config-transformRuntime",
+      "key": "transformRuntime",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-theme": {
+      "id": "virtual: config-theme",
+      "key": "theme",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-targets": {
+      "id": "virtual: config-targets",
+      "key": "targets",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-svgr": {
+      "id": "virtual: config-svgr",
+      "key": "svgr",
+      "config": {
+        "default": {}
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-svgo": {
+      "id": "virtual: config-svgo",
+      "key": "svgo",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-stylusLoader": {
+      "id": "virtual: config-stylusLoader",
+      "key": "stylusLoader",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-styleLoader": {
+      "id": "virtual: config-styleLoader",
+      "key": "styleLoader",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-srcTranspilerOptions": {
+      "id": "virtual: config-srcTranspilerOptions",
+      "key": "srcTranspilerOptions",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-srcTranspiler": {
+      "id": "virtual: config-srcTranspiler",
+      "key": "srcTranspiler",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-sassLoader": {
+      "id": "virtual: config-sassLoader",
+      "key": "sassLoader",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-runtimePublicPath": {
+      "id": "virtual: config-runtimePublicPath",
+      "key": "runtimePublicPath",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-purgeCSS": {
+      "id": "virtual: config-purgeCSS",
+      "key": "purgeCSS",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-publicPath": {
+      "id": "virtual: config-publicPath",
+      "key": "publicPath",
+      "config": {
+        "default": "/"
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-proxy": {
+      "id": "virtual: config-proxy",
+      "key": "proxy",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-postcssLoader": {
+      "id": "virtual: config-postcssLoader",
+      "key": "postcssLoader",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-outputPath": {
+      "id": "virtual: config-outputPath",
+      "key": "outputPath",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-normalCSSLoaderModules": {
+      "id": "virtual: config-normalCSSLoaderModules",
+      "key": "normalCSSLoaderModules",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-mfsu": {
+      "id": "virtual: config-mfsu",
+      "key": "mfsu",
+      "config": {
+        "default": {
+          "strategy": "eager"
+        }
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-mdx": {
+      "id": "virtual: config-mdx",
+      "key": "mdx",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-manifest": {
+      "id": "virtual: config-manifest",
+      "key": "manifest",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-lessLoader": {
+      "id": "virtual: config-lessLoader",
+      "key": "lessLoader",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-jsMinifierOptions": {
+      "id": "virtual: config-jsMinifierOptions",
+      "key": "jsMinifierOptions",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-jsMinifier": {
+      "id": "virtual: config-jsMinifier",
+      "key": "jsMinifier",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-inlineLimit": {
+      "id": "virtual: config-inlineLimit",
+      "key": "inlineLimit",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-ignoreMomentLocale": {
+      "id": "virtual: config-ignoreMomentLocale",
+      "key": "ignoreMomentLocale",
+      "config": {
+        "default": true
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-https": {
+      "id": "virtual: config-https",
+      "key": "https",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-hash": {
+      "id": "virtual: config-hash",
+      "key": "hash",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-forkTSChecker": {
+      "id": "virtual: config-forkTSChecker",
+      "key": "forkTSChecker",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-fastRefresh": {
+      "id": "virtual: config-fastRefresh",
+      "key": "fastRefresh",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-extraPostCSSPlugins": {
+      "id": "virtual: config-extraPostCSSPlugins",
+      "key": "extraPostCSSPlugins",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-extraBabelPresets": {
+      "id": "virtual: config-extraBabelPresets",
+      "key": "extraBabelPresets",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-extraBabelPlugins": {
+      "id": "virtual: config-extraBabelPlugins",
+      "key": "extraBabelPlugins",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-extraBabelIncludes": {
+      "id": "virtual: config-extraBabelIncludes",
+      "key": "extraBabelIncludes",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-externals": {
+      "id": "virtual: config-externals",
+      "key": "externals",
+      "config": {
+        "default": {}
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-esm": {
+      "id": "virtual: config-esm",
+      "key": "esm",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-devtool": {
+      "id": "virtual: config-devtool",
+      "key": "devtool",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-depTranspiler": {
+      "id": "virtual: config-depTranspiler",
+      "key": "depTranspiler",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-define": {
+      "id": "virtual: config-define",
+      "key": "define",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-deadCode": {
+      "id": "virtual: config-deadCode",
+      "key": "deadCode",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-cssPublicPath": {
+      "id": "virtual: config-cssPublicPath",
+      "key": "cssPublicPath",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-cssMinifierOptions": {
+      "id": "virtual: config-cssMinifierOptions",
+      "key": "cssMinifierOptions",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-cssMinifier": {
+      "id": "virtual: config-cssMinifier",
+      "key": "cssMinifier",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-cssLoaderModules": {
+      "id": "virtual: config-cssLoaderModules",
+      "key": "cssLoaderModules",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-cssLoader": {
+      "id": "virtual: config-cssLoader",
+      "key": "cssLoader",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-copy": {
+      "id": "virtual: config-copy",
+      "key": "copy",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-checkDepCssModules": {
+      "id": "virtual: config-checkDepCssModules",
+      "key": "checkDepCssModules",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-chainWebpack": {
+      "id": "virtual: config-chainWebpack",
+      "key": "chainWebpack",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-cacheDirectoryPath": {
+      "id": "virtual: config-cacheDirectoryPath",
+      "key": "cacheDirectoryPath",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-babelLoaderCustomize": {
+      "id": "virtual: config-babelLoaderCustomize",
+      "key": "babelLoaderCustomize",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-autoprefixer": {
+      "id": "virtual: config-autoprefixer",
+      "key": "autoprefixer",
+      "config": {},
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-autoCSSModules": {
+      "id": "virtual: config-autoCSSModules",
+      "key": "autoCSSModules",
+      "config": {
+        "default": true
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "virtual: config-alias": {
+      "id": "virtual: config-alias",
+      "key": "alias",
+      "config": {
+        "default": {
+          "umi": "@@/exports",
+          "react": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/react",
+          "react-dom": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/react-dom",
+          "react-router": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/node_modules/react-router",
+          "react-router-dom": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/node_modules/react-router-dom"
+        }
+      },
+      "type": "plugin",
+      "enableBy": "register",
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/crossorigin/crossorigin": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/crossorigin/crossorigin.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/crossorigin/crossorigin",
+      "key": "crossorigin",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/depsOnDemand/depsOnDemand": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/depsOnDemand/depsOnDemand.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/depsOnDemand/depsOnDemand",
+      "key": "depsOnDemand",
+      "config": {},
+      "time": {
+        "hooks": {
+          "onStart": [
+            0
+          ]
+        },
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/devTool/devTool": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/devTool/devTool.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/devTool/devTool",
+      "key": "devTool",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/esbuildHelperChecker/esbuildHelperChecker": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/esbuildHelperChecker/esbuildHelperChecker.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/esbuildHelperChecker/esbuildHelperChecker",
+      "key": "esbuildHelperChecker",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 42
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/esmi/esmi": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/esmi/esmi.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/esmi/esmi",
+      "key": "esmi",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 16
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/exportStatic/exportStatic": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/exportStatic/exportStatic.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/exportStatic/exportStatic",
+      "key": "exportStatic",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 7
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/favicons/favicons": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/favicons/favicons.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/favicons/favicons",
+      "key": "favicons",
+      "config": {},
+      "time": {
+        "hooks": {
+          "modifyAppData": [
+            0
+          ]
+        },
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/helmet/helmet": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/helmet/helmet.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/helmet/helmet",
+      "key": "helmet",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/icons/icons": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/icons/icons.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/icons/icons",
+      "key": "icons",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/mock/mock": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/mock/mock.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/mock/mock",
+      "key": "mock",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 16
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/mpa/mpa.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa",
+      "key": "mpa",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/okam/okam": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/okam/okam.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/okam/okam",
+      "key": "okam",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/overrides/overrides.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides",
+      "key": "overrides",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/phantomDependency/phantomDependency": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/phantomDependency/phantomDependency.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/phantomDependency/phantomDependency",
+      "key": "phantomDependency",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/polyfill/polyfill": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/polyfill/polyfill.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/polyfill/polyfill",
+      "key": "polyfill",
+      "config": {},
+      "time": {
+        "hooks": {
+          "modifyConfig": [
+            1
+          ]
+        },
+        "register": 1
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill",
+      "key": "publicPathPolyfill",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/prepare/prepare": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/prepare/prepare.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/prepare/prepare",
+      "key": "prepare",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/routePrefetch/routePrefetch": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/routePrefetch/routePrefetch.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/routePrefetch/routePrefetch",
+      "key": "routePrefetch",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/stagewise/stagewise": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/stagewise/stagewise.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/stagewise/stagewise",
+      "key": "stagewise",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/terminal/terminal": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/terminal/terminal.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/terminal/terminal",
+      "key": "terminal",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/tmpFiles/tmpFiles": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/tmpFiles/tmpFiles.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/tmpFiles/tmpFiles",
+      "key": "tmpFiles",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 2
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/clientLoader/clientLoader": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/clientLoader/clientLoader.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/clientLoader/clientLoader",
+      "key": "clientLoader",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/routeProps/routeProps": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/routeProps/routeProps.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/routeProps/routeProps",
+      "key": "routeProps",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/ssr/ssr.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr",
+      "key": "ssr",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/tmpFiles/configTypes": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/tmpFiles/configTypes.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/tmpFiles/configTypes",
+      "key": "configTypes",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/transform/transform": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/transform/transform.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/transform/transform",
+      "key": "transform",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 2
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/lowImport/lowImport": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/lowImport/lowImport.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/lowImport/lowImport",
+      "key": "lowImport",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/vite/vite": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/vite/vite.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/vite/vite",
+      "key": "vite",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/apiRoute/apiRoute": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/apiRoute/apiRoute.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/apiRoute/apiRoute",
+      "key": "apiRoute",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 2
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/monorepo/redirect.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect",
+      "key": "monorepoRedirect",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 12
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/test/test": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/test/test.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/test/test",
+      "key": "test",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent",
+      "key": "clickToComponent",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/legacy/legacy": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/legacy/legacy.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/legacy/legacy",
+      "key": "legacy",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/classPropertiesLoose/classPropertiesLoose": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/classPropertiesLoose/classPropertiesLoose.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/classPropertiesLoose/classPropertiesLoose",
+      "key": "classPropertiesLoose",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/webpack/webpack": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/webpack/webpack.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/webpack/webpack",
+      "key": "preset-umi:webpack",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/swc/swc.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/swc/swc",
+      "key": "swc",
+      "config": {},
+      "time": {
+        "hooks": {
+          "addOnDemandDeps": [
+            0
+          ]
+        },
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/ui/ui": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/ui/ui.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/ui/ui",
+      "key": "ui",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 2
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/mako/mako.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/mako/mako",
+      "key": "mako",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/utoopack/utoopack": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/utoopack/utoopack.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/utoopack/utoopack",
+      "key": "utoopack",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian",
+      "key": "hmrGuardian",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad",
+      "key": "routePreloadOnLoad",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 15
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/forget/forget.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/forget/forget",
+      "key": "forget",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "config"
+    },
+    "./node_modules/@umijs/preset-umi/dist/features/bundler/bundler": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/features/bundler/bundler.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/features/bundler/bundler",
+      "key": "preset-umi:bundler",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/build": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/build.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/build",
+      "key": "build",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/config/config": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/config/config.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/config/config",
+      "key": "config",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 19
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/dev/dev": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/dev/dev.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/dev/dev",
+      "key": "dev",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 17
+      }
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/help": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/help.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/help",
+      "key": "help",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/lint": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/lint.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/lint",
+      "key": "lint",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/setup": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/setup.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/setup",
+      "key": "setup",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/deadcode": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/deadcode.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/deadcode",
+      "key": "deadcode",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/version": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/version.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/version",
+      "key": "version",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/page": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/page.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/page",
+      "key": "generator:page",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/prettier": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/prettier.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/prettier",
+      "key": "generator:prettier",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/tsconfig": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/tsconfig.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/tsconfig",
+      "key": "generator:tsconfig",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/jest": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/jest.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/jest",
+      "key": "generator:jest",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/tailwindcss": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/tailwindcss.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/tailwindcss",
+      "key": "generator:tailwindcss",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/dva": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/dva.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/dva",
+      "key": "generator:dva",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/component": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/component.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/component",
+      "key": "generator:component",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/mock": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/mock.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/mock",
+      "key": "generator:mock",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/cypress": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/cypress.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/cypress",
+      "key": "generator:cypress",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/api": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/api.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/api",
+      "key": "generator:api",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/generators/precommit": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/generators/precommit.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/generators/precommit",
+      "key": "generator:precommit",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/plugin": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/plugin.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/plugin",
+      "key": "command:plugin",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/verify-commit": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/verify-commit.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/verify-commit",
+      "key": "verifyCommit",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/preview": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/preview.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/preview",
+      "key": "preview",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 11
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/preset-umi/dist/commands/mfsu/mfsu": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/dist/commands/mfsu/mfsu.js",
+      "id": "./node_modules/@umijs/preset-umi/dist/commands/mfsu/mfsu",
+      "key": "mfsu-cli",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 0
+      },
+      "enableBy": "register"
+    },
+    "@umijs/plugin-run": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/plugin-run/dist/index.js",
+      "id": "@umijs/plugin-run",
+      "key": "run",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    },
+    "./node_modules/@umijs/core/dist/service/generatePlugin": {
+      "cwd": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project",
+      "type": "plugin",
+      "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/core/dist/service/generatePlugin.js",
+      "id": "./node_modules/@umijs/core/dist/service/generatePlugin",
+      "key": "generatePlugin",
+      "config": {},
+      "time": {
+        "hooks": {},
+        "register": 1
+      },
+      "enableBy": "register"
+    }
+  },
+  "presets": [],
+  "name": "build",
+  "args": {
+    "_": []
+  },
+  "userConfig": {
+    "npmClient": "npm",
+    "publicPath": "/",
+    "title": "龟投",
+    "favicons": [
+      "/logo.png"
+    ],
+    "esbuildMinifyIIFE": true,
+    "history": {
+      "type": "browser"
+    },
+    "alias": {
+      "@": "/src"
+    },
+    "routes": [
+      {
+        "path": "/jump",
+        "component": "jump"
+      },
+      {
+        "path": "/",
+        "component": "@/layouts/home",
+        "routes": [
+          {
+            "path": "/",
+            "component": "home"
+          },
+          {
+            "path": "/world-cup",
+            "component": "world-cup"
+          },
+          {
+            "path": "/rivalry",
+            "component": "rivalry"
+          },
+          {
+            "path": "/forum",
+            "component": "forum"
+          },
+          {
+            "path": "/games",
+            "component": "games"
+          },
+          {
+            "path": "/battle-plaza",
+            "component": "battle-plaza"
+          },
+          {
+            "path": "/rank",
+            "component": "rank"
+          },
+          {
+            "path": "/shop",
+            "component": "shop"
+          },
+          {
+            "path": "/pet",
+            "component": "pet"
+          },
+          {
+            "path": "/profile",
+            "component": "profile"
+          },
+          {
+            "path": "/active-predictions",
+            "component": "active-predictions"
+          }
+        ]
+      }
+    ],
+    "extraPostCSSPlugins": [
+      {
+        "postcssPlugin": "@tailwindcss/postcss",
+        "plugins": [
+          {
+            "postcssPlugin": "tailwindcss-postcss-fix-relative-paths"
+          },
+          {
+            "postcssPlugin": "tailwindcss"
+          }
+        ]
+      }
+    ]
+  },
+  "mainConfigFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/.umirc.ts",
+  "config": {
+    "routeLoader": {
+      "moduleType": "esm"
+    },
+    "mountElementId": "root",
+    "history": {
+      "type": "browser"
+    },
+    "base": "/",
+    "svgr": {},
+    "publicPath": "/",
+    "mfsu": {
+      "strategy": "eager"
+    },
+    "ignoreMomentLocale": true,
+    "externals": {},
+    "autoCSSModules": true,
+    "alias": {
+      "umi": "@@/exports",
+      "react": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/react",
+      "react-dom": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/react-dom",
+      "react-router": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/node_modules/react-router",
+      "react-router-dom": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/@umijs/preset-umi/node_modules/react-router-dom",
+      "@": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src",
+      "@@": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/.umi-production",
+      "regenerator-runtime": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/regenerator-runtime"
+    },
+    "npmClient": "npm",
+    "title": "龟投",
+    "favicons": [
+      "/logo.png"
+    ],
+    "esbuildMinifyIIFE": true,
+    "routes": [
+      {
+        "path": "/jump",
+        "component": "jump"
+      },
+      {
+        "path": "/",
+        "component": "@/layouts/home",
+        "routes": [
+          {
+            "path": "/",
+            "component": "home"
+          },
+          {
+            "path": "/world-cup",
+            "component": "world-cup"
+          },
+          {
+            "path": "/rivalry",
+            "component": "rivalry"
+          },
+          {
+            "path": "/forum",
+            "component": "forum"
+          },
+          {
+            "path": "/games",
+            "component": "games"
+          },
+          {
+            "path": "/battle-plaza",
+            "component": "battle-plaza"
+          },
+          {
+            "path": "/rank",
+            "component": "rank"
+          },
+          {
+            "path": "/shop",
+            "component": "shop"
+          },
+          {
+            "path": "/pet",
+            "component": "pet"
+          },
+          {
+            "path": "/profile",
+            "component": "profile"
+          },
+          {
+            "path": "/active-predictions",
+            "component": "active-predictions"
+          }
+        ]
+      }
+    ],
+    "extraPostCSSPlugins": [
+      {
+        "postcssPlugin": "@tailwindcss/postcss",
+        "plugins": [
+          {
+            "postcssPlugin": "tailwindcss-postcss-fix-relative-paths"
+          },
+          {
+            "postcssPlugin": "tailwindcss"
+          }
+        ]
+      }
+    ],
+    "targets": {
+      "chrome": 80
+    }
+  },
+  "routes": {
+    "1": {
+      "path": "/jump",
+      "file": "@/pages/jump/index.tsx",
+      "parentId": "@@/global-layout",
+      "id": "1",
+      "absPath": "/jump",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { JumpPageView } from './components/JumpPageView';\n\nexport default function JumpPage() {\n  const navigate = useNavigate();\n\n  return (\n    <JumpPageView\n      isMobileMode={typeof window !== 'undefined' ? window.innerWidth < 1024 : false}\n      onBack={() => {\n        navigate('/games');\n      }}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/jump/index.tsx"
+    },
+    "2": {
+      "path": "/",
+      "file": "@/layouts/home.tsx",
+      "parentId": "@@/global-layout",
+      "id": "2",
+      "absPath": "/",
+      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => PATH_VIEW_MAP[location.pathname] ?? 'predictions', [location.pathname]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/home.tsx"
+    },
+    "3": {
+      "path": "/",
+      "file": "@/pages/home/index.tsx",
+      "parentId": "2",
+      "id": "3",
+      "absPath": "/",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { HomePageView } from './components/HomePageView';\nimport { usePredictionCardItems, type PredictionCardItem } from './components/predictionCards';\n\nexport default function HomePage() {\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [selectedBattleId, setSelectedBattleId] = useState<string | null>(null);\n  const { onOpenAuth } = useHomeLayoutContext();\n  const { allItems } = usePredictionCardItems(null);\n\n  const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {\n    setUserVotes((prev) => ({ ...prev, [item.id]: option }));\n  }, []);\n\n  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];\n  const battleNews = selectedBattleId\n    ? allItems.find((item) => item.id === selectedBattleId) ?? allFallbackItems.find((item) => item.id === selectedBattleId) ?? allFallbackItems[0]\n    : null;\n\n  return (\n    <HomePageView\n      battleNews={battleNews}\n      userSide={selectedBattleId ? (userVotes[selectedBattleId] ?? null) : null}\n      onBattleBack={() => setSelectedBattleId(null)}\n      onPredictionBetSuccess={handlePredictionBetSuccess}\n      onRequireAuth={onOpenAuth}\n      onEnterBattle={setSelectedBattleId}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
+    },
+    "4": {
+      "path": "/world-cup",
+      "file": "@/pages/world-cup/index.tsx",
+      "parentId": "2",
+      "id": "4",
+      "absPath": "/world-cup",
+      "__content": "/** 文件说明：World Cup 页面路由入口，负责挂载世界杯专题页面组件。 */\nimport { WorldCupPage } from './components/WorldCupPage';\n\nexport default WorldCupPage;\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/world-cup/index.tsx"
+    },
+    "5": {
+      "path": "/rivalry",
+      "file": "@/pages/rivalry/index.tsx",
+      "parentId": "2",
+      "id": "5",
+      "absPath": "/rivalry",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useRequestPKBet } from '@/hooks/usePkRequests';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken } from '@/utils/authStorage';\nimport { RivalryPageView } from './components/RivalryPageView';\n\nfunction createRequestId(prefix: string) {\n  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {\n    return `${prefix}-${crypto.randomUUID()}`;\n  }\n  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;\n}\n\nexport default function RivalryPage() {\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [betError, setBetError] = useState<string | null>(null);\n  const [pendingBetId, setPendingBetId] = useState<string | null>(null);\n  const pkBetMutation = useRequestPKBet();\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  const handleRivalryBet = useCallback(async (newsId: string, option: 'A' | 'B', _odds: number, amount?: number) => {\n    setBetError(null);\n\n    if (!getAuthToken()) {\n      onOpenAuth();\n      return;\n    }\n\n    if (newsId.startsWith('pk-')) {\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n      return;\n    }\n\n    try {\n      setPendingBetId(newsId);\n      await pkBetMutation.mutateAsync({\n        topicId: newsId,\n        side: option,\n        requestId: createRequestId(`pk-bet-${newsId}`),\n        amount,\n      });\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n    } catch (error) {\n      const message = error instanceof Error ? error.message : '下注失败，请稍后再试';\n      if (message.includes('NotLogin')) {\n        onOpenAuth();\n        return;\n      }\n      setBetError(message);\n    } finally {\n      setPendingBetId(null);\n    }\n  }, [onOpenAuth, pkBetMutation]);\n\n  return (\n    <RivalryPageView\n      userVotes={userVotes}\n      betError={betError}\n      pendingBetId={pendingBetId}\n      onBet={handleRivalryBet}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rivalry/index.tsx"
+    },
+    "6": {
+      "path": "/forum",
+      "file": "@/pages/forum/index.tsx",
+      "parentId": "2",
+      "id": "6",
+      "absPath": "/forum",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ForumPageView } from './components/ForumPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ForumPage() {\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });\n  const newsByMarketId = useMemo(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const cards = Array.isArray(list) ? list.map(mapMarketToPredictionCard) : [];\n    return new Map(cards.filter((item) => typeof item.marketId === 'number').map((item) => [item.marketId as number, item]));\n  }, [footballMarkets.data]);\n\n  const handleOpenLinkedPrediction = (item: PredictionCardItem) => {\n    navigate(`/?market=${item.marketId ?? item.id}`);\n  };\n\n  return (\n    <ForumPageView\n      newsByMarketId={newsByMarketId}\n      onOpenLinkedPrediction={handleOpenLinkedPrediction}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/forum/index.tsx"
+    },
+    "7": {
+      "path": "/games",
+      "file": "@/pages/games/index.tsx",
+      "parentId": "2",
+      "id": "7",
+      "absPath": "/games",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { GamesPageView } from './components/GamesPageView';\n\nfunction openLabStandalone() {\n  window.location.href = '/games/turtle-jump/index.html';\n}\n\nfunction openBattleStandalone() {\n  window.location.href = '/games/turtle-battle/index.html';\n}\n\nexport default function GamesPage() {\n  const navigate = useNavigate();\n\n  return (\n    <GamesPageView\n      onOpenJump={() => navigate('/jump')}\n      onOpenLab={openLabStandalone}\n      onOpenBattle={openBattleStandalone}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/games/index.tsx"
+    },
+    "8": {
+      "path": "/battle-plaza",
+      "file": "@/pages/battle-plaza/index.tsx",
+      "parentId": "2",
+      "id": "8",
+      "absPath": "/battle-plaza",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { BattlePlazaPageView } from './components/BattlePlazaPageView';\n\nexport default function BattlePlazaPage() {\n  return <BattlePlazaPageView />;\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/battle-plaza/index.tsx"
+    },
+    "9": {
+      "path": "/rank",
+      "file": "@/pages/rank/index.tsx",
+      "parentId": "2",
+      "id": "9",
+      "absPath": "/rank",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { RankPageView } from './components/RankPageView';\n\nexport default function RankPage() {\n  return <RankPageView />;\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rank/index.tsx"
+    },
+    "10": {
+      "path": "/shop",
+      "file": "@/pages/shop/index.tsx",
+      "parentId": "2",
+      "id": "10",
+      "absPath": "/shop",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { ShopPageView } from './components/ShopPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ShopPage() {\n  const navigate = useNavigate();\n  const [balance, setBalance] = useState(mockUser.balance);\n  const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);\n  const [skins] = useState<PetSkin[]>(mockPetSkins);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 商城页自己维护它需要的金币和宠物接口，页面壳统一交给 layouts/home。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof coinMe.data?.balance === 'number') {\n      setBalance(coinMe.data.balance);\n    }\n  }, [coinMe.data?.balance]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  return (\n    <ShopPageView\n      balance={balance}\n      pet={currentPet}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onBack={() => {\n        navigate('/');\n      }}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/shop/index.tsx"
+    },
+    "11": {
+      "path": "/pet",
+      "file": "@/pages/pet/index.tsx",
+      "parentId": "2",
+      "id": "11",
+      "absPath": "/pet",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetEquipUpdate,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { PetPageView } from './components/PetPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function PetPage() {\n  const navigate = useNavigate();\n  const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);\n  const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);\n\n  // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n  const petEquipMutation = useRequestPetEquipUpdate();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  const handleEquipSkin = useCallback((skinId: string) => {\n    setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));\n  }, []);\n\n  const handleEquipPet = useCallback(async (petId: number | string) => {\n    const result = await petEquipMutation.mutateAsync({ petId });\n    void Promise.all([\n      petEquipQuery.refetch(),\n      petOwnedQuery.refetch(),\n      petStatusQuery.refetch(),\n    ]);\n    return result;\n  }, [petEquipMutation, petEquipQuery, petOwnedQuery, petStatusQuery]);\n\n  return (\n    <PetPageView\n      pet={currentPet}\n      balance={coinMe.data?.balance ?? mockUser.balance}\n      winRate={0.68}\n      winStreak={mockUser.winStreak}\n      totalPredictions={42}\n      onBack={() => {\n        navigate('/');\n      }}\n      skins={skins}\n      onEquipSkin={handleEquipSkin}\n      equippedPet={petEquipQuery.data ?? null}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n      petStatus={petStatusQuery.data ?? null}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onEquipPet={handleEquipPet}\n      equippingPetId={\n        petEquipMutation.isLoading\n          ? (petEquipMutation.variables?.petId ?? petEquipMutation.variables?.petKey ?? null)\n          : null\n      }\n      onStaminaChange={setPetStamina}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/pet/index.tsx"
+    },
+    "12": {
+      "path": "/profile",
+      "file": "@/pages/profile/index.tsx",
+      "parentId": "2",
+      "id": "12",
+      "absPath": "/profile",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockCommunityPosts, mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { getStoredUserInfo } from '@/utils/authStorage';\nimport { ProfilePageView } from './components/ProfilePageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ProfilePage() {\n  const navigate = useNavigate();\n  const [skins] = useState<PetSkin[]>(mockPetSkins);\n  const { darkMode, onToggleTheme, onOpenAuth } = useHomeLayoutContext();\n\n  // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。\n  const { userInfo, coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const storedUser = getStoredUserInfo();\n  const petStamina = petStaminaQuery.data?.current ?? mockUser.petInfo.stamina;\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  return (\n    <ProfilePageView\n      userId={userInfo.data?.id ?? storedUser?.id ?? ''}\n      userName={storedUser?.username ?? '路边社社长'}\n      userHandle=\"预测达人\"\n      avatar=\"🦊\"\n      posts={mockCommunityPosts}\n      pet={currentPet}\n      skins={skins}\n      balance={coinMe.data?.balance ?? mockUser.balance}\n      darkMode={darkMode}\n      onBack={() => {\n        navigate('/');\n      }}\n      onOpenForum={() => {\n        navigate('/forum');\n      }}\n      onOpenAuth={onOpenAuth}\n      onToggleTheme={onToggleTheme}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/profile/index.tsx"
+    },
+    "13": {
+      "path": "/active-predictions",
+      "file": "@/pages/active-predictions/index.tsx",
+      "parentId": "2",
+      "id": "13",
+      "absPath": "/active-predictions",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ActivePredictionsPageView } from './components/ActivePredictionsPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ActivePredictionsPage() {\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });\n  const activePredictionItems = useMemo<PredictionCardItem[]>(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const liveNews = Array.isArray(list) && list.length > 0\n      ? list.map(mapMarketToPredictionCard)\n      : ([heroNews, ...mockNews] as PredictionCardItem[]);\n    return liveNews.filter((item) => item.status === 'open');\n  }, [footballMarkets.data]);\n\n  return (\n    <ActivePredictionsPageView\n      items={activePredictionItems}\n      onBack={() => {\n        navigate('/');\n      }}\n      onEnterBattle={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/active-predictions/index.tsx"
+    },
+    "@@/global-layout": {
+      "id": "@@/global-layout",
+      "path": "/",
+      "file": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/index.tsx",
+      "absPath": "/",
+      "isLayout": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/index.tsx"
+    }
+  },
+  "apiRoutes": {
+    "predictionApi": {
+      "path": "predictionApi",
+      "id": "predictionApi",
+      "file": "predictionApi.ts",
+      "absPath": "/predictionApi",
+      "__content": "/**\n * 文件说明：prediction Api 接口地址常量，供请求 Hook 统一引用。\n */\n\n/// MARK: 预测事件系统\n/// 基础路径: /api/football\n//查询预测市场（聚合 market + context）\nexport const API_Football_Markets = \"/api/football/markets\";\n//修改/创建 PredictContext\nexport const API_Football_Predict_Context_Update = \"/api/football/predict_context/update\";\n//热度榜\nexport const API_Football_Predict_Context_Hot = \"/api/football/predict_context/hot\";\n//热门标签 TOP10（按热度累计）\nexport const API_Football_Predict_Tags_Hot = \"/api/football/predict_tags/hot\";\n//按标签查询预测市场列表（聚合返回 market + context）\nexport const API_Football_Markets_By_Tag = \"/api/football/markets/by_tag\";\n// 查询用户在某个市场的下注结算结果（betSettleResult）\nexport const API_Football_Bet_Settle_Result = \"/api/football/bet_settle_result\";"
+    },
+    "commentApi": {
+      "path": "commentApi",
+      "id": "commentApi",
+      "file": "commentApi.ts",
+      "absPath": "/commentApi",
+      "__content": "/**\n * 文件说明：comment Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 内容域 - 评论\n/// 基础路径: /api/comment\n\n// 评论列表（按 entityType/entityId）\nexport const API_Comment_Comments = \"/api/comment/comments\";\n\n// 回复列表（按 commentId）\nexport const API_Comment_Replies = \"/api/comment/replies\";\n\n// 发布评论\nexport const API_Comment_Create = \"/api/comment/create\";\n"
+    },
+    "httpClient": {
+      "path": "httpClient",
+      "id": "httpClient",
+      "file": "httpClient.ts",
+      "absPath": "/httpClient",
+      "__content": "/**\n * 文件说明：HTTP 客户端封装，统一拼接服务地址、透传参数并归一化响应。\n */\nimport { SERVER_API } from \"@/config\";\nimport axios from \"axios\";\n\nexport function axiosCustom({\n  cmd = \"\",\n  headers = {},\n  params = {},\n  method = \"get\",\n  data = {},\n  successCode = 0,\n}): Promise<any> {\n  return new Promise(async (resolve) => {\n    try {\n      const res = await axios({\n        url: SERVER_API + cmd,\n        method: method,\n        headers,\n        params,\n        data,\n        withCredentials: true,\n      });\n      const resData = res.data;\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: resData,\n      });\n\n      resolve({\n        code: resData.errorCode,\n        cmd: cmd,\n        method: method,\n        msg: resData.message,\n        data: resData?.data ?? {},\n        success:resData?.success ?? false\n      });\n    } catch (e: any) {\n      console.log(e.response?.status, \"eeeee\");\n      //twitter user me 如果用户账号异常 也会返回403 但不能重新授权\n      if (\n        (e.response?.status === 403 && successCode !== 312454645) ||\n        e.response?.status === 411\n      ) {\n        localStorage.setItem(\"url_token\", \"{}\");\n      }\n\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: e,\n      });\n      resolve({\n        cmd: cmd,\n        method: method,\n        code: 0, //失败的code\n        msg: e,\n        success:false\n      });\n    }\n  });\n}\n"
+    },
+    "battleApi": {
+      "path": "battleApi",
+      "id": "battleApi",
+      "file": "battleApi.ts",
+      "absPath": "/battleApi",
+      "__content": "/**\n * 文件说明：battle Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 开战广场 / Battle Square\n/// 基础路径: /api/battle\n\n// 用户侧 battle 接口常量统一放在这里，页面和 hooks 都只引用这一层。\n// 赌局列表：支持分页、按状态筛选、只看我参与的 battle。\nexport const API_Battle_List = \"/api/battle/list\";\n// 赌局统计：顶部广场统计卡片。\nexport const API_Battle_Stats = \"/api/battle/stats\";\n// 赌局详情：返回 battle 基础信息、我的动作状态、我的结算明细。\nexport const API_Battle_By = \"/api/battle/by\";\n// 创建赌局：庄家发起一场新的开战广场 battle。\nexport const API_Battle_Create = \"/api/battle/create\";\n// 加入/追加下注：挑战者加入 battle，公开场会收 5% 入场费。\nexport const API_Battle_Join = \"/api/battle/join\";\n// 庄家加注：仅庄家可追加自己的押注额度。\nexport const API_Battle_Banker_Add_Stake = \"/api/battle/banker_add_stake\";\n// 庄家宣布结果：在 pending 阶段提交 banker_wins / banker_loses。\nexport const API_Battle_Declare = \"/api/battle/declare\";\n// 挑战者确认：对庄家的宣判结果表示同意。\nexport const API_Battle_Challenger_Confirm = \"/api/battle/challenger_confirm\";\n// 挑战者异议：对庄家的宣判结果提出 dispute，进入管理员仲裁。\nexport const API_Battle_Challenger_Dispute = \"/api/battle/challenger_dispute\";\n// 提取奖励：battle settled 后，一次性提取我的结算金额。\nexport const API_Battle_Withdraw = \"/api/battle/withdraw\";\n\n// 管理端裁决接口目前前台页面没直接使用，但类型层和 hook 已预留。\nexport const API_Admin_Battle_Resolve = \"/api/admin/battle/resolve\";\n"
+    },
+    "topicApi": {
+      "path": "topicApi",
+      "id": "topicApi",
+      "file": "topicApi.ts",
+      "absPath": "/topicApi",
+      "__content": "/**\n * 文件说明：topic Api 接口地址常量，供请求 Hook 统一引用。\n */\n\n/// MARK: 内容域 - 话题/帖子\n/// 基础路径: /api/topic\n//节点导航\nexport const API_Topic_Node_Navs = \"/api/topic/node_navs\";\n//获取所有节点\nexport const API_Topic_Nodes = \"/api/topic/nodes\";\n//获取节点信息\nexport const API_Topic_Node = \"/api/topic/node\";\n//发表话题\nexport const API_Topic_Create = \"/api/topic/create\";\n//获取编辑话题详情 / 编辑话题 /{topicId}\nexport const API_Topic_Edit = \"/api/topic/edit\";\n//删除话题 /${topicId}\nexport const API_Topic_Delete = \"/api/topic/delete\";\n//设置推荐 /{topicId}\nexport const API_Topic_Recommend = \"/api/topic/recommend\";\n//设置置顶 /{topicId}\nexport const API_Topic_Sticky = \"/api/topic/sticky\";\n//获取话题详情 /{topicId}\nexport const API_Topic = \"/api/topic\";\n//最近点赞用户 /{topicId}\nexport const API_Topic_RecentLikes = \"/api/topic/recentlikes\";\n//用户帖子列表\nexport const API_Topic_User_Topics = \"/api/topic/user_topics\";\n//标签帖子列表\nexport const API_Topic_Tag_Topics = \"/api/topic/tag_topics\";\n//收藏话题 /{topicId}\nexport const API_Topic_Favorite = \"/api/topic/favorite\";\n//话题列表（首页主流）\nexport const API_Topic_Topics = \"/api/topic/topics\";\n//最新帖子（可用于“最新热点”）\nexport const API_Topic_Recent = \"/api/topic/recent\";\n//获取隐藏内容\nexport const API_Topic_Hide_Content = \"/api/topic/hide_content\";\n"
+    },
+    "authApi": {
+      "path": "authApi",
+      "id": "authApi",
+      "file": "authApi.ts",
+      "absPath": "/authApi",
+      "__content": "/**\n * 文件说明：auth Api 接口地址常量，供请求 Hook 统一引用。\n */\n//获取站点配置\nexport const API_Config_Configs = \"/api/config/configs\";\n//获取当前登录用户\nexport const API_User_Current = \"/api/user/current\";\n//获取用户勋章列表\nexport const API_Badge_Badges = \"/api/badge/badges\";\n//GET 签到状态. POST 执行签到\nexport const API_Checkin_Checkin = \"/api/checkin/checkin\";\n//今日签到排行\nexport const API_Checkin_Rank = \"/api/checkin/rank\";\n//点赞\nexport const API_Like_Like = \"/api/like/like\";\n//取消点赞\nexport const API_Like_Unlike= \"/api/like/unlike\";\n//投票提交\nexport const API_Vote_Cast= \"/api/vote/cast\";\n//积分排行榜\nexport const API_User_Score_Rank= \"/api/user/score/rank\";\n//友链（首页右侧）\nexport const API_Link_Top_Links= \"/api/link/top_links\";\n//顶部未读消息摘要\nexport const API_User_Msg_recent= \"/api/user/msg_recent\";\n//搜索结果\nexport const API_Search_Topic= \"/api/search/topic\";\n//滑块验证码（推荐登录/注册使用）\nexport const API_Captcha_Request_Angle= \"/api/captcha/request_angle\";\n//图片验证码（兼容）\nexport const API_Captcha_Request= \"/api/captcha/request\";\n//图片验证码（数字验证码）\nexport const API_Captcha_Request_Image= \"/api/captcha/request_image\";\n//图片验证码校验（兼容）\nexport const API_Captcha_Verify= \"/api/captcha/verify\";\n//用户注册\nexport const API_Login_Signup= \"/api/login/signup\";\n//用户名/邮箱 + 密码登录\nexport const API_Login_Signin= \"/api/login/signin\";\n//请求短信验证码（短信登录）\nexport const API_Login_Login_Sms_Code= \"/api/login/login_sms_code\";\n//短信登录\nexport const API_Login_Login_Sms= \"/api/login/login_sms\";\n//退出登录\nexport const API_Login_Signout= \"/api/login/signout\";\n//发送找回密码邮件\nexport const API_Login_Send_Reset_Password_Email= \"/api/login/send_reset_password_email\";\n//重置密码\nexport const API_Login_Reset_Password= \"/api/login/reset_password\";\n//微信登录配置\nexport const API_Login_Wx_Login_Config= \"/api/login/wx_login_config\";\n//微信登录回调提交\nexport const API_Login_Wx_Login_Submit= \"/api/login/wx_login_submit\";\n//Google 登录配置\nexport const API_Login_Google_Login_Config= \"/api/login/google_login_config\";\n//Google 登录回调提交\nexport const API_Login_Google_Login_Submit= \"/api/login/google_login_submit\";\n//Google One Tap 登录\nexport const API_Login_Google_One_Tap= \"/api/login/google_one_tap\";\n\n\n\n\n\n\n//上传图片\nexport const API_Upload_Image= \"/api/upload\";\n//上传文件\nexport const API_Upload_File = \"/api/upload/file\";\n"
+    },
+    "coinApi": {
+      "path": "coinApi",
+      "id": "coinApi",
+      "file": "coinApi.ts",
+      "absPath": "/coinApi",
+      "__content": "/**\n * 文件说明：coin Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 金币 / 预测下注\n/// 基础路径: /api/coin\n//\nexport const API_Coin_Settle = \"/api/coin/settle\";\n//我的金币账户\nexport const API_Coin_Me = \"/api/coin/me\";\n//预测下注\nexport const API_Coin_Bet = \"/api/coin/bet\";\n\n/// MARK: 管理后台 - 金币\n/// 基础路径: /api/admin/coin\n//管理员铸币\nexport const API_Admin_Coin_Mint = \"/api/admin/coin/mint\";"
+    },
+    "petApi": {
+      "path": "petApi",
+      "id": "petApi",
+      "file": "petApi.ts",
+      "absPath": "/petApi",
+      "__content": "/**\n * 文件说明：pet Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 用户侧宠物（user_pet）\n/// 基础路径: /api/pet\n\n// 当前装备龟种\nexport const API_Pet_Equip = \"/api/pet/equip\";\n// 用户龟种资产\nexport const API_Pet_Owned = \"/api/pet/owned\";\n// 体力查询\nexport const API_Pet_Stamina = \"/api/pet/stamina\";\n// 体力消耗\nexport const API_Pet_Stamina_Consume = \"/api/pet/stamina/consume\";\n// 体力恢复 / 喂食\nexport const API_Pet_Stamina_Feed = \"/api/pet/stamina/feed\";\n// 开蛋\nexport const API_Pet_Egg_Hatch = \"/api/pet/egg/hatch\";\n// 状态页聚合\nexport const API_Pet_Status = \"/api/pet/status\";\n"
+    },
+    "pkApi": {
+      "path": "pkApi",
+      "id": "pkApi",
+      "file": "pkApi.ts",
+      "absPath": "/pkApi",
+      "__content": "/**\n * 文件说明：pk Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 对立 PK / 开撕台\n/// 基础路径: /api/pk\n\nexport const API_PK_Topics = '/api/pk/topics';\nexport const API_PK_Topic = '/api/pk/topic';\nexport const API_PK_Bet = '/api/pk/bet';\nexport const API_PK_Heat = '/api/pk/heat';\nexport const API_PK_Comments = '/api/pk/comments';\nexport const API_PK_Comment_Create = '/api/pk/comment/create';\nexport const API_PK_Comment_Reply = '/api/pk/comment/reply';\nexport const API_PK_Downvote = '/api/pk/downvote';\nexport const API_PK_History = '/api/pk/history';\nexport const API_PK_Seasons = '/api/pk/seasons';\nexport const API_PK_My_Bets = '/api/pk/my/bets';\n"
+    }
+  },
+  "hasSrcDir": true,
+  "npmClient": "npm",
+  "umi": {
+    "version": "4.6.48",
+    "name": "Umi",
+    "importSource": "umi",
+    "cliName": "umi"
+  },
+  "bundleStatus": {
+    "done": false
+  },
+  "mfsuBundleStatus": {
+    "done": false
+  },
+  "react": {
+    "version": "19.2.5",
+    "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/react"
+  },
+  "react-dom": {
+    "version": "19.2.5",
+    "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/react-dom"
+  },
+  "appJS": {
+    "path": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/app.ts",
+    "exports": [
+      "rootContainer"
+    ]
+  },
+  "locale": "C",
+  "globalCSS": [],
+  "globalJS": [],
+  "overridesCSS": [],
+  "bundler": "webpack",
+  "git": {
+    "originUrl": "git@github.com:maoshuo1988/turtle_project.git"
+  },
+  "framework": "react",
+  "typescript": {
+    "tsVersion": "5.9.3",
+    "tslibVersion": "2.8.1"
+  }
+}

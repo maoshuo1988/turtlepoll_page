@@ -399,7 +399,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   return (
     <section className={`w-full min-w-0 overflow-x-hidden text-white ${cardClass}`}>
       <div className="xl:hidden min-w-0 overflow-x-hidden px-4 py-4">
-        <div className="min-w-0 rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] px-4 py-4">
+        <div className="min-w-0  bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] px-4 py-4">
           <div className="flex items-start justify-between gap-3">
             <button
               onClick={onBack}
