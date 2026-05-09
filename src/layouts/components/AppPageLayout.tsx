@@ -2,6 +2,7 @@
  * 文件说明：App Page Layout，布局组件层，承接 Header、Footer、Sidebar 和页面内容区域。
  */
 import type React from 'react';
+import { useNavigate } from '@umijs/renderer-react';
 import { MobileFooter, PcFooter } from '@/components/footer';
 import { MobileHeader, PcHeader } from '@/components/header';
 import { Sidebar } from '@/components/layout';
@@ -34,6 +35,8 @@ type AppPageLayoutProps = HeaderProps & {
  * 这样页面层不用关心当前设备类型。
  */
 export function AppLayoutHeader(props: HeaderProps) {
+  const navigate = useNavigate();
+
   return (
     <>
       <PcHeader
@@ -44,7 +47,7 @@ export function AppLayoutHeader(props: HeaderProps) {
       <MobileHeader
         darkMode={props.darkMode}
         onOpenGames={props.onOpenGames ?? (() => {
-          window.location.href = '/games';
+          navigate('/games');
         })}
       />
     </>
@@ -83,7 +86,7 @@ export function AppLayoutSidebar(props: SidebarProps) {
  */
 export function AppPageLayout({
   children,
-  contentClassName = 'min-h-full w-full px-0 pb-12 pt-3',
+  contentClassName = 'min-h-full w-full px-0 pb-0 pt-0',
   footerClassName = 'border-t border-white/8 bg-[#080808]/96 px-3 py-3 dark:border-rdark-border dark:bg-rdark/96',
   darkMode,
   onToggleTheme,
@@ -103,9 +106,9 @@ export function AppPageLayout({
       />
 
       {showSidebar && sidebarProps ? (
-        <main className="app-main flex min-h-0 flex-1 flex-col gap-4 overflow-hidden lg:flex-row lg:gap-6">
+        <main className="app-main flex min-h-0 flex-1 flex-col gap-3 overflow-hidden lg:flex-row">
           {/* PC 端左侧栏固定宽度，移动端导航交给 MobileFooter。 */}
-          <aside className="app-sidebar hidden w-[260px] shrink-0 self-stretch overflow-hidden lg:flex lg:flex-col">
+          <aside className="app-sidebar hidden w-[276px] shrink-0 self-stretch overflow-hidden lg:flex lg:flex-col">
             <div className="min-h-0 flex-1 overflow-hidden">
               <AppLayoutSidebar {...sidebarProps} />
             </div>

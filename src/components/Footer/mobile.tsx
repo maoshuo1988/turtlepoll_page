@@ -2,6 +2,7 @@
  * 文件说明：mobile Footer 组件，负责对应端的底部区域和移动端选项卡。
  */
 import React from 'react';
+import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { Gamepad2, Home, MessageSquare, Swords, UserRound } from 'lucide-react';
 
 const MOBILE_TABS = [
@@ -18,7 +19,9 @@ function isActivePath(currentPath: string, tabPath: string) {
 }
 
 export const MobileFooter: React.FC = () => {
-  const currentPath = typeof window === 'undefined' ? '/' : window.location.pathname;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentPath = location.pathname;
 
   return (
     <footer className="mx-auto flex w-full max-w-[520px] items-center justify-around rounded-[24px] border border-white/8 bg-[#101114]/96 px-2 py-1.5 shadow-[0_-10px_28px_rgba(0,0,0,0.28)] backdrop-blur-xl dark:border-rdark-border dark:bg-rdark-card/96">
@@ -31,7 +34,9 @@ export const MobileFooter: React.FC = () => {
             key={tab.key}
             type="button"
             onClick={() => {
-              window.location.href = tab.path;
+              if (currentPath !== tab.path) {
+                navigate(tab.path);
+              }
             }}
             className={`relative flex h-[50px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[18px] text-[11px] font-bold transition-colors ${
               active

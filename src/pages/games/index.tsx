@@ -1,11 +1,8 @@
 /**
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
-import { GameHubPage } from '@/components/shared/game';
-
-function openJumpStandalone() {
-  window.location.href = '/jump';
-}
+import { useNavigate } from '@umijs/renderer-react';
+import { GamesPageView } from './components/GamesPageView';
 
 function openLabStandalone() {
   window.location.href = '/games/turtle-jump/index.html';
@@ -16,13 +13,13 @@ function openBattleStandalone() {
 }
 
 export default function GamesPage() {
+  const navigate = useNavigate();
+
   return (
-    <section className="view-shell view-rhythm view-games mx-0 grid w-full max-w-none gap-4">
-      <GameHubPage
-        onOpenJump={openJumpStandalone}
-        onOpenLab={openLabStandalone}
-        onOpenBattle={openBattleStandalone}
-      />
-    </section>
+    <GamesPageView
+      onOpenJump={() => navigate('/jump')}
+      onOpenLab={openLabStandalone}
+      onOpenBattle={openBattleStandalone}
+    />
   );
 }

@@ -56,9 +56,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
         shadow-[0_12px_28px_rgba(0,0,0,0.24)] 
         dark:shadow-none 
         overflow-hidden
-        lg:rounded-none
-        lg:border-x-0
-        lg:border-t-0
+        lg:rounded-2xl
         lg:shadow-none`
     }>
       {chatOpen ? (

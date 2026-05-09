@@ -2,10 +2,10 @@
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
 import { useCallback, useState } from 'react';
-import { RivalryPK } from '@/components/shared/rivalry';
 import { useRequestPKBet } from '@/hooks/usePkRequests';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { getAuthToken } from '@/utils/authStorage';
+import { RivalryPageView } from './components/RivalryPageView';
 
 function createRequestId(prefix: string) {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -56,17 +56,11 @@ export default function RivalryPage() {
   }, [onOpenAuth, pkBetMutation]);
 
   return (
-    <section className="view-shell view-rhythm view-rivalry mx-0 grid w-full max-w-none gap-4">
-      {betError ? (
-        <div className="rounded-2xl border border-rose-400/20 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-200">
-          {betError}
-        </div>
-      ) : null}
-      <RivalryPK
-        userVotes={userVotes}
-        onBet={handleRivalryBet}
-        pendingBetId={pendingBetId}
-      />
-    </section>
+    <RivalryPageView
+      userVotes={userVotes}
+      betError={betError}
+      pendingBetId={pendingBetId}
+      onBet={handleRivalryBet}
+    />
   );
 }

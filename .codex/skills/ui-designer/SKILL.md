@@ -79,6 +79,31 @@ Prefer:
 - Max-width containers for readable content.
 - Single-column mobile, multi-column desktop.
 
+## Page Component Ownership
+
+Page-level UI must live under the matching page folder.
+
+Must:
+
+- Put page-only UI in `src/pages/<route>/components/`.
+- Keep `src/pages/<route>/index.tsx` for route-level state, fetching, auth checks, callbacks, and prop assembly.
+- Move page bodies, page sections, modals, cards, lists, and dense visual blocks into that page's own `components/`.
+- Use local relative imports between page UI components.
+- Keep prop types explicit with `interface XxxProps` or `type XxxProps`.
+- Add a short file-purpose comment at the top of every new `.tsx` file.
+
+Must not:
+
+- Put a page-only component in `src/components/shared`.
+- Make `src/pages/<route>/components/<Xxx>.tsx` a thin wrapper around `@/components/shared/<module>/ui/<Page>`.
+- Import another page's private component directly.
+
+Responsive split:
+
+- For complex views, prefer `XxxDesktop.tsx` and `XxxMobile.tsx`, or `components/desktop/` and `components/mobile/`.
+- Desktop components optimize scanning, comparison, and repeated actions.
+- Mobile components optimize single-column flow, touch targets, bottom sheets, and no horizontal overflow.
+
 Avoid:
 
 - Edge-to-edge content unless it is the app shell.
@@ -331,12 +356,19 @@ For this project:
 - New routes must also be added to `.umirc.ts`.
 - Left nav items live in `SidebarMainPanels.tsx`.
 - Auxiliary actions such as guide/chat/pet space belong in business cards, not the main nav list.
-- `src/pages/<route>/index.tsx` must stay thin: it should import and render a dedicated page component.
-- Every page must have a corresponding component folder for its page component, sections, dialogs, list items, and page-local data maps.
-- Put page components in `src/components/<module>/`, `src/components/shared/<module>/`, or an existing same-business folder based on the repo's local convention; do not force everything into `shared`.
-- Use `src/components/shared/<module>/` only for components that are truly reused across pages.
-- Split complex page sections into separate files in the same page/business module directory.
+- `src/pages/<route>/index.tsx` may contain page-level business logic: data fetching, state, auth checks, event callbacks, API orchestration, and prop assembly.
+- `src/pages/<route>/index.tsx` must not contain large UI blocks; complex visual sections, dialogs, cards, and list items belong in that page's `components/` folder.
+- Every page must have a corresponding page folder under `src/pages/<route>/`.
+- Page-specific components belong under `src/pages/<route>/components/`, such as `<RoutePage>.tsx`, `<XxxSection>.tsx`, `<XxxModal>.tsx`, and `<XxxListItem>.tsx`.
+- The dedicated page display component should usually live at `src/pages/<route>/components/<RoutePage>.tsx`; `index.tsx` can own page-level logic and compose that display component.
+- Page-local maps, constants, and types may live in `src/pages/<route>/components/`, `src/pages/<route>/model.ts`, or `src/pages/<route>/types.ts`.
+- Use `src/components/<module>/` for module-level components, and `src/components/shared/<module>/` only for components that are truly reused across pages.
+- Split complex page sections into separate files in `src/pages/<route>/components/`.
 - Keep page-specific data maps, cards, panels, dialogs, and lists grouped with the page module instead of scattering them across unrelated folders.
+- Component props must be explicitly typed with `interface XxxProps` or `type XxxProps`; avoid large inline parameter types.
+- Props must use business-meaningful names. Callbacks use `onXxx`; booleans use `is/has/can/should` prefixes.
+- If a component has too many props, split the component or group related fields into a clear domain object.
+- `index.tsx` or page-level components may own data fetching, state, and action orchestration; presentational child components should receive clear props and should not duplicate page-level requests.
 - Every new `.tsx` file must start with a short purpose comment, preferably `/** 文件说明：xxx。 */`.
 - Comments must explain what the file or complex block is for; do not add empty comments that only restate code.
 

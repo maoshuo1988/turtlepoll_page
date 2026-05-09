@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type React from 'react';
 import { useQueryClient } from 'react-query';
+import { useNavigate } from '@umijs/renderer-react';
 import { AppPageLayout, type SidebarHotTag, type SidebarHotTopic, type ViewType } from './AppPageLayout';
 import { AuthModal } from '@/components/shared/auth';
 import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
@@ -90,6 +91,7 @@ export function StandalonePageShell({
   onAuthSuccess,
   onAfterSignOut,
 }: StandalonePageShellProps) {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
   const signOutMutation = useRequestSignout();
@@ -166,8 +168,15 @@ export function StandalonePageShell({
 
   // 侧边栏导航统一从这里跳转，避免 Sidebar 内部直接依赖路由实现。
   const handleSidebarViewChange = useCallback((view: ViewType, _topic?: SidebarHotTopic, _tag?: SidebarHotTag | null) => {
+    const navigateInApp = (path: string) => {
+      const currentPath = `${window.location.pathname}${window.location.search}`;
+      if (currentPath !== path) {
+        navigate(path);
+      }
+    };
+
     if (view === 'jump') {
-      window.location.href = '/jump';
+      navigateInApp('/jump');
       return;
     }
     if (view === 'lab') {
@@ -179,8 +188,8 @@ export function StandalonePageShell({
       return;
     }
 
-    window.location.href = ROUTE_PATHS[view] ?? '/';
-  }, []);
+    navigateInApp(ROUTE_PATHS[view] ?? '/');
+  }, [navigate]);
 
   // showSidebar=false 的页面不需要传 sidebarProps，普通业务页都会进入这里。
   const sidebarProps = activeView
@@ -235,7 +244,7 @@ export function StandalonePageShell({
       onToggleTheme={handleToggleTheme}
       onOpenAuth={() => onAuthModalOpenChange(true)}
       onOpenGames={() => {
-        window.location.href = '/games';
+        navigate('/games');
       }}
       showSidebar={showSidebar && Boolean(sidebarProps)}
       sidebarProps={sidebarProps}

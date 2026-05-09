@@ -2,11 +2,11 @@
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
 import { useCallback, useState } from 'react';
-import { EventBattle, PredictionsView } from '@/components/shared/predictions';
 import { useHomeLayoutContext } from '@/layouts/context';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
-import { usePredictionCardItems, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCards';
 import { heroNews, mockNews } from '@/data/mockData';
+import { HomePageView } from './components/HomePageView';
+import { usePredictionCardItems, type PredictionCardItem } from './components/predictionCards';
 
 export default function HomePage() {
   const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});
@@ -18,28 +18,17 @@ export default function HomePage() {
     setUserVotes((prev) => ({ ...prev, [item.id]: option }));
   }, []);
 
-  void userVotes;
-
-  if (selectedBattleId) {
-    const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];
-    const battleNews = allItems.find((item) => item.id === selectedBattleId) ?? allFallbackItems.find((item) => item.id === selectedBattleId) ?? allFallbackItems[0];
-
-    return (
-      <section className="view-shell view-rhythm view-event-battle mx-0 grid h-full w-full max-w-none gap-0">
-        <EventBattle
-          news={battleNews}
-          onBack={() => setSelectedBattleId(null)}
-          userSide={userVotes[selectedBattleId] ?? null}
-          onRequireAuth={onOpenAuth}
-        />
-      </section>
-    );
-  }
+  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];
+  const battleNews = selectedBattleId
+    ? allItems.find((item) => item.id === selectedBattleId) ?? allFallbackItems.find((item) => item.id === selectedBattleId) ?? allFallbackItems[0]
+    : null;
 
   return (
-    <PredictionsView
-      selectedTag={null}
-      onBetSuccess={handlePredictionBetSuccess}
+    <HomePageView
+      battleNews={battleNews}
+      userSide={selectedBattleId ? (userVotes[selectedBattleId] ?? null) : null}
+      onBattleBack={() => setSelectedBattleId(null)}
+      onPredictionBetSuccess={handlePredictionBetSuccess}
       onRequireAuth={onOpenAuth}
       onEnterBattle={setSelectedBattleId}
     />

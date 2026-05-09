@@ -2,11 +2,13 @@
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
 import { useMemo } from 'react';
-import { Forum } from '@/components/shared/forum';
+import { useNavigate } from '@umijs/renderer-react';
 import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
-import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCards';
+import { ForumPageView } from './components/ForumPageView';
+import { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';
 
 export default function ForumPage() {
+  const navigate = useNavigate();
   const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
   const newsByMarketId = useMemo(() => {
     const list = footballMarkets.data?.list ?? [];
@@ -15,17 +17,13 @@ export default function ForumPage() {
   }, [footballMarkets.data]);
 
   const handleOpenLinkedPrediction = (item: PredictionCardItem) => {
-    window.location.href = `/?market=${item.marketId ?? item.id}`;
+    navigate(`/?market=${item.marketId ?? item.id}`);
   };
 
   return (
-    <section className="view-shell view-rhythm view-forum mx-0 grid w-full max-w-none gap-4">
-      <Forum
-        newsByMarketId={newsByMarketId}
-        onOpenLinkedPrediction={handleOpenLinkedPrediction}
-        showComposer
-        mobileBottomSheetComposer={false}
-      />
-    </section>
+    <ForumPageView
+      newsByMarketId={newsByMarketId}
+      onOpenLinkedPrediction={handleOpenLinkedPrediction}
+    />
   );
 }

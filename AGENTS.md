@@ -13,13 +13,22 @@
 ## 目录边界
 
 - 页面入口放在 `src/pages/<route>/index.tsx`。
-- `src/pages/<route>/index.tsx` 只做路由入口和轻量组装，不直接堆完整页面 UI。
-- 每个页面必须有对应的组件文件夹，用来放页面主体、区块组件、弹框、列表项和页面内数据映射。
-- 页面组件可以放在 `src/components/<module>/`、`src/components/shared/<module>/` 或已有同业务目录里，优先跟随项目现有结构，不强制都放进 `shared`。
+- `src/pages/<route>/index.tsx` 可以放页面级业务逻辑，例如取数、状态、登录校验、事件回调、接口编排和参数组装。
+- `src/pages/<route>/index.tsx` 不直接堆完整页面 UI；复杂展示、区块、弹框、列表项必须拆到该页面的 `components/`。
+- 每个页面必须有对应的页面文件夹：`src/pages/<route>/`。
+- 页面专属组件优先放在该页面文件夹下，例如 `src/pages/<route>/components/<Xxx>.tsx`、`src/pages/<route>/components/<XxxSection>.tsx`、`src/pages/<route>/components/<XxxModal>.tsx`。
+- 页面主体展示组件可以放在 `src/pages/<route>/components/<RoutePage>.tsx`；`src/pages/<route>/index.tsx` 负责页面级业务逻辑和渲染组装。
+- 页面级业务 UI 必须归属当前 page：`src/pages/<route>/components/` 里不能只做一层薄封装然后继续引用 `src/components/shared/<module>/ui/<Page>`。
+- 如果一个组件只服务某一个页面，即使体量很大，也先放在该页面 `components/` 下；不要放到 `shared`。
+- `shared` 只允许放真正跨两个以上页面复用的基础业务组件、布局组件或工具型组件；页面自己的弹框、列表项、区块、页面主体都放回对应 page。
+- 页面组件可以引用 hooks、types、api、utils、data 等非 UI 基础能力；但页面 UI 组件之间优先本页面相对路径引用。
+- 复杂页面优先按端拆分：`<Xxx>Desktop.tsx` / `<Xxx>Mobile.tsx`，或 `components/desktop/` / `components/mobile/`；拆分后由页面级组件按响应式 class 或设备判断组合。
+- 页面专属的数据映射、常量、类型可以放在 `src/pages/<route>/components/` 或 `src/pages/<route>/model.ts` / `types.ts`，但不要散落到无关目录。
+- `src/components/<module>/` 用于模块级组件；`src/components/shared/<module>/` 只用于真正跨页面复用的业务组件。
 - 只有真正跨页面复用的业务组件才放进 `src/components/shared/<module>/`。
-- 页面内复杂区块必须继续拆成同页面/同业务目录下的独立组件文件，避免单文件过大。
+- 页面内复杂区块必须继续拆成 `src/pages/<route>/components/` 下的独立组件文件，避免单文件过大。
 - 路由必须同步维护 `.umirc.ts`。新增页面后，不允许只建页面不加 route。
-- 共享业务 UI 放在 `src/components/shared/<module>/ui/`；页面专属 UI 放在对应页面/业务组件文件夹里。
+- 共享业务 UI 只有在确认跨页面复用时才放在 `src/components/shared/<module>/ui/`；页面专属 UI 必须放在 `src/pages/<route>/components/`。
 - PC 左侧栏和布局相关内容放在 `src/components/pc/layout/`。
 - 顶层布局放在 `src/layouts/`，页面壳组件放在 `src/layouts/components/`。
 - 接口请求统一放在 `src/hooks/use*Requests.ts`。
@@ -32,10 +41,15 @@
   - `.umirc.ts` routes。
   - `src/pages/<route>/index.tsx` 页面入口。
   - 左侧导航 `src/components/pc/layout/SidebarMainPanels.tsx` 的 `NAV_ITEMS` 和 `ViewType`。
-- 新增页面必须创建对应的页面组件文件，`index.tsx` 只负责 import 并渲染该组件。
+- 新增页面必须创建对应的页面展示组件文件，优先为 `src/pages/<route>/components/<RoutePage>.tsx`；`index.tsx` 可以保留页面级业务逻辑，但不能承载大块 UI。
 - 页面组件命名使用业务名 + `Page`，例如 `WorldCupPage`、`RivalryPage`。
-- 同一页面的子组件、弹框、列表项、数据映射应封装在对应页面/业务模块目录下，方便一起维护。
+- 同一页面的子组件、弹框、列表项、数据映射应封装在 `src/pages/<route>/components/` 或页面同级 `model.ts` / `types.ts` 下，方便一起维护。
+- 页面组件不能从 `src/components/shared/<module>/ui/` 引用该页面主体或页面专属区块；需要用到就迁回当前页面目录。
 - 不要为了满足拆分规则把页面专属组件硬塞进 `shared`；`shared` 只放确认会复用的组件。
+- 页面组件和子组件的 props 必须定义明确类型：使用 `interface XxxProps` 或 `type XxxProps`，不要在参数里写大型内联类型。
+- props 命名必须表达业务含义；回调统一用 `onXxx`，布尔值统一用 `is/has/can/should` 前缀。
+- 单个组件参数过多时，要拆组件或合并成明确的领域对象，不能无限往一个组件上传散参数。
+- `index.tsx` 或页面级组件负责取数、状态和动作编排；展示型子组件只接收清晰 props，不直接重复请求接口。
 - 新增 `.tsx` 文件顶部必须写简短注释，说明这个文件是干什么的，格式优先使用：`/** 文件说明：xxx。 */`。
 - 组件内只在复杂逻辑前写必要注释，不写无意义注释。
 - 如果页面要在主布局中展示，优先接入 `src/layouts/home.tsx` 现有视图切换逻辑。

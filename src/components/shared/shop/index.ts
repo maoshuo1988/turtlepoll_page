@@ -1,4 +1,3 @@
 /**
- * 文件说明：index，商城黑市相关共享组件。
+ * 文件说明：index，商城黑市跨页面共享组件。
  */
-export { Shop } from './ui/Shop';

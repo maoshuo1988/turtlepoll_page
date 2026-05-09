@@ -1,9 +1,8 @@
 /**
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
-import { useEffect, useMemo, useState } from 'react';
-import { ProfilePage as SharedProfilePage } from '@/components/shared/profile';
-import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
+import { useMemo, useState } from 'react';
+import { useNavigate } from '@umijs/renderer-react';
 import { mockCommunityPosts, mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { useAppSession } from '@/hooks/useAppSession';
@@ -15,9 +14,11 @@ import {
   useRequestPetStatus,
 } from '@/hooks/usePetRequests';
 import { getStoredUserInfo } from '@/utils/authStorage';
+import { ProfilePageView } from './components/ProfilePageView';
+import { getPetMoodLabel } from './components/petDisplay';
 
 export default function ProfilePage() {
-  const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);
+  const navigate = useNavigate();
   const [skins] = useState<PetSkin[]>(mockPetSkins);
   const { darkMode, onToggleTheme, onOpenAuth } = useHomeLayoutContext();
 
@@ -31,6 +32,7 @@ export default function ProfilePage() {
   const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);
   const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);
   const storedUser = getStoredUserInfo();
+  const petStamina = petStaminaQuery.data?.current ?? mockUser.petInfo.stamina;
   const currentPet = useMemo(() => ({
     ...mockUser.petInfo,
     name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,
@@ -49,34 +51,26 @@ export default function ProfilePage() {
     petStatusQuery.data?.moodState,
   ]);
 
-  useEffect(() => {
-    if (typeof petStaminaQuery.data?.current === 'number') {
-      setPetStamina(petStaminaQuery.data.current);
-    }
-  }, [petStaminaQuery.data?.current]);
-
   return (
-    <section className="view-shell view-rhythm view-profile mx-0 grid w-full max-w-none gap-4">
-      <SharedProfilePage
-        userId={userInfo.data?.id ?? storedUser?.id ?? ''}
-        userName={storedUser?.username ?? '路边社社长'}
-        userHandle="预测达人"
-        avatar="🦊"
-        posts={mockCommunityPosts}
-        pet={currentPet}
-        skins={skins}
-        balance={coinMe.data?.balance ?? mockUser.balance}
-        darkMode={darkMode}
-        onBack={() => {
-          window.location.href = '/';
-        }}
-        onOpenForum={() => {
-          window.location.href = '/forum';
-        }}
-        onOpenAuth={onOpenAuth}
-        onToggleTheme={onToggleTheme}
-        equippedPet={petEquipQuery.data ?? equippedOwnedPet ?? null}
-      />
-    </section>
+    <ProfilePageView
+      userId={userInfo.data?.id ?? storedUser?.id ?? ''}
+      userName={storedUser?.username ?? '路边社社长'}
+      userHandle="预测达人"
+      avatar="🦊"
+      posts={mockCommunityPosts}
+      pet={currentPet}
+      skins={skins}
+      balance={coinMe.data?.balance ?? mockUser.balance}
+      darkMode={darkMode}
+      onBack={() => {
+        navigate('/');
+      }}
+      onOpenForum={() => {
+        navigate('/forum');
+      }}
+      onOpenAuth={onOpenAuth}
+      onToggleTheme={onToggleTheme}
+      ownedPets={petOwnedQuery.data?.list ?? []}
+    />
   );
 }

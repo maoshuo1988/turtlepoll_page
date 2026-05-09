@@ -2,12 +2,14 @@
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
 import { useMemo } from 'react';
-import { ActivePredictionsPage as SharedActivePredictionsPage } from '@/components/shared/predictions';
+import { useNavigate } from '@umijs/renderer-react';
 import { heroNews, mockNews } from '@/data/mockData';
 import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
-import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCards';
+import { ActivePredictionsPageView } from './components/ActivePredictionsPageView';
+import { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';
 
 export default function ActivePredictionsPage() {
+  const navigate = useNavigate();
   const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
   const activePredictionItems = useMemo<PredictionCardItem[]>(() => {
     const list = footballMarkets.data?.list ?? [];
@@ -18,13 +20,13 @@ export default function ActivePredictionsPage() {
   }, [footballMarkets.data]);
 
   return (
-    <SharedActivePredictionsPage
+    <ActivePredictionsPageView
       items={activePredictionItems}
       onBack={() => {
-        window.location.href = '/';
+        navigate('/');
       }}
       onEnterBattle={() => {
-        window.location.href = '/';
+        navigate('/');
       }}
     />
   );

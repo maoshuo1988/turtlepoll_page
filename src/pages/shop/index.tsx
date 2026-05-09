@@ -2,8 +2,7 @@
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
 import { useEffect, useMemo, useState } from 'react';
-import { Shop } from '@/components/shared/shop';
-import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
+import { useNavigate } from '@umijs/renderer-react';
 import { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { useAppSession } from '@/hooks/useAppSession';
@@ -14,8 +13,11 @@ import {
   useRequestPetStamina,
   useRequestPetStatus,
 } from '@/hooks/usePetRequests';
+import { ShopPageView } from './components/ShopPageView';
+import { getPetMoodLabel } from './components/petDisplay';
 
 export default function ShopPage() {
+  const navigate = useNavigate();
   const [balance, setBalance] = useState(mockUser.balance);
   const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);
   const [skins] = useState<PetSkin[]>(mockPetSkins);
@@ -61,12 +63,12 @@ export default function ShopPage() {
   }, [petStaminaQuery.data?.current]);
 
   return (
-    <Shop
+    <ShopPageView
       balance={balance}
       pet={currentPet}
       petStaminaInfo={petStaminaQuery.data ?? null}
       onBack={() => {
-        window.location.href = '/';
+        navigate('/');
       }}
       onRequireAuth={onOpenAuth}
     />

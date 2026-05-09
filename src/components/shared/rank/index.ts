@@ -1,4 +1,3 @@
 /**
- * 文件说明：index，排行榜相关共享组件。
+ * 文件说明：index，排行榜跨页面共享组件。
  */
-export { RankPage } from './ui/RankPage';
