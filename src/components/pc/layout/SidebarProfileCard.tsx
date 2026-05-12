@@ -5,6 +5,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Coins, Flame, MessageCircle } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
+import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
 import { useRequestCoinMe } from '@/hooks/useCoinRequests';
 
@@ -14,6 +15,7 @@ interface SidebarProfileCardProps {
   totalPredictions: number;
   activePredictions: number;
   pet: PetInfo;
+  aiPushMessages?: AiPushMessage[];
   chatOpen: boolean;
   currentDialogue: string;
   dialogueKey: number;
@@ -31,6 +33,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   totalPredictions,
   activePredictions,
   pet,
+  aiPushMessages = [],
   chatOpen,
   currentDialogue,
   dialogueKey,
@@ -60,7 +63,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
         lg:shadow-none`
     }>
       {chatOpen ? (
-        <PetChat pet={pet} onClose={onCloseChat} />
+        <PetChat pet={pet} onClose={onCloseChat} aiPushMessages={aiPushMessages} />
       ) : (
         <div>
           <div className="!px-4 !pt-4 !pb-4 border-b border-white/8 bg-[#0f1013]/96 dark:bg-rdark-card/90">

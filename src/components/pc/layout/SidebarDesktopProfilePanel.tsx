@@ -5,6 +5,7 @@ import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BookOpen, Coins, Flame, Turtle } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
+import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
 import { useRequestCoinMe } from '@/hooks/useCoinRequests';
 
@@ -14,6 +15,7 @@ interface SidebarDesktopProfilePanelProps {
   totalPredictions: number;
   activePredictions: number;
   pet: PetInfo;
+  aiPushMessages?: AiPushMessage[];
   chatOpen: boolean;
   currentDialogue: string;
   dialogueKey: number;
@@ -32,6 +34,7 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
   totalPredictions,
   activePredictions,
   pet,
+  aiPushMessages = [],
   chatOpen,
   currentDialogue,
   dialogueKey,
@@ -45,7 +48,7 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
   const displayBalance = coinMe.data?.balance ?? 0;
 
   if (chatOpen) {
-    return <PetChat pet={pet} onClose={onCloseChat} />;
+    return <PetChat pet={pet} onClose={onCloseChat} aiPushMessages={aiPushMessages} />;
   }
 
   return (

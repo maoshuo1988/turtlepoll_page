@@ -1,10 +1,10 @@
 /**
  * 文件说明：Standalone Page Shell，布局组件层，承接 Header、Footer、Sidebar 和页面内容区域。
  */
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type React from 'react';
 import { useQueryClient } from 'react-query';
-import { useNavigate } from '@umijs/renderer-react';
+import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { AppPageLayout, type SidebarHotTag, type SidebarHotTopic, type ViewType } from './AppPageLayout';
 import { AuthModal } from '@/components/shared/auth';
 import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
@@ -25,7 +25,16 @@ import {
 } from '@/hooks/usePetRequests';
 import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
 import { useRequestSignout } from '@/hooks/useAuthRequests';
-import { clearInfo } from '@/utils/authStorage';
+import {
+  AI_STAMINA_QUERY_KEY,
+  AI_UNREAD_PUSHES_QUERY_KEY,
+  useAiPushStream,
+  useRequestAiPresence,
+  useRequestAiPushesRead,
+  useRequestAiUnreadPushes,
+} from '@/hooks/useAiRequests';
+import type { AiPushMessage } from '@/hooks/aiTypes';
+import { clearInfo, getAuthToken } from '@/utils/authStorage';
 
 const THEME_KEY = 'theme';
 
@@ -92,17 +101,28 @@ export function StandalonePageShell({
   onAfterSignOut,
 }: StandalonePageShellProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
+  const [aiPetDialogue, setAiPetDialogue] = useState<string | null>(null);
+  const [aiPushMessages, setAiPushMessages] = useState<AiPushMessage[]>([]);
   const signOutMutation = useRequestSignout();
   const darkMode = theme === 'dark';
   const { coinMe } = useAppSession();
+  const isAuthenticated = Boolean(getAuthToken());
   // 左侧栏宠物卡片需要同时读取装备、拥有、体力和心情状态。
   const petEquipQuery = useRequestPetEquip();
   const petOwnedQuery = useRequestPetOwned();
   const petStaminaQuery = useRequestPetStamina();
   const petStatusQuery = useRequestPetStatus();
   const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
+  const aiUnreadPushesQuery = useRequestAiUnreadPushes(20, isAuthenticated);
+  const aiPushesReadMutation = useRequestAiPushesRead();
+  const aiPresenceMutation = useRequestAiPresence();
+  const displayedAiPushIdsRef = useRef<Set<string>>(new Set());
+  const aiPushesReadAsyncRef = useRef(aiPushesReadMutation.mutateAsync);
+  const aiPresenceMutateRef = useRef(aiPresenceMutation.mutate);
+  const aiPetDialogueTimerRef = useRef<number | null>(null);
   const [sidebarBalance, setSidebarBalance] = useState(mockUser.balance);
   const [sidebarPetStamina, setSidebarPetStamina] = useState(mockUser.petInfo.stamina);
   const handleToggleTheme = useCallback(() => {
@@ -113,6 +133,96 @@ export function StandalonePageShell({
     applyTheme(theme);
     localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
+
+  useEffect(() => {
+    aiPushesReadAsyncRef.current = aiPushesReadMutation.mutateAsync;
+  }, [aiPushesReadMutation.mutateAsync]);
+
+  useEffect(() => {
+    aiPresenceMutateRef.current = aiPresenceMutation.mutate;
+  }, [aiPresenceMutation.mutate]);
+
+  const currentAiPresencePage = useMemo(() => {
+    if (activeView === 'predictions') return 'predict_market';
+    if (activeView === 'activePredictions') return 'predict_market';
+    if (activeView === 'rivalry') return 'pk';
+    if (activeView === 'battlePlaza') return 'battle_plaza';
+    if (activeView === 'pet') return 'pet_chat';
+    return activeView ?? (location.pathname.replace(/^\//, '') || 'predict_market');
+  }, [activeView, location.pathname]);
+
+  const appendAiPushMessages = useCallback((pushes: AiPushMessage[]) => {
+    if (!pushes.length) return;
+
+    const nextPushes = pushes.filter((push) => {
+      const id = String(push.id);
+      if (displayedAiPushIdsRef.current.has(id)) return false;
+      displayedAiPushIdsRef.current.add(id);
+      return true;
+    });
+    if (!nextPushes.length) return;
+
+    setAiPushMessages((prev) => [...prev, ...nextPushes].slice(-20));
+    setAiPetDialogue(nextPushes[nextPushes.length - 1]?.content ?? null);
+
+    if (aiPetDialogueTimerRef.current) {
+      window.clearTimeout(aiPetDialogueTimerRef.current);
+    }
+    aiPetDialogueTimerRef.current = window.setTimeout(() => {
+      setAiPetDialogue(null);
+      aiPetDialogueTimerRef.current = null;
+    }, 12000);
+
+    void aiPushesReadAsyncRef.current({
+      ids: nextPushes.map((push) => push.id),
+    });
+  }, []);
+
+  useEffect(() => {
+    appendAiPushMessages(aiUnreadPushesQuery.data?.results ?? []);
+  }, [appendAiPushMessages, aiUnreadPushesQuery.data?.results]);
+
+  useAiPushStream({
+    enabled: isAuthenticated,
+    onPush: useCallback((message) => {
+      appendAiPushMessages([message]);
+    }, [appendAiPushMessages]),
+  });
+
+  useEffect(() => {
+    if (!isAuthenticated) return undefined;
+
+    const reportPresence = (active: boolean) => {
+      aiPresenceMutateRef.current({
+        page: currentAiPresencePage,
+        active,
+      });
+    };
+
+    reportPresence(!document.hidden);
+
+    const handleVisibilityChange = () => {
+      reportPresence(!document.hidden);
+    };
+
+    const interval = window.setInterval(() => {
+      reportPresence(!document.hidden);
+    }, 60 * 1000);
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      reportPresence(false);
+    };
+  }, [currentAiPresencePage, isAuthenticated]);
+
+  useEffect(() => () => {
+    if (aiPetDialogueTimerRef.current) {
+      window.clearTimeout(aiPetDialogueTimerRef.current);
+    }
+  }, []);
 
   // 钱包和体力接口有数据后，替换 mock 默认值，避免接口慢时页面空白。
   useEffect(() => {
@@ -201,7 +311,8 @@ export function StandalonePageShell({
         activePredictions: sidebarNews.filter((item) => item.status === 'open').length,
         pet: sidebarPet,
         newsByMarketId: sidebarNewsByMarketId,
-        petDialogue: null,
+        petDialogue: aiPetDialogue,
+        aiPushMessages,
         idleDialogues: petDialogues.idle,
         activeView,
         onViewChange: handleSidebarViewChange,
@@ -219,6 +330,11 @@ export function StandalonePageShell({
     queryClient.removeQueries(PET_OWNED_QUERY_KEY);
     queryClient.removeQueries(PET_STAMINA_QUERY_KEY);
     queryClient.removeQueries(PET_STATUS_QUERY_KEY);
+    queryClient.removeQueries(AI_STAMINA_QUERY_KEY);
+    queryClient.removeQueries(AI_UNREAD_PUSHES_QUERY_KEY);
+    setAiPetDialogue(null);
+    setAiPushMessages([]);
+    displayedAiPushIdsRef.current.clear();
   }, [queryClient]);
 
   const handleSignOut = useCallback(async () => {

@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { Flag, MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, Gamepad2, Flame } from 'lucide-react';
+import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
 import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
@@ -35,6 +36,7 @@ interface SidebarMainPanelsProps {
   totalPredictions: number;
   activePredictions: number;
   pet: PetInfo;
+  aiPushMessages?: AiPushMessage[];
   newsByMarketId: Map<number, PredictionCardItem>;
   chatOpen: boolean;
   currentDialogue: string;
@@ -57,6 +59,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
   totalPredictions,
   activePredictions,
   pet,
+  aiPushMessages = [],
   newsByMarketId,
   chatOpen,
   currentDialogue,
@@ -83,6 +86,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
               totalPredictions={totalPredictions}
               activePredictions={activePredictions}
               pet={pet}
+              aiPushMessages={aiPushMessages}
               chatOpen={chatOpen}
               currentDialogue={currentDialogue}
               dialogueKey={dialogueKey}
@@ -115,6 +119,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
             totalPredictions={totalPredictions}
             activePredictions={activePredictions}
             pet={pet}
+            aiPushMessages={aiPushMessages}
             chatOpen={chatOpen}
             currentDialogue={currentDialogue}
             dialogueKey={dialogueKey}

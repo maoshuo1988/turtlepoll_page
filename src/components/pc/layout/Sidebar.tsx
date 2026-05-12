@@ -3,6 +3,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
+import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
 import { SidebarDesktopHotPanel } from './SidebarDesktopHotPanel';
 import { SidebarDesktopNavPanel } from './SidebarDesktopNavPanel';
@@ -20,6 +21,7 @@ interface SidebarProps {
   pet: PetInfo;
   newsByMarketId: Map<number, PredictionCardItem>;
   petDialogue: string | null;
+  aiPushMessages?: AiPushMessage[];
   idleDialogues: string[];
   activeView: ViewType;
   onViewChange: (view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag | null) => void;
@@ -35,6 +37,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   pet,
   newsByMarketId,
   petDialogue,
+  aiPushMessages = [],
   idleDialogues,
   activeView,
   onViewChange,
@@ -97,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return (
       <div className="legacy-sidebar flex h-auto flex-col lg:h-full lg:min-h-0">
         <div className={`${card} flex-1 overflow-hidden`}>
-          <PetChat pet={pet} onClose={() => onViewChange('predictions')} fullScreen />
+          <PetChat pet={pet} onClose={() => onViewChange('predictions')} fullScreen aiPushMessages={aiPushMessages} />
         </div>
       </div>
     );
@@ -112,6 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           totalPredictions={totalPredictions}
           activePredictions={activePredictions}
           pet={pet}
+          aiPushMessages={aiPushMessages}
           newsByMarketId={newsByMarketId}
           chatOpen={chatOpen}
           currentDialogue={currentDialogue}
@@ -138,6 +142,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               totalPredictions={totalPredictions}
               activePredictions={activePredictions}
               pet={pet}
+              aiPushMessages={aiPushMessages}
               chatOpen={chatOpen}
               currentDialogue={currentDialogue}
               dialogueKey={dialogueKey}
