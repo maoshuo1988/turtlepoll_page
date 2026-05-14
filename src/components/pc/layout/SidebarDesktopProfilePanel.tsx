@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BookOpen, Coins, Flame, Turtle } from 'lucide-react';
+import { Coins, Flame } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
@@ -19,9 +19,7 @@ interface SidebarDesktopProfilePanelProps {
   chatOpen: boolean;
   currentDialogue: string;
   dialogueKey: number;
-  onOpenGuide: () => void;
   onCloseChat: () => void;
-  onViewPet: () => void;
   onOpenProfile: () => void;
   onOpenActivePredictions: () => void;
 }
@@ -38,9 +36,7 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
   chatOpen,
   currentDialogue,
   dialogueKey,
-  onOpenGuide,
   onCloseChat,
-  onViewPet,
   onOpenProfile,
   onOpenActivePredictions,
 }) => {
@@ -65,37 +61,6 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
             <div className="text-[14px] font-bold text-white dark:text-rdark-text">路边社社长</div>
             <div className=" text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
           </div>
-        </button>
-
-        <button
-          type="button"
-          onClick={onOpenGuide}
-          className="mt-2 flex w-full items-center gap-2.5 rounded-xl border border-amber-300/18 bg-amber-400/10 px-3 py-2 text-left transition-colors hover:border-amber-300/30 hover:bg-amber-400/15"
-        >
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-amber-300/12 text-amber-200">
-            <BookOpen size={16} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <div className="text-[12px] font-bold text-amber-100">新手引导</div>
-            <div className="text-[10px] text-amber-100/60">打开玩法引导弹框</div>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          onClick={onViewPet}
-          className="mt-2 flex w-full items-center justify-between rounded-xl border border-emerald-400/18 bg-emerald-500/10 px-3 py-2 text-left transition-colors hover:bg-emerald-500/15 dark:border-emerald-500/18 dark:bg-emerald-500/10"
-        >
-          <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-emerald-500/18 text-emerald-300">
-              <Turtle size={16} />
-            </span>
-            <div className="min-w-0">
-              <div className="text-[12px] font-bold text-emerald-200">宠物空间</div>
-              <div className="text-[10px] text-emerald-200/70">查看龟种资产并切换上阵</div>
-            </div>
-          </div>
-          <span className="shrink-0 text-[10px] font-bold text-emerald-300">进入</span>
         </button>
 
         <div className=" flex items-center justify-center gap-2">
@@ -142,7 +107,7 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
         </div>
       </div>
 
-      <div className="relative h-[190px] cursor-pointer overflow-hidden group" onClick={onViewPet}>
+      <div className="relative h-[190px] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#16171b] via-[#111214] to-[#090909]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
 

@@ -2,7 +2,7 @@
  * 文件说明：Sidebar Main Panels，PC 左侧栏相关展示组件。
  */
 import React from 'react';
-import { Flag, MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, Gamepad2, Flame } from 'lucide-react';
+import { Flag, MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, Gamepad2, Flame, Turtle } from 'lucide-react';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
 import { SidebarProfileCard } from './SidebarProfileCard';
@@ -22,10 +22,11 @@ export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'battle-plaza', label: '地下钱庄', icon: <Swords size={22} />, view: 'battlePlaza', enabled: true },
   { key: 'rank', label: '排行榜', icon: <Trophy size={22} />, view: 'rank', enabled: true },
   { key: 'shop', label: '黑市', icon: <Gift size={22} />, view: 'shop', enabled: true },
+  { key: 'guide', label: '新手引导', icon: <BookOpen size={22} />, action: 'guide', enabled: true },
+  { key: 'pet', label: '宠物空间', icon: <Turtle size={22} />, view: 'pet', enabled: true },
   { key: 'inventory', label: '背包&资产', icon: <Backpack size={22} />, enabled: false },
   { key: 'club', label: '俱乐部&工会', icon: <Users size={22} />, enabled: false },
   { key: 'news', label: '新闻源', icon: <Newspaper size={22} />, enabled: false },
-  { key: 'tutorial', label: '新手教程&规则', icon: <BookOpen size={22} />, enabled: false },
   { key: 'settings', label: '系统&设置', icon: <Settings size={22} />, enabled: false },
   { key: 'help', label: '帮助&反馈', icon: <HelpCircle size={22} />, enabled: false },
 ];
@@ -44,9 +45,7 @@ interface SidebarMainPanelsProps {
   selectedTag: string | null;
   activeView: ViewType;
   onOpenChat: () => void;
-  onOpenGuide: () => void;
   onCloseChat: () => void;
-  onViewPet: () => void;
   onOpenProfile: () => void;
   onOpenActivePredictions: () => void;
   onViewChange: (view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag) => void;
@@ -67,9 +66,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
   selectedTag,
   activeView,
   onOpenChat,
-  onOpenGuide,
   onCloseChat,
-  onViewPet,
   onOpenProfile,
   onOpenActivePredictions,
   onViewChange,
@@ -91,9 +88,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
               currentDialogue={currentDialogue}
               dialogueKey={dialogueKey}
               onOpenChat={onOpenChat}
-              onOpenGuide={onOpenGuide}
               onCloseChat={onCloseChat}
-              onViewPet={onViewPet}
               onOpenProfile={onOpenProfile}
               onOpenActivePredictions={onOpenActivePredictions}
             />
@@ -124,9 +119,7 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
             currentDialogue={currentDialogue}
             dialogueKey={dialogueKey}
             onOpenChat={onOpenChat}
-            onOpenGuide={onOpenGuide}
             onCloseChat={onCloseChat}
-            onViewPet={onViewPet}
             onOpenProfile={onOpenProfile}
             onOpenActivePredictions={onOpenActivePredictions}
           />

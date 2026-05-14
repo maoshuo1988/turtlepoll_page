@@ -68,7 +68,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -85,7 +85,7 @@
             0
           ]
         },
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -119,7 +119,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -146,10 +146,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            9
+            8
           ]
         },
-        "register": 10
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -162,7 +162,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -182,7 +182,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -199,7 +199,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1111,7 +1111,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1137,7 +1137,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 13
+        "register": 14
       },
       "enableBy": "config"
     },
@@ -1206,7 +1206,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1218,7 +1218,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1256,7 +1256,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1298,7 +1298,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1324,7 +1324,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1337,7 +1337,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1350,7 +1350,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1363,7 +1363,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1388,7 +1388,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -1427,7 +1427,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -1440,7 +1440,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1453,7 +1453,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1478,7 +1478,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1502,7 +1502,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1528,7 +1528,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1544,7 +1544,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1557,7 +1557,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1582,7 +1582,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1594,7 +1594,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1670,7 +1670,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 13
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1695,7 +1695,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1721,7 +1721,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1773,7 +1773,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1812,7 +1812,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1825,7 +1825,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1903,7 +1903,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1916,7 +1916,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 10
       },
       "enableBy": "register"
     },
@@ -2352,6 +2352,13 @@
       "file": "petApi.ts",
       "absPath": "/petApi",
       "__content": "/**\n * 文件说明：pet Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 用户侧宠物（user_pet）\n/// 基础路径: /api/pet\n\n// 当前装备龟种\nexport const API_Pet_Equip = \"/api/pet/equip\";\n// 用户龟种资产\nexport const API_Pet_Owned = \"/api/pet/owned\";\n// 体力查询\nexport const API_Pet_Stamina = \"/api/pet/stamina\";\n// 体力消耗\nexport const API_Pet_Stamina_Consume = \"/api/pet/stamina/consume\";\n// 体力恢复 / 喂食\nexport const API_Pet_Stamina_Feed = \"/api/pet/stamina/feed\";\n// 开蛋\nexport const API_Pet_Egg_Hatch = \"/api/pet/egg/hatch\";\n// 状态页聚合\nexport const API_Pet_Status = \"/api/pet/status\";\n"
+    },
+    "aiApi": {
+      "path": "aiApi",
+      "id": "aiApi",
+      "file": "aiApi.ts",
+      "absPath": "/aiApi",
+      "__content": "/**\n * 文件说明：ai Api 接口地址常量，供 AI 聊天请求 Hook 统一引用。\n */\n/// MARK: AI 聊天\n/// 基础路径: /api/ai\n\n// POST /api/ai/chat：用户主动向小龟发送聊天内容，成功后返回用户消息、AI 回复、体力和每日额度信息。\nexport const API_AI_Chat = \"/api/ai/chat\";\n// GET /api/ai/stamina：查询当前登录用户的 AI 体力、上限、下次恢复时间和每日聊天额度。\nexport const API_AI_Stamina = \"/api/ai/stamina\";\n// POST /api/ai/stamina/apple：消耗龟币购买苹果补给，用于恢复 AI 聊天体力。\nexport const API_AI_Stamina_Apple = \"/api/ai/stamina/apple\";\n// GET /api/ai/pushes/unread：拉取离线、断线或尚未展示的 AI 主动推送消息。\nexport const API_AI_Pushes_Unread = \"/api/ai/pushes/unread\";\n// POST /api/ai/pushes/read：将当前用户自己的未读 AI 推送标记为已读。\nexport const API_AI_Pushes_Read = \"/api/ai/pushes/read\";\n// POST /api/ai/presence：上报当前用户在线页面和活跃状态，供后端判断闲置推送。\nexport const API_AI_Presence = \"/api/ai/presence\";\n// GET /api/ai/pushes/stream：建立 SSE 长连接，在线接收 ai_push 事件。\nexport const API_AI_Pushes_Stream = \"/api/ai/pushes/stream\";\n"
     },
     "pkApi": {
       "path": "pkApi",

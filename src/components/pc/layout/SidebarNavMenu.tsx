@@ -10,6 +10,7 @@ export interface SidebarNavItem {
   label: string;
   icon: React.ReactNode;
   view?: ViewType;
+  action?: 'guide';
   enabled: boolean;
 }
 
@@ -42,7 +43,7 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
       <div className="mb-3 hidden h-px bg-white/6 dark:bg-rdark-border lg:block" />
 
       <div className="legacy-sidebar-nav grid gap-1.5">
-        {navItems.map((item) => {
+        {navItems.filter((item) => item.enabled).map((item) => {
           const isActive = item.view ? activeView === item.view : false;
           return (
             <React.Fragment key={item.key}>
@@ -62,7 +63,6 @@ export const SidebarNavMenu: React.FC<SidebarNavMenuProps> = ({
                 {item.icon}
               </span>
               <span className="flex-1">{item.label}</span>
-              {!item.enabled && <span className="shrink-0 text-[10px] text-zinc-600 dark:text-rdark-text2/50">即将开放</span>}
             </button>
             </React.Fragment>
           );

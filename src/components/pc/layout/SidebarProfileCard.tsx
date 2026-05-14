@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Coins, Flame, MessageCircle } from 'lucide-react';
+import { Coins, Flame, MessageCircle } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
@@ -20,9 +20,7 @@ interface SidebarProfileCardProps {
   currentDialogue: string;
   dialogueKey: number;
   onOpenChat: () => void;
-  onOpenGuide: () => void;
   onCloseChat: () => void;
-  onViewPet: () => void;
   onOpenProfile: () => void;
   onOpenActivePredictions: () => void;
 }
@@ -38,9 +36,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   currentDialogue,
   dialogueKey,
   onOpenChat,
-  onOpenGuide,
   onCloseChat,
-  onViewPet,
   onOpenProfile,
   onOpenActivePredictions,
 }) => {
@@ -125,21 +121,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onOpenGuide}
-            className="mx-4 mb-3 flex w-[calc(100%-32px)] items-center gap-3 rounded-xl border border-amber-300/18 bg-amber-400/10 px-3 py-2.5 text-left text-[13px] font-bold text-amber-100 transition-all hover:border-amber-300/30 hover:bg-amber-400/15"
-          >
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-amber-300/12 text-amber-200">
-              <BookOpen size={17} />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block leading-tight">新手引导</span>
-              <span className="mt-0.5 block text-[10px] font-semibold text-amber-100/58">打开玩法引导弹框</span>
-            </span>
-          </button>
-
-          <div className="relative h-[194px] overflow-hidden cursor-pointer group" onClick={onViewPet}>
+          <div className="relative h-[194px] overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-[#16171b] via-[#111214] to-[#090909]" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
 
@@ -203,7 +185,6 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
               <MessageCircle size={13} /> 和龟仙人聊聊
             </button>
 
-            <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity"><div className="bg-white/80 dark:bg-rdark-card/80 backdrop-blur-sm rounded-md px-2 py-1 text-[9px] font-medium text-emerald-600 dark:text-emerald-400 shadow-sm border border-emerald-200/40 dark:border-emerald-800/40">进入宠物空间 →</div></div>
           </div>
         </div>
       )}

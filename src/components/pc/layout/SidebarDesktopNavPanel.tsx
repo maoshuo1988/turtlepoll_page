@@ -17,7 +17,7 @@ export const SidebarDesktopNavPanel: React.FC<SidebarDesktopNavPanelProps> = ({
   return (
     <div className="min-h-0 flex-1">
       <div className="space-y-1">
-        {NAV_ITEMS.map((item) => {
+        {NAV_ITEMS.filter((item) => item.enabled).map((item) => {
           const isActive = item.view ? activeView === item.view : false;
 
           return (
@@ -42,7 +42,6 @@ export const SidebarDesktopNavPanel: React.FC<SidebarDesktopNavPanelProps> = ({
                 {item.icon}
               </span>
               <span className="flex-1">{item.label}</span>
-              {!item.enabled && <span className="shrink-0 text-[10px] text-slate-300 dark:text-rdark-text2/50">即将开放</span>}
             </button>
             </React.Fragment>
           );

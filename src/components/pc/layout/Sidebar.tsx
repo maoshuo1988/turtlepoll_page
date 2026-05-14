@@ -87,6 +87,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const handleNavClick = (item: (typeof NAV_ITEMS)[number]) => {
     if (!item.enabled) return;
+    if (item.action === 'guide') {
+      setGuideOpen(true);
+      return;
+    }
     if (item.key === 'predictions') {
       setSelectedTag(null);
     }
@@ -123,9 +127,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           selectedTag={selectedTag}
           activeView={activeView}
           onOpenChat={() => setChatOpen(true)}
-          onOpenGuide={() => setGuideOpen(true)}
           onCloseChat={() => setChatOpen(false)}
-          onViewPet={() => onViewChange('pet')}
           onOpenProfile={() => onViewChange('profile')}
           onOpenActivePredictions={() => onViewChange('activePredictions')}
           onViewChange={handlePanelViewChange}
@@ -146,9 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               chatOpen={chatOpen}
               currentDialogue={currentDialogue}
               dialogueKey={dialogueKey}
-              onOpenGuide={() => setGuideOpen(true)}
               onCloseChat={() => setChatOpen(false)}
-              onViewPet={() => onViewChange('pet')}
               onOpenProfile={() => onViewChange('profile')}
               onOpenActivePredictions={() => onViewChange('activePredictions')}
             />
