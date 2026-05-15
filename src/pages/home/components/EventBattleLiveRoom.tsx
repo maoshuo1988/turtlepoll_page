@@ -1295,18 +1295,19 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           </div>
         </section>
 
-        <nav className="eb-tabs">
+        <nav className="eb-tabs eb-tabs-hidden-gap pointer-events-none" aria-hidden="true">
           {tabs.map((tab, index) => (
             <button
               key={tab}
               type="button"
               className={activeTab === tab || (!activeTab && index === 2) ? 'active' : ''}
               onClick={() => setActiveTab(tab)}
+              tabIndex={-1}
             >
               {tab}
             </button>
           ))}
-          <button type="button" className="eb-sort">最新评论 <ChevronDown size={14} /></button>
+          <button type="button" className="eb-sort" tabIndex={-1}>最新评论 <ChevronDown size={14} /></button>
         </nav>
 
         <section className="eb-comments-grid">
@@ -1459,19 +1460,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           </div>
         </section>
 
-        <section className="eb-side-card eb-events-card">
-          <div className="eb-side-title"><Crosshair size={18} /> 直播事件</div>
-          <div ref={feedRef} className="eb-event-list">
-            {(liveEvents.length ? liveEvents : buildInitialFeed(displayNews, leftComments, rightComments)).map((item, index) => (
-              <div className="eb-event-item" key={item.id}>
-                <span>23:{25 - index}</span>
-                <img src={FALLBACK_AVATAR} alt="" />
-                <p>{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section className="eb-side-card eb-bet-side-card">
           <div className="eb-side-title"><Zap size={18} /> 下注助威 <span>{canPlaceBet ? '进行中' : '已暂停'}</span></div>
           <div className={`eb-bet-panel ${betIntent === 'A' ? 'bet-blue' : 'bet-red'}`}>
@@ -1573,6 +1561,19 @@ export const EventBattle: React.FC<EventBattleProps> = ({
               <span>回复互动</span>
               <strong>{formatVotes(personalContribution.replyCount)}</strong>
             </div>
+          </div>
+        </section>
+
+        <section className="eb-side-card eb-events-card eb-events-card-hidden pointer-events-none" aria-hidden="true">
+          <div className="eb-side-title"><Crosshair size={18} /> 直播事件</div>
+          <div ref={feedRef} className="eb-event-list">
+            {(liveEvents.length ? liveEvents : buildInitialFeed(displayNews, leftComments, rightComments)).map((item, index) => (
+              <div className="eb-event-item" key={item.id}>
+                <span>23:{25 - index}</span>
+                <img src={FALLBACK_AVATAR} alt="" />
+                <p>{item.text}</p>
+              </div>
+            ))}
           </div>
         </section>
       </aside>
