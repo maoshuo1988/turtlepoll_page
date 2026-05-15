@@ -13,6 +13,8 @@ export type FootballMarketsByTagParams = {
   tag?: string;
   page?: number;
   limit?: number;
+  /** 为 false 时不发起请求（用于按条件补充拉取） */
+  enabled?: boolean;
 };
 
 export type FootballPredictContextHotParams = {

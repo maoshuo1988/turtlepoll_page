@@ -97,7 +97,7 @@ export function useRequestFootballMarketsByTag(params: FootballMarketsByTagParam
             });
             return assertSuccess(res);
         },
-        enabled: Boolean(token && normalizedTag),
+        enabled: Boolean(token && normalizedTag) && params.enabled !== false,
     });
 }
 

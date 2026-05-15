@@ -1,5 +1,6 @@
 /** 文件说明：世界杯专题页面，体育转播 HUD 风格 —— 预测板、暗盘赛程、开撕台、最新消息。 */
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from '@umijs/renderer-react';
 import {
   Activity,
   CalendarClock,
@@ -505,6 +506,7 @@ export function WorldCupPage() {
   const [betModal, setBetModal] = useState<{ item: PredictionCardItem; option: 'A' | 'B' } | null>(null);
   const [localBetSides, setLocalBetSides] = useState<Record<string, 'A' | 'B'>>({});
   const { onOpenAuth } = useHomeLayoutContext();
+  const navigate = useNavigate();
   const footballMarketsQuery = useRequestFootballMarketsByTag({
     tag: 'football',
     page: footballPage,
@@ -554,6 +556,12 @@ export function WorldCupPage() {
     if (!item || item.status !== 'open' || item.hasBet || localBetSides[item.id]) return;
     setBetModal({ item, option });
   };
+
+  /** 首页撕裂带按 marketId 拉齐数据；state 直达 EventBattle，避免 Hero 仍错用默认列表 */
+  const goToTearZone = useCallback((item: PredictionCardItem | undefined) => {
+    if (!item?.marketId) return;
+    navigate(`/?market=${item.marketId}`, { state: { openBattleNews: item } });
+  }, [navigate]);
 
   const handleBetSuccess = (item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {
     setLocalBetSides((prev) => ({ ...prev, [item.id]: option }));
@@ -1010,6 +1018,16 @@ export function WorldCupPage() {
                       </div>
                     </button>
                   </div>
+                  {market.predictionItem?.marketId ? (
+                    <button
+                      type="button"
+                      onClick={() => goToTearZone(market.predictionItem)}
+                      className="relative mt-3 flex w-full items-center justify-center gap-2 rounded-sm border border-cyan-400/30 bg-cyan-400/[0.08] py-2.5 text-[11px] font-black uppercase tracking-wider text-cyan-200 transition-colors hover:bg-cyan-400/16"
+                    >
+                      <MessageCircleMore size={14} />
+                      进入撕裂带
+                    </button>
+                  ) : null}
                 </article>
               ))}
             </div>
@@ -1102,6 +1120,17 @@ export function WorldCupPage() {
                           <Swords size={11} />
                           客队
                         </button>
+                        {fixture.predictionItem?.marketId ? (
+                          <button
+                            type="button"
+                            onClick={() => goToTearZone(fixture.predictionItem)}
+                            title="进入对应预测的撕裂带"
+                            className="inline-flex items-center gap-0.5 rounded-sm border border-cyan-400/35 bg-cyan-400/10 px-2 py-1.5 text-[10px] font-black uppercase tracking-wider text-cyan-200 transition-colors hover:bg-cyan-400/18"
+                          >
+                            <MessageCircleMore size={12} />
+                            撕裂带
+                          </button>
+                        ) : null}
                       </div>
                     </div>
                   </li>

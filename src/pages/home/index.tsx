@@ -1,18 +1,26 @@
 /**
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
-import { useCallback, useState } from 'react';
-import { useEffect } from 'react';
-import { useLocation } from '@umijs/renderer-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { useHomeLayoutContext } from '@/layouts/context';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import type { SidebarHotTopic } from '@/components/shared/layout';
+import { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 import { heroNews, mockNews } from '@/data/mockData';
 import { HomePageView } from './components/HomePageView';
-import { usePredictionCardItems, type PredictionCardItem } from './components/predictionCards';
+import {
+  mapMarketToPredictionCard,
+  usePredictionCardItems,
+  type PredictionCardItem,
+} from './components/predictionCards';
+
+/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */
+const FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;
 
 type HomeLocationState = {
   sidebarTopic?: SidebarHotTopic;
+  openBattleNews?: PredictionCardItem;
 };
 
 function mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {
@@ -40,6 +48,7 @@ export default function HomePage() {
   const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});
   const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const { onOpenAuth } = useHomeLayoutContext();
   const searchParams = new URLSearchParams(location.search);
   const selectedTag = searchParams.get('tag');
@@ -48,23 +57,80 @@ export default function HomePage() {
   const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);
   const { allItems } = usePredictionCardItems(selectedTag);
 
+  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];
+  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;
+
+  const needsFootballDeepLink =
+    Boolean(selectedMarket && selectedMarketId !== null) &&
+    !allItems.some(
+      (item) =>
+        item.marketId === selectedMarketId ||
+        item.id === selectedMarket ||
+        item.id === `market-${selectedMarket}`,
+    );
+
+  const footballDeepLinkQuery = useRequestFootballMarketsByTag({
+    tag: 'football',
+    page: 1,
+    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,
+    enabled: needsFootballDeepLink,
+  });
+
+  const selectedPrediction = useMemo(() => {
+    if (!selectedMarket || selectedMarketId === null) return null;
+    const match = (items: PredictionCardItem[]) =>
+      items.find(
+        (item) =>
+          item.marketId === selectedMarketId ||
+          item.id === selectedMarket ||
+          item.id === `market-${selectedMarket}`,
+      );
+    const fromMain = match(allItems);
+    if (fromMain) return fromMain;
+    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);
+    const fromFootball = match(footballItems);
+    if (fromFootball) return fromFootball;
+    return (
+      allFallbackItems.find(
+        (item) =>
+          item.marketId === selectedMarketId ||
+          item.id === selectedMarket ||
+          item.id === `market-${selectedMarket}`,
+      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)
+    );
+  }, [
+    allItems,
+    allFallbackItems,
+    footballDeepLinkQuery.data,
+    selectedMarket,
+    selectedMarketId,
+    sidebarTopicItem,
+  ]);
+
+  /** 世界杯等路由传入 state，直达撕裂带；消费后丢掉避免刷新重复进入 */
   useEffect(() => {
-    if (selectedMarket) {
-      setSelectedBattleNews(null);
-    }
-  }, [selectedMarket]);
+    const raw = location.state as HomeLocationState | null;
+    if (!raw?.openBattleNews) return;
+    setSelectedBattleNews(raw.openBattleNews);
+    navigate(`${location.pathname}${location.search || ''}`, {
+      replace: true,
+      state: raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {},
+    });
+  }, [location.state, location.pathname, location.search, navigate]);
+
+  /** URL ?market= 与当前撕裂带场次不一致时再关掉撕裂带 */
+  useEffect(() => {
+    if (selectedMarketId === null) return;
+    setSelectedBattleNews((prev) => {
+      if (!prev) return prev;
+      return prev.marketId === selectedMarketId ? prev : null;
+    });
+  }, [selectedMarketId]);
 
   const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {
     setUserVotes((prev) => ({ ...prev, [item.id]: option }));
   }, []);
 
-  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];
-  const selectedMarketId = selectedMarket ? Number(selectedMarket) : null;
-  const selectedPrediction = selectedMarket
-    ? allItems.find((item) => item.marketId === selectedMarketId || item.id === selectedMarket || item.id === `market-${selectedMarket}`)
-      ?? allFallbackItems.find((item) => item.marketId === selectedMarketId || item.id === selectedMarket || item.id === `market-${selectedMarket}`)
-      ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)
-    : null;
   const battleNews = selectedBattleNews;
 
   const handleBattleBack = useCallback(() => {

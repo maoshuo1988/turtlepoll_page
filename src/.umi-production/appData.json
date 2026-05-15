@@ -68,7 +68,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -85,7 +85,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -146,7 +146,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            7
+            10
           ]
         },
         "register": 11
@@ -229,7 +229,7 @@
             0
           ]
         },
-        "register": 4
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -1098,7 +1098,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1137,7 +1137,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 14
+        "register": 15
       },
       "enableBy": "config"
     },
@@ -1150,7 +1150,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 8
+        "register": 7
       },
       "enableBy": "config"
     },
@@ -1256,7 +1256,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1270,10 +1270,10 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1285,7 +1285,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1298,7 +1298,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1350,7 +1350,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1363,7 +1363,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1401,7 +1401,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1440,7 +1440,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1453,7 +1453,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 3
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1490,7 +1490,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/legacy/legacy": {
@@ -1502,7 +1502,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1557,7 +1557,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1569,7 +1569,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1618,7 +1618,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1631,7 +1631,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1644,7 +1644,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1657,7 +1657,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 20
       },
       "enableBy": "register"
     },
@@ -1670,7 +1670,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 17
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1825,7 +1825,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1851,7 +1851,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1890,7 +1890,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1903,7 +1903,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1916,7 +1916,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -1955,7 +1955,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     }
@@ -2183,7 +2183,7 @@
       "parentId": "2",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useEffect } from 'react';\nimport { useLocation } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/shared/layout';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { HomePageView } from './components/HomePageView';\nimport { usePredictionCardItems, type PredictionCardItem } from './components/predictionCards';\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  useEffect(() => {\n    if (selectedMarket) {\n      setSelectedBattleNews(null);\n    }\n  }, [selectedMarket]);\n\n  const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {\n    setUserVotes((prev) => ({ ...prev, [item.id]: option }));\n  }, []);\n\n  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];\n  const selectedMarketId = selectedMarket ? Number(selectedMarket) : null;\n  const selectedPrediction = selectedMarket\n    ? allItems.find((item) => item.marketId === selectedMarketId || item.id === selectedMarket || item.id === `market-${selectedMarket}`)\n      ?? allFallbackItems.find((item) => item.marketId === selectedMarketId || item.id === selectedMarket || item.id === `market-${selectedMarket}`)\n      ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    : null;\n  const battleNews = selectedBattleNews;\n\n  const handleBattleBack = useCallback(() => {\n    setSelectedBattleNews(null);\n  }, []);\n\n  return (\n    <HomePageView\n      battleNews={battleNews}\n      userSide={battleNews ? (userVotes[battleNews.id] ?? null) : null}\n      selectedTag={selectedTag}\n      selectedPrediction={selectedPrediction}\n      onBattleBack={handleBattleBack}\n      onPredictionBetSuccess={handlePredictionBetSuccess}\n      onRequireAuth={onOpenAuth}\n      onEnterBattle={setSelectedBattleNews}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/shared/layout';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  /** 世界杯等路由传入 state，直达撕裂带；消费后丢掉避免刷新重复进入 */\n  useEffect(() => {\n    const raw = location.state as HomeLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {},\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  /** URL ?market= 与当前撕裂带场次不一致时再关掉撕裂带 */\n  useEffect(() => {\n    if (selectedMarketId === null) return;\n    setSelectedBattleNews((prev) => {\n      if (!prev) return prev;\n      return prev.marketId === selectedMarketId ? prev : null;\n    });\n  }, [selectedMarketId]);\n\n  const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {\n    setUserVotes((prev) => ({ ...prev, [item.id]: option }));\n  }, []);\n\n  const battleNews = selectedBattleNews;\n\n  const handleBattleBack = useCallback(() => {\n    setSelectedBattleNews(null);\n  }, []);\n\n  return (\n    <HomePageView\n      battleNews={battleNews}\n      userSide={battleNews ? (userVotes[battleNews.id] ?? null) : null}\n      selectedTag={selectedTag}\n      selectedPrediction={selectedPrediction}\n      onBattleBack={handleBattleBack}\n      onPredictionBetSuccess={handlePredictionBetSuccess}\n      onRequireAuth={onOpenAuth}\n      onEnterBattle={setSelectedBattleNews}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },

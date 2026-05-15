@@ -149,6 +149,10 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -257,7 +261,20 @@
             4,
             7,
             8,
-            3
+            3,
+            3,
+            3,
+            4,
+            4,
+            5,
+            4,
+            2,
+            10,
+            15,
+            26,
+            7,
+            5,
+            5
           ]
         },
         "register": 0
@@ -310,7 +327,11 @@
             16,
             18,
             8,
-            10
+            10,
+            6,
+            10,
+            11,
+            6
           ]
         },
         "register": 11
@@ -327,6 +348,10 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -416,6 +441,12 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "onCheckCode": [
@@ -471,6 +502,13 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
             0,
             0,
             0,
@@ -1506,6 +1544,7 @@
             0,
             0,
             0,
+            0,
             0
           ]
         },
@@ -1556,9 +1595,17 @@
             2,
             1,
             1,
-            1
+            1,
+            0,
+            3,
+            1,
+            0
           ],
           "addRuntimePlugin": [
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1699,6 +1746,10 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addEntryImports": [
@@ -1743,6 +1794,14 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1835,9 +1894,21 @@
             23,
             18,
             13,
-            12
+            12,
+            10,
+            20,
+            19,
+            8
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1988,6 +2059,14 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -2017,6 +2096,10 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2114,6 +2197,10 @@
             0,
             1,
             0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addBeforeMiddlewares": [
@@ -2201,6 +2288,14 @@
             6,
             1,
             7,
+            0,
+            4,
+            1,
+            9,
+            1,
+            7,
+            1,
+            5,
             0
           ]
         },
@@ -2289,7 +2384,11 @@
             11,
             9,
             6,
-            4
+            4,
+            3,
+            5,
+            7,
+            3
           ]
         },
         "register": 1
@@ -2406,6 +2505,10 @@
             1,
             1,
             0,
+            0,
+            1,
+            0,
+            1,
             0,
             1
           ]
@@ -2543,6 +2646,7 @@
             12,
             12,
             4,
+            0,
             0,
             0,
             0,
@@ -3165,7 +3269,7 @@
       "parentId": "2",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useEffect } from 'react';\nimport { useLocation } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/shared/layout';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { HomePageView } from './components/HomePageView';\nimport { usePredictionCardItems, type PredictionCardItem } from './components/predictionCards';\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  useEffect(() => {\n    if (selectedMarket) {\n      setSelectedBattleNews(null);\n    }\n  }, [selectedMarket]);\n\n  const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {\n    setUserVotes((prev) => ({ ...prev, [item.id]: option }));\n  }, []);\n\n  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];\n  const selectedMarketId = selectedMarket ? Number(selectedMarket) : null;\n  const selectedPrediction = selectedMarket\n    ? allItems.find((item) => item.marketId === selectedMarketId || item.id === selectedMarket || item.id === `market-${selectedMarket}`)\n      ?? allFallbackItems.find((item) => item.marketId === selectedMarketId || item.id === selectedMarket || item.id === `market-${selectedMarket}`)\n      ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    : null;\n  const battleNews = selectedBattleNews;\n\n  const handleBattleBack = useCallback(() => {\n    setSelectedBattleNews(null);\n  }, []);\n\n  return (\n    <HomePageView\n      battleNews={battleNews}\n      userSide={battleNews ? (userVotes[battleNews.id] ?? null) : null}\n      selectedTag={selectedTag}\n      selectedPrediction={selectedPrediction}\n      onBattleBack={handleBattleBack}\n      onPredictionBetSuccess={handlePredictionBetSuccess}\n      onRequireAuth={onOpenAuth}\n      onEnterBattle={setSelectedBattleNews}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/shared/layout';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  /** 世界杯等路由传入 state，直达撕裂带；消费后丢掉避免刷新重复进入 */\n  useEffect(() => {\n    const raw = location.state as HomeLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {},\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  /** URL ?market= 与当前撕裂带场次不一致时再关掉撕裂带 */\n  useEffect(() => {\n    if (selectedMarketId === null) return;\n    setSelectedBattleNews((prev) => {\n      if (!prev) return prev;\n      return prev.marketId === selectedMarketId ? prev : null;\n    });\n  }, [selectedMarketId]);\n\n  const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {\n    setUserVotes((prev) => ({ ...prev, [item.id]: option }));\n  }, []);\n\n  const battleNews = selectedBattleNews;\n\n  const handleBattleBack = useCallback(() => {\n    setSelectedBattleNews(null);\n  }, []);\n\n  return (\n    <HomePageView\n      battleNews={battleNews}\n      userSide={battleNews ? (userVotes[battleNews.id] ?? null) : null}\n      selectedTag={selectedTag}\n      selectedPrediction={selectedPrediction}\n      onBattleBack={handleBattleBack}\n      onPredictionBetSuccess={handlePredictionBetSuccess}\n      onRequireAuth={onOpenAuth}\n      onEnterBattle={setSelectedBattleNews}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },
@@ -5874,13 +5978,8 @@
             "format": "esm"
           },
           "src/pages/home/index.tsx": {
-            "bytes": 3538,
+            "bytes": 5680,
             "imports": [
-              {
-                "path": "react",
-                "kind": "import-statement",
-                "external": true
-              },
               {
                 "path": "react",
                 "kind": "import-statement",
@@ -5895,6 +5994,11 @@
                 "path": "src/layouts/context/index.ts",
                 "kind": "import-statement",
                 "original": "@/layouts/context"
+              },
+              {
+                "path": "src/hooks/usePredictionRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/usePredictionRequests"
               },
               {
                 "path": "src/data/mockData.ts",
@@ -5915,10 +6019,15 @@
             "format": "esm"
           },
           "src/pages/world-cup/components/WorldCupPage.tsx": {
-            "bytes": 65951,
+            "bytes": 67718,
             "imports": [
               {
                 "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -7684,17 +7793,17 @@
                 "external": true
               },
               {
-                "path": "react",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
                 "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
               },
               {
                 "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -9380,10 +9489,10 @@
                 "bytesInOutput": 1852
               },
               "src/pages/home/index.tsx": {
-                "bytesInOutput": 3081
+                "bytesInOutput": 4722
               },
               "src/pages/world-cup/components/WorldCupPage.tsx": {
-                "bytesInOutput": 65619
+                "bytesInOutput": 67082
               },
               "src/pages/world-cup/index.tsx": {
                 "bytesInOutput": 258
@@ -9494,7 +9603,7 @@
                 "bytesInOutput": 1137
               },
               "src/pages/pet/index.tsx": {
-                "bytesInOutput": 3214
+                "bytesInOutput": 3216
               },
               "src/pages/profile/components/petDisplay.ts": {
                 "bytesInOutput": 2521
@@ -9509,7 +9618,7 @@
                 "bytesInOutput": 323
               },
               "src/pages/profile/index.tsx": {
-                "bytesInOutput": 2509
+                "bytesInOutput": 2511
               },
               "src/pages/active-predictions/components/ActivePredictionsPage.tsx": {
                 "bytesInOutput": 7153
@@ -9560,7 +9669,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 933260
+            "bytes": 936368
           }
         }
       }
@@ -18794,13 +18903,23 @@
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx": [
         {
-          "end": 161,
+          "end": 181,
           "importKind": "value",
           "source": "react",
           "specifiers": [
             {
               "imported": "useCallback",
               "local": "useCallback",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
               "type": "ImportSpecifier"
             },
             {
@@ -18813,21 +18932,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 196,
-          "importKind": "value",
-          "source": "react",
-          "specifiers": [
-            {
-              "imported": "useEffect",
-              "local": "useEffect",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 162,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 249,
+          "end": 247,
           "importKind": "value",
           "source": "@umijs/renderer-react",
           "specifiers": [
@@ -18835,13 +18940,18 @@
               "imported": "useLocation",
               "local": "useLocation",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useNavigate",
+              "local": "useNavigate",
+              "type": "ImportSpecifier"
             }
           ],
-          "start": 197,
+          "start": 182,
           "type": "ImportDeclaration"
         },
         {
-          "end": 307,
+          "end": 305,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -18851,11 +18961,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 250,
+          "start": 248,
           "type": "ImportDeclaration"
         },
         {
-          "end": 364,
+          "end": 362,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -18865,11 +18975,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 308,
+          "start": 306,
           "type": "ImportDeclaration"
         },
         {
-          "end": 431,
+          "end": 429,
           "importKind": "type",
           "source": "@/components/shared/layout",
           "specifiers": [
@@ -18879,11 +18989,25 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 365,
+          "start": 363,
           "type": "ImportDeclaration"
         },
         {
-          "end": 485,
+          "end": 509,
+          "importKind": "value",
+          "source": "@/hooks/usePredictionRequests",
+          "specifiers": [
+            {
+              "imported": "useRequestFootballMarketsByTag",
+              "local": "useRequestFootballMarketsByTag",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 430,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 563,
           "importKind": "value",
           "source": "@/data/mockData",
           "specifiers": [
@@ -18898,11 +19022,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 432,
+          "start": 510,
           "type": "ImportDeclaration"
         },
         {
-          "end": 543,
+          "end": 621,
           "importKind": "value",
           "source": "./components/HomePageView",
           "specifiers": [
@@ -18912,14 +19036,19 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 486,
+          "start": 564,
           "type": "ImportDeclaration"
         },
         {
-          "end": 639,
+          "end": 751,
           "importKind": "value",
           "source": "./components/predictionCards",
           "specifiers": [
+            {
+              "imported": "mapMarketToPredictionCard",
+              "local": "mapMarketToPredictionCard",
+              "type": "ImportSpecifier"
+            },
             {
               "imported": "usePredictionCardItems",
               "local": "usePredictionCardItems",
@@ -18931,7 +19060,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 544,
+          "start": 622,
           "type": "ImportDeclaration"
         }
       ],
@@ -21027,10 +21156,15 @@
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/world-cup/components/WorldCupPage.tsx": [
         {
-          "end": 186,
+          "end": 199,
           "importKind": "value",
           "source": "react",
           "specifiers": [
+            {
+              "imported": "useCallback",
+              "local": "useCallback",
+              "type": "ImportSpecifier"
+            },
             {
               "imported": "useEffect",
               "local": "useEffect",
@@ -21051,7 +21185,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 429,
+          "end": 252,
+          "importKind": "value",
+          "source": "@umijs/renderer-react",
+          "specifiers": [
+            {
+              "imported": "useNavigate",
+              "local": "useNavigate",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 200,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 495,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
@@ -21151,11 +21299,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 187,
+          "start": 253,
           "type": "ImportDeclaration"
         },
         {
-          "end": 510,
+          "end": 576,
           "importKind": "value",
           "source": "@/pages/home/components/PredictionBetModal",
           "specifiers": [
@@ -21165,11 +21313,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 430,
+          "start": 496,
           "type": "ImportDeclaration"
         },
         {
-          "end": 593,
+          "end": 659,
           "importKind": "type",
           "source": "@/pages/home/components/predictionCards",
           "specifiers": [
@@ -21179,11 +21327,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 511,
+          "start": 577,
           "type": "ImportDeclaration"
         },
         {
-          "end": 650,
+          "end": 716,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -21193,11 +21341,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 594,
+          "start": 660,
           "type": "ImportDeclaration"
         },
         {
-          "end": 730,
+          "end": 796,
           "importKind": "value",
           "source": "@/hooks/usePredictionRequests",
           "specifiers": [
@@ -21207,11 +21355,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 651,
+          "start": 717,
           "type": "ImportDeclaration"
         },
         {
-          "end": 802,
+          "end": 868,
           "importKind": "type",
           "source": "@/hooks/predictionTypes",
           "specifiers": [
@@ -21221,11 +21369,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 731,
+          "start": 797,
           "type": "ImportDeclaration"
         },
         {
-          "end": 860,
+          "end": 926,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -21235,7 +21383,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 803,
+          "start": 869,
           "type": "ImportDeclaration"
         }
       ],
