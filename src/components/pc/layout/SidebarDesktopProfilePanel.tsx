@@ -3,17 +3,16 @@
  */
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Coins, Flame } from 'lucide-react';
+import { Coins } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
+import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { useRequestCoinMe } from '@/hooks/useCoinRequests';
 
+const DEFAULT_USER_AVATAR = '/image/default-header.png';
+
 interface SidebarDesktopProfilePanelProps {
-  winStreak: number;
-  winRate: number;
-  totalPredictions: number;
-  activePredictions: number;
   pet: PetInfo;
   aiPushMessages?: AiPushMessage[];
   chatOpen: boolean;
@@ -21,16 +20,11 @@ interface SidebarDesktopProfilePanelProps {
   dialogueKey: number;
   onCloseChat: () => void;
   onOpenProfile: () => void;
-  onOpenActivePredictions: () => void;
 }
 
 // 桌面侧边栏顶部个人卡片：资料、金币、战绩和宠物入口
 // 金币直接读取全局 coinMe 缓存，别处更新后这里会自动同步
 export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProps> = ({
-  winStreak,
-  winRate,
-  totalPredictions,
-  activePredictions,
   pet,
   aiPushMessages = [],
   chatOpen,
@@ -38,10 +32,16 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
   dialogueKey,
   onCloseChat,
   onOpenProfile,
-  onOpenActivePredictions,
 }) => {
+  const userCurrent = useRequestUserCurrent();
   const coinMe = useRequestCoinMe();
   const displayBalance = coinMe.data?.balance ?? 0;
+  const user = userCurrent.data;
+  const displayName = user?.nickname || user?.username || user?.email || '未登录用户';
+  const displaySubtitle = user?.levelTitle?.trim() || (user ? '暂无等级称号' : '登录后同步你的等级称号');
+  const avatarValue = typeof user?.avatar === 'string' && user.avatar.trim() ? user.avatar.trim() : '';
+  const isAvatarImage = /^https?:\/\//.test(avatarValue) || avatarValue.startsWith('/');
+  const avatarSrc = isAvatarImage ? avatarValue : DEFAULT_USER_AVATAR;
 
   if (chatOpen) {
     return <PetChat pet={pet} onClose={onCloseChat} aiPushMessages={aiPushMessages} />;
@@ -54,16 +54,20 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
           onClick={onOpenProfile}
           className=" flex w-full items-center gap-3 rounded-2xl border border-transparent bg-transparent p-0 text-left transition-all hover:border-white/8 hover:bg-white/[0.03]"
         >
-          <div className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1d1e22] to-[#0f1013] text-lg font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
-            🦊
+          <div className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/10 bg-gradient-to-br from-[#1d1e22] to-[#0f1013] text-lg font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
+            {avatarValue && !isAvatarImage ? (
+              <span>{avatarValue}</span>
+            ) : (
+              <img src={avatarSrc} alt={displayName} className="h-full w-full object-cover" />
+            )}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-[14px] font-bold text-white dark:text-rdark-text">路边社社长</div>
-            <div className=" text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
+            <div className="truncate text-[14px] font-bold text-white dark:text-rdark-text">{displayName}</div>
+            <div className="truncate text-[10px] text-zinc-500 dark:text-rdark-text2">{displaySubtitle}</div>
           </div>
         </button>
 
-        <div className=" flex items-center justify-center gap-2">
+        <div className="mt-2 flex items-center justify-start gap-2">
           <Coins size={18} className="text-emerald-500 dark:text-emerald-400" />
           <AnimatePresence mode="popLayout">
             <motion.span
@@ -80,30 +84,27 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
           <span className=" self-end text-[11px] text-zinc-500 dark:text-rdark-text2">龟币</span>
         </div>
 
-        <div className="grid grid-cols-4 gap-1.5">
+        <div className="my-2 grid grid-cols-3 gap-1.5">
           <div className="rounded-lg bg-[#141518]  text-center dark:bg-rdark-input">
-            <div className=" text-[15px] font-bold leading-none text-white dark:text-rdark-text">{(winRate * 100).toFixed(0)}%</div>
-            <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">胜率</div>
+            <div className="text-[15px] font-bold leading-none text-white dark:text-rdark-text">0%</div>
+            <div className="mt-1 text-[9px] text-zinc-500 dark:text-rdark-text2">胜率</div>
           </div>
           <div className="rounded-lg bg-[#141518]  text-center dark:bg-rdark-input">
-            <div className=" flex items-center justify-center gap-0.5 text-[15px] font-bold leading-none text-emerald-600 dark:text-emerald-400">
-              <Flame size={12} className="text-orange-400" />
-              {winStreak}
-            </div>
-            <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">连胜</div>
+            <div className=" text-[15px] font-bold leading-none text-white dark:text-rdark-text">0</div>
+            <div className="mt-1 text-[9px] text-zinc-500 dark:text-rdark-text2">连胜</div>
           </div>
           <div className="rounded-lg bg-[#141518]  text-center dark:bg-rdark-input">
-            <div className=" text-[15px] font-bold leading-none text-white dark:text-rdark-text">{totalPredictions}</div>
-            <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">已预测</div>
+            <div className=" text-[15px] font-bold leading-none text-white dark:text-rdark-text">0</div>
+            <div className="mt-1 text-[9px] text-zinc-500 dark:text-rdark-text2">已预测</div>
           </div>
-          <button
+          {/* <button
             type="button"
             onClick={onOpenActivePredictions}
             className="rounded-lg bg-[#141518] text-center transition-colors hover:bg-[#1a1c20] dark:bg-rdark-input dark:hover:bg-rdark-hover"
           >
-            <div className="text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">{activePredictions}</div>
-            <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">进行中</div>
-          </button>
+            <div className="text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">0</div>
+            <div className="mt-1 text-[9px] text-zinc-500 dark:text-rdark-text2">进行中</div>
+          </button> */}
         </div>
       </div>
 
@@ -197,7 +198,7 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
 
         <motion.div animate={{ scale: [1, 0.9, 1], opacity: [0.15, 0.1, 0.15] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className="absolute bottom-[38px] left-1/2 z-0 h-2.5 w-14 -translate-x-1/2 rounded-full bg-black/15 blur-[2px] dark:bg-black/25" />
 
-        <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5">
+        {/* <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5">
           <div className="flex items-center gap-1.5 rounded-lg border border-white/40 bg-white/70  shadow-sm backdrop-blur-sm dark:border-rdark-border/50 dark:bg-rdark-card/70">
             <span className="text-[11px]">😊</span>
             <div className="flex flex-col">
@@ -217,7 +218,7 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* <button
           onClick={(e) => {

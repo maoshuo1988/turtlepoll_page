@@ -17,7 +17,6 @@ import { API_Comment_Comments } from '@/api/commentApi';
 type PlazaTab = 'plaza' | 'my-banker' | 'my-challenger';
 type PlazaSort =
   | '最新'
-  | '大额'
   | '进行中'
   | '待结果'
   | '已结算';
@@ -97,7 +96,6 @@ type AddStakeModalState = {
 
 const PLAZA_SORTS: PlazaSort[] = [
   '最新',
-  '大额',
   '进行中',
   '待结果',
   '已结算',
@@ -160,7 +158,7 @@ const PAGE_STYLES = `
 #page-battle-square .phb-title { font-family:'Syne','Arial Black',sans-serif; font-size:32px; font-weight:800; color:var(--ink); margin-bottom:6px; }
 #page-battle-square .phb-title span { color:var(--red); }
 #page-battle-square .phb-sub { font-size:15px; color:#5b6d83; }
-#page-battle-square .phb-stats { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+#page-battle-square .phb-stats { display:flex; gap:10px;  flex-wrap:wrap; }
 #page-battle-square .phb-stat {
   background:rgba(255,255,255,.62); border:1px solid rgba(56,118,255,.12);
   border-radius:999px; padding:6px 12px; font-size:13px; font-weight:700; color:#23405f;
@@ -1025,9 +1023,10 @@ function DuelCard({
               {capacityPct >= 100 ? ' (满额)' : ''}
             </div>
           </div>
-          <div className="duel-cap-bar">
+          {/* 进度条先隐藏，保留文案 */}
+          {/* <div className="duel-cap-bar">
             <div className={`duel-cap-fill ${capacityPct >= 100 ? 'full' : ''}`} style={{ width: `${capacityPct}%` }} />
-          </div>
+          </div> */}
           <div className="duel-cap-detail">
             <span>已加入 {duel.challengerCount} 人</span>
             <span>
@@ -1305,8 +1304,6 @@ export const BattlePlazaPage: React.FC = () => {
   const sortedPlazaDuels = useMemo(() => {
     const list = [...plazaDuels];
     switch (activeSort) {
-      case '大额':
-        return list.sort((a, b) => b.wager - a.wager);
       case '最新':
         return list.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
       case '进行中':
@@ -1730,9 +1727,6 @@ export const BattlePlazaPage: React.FC = () => {
           ) : null}
 
           <div className="page-hero-battle">
-            <div className="phb-label">⚔️ 庄家赌局</div>
-            <div className="phb-title">开<span>战</span>广场</div>
-            <div className="phb-sub">做庄开局 · 挑战接战 · 龟币对赌</div>
             <div className="phb-stats">
               <div className="phb-stat">🔥 当前 {totalBattleCount} 场赌局</div>
               <div className="phb-stat">💰 冻结 {formatCoins(totalFrozen)} 龟币</div>

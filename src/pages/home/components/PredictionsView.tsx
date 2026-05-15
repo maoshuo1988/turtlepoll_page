@@ -9,15 +9,16 @@ import type { PlaceBetResult } from '@/hooks/coinTypes';
 
 interface PredictionsViewProps {
   selectedTag: string | null;
+  selectedPrediction?: PredictionCardItem | null;
   onBetSuccess?: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
   onRequireAuth?: () => void;
-  onEnterBattle?: (newsId: string) => void;
+  onEnterBattle?: (item: PredictionCardItem) => void;
 }
 
-export const PredictionsView: React.FC<PredictionsViewProps> = ({ selectedTag, onBetSuccess, onRequireAuth, onEnterBattle }) => {
+export const PredictionsView: React.FC<PredictionsViewProps> = ({ selectedTag, selectedPrediction, onBetSuccess, onRequireAuth, onEnterBattle }) => {
   return (
     <section className="grid w-full gap-4 pb-1 md:gap-4 md:pb-0">
-      <HeroPrediction selectedTag={selectedTag} onBetSuccess={onBetSuccess} onRequireAuth={onRequireAuth} onEnterBattle={onEnterBattle} />
+      <HeroPrediction news={selectedPrediction} selectedTag={selectedTag} onBetSuccess={onBetSuccess} onRequireAuth={onRequireAuth} onEnterBattle={onEnterBattle} />
       <NewsFeed selectedTag={selectedTag} onBetSuccess={onBetSuccess} onRequireAuth={onRequireAuth} onEnterBattle={onEnterBattle} />
     </section>
   );

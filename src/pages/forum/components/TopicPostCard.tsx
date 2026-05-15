@@ -1,9 +1,21 @@
 /**
  * 文件说明：Topic Post Card，论坛线报页面组件。
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, MessageCircle, Repeat2, Share, BarChart2, MoreHorizontal, BadgeCheck, Bookmark, CornerDownRight, SendHorizonal, TrendingUp, Flame, X } from 'lucide-react';
+import {
+  Heart,
+  MessageCircle,
+  BadgeCheck,
+  Bookmark,
+  CornerDownRight,
+  SendHorizonal,
+  TrendingUp,
+  Flame,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
@@ -16,6 +28,8 @@ import type { PredictionCardItem } from './predictionCards';
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
+
+const DISLIKE_ICON_SRC = '/image/cai.svg';
 
 export type TopicPostTag = '讨论' | '爆料' | '分析';
 
@@ -42,6 +56,9 @@ interface TopicPostCardProps {
   onOpenLinkedPrediction?: (item: PredictionCardItem) => void;
   onLike?: (postId: string) => void | Promise<void>;
   onUnlike?: (postId: string) => void | Promise<void>;
+  /** 点踩（可选，未接接口时仅在本地切换展示） */
+  onDislike?: (postId: string) => void | Promise<void>;
+  onUndislike?: (postId: string) => void | Promise<void>;
   onToggleFavorite?: (postId: string, nextFavorited: boolean) => void | Promise<void>;
 }
 
@@ -93,27 +110,202 @@ const resolveAssetUrl = (src?: string) => {
 const getUserDisplayName = (comment?: CommentResponse | null) =>
   comment?.user?.nickname || comment?.user?.username || `用户 ${comment?.user?.id ?? ''}`.trim() || '匿名用户';
 
-const ImageGrid: React.FC<{ images: string[] }> = ({ images }) => {
-  if (images.length === 0) return null;
+/** 列表九宫格最多展示张数，与发帖配图上限一致；超出时在末格显示 +N */
+const TOPIC_IMAGE_GRID_MAX_VISIBLE = 9;
+
+const TopicImageLightbox: React.FC<{
+  urls: string[];
+  index: number | null;
+  onChangeIndex: (next: number | null) => void;
+}> = ({ urls, index, onChangeIndex }) => {
+  const count = urls.length;
+  const safeIndex = index !== null && index >= 0 && index < count ? index : null;
+
+  const indexRef = useRef(index);
+  indexRef.current = index;
+  const countRef = useRef(count);
+  countRef.current = count;
+
+  useEffect(() => {
+    if (safeIndex === null) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onChangeIndex(null);
+        return;
+      }
+      const i = indexRef.current;
+      const n = countRef.current;
+      if (i === null) return;
+      if (e.key === 'ArrowLeft' && i > 0) {
+        e.preventDefault();
+        onChangeIndex(i - 1);
+      }
+      if (e.key === 'ArrowRight' && i < n - 1) {
+        e.preventDefault();
+        onChangeIndex(i + 1);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [safeIndex, onChangeIndex]);
+
+  if (safeIndex === null) return null;
+
+  const resolved = resolveAssetUrl(urls[safeIndex]);
+  const canPrev = safeIndex > 0;
+  const canNext = safeIndex < count - 1;
 
   return (
-    <div className="mt-2.5 md:mt-3 grid grid-cols-3 gap-2 overflow-hidden rounded-[20px] border border-white/8 bg-[#11161d] md:rounded-2xl md:border-slate-200 dark:md:border-rdark-border md:grid-cols-4">
-      {images.slice(0, 8).map((src, i) => (
-        <div key={i} className="relative aspect-square overflow-hidden bg-[#09182f]">
-          <img
-            src={resolveAssetUrl(src)}
-            alt=""
-            loading="lazy"
-            className="h-full w-full cursor-pointer object-cover transition-opacity hover:opacity-95"
-          />
-          {i === 7 && images.length > 8 && (
-            <div className="absolute inset-0 grid place-items-center bg-black/50 text-2xl font-bold text-white">
-              +{images.length - 8}
-            </div>
-          )}
-        </div>
-      ))}
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="查看大图"
+      className="fixed inset-0 z-[130] flex flex-col items-center justify-center bg-black/55 p-4 backdrop-blur-[10px]"
+      onClick={() => onChangeIndex(null)}
+    >
+      <button
+        type="button"
+        aria-label="关闭"
+        className="absolute right-3 top-3 z-10 grid h-10 w-10 place-items-center rounded-full border border-white/20 bg-white/12 text-white shadow-lg transition hover:bg-white/22"
+        onClick={() => onChangeIndex(null)}
+      >
+        <X size={20} strokeWidth={2} />
+      </button>
+
+      <div
+        className="relative w-full max-w-[min(96vw,920px)] px-11 sm:px-14"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {count > 1 && (
+          <button
+            type="button"
+            aria-label="上一张"
+            disabled={!canPrev}
+            className="absolute left-0 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/18 bg-black/35 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/50 disabled:cursor-not-allowed disabled:opacity-25"
+            onClick={() => {
+              if (canPrev) onChangeIndex(safeIndex - 1);
+            }}
+          >
+            <ChevronLeft className="h-7 w-7" strokeWidth={2} aria-hidden />
+          </button>
+        )}
+        {count > 1 && (
+          <button
+            type="button"
+            aria-label="下一张"
+            disabled={!canNext}
+            className="absolute right-0 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/18 bg-black/35 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/50 disabled:cursor-not-allowed disabled:opacity-25"
+            onClick={() => {
+              if (canNext) onChangeIndex(safeIndex + 1);
+            }}
+          >
+            <ChevronRight className="h-7 w-7" strokeWidth={2} aria-hidden />
+          </button>
+        )}
+        <img
+          src={resolved}
+          alt={`配图 ${safeIndex + 1}/${count}`}
+          className="mx-auto max-h-[min(85vh,900px)] max-w-full rounded-xl object-contain shadow-2xl ring-1 ring-white/15"
+        />
+        {count > 1 && (
+          <p className="mt-3 text-center text-[13px] font-medium tabular-nums text-zinc-300">
+            {safeIndex + 1} / {count}
+          </p>
+        )}
+      </div>
+
+      <p className="mt-2 text-center text-[12px] text-zinc-500">
+        {count > 1 ? '点击空白处关闭 · Esc · ← → 切换' : '点击空白处关闭 · Esc'}
+      </p>
     </div>
+  );
+};
+
+const ImageGrid: React.FC<{ images: string[] }> = ({ images }) => {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  if (images.length === 0) return null;
+
+  const visible = images.slice(0, TOPIC_IMAGE_GRID_MAX_VISIBLE);
+  const overflow = images.length > TOPIC_IMAGE_GRID_MAX_VISIBLE;
+  const lastSlot = TOPIC_IMAGE_GRID_MAX_VISIBLE - 1;
+
+  return (
+    <>
+      <div
+        className="mt-2.5 md:mt-3 grid grid-cols-3 gap-2 overflow-hidden rounded-[20px] border border-white/8 bg-[#11161d] md:rounded-2xl md:border-slate-200 dark:md:border-rdark-border md:grid-cols-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {visible.map((src, i) => (
+          <div key={`${src}-${i}`} className="relative aspect-square overflow-hidden bg-[#09182f]">
+            <button
+              type="button"
+              aria-label={overflow && i === lastSlot ? `查看配图，另有 ${images.length - TOPIC_IMAGE_GRID_MAX_VISIBLE} 张` : `查看大图 ${i + 1}`}
+              className="relative block h-full w-full cursor-zoom-in border-0 bg-transparent p-0 text-left outline-none ring-emerald-400/0 transition hover:opacity-95 focus-visible:ring-2 focus-visible:ring-emerald-400/40"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex(i);
+              }}
+            >
+              <img
+                src={resolveAssetUrl(src)}
+                alt=""
+                loading="lazy"
+                className="pointer-events-none h-full w-full object-cover"
+              />
+              {overflow && i === lastSlot && (
+                <div className="pointer-events-none absolute inset-0 grid place-items-center bg-black/50 text-2xl font-bold text-white">
+                  +{images.length - TOPIC_IMAGE_GRID_MAX_VISIBLE}
+                </div>
+              )}
+            </button>
+          </div>
+        ))}
+      </div>
+      <TopicImageLightbox urls={images} index={lightboxIndex} onChangeIndex={setLightboxIndex} />
+    </>
+  );
+};
+
+const CommentImageGrid: React.FC<{ urls: string[] }> = ({ urls }) => {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  if (urls.length === 0) return null;
+
+  return (
+    <>
+      <div
+        className="!mt-3 grid grid-cols-3 gap-2 overflow-hidden rounded-2xl border border-white/8 md:grid-cols-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {urls.map((src, i) => (
+          <div key={`${src}-${i}`} className="relative aspect-square overflow-hidden bg-[#111111]">
+            <button
+              type="button"
+              aria-label={`查看评论配图 ${i + 1}`}
+              className="relative block h-full w-full cursor-zoom-in border-0 bg-transparent p-0 outline-none ring-emerald-400/0 focus-visible:ring-2 focus-visible:ring-emerald-400/40"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex(i);
+              }}
+            >
+              <img
+                src={resolveAssetUrl(src)}
+                alt=""
+                loading="lazy"
+                className="pointer-events-none h-full w-full object-cover"
+              />
+            </button>
+          </div>
+        ))}
+      </div>
+      <TopicImageLightbox urls={urls} index={lightboxIndex} onChangeIndex={setLightboxIndex} />
+    </>
   );
 };
 
@@ -337,11 +529,14 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   onOpenLinkedPrediction,
   onLike,
   onUnlike,
+  onDislike,
+  onUndislike,
   onToggleFavorite,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [textExpanded, setTextExpanded] = useState(false);
   const [liked, setLiked] = useState(Boolean(post.liked));
+  const [disliked, setDisliked] = useState(Boolean(post.disliked));
   const [bookmarked, setBookmarked] = useState(Boolean(post.favorited));
   const [cursor, setCursor] = useState<number | string>(0);
   const [comments, setComments] = useState<CommentResponse[]>([]);
@@ -389,8 +584,8 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const tag = resolveTag(post);
   const displayTime = formatTopicTime(post.createTime, post.time);
   const displayLikes = post.likeCount ?? post.likes ?? 0;
+  const displayDislikes = post.dislikeCount ?? 0;
   const commentCount = Math.max(typeof post.commentCount === 'number' ? post.commentCount : 0, comments.length);
-  const viewCount = typeof post.viewCount === 'number' ? post.viewCount : displayLikes * 14 + commentCount * 42;
   const canComment = Boolean(currentUserQuery.data?.id);
 
   const handleLike = async () => {
@@ -414,6 +609,34 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
     }
   };
 
+  const handleDislike = async () => {
+    if (disliked) {
+      if (onUndislike) {
+        try {
+          await onUndislike(post.id);
+          setDisliked(false);
+        } catch {
+          return;
+        }
+        return;
+      }
+      setDisliked(false);
+      return;
+    }
+
+    if (onDislike) {
+      try {
+        await onDislike(post.id);
+        setDisliked(true);
+      } catch {
+        return;
+      }
+      return;
+    }
+
+    setDisliked(true);
+  };
+
   const handleCreateComment = async (contentValue: string) => {
     if (!canComment) return;
 
@@ -433,6 +656,8 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
 
   const likeBase = displayLikes - (post.liked ? 1 : 0);
   const likeCount = likeBase + (liked ? 1 : 0);
+  const dislikeBase = displayDislikes - (post.disliked ? 1 : 0);
+  const dislikeCount = dislikeBase + (disliked ? 1 : 0);
   const canExpandText = content.length > 52;
   const renderCommentsPanel = (className: string) => (
     <div className={className}>
@@ -504,13 +729,11 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                     </div>
 
                     {Array.isArray(comment.imageList) && comment.imageList.length > 0 && (
-                      <div className="!mt-3 grid grid-cols-3 gap-2 overflow-hidden rounded-2xl border border-white/8 md:grid-cols-4">
-                        {comment.imageList.map((image, imageIndex) => (
-                          <div key={`${String(comment.id)}-${imageIndex}`} className="aspect-square overflow-hidden bg-[#111111]">
-                            <img src={resolveAssetUrl(image.url || image.preview)} alt="" className="h-full w-full object-cover" />
-                          </div>
-                        ))}
-                      </div>
+                      <CommentImageGrid
+                        urls={comment.imageList
+                          .map((image) => image.url || image.preview)
+                          .filter((u): u is string => Boolean(u))}
+                      />
                     )}
 
                     <ReplyThread comment={comment} canComment={canComment} />
@@ -540,7 +763,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: index * 0.03, duration: 0.15 }}
-      className="legacy-forum-post mx-3 rounded-[24px] border border-white/8 bg-[#0f1013] px-4 py-3 shadow-[0_16px_36px_rgba(0,0,0,0.24)] transition-colors md:mx-0 md:rounded-none md:border-x-0 md:border-b md:border-t-0 md:border-slate-100 md:bg-transparent md:px-0 md:shadow-none md:hover:bg-black/[0.02] dark:md:border-rdark-border dark:md:hover:bg-white/[0.02]"
+      className="legacy-forum-post mx-0 w-full rounded-[22px] border border-white/10 bg-[#0f1013] px-4 py-3.5 shadow-[0_14px_40px_rgba(0,0,0,0.28)] transition-colors md:rounded-2xl md:border md:border-white/[0.09] md:bg-[linear-gradient(165deg,rgba(18,19,24,0.92)_0%,rgba(12,13,17,0.96)_100%)] md:px-5 md:py-4 md:shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_16px_44px_rgba(0,0,0,0.35)] md:hover:border-emerald-400/12 md:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_20px_48px_rgba(0,0,0,0.42)] dark:md:border-white/10"
     >
       <div className="legacy-forum-post-row">
         <div className="flex items-start justify-between gap-3">
@@ -568,9 +791,10 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
               </span>
             </div>
           </div>
-          <button className="rounded-full border-0 bg-transparent p-1.5 text-zinc-500 transition-colors hover:bg-white/6 hover:text-cyan-300 md:-mr-1.5 md:-mt-0.5 md:hover:bg-blue-50 md:hover:text-blue-500 dark:md:text-rdark-text2 dark:md:hover:bg-blue-900/20 shrink-0">
+          {/* 列表右上角菜单入口暂未接入，先隐藏 */}
+          {/* <button className="rounded-full border-0 bg-transparent p-1.5 text-zinc-500 transition-colors hover:bg-white/6 hover:text-cyan-300 md:-mr-1.5 md:-mt-0.5 md:hover:bg-blue-50 md:hover:text-blue-500 dark:md:text-rdark-text2 dark:md:hover:bg-blue-900/20 shrink-0">
             <MoreHorizontal size={17} />
-          </button>
+          </button> */}
         </div>
 
         <div className="mt-2 min-w-0">
@@ -648,7 +872,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
             </button>
           )}
 
-          <div className="legacy-forum-post-actions mt-3 grid max-w-full grid-cols-6 gap-1 border-t border-white/8 pt-2.5 md:!mt-4 md:-ml-2 md:flex md:max-w-[450px] md:border-t-0 md:pt-0">
+          <div className="legacy-forum-post-actions mt-3 grid max-w-full grid-cols-6 gap-1 border-t border-white/8 pt-2.5 md:!mt-4 md:flex md:max-w-[450px] md:border-t-0 md:pt-0">
             <ActionBtn
               icon={<MessageCircle size={17} className="group-hover:text-blue-500 transition-colors" />}
               count={formatCount(commentCount)}
@@ -658,12 +882,13 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                 setExpanded((v) => !v);
               }}
             />
-            <ActionBtn
+            {/* <ActionBtn
               icon={<Repeat2 size={17} className="group-hover:text-green-500 transition-colors" />}
               count={formatCount(Math.floor(displayLikes * 0.3))}
               hoverColor="bg-green-50 dark:bg-green-900/20"
-            />
+            /> */}
             <button
+              type="button"
               onClick={(e) => { e.stopPropagation(); void handleLike(); }}
               className={`group flex min-w-0 items-center justify-center gap-1 rounded-full py-1 cursor-pointer border-0 bg-transparent transition-colors md:flex-none md:justify-start md:rounded-none md:py-0 ${
                 liked ? 'text-pink-600' : 'text-slate-500 dark:text-rdark-text2'
@@ -678,11 +903,11 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                 {formatCount(likeCount)}
               </span>
             </button>
-            <ActionBtn
+            {/* <ActionBtn
               icon={<BarChart2 size={17} className="group-hover:text-blue-500 transition-colors" />}
               count={formatCount(viewCount)}
               hoverColor="bg-blue-50 dark:bg-blue-900/20"
-            />
+            /> */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -700,10 +925,44 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                 <Bookmark size={17} fill={bookmarked ? 'currentColor' : 'none'} className={bookmarked ? '' : 'group-hover:text-blue-500 transition-colors'} />
               </div>
             </button>
-            <button className="group flex items-center justify-center rounded-full py-1 cursor-pointer border-0 bg-transparent text-slate-500 dark:text-rdark-text2 transition-colors md:block md:rounded-none md:py-0">
+            {/* <button className="group flex items-center justify-center rounded-full py-1 cursor-pointer border-0 bg-transparent text-slate-500 dark:text-rdark-text2 transition-colors md:block md:rounded-none md:py-0">
               <div className="p-2 rounded-full group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
                 <Share size={17} className="group-hover:text-blue-500 transition-colors" />
               </div>
+            </button> */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                void handleDislike();
+              }}
+              className={`group flex min-w-0 items-center justify-center gap-1 rounded-full py-1 cursor-pointer border-0 bg-transparent transition-colors md:flex-none md:justify-start md:rounded-none md:py-0 ${
+                disliked ? 'text-yellow-400' : 'text-slate-500 dark:text-rdark-text2'
+              }`}
+            >
+              <div className={`p-2 rounded-full transition-colors ${disliked ? '' : 'group-hover:bg-yellow-400/10 dark:group-hover:bg-yellow-400/15'}`}>
+                <motion.div animate={disliked ? { scale: [1, 1.35, 1] } : {}} transition={{ duration: 0.3 }}>
+                  <img
+                    src={DISLIKE_ICON_SRC}
+                    alt="踩"
+                    width={17}
+                    height={17}
+                    draggable={false}
+                    style={
+                      disliked
+                        ? {
+                            filter:
+                              'brightness(0) saturate(100%) invert(82%) sepia(58%) saturate(1686%) hue-rotate(359deg) brightness(103%) contrast(101%)',
+                          }
+                        : undefined
+                    }
+                    className={`h-[17px] w-[17px] object-contain transition-[opacity,filter] duration-200 ${disliked ? 'opacity-100 drop-shadow-[0_0_6px_rgba(250,204,21,0.45)]' : 'opacity-55 group-hover:opacity-90'}`}
+                  />
+                </motion.div>
+              </div>
+              <span className={`min-w-0 truncate text-[12px] md:text-[13px] -ml-0.5 transition-colors ${disliked ? 'text-yellow-400' : 'group-hover:text-yellow-600 dark:group-hover:text-yellow-500'}`}>
+                {formatCount(dislikeCount)}
+              </span>
             </button>
           </div>
 

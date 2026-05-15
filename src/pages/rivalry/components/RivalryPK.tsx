@@ -224,11 +224,28 @@ function PhaseTag({ phase }: { phase: PKPhase }) {
 
 function SeasonBar({ winsA, winsB, nameA, nameB }: { winsA: number; winsB: number; nameA: string; nameB: string }) {
   const total = winsA + winsB || 1;
-  return <div><div className="mb-0.5 flex justify-between text-[10px]"><span className="font-bold text-[#40ead0]">{nameA} {winsA}胜</span><span className="font-bold text-[#ff6f8f]">{nameB} {winsB}胜</span></div><div className="flex h-1.5 overflow-hidden rounded-full bg-white/8"><div className="h-full rounded-l-full bg-gradient-to-r from-[#1dbfd0] via-[#27d8cf] to-[#38f0d1]" style={{ width: `${(winsA / total) * 100}%` }} /><div className="h-full rounded-r-full bg-gradient-to-r from-[#ff4f75] to-[#A2343B]" style={{ width: `${(winsB / total) * 100}%` }} /></div></div>;
-}
-
-function RoundDots({ rounds, nameA }: { rounds: PKRoundResult[]; nameA: string }) {
-  return <div className="flex flex-wrap gap-0.5">{rounds.map((round) => <div key={round.round} title={`第${round.round}局 ${round.winner === 'A' ? nameA : '反方'}胜`} className={`flex h-4 w-4 items-center justify-center rounded-sm text-[8px] font-bold ${round.winner === 'A' ? 'bg-[#27d8cf] text-[#06131f]' : 'bg-[#ff4f75] text-white'}`}>{round.round}</div>)}</div>;
+  return (
+    <div>
+      <div className="mb-0.5 flex justify-between text-[10px]">
+        <span className="font-bold text-[#40ead0]">
+          {nameA} {winsA}胜
+        </span>
+        <span className="font-bold text-[#ff6f8f]">
+          {nameB} {winsB}胜
+        </span>
+      </div>
+      <div className="flex h-1.5 overflow-hidden rounded-full bg-white/8">
+        <div
+          className="h-full rounded-l-full bg-gradient-to-r from-[#1dbfd0] via-[#27d8cf] to-[#38f0d1]"
+          style={{ width: `${(winsA / total) * 100}%` }}
+        />
+        <div
+          className="h-full rounded-r-full bg-gradient-to-r from-[#ff4f75] to-[#A2343B]"
+          style={{ width: `${(winsB / total) * 100}%` }}
+        />
+      </div>
+    </div>
+  );
 }
 
 function HeroPK({
@@ -322,7 +339,8 @@ function HeroPK({
           {pk.phase === 'cooldown' && pk.nextRoundTime ? <Countdown target={pk.nextRoundTime} label="下一局开始" color="text-[#40ead0]" /> : null}
         </div>
 
-        <div className="mb-4 rounded-[20px] border border-white/16 bg-[#071127]/28 p-3 shadow-[0_12px_34px_rgba(3,10,24,0.35)] backdrop-blur-md">
+        {/* 顶部 Hero：赛季战绩块（日期 + N胜 + 细条 + 局点）先隐藏，可从历史战绩查看 */}
+        {/* <div className="mb-4 rounded-[20px] border border-white/16 bg-[#071127]/28 p-3 shadow-[0_12px_34px_rgba(3,10,24,0.35)] backdrop-blur-md">
           <div className="mb-2 flex items-center justify-between">
             <span className="text-xs font-semibold text-white/70">赛季{pk.season.season} 战绩</span>
             <span className="text-[10px] text-white/40">{pk.season.startDate} ~ {pk.season.endDate}</span>
@@ -331,7 +349,7 @@ function HeroPK({
           <div className="mt-2 flex gap-1">
             <RoundDots rounds={pk.roundHistory} nameA={item.optionA} />
           </div>
-        </div>
+        </div> */}
 
         <div className="mb-3 flex gap-3">
           <button
@@ -449,10 +467,6 @@ function PKCard({
             <div className="h-full bg-gradient-to-r from-[#1dbfd0] via-[#27d8cf] to-[#38f0d1] transition-all" style={{ width: `${heatPctA}%` }} />
             <div className="h-full bg-gradient-to-r from-[#ff4f75] to-[#A2343B] transition-all" style={{ width: `${100 - heatPctA}%` }} />
           </div>
-        </div>
-
-        <div className="mb-2">
-          <SeasonBar winsA={pk.season.winsA} winsB={pk.season.winsB} nameA={item.optionA} nameB={item.optionB} />
         </div>
 
         <div className="mb-2">

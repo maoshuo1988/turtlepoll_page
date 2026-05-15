@@ -40,6 +40,7 @@ export type AuthUser = {
   nickname?: string;
   email?: string;
   avatar?: string;
+  levelTitle?: string;
   [key: string]: unknown;
 };
 

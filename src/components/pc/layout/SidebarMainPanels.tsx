@@ -32,10 +32,6 @@ export const NAV_ITEMS: SidebarNavItem[] = [
 ];
 
 interface SidebarMainPanelsProps {
-  winStreak: number;
-  winRate: number;
-  totalPredictions: number;
-  activePredictions: number;
   pet: PetInfo;
   aiPushMessages?: AiPushMessage[];
   newsByMarketId: Map<number, PredictionCardItem>;
@@ -53,10 +49,6 @@ interface SidebarMainPanelsProps {
 }
 
 export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
-  winStreak,
-  winRate,
-  totalPredictions,
-  activePredictions,
   pet,
   aiPushMessages = [],
   newsByMarketId,
@@ -78,10 +70,6 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
         <div className="flex h-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory gap-3 scroll-smooth pb-0 overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
             <SidebarProfileCard
-              winStreak={winStreak}
-              winRate={winRate}
-              totalPredictions={totalPredictions}
-              activePredictions={activePredictions}
               pet={pet}
               aiPushMessages={aiPushMessages}
               chatOpen={chatOpen}
@@ -109,10 +97,6 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
       <div className="hidden lg:flex min-h-0 flex-1 flex-col overflow-y-auto py-1 pr-1">
         <div className="flex min-h-full flex-col gap-4">
           <SidebarProfileCard
-            winStreak={winStreak}
-            winRate={winRate}
-            totalPredictions={totalPredictions}
-            activePredictions={activePredictions}
             pet={pet}
             aiPushMessages={aiPushMessages}
             chatOpen={chatOpen}

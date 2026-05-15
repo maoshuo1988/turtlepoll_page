@@ -14,10 +14,6 @@ import type { PredictionCardItem } from '../../shared/predictions/ui/predictionC
 
 interface SidebarProps {
   balance: number;
-  winStreak: number;
-  winRate: number;
-  totalPredictions: number;
-  activePredictions: number;
   pet: PetInfo;
   newsByMarketId: Map<number, PredictionCardItem>;
   petDialogue: string | null;
@@ -30,10 +26,6 @@ interface SidebarProps {
 const card = 'rounded-xl bg-[#0f1013] dark:bg-rdark-card border border-white/8 dark:border-rdark-border shadow-[0_12px_28px_rgba(0,0,0,0.24)] dark:shadow-none';
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  winStreak,
-  winRate,
-  totalPredictions,
-  activePredictions,
   pet,
   newsByMarketId,
   petDialogue,
@@ -114,10 +106,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <div className="legacy-sidebar flex h-auto flex-col lg:h-full lg:min-h-0">
       <div className="lg:hidden">
         <SidebarMainPanels
-          winStreak={winStreak}
-          winRate={winRate}
-          totalPredictions={totalPredictions}
-          activePredictions={activePredictions}
           pet={pet}
           aiPushMessages={aiPushMessages}
           newsByMarketId={newsByMarketId}
@@ -139,10 +127,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="flex flex-col gap-3.5 lg:overflow-x-hidden">
           <div className="overflow-hidden">
             <SidebarDesktopProfilePanel
-              winStreak={winStreak}
-              winRate={winRate}
-              totalPredictions={totalPredictions}
-              activePredictions={activePredictions}
               pet={pet}
               aiPushMessages={aiPushMessages}
               chatOpen={chatOpen}
@@ -150,7 +134,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               dialogueKey={dialogueKey}
               onCloseChat={() => setChatOpen(false)}
               onOpenProfile={() => onViewChange('profile')}
-              onOpenActivePredictions={() => onViewChange('activePredictions')}
             />
           </div>
 

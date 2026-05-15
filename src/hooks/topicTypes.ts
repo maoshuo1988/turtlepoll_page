@@ -99,6 +99,8 @@ export type TopicResponse = {
   commentCount?: number;
   likeCount?: number;
   liked?: boolean;
+  dislikeCount?: number;
+  disliked?: boolean;
   createTime?: number;
   recommend?: boolean;
   sticky?: boolean;

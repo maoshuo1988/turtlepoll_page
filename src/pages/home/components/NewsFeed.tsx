@@ -13,7 +13,7 @@ interface NewsFeedProps {
   selectedTag: string | null;
   onBetSuccess?: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
   onRequireAuth?: () => void;
-  onEnterBattle?: (newsId: string) => void;
+  onEnterBattle?: (item: PredictionCardItem) => void;
 }
 
 type CardStatusMeta = {
@@ -281,7 +281,7 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
             </button>
             {onEnterBattle && (
               <button
-                onClick={() => onEnterBattle(item.id)}
+                onClick={() => onEnterBattle(item)}
                 className="legacy-pred-card-enter flex h-[28px] md:h-[24px] items-center justify-center gap-1 rounded-full px-2 text-[11px] font-medium whitespace-nowrap text-white/44 transition-colors hover:text-white/66"
               >
                 <MessageSquare size={11} className="text-white/38" />

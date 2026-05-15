@@ -8,15 +8,19 @@ import type { PredictionCardItem } from './predictionCards';
 interface HomePageViewProps {
   battleNews: PredictionCardItem | null;
   userSide: 'A' | 'B' | null;
+  selectedTag: string | null;
+  selectedPrediction: PredictionCardItem | null;
   onBattleBack: () => void;
   onRequireAuth: () => void;
   onPredictionBetSuccess: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
-  onEnterBattle: (id: string) => void;
+  onEnterBattle: (item: PredictionCardItem) => void;
 }
 
 export function HomePageView({
   battleNews,
   userSide,
+  selectedTag,
+  selectedPrediction,
   onBattleBack,
   onRequireAuth,
   onPredictionBetSuccess,
@@ -50,7 +54,8 @@ export function HomePageView({
         </div>
       </header>
       <PredictionsView
-        selectedTag={null}
+        selectedTag={selectedTag}
+        selectedPrediction={selectedPrediction}
         onBetSuccess={onPredictionBetSuccess}
         onRequireAuth={onRequireAuth}
         onEnterBattle={onEnterBattle}

@@ -7,13 +7,12 @@ import { Coins, Flame, MessageCircle } from 'lucide-react';
 import { PetChat } from '../../shared/pet/ui/PetChat';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
+import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { useRequestCoinMe } from '@/hooks/useCoinRequests';
 
+const DEFAULT_USER_AVATAR = '/image/default-header.png';
+
 interface SidebarProfileCardProps {
-  winStreak: number;
-  winRate: number;
-  totalPredictions: number;
-  activePredictions: number;
   pet: PetInfo;
   aiPushMessages?: AiPushMessage[];
   chatOpen: boolean;
@@ -26,10 +25,6 @@ interface SidebarProfileCardProps {
 }
 
 export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
-  winStreak,
-  winRate,
-  totalPredictions,
-  activePredictions,
   pet,
   aiPushMessages = [],
   chatOpen,
@@ -41,8 +36,15 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   onOpenActivePredictions,
 }) => {
   // 直接订阅全局金币缓存，其他地方只要更新 coinMe，这里会自动同步
+  const userCurrent = useRequestUserCurrent();
   const coinMe = useRequestCoinMe();
   const displayBalance = coinMe.data?.balance ?? 0;
+  const user = userCurrent.data;
+  const displayName = user?.nickname || user?.username || user?.email || '未登录用户';
+  const displaySubtitle = user?.levelTitle?.trim() || (user ? '暂无等级称号' : '登录后同步你的等级称号');
+  const avatarValue = typeof user?.avatar === 'string' && user.avatar.trim() ? user.avatar.trim() : '';
+  const isAvatarImage = /^https?:\/\//.test(avatarValue) || avatarValue.startsWith('/');
+  const avatarSrc = isAvatarImage ? avatarValue : DEFAULT_USER_AVATAR;
 
   return (
     <div className={
@@ -68,15 +70,21 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
                 onClick={onOpenProfile}
                 className="mb-3.5 flex w-full items-center gap-3 rounded-2xl border border-transparent bg-transparent p-0 text-left transition-all hover:border-white/8 hover:bg-white/[0.03]"
               >
-                <div className="grid h-16 w-16 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-xl font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">🦊</div>
+                <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-xl font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
+                  {avatarValue && !isAvatarImage ? (
+                    <span>{avatarValue}</span>
+                  ) : (
+                    <img src={avatarSrc} alt={displayName} className="h-full w-full object-cover" />
+                  )}
+                </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[15px] font-bold text-white dark:text-rdark-text">路边社社长</div>
-                  <div className="mt-0.5 text-[10px] text-zinc-500 dark:text-rdark-text2">预测达人 · 连续签到 12 天</div>
+                  <div className="truncate text-[15px] font-bold text-white dark:text-rdark-text">{displayName}</div>
+                  <div className="mt-0.5 truncate text-[10px] text-zinc-500 dark:text-rdark-text2">{displaySubtitle}</div>
                 </div>
               </button>
 
               <div className="mb-3.5 rounded-xl border border-white/6 bg-[#141518] px-3 py-2.5 dark:bg-rdark-input/75">
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-start gap-2 pl-16">
                   <Coins size={17} className="text-emerald-500 dark:text-emerald-400" />
                   <AnimatePresence mode="popLayout">
                     <motion.span
@@ -90,24 +98,24 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
                       {displayBalance.toLocaleString()}
                     </motion.span>
                   </AnimatePresence>
-                  <span className="mb-0.5 self-end text-[11px] text-zinc-500 dark:text-rdark-text2">龟币</span>
+                  {/* <span className="mb-0.5 self-end text-[11px] text-zinc-500 dark:text-rdark-text2">龟币</span> */}
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-4 gap-2">
               <div className="rounded-lg bg-[#141518] !py-2.5 text-center dark:bg-rdark-input">
-                <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">{(winRate * 100).toFixed(0)}%</div>
+                <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">0%</div>
                 <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">胜率</div>
               </div>
               <div className="rounded-lg bg-[#141518] !py-2.5 text-center dark:bg-rdark-input">
                 <div className="mb-1 flex items-center justify-center gap-0.5 text-[15px] font-bold leading-none text-emerald-600 dark:text-emerald-400">
-                  <Flame size={12} className="text-orange-400" />{winStreak}
+                  <Flame size={12} className="text-orange-400" />0
                 </div>
                 <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">连胜</div>
               </div>
               <div className="rounded-lg bg-[#141518] !py-2.5 text-center dark:bg-rdark-input">
-                <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">{totalPredictions}</div>
+                <div className="mb-1 text-[15px] font-bold leading-none text-white dark:text-rdark-text">0</div>
                 <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">已预测</div>
               </div>
               <button
@@ -115,7 +123,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
                 onClick={onOpenActivePredictions}
                 className="rounded-lg bg-[#141518] !py-2.5 text-center transition-colors hover:bg-[#1a1c20] dark:bg-rdark-input dark:hover:bg-rdark-hover"
               >
-                <div className="mb-1 text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">{activePredictions}</div>
+                <div className="mb-1 text-[15px] font-bold leading-none text-zinc-200 dark:text-zinc-200">0</div>
                 <div className="text-[9px] text-zinc-500 dark:text-rdark-text2">进行中</div>
               </button>
             </div>

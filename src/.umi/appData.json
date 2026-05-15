@@ -55,7 +55,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -68,7 +68,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 5
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -85,7 +85,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -99,7 +99,7 @@
       "time": {
         "hooks": {
           "onStart": [
-            1
+            0
           ]
         },
         "register": 1
@@ -146,7 +146,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            11
+            12
           ]
         },
         "register": 10
@@ -162,7 +162,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1081,7 +1081,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1095,7 +1095,7 @@
       "time": {
         "hooks": {
           "onStart": [
-            0
+            1
           ]
         },
         "register": 0
@@ -1124,7 +1124,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 41
+        "register": 39
       },
       "enableBy": "register"
     },
@@ -1150,7 +1150,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 13
       },
       "enableBy": "config"
     },
@@ -1180,7 +1180,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1193,7 +1193,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1207,10 +1207,10 @@
       "time": {
         "hooks": {
           "onStart": [
-            1
+            0
           ]
         },
-        "register": 15
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1222,7 +1222,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1235,7 +1235,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides": {
@@ -1302,7 +1302,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1315,7 +1315,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1341,7 +1341,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1367,7 +1367,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1444,7 +1444,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1482,7 +1482,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1494,7 +1494,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1520,7 +1520,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1533,7 +1533,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1562,7 +1562,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1574,7 +1574,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1587,7 +1587,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1623,7 +1623,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1636,7 +1636,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1649,7 +1649,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1662,7 +1662,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 16
       },
       "enableBy": "register"
     },
@@ -1676,10 +1676,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            6
+            5
           ]
         },
-        "register": 18
+        "register": 17
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1886,7 +1886,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1899,7 +1899,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1912,7 +1912,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1925,7 +1925,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -2192,7 +2192,7 @@
       "parentId": "2",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { HomePageView } from './components/HomePageView';\nimport { usePredictionCardItems, type PredictionCardItem } from './components/predictionCards';\n\nexport default function HomePage() {\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [selectedBattleId, setSelectedBattleId] = useState<string | null>(null);\n  const { onOpenAuth } = useHomeLayoutContext();\n  const { allItems } = usePredictionCardItems(null);\n\n  const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {\n    setUserVotes((prev) => ({ ...prev, [item.id]: option }));\n  }, []);\n\n  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];\n  const battleNews = selectedBattleId\n    ? allItems.find((item) => item.id === selectedBattleId) ?? allFallbackItems.find((item) => item.id === selectedBattleId) ?? allFallbackItems[0]\n    : null;\n\n  return (\n    <HomePageView\n      battleNews={battleNews}\n      userSide={selectedBattleId ? (userVotes[selectedBattleId] ?? null) : null}\n      onBattleBack={() => setSelectedBattleId(null)}\n      onPredictionBetSuccess={handlePredictionBetSuccess}\n      onRequireAuth={onOpenAuth}\n      onEnterBattle={setSelectedBattleId}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useEffect } from 'react';\nimport { useLocation } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/shared/layout';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { HomePageView } from './components/HomePageView';\nimport { usePredictionCardItems, type PredictionCardItem } from './components/predictionCards';\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  useEffect(() => {\n    if (selectedMarket) {\n      setSelectedBattleNews(null);\n    }\n  }, [selectedMarket]);\n\n  const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {\n    setUserVotes((prev) => ({ ...prev, [item.id]: option }));\n  }, []);\n\n  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];\n  const selectedMarketId = selectedMarket ? Number(selectedMarket) : null;\n  const selectedPrediction = selectedMarket\n    ? allItems.find((item) => item.marketId === selectedMarketId || item.id === selectedMarket || item.id === `market-${selectedMarket}`)\n      ?? allFallbackItems.find((item) => item.marketId === selectedMarketId || item.id === selectedMarket || item.id === `market-${selectedMarket}`)\n      ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    : null;\n  const battleNews = selectedBattleNews;\n\n  const handleBattleBack = useCallback(() => {\n    setSelectedBattleNews(null);\n  }, []);\n\n  return (\n    <HomePageView\n      battleNews={battleNews}\n      userSide={battleNews ? (userVotes[battleNews.id] ?? null) : null}\n      selectedTag={selectedTag}\n      selectedPrediction={selectedPrediction}\n      onBattleBack={handleBattleBack}\n      onPredictionBetSuccess={handlePredictionBetSuccess}\n      onRequireAuth={onOpenAuth}\n      onEnterBattle={setSelectedBattleNews}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },
@@ -2360,7 +2360,7 @@
       "id": "petApi",
       "file": "petApi.ts",
       "absPath": "/petApi",
-      "__content": "/**\n * 文件说明：pet Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 用户侧宠物（user_pet）\n/// 基础路径: /api/pet\n\n// 当前装备龟种\nexport const API_Pet_Equip = \"/api/pet/equip\";\n// 用户龟种资产\nexport const API_Pet_Owned = \"/api/pet/owned\";\n// 体力查询\nexport const API_Pet_Stamina = \"/api/pet/stamina\";\n// 体力消耗\nexport const API_Pet_Stamina_Consume = \"/api/pet/stamina/consume\";\n// 体力恢复 / 喂食\nexport const API_Pet_Stamina_Feed = \"/api/pet/stamina/feed\";\n// 开蛋\nexport const API_Pet_Egg_Hatch = \"/api/pet/egg/hatch\";\n// 状态页聚合\nexport const API_Pet_Status = \"/api/pet/status\";\n"
+      "__content": "/**\n * 文件说明：pet Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 用户侧宠物（user_pet）\n/// 基础路径: /api/pet\n\n// 当前装备龟种\nexport const API_Pet_Equip = \"/api/pet/equip\";\n// 用户龟种资产\nexport const API_Pet_Owned = \"/api/pet/owned\";\n// 体力查询\nexport const API_Pet_Stamina = \"/api/pet/stamina\";\n// 体力消耗\nexport const API_Pet_Stamina_Consume = \"/api/pet/stamina/consume\";\n// 体力恢复 / 喂食\nexport const API_Pet_Stamina_Feed = \"/api/pet/stamina/feed\";\n// 开蛋\nexport const API_Pet_Egg_Hatch = \"/api/pet/egg/hatch\";\n// 状态页聚合\nexport const API_Pet_Status = \"/api/pet/status\";\n// 抽奖配置\nexport const API_Admin_Pet_Gacha_Config = \"/api/admin/pet/gacha/config\";\n// 宠物定义列表（奖池预览等）\nexport const API_Admin_Pet_Defs = \"/api/admin/pet/defs\";\n"
     },
     "aiApi": {
       "path": "aiApi",
@@ -2418,7 +2418,7 @@
     "tsVersion": "5.9.3",
     "tslibVersion": "2.8.1"
   },
-  "port": 8001,
+  "port": 8000,
   "host": "0.0.0.0",
   "ip": "192.168.1.13"
 }

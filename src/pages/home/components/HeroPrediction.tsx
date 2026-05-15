@@ -13,7 +13,7 @@ interface HeroPredictionProps {
   selectedTag: string | null;
   onBetSuccess?: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
   onRequireAuth?: () => void;
-  onEnterBattle?: (newsId: string) => void;
+  onEnterBattle?: (item: PredictionCardItem) => void;
 }
 
 export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news: newsOverride, selectedTag, onBetSuccess, onRequireAuth, onEnterBattle }) => {
@@ -102,7 +102,7 @@ export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news: newsOverri
             </div>
             {onEnterBattle ? (
               <button
-                onClick={() => onEnterBattle(news.id)}
+                onClick={() => onEnterBattle(news)}
                 className="flex h-[36px] sm:h-[38px] items-center justify-center gap-2 rounded-full border border-[#4f6489]/45 bg-[#10273d]/20 text-[12px] sm:text-[13px] font-bold text-[#ffd7de] transition-colors hover:bg-[#163252]"
               >
                 <MessageSquare size={14} className="text-[#5df3d7]" />

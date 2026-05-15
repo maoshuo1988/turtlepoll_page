@@ -277,11 +277,11 @@ export function StandalonePageShell({
   );
 
   // 侧边栏导航统一从这里跳转，避免 Sidebar 内部直接依赖路由实现。
-  const handleSidebarViewChange = useCallback((view: ViewType, _topic?: SidebarHotTopic, _tag?: SidebarHotTag | null) => {
-    const navigateInApp = (path: string) => {
+  const handleSidebarViewChange = useCallback((view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag | null) => {
+    const navigateInApp = (path: string, state?: unknown) => {
       const currentPath = `${window.location.pathname}${window.location.search}`;
       if (currentPath !== path) {
-        navigate(path);
+        navigate(path, state === undefined ? undefined : { state });
       }
     };
 
@@ -297,18 +297,31 @@ export function StandalonePageShell({
       window.location.href = '/games/turtle-battle/index.html';
       return;
     }
+    if (view === 'predictions') {
+      if (topic?.context?.marketId) {
+        const params = new URLSearchParams();
+        params.set('market', String(topic.context.marketId));
+        if (topic.tag) {
+          params.set('tag', topic.tag.replace(/^#/, ''));
+        }
+        navigateInApp(`/?${params.toString()}`, { sidebarTopic: topic });
+        return;
+      }
+      if (tag?.tag) {
+        const params = new URLSearchParams();
+        params.set('tag', tag.tag.replace(/^#/, ''));
+        navigateInApp(`/?${params.toString()}`);
+        return;
+      }
+    }
 
     navigateInApp(ROUTE_PATHS[view] ?? '/');
   }, [navigate]);
 
   // showSidebar=false 的页面不需要传 sidebarProps，普通业务页都会进入这里。
   const sidebarProps = activeView
-    ? {
+      ? {
         balance: sidebarBalance,
-        winStreak: mockUser.winStreak,
-        winRate: 0.68,
-        totalPredictions: 42,
-        activePredictions: sidebarNews.filter((item) => item.status === 'open').length,
         pet: sidebarPet,
         newsByMarketId: sidebarNewsByMarketId,
         petDialogue: aiPetDialogue,

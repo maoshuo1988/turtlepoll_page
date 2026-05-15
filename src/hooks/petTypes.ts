@@ -115,3 +115,30 @@ export type PetEggHatchResponse = {
   balanceBefore?: number;
   balanceAfter?: number;
 };
+
+export type PetGachaProbabilityRow = {
+  rarity: string | number;
+  label: string;
+  probability?: number;
+  value: string;
+};
+
+export type PetGachaConfigResponse = {
+  cost?: number;
+  probabilities: PetGachaProbabilityRow[];
+};
+
+/** 归一化后的单条宠物定义（接口字段兼容别名）。 */
+export type PetDefNormalized = {
+  id: string;
+  petKey: string;
+  displayName: string;
+  rarity?: string;
+  /** 服务端静态资源完整 URL（display.thumbnail / icon 等） */
+  avatarUrl?: string;
+};
+
+export type PetDefsListNormalized = {
+  list: PetDefNormalized[];
+  total: number;
+};

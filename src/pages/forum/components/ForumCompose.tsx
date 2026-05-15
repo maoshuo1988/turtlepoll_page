@@ -1,15 +1,23 @@
 /**
- * 文件说明：Forum Compose，论坛线报页面组件。
+ * 文件说明：Forum Compose，论坛发帖表单（标题、标签、正文、配图）。
  */
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Image, Smile, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Image as ImageIcon, SendHorizonal, X } from 'lucide-react';
 import type { TopicPostTag } from './TopicPostCard';
 import { FORUM_TAGS } from '@/data/mockData';
 import { useRequestUploadImage } from '@/hooks/useAuthRequests';
+import { compressImageForUpload } from '@/utils/imageCompress';
+
+export type ForumComposeSubmitPayload = {
+  title: string;
+  content: string;
+  tag: TopicPostTag;
+  images: string[];
+};
 
 interface ForumComposeProps {
-  onPost: (content: string, tag: TopicPostTag, images: string[]) => Promise<void> | void;
+  onPost: (payload: ForumComposeSubmitPayload) => Promise<void> | void;
   posting?: boolean;
   openSignal?: number;
   onCloseComposer?: () => void;
@@ -17,17 +25,26 @@ interface ForumComposeProps {
   mobileBottomSheet?: boolean;
 }
 
-const tags: TopicPostTag[] = ['讨论', '爆料', '分析'];
-const visibilityOptions = ['所有人可见', '仅自己可见', '所有人不可见'] as const;
-const emojiOptions = ['😀', '🔥', '🐢', '🎯', '💡', '🚀', '👏', '🍉'] as const;
-const topicOptions = ['# 我心中引进最成功的外援', '# 大热必聊'] as const;
+const categoryTags: TopicPostTag[] = ['讨论', '爆料', '分析'];
 const MAX_IMAGES = 9;
-const MAX_CHARS = 280;
+const TITLE_MAX = 100;
+const CONTENT_MAX = 3000;
 
 type LocalComposeImage = {
+  /** 稳定 key，避免列表调和异常导致末尾图「丢失」 */
+  id: string;
   file: File;
   previewUrl: string;
 };
+
+const composeInputShell =
+  'w-full rounded-lg border border-white/[0.08] bg-black/30 px-2.5 py-1.5 text-[13px] text-white outline-none transition placeholder:text-zinc-600 focus:border-emerald-400/40 focus:ring-1 focus:ring-emerald-400/20 md:text-[13px]';
+
+const composerCard =
+  'rounded-xl border border-white/[0.08] bg-[#0f1013]/95 p-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.22)] md:p-3 dark:bg-[#0f1013]/98';
+
+/** 配图缩略图（略收紧以降低发帖卡片总高度） */
+const COMPOSE_THUMB_CLASS = 'h-[60px] w-[60px] md:h-[68px] md:w-[68px]';
 
 export const ForumCompose: React.FC<ForumComposeProps> = ({
   onPost,
@@ -38,28 +55,37 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
   mobileBottomSheet = false,
 }) => {
   const uploadImageMutation = useRequestUploadImage();
+  const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [selectedTopic, setSelectedTopic] = useState('');
   const [tag, setTag] = useState<TopicPostTag>('讨论');
   const [images, setImages] = useState<LocalComposeImage[]>([]);
-  const [focused, setFocused] = useState(false);
   const [mobileComposerOpen, setMobileComposerOpen] = useState(false);
-  const [visibility, setVisibility] = useState<(typeof visibilityOptions)[number]>('所有人可见');
-  const [visibilityOpen, setVisibilityOpen] = useState(false);
-  const [emojiOpen, setEmojiOpen] = useState(false);
-  const [toolbarHint, setToolbarHint] = useState('支持本地上传最多 9 张图片');
+  const [toolbarHint, setToolbarHint] = useState(
+    '支持 JPG / PNG / GIF，大图自动压缩至约 1MB 内，最多 9 张',
+  );
   const [submitting, setSubmitting] = useState(false);
+  /** 本地选图后压缩处理中 */
+  const [imageProcessing, setImageProcessing] = useState(false);
+  /** 发帖配图大图预览（索引对应 images） */
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const previousOpenSignalRef = useRef<number | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imagesRef = useRef(images);
+  imagesRef.current = images;
 
-  /**
-   * Mobile publish entry:
-   * 当手机端底部中间“发布”按钮被点击时，外层会递增 openSignal。
-   * 这里只有 signal 相比上一次“真的变大”时才打开。
-   * 这样刷新、初始化挂载、同值重渲染都不会误触发发布弹层。
-   * 这样中间发布按钮就只负责“发帖子”，不会混入其他导航含义。
-   */
+  const focusComposeTitle = () => {
+    window.requestAnimationFrame(() => {
+      const sheet = document.getElementById('forum-compose-title-sheet');
+      const mobile = document.getElementById('forum-compose-title-mobile');
+      const el =
+        (sheet instanceof HTMLInputElement ? sheet : null) ??
+        (mobile instanceof HTMLInputElement ? mobile : null) ??
+        titleInputRef.current;
+      el?.focus();
+    });
+  };
+
   useEffect(() => {
     if (typeof openSignal !== 'number') return;
     if (previousOpenSignalRef.current === null) {
@@ -70,359 +96,376 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
     previousOpenSignalRef.current = openSignal;
     if (!hasIncreased) return;
     setMobileComposerOpen(true);
-    setFocused(true);
+    setTimeout(() => focusComposeTitle(), 50);
   }, [openSignal]);
 
-  /**
-   * closeMobileComposer:
-   * 手机端底部发帖弹层的统一关闭入口。
-   *
-   * 以后如果你要补“关闭动画结束后清理草稿”之类的逻辑，
-   * 优先从这个函数下手，不要分散到多个按钮里分别维护。
-   */
+  useEffect(() => {
+    if (previewIndex === null) return;
+    if (images.length === 0) {
+      setPreviewIndex(null);
+      return;
+    }
+    if (previewIndex > images.length - 1) {
+      setPreviewIndex(images.length - 1);
+    }
+  }, [previewIndex, images.length]);
+
+  useEffect(() => {
+    if (previewIndex === null) return;
+    const max = images.length - 1;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setPreviewIndex(null);
+        return;
+      }
+      if (max <= 0) return;
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setPreviewIndex((i) => (i === null ? i : Math.max(0, i - 1)));
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setPreviewIndex((i) => (i === null ? i : Math.min(max, i + 1)));
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [previewIndex, images.length]);
+
   const closeMobileComposer = () => {
     setMobileComposerOpen(false);
-    setFocused(false);
     onCloseComposer?.();
   };
 
   const handleSubmit = async () => {
-    const trimmedContent = content.trim();
-    const mergedContent = [selectedTopic.trim(), trimmedContent].filter(Boolean).join(' ');
-    if (!mergedContent && images.length === 0) return;
+    const trimmedTitle = title.trim().slice(0, TITLE_MAX);
+    const trimmedContent = content.trim().slice(0, CONTENT_MAX);
+    if (!trimmedTitle && !trimmedContent && images.length === 0) return;
 
     try {
       setSubmitting(true);
-      setToolbarHint('正在发布帖子...');
+      setToolbarHint('正在发布…');
 
-      const uploadedImageUrls = await Promise.all(
-        images.map(async (item) => {
-          const result = await uploadImageMutation.mutateAsync(item.file);
-          return result.url;
-        }),
-      );
+      const uploadedImageUrls: string[] = [];
+      for (let i = 0; i < images.length; i++) {
+        setToolbarHint(`上传配图 ${i + 1}/${images.length}…`);
+        try {
+          const result = await uploadImageMutation.mutateAsync(images[i].file);
+          if (result?.url) uploadedImageUrls.push(result.url);
+        } catch {
+          setToolbarHint(`第 ${i + 1} 张图上传失败，可删掉该图或换一张后重试`);
+          return;
+        }
+      }
 
-      await onPost(mergedContent, tag, uploadedImageUrls.filter(Boolean));
+      await onPost({
+        title: trimmedTitle,
+        content: trimmedContent || trimmedTitle,
+        tag,
+        images: uploadedImageUrls,
+      });
       images.forEach((item) => URL.revokeObjectURL(item.previewUrl));
+      setTitle('');
       setContent('');
-      setSelectedTopic('');
       setImages([]);
-      setFocused(false);
+      setPreviewIndex(null);
       setMobileComposerOpen(false);
-      setVisibilityOpen(false);
-      setEmojiOpen(false);
       setToolbarHint('发布成功');
       onCloseComposer?.();
     } catch (error) {
       setToolbarHint(error instanceof Error ? error.message || '发布失败，请稍后重试' : '发布失败，请稍后重试');
-      return;
     } finally {
       setSubmitting(false);
     }
   };
 
   const openFilePicker = () => {
-    if (images.length >= MAX_IMAGES) return;
+    if (images.length >= MAX_IMAGES || imageProcessing) return;
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    if (files.length === 0) return;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const picked = Array.from(e.target.files ?? []);
+    e.target.value = '';
 
-    const remain = MAX_IMAGES - images.length;
-    const selectedFiles = files.filter((file) => file.type.startsWith('image/')).slice(0, remain);
-    if (selectedFiles.length === 0) {
+    if (picked.length === 0) return;
+
+    const imageFiles = picked.filter((file) => file.type.startsWith('image/'));
+    if (imageFiles.length === 0) {
       setToolbarHint('只能选择图片文件');
-      e.target.value = '';
       return;
     }
 
-    try {
-      const nextImages = selectedFiles.map((file) => ({
-        file,
-        previewUrl: URL.createObjectURL(file),
-      }));
-      setImages((prev) => [...prev, ...nextImages]);
-      setToolbarHint(
-        files.length > remain
-          ? `最多上传 ${MAX_IMAGES} 张，已为你保留前 ${remain} 张`
-          : `已添加 ${selectedFiles.length} 张图片`
-      );
-    } catch {
-      setToolbarHint('图片读取失败，请重试');
-    }
+    void (async () => {
+      try {
+        setImageProcessing(true);
+        const remainStart = MAX_IMAGES - imagesRef.current.length;
+        if (remainStart <= 0) {
+          setToolbarHint(`已达到 ${MAX_IMAGES} 张上限，请先删除再继续添加`);
+          return;
+        }
 
-    setFocused(true);
-    e.target.value = '';
+        const take = imageFiles.slice(0, remainStart);
+        const compressedFiles: File[] = [];
+        for (let i = 0; i < take.length; i++) {
+          setToolbarHint(`正在压缩图片 ${i + 1}/${take.length}…`);
+          compressedFiles.push(await compressImageForUpload(take[i]));
+        }
+
+        setImages((prev) => {
+          const remain = MAX_IMAGES - prev.length;
+          if (remain <= 0) return prev;
+          const slice = compressedFiles.slice(0, remain);
+          const nextImages: LocalComposeImage[] = slice.map((file) => ({
+            id: `compose-img-${crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`}`,
+            file,
+            previewUrl: URL.createObjectURL(file),
+          }));
+
+          const hint =
+            imageFiles.length > remainStart
+              ? `已达 ${MAX_IMAGES} 张上限，本次加入 ${slice.length} 张`
+              : slice.length === 1
+                ? '已添加 1 张'
+                : `已添加 ${slice.length} 张`;
+          queueMicrotask(() => setToolbarHint(hint));
+
+          return [...prev, ...nextImages];
+        });
+      } catch (err) {
+        setToolbarHint(err instanceof Error ? err.message : '图片处理失败');
+      } finally {
+        setImageProcessing(false);
+      }
+    })();
   };
 
   const removeImage = (idx: number) => {
+    setPreviewIndex((pi) => {
+      if (pi === null) return null;
+      if (pi === idx) return null;
+      if (pi > idx) return pi - 1;
+      return pi;
+    });
     setImages((prev) => {
       const target = prev[idx];
-      if (target) {
-        URL.revokeObjectURL(target.previewUrl);
-      }
+      if (target) URL.revokeObjectURL(target.previewUrl);
       return prev.filter((_, i) => i !== idx);
     });
   };
 
-  /**
-   * appendEmoji:
-   * 手机端发帖层的表情插入入口。
-   * 这里统一把表情追加到正文末尾，避免以后在多个按钮里分散维护插入逻辑。
-   */
-  const appendEmoji = (emoji: string) => {
-    setContent((prev) => `${prev}${emoji}`);
-    setEmojiOpen(false);
-    setFocused(true);
-    textareaRef.current?.focus();
-  };
+  const canPost = Boolean(title.trim() || content.trim() || images.length > 0);
+  const contentOverLimit = content.length > CONTENT_MAX;
+  const publishDisabled =
+    posting || submitting || imageProcessing || !canPost || contentOverLimit;
 
-  /**
-   * prependTopic:
-   * 话题和正文分开维护。
-   * 点击话题时只替换当前话题，不把话题混进输入框正文里。
-   */
-  const prependTopic = (topic: string) => {
-    setSelectedTopic(topic);
-    setFocused(true);
-    textareaRef.current?.focus();
-  };
+  const bodyCounterWrap =
+    'pointer-events-none absolute bottom-1.5 right-2 rounded bg-[#0a0a0c]/88 px-1.5 py-0.5 text-[10px] tabular-nums text-zinc-400 ring-1 ring-white/[0.08]';
 
-  const canPost = content.trim().length > 0 || images.length > 0;
-  const charCount = content.length;
+  const renderComposeBodyTextarea = (opts: {
+    rows: number;
+    minHeightClass: string;
+    wrapperClass?: string;
+    paddingTopClass?: string;
+  }) => (
+    <div className={opts.wrapperClass ?? 'mt-2.5'}>
+      <div className="relative">
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value.slice(0, CONTENT_MAX))}
+          placeholder="正文：观点、数据、引用来源…"
+          aria-label="正文"
+          maxLength={CONTENT_MAX}
+          rows={opts.rows}
+          className={`${composeInputShell} w-full resize-y py-1.5 pb-8 pr-[4.5rem] leading-relaxed ${opts.minHeightClass} ${opts.paddingTopClass ?? ''}`}
+        />
+        <span className={bodyCounterWrap} aria-live="polite">
+          {content.length}/{CONTENT_MAX}
+        </span>
+      </div>
+    </div>
+  );
 
-  /**
-   * mobileSheetComposer:
-   * 手机端专用的底部发帖弹层。
-   *
-   * 这里恢复到改参考图 UI 之前那一版：
-   * - 黑色背景
-   * - 绿色强调色
-   * - 保留补充说明、图片区、添加专区、公开、帖子、添加话题
-   * - 底部保留帖子 / 投票 / 模板和固定发布按钮
-   */
+  const scrollbarHide =
+    '[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
+
+  const renderTagSection = () => (
+    <div
+      className="mt-1.5 flex items-center gap-2"
+      title={categoryTags.length > 3 ? '标签较多时可横向滑动' : undefined}
+    >
+      <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+        标签
+      </span>
+      <div className="min-w-0 flex-1 rounded-md border border-white/[0.07] bg-black/22 px-1 py-1">
+        <div className={`flex flex-nowrap gap-1.5 overflow-x-auto overflow-y-visible ${scrollbarHide}`}>
+          {categoryTags.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setTag(item)}
+              className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold transition-all md:px-2.5 md:text-[11px] ${
+                tag === item
+                  ? `${FORUM_TAGS[item]} border-transparent shadow-[0_0_12px_rgba(16,185,129,0.14)]`
+                  : 'border-white/10 bg-white/[0.05] text-zinc-400 hover:border-emerald-400/22 hover:text-emerald-200'
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const thumbnailEls = images.map((image, index) => (
+    <div
+      key={image.id}
+      role="button"
+      tabIndex={0}
+      title="点击预览大图"
+      className={`relative shrink-0 cursor-zoom-in overflow-hidden rounded-xl border border-white/12 bg-[#111215] outline-none ring-emerald-400/25 transition hover:border-emerald-400/35 focus-visible:ring-2 ${COMPOSE_THUMB_CLASS}`}
+      onClick={() => setPreviewIndex(index)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setPreviewIndex(index);
+        }
+      }}
+    >
+      <img src={image.previewUrl} alt="" className="pointer-events-none h-full w-full object-cover" />
+      <button
+        type="button"
+        aria-label="移除该配图"
+        onClick={(ev) => {
+          ev.stopPropagation();
+          removeImage(index);
+        }}
+        className="absolute right-1 top-1 z-10 grid h-8 w-8 place-items-center rounded-full bg-black/80 text-white backdrop-blur-sm transition hover:bg-black"
+      >
+        <X size={15} />
+      </button>
+    </div>
+  ));
+
+  const composeActions = (
+    <>
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex min-w-0 flex-1 items-stretch">
+          {/* 配图区：缩略图 + 上传固定在同一横条内横向滑动，始终挨在一起 */}
+          <div
+            className={`flex max-w-full min-w-0 flex-nowrap items-center gap-2 overflow-x-auto overflow-y-visible rounded-lg border border-white/[0.1] bg-black/30 px-2 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] ${scrollbarHide}`}
+          >
+            {thumbnailEls}
+            {images.length < MAX_IMAGES && (
+              <button
+                type="button"
+                onClick={openFilePicker}
+                disabled={submitting || imageProcessing}
+                title={
+                  imageProcessing
+                    ? '正在压缩…'
+                    : `上传配图（还可 ${MAX_IMAGES - images.length} 张）`
+                }
+                aria-label="上传配图"
+                className={`grid shrink-0 place-items-center rounded-xl border border-dashed border-emerald-400/35 bg-emerald-500/[0.07] text-emerald-200 transition hover:border-emerald-400/50 hover:bg-emerald-500/12 disabled:opacity-35 ${COMPOSE_THUMB_CLASS}`}
+              >
+                <ImageIcon size={22} strokeWidth={2} />
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={() => void handleSubmit()}
+            disabled={publishDisabled}
+            className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 px-3.5 text-[13px] font-bold text-[#04130c] shadow-[0_6px_18px_rgba(16,185,129,0.22)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-45"
+          >
+            <SendHorizonal size={16} strokeWidth={2.25} className="opacity-90" aria-hidden />
+            {submitting ? '发布中…' : '发布'}
+          </button>
+        </div>
+      </div>
+      <p className="text-[10px] leading-snug text-zinc-600">
+        {toolbarHint}
+        {images.length > 0 ? ` · 配图 ${images.length}/${MAX_IMAGES}` : ''}
+      </p>
+    </>
+  );
+
+  const sharedHiddenInput = (
+    <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileChange} />
+  );
+
   const mobileSheetComposer = (
     <AnimatePresence>
       {mobileBottomSheet && mobileComposerOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[120] md:hidden"
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[120] md:hidden">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/70 backdrop-blur-[4px]"
+            className="absolute inset-0 bg-black/75 backdrop-blur-sm"
             onClick={closeMobileComposer}
           />
-
           <motion.div
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-            className="absolute inset-x-0 bottom-0 top-[20px] flex flex-col overflow-hidden rounded-t-[30px] border-t border-white/10 bg-[linear-gradient(180deg,#0f1013_0%,#0a0b0d_100%)] shadow-[0_-24px_64px_rgba(0,0,0,0.5)]"
+            className="absolute inset-x-0 bottom-0 top-[12%] flex flex-col overflow-hidden rounded-t-[26px] border border-white/10 border-b-0 bg-[linear-gradient(180deg,#111318_0%,#0a0b0e_100%)] shadow-[0_-20px_60px_rgba(0,0,0,0.55)]"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-white/8 px-4 py-4">
+            <div className="flex items-center justify-between border-b border-white/8 px-4 py-3">
               <button
                 type="button"
                 onClick={closeMobileComposer}
-                className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/6 text-zinc-200"
+                className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 text-[13px] font-semibold text-zinc-300"
               >
-                <X size={18} />
+                取消
               </button>
-              <div className="text-[15px] font-bold text-white">发布帖子</div>
+              <span className="text-[15px] font-bold text-white">发布线报</span>
               <button
                 type="button"
-                className="rounded-full border border-white/10 bg-white/6 px-4 py-2 text-[12px] font-semibold text-zinc-300"
+                onClick={() => void handleSubmit()}
+                disabled={publishDisabled}
+                className="rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-1.5 text-[13px] font-bold text-[#04130c] shadow-[0_8px_24px_rgba(16,185,129,0.35)] disabled:opacity-40"
               >
-                草稿箱
+                {submitting ? '…' : '发布'}
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 pb-4 pt-4">
-              <div className="mb-4 flex items-center gap-2">
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setVisibilityOpen((prev) => !prev);
-                      setEmojiOpen(false);
-                    }}
-                    className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-zinc-300"
-                  >
-                    {visibility}
-                  </button>
-                  {visibilityOpen && (
-                    <div className="absolute left-0 top-[calc(100%+8px)] z-20 min-w-[150px] overflow-hidden rounded-2xl border border-white/10 bg-[#15161a] shadow-xl">
-                      {visibilityOptions.map((option) => (
-                        <button
-                          key={option}
-                          type="button"
-                          onClick={() => {
-                            setVisibility(option);
-                            setVisibilityOpen(false);
-                          }}
-                          className={`block w-full px-4 py-3 text-left text-[13px] transition-colors ${
-                            visibility === option
-                              ? 'bg-emerald-500/12 text-emerald-300'
-                              : 'text-zinc-300 hover:bg-white/[0.04]'
-                          }`}
-                        >
-                          {option}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEmojiOpen((prev) => !prev);
-                      setVisibilityOpen(false);
-                    }}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-zinc-300"
-                  >
-                    <Smile size={16} />
-                    表情
-                  </button>
-                  {emojiOpen && (
-                    <div className="absolute left-0 top-[calc(100%+8px)] z-20 grid w-[188px] grid-cols-4 gap-2 rounded-2xl border border-white/10 bg-[#15161a] p-3 shadow-xl">
-                      {emojiOptions.map((emoji) => (
-                        <button
-                          key={emoji}
-                          type="button"
-                          onClick={() => appendEmoji(emoji)}
-                          className="grid h-10 w-10 place-items-center rounded-xl bg-white/[0.04] text-[20px] transition-colors hover:bg-emerald-500/12"
-                        >
-                          {emoji}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/8 bg-white/[0.02] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
-                {selectedTopic ? (
-                  <div className="mb-2 inline-flex items-center rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-[14px] font-semibold text-emerald-300">
-                    {selectedTopic}
-                  </div>
-                ) : null}
-                <textarea
-                  ref={textareaRef}
-                  value={content}
-                  onChange={(e) => setContent(e.target.value.slice(0, MAX_CHARS))}
-                  onFocus={() => setFocused(true)}
-                  placeholder="分享你的心情、观点和经历..."
-                  rows={4}
-                  className="w-full resize-none border-0 bg-transparent text-[18px] leading-[1.7] tracking-[-0.01em] text-white outline-none placeholder:text-zinc-500"
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+              <div className="flex-1 overflow-y-auto px-4 pb-3 pt-3">
+                <input
+                  id="forum-compose-title-sheet"
+                  type="text"
+                  value={title}
+                  maxLength={TITLE_MAX}
+                  onChange={(e) => setTitle(e.target.value.slice(0, TITLE_MAX))}
+                  placeholder="标题（可与正文择一）"
+                  aria-label="标题"
+                  className={composeInputShell}
                 />
-                <div className="mt-3 flex items-center justify-end">
-                  <div className={`text-[11px] ${charCount > MAX_CHARS ? 'text-rose-300' : 'text-zinc-500'}`}>{charCount}/{MAX_CHARS}</div>
-                </div>
+
+                {renderTagSection()}
+
+                {renderComposeBodyTextarea({
+                  rows: 3,
+                  minHeightClass: 'min-h-[96px]',
+                  wrapperClass: 'mt-1.5',
+                })}
               </div>
 
-              <div className="mt-4">
-                <div className="flex flex-wrap gap-3">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative h-[104px] w-[104px] overflow-hidden rounded-[22px] border border-white/10 bg-[#111215]">
-                      <img src={image.previewUrl} alt="" className="h-full w-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => removeImage(index)}
-                        className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/70 text-white"
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  ))}
-                  {images.length < MAX_IMAGES && (
-                    <button
-                      type="button"
-                      onClick={openFilePicker}
-                      className="flex h-[104px] w-[104px] flex-col items-center justify-center rounded-[22px] border border-dashed border-white/12 bg-white/[0.03] text-zinc-400"
-                    >
-                      <Image size={24} />
-                      <span className="mt-2 text-[12px] font-medium">添加图片</span>
-                    </button>
-                  )}
-                </div>
-                <div className="mt-3 text-[12px] text-zinc-500">已添加 {images.length}/{MAX_IMAGES} 张图片</div>
+              <div className="shrink-0 space-y-1.5 border-t border-white/8 bg-[#0c0d10]/98 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-2">
+                {composeActions}
               </div>
-
-              {/* <div className="mt-5 flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-[14px] font-semibold text-zinc-200"
-                >
-                  添加专区
-                </button>
-                <button
-                  type="button"
-                  className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-[14px] font-semibold text-zinc-300"
-                >
-                  公开
-                </button>
-                <button
-                  type="button"
-                  className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-4 py-2.5 text-[14px] font-semibold text-emerald-300"
-                >
-                  帖子
-                </button>
-              </div> */}
-
-              <div className="mt-4 rounded-[22px] border border-white/8 bg-white/[0.02] p-4">
-                <div className="mb-3 text-[15px] font-semibold text-zinc-200">添加话题</div>
-                <div className="flex flex-wrap items-center gap-2">
-                  {topicOptions.map((topic) => (
-                    <button
-                      key={topic}
-                      type="button"
-                      onClick={() => prependTopic(topic)}
-                      className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[13px] font-medium text-zinc-300 transition-colors hover:bg-emerald-500/10 hover:text-emerald-300"
-                    >
-                      {topic}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                {tags.map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => setTag(item)}
-                    className={`rounded-full px-3 py-2 text-[12px] font-semibold transition-colors ${
-                      tag === item
-                        ? `${FORUM_TAGS[item]} border-transparent`
-                        : 'border border-white/10 bg-white/[0.04] text-zinc-300'
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="border-t border-white/8 bg-[#0b0c0f]/96 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3">
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={posting || submitting || !canPost || charCount > MAX_CHARS}
-                className="h-13 w-full rounded-[18px] bg-[linear-gradient(135deg,#34d399,#10b981)] text-[18px] font-bold text-[#04130c] shadow-[0_10px_30px_rgba(16,185,129,0.28)] transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-45"
-              >
-                {submitting ? '发布中...' : '发布'}
-              </button>
-              <div className="mt-3 text-[12px] text-zinc-500">{toolbarHint}</div>
             </div>
           </motion.div>
         </motion.div>
@@ -431,154 +474,153 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
   );
 
   const desktopComposer = (
-    <div className="legacy-forum-compose rounded-[28px] border border-white/8 bg-[#0f1013] px-4 py-4 shadow-[0_18px_40px_rgba(0,0,0,0.24)] md:rounded-none md:border-0 md:bg-transparent md:px-4 md:py-4 md:shadow-none">
-      <div className="legacy-forum-compose-row">
-        <div className="min-w-0">
-          {!mobileComposerOpen && showEntryButton && (
+    <div className={composerCard}>
+      <input
+        id="forum-compose-title-desktop"
+        ref={titleInputRef}
+        type="text"
+        value={title}
+        maxLength={TITLE_MAX}
+        onChange={(e) => setTitle(e.target.value.slice(0, TITLE_MAX))}
+        placeholder="标题（可与正文择一）"
+        aria-label="标题"
+        className={composeInputShell}
+      />
+
+      {renderTagSection()}
+
+      {renderComposeBodyTextarea({
+        rows: 2,
+        minHeightClass: 'min-h-[52px] md:min-h-[60px]',
+        wrapperClass: 'mt-1.5',
+      })}
+
+      <div className="mt-2 space-y-1.5 border-t border-white/[0.06] pt-2">{composeActions}</div>
+    </div>
+  );
+
+  const previewItem =
+    previewIndex !== null && previewIndex < images.length ? images[previewIndex] : undefined;
+  const previewCount = images.length;
+  const canPreviewPrev = previewIndex !== null && previewIndex > 0;
+  const canPreviewNext = previewIndex !== null && previewIndex < previewCount - 1;
+
+  return (
+    <>
+      {sharedHiddenInput}
+      {previewItem && previewIndex !== null ? (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="配图预览"
+          className="fixed inset-0 z-[140] flex flex-col items-center justify-center bg-black/45 p-4 backdrop-blur-[10px]"
+          onClick={() => setPreviewIndex(null)}
+        >
+          <button
+            type="button"
+            aria-label="关闭预览"
+            className="absolute right-3 top-3 z-10 grid h-10 w-10 place-items-center rounded-full border border-white/20 bg-white/12 text-white shadow-lg transition hover:bg-white/22"
+            onClick={() => setPreviewIndex(null)}
+          >
+            <X size={20} strokeWidth={2} />
+          </button>
+
+          <div
+            className="relative w-full max-w-[min(96vw,920px)] px-11 sm:px-14"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {previewCount > 1 && (
+              <button
+                type="button"
+                aria-label="上一张"
+                disabled={!canPreviewPrev}
+                className="absolute left-0 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/18 bg-black/35 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/50 disabled:cursor-not-allowed disabled:opacity-25"
+                onClick={() =>
+                  setPreviewIndex((i) => (i === null ? i : Math.max(0, i - 1)))
+                }
+              >
+                <ChevronLeft className="h-7 w-7" strokeWidth={2} aria-hidden />
+              </button>
+            )}
+            {previewCount > 1 && (
+              <button
+                type="button"
+                aria-label="下一张"
+                disabled={!canPreviewNext}
+                className="absolute right-0 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/18 bg-black/35 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/50 disabled:cursor-not-allowed disabled:opacity-25"
+                onClick={() =>
+                  setPreviewIndex((i) =>
+                    i === null ? i : Math.min(previewCount - 1, i + 1),
+                  )
+                }
+              >
+                <ChevronRight className="h-7 w-7" strokeWidth={2} aria-hidden />
+              </button>
+            )}
+            <img
+              src={previewItem.previewUrl}
+              alt={`配图预览 ${previewIndex + 1}/${previewCount}`}
+              className="mx-auto max-h-[min(85vh,900px)] max-w-full rounded-xl object-contain shadow-2xl ring-1 ring-white/15"
+            />
+            {previewCount > 1 && (
+              <p className="mt-3 text-center text-[13px] font-medium tabular-nums text-zinc-300">
+                {previewIndex + 1} / {previewCount}
+              </p>
+            )}
+          </div>
+
+          <p className="mt-2 text-center text-[12px] text-zinc-500">
+            {previewCount > 1 ? '点击空白处关闭 · Esc · ← → 切换' : '点击空白处关闭 · Esc'}
+          </p>
+        </div>
+      ) : null}
+      {mobileSheetComposer}
+      <div className="hidden md:block">{desktopComposer}</div>
+      {!mobileBottomSheet && (
+        <div className="md:hidden">
+          {!mobileComposerOpen && showEntryButton ? (
             <button
               type="button"
               onClick={() => {
                 setMobileComposerOpen(true);
-                setFocused(true);
+                setTimeout(() => focusComposeTitle(), 50);
               }}
-              className="flex w-full items-center gap-3 rounded-[22px] border border-white/8 bg-[#14161a] px-3 py-3 text-left md:hidden"
+              className="flex w-full items-center gap-2.5 rounded-xl border border-white/[0.08] bg-[#121418]/95 px-3 py-2.5 text-left shadow-[0_6px_22px_rgba(0,0,0,0.28)] transition hover:border-emerald-400/20"
             >
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#142f58] text-[20px] text-cyan-300">
+              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-emerald-500/12 text-base text-emerald-300">
                 ✍️
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-[14px] font-semibold text-white">发布帖子</div>
-                <div className="mt-0.5 text-[12px] text-[#7f9bc4]">点一下，发你的新观点或爆料</div>
+                <div className="text-[13px] font-semibold text-white">写一条线报</div>
+                <div className="truncate text-[11px] text-zinc-500">标题 · 标签 · 正文 · 配图</div>
               </div>
             </button>
+          ) : (
+            <div className={composerCard}>
+              <input
+                id="forum-compose-title-mobile"
+                type="text"
+                value={title}
+                maxLength={TITLE_MAX}
+                onChange={(e) => setTitle(e.target.value.slice(0, TITLE_MAX))}
+                placeholder="标题（可与正文择一）"
+                aria-label="标题"
+                className={composeInputShell}
+              />
+
+              {renderTagSection()}
+
+              {renderComposeBodyTextarea({
+                rows: 3,
+                minHeightClass: 'min-h-[88px]',
+                wrapperClass: 'mt-1.5',
+              })}
+
+              <div className="mt-2 space-y-1.5 border-t border-white/[0.06] pt-2">{composeActions}</div>
+            </div>
           )}
-
-          <div className={mobileComposerOpen || !showEntryButton ? 'block md:block' : 'hidden md:block'}>
-          
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              className="hidden"
-              onChange={handleFileChange}
-            />
-
-            <div className="flex flex-col gap-3 rounded-[22px] border border-white/8 bg-[#14161a] px-3 py-3 backdrop-blur-sm md:flex-row md:gap-4 md:rounded-xl md:border-cyan-300/22 md:bg-[#0a1d3c]/72 md:px-3 md:py-2">
-              <div className="flex min-w-0 gap-3 md:flex-1">
-                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#142f58] text-[20px] text-cyan-300 md:h-15 md:w-15">💬</div>
-                <textarea
-                  ref={textareaRef}
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  onFocus={() => setFocused(true)}
-                  placeholder="写点什么..."
-                  rows={5}
-                  className="legacy-forum-compose-input max-h-100 w-full resize-none border-0 bg-transparent text-[15px] leading-relaxed text-[#d9e8ff] outline-none placeholder:text-[#7f9bc4] md:text-[14px]"
-                />
-              </div>
-              <div className="flex justify-end md:items-end">
-                <button
-                  onClick={handleSubmit}
-                  disabled={posting || submitting || !canPost || charCount > MAX_CHARS}
-                  className="legacy-forum-compose-submit h-[38px] w-full rounded-full border-0 bg-gradient-to-b from-[#33c6bb] to-[#219f95] px-3 text-[14px] font-bold text-[#e8fff9] shadow-[0_0_12px_rgba(35,187,176,0.45)] transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 md:h-[36px] md:w-auto md:min-w-[86px] md:rounded-[8px] md:px-4"
-                >
-                  {submitting ? '发布中...' : '发布'}
-                </button>
-              </div>
-            </div>
-
-            {images.length > 0 && (
-              <div className="!mb-2 flex items-center justify-between text-[12px] text-[#8eb0da]">
-                <span>已添加 {images.length}/{MAX_IMAGES} 张图片</span>
-                <button
-                  type="button"
-                  onClick={openFilePicker}
-                  disabled={images.length >= MAX_IMAGES}
-                  className="cursor-pointer border-0 bg-transparent font-semibold text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  继续添加
-                </button>
-              </div>
-            )}
-            {images.length > 0 && (
-              <div className="!mb-3 grid grid-cols-3 gap-2 overflow-hidden rounded-2xl border border-slate-200 dark:border-rdark-border md:grid-cols-4">
-                {images.map((image, i) => (
-                  <div key={i} className="relative aspect-square overflow-hidden bg-[#09182f]">
-                    <img src={image.previewUrl} alt="" className="h-full w-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(i)}
-                      className="absolute right-1.5 top-1.5 grid h-7 w-7 cursor-pointer place-items-center rounded-full border-0 bg-black/70 text-white opacity-100 backdrop-blur-sm transition-opacity hover:bg-black/80"
-                    >
-                      <X size={14} />
-                    </button>
-                    <div className="absolute bottom-1.5 left-1.5 rounded-full bg-black/55 !px-2 !py-0.5 text-[11px] text-white">
-                      {i + 1}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {focused && (
-              <div className="!mb-2 !mt-2 flex flex-wrap items-center gap-1.5 border-b border-cyan-400/20 !pb-2">
-                <span className="!mr-1 text-[14px] text-[#8eb0da] md:text-[16px]">标签:</span>
-                {tags.map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTag(t)}
-                    className={`cursor-pointer rounded-full border !px-3 !py-1 text-[13px] font-semibold transition-all md:text-[16px] ${
-                      tag === t
-                        ? `${FORUM_TAGS[t]} border-transparent`
-                        : 'border-cyan-300/20 bg-transparent text-[#9eb8da] hover:bg-cyan-500/10'
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <div className="legacy-forum-compose-foot flex flex-col gap-3 pt-2 md:flex-row md:items-center md:justify-between md:pt-1">
-              <div className="legacy-forum-compose-tools flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={openFilePicker}
-                  disabled={submitting || images.length >= MAX_IMAGES}
-                  className={`group relative flex items-center gap-2 rounded-full border border-cyan-300/15 !px-3 !py-2 text-[12px] font-semibold transition-all md:text-[13px] ${
-                    images.length > 0
-                      ? 'bg-cyan-500/12 text-cyan-200'
-                      : 'bg-transparent text-[#7fb6f6] hover:bg-cyan-500/10 hover:text-cyan-300'
-                  } disabled:cursor-not-allowed disabled:opacity-30`}
-                  title="添加图片"
-                >
-                  <Image size={18} />
-                  <span className="hidden sm:inline">图片</span>
-                  <span className="rounded-full bg-white/8 !px-1.5 !py-0.5 text-[10px] text-[#b8dcff] md:text-[11px]">{images.length}/{MAX_IMAGES}</span>
-                </button>
-              </div>
-
-              <div className="flex w-full items-center justify-between gap-3 md:w-auto md:justify-end">
-                <div className="text-left md:text-right">
-                  <div className="text-[12px] text-[#8eb0da]">{toolbarHint}</div>
-                  <div className={`text-[11px] ${charCount > MAX_CHARS ? 'text-rose-300' : 'text-[#6f8fb8]'}`}>
-                    {charCount}/{MAX_CHARS}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <>
-      {mobileSheetComposer}
-      <div className="hidden md:block">{desktopComposer}</div>
-      {!mobileBottomSheet && <div className="md:hidden">{desktopComposer}</div>}
+      )}
     </>
   );
 };
