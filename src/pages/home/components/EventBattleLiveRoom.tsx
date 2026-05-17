@@ -540,6 +540,9 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const [likePendingIds, setLikePendingIds] = useState<Set<string>>(new Set());
   const [countdownLeft, setCountdownLeft] = useState(() => getCountdownSeconds(news.closeTime));
   const [activeTab, setActiveTab] = useState('全部');
+  const [mobileActiveSide, setMobileActiveSide] = useState<CommentSide>(userSide ?? 'A');
+  const [mobileRankMode, setMobileRankMode] = useState<'all' | 'side'>('all');
+  const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
   const [betBurst, setBetBurst] = useState<{ side: CommentSide; token: number } | null>(null);
   const [betDialogSide, setBetDialogSide] = useState<CommentSide | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
@@ -689,12 +692,15 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     setCommentsAState([]);
     setCommentsBState([]);
     setSelectedSide(userSide ?? 'A');
+    setMobileActiveSide(userSide ?? 'A');
+    setMobileRankMode('all');
     setBetIntent(userSide ?? 'A');
     setDraft('');
     setReplyDraft('');
     setReplyingTo(null);
     setFeedItems([]);
     setLatestReplyEvent(null);
+    setMobilePanelOpen(false);
   }, [battleEntityId, news.id, userSide]);
 
   useEffect(() => {
@@ -1138,6 +1144,19 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     };
   }, [currentUserName, leftComments, rightComments, userSide]);
   const fallbackLeaders = ['MessiKing', '罗总裁', 'CR7_GOAT', '巴萨信仰', '曼联传奇', '球王梅西10', '蓝白永不倒', '绝代双骄CR7'];
+  const displayLeaderBoard = leaderBoard.length
+    ? leaderBoard
+    : fallbackLeaders.map((name, index) => ({
+      id: name,
+      name,
+      avatar: FALLBACK_AVATAR,
+      rank: index + 1,
+      score: [56232, 45678, 28901, 23456, 18765, 15432, 12345, 11234][index],
+      side: (index % 2 === 0 ? 'A' : 'B') as CommentSide,
+    }));
+  const mobileLeaderBoard = mobileRankMode === 'side'
+    ? displayLeaderBoard.filter((item) => item.side === mobileActiveSide)
+    : displayLeaderBoard;
   const quickAmounts = [100, 520, 1000, 5000];
   const tabs = ['战报', '弹幕 99+', '全部', '热门', '只看我方', '只看对方', '精华'];
 
@@ -1310,7 +1329,30 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           <button type="button" className="eb-sort" tabIndex={-1}>最新评论 <ChevronDown size={14} /></button>
         </nav>
 
-        <section className="eb-comments-grid">
+        <div className="eb-mobile-side-switch" role="tablist" aria-label="切换阵营评论">
+          {[
+            { side: 'A' as const, label: displayNews.optionA, pct: leftHeatPct, count: leftSupporters.length + leftComments.length },
+            { side: 'B' as const, label: displayNews.optionB, pct: rightHeatPct, count: rightSupporters.length + rightComments.length },
+          ].map((item) => (
+            <button
+              key={item.side}
+              type="button"
+              role="tab"
+              aria-selected={mobileActiveSide === item.side}
+              className={`${item.side === 'A' ? 'side-blue' : 'side-red'} ${mobileActiveSide === item.side ? 'active' : ''}`}
+              onClick={() => {
+                setMobileActiveSide(item.side);
+                setSelectedSide(item.side);
+              }}
+            >
+              <span>{item.side === 'A' ? '蓝方' : '红方'}</span>
+              <strong>{item.label}</strong>
+              <em>{item.pct}% · {formatWan(item.count)}</em>
+            </button>
+          ))}
+        </div>
+
+        <section className={`eb-comments-grid ${mobileActiveSide === 'A' ? 'eb-mobile-show-blue' : 'eb-mobile-show-red'}`}>
           {[
             { side: 'A' as const, title: `${displayNews.optionA}阵营`, count: leftSupporters.length + leftComments.length, comments: leftComments, color: 'blue' },
             { side: 'B' as const, title: `${displayNews.optionB}阵营`, count: rightSupporters.length + rightComments.length, comments: rightComments, color: 'red' },
@@ -1391,6 +1433,78 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         </section>
       </div>
 
+      <section className="eb-mobile-info-panels" aria-label="场内数据">
+        <section className="eb-mobile-info-card eb-mobile-rank-card">
+          <div className="eb-mobile-info-title">
+            <Trophy size={16} />
+            热度贡献榜
+            <div className="eb-mobile-rank-switch" role="tablist" aria-label="切换热度榜">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={mobileRankMode === 'all'}
+                className={mobileRankMode === 'all' ? 'active' : ''}
+                onClick={() => setMobileRankMode('all')}
+              >
+                总榜
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={mobileRankMode === 'side'}
+                className={mobileRankMode === 'side' ? 'active' : ''}
+                onClick={() => setMobileRankMode('side')}
+              >
+                本方榜
+              </button>
+            </div>
+          </div>
+          <div className="eb-rank-list">
+            {mobileLeaderBoard.map((item, index) => (
+              <div className="eb-rank-item" key={item.id}>
+                <i>{index + 1}</i>
+                <img src={item.avatar || FALLBACK_AVATAR} alt={item.name} />
+                <b>{item.name}</b>
+                <strong>{formatVotes(item.score)}</strong>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="eb-mobile-info-card eb-mobile-personal-card">
+          <div className="eb-mobile-info-title">
+            <Shield size={16} />
+            个人贡献
+            <span>{personalContribution.side === 'A' ? '蓝方' : personalContribution.side === 'B' ? '红方' : '未站队'}</span>
+          </div>
+          <div className="eb-personal-profile">
+            <img src={FALLBACK_AVATAR} alt={currentUserName} />
+            <div>
+              <b>{currentUserName}</b>
+              <span>本场互动贡献</span>
+            </div>
+            <strong>{formatVotes(personalContribution.score)}</strong>
+          </div>
+          <div className="eb-personal-stats">
+            <div>
+              <MessageCircleReply size={15} />
+              <span>评论数</span>
+              <strong>{formatVotes(personalContribution.commentCount)}</strong>
+            </div>
+            <div>
+              <ThumbsUp size={15} />
+              <span>获赞数</span>
+              <strong>{formatVotes(personalContribution.likeCount)}</strong>
+            </div>
+            <div>
+              <Flame size={15} />
+              <span>回复互动</span>
+              <strong>{formatVotes(personalContribution.replyCount)}</strong>
+            </div>
+          </div>
+        </section>
+      </section>
+
       {betDialogSide ? (
         <div className="eb-bet-dialog-mask" role="presentation" onMouseDown={() => setBetDialogSide(null)}>
           <div
@@ -1438,18 +1552,36 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         </div>
       ) : null}
 
-      <aside className="eb-sidebar">
+      <button
+        type="button"
+        className="eb-mobile-panel-trigger"
+        onClick={() => setMobilePanelOpen(true)}
+      >
+        <span>下注助威</span>
+        <strong>{canPlaceBet ? '进行中' : '已暂停'}</strong>
+      </button>
+
+      {mobilePanelOpen ? (
+        <button
+          type="button"
+          className="eb-mobile-panel-backdrop"
+          aria-label="关闭移动端操作面板"
+          onClick={() => setMobilePanelOpen(false)}
+        />
+      ) : null}
+
+      <aside className={`eb-sidebar ${mobilePanelOpen ? 'eb-sidebar-mobile-open' : ''}`}>
+        <div className="eb-mobile-panel-head">
+          <div>
+            <span>下注助威</span>
+            <strong>选择阵营 · 输入龟币</strong>
+          </div>
+          <button type="button" onClick={() => setMobilePanelOpen(false)}>×</button>
+        </div>
         <section className="eb-side-card">
           <div className="eb-side-title"><Trophy size={18} /> 热度贡献榜 <span>总榜</span><span>本方榜</span></div>
           <div className="eb-rank-list">
-            {(leaderBoard.length ? leaderBoard : fallbackLeaders.map((name, index) => ({
-              id: name,
-              name,
-              avatar: FALLBACK_AVATAR,
-              rank: index + 1,
-              score: [56232, 45678, 28901, 23456, 18765, 15432, 12345, 11234][index],
-              side: index % 2 === 0 ? 'A' : 'B',
-            }))).map((item, index) => (
+            {displayLeaderBoard.map((item, index) => (
               <div className="eb-rank-item" key={item.id}>
                 <i>{index + 1}</i>
                 <img src={item.avatar || FALLBACK_AVATAR} alt={item.name} />
