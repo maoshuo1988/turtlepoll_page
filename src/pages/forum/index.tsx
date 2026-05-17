@@ -21,9 +21,11 @@ export default function ForumPage() {
   };
 
   return (
-    <ForumPageView
-      newsByMarketId={newsByMarketId}
-      onOpenLinkedPrediction={handleOpenLinkedPrediction}
-    />
+    <div className="pt-[10px]">
+      <ForumPageView
+        newsByMarketId={newsByMarketId}
+        onOpenLinkedPrediction={handleOpenLinkedPrediction}
+      />
+    </div>
   );
 }

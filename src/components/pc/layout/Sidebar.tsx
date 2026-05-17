@@ -9,7 +9,7 @@ import { SidebarDesktopHotPanel } from './SidebarDesktopHotPanel';
 import { SidebarDesktopNavPanel } from './SidebarDesktopNavPanel';
 import { SidebarDesktopProfilePanel } from './SidebarDesktopProfilePanel';
 import { NAV_ITEMS, SidebarMainPanels, type ViewType } from './SidebarMainPanels';
-import { GuideTourModal, useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type SidebarHotTopic } from '@/components/shared/layout';
+import { useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type SidebarHotTopic } from '@/components/shared/layout';
 import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCards';
 
 interface SidebarProps {
@@ -38,7 +38,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [dialogueKey, setDialogueKey] = useState(0);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
-  const [guideOpen, setGuideOpen] = useState(false);
   const hotTopics = useSidebarHotTopics(newsByMarketId);
   const hotTags = useSidebarHotTags();
 
@@ -79,10 +78,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const handleNavClick = (item: (typeof NAV_ITEMS)[number]) => {
     if (!item.enabled) return;
-    if (item.action === 'guide') {
-      setGuideOpen(true);
-      return;
-    }
     if (item.key === 'predictions') {
       setSelectedTag(null);
     }
@@ -118,14 +113,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onCloseChat={() => setChatOpen(false)}
           onOpenProfile={() => onViewChange('profile')}
           onOpenActivePredictions={() => onViewChange('activePredictions')}
+          onOpenShop={() => onViewChange('shop')}
+          onOpenPetSpace={() => onViewChange('pet')}
           onViewChange={handlePanelViewChange}
           onNavClick={handleNavClick}
         />
       </div>
 
       <div className="hidden lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-y-auto">
-        <div className="flex flex-col gap-3.5 lg:overflow-x-hidden">
-          <div className="overflow-hidden">
+        <div className="flex min-h-0 flex-col gap-3.5 lg:overflow-x-hidden">
+          {/* overflow-hidden 会使 flex 子项默认 min-height 为 0，易被下方展开的热点区挤扁；shrink-0 保留宠物面板完整高度 */}
+          <div className="shrink-0 overflow-hidden">
             <SidebarDesktopProfilePanel
               pet={pet}
               aiPushMessages={aiPushMessages}
@@ -134,17 +132,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
               dialogueKey={dialogueKey}
               onCloseChat={() => setChatOpen(false)}
               onOpenProfile={() => onViewChange('profile')}
+              onOpenChat={() => setChatOpen(true)}
+              onOpenShop={() => onViewChange('shop')}
+              onOpenPetSpace={() => onViewChange('pet')}
+              onOpenActivePredictions={() => onViewChange('activePredictions')}
             />
           </div>
 
-          <SidebarDesktopHotPanel
-            hotTopics={hotTopics ?? []}
-            hotTags={hotTags}
-            selectedTag={selectedTag}
-            onOpenTopic={(topic) => onViewChange('predictions', topic, null)}
-            onTagClick={handleTagClick}
-            fmtHeat={fmtHeat}
-          />
+          <div className="shrink-0">
+            <SidebarDesktopHotPanel
+              hotTopics={hotTopics ?? []}
+              hotTags={hotTags}
+              selectedTag={selectedTag}
+              onOpenTopic={(topic) => onViewChange('predictions', topic, null)}
+              onTagClick={handleTagClick}
+              fmtHeat={fmtHeat}
+            />
+          </div>
 
           <SidebarDesktopNavPanel
             activeView={activeView}
@@ -152,8 +156,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           />
         </div>
       </div>
-
-      <GuideTourModal open={guideOpen} onClose={() => setGuideOpen(false)} />
     </div>
   );
 };

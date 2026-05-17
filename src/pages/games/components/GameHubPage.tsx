@@ -64,19 +64,14 @@ export const GameHubPage: React.FC<GameHubPageProps> = ({
   ];
 
   return (
-    <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[#0c0f14] text-white shadow-[0_24px_70px_rgba(0,0,0,0.28)] dark:border-white/10 dark:bg-[#0c0f14]">
-      <div className="relative overflow-hidden border-b border-white/8 px-5 py-6 md:px-7 md:py-8">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(52,211,153,0.18),transparent_34%),radial-gradient(circle_at_top_right,rgba(56,189,248,0.18),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent)]" />
-      </div>
-
-      <div className="grid gap-4 p-5 md:p-7 xl:grid-cols-3">
-        {cards.map((card) => (
-          <button
-            key={card.key}
-            type="button"
-            onClick={card.onOpen}
-            className={`group relative overflow-hidden rounded-[24px] border bg-gradient-to-br p-5 text-left transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)] ${card.accentClassName}`}
-          >
+    <div className="grid gap-4 xl:grid-cols-3">
+      {cards.map((card) => (
+        <button
+          key={card.key}
+          type="button"
+          onClick={card.onOpen}
+          className={`group relative overflow-hidden rounded-[24px] border bg-gradient-to-br p-5 text-left transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)] ${card.accentClassName}`}
+        >
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_28%)] opacity-70" />
             <div className="relative flex h-full flex-col">
               <div className="flex items-start justify-between gap-3">
@@ -110,8 +105,7 @@ export const GameHubPage: React.FC<GameHubPageProps> = ({
               </div>
             </div>
           </button>
-        ))}
-      </div>
-    </section>
+      ))}
+    </div>
   );
 };

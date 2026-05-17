@@ -20,6 +20,8 @@ interface ForumComposeProps {
   onPost: (payload: ForumComposeSubmitPayload) => Promise<void> | void;
   posting?: boolean;
   openSignal?: number;
+  /** 页头「发线报」等：每次传入新的数字即滚动并就位标题输入框（可与 undefined 交替由父级控制）。 */
+  focusComposerSignal?: number;
   onCloseComposer?: () => void;
   showEntryButton?: boolean;
   mobileBottomSheet?: boolean;
@@ -38,10 +40,10 @@ type LocalComposeImage = {
 };
 
 const composeInputShell =
-  'w-full rounded-lg border border-white/[0.08] bg-black/30 px-2.5 py-1.5 text-[13px] text-white outline-none transition placeholder:text-zinc-600 focus:border-emerald-400/40 focus:ring-1 focus:ring-emerald-400/20 md:text-[13px]';
+  'w-full rounded-xl bg-white/[0.035] px-3 py-2 text-[13px] text-white outline-none ring-1 ring-inset ring-white/[0.07] transition placeholder:text-zinc-600 focus:ring-emerald-400/35 md:text-[13px] dark:bg-white/[0.03]';
 
 const composerCard =
-  'rounded-xl border border-white/[0.08] bg-[#0f1013]/95 p-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.22)] md:p-3 dark:bg-[#0f1013]/98';
+  'rounded-2xl bg-white/[0.025] p-3 ring-1 ring-white/[0.06] md:p-4 dark:bg-white/[0.02] dark:ring-white/[0.07]';
 
 /** 配图缩略图（略收紧以降低发帖卡片总高度） */
 const COMPOSE_THUMB_CLASS = 'h-[60px] w-[60px] md:h-[68px] md:w-[68px]';
@@ -50,6 +52,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
   onPost,
   posting = false,
   openSignal,
+  focusComposerSignal,
   onCloseComposer,
   showEntryButton = true,
   mobileBottomSheet = false,
@@ -98,6 +101,20 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
     setMobileComposerOpen(true);
     setTimeout(() => focusComposeTitle(), 50);
   }, [openSignal]);
+
+  useEffect(() => {
+    if (typeof focusComposerSignal !== 'number') return;
+
+    const openInlineMobile = () => {
+      if (!mobileBottomSheet && showEntryButton) {
+        setMobileComposerOpen(true);
+      }
+    };
+
+    openInlineMobile();
+    document.getElementById('forum-compose-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => focusComposeTitle(), mobileBottomSheet ? 50 : 80);
+  }, [focusComposerSignal, mobileBottomSheet, showEntryButton]);
 
   useEffect(() => {
     if (previewIndex === null) return;
@@ -265,7 +282,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
     posting || submitting || imageProcessing || !canPost || contentOverLimit;
 
   const bodyCounterWrap =
-    'pointer-events-none absolute bottom-1.5 right-2 rounded bg-[#0a0a0c]/88 px-1.5 py-0.5 text-[10px] tabular-nums text-zinc-400 ring-1 ring-white/[0.08]';
+    'pointer-events-none absolute bottom-1.5 right-2 rounded-md bg-black/55 px-1.5 py-0.5 text-[10px] tabular-nums text-zinc-500';
 
   const renderComposeBodyTextarea = (opts: {
     rows: number;
@@ -295,30 +312,23 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
     '[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 
   const renderTagSection = () => (
-    <div
-      className="mt-1.5 flex items-center gap-2"
-      title={categoryTags.length > 3 ? '标签较多时可横向滑动' : undefined}
-    >
-      <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
-        标签
-      </span>
-      <div className="min-w-0 flex-1 rounded-md border border-white/[0.07] bg-black/22 px-1 py-1">
-        <div className={`flex flex-nowrap gap-1.5 overflow-x-auto overflow-y-visible ${scrollbarHide}`}>
-          {categoryTags.map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setTag(item)}
-              className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold transition-all md:px-2.5 md:text-[11px] ${
-                tag === item
-                  ? `${FORUM_TAGS[item]} border-transparent shadow-[0_0_12px_rgba(16,185,129,0.14)]`
-                  : 'border-white/10 bg-white/[0.05] text-zinc-400 hover:border-emerald-400/22 hover:text-emerald-200'
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
+    <div className="mt-2 flex flex-wrap items-center gap-2">
+      <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">标签</span>
+      <div className="flex flex-wrap gap-1.5">
+        {categoryTags.map((item) => (
+          <button
+            key={item}
+            type="button"
+            onClick={() => setTag(item)}
+            className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition-all ${
+              tag === item
+                ? `${FORUM_TAGS[item]} shadow-[0_0_12px_rgba(16,185,129,0.12)]`
+                : 'bg-white/[0.06] text-zinc-400 ring-1 ring-white/[0.08] hover:bg-white/[0.1] hover:text-emerald-200 hover:ring-emerald-400/20'
+            }`}
+          >
+            {item}
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -329,7 +339,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
       role="button"
       tabIndex={0}
       title="点击预览大图"
-      className={`relative shrink-0 cursor-zoom-in overflow-hidden rounded-xl border border-white/12 bg-[#111215] outline-none ring-emerald-400/25 transition hover:border-emerald-400/35 focus-visible:ring-2 ${COMPOSE_THUMB_CLASS}`}
+      className={`relative shrink-0 cursor-zoom-in overflow-hidden rounded-xl bg-[#111215] outline-none ring-1 ring-white/[0.1] transition hover:ring-emerald-400/35 focus-visible:ring-2 focus-visible:ring-emerald-400/40 ${COMPOSE_THUMB_CLASS}`}
       onClick={() => setPreviewIndex(index)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -355,42 +365,33 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
 
   const composeActions = (
     <>
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex min-w-0 flex-1 items-stretch">
-          {/* 配图区：缩略图 + 上传固定在同一横条内横向滑动，始终挨在一起 */}
-          <div
-            className={`flex max-w-full min-w-0 flex-nowrap items-center gap-2 overflow-x-auto overflow-y-visible rounded-lg border border-white/[0.1] bg-black/30 px-2 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] ${scrollbarHide}`}
-          >
-            {thumbnailEls}
-            {images.length < MAX_IMAGES && (
-              <button
-                type="button"
-                onClick={openFilePicker}
-                disabled={submitting || imageProcessing}
-                title={
-                  imageProcessing
-                    ? '正在压缩…'
-                    : `上传配图（还可 ${MAX_IMAGES - images.length} 张）`
-                }
-                aria-label="上传配图"
-                className={`grid shrink-0 place-items-center rounded-xl border border-dashed border-emerald-400/35 bg-emerald-500/[0.07] text-emerald-200 transition hover:border-emerald-400/50 hover:bg-emerald-500/12 disabled:opacity-35 ${COMPOSE_THUMB_CLASS}`}
-              >
-                <ImageIcon size={22} strokeWidth={2} />
-              </button>
-            )}
-          </div>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className={`flex min-w-0 flex-1 flex-wrap items-center gap-2 ${scrollbarHide}`}>
+          {thumbnailEls}
+          {images.length < MAX_IMAGES && (
+            <button
+              type="button"
+              onClick={openFilePicker}
+              disabled={submitting || imageProcessing}
+              title={
+                imageProcessing ? '正在压缩…' : `上传配图（还可 ${MAX_IMAGES - images.length} 张）`
+              }
+              aria-label="上传配图"
+              className={`grid shrink-0 place-items-center rounded-xl bg-emerald-500/10 text-emerald-200 ring-1 ring-dashed ring-emerald-400/30 transition hover:bg-emerald-500/14 hover:ring-emerald-400/45 disabled:opacity-35 ${COMPOSE_THUMB_CLASS}`}
+            >
+              <ImageIcon size={20} strokeWidth={2} />
+            </button>
+          )}
         </div>
-        <div className="ml-auto flex shrink-0 items-center gap-2">
-          <button
-            type="button"
-            onClick={() => void handleSubmit()}
-            disabled={publishDisabled}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 px-3.5 text-[13px] font-bold text-[#04130c] shadow-[0_6px_18px_rgba(16,185,129,0.22)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-45"
-          >
-            <SendHorizonal size={16} strokeWidth={2.25} className="opacity-90" aria-hidden />
-            {submitting ? '发布中…' : '发布'}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => void handleSubmit()}
+          disabled={publishDisabled}
+          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 px-4 text-[13px] font-bold text-[#04130c] shadow-[0_6px_18px_rgba(16,185,129,0.22)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-45"
+        >
+          <SendHorizonal size={16} strokeWidth={2.25} className="opacity-90" aria-hidden />
+          {submitting ? '发布中…' : '发布'}
+        </button>
       </div>
       <p className="text-[10px] leading-snug text-zinc-600">
         {toolbarHint}
@@ -495,7 +496,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
         wrapperClass: 'mt-1.5',
       })}
 
-      <div className="mt-2 space-y-1.5 border-t border-white/[0.06] pt-2">{composeActions}</div>
+      <div className="mt-3 space-y-1.5">{composeActions}</div>
     </div>
   );
 
@@ -585,7 +586,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
                 setMobileComposerOpen(true);
                 setTimeout(() => focusComposeTitle(), 50);
               }}
-              className="flex w-full items-center gap-2.5 rounded-xl border border-white/[0.08] bg-[#121418]/95 px-3 py-2.5 text-left shadow-[0_6px_22px_rgba(0,0,0,0.28)] transition hover:border-emerald-400/20"
+              className="flex w-full items-center gap-2.5 rounded-2xl bg-white/[0.03] px-3 py-2.5 text-left ring-1 ring-white/[0.07] transition hover:ring-emerald-400/28"
             >
               <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-emerald-500/12 text-base text-emerald-300">
                 ✍️
@@ -616,7 +617,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
                 wrapperClass: 'mt-1.5',
               })}
 
-              <div className="mt-2 space-y-1.5 border-t border-white/[0.06] pt-2">{composeActions}</div>
+              <div className="mt-3 space-y-1.5">{composeActions}</div>
             </div>
           )}
         </div>

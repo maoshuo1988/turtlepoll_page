@@ -2,7 +2,7 @@
  * 文件说明：Sidebar Main Panels，PC 左侧栏相关展示组件。
  */
 import React from 'react';
-import { Flag, MessageSquare, Swords, Trophy, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, BookOpen, Gamepad2, Flame, Turtle } from 'lucide-react';
+import { Flag, MessageSquare, Swords, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, Gamepad2, Flame, Turtle } from 'lucide-react';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
 import { SidebarProfileCard } from './SidebarProfileCard';
@@ -20,10 +20,8 @@ export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'forum', label: '线报', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
   { key: 'games', label: '游戏管理', icon: <Gamepad2 size={22} />, view: 'games', enabled: true },
   { key: 'battle-plaza', label: '地下钱庄', icon: <Swords size={22} />, view: 'battlePlaza', enabled: true },
-  { key: 'rank', label: '排行榜', icon: <Trophy size={22} />, view: 'rank', enabled: true },
-  { key: 'shop', label: '黑市', icon: <Gift size={22} />, view: 'shop', enabled: true },
-  { key: 'guide', label: '新手引导', icon: <BookOpen size={22} />, action: 'guide', enabled: true },
-  { key: 'pet', label: '宠物空间', icon: <Turtle size={22} />, view: 'pet', enabled: true },
+  { key: 'shop', label: '黑市', icon: <Gift size={22} />, view: 'shop', enabled: false },
+  { key: 'pet', label: '宠物空间', icon: <Turtle size={22} />, view: 'pet', enabled: false },
   { key: 'inventory', label: '背包&资产', icon: <Backpack size={22} />, enabled: false },
   { key: 'club', label: '俱乐部&工会', icon: <Users size={22} />, enabled: false },
   { key: 'news', label: '新闻源', icon: <Newspaper size={22} />, enabled: false },
@@ -44,6 +42,8 @@ interface SidebarMainPanelsProps {
   onCloseChat: () => void;
   onOpenProfile: () => void;
   onOpenActivePredictions: () => void;
+  onOpenShop: () => void;
+  onOpenPetSpace: () => void;
   onViewChange: (view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag) => void;
   onNavClick: (item: SidebarNavItem) => void;
 }
@@ -61,6 +61,8 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
   onCloseChat,
   onOpenProfile,
   onOpenActivePredictions,
+  onOpenShop,
+  onOpenPetSpace,
   onViewChange,
   onNavClick,
 }) => {
@@ -79,6 +81,8 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
               onCloseChat={onCloseChat}
               onOpenProfile={onOpenProfile}
               onOpenActivePredictions={onOpenActivePredictions}
+              onOpenShop={onOpenShop}
+              onOpenPetSpace={onOpenPetSpace}
             />
           </div>
           <div className="snap-start shrink-0 w-full min-w-full h-full overflow-y-auto overscroll-y-contain">
@@ -106,6 +110,8 @@ export const SidebarMainPanels: React.FC<SidebarMainPanelsProps> = ({
             onCloseChat={onCloseChat}
             onOpenProfile={onOpenProfile}
             onOpenActivePredictions={onOpenActivePredictions}
+            onOpenShop={onOpenShop}
+            onOpenPetSpace={onOpenPetSpace}
           />
 
           <SidebarHotTopicsPanel

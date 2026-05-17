@@ -596,7 +596,7 @@ export function WorldCupPage() {
   };
 
   return (
-    <section className="page-frame page-frame-wide view-world-cup pb-8 font-mono text-zinc-100">
+    <section className="page-frame page-frame-wide view-world-cup pb-8 pt-[10px] font-mono text-zinc-100">
       {/* Hero —— HUD 顶部直播看板 */}
       <div className="relative isolate overflow-hidden rounded-[20px] border border-emerald-400/30 shadow-[0_0_40px_rgba(52,255,139,0.12),0_20px_60px_rgba(0,0,0,0.55)]">
         {/* 基底 */}

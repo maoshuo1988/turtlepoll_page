@@ -16,10 +16,12 @@ export default function GamesPage() {
   const navigate = useNavigate();
 
   return (
-    <GamesPageView
-      onOpenJump={() => navigate('/jump')}
-      onOpenLab={openLabStandalone}
-      onOpenBattle={openBattleStandalone}
-    />
+    <div className="pt-[10px]">
+      <GamesPageView
+        onOpenJump={() => navigate('/jump')}
+        onOpenLab={openLabStandalone}
+        onOpenBattle={openBattleStandalone}
+      />
+    </div>
   );
 }

@@ -774,15 +774,12 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
       ) : null}
 
       {allPKs.filter((pk) => pk.id !== heroPK?.id).length > 0 ? (
-        <div className="relative overflow-hidden rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,rgba(8,14,20,0.86),rgba(8,12,18,0.94))] p-4 shadow-[0_14px_30px_rgba(0,0,0,0.18)]">
-          <img src={heroPK?.newsItem.image ?? hero.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-[0.08]" />
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(6,20,14,0.78),rgba(8,12,18,0.88),rgba(24,8,8,0.66))]" />
-          <div className="relative">
-            <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-slate-100">
-              <span className="h-5 w-1 rounded-full bg-gradient-to-b from-[#27d8cf] to-[#ff4f75]" />
-              全部对决
-            </h2>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="relative">
+          <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-slate-100">
+            <span className="h-5 w-1 rounded-full bg-gradient-to-b from-[#27d8cf] to-[#ff4f75]" />
+            全部对决
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {allPKs.filter((pk) => pk.id !== heroPK?.id).map((pk, index) => (
               <PKCard
                 key={pk.id}
@@ -795,7 +792,6 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
                 isBetting={pendingBetId === pk.newsItem.id}
               />
             ))}
-            </div>
           </div>
         </div>
       ) : null}

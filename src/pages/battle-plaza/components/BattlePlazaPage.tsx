@@ -2,7 +2,7 @@
  * 文件说明：Battle Plaza Page，地下钱庄/战斗广场页面组件。
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useQueries } from 'react-query';
+import { useQueries, useQueryClient } from 'react-query';
 import { battleQueryKeys, fetchBattleDetail, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleStats, useRequestBattleWithdraw } from '@/hooks/useBattleRequests';
 import { createBattleRequestId, getBattleActionPermissions, getBattleErrorMessage, type Battle, type BattleDetailResponse, type BattleListItem, type BattleMyAction } from '@/hooks/battleTypes';
 import { useAppSession } from '@/hooks/useAppSession';
@@ -141,27 +141,79 @@ const PAGE_STYLES = `
 #page-battle-square .bp-wrap { width:100%; max-width:none; margin:0; padding:0 0 28px; display:grid; gap:16px; }
 #page-battle-square .bp-back { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700; color:var(--muted); text-decoration:none; margin-bottom:14px; cursor:pointer; }
 #page-battle-square .bp-back:hover { color:var(--ink); }
-#page-battle-square .page-hero-battle {
-  border-radius:24px; padding:24px 28px; margin-bottom:16px; position:relative; overflow:hidden;
+#page-battle-square .bp-hub {
+  border-radius:22px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 20% 0%, rgba(14,165,233,.22), transparent 36%),
-    radial-gradient(circle at 86% 20%, rgba(236,72,153,.16), transparent 34%),
-    linear-gradient(145deg, rgba(255,255,255,.94), rgba(241,247,255,.92));
-  border:1px solid var(--border2);
-  box-shadow:var(--legacy-shadow);
+    radial-gradient(ellipse 100% 125% at 50% -38%, rgba(34,197,94,.14), transparent 52%),
+    linear-gradient(165deg, rgba(17,19,18,.98) 0%, rgba(11,12,13,.99) 100%);
+  box-shadow:0 18px 44px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
 }
-#page-battle-square .page-hero-battle::before {
-  content:'⚔️'; position:absolute; right:22px; top:50%; transform:translateY(-50%);
-  font-size:96px; opacity:.08; pointer-events:none;
+#page-battle-square .bp-hub-metrics { padding:16px 18px 14px; }
+#page-battle-square .bp-hub-divider {
+  height:1px;
+  margin:0 18px;
+  background:rgba(255,255,255,.07);
+  flex-shrink:0;
 }
-#page-battle-square .phb-label { font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#57728e; margin-bottom:6px; }
-#page-battle-square .phb-title { font-family:'Syne','Arial Black',sans-serif; font-size:32px; font-weight:800; color:var(--ink); margin-bottom:6px; }
-#page-battle-square .phb-title span { color:var(--red); }
-#page-battle-square .phb-sub { font-size:15px; color:#5b6d83; }
-#page-battle-square .phb-stats { display:flex; gap:10px;  flex-wrap:wrap; }
-#page-battle-square .phb-stat {
-  background:rgba(255,255,255,.62); border:1px solid rgba(56,118,255,.12);
-  border-radius:999px; padding:6px 12px; font-size:13px; font-weight:700; color:#23405f;
+#page-battle-square .bp-hub .plaza-rules,
+#page-battle-square .bp-hub .duel-compose,
+#page-battle-square .bp-hub .invite-entry {
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+#page-battle-square .bp-hub .invite-entry {
+  padding:14px 18px 18px;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px;
+}
+#page-battle-square .bp-hub .plaza-rules-header {
+  padding-left:18px;
+  padding-right:18px;
+  background:transparent;
+}
+#page-battle-square .bp-hub .plaza-rules-header:hover { background:rgba(255,255,255,.04); }
+#page-battle-square .bp-hub .plaza-rules-body { padding-left:18px; padding-right:18px; padding-bottom:16px; }
+#page-battle-square .bp-invite-ico { font-size:22px; line-height:1; flex-shrink:0; opacity:.9; }
+#page-battle-square .phb-stats {
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:10px;
+}
+#page-battle-square .bp-hub-metrics .phb-metric {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  min-height:76px;
+  padding:10px 8px;
+  text-align:center;
+  background:rgba(255,255,255,.05);
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+#page-battle-square .phb-metric-ico { font-size:16px; line-height:1; opacity:.92; margin-bottom:2px; }
+#page-battle-square .bp-hub-metrics .phb-metric-val {
+  font-family:'Space Mono','SF Mono',ui-monospace,monospace;
+  font-size:clamp(17px, 2.8vw, 20px);
+  font-weight:800;
+  color:#f4f4f5;
+  letter-spacing:-0.02em;
+  line-height:1.15;
+}
+#page-battle-square .bp-hub-metrics .phb-metric-lbl {
+  font-size:11px;
+  font-weight:600;
+  color:rgba(161,161,170,.9);
+  line-height:1.25;
+  max-width:100%;
 }
 #page-battle-square .plaza-rules,
 #page-battle-square .duel-compose,
@@ -171,8 +223,8 @@ const PAGE_STYLES = `
 #page-battle-square .duel-card,
 #page-battle-square .empty-state,
 #page-battle-square .bo-item {
-  background:var(--surface); border:1px solid var(--border2); border-radius:20px;
-  box-shadow:var(--legacy-shadow);
+  background:var(--surface); border:1px solid var(--border); border-radius:20px;
+  box-shadow:0 8px 26px rgba(15,23,42,.07);
   backdrop-filter:blur(14px);
 }
 #page-battle-square .plaza-rules { overflow:hidden; margin-bottom:0; }
@@ -186,20 +238,17 @@ const PAGE_STYLES = `
 #page-battle-square .rules-section:first-child { margin-top:0; }
 #page-battle-square .rules-title { font-size:12px; font-weight:800; color:var(--gold); letter-spacing:.8px; text-transform:uppercase; margin-bottom:8px; }
 #page-battle-square .pr-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-#page-battle-square .pr-item { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px 12px; }
+#page-battle-square .pr-item { background:var(--surface2); border:none; border-radius:12px; padding:10px 12px; }
 #page-battle-square .pr-item-title { font-size:13px; font-weight:700; color:var(--gold); margin-bottom:6px; }
 #page-battle-square .pr-item-text,
 #page-battle-square .rules-steps { font-size:13px; color:rgba(240,237,232,.68); line-height:1.7; }
-#page-battle-square .rules-steps { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:14px; }
+#page-battle-square .rules-steps { font-size:13px; color:rgba(240,237,232,.68); line-height:1.7; background:var(--surface2); border:none; border-radius:12px; padding:14px; }
 #page-battle-square .pr-warn { margin-top:14px; background:rgba(255,60,60,.06); border:1px solid rgba(255,60,60,.12); border-radius:10px; padding:10px 14px; }
 #page-battle-square .pr-warn-title { font-size:13px; font-weight:700; color:var(--red); margin-bottom:4px; }
 #page-battle-square .duel-compose { overflow:hidden; margin-bottom:0; }
 #page-battle-square .dc-header {
-  padding:16px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border);
-  background:
-    radial-gradient(circle at 0% 0%, rgba(245,158,11,.10), transparent 26%),
-    radial-gradient(circle at 100% 0%, rgba(37,99,235,.10), transparent 24%),
-    linear-gradient(180deg, rgba(15,23,42,.08), rgba(255,255,255,.02));
+  padding:14px 18px; display:flex; align-items:center; gap:10px; border-bottom:none;
+  background:rgba(255,255,255,.03);
 }
 #page-battle-square .dc-ava,
 #page-battle-square .badd-cmt-ava { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--red),var(--orange)); display:grid; place-items:center; font-size:16px; flex-shrink:0; }
@@ -210,12 +259,12 @@ const PAGE_STYLES = `
 #page-battle-square .duel-foot-join,
 #page-battle-square .dm-cta { border:none; cursor:pointer; transition:.15s; font-weight:700; }
 #page-battle-square .dc-btn {
-  padding:8px 16px; border-radius:12px; background:linear-gradient(135deg,#f59e0b,#f97316);
-  color:#fff; font-size:13px; box-shadow:0 10px 24px rgba(249,115,22,.22);
+  padding:8px 18px; border-radius:999px; background:linear-gradient(135deg,#22c55e,#0f766e);
+  color:#04130c; font-size:13px; box-shadow:0 8px 22px rgba(34,197,94,.22);
 }
 #page-battle-square .dc-btn:hover,
-#page-battle-square .dc-submit:hover { filter:brightness(1.04); }
-#page-battle-square .dc-form { padding:18px; }
+#page-battle-square .dc-submit:hover { filter:brightness(1.06); }
+#page-battle-square .dc-form { padding:18px; padding-top:16px; }
 #page-battle-square .dc-row { margin-bottom:12px; }
 #page-battle-square .dc-label,
 #page-battle-square .dm-label,
@@ -236,36 +285,104 @@ const PAGE_STYLES = `
 #page-battle-square .dc-inline .dc-row { flex:1; min-width:140px; margin-bottom:0; }
 #page-battle-square .dc-stake-opts,
 #page-battle-square .dc-vis-toggle,
-#page-battle-square .battle-sort,
-#page-battle-square .my-duel-bar,
 #page-battle-square .dm-amts,
 #page-battle-square .duel-foot { display:flex; gap:6px; flex-wrap:wrap; }
 #page-battle-square .dc-stake-opt,
 #page-battle-square .dc-vis-btn,
-#page-battle-square .bst,
-#page-battle-square .my-duel-tab,
 #page-battle-square .dm-amt {
-  padding:7px 14px; border-radius:8px; border:1.5px solid var(--border); font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; transition:.15s;
+  padding:7px 14px; border-radius:999px; border:1.5px solid var(--border); font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; transition:.15s;
 }
 #page-battle-square .dc-stake-opt.on,
 #page-battle-square .dc-vis-btn.on,
 #page-battle-square .dm-amt.on { border-color:var(--gold); background:var(--gold-dim); color:var(--gold); }
 #page-battle-square .dc-footer { display:flex; align-items:center; gap:8px; margin-top:14px; flex-wrap:wrap; }
 #page-battle-square .dc-cancel { padding:9px 16px; border-radius:9px; background:transparent; color:var(--muted); border:1px solid var(--border); cursor:pointer; font-size:14px; }
-#page-battle-square .dc-submit { padding:10px 22px; border-radius:12px; background:linear-gradient(135deg,#ef4444,#f97316); color:#fff; margin-left:auto; box-shadow:0 12px 24px rgba(239,68,68,.18); font-size:14px; }
+#page-battle-square .dc-submit { padding:10px 22px; border-radius:999px; background:linear-gradient(135deg,#22c55e,#0d9488); color:#04130c; margin-left:auto; box-shadow:0 10px 26px rgba(34,197,94,.22); font-size:14px; font-weight:800; }
 #page-battle-square .dc-fee-hint { font-size:12px; color:var(--muted); flex:1; min-width:220px; }
-#page-battle-square .invite-entry { padding:14px 18px; display:flex; align-items:center; gap:12px; margin-bottom:0; border-color:rgba(199,125,255,.15); }
+#page-battle-square .invite-entry { padding:12px 16px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:0; border-color:rgba(199,125,255,.12); }
 #page-battle-square .invite-entry-title { font-size:15px; font-weight:700; color:var(--ink); margin-bottom:2px; }
 #page-battle-square .invite-entry-sub { font-size:12px; color:var(--muted); }
 #page-battle-square .invite-entry-info { flex:1; }
 #page-battle-square .invite-entry-input { width:140px; text-align:center; letter-spacing:2px; color:var(--purple); }
-#page-battle-square .invite-entry-btn { padding:7px 14px; border-radius:8px; background:rgba(199,125,255,.12); color:var(--purple); border:1.5px solid rgba(199,125,255,.25); font-size:13px; font-weight:700; cursor:pointer; }
-#page-battle-square .my-duel-bar { margin-bottom:0; }
-#page-battle-square .my-duel-tab.on,
-#page-battle-square .bst.on { background:var(--surface3); color:var(--ink); border-color:var(--border2); }
-#page-battle-square .battle-sort { align-items:center; background:var(--surface); border-radius:18px; padding:8px; border:1px solid var(--border2); overflow-x:auto; margin-bottom:14px; flex-wrap:nowrap; box-shadow:var(--legacy-shadow); }
-#page-battle-square .battle-sort::-webkit-scrollbar { display:none; }
-#page-battle-square .bsort-sep { width:1px; height:18px; background:var(--border); flex-shrink:0; }
+#page-battle-square .invite-entry-btn { padding:8px 16px; border-radius:999px; background:rgba(199,125,255,.12); color:var(--purple); border:1.5px solid rgba(199,125,255,.22); font-size:13px; font-weight:700; cursor:pointer; font:inherit; }
+#page-battle-square .bp-toolbar {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px 14px;
+  margin-bottom:14px;
+}
+#page-battle-square .bp-segmented {
+  display:inline-flex;
+  border-radius:14px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  background:rgba(255,255,255,.03);
+}
+#page-battle-square .bp-segment {
+  margin:0;
+  padding:9px 14px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--muted);
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font:inherit;
+  transition:background .15s ease,color .15s ease;
+  white-space:nowrap;
+}
+#page-battle-square .bp-segment + .bp-segment { border-left:1px solid var(--border); }
+#page-battle-square .bp-segment[aria-selected='true'] {
+  background:rgba(34,197,94,.14);
+  color:#ecfdf5;
+}
+#page-battle-square .bp-plaza-controls {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+#page-battle-square .bp-sort-label {
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+#page-battle-square .bp-sort-select {
+  min-width:108px;
+  padding:8px 12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  color:var(--ink);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  outline:none;
+}
+#page-battle-square .bp-refresh-icon-btn {
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  color:var(--ink);
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  font-size:17px;
+  line-height:1;
+  flex-shrink:0;
+  transition:background .15s ease,border-color .15s ease;
+}
+#page-battle-square .bp-refresh-icon-btn:hover:not(:disabled) {
+  border-color:rgba(34,197,94,.35);
+  background:rgba(34,197,94,.08);
+}
+#page-battle-square .bp-refresh-icon-btn:disabled { opacity:.45; cursor:not-allowed; }
 @keyframes bp-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 #page-battle-square .banker-tips,
 #page-battle-square .challenger-tips { padding:14px 18px; margin-bottom:0; }
@@ -281,7 +398,7 @@ const PAGE_STYLES = `
 #page-battle-square .bo-num { font-family:'Space Mono',monospace; font-size:20px; font-weight:700; color:var(--gold); }
 #page-battle-square .duel-card { overflow:hidden; margin-bottom:14px; transition:border-color .2s, box-shadow .2s; }
 #page-battle-square .duel-card:hover { border-color:var(--legacy-panel-border); box-shadow:0 16px 36px rgba(15,23,42,.12); }
-#page-battle-square .duel-status-bar { padding:10px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+#page-battle-square .duel-status-bar { padding:12px 16px 10px; display:flex; align-items:center; gap:8px; border-bottom:none; flex-wrap:wrap; }
 #page-battle-square .duel-cat,
 #page-battle-square .duel-badge,
 #page-battle-square .duel-banker-tag,
@@ -302,7 +419,7 @@ const PAGE_STYLES = `
 #page-battle-square .dbadge-settled { background:rgba(60,142,255,.1); color:var(--blue); border:1px solid rgba(60,142,255,.2); }
 #page-battle-square .dbadge-private { background:rgba(199,125,255,.1); color:var(--purple); border:1px solid rgba(199,125,255,.2); }
 #page-battle-square .dbadge-disputing { background:rgba(255,60,60,.12); color:var(--red); border:1px solid rgba(255,60,60,.2); }
-#page-battle-square .duel-banker-area { padding:16px; border-bottom:1px solid var(--border); }
+#page-battle-square .duel-banker-area { padding:14px 16px 16px; border-bottom:none; }
 #page-battle-square .duel-banker-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
 #page-battle-square .duel-banker-ava,
 #page-battle-square .duel-ch-ava,
@@ -319,15 +436,15 @@ const PAGE_STYLES = `
 #page-battle-square .duel-challenger-opinion,
 #page-battle-square .duel-callout,
 #page-battle-square .duel-my-challenge-box { background:var(--surface2); border-radius:12px; padding:12px 14px; }
-#page-battle-square .duel-opinion-box { border:1px solid rgba(239,68,68,.14); }
-#page-battle-square .duel-challenger-opinion { border:1px solid rgba(37,99,235,.14); }
+#page-battle-square .duel-opinion-box { border:none; box-shadow:inset 0 0 0 1px rgba(239,68,68,.1); }
+#page-battle-square .duel-challenger-opinion { border:none; box-shadow:inset 0 0 0 1px rgba(37,99,235,.1); }
 #page-battle-square .duel-opinion-label { font-size:11px; font-weight:700; color:var(--red); letter-spacing:.8px; text-transform:uppercase; margin-bottom:4px; }
 #page-battle-square .duel-challenger-label { font-size:11px; font-weight:700; color:var(--blue); letter-spacing:.8px; text-transform:uppercase; margin-bottom:4px; }
 #page-battle-square .duel-opinion-text { font-size:15px; line-height:1.65; color:rgba(240,237,232,.8); }
 #page-battle-square .duel-vs-label { text-align:center; font-family:'Syne','Arial Black',sans-serif; font-size:11px; font-weight:700; color:var(--muted); letter-spacing:1px; margin:8px 0; }
 #page-battle-square .duel-invite-code { display:inline-flex; align-items:center; gap:6px; background:rgba(199,125,255,.08); border:1px solid rgba(199,125,255,.2); border-radius:8px; padding:5px 10px; font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:var(--purple); cursor:pointer; margin-top:10px; }
 #page-battle-square .duel-capacity,
-#page-battle-square .duel-challengers { padding:12px 16px; border-bottom:1px solid var(--border); }
+#page-battle-square .duel-challengers { padding:12px 16px; border-bottom:none; }
 #page-battle-square .duel-cap-header,
 #page-battle-square .duel-cap-detail,
 #page-battle-square .duel-ch-row,
@@ -362,7 +479,7 @@ const PAGE_STYLES = `
 #page-battle-square .duel-my-challenge-actions { display:flex; gap:6px; flex-shrink:0; }
 #page-battle-square .duel-mini-btn { padding:5px 10px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer; border:1.5px solid rgba(255,201,77,.3); background:rgba(255,201,77,.12); color:var(--gold); }
 #page-battle-square .duel-dispute-btn { padding:5px 10px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer; border:1.5px solid rgba(255,60,60,.2); background:rgba(255,60,60,.08); color:var(--red); }
-#page-battle-square .duel-cmt-thread { background:var(--surface); border-top:1px solid var(--border); overflow:hidden; }
+#page-battle-square .duel-cmt-thread { background:transparent; border-top:none; overflow:hidden; margin-top:4px; padding-top:8px; }
 #page-battle-square .bct-inner { padding:10px 14px; display:flex; flex-direction:column; gap:8px; }
 #page-battle-square .bcmt { display:flex; gap:7px; align-items:flex-start; }
 #page-battle-square .bcmt-ava { width:24px; height:24px; font-size:12px; border:1px solid var(--border); margin-top:1px; }
@@ -373,7 +490,7 @@ const PAGE_STYLES = `
 #page-battle-square .bcmt-text { font-size:13px; line-height:1.55; color:rgba(240,237,232,.7); background:var(--surface2); border:1px solid var(--border); border-radius:4px 12px 12px 12px; padding:7px 10px; display:inline-block; max-width:88%; }
 #page-battle-square .bcmt-acts { display:inline-flex; align-items:center; gap:6px; margin-left:4px; vertical-align:middle; }
 #page-battle-square .bca { font-size:11px; color:var(--muted); font-weight:600; }
-#page-battle-square .badd-cmt { display:flex; align-items:center; gap:6px; padding-top:6px; border-top:1px solid var(--border); }
+#page-battle-square .badd-cmt { display:flex; align-items:center; gap:6px; padding-top:8px; border-top:none; }
 #page-battle-square .badd-cmt-inp { flex:1; border-radius:16px; padding:6px 12px; font-size:13px; }
 #page-battle-square .badd-cmt-send { background:var(--surface3); border:1px solid var(--border); border-radius:50%; width:26px; height:26px; display:grid; place-items:center; cursor:pointer; font-size:14px; color:var(--muted); }
 #page-battle-square .empty-state { text-align:center; padding:40px 20px; }
@@ -395,34 +512,34 @@ const PAGE_STYLES = `
 #page-battle-square .dm-info-value.gold { color:var(--gold); }
 #page-battle-square .dm-stake-input { text-align:center; margin-bottom:6px; color:var(--gold); }
 #page-battle-square .dm-fee-note { font-size:12px; color:var(--muted); text-align:center; margin-bottom:14px; padding:8px; border-radius:8px; background:var(--surface2); border:1px solid var(--border); }
-#page-battle-square .dm-cta { width:100%; padding:13px; border-radius:11px; background:var(--blue); color:#fff; font-size:16px; box-shadow:0 0 20px rgba(60,142,255,.3); }
+#page-battle-square .dm-cta { width:100%; padding:13px; border-radius:12px; background:linear-gradient(135deg,#22c55e,#0f766e); color:#04130c; font-size:16px; font-weight:800; box-shadow:0 8px 26px rgba(34,197,94,.25); }
 html.dark #page-battle-square {
   --red:#ff5d72; --red-dim:rgba(255,93,114,.12); --red-glow:rgba(255,93,114,.26);
   --blue:#38bdf8; --blue-dim:rgba(56,189,248,.12); --blue-glow:rgba(56,189,248,.24);
   --gold:#fbbf24; --gold-dim:rgba(251,191,36,.10);
   --green:#34d399; --orange:#fb923c; --purple:#a78bfa;
-  --surface:rgba(10,17,32,.92);
-  --surface2:rgba(15,26,48,.74);
-  --surface3:rgba(20,33,60,.86);
-  --border:rgba(96,165,250,.18);
-  --border2:rgba(96,165,250,.28);
+  --surface:rgba(15,16,18,.94);
+  --surface2:rgba(255,255,255,.06);
+  --surface3:rgba(255,255,255,.10);
+  --border:rgba(255,255,255,.08);
+  --border2:rgba(255,255,255,.12);
 }
-html.dark #page-battle-square .page-hero-battle {
+html.dark #page-battle-square .bp-hub {
+  border-color:rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 20% 0%, rgba(34,211,238,.20), transparent 36%),
-    radial-gradient(circle at 86% 20%, rgba(236,72,153,.14), transparent 34%),
-    linear-gradient(145deg, rgba(10,17,32,.94), rgba(11,20,39,.92));
+    radial-gradient(ellipse 100% 125% at 50% -38%, rgba(34,197,94,.12), transparent 52%),
+    linear-gradient(165deg, rgba(14,16,15,.98) 0%, rgba(10,11,12,.99) 100%);
 }
 html.dark #page-battle-square .dc-header {
-  background:
-    radial-gradient(circle at 0% 0%, rgba(245,158,11,.12), transparent 28%),
-    radial-gradient(circle at 100% 0%, rgba(34,197,94,.08), transparent 24%),
-    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+  background:rgba(255,255,255,.035);
 }
-html.dark #page-battle-square .phb-label { color:#8fb3d4; }
-html.dark #page-battle-square .phb-sub,
-html.dark #page-battle-square .phb-stat { color:#c6d8ec; }
-html.dark #page-battle-square .phb-stat,
+html.dark #page-battle-square .bp-hub-metrics .phb-metric {
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.09);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+html.dark #page-battle-square .bp-hub-metrics .phb-metric-val { color:#f8fafc; }
+html.dark #page-battle-square .bp-hub-metrics .phb-metric-lbl { color:rgba(161,161,170,.92); }
 html.dark #page-battle-square .dc-input,
 html.dark #page-battle-square .dc-textarea,
 html.dark #page-battle-square .invite-entry-input,
@@ -466,42 +583,54 @@ html.dark #page-battle-square .dm-stake-input {
     gap:12px;
     padding:0 0 24px;
   }
-  #page-battle-square .page-hero-battle {
+  #page-battle-square .bp-toolbar {
+    flex-direction:column;
+    align-items:stretch;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  #page-battle-square .bp-segmented {
+    width:100%;
+    justify-content:stretch;
+  }
+  #page-battle-square .bp-segment {
+    flex:1;
+    text-align:center;
+    padding-left:8px;
+    padding-right:8px;
+  }
+  #page-battle-square .bp-plaza-controls {
+    width:100%;
+    justify-content:flex-start;
+  }
+  #page-battle-square .bp-sort-select {
+    flex:1;
+    min-width:0;
+  }
+  #page-battle-square .bp-hub {
+    border-radius:20px;
+    border-color:rgba(255,255,255,.09);
+    box-shadow:0 14px 36px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.05);
     background:
-      radial-gradient(circle at 18% 0%, rgba(34,197,94,.08), transparent 28%),
-      radial-gradient(circle at 86% 18%, rgba(255,255,255,.03), transparent 24%),
-      linear-gradient(145deg, rgba(15,16,19,.99), rgba(12,13,15,.99)) !important;
-    border-color:rgba(255,255,255,.08) !important;
-    box-shadow:0 18px 40px rgba(0,0,0,.28) !important;
+      radial-gradient(ellipse 100% 120% at 50% -42%, rgba(34,197,94,.10), transparent 50%),
+      linear-gradient(165deg, rgba(15,16,17,.99), rgba(11,12,13,.99));
   }
-  #page-battle-square .phb-label,
-  #page-battle-square .phb-sub { color:rgba(212,212,216,.82); }
-  #page-battle-square .phb-stat {
-    background:rgba(255,255,255,.04);
-    border-color:rgba(255,255,255,.08);
-    color:#e4e4e7;
+  #page-battle-square .bp-hub-divider { margin:0 14px; opacity:.85; }
+  #page-battle-square .bp-hub-metrics .phb-metric {
+    min-height:72px;
+    padding:10px 6px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.07);
   }
-  #page-battle-square .page-hero-battle::before {
-    opacity:.04;
-  }
-  #page-battle-square .phb-title span {
-    color:#22c55e;
+  #page-battle-square .bp-hub-metrics .phb-metric-val { color:#f4f4f5; }
+  #page-battle-square .bp-hub-metrics .phb-metric-lbl { color:rgba(161,161,170,.92); }
+  #page-battle-square .bp-hub-metrics { padding:14px 14px 12px; }
+  #page-battle-square .phb-stats {
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:8px;
   }
   #page-battle-square .dc-header {
-    background:
-      radial-gradient(circle at 0% 0%, rgba(34,197,94,.10), transparent 26%),
-      radial-gradient(circle at 100% 0%, rgba(245,158,11,.08), transparent 22%),
-      linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-  }
-  #page-battle-square .dc-btn {
-    background:linear-gradient(135deg,#f59e0b,#ea580c);
-    box-shadow:0 10px 24px rgba(234,88,12,.24);
-  }
-  #page-battle-square .dc-submit,
-  #page-battle-square .dm-cta {
-    background:linear-gradient(135deg,#34d399,#10b981);
-    color:#04130c;
-    box-shadow:0 10px 24px rgba(16,185,129,.24);
+    background:rgba(255,255,255,.04);
   }
   #page-battle-square .invite-entry,
   #page-battle-square .challenger-tips,
@@ -607,8 +736,6 @@ html.dark #page-battle-square .dm-stake-input {
   }
   #page-battle-square .dc-stake-opt,
   #page-battle-square .dc-vis-btn,
-  #page-battle-square .bst,
-  #page-battle-square .my-duel-tab,
   #page-battle-square .dm-amt,
   #page-battle-square .duel-foot-btn {
     background:rgba(255,255,255,.03);
@@ -618,8 +745,7 @@ html.dark #page-battle-square .dm-stake-input {
   #page-battle-square .dc-stake-opt.on,
   #page-battle-square .dc-vis-btn.on,
   #page-battle-square .dm-amt.on,
-  #page-battle-square .my-duel-tab.on,
-  #page-battle-square .bst.on {
+  #page-battle-square .bp-segment[aria-selected='true'] {
     background:rgba(34,197,94,.12);
     border-color:rgba(34,197,94,.28);
     color:#86efac;
@@ -1164,6 +1290,7 @@ export const BattlePlazaPage: React.FC = () => {
   const userBalance = coin?.balance ?? 0;
   // 登录提示按 token 判断，避免“已登录但 userInfo 还在加载”时误闪未登录提示。
   const isAuthenticated = Boolean(authToken);
+  const queryClient = useQueryClient();
   const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 });
   const battleStatsQuery = useRequestBattleStats({ enabled: isAuthenticated });
   const myBankerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'banker' });
@@ -1279,18 +1406,20 @@ export const BattlePlazaPage: React.FC = () => {
   }, [myDetailQueries, myRoleBattleItems]);
 
   // 广场与“我的”两个 tab 共享同一套 DuelItem 映射，保证 PC/手机端展示逻辑一致。
+  // 广场 Tab 下详情查询是禁用的，但若用户曾进过「我的」页，缓存里的 detail 仍会参与合并并盖住列表字段，
+  // 导致点击刷新后列表已更新、卡片仍显示旧盘口/状态；广场展示一律以列表接口为准。
   const plazaDuels = useMemo(
     () =>
       (plazaQuery.data?.list ?? []).map((item) =>
         mapBattleToDuel(
           item,
           currentUserId,
-          detailMap.get(item.battle.id),
+          undefined,
           commentMap.get(item.battle.id) ?? [],
           myBankerBattleIds.has(item.battle.id) ? 'banker' : myChallengerBattleIds.has(item.battle.id) ? 'challenger' : undefined,
         ),
       ),
-    [plazaQuery.data?.list, currentUserId, detailMap, commentMap, myBankerBattleIds, myChallengerBattleIds],
+    [plazaQuery.data?.list, currentUserId, commentMap, myBankerBattleIds, myChallengerBattleIds],
   );
   const myBankerDuels = useMemo(
     () => (myBankerQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], 'banker')),
@@ -1338,6 +1467,19 @@ export const BattlePlazaPage: React.FC = () => {
   const totalPendingCount = battleStatsQuery.data?.pendingCount ?? fallbackPendingCount;
   const totalBattleCount = battleStatsQuery.data?.unsettledCount ?? fallbackUnsettledCount;
   const totalBankerCount = battleStatsQuery.data?.bankerCount ?? fallbackBankerCount;
+
+  const battleListRefreshing =
+    plazaQuery.isFetching || battleStatsQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching;
+
+  const refetchBattleLists = () => {
+    void (async () => {
+      await Promise.all([
+        queryClient.invalidateQueries(battleQueryKeys.lists()),
+        queryClient.invalidateQueries(battleQueryKeys.details()),
+        ...(isAuthenticated ? [queryClient.invalidateQueries(battleQueryKeys.stats())] : []),
+      ]);
+    })();
+  };
 
   const joinModalMax = joinModal ? Math.max(100, Math.min(joinModal.max, userBalance)) : 100;
   const normalizedJoinAmount = joinModal ? clampAmount(joinAmount, 100, joinModalMax) : 100;
@@ -1699,7 +1841,7 @@ export const BattlePlazaPage: React.FC = () => {
       <style>{PAGE_STYLES}</style>
       <div
         id="page-battle-square"
-        className="legacy-battle-square relative min-h-full bg-transparent px-0 py-0 md:rounded-none md:border-x md:border-slate-200 md:bg-slate-50 dark:md:border-rdark-border dark:md:bg-rdark-card"
+        className="legacy-battle-square relative min-h-full bg-transparent px-0 py-0 md:rounded-none"
       >
         <div className="bp-wrap">
           {!isAuthenticated ? (
@@ -1711,13 +1853,7 @@ export const BattlePlazaPage: React.FC = () => {
                 boxShadow: '0 18px 40px rgba(0,0,0,.28)',
               }}
             >
-              <div
-                className="dc-header"
-                style={{
-                  background: 'linear-gradient(180deg, rgba(245,158,11,.08), rgba(255,255,255,.02))',
-                  borderBottom: '1px solid rgba(245,158,11,.14)',
-                }}
-              >
+              <div className="dc-header">
                 <div className="dc-ava">🔐</div>
                 <div className="dc-placeholder" style={{ cursor: 'default', color: '#f8d27a' }}>
                   当前未登录。开战广场浏览正常，但创建、挑战、宣判、确认、异议和提取都需要先登录。
@@ -1726,171 +1862,266 @@ export const BattlePlazaPage: React.FC = () => {
             </div>
           ) : null}
 
-          <div className="page-hero-battle">
-            <div className="phb-stats">
-              <div className="phb-stat">🔥 当前 {totalBattleCount} 场赌局</div>
-              <div className="phb-stat">💰 冻结 {formatCoins(totalFrozen)} 龟币</div>
-              <div className="phb-stat">👥 {totalBankerCount} 位庄家</div>
-              <div className="phb-stat">⚡ {totalPendingCount} 场等待结算</div>
-            </div>
-          </div>
-
           {feedback ? (
-            <div className="duel-compose" style={{ borderColor: feedback.tone === 'error' ? 'rgba(239,68,68,.22)' : feedback.tone === 'success' ? 'rgba(16,185,129,.22)' : undefined }}>
+            <div
+              className="duel-compose"
+              style={{
+                borderColor:
+                  feedback.tone === 'error'
+                    ? 'rgba(239,68,68,.22)'
+                    : feedback.tone === 'success'
+                      ? 'rgba(16,185,129,.22)'
+                      : undefined,
+              }}
+            >
               <div className="dc-header">
                 <div className="dc-ava">{feedback.tone === 'error' ? '⚠️' : feedback.tone === 'success' ? '✅' : 'ℹ️'}</div>
-                <div className="dc-placeholder" style={{ cursor: 'default', color: feedback.tone === 'error' ? 'var(--red)' : feedback.tone === 'success' ? 'var(--green)' : 'var(--ink)' }}>
+                <div
+                  className="dc-placeholder"
+                  style={{
+                    cursor: 'default',
+                    color:
+                      feedback.tone === 'error'
+                        ? 'var(--red)'
+                        : feedback.tone === 'success'
+                          ? 'var(--green)'
+                          : 'var(--ink)',
+                  }}
+                >
                   {feedback.text}
                 </div>
-                <button className="dc-cancel" onClick={() => setFeedback(null)}>关闭</button>
+                <button type="button" className="dc-cancel" onClick={() => setFeedback(null)}>
+                  关闭
+                </button>
               </div>
             </div>
           ) : null}
 
-          <div className="plaza-rules">
-            <div className="plaza-rules-header" onClick={() => setRulesOpen((prev) => !prev)}>
-              <div>📜</div>
-              <div className="plaza-rules-title">广场规则 · 开局前必读</div>
-              <div className={`plaza-rules-chev ${rulesOpen ? 'open' : ''}`}>▸</div>
-            </div>
-            {rulesOpen && (
-              <div className="plaza-rules-body">
-                <div className="rules-section">
-                  <div className="rules-title">基本机制</div>
-                  <div className="pr-grid">
-                    <RuleCard title="🎲 做庄（1v多）" text="庄家自定议题和双方立场，押注 100 起。所有加入的人自动站对立面，形成一个庄家对多个挑战者。" />
-                    <RuleCard title="⚔️ 挑战庄家" text="公开赌局收 5% 入场费给庄家，私人赌局无入场费。挑战者冻结总额不得超过庄家押注，满额自动封盘。" />
-                  </div>
+          <div className="bp-hub">
+            <div className="bp-hub-metrics">
+              <div className="phb-stats">
+                <div className="phb-metric">
+                  <span className="phb-metric-ico" aria-hidden>
+                    🔥
+                  </span>
+                  <span className="phb-metric-val">{totalBattleCount}</span>
+                  <span className="phb-metric-lbl">当前赌局</span>
                 </div>
-                <div className="rules-section">
-                  <div className="rules-title">结算流程</div>
-                  <div className="rules-steps">
-                    1. 到达结算时间后自动封盘。<br />
-                    2. 庄家 24h 内宣布结果，超时系统自动判庄家输。<br />
-                    3. 挑战者 24h 内确认，未操作视为同意。<br />
-                    4. 任一人异议则进入管理员仲裁。
-                  </div>
+                <div className="phb-metric">
+                  <span className="phb-metric-ico" aria-hidden>
+                    💰
+                  </span>
+                  <span className="phb-metric-val">{formatCoins(totalFrozen)}</span>
+                  <span className="phb-metric-lbl">冻结龟币</span>
+                </div>
+                <div className="phb-metric">
+                  <span className="phb-metric-ico" aria-hidden>
+                    👥
+                  </span>
+                  <span className="phb-metric-val">{totalBankerCount}</span>
+                  <span className="phb-metric-lbl">庄家人数</span>
+                </div>
+                <div className="phb-metric">
+                  <span className="phb-metric-ico" aria-hidden>
+                    ⚡
+                  </span>
+                  <span className="phb-metric-val">{totalPendingCount}</span>
+                  <span className="phb-metric-lbl">等待结算</span>
                 </div>
               </div>
-            )}
+            </div>
+
+            <div className="bp-hub-divider" aria-hidden />
+
+            <div className="duel-compose">
+              <div className="dc-header">
+                <div className="dc-ava">🦊</div>
+                <div className="dc-placeholder" onClick={() => setComposeOpen(true)}>想开一局？点击做庄，设定议题和押注…</div>
+                <button type="button" className="dc-btn" onClick={() => setComposeOpen(true)}>我要做庄</button>
+              </div>
+              {composeOpen && (
+                <div className="dc-form">
+                  <div className="dc-row">
+                    <div className="dc-label">议题（事件标题）</div>
+                    <input className="dc-input" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="例：2026 世界杯决赛巴西夺冠" />
+                  </div>
+                  <div className="dc-row">
+                    <div className="dc-label">🔴 庄家立场</div>
+                    <textarea className="dc-textarea" value={bankerOpinion} onChange={(e) => setBankerOpinion(e.target.value)} placeholder="写出你的立场和理由…" />
+                  </div>
+                  <div className="dc-row">
+                    <div className="dc-label">🔵 挑战者立场</div>
+                    <textarea className="dc-textarea" value={challengerOpinion} onChange={(e) => setChallengerOpinion(e.target.value)} placeholder="反方立场…" />
+                  </div>
+                  <div className="dc-inline">
+                    <div className="dc-row">
+                      <div className="dc-label">押注金额</div>
+                      <div className="dc-stake-opts">
+                        {WAGER_OPTIONS.map((amount) => (
+                          <div key={amount} className={`dc-stake-opt ${wager === amount ? 'on' : ''}`} onClick={() => setWager(amount)}>
+                            {formatCoins(amount)}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="dc-row">
+                      <div className="dc-label">公开/私人</div>
+                      <div className="dc-vis-toggle">
+                        <div className={`dc-vis-btn ${visibility === 'public' ? 'on' : ''}`} onClick={() => setVisibility('public')}>🌐 公开</div>
+                        <div className={`dc-vis-btn ${visibility === 'private' ? 'on' : ''}`} onClick={() => setVisibility('private')}>🔒 私人</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="dc-row" style={{ marginTop: 12 }}>
+                    <div className="dc-label">结算时间</div>
+                    <input className="dc-input" type="datetime-local" value={settleTime} onChange={(e) => setSettleTime(e.target.value)} />
+                  </div>
+                  {visibility === 'private' ? (
+                    <div className="dc-row">
+                      <div className="dc-label">邀请码</div>
+                      <input className="dc-input" value={inviteInput} onChange={(e) => setInviteInput(e.target.value.toUpperCase())} placeholder="私密场必须填写邀请码" />
+                    </div>
+                  ) : null}
+                  <div className="dc-footer">
+                    <div className="dc-fee-hint">
+                      {visibility === 'public' ? '公开赌局：挑战者支付 5% 入场费给庄家' : '私人赌局：挑战者无入场费'}
+                      {` · 当前余额 ${formatCoins(userBalance)}🪙`}
+                    </div>
+                    <button type="button" className="dc-cancel" onClick={() => setComposeOpen(false)}>取消</button>
+                    <button
+                      type="button"
+                      className="dc-submit"
+                      onClick={() => void handleCreate()}
+                      disabled={!canSubmitCreate}
+                      style={!canSubmitCreate ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
+                    >
+                      {createBattleMutation.isLoading ? '提交中...' : `确认开局 · 冻结 ${formatCoins(wager)}🪙`}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="bp-hub-divider" aria-hidden />
+
+            <div className="plaza-rules">
+              <div className="plaza-rules-header" onClick={() => setRulesOpen((prev) => !prev)}>
+                <div>📜</div>
+                <div className="plaza-rules-title">广场规则 · 开局前必读</div>
+                <div className={`plaza-rules-chev ${rulesOpen ? 'open' : ''}`}>▸</div>
+              </div>
+              {rulesOpen && (
+                <div className="plaza-rules-body">
+                  <div className="rules-section">
+                    <div className="rules-title">基本机制</div>
+                    <div className="pr-grid">
+                      <RuleCard title="🎲 做庄（1v多）" text="庄家自定议题和双方立场，押注 100 起。所有加入的人自动站对立面，形成一个庄家对多个挑战者。" />
+                      <RuleCard title="⚔️ 挑战庄家" text="公开赌局收 5% 入场费给庄家，私人赌局无入场费。挑战者冻结总额不得超过庄家押注，满额自动封盘。" />
+                    </div>
+                  </div>
+                  <div className="rules-section">
+                    <div className="rules-title">结算流程</div>
+                    <div className="rules-steps">
+                      1. 到达结算时间后自动封盘。<br />
+                      2. 庄家 24h 内宣布结果，超时系统自动判庄家输。<br />
+                      3. 挑战者 24h 内确认，未操作视为同意。<br />
+                      4. 任一人异议则进入管理员仲裁。
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="bp-hub-divider" aria-hidden />
+
+            <div className="invite-entry">
+              <span className="bp-invite-ico" aria-hidden>
+                🔒
+              </span>
+              <div className="invite-entry-info">
+                <div className="invite-entry-title">私人赌局邀请码</div>
+                <div className="invite-entry-sub">挑战私密场时会优先带上此处保存的邀请码</div>
+              </div>
+              <input className="invite-entry-input" value={inviteInput} onChange={(e) => setInviteInput(e.target.value.toUpperCase())} placeholder="邀请码" maxLength={20} />
+              <button
+                type="button"
+                className="invite-entry-btn"
+                onClick={() => pushFeedback('info', '邀请码已保存，点击具体私密赌局时会自动带上。')}
+              >
+                保存
+              </button>
+            </div>
           </div>
 
-          <div className="duel-compose">
-            <div className="dc-header">
-              <div className="dc-ava">🦊</div>
-              <div className="dc-placeholder" onClick={() => setComposeOpen(true)}>想开一局？点击做庄，设定议题和押注…</div>
-              <button className="dc-btn" onClick={() => setComposeOpen(true)}>🎲 我要做庄</button>
+          <div className="bp-toolbar">
+            <div className="bp-segmented" role="tablist" aria-label="赌局列表视图">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'plaza'}
+                className="bp-segment"
+                onClick={() => setActiveTab('plaza')}
+              >
+                赌局广场
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'my-banker'}
+                className="bp-segment"
+                onClick={() => setActiveTab('my-banker')}
+              >
+                我做的庄
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'my-challenger'}
+                className="bp-segment"
+                onClick={() => setActiveTab('my-challenger')}
+              >
+                我的挑战
+              </button>
             </div>
-            {composeOpen && (
-              <div className="dc-form">
-                <div className="dc-row">
-                  <div className="dc-label">议题（事件标题）</div>
-                  <input className="dc-input" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="例：2026 世界杯决赛巴西夺冠" />
-                </div>
-                <div className="dc-row">
-                  <div className="dc-label">🔴 庄家立场</div>
-                  <textarea className="dc-textarea" value={bankerOpinion} onChange={(e) => setBankerOpinion(e.target.value)} placeholder="写出你的立场和理由…" />
-                </div>
-                <div className="dc-row">
-                  <div className="dc-label">🔵 挑战者立场</div>
-                  <textarea className="dc-textarea" value={challengerOpinion} onChange={(e) => setChallengerOpinion(e.target.value)} placeholder="反方立场…" />
-                </div>
-                <div className="dc-inline">
-                  <div className="dc-row">
-                    <div className="dc-label">押注金额</div>
-                    <div className="dc-stake-opts">
-                      {WAGER_OPTIONS.map((amount) => (
-                        <div key={amount} className={`dc-stake-opt ${wager === amount ? 'on' : ''}`} onClick={() => setWager(amount)}>
-                          {formatCoins(amount)}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="dc-row">
-                    <div className="dc-label">公开/私人</div>
-                    <div className="dc-vis-toggle">
-                      <div className={`dc-vis-btn ${visibility === 'public' ? 'on' : ''}`} onClick={() => setVisibility('public')}>🌐 公开</div>
-                      <div className={`dc-vis-btn ${visibility === 'private' ? 'on' : ''}`} onClick={() => setVisibility('private')}>🔒 私人</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="dc-row" style={{ marginTop: 12 }}>
-                  <div className="dc-label">结算时间</div>
-                  <input className="dc-input" type="datetime-local" value={settleTime} onChange={(e) => setSettleTime(e.target.value)} />
-                </div>
-                {visibility === 'private' ? (
-                  <div className="dc-row">
-                    <div className="dc-label">邀请码</div>
-                    <input className="dc-input" value={inviteInput} onChange={(e) => setInviteInput(e.target.value.toUpperCase())} placeholder="私密场必须填写邀请码" />
-                  </div>
-                ) : null}
-                <div className="dc-footer">
-                  <div className="dc-fee-hint">
-                    {visibility === 'public' ? '公开赌局：挑战者支付 5% 入场费给庄家' : '私人赌局：挑战者无入场费'}
-                    {` · 当前余额 ${formatCoins(userBalance)}🪙`}
-                  </div>
-                  <button className="dc-cancel" onClick={() => setComposeOpen(false)}>取消</button>
-                  <button
-                    className="dc-submit"
-                    onClick={() => void handleCreate()}
-                    disabled={!canSubmitCreate}
-                    style={!canSubmitCreate ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
+            {activeTab === 'plaza' ? (
+              <div className="bp-plaza-controls">
+                <label htmlFor="bp-plaza-sort" className="bp-sort-label">
+                  排序
+                </label>
+                <select
+                  id="bp-plaza-sort"
+                  className="bp-sort-select"
+                  value={activeSort}
+                  onChange={(e) => setActiveSort(e.target.value as PlazaSort)}
+                >
+                  {PLAZA_SORTS.map((sort) => (
+                    <option key={sort} value={sort}>
+                      {sort}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  className="bp-refresh-icon-btn"
+                  aria-label={battleListRefreshing ? '刷新中' : '刷新列表'}
+                  disabled={battleListRefreshing}
+                  onClick={refetchBattleLists}
+                >
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      animation: battleListRefreshing ? 'bp-spin 0.9s linear infinite' : undefined,
+                    }}
                   >
-                    {createBattleMutation.isLoading ? '提交中...' : `🎲 确认开局 · 冻结 ${formatCoins(wager)}🪙`}
-                  </button>
-                </div>
+                    ⟳
+                  </span>
+                </button>
               </div>
-            )}
-          </div>
-
-          <div className="invite-entry">
-            <div style={{ fontSize: 28 }}>🔒</div>
-            <div className="invite-entry-info">
-              <div className="invite-entry-title">加入私人赌局</div>
-              <div className="invite-entry-sub">在挑战私密场时，会优先使用这里填写的邀请码</div>
-            </div>
-            <input className="invite-entry-input" value={inviteInput} onChange={(e) => setInviteInput(e.target.value.toUpperCase())} placeholder="邀请码" maxLength={20} />
-            <div className="invite-entry-btn" onClick={() => pushFeedback('info', '邀请码已保存，点击具体私密赌局时会自动带上。')}>保存</div>
-          </div>
-
-          <div className="my-duel-bar">
-            <div className={`my-duel-tab ${activeTab === 'plaza' ? 'on' : ''}`} onClick={() => setActiveTab('plaza')}>🏟️ 赌局广场</div>
-            <div className={`my-duel-tab ${activeTab === 'my-banker' ? 'on' : ''}`} onClick={() => setActiveTab('my-banker')}>🎲 我做的庄</div>
-            <div className={`my-duel-tab ${activeTab === 'my-challenger' ? 'on' : ''}`} onClick={() => setActiveTab('my-challenger')}>⚔️ 我的挑战</div>
+            ) : null}
           </div>
 
           {activeTab === 'plaza' && (
             <>
-              <div className="battle-sort">
-                {PLAZA_SORTS.map((sort) => (
-                  <div key={sort} className={`bst ${activeSort === sort ? 'on' : ''}`} onClick={() => setActiveSort(sort)}>{sort}</div>
-                ))}
-                <div className="bsort-sep" />
-                <div
-                  className="bst"
-                  onClick={() => {
-                    void plazaQuery.refetch();
-                    if (isAuthenticated) {
-                      void battleStatsQuery.refetch();
-                    }
-                    void myBankerQuery.refetch();
-                    void myChallengerQuery.refetch();
-                  }}
-                >
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontWeight: 700 }}>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        animation: (plazaQuery.isFetching || battleStatsQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching) ? 'bp-spin 0.9s linear infinite' : undefined,
-                        fontSize: 14,
-                      }}
-                    >
-                      ⟳
-                    </span>
-                    <span>{(plazaQuery.isFetching || battleStatsQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching) ? '刷新中' : '刷新'}</span>
-                  </span>
-                </div>
-              </div>
               {plazaQuery.isLoading ? (
                 <div className="empty-state">
                   <div className="empty-ico">⏳</div>

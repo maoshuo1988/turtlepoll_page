@@ -1,4 +1,5 @@
 /** 文件说明：论坛页面展示组件，负责把预测映射数据传入论坛视图。 */
+import { useState } from 'react';
 import { MessageSquareText, PenLine } from 'lucide-react';
 import { Forum } from './Forum';
 import type { PredictionCardItem } from './predictionCards';
@@ -9,6 +10,8 @@ interface ForumPageViewProps {
 }
 
 export function ForumPageView({ newsByMarketId, onOpenLinkedPrediction }: ForumPageViewProps) {
+  const [composerFocusKey, setComposerFocusKey] = useState<number | undefined>(undefined);
+
   return (
     <section className="page-frame view-forum">
       <header className="page-header">
@@ -22,10 +25,14 @@ export function ForumPageView({ newsByMarketId, onOpenLinkedPrediction }: ForumP
             <p className="page-description">围绕盘口、爆料和赛前分析展开讨论，相关预测会在帖子里保持联动。</p>
           </div>
           <div className="page-actions">
-            <span className="page-secondary-button">
+            <button
+              type="button"
+              className="page-secondary-button cursor-pointer"
+              onClick={() => setComposerFocusKey((k) => (k ?? 0) + 1)}
+            >
               <PenLine size={15} />
               发线报
-            </span>
+            </button>
           </div>
         </div>
       </header>
@@ -33,6 +40,7 @@ export function ForumPageView({ newsByMarketId, onOpenLinkedPrediction }: ForumP
         newsByMarketId={newsByMarketId}
         onOpenLinkedPrediction={onOpenLinkedPrediction}
         showComposer
+        composerFocusSignal={composerFocusKey}
         mobileBottomSheetComposer={false}
       />
     </section>

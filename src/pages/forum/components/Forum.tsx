@@ -25,6 +25,7 @@ interface ForumProps {
   onOpenLinkedPrediction?: (item: PredictionCardItem) => void;
   showComposer?: boolean;
   composerOpenSignal?: number;
+  composerFocusSignal?: number;
   onCloseComposer?: () => void;
   mobileBottomSheetComposer?: boolean;
 }
@@ -74,6 +75,7 @@ export const Forum: React.FC<ForumProps> = ({
   onOpenLinkedPrediction,
   showComposer = true,
   composerOpenSignal,
+  composerFocusSignal,
   onCloseComposer,
   mobileBottomSheetComposer = false,
 }) => {
@@ -139,13 +141,14 @@ export const Forum: React.FC<ForumProps> = ({
   };
 
   return (
-    <div className="legacy-forum relative min-h-screen bg-[#080808] md:border-x md:border-white/8 md:bg-[#090909] dark:md:border-rdark-border dark:md:bg-rdark-card">
+    <div className="legacy-forum relative min-h-screen bg-[#080808] md:bg-[#090909] dark:md:bg-rdark-card">
       {showComposer && (
-        <div className="border-b border-white/[0.06] bg-[#090909] px-3 pb-2 pt-1.5 md:px-5 md:pb-3 md:pt-2 lg:px-6">
+        <div id="forum-compose-anchor" className="pb-2 pt-1 md:pb-3 md:pt-1 scroll-mt-16 md:scroll-mt-20">
           <ForumCompose
             onPost={handleCreatePost}
             posting={createTopicMutation.isLoading}
             openSignal={composerOpenSignal}
+            focusComposerSignal={composerFocusSignal}
             onCloseComposer={onCloseComposer}
             showEntryButton={!mobileBottomSheetComposer}
             mobileBottomSheet={mobileBottomSheetComposer}
@@ -153,7 +156,7 @@ export const Forum: React.FC<ForumProps> = ({
         </div>
       )}
 
-      <div className="space-y-3 px-3 pb-6 pt-2 md:space-y-4 md:px-5 md:pb-10 md:pt-4 lg:px-6">
+      <div className="space-y-3 pb-6 pt-2 md:space-y-4 md:pb-10 md:pt-4">
         {topicFeedQuery.isFetching && posts.length > 0 && (
           <div className="py-3 text-center text-[13px] text-zinc-500">正在刷新...</div>
         )}

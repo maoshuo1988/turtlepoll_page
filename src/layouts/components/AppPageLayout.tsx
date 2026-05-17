@@ -3,7 +3,7 @@
  */
 import type React from 'react';
 import { useNavigate } from '@umijs/renderer-react';
-import { MobileFooter, PcFooter } from '@/components/footer';
+import { MobileFooter } from '@/components/footer';
 import { MobileHeader, PcHeader } from '@/components/header';
 import { Sidebar } from '@/components/layout';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';
@@ -14,6 +14,16 @@ type HeaderProps = {
   onToggleTheme: () => void;
   onOpenAuth: () => void;
   onOpenGames?: () => void;
+  /** 已登录时顶部头像菜单「退出登录」 */
+  onSignOut?: () => void | Promise<void>;
+  /** 已登录时顶部头像菜单「个人中心」 */
+  onOpenProfile?: () => void;
+  /** PC 顶栏「帮助」 */
+  onOpenHelp?: () => void;
+  /** PC 顶栏「排行榜」 */
+  onOpenRank?: () => void;
+  /** PC 顶栏头像菜单「设置」（登录态） */
+  onOpenSettings?: () => void;
 };
 
 type SidebarProps = React.ComponentProps<typeof Sidebar>;
@@ -43,6 +53,11 @@ export function AppLayoutHeader(props: HeaderProps) {
         darkMode={props.darkMode}
         onToggleTheme={props.onToggleTheme}
         onOpenAuth={props.onOpenAuth}
+        onSignOut={props.onSignOut}
+        onOpenProfile={props.onOpenProfile}
+        onOpenHelp={props.onOpenHelp}
+        onOpenRank={props.onOpenRank}
+        onOpenSettings={props.onOpenSettings}
       />
       <MobileHeader
         darkMode={props.darkMode}
@@ -62,12 +77,10 @@ export function AppLayoutHeader(props: HeaderProps) {
 export function AppLayoutFooter() {
   return (
     <>
-      <div className="hidden lg:block">
+      {/* <div className="hidden lg:block">
         <PcFooter />
-      </div>
-      <div className="lg:hidden">
-        <MobileFooter />
-      </div>
+      </div> */}
+      <MobileFooter />
     </>
   );
 }
@@ -92,6 +105,11 @@ export function AppPageLayout({
   onToggleTheme,
   onOpenAuth,
   onOpenGames,
+  onSignOut,
+  onOpenProfile,
+  onOpenHelp,
+  onOpenRank,
+  onOpenSettings,
   sidebarProps,
   showSidebar = false,
   showFooter = true,
@@ -103,10 +121,15 @@ export function AppPageLayout({
         onToggleTheme={onToggleTheme}
         onOpenAuth={onOpenAuth}
         onOpenGames={onOpenGames}
+        onSignOut={onSignOut}
+        onOpenProfile={onOpenProfile}
+        onOpenHelp={onOpenHelp}
+        onOpenRank={onOpenRank}
+        onOpenSettings={onOpenSettings}
       />
 
       {showSidebar && sidebarProps ? (
-        <main className="app-main flex min-h-0 flex-1 flex-col gap-3 overflow-hidden lg:flex-row">
+        <main className="app-main flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
           {/* PC 端左侧栏固定宽度，移动端导航交给 MobileFooter。 */}
           <aside className="app-sidebar hidden w-[276px] shrink-0 self-stretch overflow-hidden lg:flex lg:flex-col">
             <div className="min-h-0 flex-1 overflow-hidden">
@@ -114,7 +137,7 @@ export function AppPageLayout({
             </div>
           </aside>
           {/* 页面内容区域默认铺满右侧剩余空间，具体页面只需要管理自己的内部布局。 */}
-          <div className="app-content min-w-0 flex-1 overflow-x-hidden lg:h-full lg:min-h-0 lg:overflow-y-auto">
+          <div className="app-content min-w-0 flex-1 overflow-x-hidden rounded-none border-0 bg-transparent shadow-none lg:h-full lg:min-h-0 lg:overflow-y-auto">
             <div className={contentClassName}>{children}</div>
           </div>
         </main>
@@ -123,7 +146,7 @@ export function AppPageLayout({
       )}
 
       {showFooter ? (
-        <div className={footerClassName}>
+        <div className={`shrink-0 lg:hidden ${footerClassName}`}>
           <AppLayoutFooter />
         </div>
       ) : null}

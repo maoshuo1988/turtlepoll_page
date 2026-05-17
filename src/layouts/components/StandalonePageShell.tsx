@@ -7,6 +7,7 @@ import { useQueryClient } from 'react-query';
 import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { AppPageLayout, type SidebarHotTag, type SidebarHotTopic, type ViewType } from './AppPageLayout';
 import { AuthModal } from '@/components/shared/auth';
+import { GuideTourModal } from '@/components/shared/layout';
 import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
 import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCards';
 import { heroNews, mockNews, mockPetSkins, mockUser, petDialogues } from '@/data/mockData';
@@ -92,7 +93,7 @@ function applyTheme(mode: ThemeMode) {
  */
 export function StandalonePageShell({
   children,
-  contentClassName = 'min-h-full w-full px-0 pb-12 pt-3',
+  contentClassName = 'min-h-full w-full px-0 pt-0 pb-0',
   activeView,
   showSidebar = true,
   authModalOpen,
@@ -106,6 +107,7 @@ export function StandalonePageShell({
   const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
   const [aiPetDialogue, setAiPetDialogue] = useState<string | null>(null);
   const [aiPushMessages, setAiPushMessages] = useState<AiPushMessage[]>([]);
+  const [guideTourOpen, setGuideTourOpen] = useState(false);
   const signOutMutation = useRequestSignout();
   const darkMode = theme === 'dark';
   const { coinMe } = useAppSession();
@@ -318,6 +320,10 @@ export function StandalonePageShell({
     navigateInApp(ROUTE_PATHS[view] ?? '/');
   }, [navigate]);
 
+  const handleOpenGuideTour = useCallback(() => {
+    setGuideTourOpen(true);
+  }, []);
+
   // showSidebar=false 的页面不需要传 sidebarProps，普通业务页都会进入这里。
   const sidebarProps = activeView
       ? {
@@ -375,6 +381,17 @@ export function StandalonePageShell({
       onOpenGames={() => {
         navigate('/games');
       }}
+      onSignOut={handleSignOut}
+      onOpenProfile={() => {
+        navigate('/profile');
+      }}
+      onOpenHelp={handleOpenGuideTour}
+      onOpenRank={() => {
+        navigate('/rank');
+      }}
+      onOpenSettings={() => {
+        navigate({ pathname: '/profile', hash: 'settings' });
+      }}
       showSidebar={showSidebar && Boolean(sidebarProps)}
       sidebarProps={sidebarProps}
     >
@@ -386,6 +403,8 @@ export function StandalonePageShell({
         onSignOut={handleSignOut}
         onAuthSuccess={handleAuthSuccess}
       />
+
+      <GuideTourModal open={guideTourOpen} onClose={() => setGuideTourOpen(false)} />
     </AppPageLayout>
   );
 }

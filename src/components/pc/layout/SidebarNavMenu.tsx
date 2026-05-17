@@ -10,7 +10,6 @@ export interface SidebarNavItem {
   label: string;
   icon: React.ReactNode;
   view?: ViewType;
-  action?: 'guide';
   enabled: boolean;
 }
 

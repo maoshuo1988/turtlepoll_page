@@ -353,7 +353,7 @@ const CommentComposer: React.FC<ComposerProps> = ({ compact = false, disabled = 
   };
 
   return (
-    <div className={`rounded-2xl border border-white/8 bg-[#111111] ${compact ? '!p-3' : '!p-4'}`}>
+    <div className={`rounded-2xl bg-white/[0.03] ring-1 ring-inset ring-white/[0.07] ${compact ? '!p-3' : '!p-4'} dark:bg-white/[0.025]`}>
       <div className={`flex gap-2 ${compact ? 'flex-col md:flex-row md:items-center' : 'items-center'}`}>
         <input
           value={content}
@@ -366,13 +366,13 @@ const CommentComposer: React.FC<ComposerProps> = ({ compact = false, disabled = 
           }}
           disabled={disabled}
           placeholder={placeholder}
-          className="h-[40px] min-w-0 flex-1 rounded-full border border-white/8 bg-black/20 px-4 text-[13px] text-[#ece7de] outline-none placeholder:text-[#7d766d] disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-[40px] min-w-0 flex-1 rounded-full bg-black/25 px-4 text-[13px] text-[#ece7de] outline-none ring-1 ring-inset ring-white/[0.06] placeholder:text-[#7d766d] transition focus:ring-emerald-400/25 disabled:cursor-not-allowed disabled:opacity-45"
         />
         <button
           type="button"
           onClick={() => void handleSubmit()}
           disabled={disabled || submitting || content.trim().length === 0}
-          className={`inline-flex h-[40px] items-center justify-center gap-1 rounded-full border border-[#5d5245] bg-[#181716] px-4 text-[12px] font-bold text-[#f1e6d2] transition hover:border-[#8a7457] hover:text-[#fff0d7] disabled:cursor-not-allowed disabled:opacity-40 ${compact ? 'w-full md:w-auto' : ''}`}
+          className={`inline-flex h-[40px] items-center justify-center gap-1 rounded-full bg-[#181716] px-4 text-[12px] font-bold text-[#f1e6d2] ring-1 ring-[#5d5245]/55 transition hover:ring-[#8a7457]/75 hover:text-[#fff0d7] disabled:cursor-not-allowed disabled:opacity-40 ${compact ? 'w-full md:w-auto' : ''}`}
         >
           <SendHorizonal size={13} />
           {submitting ? '发送中' : compact ? '回复' : '评论'}
@@ -432,7 +432,7 @@ const ReplyThread: React.FC<ReplyThreadProps> = ({ comment, canComment }) => {
   };
 
   return (
-    <div className="!mt-3 border-t border-white/8 !pt-3">
+    <div className="!mt-3 !pt-3">
       <div className="flex items-center justify-between text-[12px] text-[#8f877d]">
         <span>回复 {Math.max(comment.replyCount ?? 0, replies.length)}</span>
         <button
@@ -665,7 +665,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
         <button
           type="button"
           onClick={() => setCommentComposerOpen(true)}
-          className="flex w-full items-center gap-3 rounded-2xl border border-white/8 bg-[#17191d] px-3 py-3 text-left"
+          className="flex w-full items-center gap-3 rounded-2xl bg-white/[0.03] px-3 py-3 text-left ring-1 ring-white/[0.07] transition hover:ring-emerald-400/22"
         >
           <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#14212d] text-sm text-cyan-300">
             💬
@@ -830,9 +830,9 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                 e.stopPropagation();
                 onOpenLinkedPrediction?.(linkedPrediction);
               }}
-              className="mt-3 w-full overflow-hidden rounded-[22px] border border-emerald-400/15 bg-[linear-gradient(135deg,rgba(11,17,26,0.96)_0%,rgba(10,24,22,0.98)_52%,rgba(9,13,16,0.98)_100%)] text-left shadow-[0_16px_36px_rgba(0,0,0,0.2)] transition-all hover:border-emerald-400/25 hover:shadow-[0_20px_44px_rgba(0,0,0,0.28)]"
+              className="mt-3 w-full overflow-hidden rounded-[22px] bg-[linear-gradient(135deg,rgba(11,17,26,0.96)_0%,rgba(10,24,22,0.98)_52%,rgba(9,13,16,0.98)_100%)] text-left ring-1 ring-emerald-400/18 shadow-[0_16px_36px_rgba(0,0,0,0.2)] transition-all hover:ring-emerald-400/28 hover:shadow-[0_20px_44px_rgba(0,0,0,0.28)]"
             >
-              <div className="flex items-start justify-between gap-3 border-b border-white/6 px-4 py-3">
+              <div className="flex flex-col gap-4 px-4 pb-4 pt-3 md:flex-row md:items-start md:justify-between md:gap-5">
                 <div className="min-w-0 flex-1">
                   <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold tracking-[0.08em] text-emerald-300">
                     <TrendingUp size={12} />
@@ -846,7 +846,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                   </div>
                 </div>
 
-                <div className="shrink-0 rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-2 text-right">
+                <div className="shrink-0 self-start rounded-2xl bg-white/[0.04] px-3 py-2 text-right ring-1 ring-white/[0.08] md:self-auto">
                   <div className="text-[10px] text-zinc-500">最高赔率</div>
                   <div className="mt-1 text-[16px] font-black text-white">
                     {Math.max(linkedPrediction.oddsA, linkedPrediction.oddsB).toFixed(1)}x
@@ -854,8 +854,8 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 px-4 py-3">
-                <div className="rounded-2xl border border-emerald-400/14 bg-emerald-500/8 px-3 py-3">
+              <div className="grid grid-cols-2 gap-2 px-4 pb-4">
+                <div className="rounded-2xl bg-emerald-500/8 px-3 py-3 ring-1 ring-emerald-400/18">
                   <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-300">
                     <Flame size={12} />
                     正方入口
@@ -863,7 +863,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                   <div className="mt-1 text-[13px] font-bold text-white">{linkedPrediction.optionA}</div>
                   <div className="mt-1 text-[12px] text-emerald-200/75">{linkedPrediction.oddsA.toFixed(1)}x</div>
                 </div>
-                <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3">
+                <div className="rounded-2xl bg-white/[0.03] px-3 py-3 ring-1 ring-white/[0.08]">
                   <div className="text-[11px] font-semibold text-zinc-400">反方入口</div>
                   <div className="mt-1 text-[13px] font-bold text-white">{linkedPrediction.optionB}</div>
                   <div className="mt-1 text-[12px] text-zinc-400">{linkedPrediction.oddsB.toFixed(1)}x</div>
@@ -872,7 +872,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
             </button>
           )}
 
-          <div className="legacy-forum-post-actions mt-3 grid max-w-full grid-cols-6 gap-1 border-t border-white/8 pt-2.5 md:!mt-4 md:flex md:max-w-[450px] md:border-t-0 md:pt-0">
+          <div className="legacy-forum-post-actions mt-3 grid max-w-full grid-cols-6 gap-1 md:!mt-4 md:flex md:max-w-[450px]">
             <ActionBtn
               icon={<MessageCircle size={17} className="group-hover:text-blue-500 transition-colors" />}
               count={formatCount(commentCount)}
@@ -975,7 +975,9 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                {renderCommentsPanel('legacy-forum-comments mt-3 rounded-[20px] border border-white/8 bg-[#111318] p-3 md:mt-2 md:rounded-none md:border-0 md:bg-transparent md:p-0 md:pt-3 md:border-t md:border-slate-100 dark:md:border-rdark-border')}
+                {renderCommentsPanel(
+                  'legacy-forum-comments mt-3 rounded-2xl bg-[#111318]/70 p-3 ring-1 ring-white/[0.06] backdrop-blur-sm md:mt-4 md:rounded-none md:bg-transparent md:p-0 md:pt-4 md:ring-0 md:backdrop-blur-none',
+                )}
               </motion.div>
             )}
           </AnimatePresence>

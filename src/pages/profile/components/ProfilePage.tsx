@@ -1,7 +1,8 @@
 /**
  * 文件说明：Profile Page，个人主页页面组件。
  */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation } from '@umijs/renderer-react';
 import {
   ArrowLeft,
   ChevronRight,
@@ -128,6 +129,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
   const [sort, setSort] = useState<FeedSort>('new');
+  const location = useLocation();
   const userPostsQuery = useInfiniteRequestTopicUserTopics({ userId: userId, cursor: 0 });
   const isAuthenticated = Boolean(getAuthToken());
   const storedUser = getStoredUserInfo();
@@ -164,6 +166,17 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     () => skins.find((skin) => skin.equipped) ?? skins.find((skin) => skin.owned) ?? null,
     [skins],
   );
+
+  useEffect(() => {
+    const raw = location.hash?.replace(/^#/, '') ?? '';
+    if (raw !== 'settings') return;
+    const scrollToSettings = () => {
+      const isXl = typeof window !== 'undefined' && window.matchMedia('(min-width: 1280px)').matches;
+      const id = isXl ? 'profile-settings-xl' : 'profile-settings';
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    requestAnimationFrame(() => requestAnimationFrame(scrollToSettings));
+  }, [location.hash, location.pathname]);
 
   const renderOverview = () => (
     <>
@@ -478,7 +491,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
         </div>
 
-        <div className="mt-3 min-w-0 rounded-[24px] border border-white/8 bg-white/[0.03] px-4 py-4">
+        <div id="profile-settings" className="mt-3 min-w-0 rounded-[24px] border border-white/8 bg-white/[0.03] px-4 py-4">
           <div className="flex items-center justify-between gap-3">
             <div>
               <div className="text-[14px] font-bold text-white">设置与入口</div>
@@ -600,6 +613,28 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className="mt-8 flex min-h-0 flex-1 flex-col border-t border-white/10 pt-8 xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-6">
           <div className="min-w-0 min-h-0 overflow-y-auto pr-1">{renderContent()}</div>
           <aside className="mt-8 min-h-0 overflow-y-auto xl:mt-0 xl:px-4 xl:py-4">
+            {/* <div id="profile-settings-xl" className="mb-4 shrink-0 rounded-[22px] border border-white/8 bg-white/[0.03] px-4 py-4">
+              <div className="text-[14px] font-bold text-white">设置</div>
+              <div className="mt-1 text-[12px] text-[#8a949d]">主题与显示偏好（顶部头像菜单可快速进入）</div>
+              <button
+                type="button"
+                onClick={onToggleTheme}
+                className="mt-4 flex w-full items-center justify-between rounded-[18px] border border-white/10 bg-black/25 px-4 py-3 text-left transition-colors hover:bg-white/[0.04]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-[#15161a] text-zinc-200">
+                    {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+                  </div>
+                  <div>
+                    <div className="text-[13px] font-semibold text-white">亮暗模式</div>
+                    <div className="mt-1 text-[11px] text-[#8a949d]">当前为{darkMode ? '深色模式' : '浅色模式'}</div>
+                  </div>
+                </div>
+                <div className="rounded-full border border-emerald-400/15 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-300">
+                  切换
+                </div>
+              </button>
+            </div> */}
             <div>
               <ProfilePetArchive pet={pet} ownedPets={ownedPets} />
             </div>

@@ -138,15 +138,17 @@ export default function HomePage() {
   }, []);
 
   return (
-    <HomePageView
-      battleNews={battleNews}
-      userSide={battleNews ? (userVotes[battleNews.id] ?? null) : null}
-      selectedTag={selectedTag}
-      selectedPrediction={selectedPrediction}
-      onBattleBack={handleBattleBack}
-      onPredictionBetSuccess={handlePredictionBetSuccess}
-      onRequireAuth={onOpenAuth}
-      onEnterBattle={setSelectedBattleNews}
-    />
+    <div className="pt-[10px]">
+      <HomePageView
+        battleNews={battleNews}
+        userSide={battleNews ? (userVotes[battleNews.id] ?? null) : null}
+        selectedTag={selectedTag}
+        selectedPrediction={selectedPrediction}
+        onBattleBack={handleBattleBack}
+        onPredictionBetSuccess={handlePredictionBetSuccess}
+        onRequireAuth={onOpenAuth}
+        onEnterBattle={setSelectedBattleNews}
+      />
+    </div>
   );
 }

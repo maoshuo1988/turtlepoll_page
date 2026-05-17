@@ -56,11 +56,13 @@ export default function RivalryPage() {
   }, [onOpenAuth, pkBetMutation]);
 
   return (
-    <RivalryPageView
-      userVotes={userVotes}
-      betError={betError}
-      pendingBetId={pendingBetId}
-      onBet={handleRivalryBet}
-    />
+    <div className="pt-[10px]">
+      <RivalryPageView
+        userVotes={userVotes}
+        betError={betError}
+        pendingBetId={pendingBetId}
+        onBet={handleRivalryBet}
+      />
+    </div>
   );
 }
