@@ -423,6 +423,16 @@ html:not(.dark) .page-primary-button {
   .page-title {
     font-size: 30px;
   }
+
+  /* 钱庄 PC：标题区说明稍放宽，便于扫规则摘要 */
+  .page-frame.view-battle-plaza .page-description {
+    max-width: 52rem;
+  }
+
+  /* 排行榜 PC：与顶栏/滚动区顶部留出间距（仅用 Tailwind 易未打入产物） */
+  .page-frame.view-rank {
+    padding-top: 10px;
+  }
 }
 
 /* 平板与手机：收窄外边距与卡片「框框」强度，避免与底部 Tab 叠太多层边框 */

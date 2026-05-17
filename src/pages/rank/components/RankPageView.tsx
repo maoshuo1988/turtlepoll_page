@@ -4,7 +4,7 @@ import { RankPage } from './RankPage';
 
 export function RankPageView() {
   return (
-    <section className="page-frame view-rank">
+    <section className="page-frame view-rank lg:pt-[10px]">
       <header className="page-header">
         <div className="page-header-row">
           <div>

@@ -849,6 +849,78 @@ html.dark #page-battle-square .dm-stake-input {
     border-color:rgba(255,255,255,.10);
   }
 }
+
+/* PC：宽屏下列宽居中，指标与 Tab 更易扫读（与 max-width:1279px 手机壳样式分界对齐） */
+@media (min-width: 1280px) {
+  #page-battle-square .bp-wrap {
+    max-width:min(1180px, 100%);
+    margin-inline:auto;
+    gap:20px;
+    padding:0 8px 40px;
+  }
+  #page-battle-square .bp-hub {
+    border-radius:24px;
+    box-shadow:0 22px 52px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.07);
+  }
+  #page-battle-square .bp-hub-metrics {
+    padding:18px 22px 16px;
+  }
+  #page-battle-square .bp-hub-divider {
+    margin:0 22px;
+  }
+  #page-battle-square .phb-stats {
+    gap:12px;
+  }
+  #page-battle-square .bp-hub-metrics .phb-metric {
+    min-height:84px;
+    padding:12px 10px;
+    border-radius:18px;
+  }
+  #page-battle-square .phb-metric-ico {
+    font-size:18px;
+    margin-bottom:4px;
+  }
+  #page-battle-square .bp-hub-metrics .phb-metric-val {
+    font-size:clamp(18px, 1.35vw, 24px);
+  }
+  #page-battle-square .bp-hub-metrics .phb-metric-lbl {
+    font-size:12px;
+  }
+  #page-battle-square .bp-toolbar {
+    margin-bottom:18px;
+    gap:12px 20px;
+    align-items:center;
+  }
+  #page-battle-square .bp-segmented {
+    border-radius:16px;
+  }
+  #page-battle-square .bp-segment {
+    padding:11px 20px;
+    font-size:14px;
+  }
+  #page-battle-square .bp-sort-select {
+    min-width:132px;
+    padding:10px 14px;
+    border-radius:14px;
+    font-size:14px;
+  }
+  #page-battle-square .bp-refresh-icon-btn {
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    font-size:18px;
+  }
+  #page-battle-square .duel-compose .dc-header {
+    padding:16px 22px;
+  }
+  #page-battle-square .duel-card {
+    border-radius:22px;
+    box-shadow:0 12px 34px rgba(15,23,42,.09);
+  }
+  html.dark #page-battle-square .duel-card {
+    box-shadow:0 18px 44px rgba(0,0,0,.32);
+  }
+}
 `;
 
 function formatCoins(value: number) {
