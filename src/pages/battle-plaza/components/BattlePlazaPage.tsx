@@ -548,13 +548,13 @@ html.dark #page-battle-square .dm-stake-input {
   background:rgba(15,26,48,.78);
 }
 @media (max-width: 600px) {
-  #page-battle-square .bp-wrap { padding:0 0 24px; }
   #page-battle-square .pr-grid,
   #page-battle-square .banker-overview,
   #page-battle-square .dm-info-grid { grid-template-columns:1fr; }
   #page-battle-square .dc-inline,
   #page-battle-square .invite-entry { flex-direction:column; align-items:stretch; }
   #page-battle-square .invite-entry-input { width:100%; }
+  #page-battle-square .invite-entry-btn { width:100%; }
   #page-battle-square .duel-banker-row { align-items:flex-start; flex-wrap:wrap; }
   #page-battle-square .duel-banker-stake { margin-left:0; width:100%; text-align:left; }
   #page-battle-square .duel-title { font-size:16px; }
@@ -581,7 +581,7 @@ html.dark #page-battle-square .dm-stake-input {
   }
   #page-battle-square .bp-wrap {
     gap:12px;
-    padding:0 0 24px;
+    padding:0 0 max(28px, calc(18px + env(safe-area-inset-bottom, 0px)));
   }
   #page-battle-square .bp-toolbar {
     flex-direction:column;
@@ -592,12 +592,20 @@ html.dark #page-battle-square .dm-stake-input {
   #page-battle-square .bp-segmented {
     width:100%;
     justify-content:stretch;
+    border-radius:16px;
   }
   #page-battle-square .bp-segment {
     flex:1;
     text-align:center;
     padding-left:8px;
     padding-right:8px;
+    min-height:44px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding-top:10px;
+    padding-bottom:10px;
+    font-size:14px;
   }
   #page-battle-square .bp-plaza-controls {
     width:100%;
@@ -606,6 +614,15 @@ html.dark #page-battle-square .dm-stake-input {
   #page-battle-square .bp-sort-select {
     flex:1;
     min-width:0;
+    min-height:44px;
+    padding:10px 14px;
+    font-size:15px;
+    border-radius:14px;
+  }
+  #page-battle-square .bp-refresh-icon-btn {
+    width:44px;
+    height:44px;
+    border-radius:14px;
   }
   #page-battle-square .bp-hub {
     border-radius:20px;
@@ -629,8 +646,75 @@ html.dark #page-battle-square .dm-stake-input {
     grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:8px;
   }
+  #page-battle-square .bp-hub-metrics .phb-metric-val {
+    font-size:clamp(18px, 4.6vw, 22px);
+  }
+  #page-battle-square .bp-hub-metrics .phb-metric-lbl {
+    font-size:12px;
+  }
   #page-battle-square .dc-header {
     background:rgba(255,255,255,.04);
+    flex-wrap:wrap;
+    row-gap:10px;
+  }
+  #page-battle-square .dc-placeholder {
+    flex:1 1 160px;
+    min-width:0;
+    font-size:14px;
+    line-height:1.45;
+  }
+  #page-battle-square .dc-btn {
+    flex-shrink:0;
+    min-height:44px;
+    padding:10px 18px;
+    font-size:14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  #page-battle-square .invite-entry-btn {
+    min-height:44px;
+    padding:10px 18px;
+    font-size:14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  #page-battle-square .dc-stake-opt,
+  #page-battle-square .dc-vis-btn {
+    min-height:40px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding-left:16px;
+    padding-right:16px;
+  }
+  #page-battle-square .dc-submit {
+    min-height:48px;
+    padding:12px 22px;
+    font-size:15px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  #page-battle-square .dc-cancel {
+    min-height:44px;
+    padding:10px 18px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  #page-battle-square .duel-foot-join {
+    min-height:44px;
+    padding:10px 16px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  #page-battle-square .plaza-rules-header {
+    min-height:48px;
+    display:flex;
+    align-items:center;
   }
   #page-battle-square .invite-entry,
   #page-battle-square .challenger-tips,

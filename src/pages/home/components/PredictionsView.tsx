@@ -17,7 +17,7 @@ interface PredictionsViewProps {
 
 export const PredictionsView: React.FC<PredictionsViewProps> = ({ selectedTag, selectedPrediction, onBetSuccess, onRequireAuth, onEnterBattle }) => {
   return (
-    <section className="grid w-full gap-4 pb-1 md:gap-4 md:pb-0">
+    <section className="grid w-full gap-3 pb-1 md:gap-4 md:pb-0">
       <HeroPrediction news={selectedPrediction} selectedTag={selectedTag} onBetSuccess={onBetSuccess} onRequireAuth={onRequireAuth} onEnterBattle={onEnterBattle} />
       <NewsFeed selectedTag={selectedTag} onBetSuccess={onBetSuccess} onRequireAuth={onRequireAuth} onEnterBattle={onEnterBattle} />
     </section>

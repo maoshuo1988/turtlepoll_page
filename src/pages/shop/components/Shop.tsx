@@ -3,7 +3,7 @@
  */
 import React, { useState, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Coins, Heart } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Coins, Heart } from 'lucide-react';
 import type { PetInfo, ShopItem } from '@/data/mockData';
 import {
   shopApples,
@@ -17,7 +17,11 @@ import { getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
 import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/shared/pet/petRarity';
 
 const card =
-  'rounded-[24px] border border-cyan-400/18 bg-[linear-gradient(180deg,rgba(7,15,31,0.96),rgba(6,12,24,0.98))] shadow-[0_14px_40px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl';
+  'rounded-[24px] max-lg:rounded-[18px] border border-cyan-400/18 max-lg:border-cyan-400/11 bg-[linear-gradient(180deg,rgba(7,15,31,0.96),rgba(6,12,24,0.98))] shadow-[0_14px_40px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.06)] max-lg:shadow-[0_10px_26px_rgba(0,0,0,0.22),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl';
+
+/** 手机端区块：浅色主题为白底卡片，深色主题为 Navy 渐变，避免与抽奖头图抢对比 */
+const sheetMobile =
+  'rounded-[18px] border border-slate-200/90 bg-white shadow-[0_8px_26px_rgba(15,23,42,0.06)] dark:border-white/[0.08] dark:bg-[linear-gradient(180deg,rgba(11,17,34,0.97),rgba(6,10,22,0.99))] dark:shadow-[0_12px_34px_rgba(0,0,0,0.38)]';
 
 /* ── Types ── */
 type HatchPhase = 'idle' | 'heating' | 'cracking' | 'breaking' | 'reveal';
@@ -76,6 +80,7 @@ export const Shop: React.FC<ShopProps> = ({
   const [tempGlow, setTempGlow] = useState(0); // 0-100 temperature bar
   const timerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const previewScrollRef = useRef<HTMLDivElement | null>(null);
+  const previewScrollMobileRef = useRef<HTMLDivElement | null>(null);
   const previewDragRef = useRef({ active: false, startX: 0, scrollLeft: 0 });
   const ownedPetsScrollRef = useRef<HTMLDivElement | null>(null);
   const ownedPetsDragRef = useRef({ active: false, startX: 0, scrollLeft: 0 });
@@ -273,116 +278,224 @@ export const Shop: React.FC<ShopProps> = ({
 
   return (
     <div className="legacy-shop-page min-w-0 max-w-full overflow-x-hidden space-y-3 px-0 md:space-y-4">
-      <div className="grid gap-4 md:hidden">
-        <section className={`${card} relative overflow-hidden !bg-transparent !px-0 !py-0`}>
-          <img src={SHOP_BG} alt="黑市背景" className="absolute inset-0 h-full w-full object-fill opacity-100" />
-          <div className="relative px-4 py-4">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <div className="text-[22px] font-black text-white">宠物抽奖</div>
-                <div className="mt-1 text-[12px] text-white/76">极光之力，守护你的每一次召唤!</div>
-              </div>
-              <div className="rounded-full border border-cyan-300/20 bg-[#08192f]/90 px-2.5 py-1 text-[11px] font-semibold text-cyan-200">奖池预览</div>
+      <div className="grid gap-3.5 md:hidden md:gap-4">
+        <section className="relative overflow-hidden rounded-[18px] border border-white/10 bg-[#071527] shadow-[0_16px_44px_rgba(0,0,0,0.45)] ring-1 ring-white/[0.04] dark:border-white/12 dark:ring-white/[0.06]">
+          <img
+            src={SHOP_BG}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-center opacity-100 sm:object-fill"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(6,12,26,0.25),rgba(4,8,18,0.62))] dark:bg-[linear-gradient(180deg,rgba(2,6,23,0.45),rgba(2,6,23,0.78))]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_0%,transparent_0%,rgba(0,0,0,0.28)_100%)] opacity-90 dark:opacity-100" />
+
+          <div className="relative space-y-3 p-3 sm:space-y-4 sm:p-4">
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={onBack}
+                className="inline-flex min-h-[44px] touch-manipulation items-center justify-center gap-1 rounded-full border border-white/15 bg-black/40 px-3.5 py-2 text-[13px] font-bold text-white backdrop-blur-sm active:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#071527]"
+              >
+                <ArrowLeft size={16} strokeWidth={2.2} aria-hidden />
+                返回
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsPreviewDialogOpen(true)}
+                className="flex min-h-[44px] touch-manipulation items-center justify-center rounded-full border border-cyan-400/35 bg-cyan-950/45 px-3.5 py-2 text-[13px] font-semibold text-cyan-50 backdrop-blur-sm active:bg-cyan-950/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#071527]"
+              >
+                奖池预览
+              </button>
             </div>
-            <div className="mt-4 flex items-end justify-between gap-2">
-              <div className="text-[72px] leading-none">{heroAvatar}</div>
-              <div className="flex items-end gap-2">
-                <div className="flex h-[94px] w-[62px] items-center justify-center rounded-b-[28px] rounded-t-[40px] border border-white/15 bg-[linear-gradient(180deg,#edf4ff,#b8d7ff)] text-[34px]">🥚</div>
-                <div className="flex h-[110px] w-[76px] items-center justify-center rounded-b-[34px] rounded-t-[48px] border border-[#ffde7d]/25 bg-[linear-gradient(180deg,#f4de88,#bf7d17)] text-[42px]">🥚</div>
-                <div className="flex h-[94px] w-[62px] items-center justify-center rounded-b-[28px] rounded-t-[40px] border border-violet-300/20 bg-[linear-gradient(180deg,#7b61d6,#4e348f)] text-[34px]">🥚</div>
+
+            <div className="flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/28 bg-amber-500/18 px-3 py-1.5 text-[12px] font-bold text-amber-50 shadow-[0_6px_18px_rgba(0,0,0,0.18)]">
+                <Coins size={14} strokeWidth={2.3} aria-hidden />
+                {balance.toLocaleString()} 龟币
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-400/25 bg-rose-500/14 px-3 py-1.5 text-[12px] font-semibold text-rose-50 shadow-[0_6px_18px_rgba(0,0,0,0.18)]">
+                <Heart size={14} strokeWidth={2.3} aria-hidden />
+                体力 {pet.stamina}/{pet.maxStamina}
+              </span>
+              <span className="inline-flex items-center rounded-full border border-white/14 bg-white/[0.07] px-3 py-1.5 text-[11px] font-semibold text-white/78 shadow-[0_6px_18px_rgba(0,0,0,0.14)]">
+                已拥有 {ownedPetList.length} 龟
+              </span>
+            </div>
+
+            <div className="rounded-[16px] border border-white/16 bg-black/45 px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-md sm:px-4 sm:py-5">
+              <p className="text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-cyan-200/85">龟蛋抽奖</p>
+              <p className="mt-1 text-center text-[12px] text-white/58">极光蛋池 · 消耗龟币孵化</p>
+
+              <div className="mt-4 flex flex-col items-center">
+                <div className="text-[clamp(68px,22vw,104px)] leading-none drop-shadow-[0_10px_32px_rgba(0,0,0,0.5)]">{heroAvatar}</div>
+              </div>
+
+              {(phase === 'heating' || phase === 'cracking') && (
+                <div className="mt-5">
+                  <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-white/70">
+                    <span>孵化进度</span>
+                    <span>{tempGlow}%</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-white/12">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{
+                        background: 'linear-gradient(90deg, #38bdf8 0%, #a78bfa 52%, #fb923c 100%)',
+                        width: `${tempGlow}%`,
+                      }}
+                      transition={{ duration: 0.05 }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <p className="mb-2 text-[11px] font-semibold tracking-wide text-white/48">快速补给 · AI 体力</p>
+              <div className="flex gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {shopApples.slice(0, 3).map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => buyApple(item)}
+                    disabled={pet.stamina >= pet.maxStamina}
+                    className="w-[118px] shrink-0 snap-start touch-manipulation rounded-[14px] border border-violet-400/28 bg-[linear-gradient(180deg,rgba(42,22,68,0.96),rgba(10,16,38,0.99))] px-3 py-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] disabled:opacity-45"
+                  >
+                    <img
+                      src={APPLE_IMAGE_BY_ITEM[item.id]}
+                      alt={item.name}
+                      className="mx-auto h-11 w-11 object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.38)]"
+                    />
+                    <div className="mt-1.5 truncate text-[11px] font-bold text-white">{item.name}</div>
+                    <div className="mt-0.5 text-[15px] font-black text-white">+{item.effect.value}</div>
+                    <div className="mt-1 flex justify-center">
+                      <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-950/85 px-2 py-0.5 text-[10px] font-black text-emerald-300">
+                        <Coins size={10} /> {item.price}
+                      </span>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
 
-            {(phase === 'heating' || phase === 'cracking') && (
-              <div className="mt-4">
-                <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-slate-500 dark:text-rdark-text2">
-                  <span>孵化进度</span>
-                  <span>{tempGlow}%</span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
-                  <motion.div
-                    className="h-full rounded-full"
-                    style={{
-                      background: 'linear-gradient(90deg, #3b82f6 0%, #ef4444 100%)',
-                      width: `${tempGlow}%`,
-                    }}
-                    transition={{ duration: 0.05 }}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="mt-4 grid grid-cols-3 gap-2">{shopApples.slice(0, 3).map((item) => <button key={item.id} onClick={() => buyApple(item)} disabled={pet.stamina >= pet.maxStamina} className="rounded-[16px] border border-[#7b5eff]/35 bg-[linear-gradient(180deg,#26173d,#111a2f)] px-2 py-2 text-center"><img src={APPLE_IMAGE_BY_ITEM[item.id]} alt={item.name} className="mx-auto h-12 w-12 object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.35)]" /><div className="mt-1 text-[11px] font-bold text-white">{item.name}</div><div className="mt-1 text-[16px] font-black text-white">+{item.effect.value}</div><div className="mt-1 inline-flex items-center gap-1 rounded-full bg-[#0d2216] px-2 py-0.5 text-[10px] font-black text-emerald-300"><Coins size={10} /> {item.price}</div></button>)}</div>
-
-            <div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto] gap-2.5">
+            <div className="space-y-2">
               {phase === 'idle' ? (
                 <motion.button
                   whileTap={{ scale: 0.98 }}
+                  type="button"
                   onClick={doGacha}
                   disabled={hatchMutation.isLoading}
-                  className={`flex h-12 items-center justify-center rounded-2xl px-4 text-[15px] font-black text-white transition ${!hatchMutation.isLoading
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 shadow-[0_10px_24px_rgba(245,158,11,0.28)]'
-                    : 'bg-slate-400 cursor-not-allowed'
-                    }`}
+                  aria-busy={hatchMutation.isLoading}
+                  className={`touch-manipulation flex min-h-[54px] w-full items-center justify-center rounded-[14px] text-[15px] font-black text-white shadow-[0_14px_38px_rgba(245,158,11,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#071527] ${!hatchMutation.isLoading ? 'bg-gradient-to-r from-amber-500 to-orange-600' : 'cursor-not-allowed bg-slate-500'}`}
                 >
-                  <Coins size={15} className="mr-1.5" />
-                  花 {gachaCost} 龟币孵化
+                  <Coins size={17} className="mr-2 shrink-0" aria-hidden />
+                  {hatchMutation.isLoading ? '准备中…' : `花 ${gachaCost} 龟币孵化`}
                 </motion.button>
               ) : phase === 'reveal' ? (
                 <motion.button
                   whileTap={{ scale: 0.98 }}
+                  type="button"
                   onClick={resetGacha}
-                  className="flex h-12 items-center justify-center rounded-2xl bg-cyan-500 px-4 text-[15px] font-black text-white shadow-[0_10px_24px_rgba(6,182,212,0.24)]"
+                  className="touch-manipulation flex min-h-[54px] w-full items-center justify-center rounded-[14px] bg-cyan-500 text-[15px] font-black text-white shadow-[0_14px_38px_rgba(34,211,238,0.22)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#071527]"
                 >
                   继续孵化
                 </motion.button>
               ) : (
-                <div className="flex h-12 items-center justify-center rounded-2xl bg-slate-100 text-[14px] font-bold text-amber-600 dark:bg-white/[0.05] dark:text-amber-400">
-                  孵化中...
+                <div className="flex min-h-[54px] w-full items-center justify-center rounded-[14px] border border-white/14 bg-white/[0.07] text-[14px] font-bold text-amber-50/95">
+                  孵化中，请稍候…
                 </div>
               )}
-
-              <div className="flex h-12 items-center rounded-2xl border border-slate-200 bg-[#f8fafc] px-3 text-[12px] font-bold text-slate-600 dark:border-white/10 dark:bg-[#121820] dark:text-rdark-text2">
-                已拥有 {ownedPetList.length}
-              </div>
             </div>
 
-            {actionError ? (
-              <p className="mt-2 text-[12px] text-rose-500">{actionError}</p>
-            ) : null}
-            {actionSuccess ? (
-              <p className="mt-2 text-[12px] text-emerald-600 dark:text-emerald-400">{actionSuccess}</p>
-            ) : null}
+            {actionError ? <p className="text-[12px] leading-relaxed text-rose-300">{actionError}</p> : null}
+            {actionSuccess ? <p className="text-[12px] leading-relaxed text-emerald-300">{actionSuccess}</p> : null}
           </div>
         </section>
 
-        <section className={`${card} overflow-hidden !px-0 !py-0`}>
-          <div className="border-b border-slate-100 px-4 py-3 dark:border-white/6">
-            <div className="flex items-center justify-between gap-2">
-              <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">已拥有龟种</div>
-              <div className="text-[12px] font-semibold text-slate-500 dark:text-rdark-text2">{ownedPetList.length}</div>
+        <details className={`group ${sheetMobile} overflow-hidden`}>
+          <summary className="flex min-h-[48px] cursor-pointer list-none items-center justify-between gap-3 border-b border-slate-100 px-3 py-3 dark:border-white/[0.07] sm:px-4 [&::-webkit-details-marker]:hidden">
+            <span className="text-[14px] font-bold text-slate-900 dark:text-white sm:text-[15px]">奖池与概率</span>
+            <span className="inline-flex shrink-0 items-center gap-1 text-[12px] font-semibold text-cyan-700 dark:text-cyan-300">
+              <span className="hidden group-open:inline">收起</span>
+              <span className="group-open:hidden">展开</span>
+              <ChevronDown size={16} strokeWidth={2.4} className="transition-transform duration-200 group-open:-rotate-180" aria-hidden />
+            </span>
+          </summary>
+          <div className="space-y-3 px-3 py-3 sm:px-4 sm:py-4">
+            <button
+              type="button"
+              onClick={() => setIsPreviewDialogOpen(true)}
+              className="touch-manipulation w-full rounded-[12px] border border-cyan-500/22 bg-cyan-500/[0.08] py-2.5 text-[13px] font-semibold text-cyan-800 active:bg-cyan-500/14 dark:border-cyan-400/18 dark:bg-cyan-400/10 dark:text-cyan-100"
+            >
+              查看全部龟种预览
+            </button>
+            <div className="flex gap-2 overflow-x-auto pb-0.5 [-webkit-overflow-scrolling:touch] snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {probabilityRows.map((item) => (
+                <div
+                  key={item.label}
+                  className="flex shrink-0 snap-start items-center gap-2 rounded-full border border-white/12 bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(30,27,75,0.9))] py-1.5 pl-2 pr-3 shadow-[0_6px_16px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] dark:border-white/14 dark:bg-[#0a1228]"
+                >
+                  <img src={item.icon} alt={item.label} className="h-6 w-6 object-contain" />
+                  <span className={`text-[12px] font-black sm:text-[13px] ${item.tone}`}>{item.label}</span>
+                  <span className={`text-[12px] font-black sm:text-[13px] ${item.tone}`}>{item.value}</span>
+                </div>
+              ))}
+            </div>
+            <div
+              ref={previewScrollMobileRef}
+              className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:thin] overscroll-x-contain [-webkit-overflow-scrolling:touch]"
+            >
+              {petPoolPreviewRows.slice(0, 14).map((item) => (
+                <PetPoolPreviewTile
+                  key={`m-${item.key}`}
+                  variant="strip"
+                  rarityGrade={item.rarityGrade}
+                  label={item.label}
+                  imageSrc={item.imageSrc}
+                  imageAlt={item.label}
+                />
+              ))}
             </div>
           </div>
+        </details>
+
+        <section className={`${sheetMobile} overflow-hidden`}>
+          <div className="border-b border-slate-100 px-3 py-2.5 dark:border-white/[0.07] sm:px-4 sm:py-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-[14px] font-bold text-slate-900 dark:text-white sm:text-[15px]">已拥有龟种</div>
+              <div className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[12px] font-semibold text-slate-600 dark:bg-white/[0.06] dark:text-white/70">
+                {ownedPetList.length}
+              </div>
+            </div>
+          </div>
+          {ownedPetList.length === 0 ? (
+            <div className="px-4 py-10 text-center">
+              <p className="text-[14px] font-semibold text-slate-700 dark:text-white/88">还没有龟种</p>
+              <p className="mt-2 text-[12px] leading-relaxed text-slate-500 dark:text-white/50">点击下方孵化，把第一只龟带回家</p>
+            </div>
+          ) : (
           <div
             ref={ownedPetsScrollRef}
             onMouseDown={handleOwnedPetsMouseDown}
             onMouseMove={handleOwnedPetsMouseMove}
             onMouseUp={stopOwnedPetsDrag}
             onMouseLeave={stopOwnedPetsDrag}
-            className="flex gap-3 overflow-x-auto px-4 py-5 snap-x snap-mandatory select-none scroll-smooth overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
+            className="flex gap-2 overflow-x-auto px-3 py-4 snap-x snap-mandatory select-none scroll-smooth overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing sm:gap-3 sm:px-4 sm:py-5"
           >
             {ownedPetList.map((petItem) => (
               <div
                 key={String(petItem.petId)}
-                className={`relative w-[112px] shrink-0 snap-start rounded-[22px] border px-3 py-4 text-center border-slate-200 bg-[#fafbfd] dark:border-white/10 dark:bg-[#121820] ${petItem.isEquipped ? 'border-cyan-300/70 ring-2 ring-cyan-400/70 ring-offset-2 ring-offset-[#071527] dark:ring-offset-[#071527]' : ''}`}
+                className={`relative w-[104px] shrink-0 snap-start rounded-[16px] border px-2.5 py-3 text-center sm:w-[112px] sm:rounded-[18px] sm:px-3 sm:py-4 ${petItem.isEquipped
+                  ? 'border-cyan-400/75 bg-cyan-50/90 ring-2 ring-cyan-400/55 ring-offset-2 ring-offset-white dark:bg-[#0c162e] dark:ring-cyan-400/45 dark:ring-offset-[#070d18]'
+                  : 'border-slate-200/95 bg-slate-50/85 dark:border-white/10 dark:bg-[#0f172a]/92'
+                  }`}
               >
                 {petItem.isEquipped ? (
                   <div className="absolute left-1/2 top-1 z-10 -translate-x-1/2 rounded-full bg-cyan-400 px-2 py-0.5 text-[10px] font-black text-[#06242c] shadow-[0_6px_14px_rgba(34,211,238,0.28)]">
                     已装备
                   </div>
                 ) : null}
-                <div className="text-5xl">{getPetDisplayAvatar(petItem.petKey, petItem.petName)}</div>
-                <div className="mt-3 truncate text-[13px] font-bold text-slate-700 dark:text-rdark-text">
+                <div className="text-4xl sm:text-5xl">{getPetDisplayAvatar(petItem.petKey, petItem.petName)}</div>
+                <div className="mt-3 truncate text-[12px] font-bold text-slate-800 dark:text-white sm:text-[13px]">
                   {petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}
                 </div>
                 <div className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ${getPetRarityBadgeClass(petItem.rarity)}`}>
@@ -391,20 +504,21 @@ export const Shop: React.FC<ShopProps> = ({
               </div>
             ))}
           </div>
+          )}
         </section>
 
-        <section className={`${card} overflow-hidden !px-0 !py-0`}>
-          <div className="border-b border-slate-100 px-4 py-3 dark:border-white/6">
+        <section className={`${sheetMobile} overflow-hidden`}>
+          <div className="border-b border-slate-100 px-3 py-2.5 dark:border-white/[0.07] sm:px-4 sm:py-3">
             <div className="flex items-center justify-between gap-2">
-              <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">体力商店</div>
-              <div className="flex items-center gap-1 text-[12px] font-semibold text-rose-500 dark:text-rose-300">
-                <Heart size={13} />
+              <div className="text-[14px] font-bold text-slate-900 dark:text-white sm:text-[15px]">体力商店</div>
+              <div className="flex items-center gap-1 rounded-full bg-rose-500/10 px-2 py-0.5 text-[12px] font-semibold text-rose-600 dark:text-rose-300">
+                <Heart size={13} strokeWidth={2.3} />
                 {pet.stamina}/{pet.maxStamina}
               </div>
             </div>
           </div>
-          <div className="px-4 py-4">
-            <div className="grid gap-3">
+          <div className="px-3 py-3 sm:px-4 sm:py-4">
+            <div className="grid gap-2.5 sm:gap-3">
               {shopApples.map((item) => {
                 const isFull = pet.stamina >= pet.maxStamina;
                 const cantAfford = balance < item.price;
@@ -413,12 +527,13 @@ export const Shop: React.FC<ShopProps> = ({
                 return (
                   <motion.button
                     key={item.id}
+                    type="button"
                     whileTap={disabled ? {} : { scale: 0.98 }}
                     onClick={() => buyApple(item)}
                     disabled={disabled}
-                    className={`relative overflow-hidden rounded-[20px] border px-3 py-3 text-left ${disabled
-                      ? 'border-slate-200 bg-slate-100/80 opacity-55 dark:border-white/8 dark:bg-white/[0.03]'
-                      : 'border-slate-200 bg-[#fafbfd] dark:border-white/10 dark:bg-[#121820]'
+                    className={`touch-manipulation relative min-h-[52px] overflow-hidden rounded-[16px] border px-3 py-3 text-left sm:min-h-0 sm:rounded-[18px] ${disabled
+                      ? 'border-slate-200/90 bg-slate-100/85 opacity-55 dark:border-white/[0.06] dark:bg-white/[0.04]'
+                      : 'border-slate-200/90 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] dark:border-white/10 dark:bg-[#101b33]/95 dark:shadow-none'
                       }`}
                   >
                     {buyFlash === item.id && (
@@ -426,22 +541,22 @@ export const Shop: React.FC<ShopProps> = ({
                         initial={{ opacity: 0.6 }}
                         animate={{ opacity: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="absolute inset-0 rounded-[20px] bg-green-400/20"
+                        className="absolute inset-0 rounded-[18px] bg-emerald-400/18"
                       />
                     )}
                     <div className="flex items-center gap-3">
-                      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/10 shadow-sm">
+                      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-slate-200/80 bg-slate-50 dark:border-white/10 dark:bg-white/[0.06]">
                         <img src={APPLE_IMAGE_BY_ITEM[item.id]} alt={item.name} className="h-10 w-10 object-contain" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-[15px] font-bold text-slate-800 dark:text-rdark-text">{item.name}</div>
-                        <div className="mt-1 text-[12px] text-slate-500 dark:text-rdark-text2">补充 {item.effect.value} 点体力</div>
+                        <div className="text-[15px] font-bold text-slate-900 dark:text-white">{item.name}</div>
+                        <div className="mt-1 text-[12px] text-slate-600 dark:text-white/55">补充 {item.effect.value} 点体力</div>
                         <div className="mt-2 flex items-center gap-1 text-[13px] font-bold text-amber-600 dark:text-amber-400">
-                          <Coins size={14} />
+                          <Coins size={14} strokeWidth={2.3} />
                           {item.price}
                         </div>
                       </div>
-                      <div className={`rounded-full px-3 py-1.5 text-[11px] font-bold ${disabled ? 'bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-300' : 'bg-[#ff8200] text-white'}`}>
+                      <div className={`shrink-0 rounded-full px-2.5 py-2 text-[11px] font-bold sm:px-3 sm:py-1.5 ${disabled ? 'bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-300' : 'bg-[#ff8200] text-white shadow-[0_6px_14px_rgba(255,130,0,0.22)]'}`}>
                         {isFull ? '已满' : cantAfford ? '试试购买' : '购买'}
                       </div>
                     </div>
@@ -450,11 +565,8 @@ export const Shop: React.FC<ShopProps> = ({
               })}
             </div>
             {pet.stamina >= pet.maxStamina && (
-              <p className="mt-3 text-center text-[12px] text-green-600 dark:text-green-400">体力已满</p>
+              <p className="mt-3 text-center text-[12px] font-medium text-emerald-700 dark:text-emerald-400">体力已满</p>
             )}
-            {actionSuccess ? (
-              <p className="mt-3 text-center text-[12px] text-emerald-600 dark:text-emerald-400">{actionSuccess}</p>
-            ) : null}
           </div>
         </section>
       </div>
@@ -574,13 +686,19 @@ export const Shop: React.FC<ShopProps> = ({
             <div className="mt-4 grid gap-3">{recordRows.slice(0, 4).map((item, index) => <div key={`${item.name}-${index}`} className="rounded-[18px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] px-3 py-3"><div className="flex items-center gap-3"><img src={item.image} alt={item.name} className="h-10 w-10 rounded-full object-cover" /><div className={`inline-flex shrink-0 rounded-full px-2.5 py-1 text-[11px] font-black ${item.rarity === '传说' ? 'bg-amber-500/12 text-amber-300' : item.rarity === '史诗' ? 'bg-fuchsia-500/12 text-fuchsia-300' : item.rarity === '稀有' ? 'bg-sky-500/12 text-sky-300' : 'bg-lime-500/12 text-lime-300'}`}>{item.rarity}</div><div className="min-w-0 flex-1 truncate text-sm font-semibold text-white">{item.name}</div><div className="shrink-0 text-[11px] text-white/48">{item.ago}</div></div></div>)}</div>
           </section> */}
         </div>
-        <AnimatePresence>
+      </div>
+      <AnimatePresence>
           {isPreviewDialogOpen && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-[#020817]/82 p-4 backdrop-blur-sm">
-              <motion.div initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} className="flex min-h-0 max-h-[90vh] w-full max-w-[860px] flex-col overflow-hidden rounded-[28px] border border-white/12 bg-[linear-gradient(135deg,rgba(8,18,48,0.96),rgba(75,37,123,0.9),rgba(20,101,98,0.88),rgba(9,20,45,0.96))] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.46)]">
-                <div className="flex shrink-0 items-center justify-between"><div className="text-lg font-black text-white">全部预览</div><button type="button" onClick={() => setIsPreviewDialogOpen(false)} className="rounded-full border border-white/12 px-3 py-1 text-sm font-bold text-white/72">关闭</button></div>
-                <div className="mt-4 min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1 [scrollbar-gutter:stable]">
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-end justify-center bg-[#020817]/82 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+              <motion.div initial={{ scale: 0.96, opacity: 0, y: 16 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0, y: 16 }} className="flex max-h-[min(92dvh,920px)] min-h-0 w-full max-w-[860px] flex-col overflow-hidden rounded-t-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(8,18,48,0.96),rgba(75,37,123,0.9),rgba(20,101,98,0.88),rgba(9,20,45,0.96))] p-3 pb-[max(12px,env(safe-area-inset-bottom))] shadow-[0_20px_60px_rgba(0,0,0,0.46)] sm:max-h-[90vh] sm:rounded-[28px] sm:p-4 sm:pb-4">
+                <div className="flex shrink-0 items-center justify-between gap-3">
+                  <div className="text-base font-black text-white sm:text-lg">全部预览</div>
+                  <button type="button" onClick={() => setIsPreviewDialogOpen(false)} className="touch-manipulation rounded-full border border-white/12 px-3 py-1.5 text-sm font-bold text-white/72">
+                    关闭
+                  </button>
+                </div>
+                <div className="mt-3 min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1 [scrollbar-gutter:stable] sm:mt-4">
+                  <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4">
                   {petPoolPreviewRows.map((item) => (
                     <PetPoolPreviewTile
                       key={`dialog-${item.key}`}
@@ -596,17 +714,17 @@ export const Shop: React.FC<ShopProps> = ({
               </motion.div>
             </motion.div>
           )}
-        </AnimatePresence>
-        <AnimatePresence>
+      </AnimatePresence>
+      <AnimatePresence>
           {appleBuyOpen && smallApple ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-[#020817]/82 p-4 backdrop-blur-sm">
-              <motion.div initial={{ scale: 0.96, opacity: 0, y: 14 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0, y: 14 }} className="w-full max-w-[420px] overflow-hidden rounded-[26px] border border-white/12 bg-[linear-gradient(135deg,rgba(18,12,48,0.98),rgba(64,34,112,0.94),rgba(12,42,58,0.94))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.46)]">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-end justify-center bg-[#020817]/82 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+              <motion.div initial={{ scale: 0.96, opacity: 0, y: 14 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0, y: 14 }} className="w-full max-w-[420px] overflow-hidden rounded-t-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(18,12,48,0.98),rgba(64,34,112,0.94),rgba(12,42,58,0.94))] p-4 pb-[max(12px,env(safe-area-inset-bottom))] shadow-[0_20px_60px_rgba(0,0,0,0.46)] sm:rounded-[26px] sm:p-5 sm:pb-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="text-lg font-black text-white">购买小苹果</div>
                     <div className="mt-1 text-xs font-semibold text-white/58">每个恢复 {SMALL_APPLE_RECOVERY} 点体力，单价 {SMALL_APPLE_PRICE} 龟币</div>
                   </div>
-                  <button type="button" onClick={() => setAppleBuyOpen(false)} className="rounded-full border border-white/12 px-3 py-1 text-sm font-bold text-white/72 transition hover:text-white">
+                  <button type="button" onClick={() => setAppleBuyOpen(false)} className="touch-manipulation rounded-full border border-white/12 px-3 py-1 text-sm font-bold text-white/72 transition hover:text-white">
                     关闭
                   </button>
                 </div>
@@ -631,19 +749,19 @@ export const Shop: React.FC<ShopProps> = ({
                     step={1}
                     value={appleBuyCount}
                     onChange={(event) => setAppleBuyCount(Math.max(1, Math.floor(Number(event.target.value) || 1)))}
-                    className="mt-2 h-11 w-full rounded-2xl border border-white/12 bg-[#071127]/70 px-4 text-base font-black text-white outline-none transition focus:border-emerald-300/45"
+                    className="mt-2 h-12 w-full rounded-2xl border border-white/12 bg-[#071127]/70 px-4 text-base font-black text-white outline-none transition focus:border-emerald-300/45"
                   />
                 </div>
 
-                <div className="mt-5 flex items-center justify-end gap-3">
-                  <button type="button" onClick={() => setAppleBuyOpen(false)} className="rounded-2xl border border-white/12 px-4 py-2 text-sm font-bold text-white/62 transition hover:text-white">
+                <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                  <button type="button" onClick={() => setAppleBuyOpen(false)} className="touch-manipulation rounded-2xl border border-white/12 py-2.5 text-sm font-bold text-white/62 transition hover:text-white sm:px-4">
                     取消
                   </button>
                   <button
                     type="button"
                     onClick={confirmSmallApplePurchase}
                     disabled={aiAppleMutation.isLoading}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-emerald-500 px-5 py-2 text-sm font-black text-white shadow-[0_12px_28px_rgba(16,185,129,0.28)] transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-55"
+                    className="inline-flex touch-manipulation items-center justify-center gap-2 rounded-2xl bg-emerald-500 py-2.5 text-sm font-black text-white shadow-[0_12px_28px_rgba(16,185,129,0.28)] transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-55 sm:px-5"
                   >
                     <Coins size={15} />
                     {aiAppleMutation.isLoading ? '购买中...' : '确认购买'}
@@ -652,8 +770,7 @@ export const Shop: React.FC<ShopProps> = ({
               </motion.div>
             </motion.div>
           ) : null}
-        </AnimatePresence>
-      </div>
+      </AnimatePresence>
 
       {/* ━━━ Gacha Section ━━━ */}
       <div className="hidden">

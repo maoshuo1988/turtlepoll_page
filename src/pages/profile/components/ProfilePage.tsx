@@ -58,8 +58,16 @@ const PROFILE_TABS: { key: ProfileTab; label: string }[] = [
   { key: 'downvoted', label: '已点踩' },
 ];
 
+/** xl 以下与 Profile 手机壳一致：外层不再叠一层大卡 */
 const cardClass =
-  'rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,#111315_0%,#0b0c0e_100%)] shadow-[0_18px_50px_rgba(0,0,0,0.28)]';
+  'rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,#111315_0%,#0b0c0e_100%)] shadow-[0_18px_50px_rgba(0,0,0,0.28)] max-xl:rounded-none max-xl:border-0 max-xl:bg-transparent max-xl:shadow-none';
+
+/** 列表项：窄屏圆角与边框略收（与 xl:hidden 布局同断点） */
+const feedCard =
+  'rounded-[20px] border border-white/8 bg-white/[0.03] max-xl:rounded-[16px] max-xl:border-white/[0.06]';
+
+const bannerRow =
+  'rounded-[20px] bg-black/70 px-4 py-4 text-white max-xl:rounded-[16px] max-xl:px-3 max-xl:py-3';
 
 const emptyArt = (
   <div className="relative h-[116px] w-[116px]">
@@ -103,7 +111,7 @@ const ProfileTabButton: React.FC<{
 }> = ({ active, label, onClick }) => (
   <button
     onClick={onClick}
-    className={`shrink-0 rounded-full !px-4 !py-2.5 text-[14px] font-bold transition-all ${
+    className={`shrink-0 rounded-full max-xl:!px-3 max-xl:!py-2 max-xl:text-[13px] !px-4 !py-2.5 text-[14px] font-bold transition-all ${
       active ? 'bg-[#3a4348] text-white' : 'text-[#d8dde2] hover:bg-white/6'
     }`}
   >
@@ -180,7 +188,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderOverview = () => (
     <>
-      <div className="rounded-[20px] bg-black/70 px-4 py-4 text-white">
+      <div className={bannerRow}>
         <button className="flex w-full items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <Eye size={18} className="text-[#cad2d9]" />
@@ -224,7 +232,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       ) : (
         <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
           {userPosts.slice(0, 3).map((post) => (
-            <article key={post.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] p-4 md:p-5">
+            <article key={post.id} className={`${feedCard} p-4 md:p-5`}>
               <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
                 <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">{post.tag}</span>
                 <span>{post.time}</span>
@@ -245,7 +253,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderPosts = () => (
     <>
-      <div className="rounded-[20px] bg-black/70 px-4 py-4 text-white">
+      <div className={bannerRow}>
         <button className="flex w-full items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <Eye size={18} className="text-[#cad2d9]" />
@@ -269,11 +277,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       </div>
 
       {userPostsQuery.isLoading && profileTopics.length === 0 ? (
-        <div className="mt-5 rounded-[20px] border border-white/8 bg-white/[0.03] p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6">
+        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
           正在加载帖子...
         </div>
       ) : userPostsQuery.isError && profileTopics.length === 0 ? (
-        <div className="mt-5 rounded-[20px] border border-rose-400/20 bg-rose-500/8 p-5 text-[14px] text-rose-200 md:mt-6 md:p-6">
+        <div className="mt-5 rounded-[20px] border border-rose-400/20 bg-rose-500/8 p-5 text-[14px] text-rose-200 max-xl:rounded-[16px] md:mt-6 md:p-6">
           {userPostsQuery.error instanceof Error ? userPostsQuery.error.message : '帖子加载失败'}
         </div>
       ) : profileTopics.length === 0 ? (
@@ -288,7 +296,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       ) : (
         <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
           {profileTopics.map((post) => (
-            <article key={post.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] p-4 md:p-5">
+            <article key={post.id} className={`${feedCard} p-4 md:p-5`}>
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
                   {post.node?.name && (
@@ -326,7 +334,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderComments = () => (
     <>
-      <div className="rounded-[20px] bg-black/70 px-4 py-4 text-white">
+      <div className={bannerRow}>
         <button className="flex w-full items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <Eye size={18} className="text-[#cad2d9]" />
@@ -366,7 +374,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             ? [...userComments].sort((a, b) => b.likes - a.likes)
             : userComments
           ).map((comment) => (
-            <article key={comment.id} className="rounded-[20px] border border-white/8 bg-white/[0.03] p-4 md:p-5">
+            <article key={comment.id} className={`${feedCard} p-4 md:p-5`}>
               <div className="text-[12px] text-[#7e8790]">{comment.time}</div>
               <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{comment.content}</p>
               <p className="mt-3 line-clamp-2 text-[13px] leading-6 text-[#7e8790]">原帖：{comment.postTitle}</p>
@@ -411,21 +419,21 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   return (
     <section className={`w-full min-w-0 overflow-x-hidden text-white ${cardClass}`}>
-      <div className="xl:hidden min-w-0 overflow-x-hidden px-4 py-4">
-        <div className="min-w-0 rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] px-4 py-4">
+      <div className="xl:hidden min-w-0 overflow-x-hidden px-3 pb-1 pt-2">
+        <div className="min-w-0 rounded-[18px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] px-3 py-3 shadow-[0_10px_28px_rgba(0,0,0,0.2)]">
           <div className="flex items-start justify-between gap-3">
             <button
               onClick={onBack}
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-black/35 text-[#b8c0c7]"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/35 text-[#b8c0c7]"
             >
               <ArrowLeft size={18} />
             </button>
-            <button className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-black/35 text-[#b8c0c7]">
+            <button className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/35 text-[#b8c0c7]">
               <Settings2 size={18} />
             </button>
           </div>
 
-          <div className="mt-4 flex min-w-0 items-start gap-3">
+          <div className="mt-3 flex min-w-0 items-start gap-3">
             <div className="relative shrink-0">
               <div className="grid h-[72px] w-[72px] place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-[26px] font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
                 {avatar}
@@ -444,24 +452,24 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-3 grid grid-cols-3 gap-1.5">
             {overviewStats.map((item) => (
-              <div key={item.label} className="rounded-[18px] bg-black/25 px-2 py-2.5 text-center">
+              <div key={item.label} className="rounded-[14px] bg-black/22 px-2 py-2 text-center">
                 <div className="text-[10px] text-[#7e8790]">{item.label}</div>
                 <div className="mt-1 text-[16px] font-black text-white">{item.value}</div>
               </div>
             ))}
           </div>
 
-          <div className="mt-4 grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-2">
+          <div className="mt-3 grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-2">
             <button
               onClick={onOpenForum}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#f3f4f6] px-4 text-[14px] font-bold text-[#111315]"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#f3f4f6] px-3 text-[14px] font-bold text-[#111315]"
             >
               <MessageSquarePlus size={18} />
               发微博式帖子
             </button>
-            <div className="inline-flex h-11 max-w-[42vw] min-w-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-4 text-[12px] font-bold text-[#d5dee5]">
+            <div className="inline-flex h-11 max-w-[42vw] min-w-0 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.04] px-3 text-[12px] font-bold text-[#d5dee5]">
               <span className="truncate">
               {equippedSkin ? `${equippedSkin.avatar} ${equippedSkin.name}` : '未装备皮肤'}
               </span>
@@ -469,7 +477,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
         </div>
 
-        <div className="mt-3 min-w-0 rounded-[24px] border border-white/8 bg-white/[0.03] px-4 py-4">
+        <div className="mt-2.5 min-w-0 rounded-[18px] border border-white/[0.06] bg-white/[0.03] px-3 py-3">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="text-[14px] font-bold text-white">{pet.name}</div>
@@ -479,19 +487,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               Lv.{pet.level}
             </div>
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <div className="rounded-[18px] bg-black/25 px-3 py-3">
+          <div className="mt-2.5 grid grid-cols-2 gap-1.5">
+            <div className="rounded-[14px] bg-black/22 px-3 py-2.5">
               <div className="text-[11px] text-[#7e8790]">体力</div>
-              <div className="mt-2 text-[18px] font-black text-white">{pet.stamina}/{pet.maxStamina}</div>
+              <div className="mt-1.5 text-[18px] font-black text-white">{pet.stamina}/{pet.maxStamina}</div>
             </div>
-            <div className="rounded-[18px] bg-black/25 px-3 py-3">
+            <div className="rounded-[14px] bg-black/22 px-3 py-2.5">
               <div className="text-[11px] text-[#7e8790]">龟币</div>
-              <div className="mt-2 text-[18px] font-black text-white">{balance.toLocaleString()}</div>
+              <div className="mt-1.5 text-[18px] font-black text-white">{balance.toLocaleString()}</div>
             </div>
           </div>
         </div>
 
-        <div id="profile-settings" className="mt-3 min-w-0 rounded-[24px] border border-white/8 bg-white/[0.03] px-4 py-4">
+        <div id="profile-settings" className="mt-2.5 min-w-0 rounded-[18px] border border-white/[0.06] bg-white/[0.03] px-3 py-3">
           <div className="flex items-center justify-between gap-3">
             <div>
               <div className="text-[14px] font-bold text-white">设置与入口</div>
@@ -502,11 +510,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             </div>
           </div>
 
-          <div className="mt-3 space-y-2">
+          <div className="mt-2 space-y-2">
             <button
               type="button"
               onClick={onOpenAuth}
-              className="flex w-full items-center justify-between rounded-[18px] border border-white/10 bg-black/25 px-4 py-3 text-left"
+              className="flex w-full items-center justify-between rounded-[14px] border border-white/[0.08] bg-black/22 px-3 py-2.5 text-left"
             >
               <div className="flex min-w-0 items-center gap-3">
                 <div className="grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-white/10 bg-[#15161a] text-white">
@@ -535,7 +543,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             <button
               type="button"
               onClick={onToggleTheme}
-              className="flex w-full items-center justify-between rounded-[18px] border border-white/10 bg-black/25 px-4 py-3 text-left"
+              className="flex w-full items-center justify-between rounded-[14px] border border-white/[0.08] bg-black/22 px-3 py-2.5 text-left"
             >
               <div className="flex items-center gap-3">
                 <div className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-[#15161a] text-zinc-200">
@@ -555,8 +563,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto overflow-y-hidden [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.18)_transparent] [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/15">
-          <div className="flex min-w-max gap-2 pb-1">
+        <div className="mt-3 overflow-x-auto overflow-y-hidden [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.18)_transparent] [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/15">
+          <div className="flex min-w-max gap-1.5 pb-0.5">
             {PROFILE_TABS.map((tab) => (
               <ProfileTabButton
                 key={tab.key}
@@ -568,7 +576,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
         </div>
 
-        <div className="mt-5 min-w-0 border-t border-white/10 pt-4">
+        <div className="mt-4 min-w-0 border-t border-white/[0.07] pt-3">
           {renderContent()}
         </div>
       </div>

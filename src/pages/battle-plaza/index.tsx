@@ -5,7 +5,7 @@ import { BattlePlazaPageView } from './components/BattlePlazaPageView';
 
 export default function BattlePlazaPage() {
   return (
-    <div className="pt-[10px]">
+    <div className="pt-0 lg:pt-[10px]">
       <BattlePlazaPageView />
     </div>
   );

@@ -65,18 +65,18 @@ function Shell({
   return (
     <div className="fixed inset-0 z-[100]">
       <div className="absolute inset-0 bg-[rgba(0,0,0,0.72)] backdrop-blur-[10px]" onClick={onClose} />
-      <div className="absolute inset-0 grid place-items-center p-4">
+      <div className="absolute inset-0 grid place-items-center p-3 lg:p-4 max-lg:items-end max-lg:p-0 max-lg:pb-[env(safe-area-inset-bottom,0px)]">
         <div
-          className={`relative w-full ${maxWidth} overflow-hidden rounded-[42px] border border-white/10 bg-[linear-gradient(180deg,#0b0b0d_0%,#101114_52%,#0c0c0e_100%)] shadow-[0_28px_110px_rgba(0,0,0,0.56),inset_0_1px_0_rgba(255,255,255,0.06)]`}
+          className={`relative w-full ${maxWidth} max-lg:max-w-none overflow-hidden overscroll-y-contain rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,#0b0b0d_0%,#101114_52%,#0c0c0e_100%)] shadow-[0_28px_110px_rgba(0,0,0,0.56),inset_0_1px_0_rgba(255,255,255,0.06)] max-lg:max-h-[min(92dvh,840px)] max-lg:overflow-y-auto max-lg:rounded-t-[26px] max-lg:rounded-b-none max-lg:border-x-0 max-lg:border-b-0 max-lg:pb-[max(12px,env(safe-area-inset-bottom,0px))] max-lg:shadow-[0_-12px_48px_rgba(0,0,0,0.45)] max-lg:touch-manipulation lg:rounded-[42px]`}
           onClick={(event) => event.stopPropagation()}
         >
           {children}
           <button
             type="button"
-            className="absolute right-[18px] top-[14px] grid h-[56px] w-[56px] place-items-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_35%_30%,#24262c_0%,#17181c_45%,#101114_100%)] text-white shadow-[0_10px_20px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)]"
+            className="absolute right-3 top-3 z-[1] grid h-11 w-11 touch-manipulation place-items-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_35%_30%,#24262c_0%,#17181c_45%,#101114_100%)] text-white shadow-[0_10px_20px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)] lg:right-[18px] lg:top-[14px] lg:h-[56px] lg:w-[56px]"
             onClick={onClose}
           >
-            <X size={24} strokeWidth={2.8} />
+            <X className="h-5 w-5 lg:h-6 lg:w-6" strokeWidth={2.8} />
           </button>
         </div>
       </div>
@@ -107,21 +107,21 @@ function PrimaryInput({
 
   return (
     <label
-      className={`flex h-[48px] items-center rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(20,21,24,0.98),rgba(15,16,19,0.96))] !px-[12px] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_6px_20px_rgba(0,0,0,0.24)] ${className}`}
+      className={`flex h-[46px] items-center rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(20,21,24,0.98),rgba(15,16,19,0.96))] !px-[10px] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_6px_20px_rgba(0,0,0,0.24)] lg:h-[48px] lg:rounded-[36px] lg:!px-[12px] ${className}`}
     >
-      <span className="!mr-[12px] text-zinc-500">{icon}</span>
+      <span className="!mr-[10px] shrink-0 text-zinc-500 lg:!mr-[12px]">{icon}</span>
       <input
         type={actualType}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="h-full w-full bg-transparent text-[18px] font-medium tracking-[-0.02em] text-white outline-none placeholder:text-white/54"
+        className="h-full min-w-0 flex-1 bg-transparent text-[16px] font-medium tracking-[-0.02em] text-white outline-none placeholder:text-white/54 lg:text-[18px]"
       />
       {type === 'password' && onToggleReveal ? (
         <button
           type="button"
           onClick={onToggleReveal}
-          className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:text-white"
+          className="ml-3 inline-flex h-9 w-9 touch-manipulation items-center justify-center rounded-full text-zinc-400 transition-colors hover:text-white lg:h-8 lg:w-8"
           aria-label={revealed ? '隐藏密码' : '显示密码'}
         >
           {revealed ? <EyeOff size={18} strokeWidth={2.1} /> : <Eye size={18} strokeWidth={2.1} />}
@@ -140,7 +140,7 @@ function LabeledField({
 }) {
   return (
     <label className="block">
-      <div className="!mb-[10px] !pl-[16px] text-[18px] font-medium tracking-[-0.02em] text-zinc-400">{label}</div>
+      <div className="!mb-2 !pl-3 text-[15px] font-medium tracking-[-0.02em] text-zinc-400 lg:!mb-[10px] lg:!pl-[16px] lg:text-[18px]">{label}</div>
       {children}
     </label>
   );
@@ -151,7 +151,7 @@ function ErrorText({ text }: { text: string }) {
     return null;
   }
 
-  return <div className="mt-4 text-[16px] text-[#ff8e97]">{text}</div>;
+  return <div className="mt-3 text-[14px] text-[#ff8e97] lg:mt-4 lg:text-[16px]">{text}</div>;
 }
 
 function LoginPanel({
@@ -172,19 +172,19 @@ function LoginPanel({
   const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   return (
-    <div className="!px-[22px] !pb-[10px] !pt-[22px]">
+    <div className="!px-4 !pb-3 !pt-4 lg:!px-[22px] lg:!pb-[10px] lg:!pt-[22px]">
       <div className="rounded-[38px]">
-        <div className="!mt-[50px] !px-[22px] !pb-[18px] !pt-[18px]">
-          <div className="!space-y-[20px]">
+        <div className="!mt-12 !px-2 !pb-4 !pt-2 lg:!mt-[50px] lg:!px-[22px] lg:!pb-[18px] lg:!pt-[18px]">
+          <div className="!space-y-3 lg:!space-y-[20px]">
             <PrimaryInput
-              icon={<Mail size={24} strokeWidth={2.1} />}
+              icon={<Mail className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" strokeWidth={2.1} />}
               value={loginForm.username}
               onChange={(value) => setLoginForm((prev) => ({ ...prev, username: value }))}
               placeholder="请输入用户名"
               type="email"
             />
             <PrimaryInput
-              icon={<LockKeyhole size={24} strokeWidth={2.1} />}
+              icon={<LockKeyhole className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" strokeWidth={2.1} />}
               value={loginForm.password}
               onChange={(value) => setLoginForm((prev) => ({ ...prev, password: value }))}
               placeholder="请输入密码"
@@ -194,43 +194,43 @@ function LoginPanel({
             />
           </div>
 
-          <div className="flex items-center justify-between !px-[8px] !pb-[10px] !pt-[18px]">
+          <div className="flex flex-col gap-3 !px-1 !pb-2 !pt-4 lg:flex-row lg:items-center lg:justify-between lg:!px-[8px] lg:!pb-[10px] lg:!pt-[18px]">
             <button
               type="button"
-              className="inline-flex items-center gap-[14px] text-white"
+              className="inline-flex items-center gap-3 text-white lg:gap-[14px]"
               onClick={() => setLoginForm((prev) => ({ ...prev, remember: !prev.remember }))}
             >
-              <span className={`grid h-[28px] w-[28px] place-items-center rounded-[6px] border ${loginForm.remember ? 'border-white/18 bg-white/10 text-white' : 'border-white/12 text-transparent'}`}>
+              <span className={`grid h-7 w-7 place-items-center rounded-[6px] border lg:h-[28px] lg:w-[28px] ${loginForm.remember ? 'border-white/18 bg-white/10 text-white' : 'border-white/12 text-transparent'}`}>
                 ✓
               </span>
-              <span className="text-[18px] font-medium tracking-[-0.03em]">记住我</span>
+              <span className="text-[16px] font-medium tracking-[-0.03em] lg:text-[18px]">记住我</span>
             </button>
 
-            <button type="button" className="inline-flex items-center gap-[8px] text-[18px] font-semibold text-zinc-300">
+            <button type="button" className="inline-flex items-center gap-1 self-start text-[15px] font-semibold text-zinc-300 lg:gap-[8px] lg:self-auto lg:text-[18px]">
               忘记密码?
-              <ChevronRight size={24} strokeWidth={2.6} />
+              <ChevronRight className="h-5 w-5 lg:h-6 lg:w-6" strokeWidth={2.6} />
             </button>
           </div>
 
           <ErrorText text={error} />
         </div>
 
-        <div className="border-t border-white/8 !px-[34px] !py-[20px]">
+        <div className="border-t border-white/8 !px-5 !py-4 lg:!px-[34px] lg:!py-[20px]">
           <button
             type="button"
             disabled={submitting}
-            className="h-[48px] w-full rounded-full border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[24px] font-black tracking-[0.08em] text-white shadow-[0_18px_34px_rgba(0,0,0,0.34)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-12 w-full touch-manipulation rounded-full border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[18px] font-black tracking-[0.06em] text-white shadow-[0_18px_34px_rgba(0,0,0,0.34)] disabled:cursor-not-allowed disabled:opacity-60 lg:h-[48px] lg:text-[24px] lg:tracking-[0.08em]"
             onClick={onSubmit}
           >
             {submitting ? '登录中' : '登录'}
           </button>
         </div>
 
-        <div className=" !px-[20px] !py-[14px] text-center text-[22px] text-zinc-500">
+        <div className="!px-4 !py-3 text-center text-[15px] text-zinc-500 lg:!px-[20px] lg:!py-[14px] lg:text-[22px]">
           还没有账户？
-          <button type="button" className="ml-[14px] inline-flex items-center gap-[6px] font-semibold text-white" onClick={onSwitchToRegister}>
+          <button type="button" className="ml-2 inline-flex items-center gap-1 font-semibold text-white lg:ml-[14px] lg:gap-[6px]" onClick={onSwitchToRegister}>
             立即注册
-            <ChevronRight size={24} strokeWidth={2.6} />
+            <ChevronRight className="h-5 w-5 lg:h-6 lg:w-6" strokeWidth={2.6} />
           </button>
         </div>
       </div>
@@ -257,37 +257,37 @@ function RegisterPanel({
   const [showRegisterRePassword, setShowRegisterRePassword] = useState(false);
 
   return (
-    <div className="!px-[28px] !pb-[12px] !pt-[28px]">
-      <div className="!pb-[18px] !pl-[10px]">
+    <div className="!px-4 !pb-4 !pt-5 lg:!px-[28px] lg:!pb-[12px] lg:!pt-[28px]">
+      <div className="!pb-3 !pl-1 lg:!pb-[18px] lg:!pl-[10px]">
         <button
           type="button"
-          className="!mb-[14px] inline-flex items-center gap-[8px] rounded-full border border-white/10 bg-[rgba(255,255,255,0.04)] !px-[14px] !py-[8px] text-[14px] font-medium text-zinc-300"
+          className="!mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[rgba(255,255,255,0.04)] !px-3 !py-2 text-[13px] font-medium text-zinc-300 lg:!mb-[14px] lg:gap-[8px] lg:!px-[14px] lg:!py-[8px] lg:text-[14px]"
           onClick={onBackToLogin}
         >
-          <ArrowLeft size={24} />
+          <ArrowLeft className="h-5 w-5 lg:h-6 lg:w-6" />
           返回登录
         </button>
-        <h2 className="text-[28px] font-bold tracking-[-0.05em] text-white">创建账户</h2>
-        <p className="mt-[8px] text-[14px] tracking-[-0.02em] text-zinc-500">注册一个新的 Turtle Pass 账户</p>
+        <h2 className="text-[22px] font-bold tracking-[-0.05em] text-white lg:text-[28px]">创建账户</h2>
+        <p className="mt-2 text-[13px] tracking-[-0.02em] text-zinc-500 lg:mt-[8px] lg:text-[14px]">注册一个新的 Turtle Pass 账户</p>
       </div>
 
-      <div className="!space-y-[18px] !px-[4px]">
+      <div className="!space-y-3 !px-1 lg:!space-y-[18px] lg:!px-[4px]">
         <PrimaryInput
-          icon={<Mail size={24} strokeWidth={2.1} />}
+          icon={<Mail className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" strokeWidth={2.1} />}
           value={registerForm.email}
           onChange={(value) => setRegisterForm((prev) => ({ ...prev, email: value }))}
           placeholder="请输入邮箱"
           type="email"
         />
 
-        <div className="grid grid-cols-2 !gap-[18px]">
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:!gap-[18px]">
           <LabeledField label="用户名">
             <PrimaryInput
               icon={null}
               value={registerForm.username}
               onChange={(value) => setRegisterForm((prev) => ({ ...prev, username: value }))}
               placeholder="请输入用户名"
-              className="px-[28px]"
+              className="!px-4 lg:px-[28px]"
             />
           </LabeledField>
           <LabeledField label="昵称">
@@ -296,12 +296,12 @@ function RegisterPanel({
               value={registerForm.nickname}
               onChange={(value) => setRegisterForm((prev) => ({ ...prev, nickname: value }))}
               placeholder="请输入昵称"
-              className="px-[28px]"
+              className="!px-4 lg:px-[28px]"
             />
           </LabeledField>
         </div>
 
-        <div className="grid grid-cols-2 gap-[18px]">
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-[18px]">
           <LabeledField label="密码">
             <PrimaryInput
               icon={null}
@@ -311,7 +311,7 @@ function RegisterPanel({
               type="password"
               revealed={showRegisterPassword}
               onToggleReveal={() => setShowRegisterPassword((prev) => !prev)}
-              className="px-[28px]"
+              className="!px-4 lg:px-[28px]"
             />
           </LabeledField>
           <LabeledField label="确认密码">
@@ -323,20 +323,20 @@ function RegisterPanel({
               type="password"
               revealed={showRegisterRePassword}
               onToggleReveal={() => setShowRegisterRePassword((prev) => !prev)}
-              className="px-[28px]"
+              className="!px-4 lg:px-[28px]"
             />
           </LabeledField>
         </div>
 
-        <div className="!px-[14px] text-[18px] tracking-[-0.02em] text-zinc-500">点击提交后会进入数字验证码验证</div>
+        <div className="!px-2 text-[15px] tracking-[-0.02em] text-zinc-500 lg:!px-[14px] lg:text-[18px]">点击提交后会进入数字验证码验证</div>
         <ErrorText text={error} />
       </div>
 
-      <div className="!my-[22px] border-t border-white/8 !px-[10px] !pt-[16px]">
+      <div className="!my-5 border-t border-white/8 !px-2 !pt-4 lg:!my-[22px] lg:!px-[10px] lg:!pt-[16px]">
         <button
           type="button"
           disabled={submitting}
-          className="h-[48px] w-full rounded-full border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[24px] font-black tracking-[0.08em] text-white shadow-[0_18px_34px_rgba(0,0,0,0.34)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-12 w-full touch-manipulation rounded-full border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[18px] font-black tracking-[0.06em] text-white shadow-[0_18px_34px_rgba(0,0,0,0.34)] disabled:cursor-not-allowed disabled:opacity-60 lg:h-[48px] lg:text-[24px] lg:tracking-[0.08em]"
           onClick={onSubmit}
         >
           {submitting ? '注册中' : '注册'}
@@ -358,48 +358,48 @@ function UserPanel({
   onSignOut: () => Promise<void>;
 }) {
   return (
-    <div className="!px-[28px] !pb-[28px] !pt-[40px]">
-      <div className="rounded-[36px] ! p-[28px] text-white">
-        <div className="flex items-center gap-[18px]">
-          <div className="grid h-[92px] w-[92px] place-items-center rounded-full border border-white/10 bg-[linear-gradient(135deg,#23252a,#101114)] text-[36px] font-black">
+    <div className="!px-4 !pb-6 !pt-12 lg:!px-[28px] lg:!pb-[28px] lg:!pt-[40px]">
+      <div className="rounded-[36px] !p-5 text-white lg:!p-[28px]">
+        <div className="flex items-center gap-3 lg:gap-[18px]">
+          <div className="grid h-[72px] w-[72px] shrink-0 place-items-center rounded-full border border-white/10 bg-[linear-gradient(135deg,#23252a,#101114)] text-[28px] font-black lg:h-[92px] lg:w-[92px] lg:text-[36px]">
             {userinfo?.nickname ? userinfo.nickname.slice(0, 1).toUpperCase() : "g"}
           </div>
           <div className="min-w-0">
-            <div className="text-[18px] text-zinc-400">当前已登录</div>
-            <div className="truncate text-[24px] font-bold tracking-[-0.04em]">{userinfo.email}</div>
+            <div className="text-[15px] text-zinc-400 lg:text-[18px]">当前已登录</div>
+            <div className="truncate text-[18px] font-bold tracking-[-0.04em] lg:text-[24px]">{userinfo.email}</div>
           </div>
         </div>
 
-        <div className="!mt-[24px] grid grid-cols-2 !gap-[14px]">
-          <div className="rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] !px-[20px] !py-[18px]">
-            <div className="text-[16px] text-zinc-400">用户名</div>
-            <div className="!mt-[10px] text-[28px] font-semibold">{String(userinfo?.username ?? '-')}</div>
+        <div className="!mt-5 grid grid-cols-1 gap-3 lg:!mt-[24px] lg:grid-cols-2 lg:!gap-[14px]">
+          <div className="rounded-[18px] border border-white/10 bg-[rgba(255,255,255,0.04)] !px-4 !py-3 lg:rounded-[24px] lg:!px-[20px] lg:!py-[18px]">
+            <div className="text-[14px] text-zinc-400 lg:text-[16px]">用户名</div>
+            <div className="!mt-2 truncate text-[22px] font-semibold lg:!mt-[10px] lg:text-[28px]">{String(userinfo?.username ?? '-')}</div>
           </div>
-          <div className="rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] !px-[20px] !py-[18px]">
-            <div className="text-[16px] text-zinc-400">昵称</div>
-            <div className="!mt-[10px] text-[28px] font-semibold">{String(userinfo?.nickname ?? '-')}</div>
+          <div className="rounded-[18px] border border-white/10 bg-[rgba(255,255,255,0.04)] !px-4 !py-3 lg:rounded-[24px] lg:!px-[20px] lg:!py-[18px]">
+            <div className="text-[14px] text-zinc-400 lg:text-[16px]">昵称</div>
+            <div className="!mt-2 truncate text-[22px] font-semibold lg:!mt-[10px] lg:text-[28px]">{String(userinfo?.nickname ?? '-')}</div>
           </div>
         </div>
 
-        <div className="!mt-[22px] grid grid-cols-2 !gap-[14px]">
+        <div className="!mt-5 grid grid-cols-1 gap-3 lg:!mt-[22px] lg:grid-cols-2 lg:!gap-[14px]">
           <button
             type="button"
-            className="h-[48px] rounded-[24px] border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[18px] font-bold"
+            className="h-12 rounded-[18px] border border-white/10 bg-[linear-gradient(90deg,#18191c_0%,#23262b_50%,#121316_100%)] text-[16px] font-bold lg:h-[48px] lg:rounded-[24px] lg:text-[18px]"
             onClick={onClose}
           >
             返回首页
           </button>
           <button
             type="button"
-            className="inline-flex h-[48px] items-center justify-center gap-[10px] rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] text-[18px] font-bold"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-[18px] border border-white/10 bg-[rgba(255,255,255,0.04)] text-[16px] font-bold lg:h-[48px] lg:gap-[10px] lg:rounded-[24px] lg:text-[18px]"
             onClick={() => void onSignOut()}
           >
-            <LogOut size={24} />
+            <LogOut className="h-5 w-5 lg:h-6 lg:w-6" />
             退出登录
           </button>
         </div>
 
-        <div className="!mt-[22px]">
+        <div className="!mt-5 lg:!mt-[22px]">
           <AuthDailySettleCard dailySettle={dailySettle} />
         </div>
       </div>
