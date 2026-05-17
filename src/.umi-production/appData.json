@@ -55,7 +55,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -146,10 +146,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            7
+            10
           ]
         },
-        "register": 11
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -196,7 +196,7 @@
       "time": {
         "hooks": {
           "onCheck": [
-            1
+            0
           ]
         },
         "register": 0
@@ -1124,7 +1124,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 40
+        "register": 44
       },
       "enableBy": "register"
     },
@@ -1137,7 +1137,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 16
       },
       "enableBy": "config"
     },
@@ -1167,7 +1167,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1206,7 +1206,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1243,7 +1243,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1256,7 +1256,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1298,7 +1298,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1324,7 +1324,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1376,7 +1376,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1465,7 +1465,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 13
       },
       "enableBy": "config"
     },
@@ -1478,7 +1478,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1582,7 +1582,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1606,7 +1606,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 14
+        "register": 13
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1618,7 +1618,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1631,7 +1631,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1644,7 +1644,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1657,7 +1657,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 19
       },
       "enableBy": "register"
     },
@@ -1670,7 +1670,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1682,7 +1682,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1695,7 +1695,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1721,7 +1721,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1734,7 +1734,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1747,7 +1747,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1786,7 +1786,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1825,7 +1825,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1851,7 +1851,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1890,7 +1890,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1903,7 +1903,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2173,7 +2173,7 @@
       "parentId": "@@/global-layout",
       "id": "2",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => PATH_VIEW_MAP[location.pathname] ?? 'predictions', [location.pathname]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => PATH_VIEW_MAP[location.pathname] ?? 'predictions', [location.pathname]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme, aiPushMessages }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n            aiPushMessages,\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/home.tsx"
     },
@@ -2263,7 +2263,7 @@
       "parentId": "2",
       "id": "11",
       "absPath": "/pet",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetEquipUpdate,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { PetPageView } from './components/PetPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function PetPage() {\n  const navigate = useNavigate();\n  const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);\n  const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);\n\n  // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n  const petEquipMutation = useRequestPetEquipUpdate();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  const handleEquipSkin = useCallback((skinId: string) => {\n    setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));\n  }, []);\n\n  const handleEquipPet = useCallback(async (petId: number | string) => {\n    const result = await petEquipMutation.mutateAsync({ petId });\n    void Promise.all([\n      petEquipQuery.refetch(),\n      petOwnedQuery.refetch(),\n      petStatusQuery.refetch(),\n    ]);\n    return result;\n  }, [petEquipMutation, petEquipQuery, petOwnedQuery, petStatusQuery]);\n\n  return (\n    <PetPageView\n      pet={currentPet}\n      balance={coinMe.data?.balance ?? mockUser.balance}\n      winRate={0.68}\n      winStreak={mockUser.winStreak}\n      totalPredictions={42}\n      onBack={() => {\n        navigate('/');\n      }}\n      skins={skins}\n      onEquipSkin={handleEquipSkin}\n      equippedPet={petEquipQuery.data ?? null}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n      petStatus={petStatusQuery.data ?? null}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onEquipPet={handleEquipPet}\n      equippingPetId={\n        petEquipMutation.isLoading\n          ? (petEquipMutation.variables?.petId ?? petEquipMutation.variables?.petKey ?? null)\n          : null\n      }\n      onStaminaChange={setPetStamina}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetEquipUpdate,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { PetPageView } from './components/PetPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\nimport { useHomeLayoutContext } from '@/layouts/context';\n\nexport default function PetPage() {\n  const navigate = useNavigate();\n  const { aiPushMessages } = useHomeLayoutContext();\n  const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);\n  const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);\n\n  // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n  const petEquipMutation = useRequestPetEquipUpdate();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  const handleEquipSkin = useCallback((skinId: string) => {\n    setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));\n  }, []);\n\n  const handleEquipPet = useCallback(async (petId: number | string) => {\n    const result = await petEquipMutation.mutateAsync({ petId });\n    void Promise.all([\n      petEquipQuery.refetch(),\n      petOwnedQuery.refetch(),\n      petStatusQuery.refetch(),\n    ]);\n    return result;\n  }, [petEquipMutation, petEquipQuery, petOwnedQuery, petStatusQuery]);\n\n  return (\n    <PetPageView\n      pet={currentPet}\n      balance={coinMe.data?.balance ?? mockUser.balance}\n      winRate={0.68}\n      winStreak={mockUser.winStreak}\n      totalPredictions={42}\n      onBack={() => {\n        navigate('/');\n      }}\n      skins={skins}\n      onEquipSkin={handleEquipSkin}\n      equippedPet={petEquipQuery.data ?? null}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n      petStatus={petStatusQuery.data ?? null}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onEquipPet={handleEquipPet}\n      equippingPetId={\n        petEquipMutation.isLoading\n          ? (petEquipMutation.variables?.petId ?? petEquipMutation.variables?.petKey ?? null)\n          : null\n      }\n      onStaminaChange={setPetStamina}\n      aiPushMessages={aiPushMessages}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/pet/index.tsx"
     },

@@ -1,4 +1,4 @@
-/** 文件说明：世界杯专题页面，体育转播 HUD 风格 —— 预测板、暗盘赛程、开撕台、最新消息。 */
+/** 文件说明：世界杯专题页面，体育转播 HUD 风格 —— 预测板、暗盘赛程、最新消息等。 */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from '@umijs/renderer-react';
 import {
@@ -160,6 +160,9 @@ const fallbackTodayFixtures: Fixture[] = [
     signalTone: 'sky',
   },
 ];
+
+/** 侧栏「开撕台」展示开关（暂时关闭，改为 true 可恢复）。 */
+const SHOW_WORLD_CUP_DEBATE_STAGE = false;
 
 const debates = [
   {
@@ -1159,7 +1162,7 @@ export function WorldCupPage() {
 
         {/* 侧栏 */}
         <aside className="grid content-start gap-4">
-          {/* 开撕台 */}
+          {SHOW_WORLD_CUP_DEBATE_STAGE ? (
           <section className="relative overflow-hidden rounded-[14px] border border-rose-400/25 bg-[linear-gradient(160deg,rgba(20,4,10,0.92),rgba(4,11,15,0.97)_60%)] shadow-[0_0_24px_rgba(255,46,99,0.10),0_18px_42px_rgba(0,0,0,0.38)]">
             <CornerBrackets />
             <header className="relative flex items-center justify-between border-b border-rose-400/20 px-5 py-4">
@@ -1218,6 +1221,7 @@ export function WorldCupPage() {
               ))}
             </ul>
           </section>
+          ) : null}
 
           {/* 最新消息 */}
           <section className="relative overflow-hidden rounded-[14px] border border-cyan-400/25 bg-[linear-gradient(165deg,rgba(4,18,24,0.92),rgba(4,11,15,0.98)_62%)] shadow-[0_0_24px_rgba(34,211,238,0.10),0_18px_42px_rgba(0,0,0,0.4)]">

@@ -25,6 +25,8 @@ interface PetChatProps {
   onClose: () => void;
   /** When true the chat fills its parent height and the X button shows "回到大厅" */
   fullScreen?: boolean;
+  /** 嵌入 Tab / 面板时使用更高可视高度（移动端宠物页 AI 对话） */
+  embedded?: boolean;
   stamina?: number;
   onStaminaChange?: (newStamina: number) => void;
   aiPushMessages?: AiPushMessage[];
@@ -42,7 +44,7 @@ function getAiChatErrorMessage(error: unknown, fallback: string) {
   return fallback;
 }
 
-export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, stamina, aiPushMessages = [] }) => {
+export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embedded, stamina, aiPushMessages = [] }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: 'init', role: 'pet', text: `主人好呀！我是${pet.name}~\n想了解哪个事件的概率？直接问我就好！` },
   ]);
@@ -167,7 +169,11 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, stam
   };
 
   return (
-    <div className={`legacy-pet-chat flex flex-col ${fullScreen ? 'h-full' : 'h-[360px]'}`}>
+    <div
+      className={`legacy-pet-chat flex flex-col ${
+        fullScreen ? 'h-full' : embedded ? 'h-[min(62vh,520px)] min-h-[320px]' : 'h-[360px]'
+      }`}
+    >
       {/* Header */}
       <div className="flex items-center gap-2.5 px-3 py-2.5 border-b border-emerald-100 dark:border-emerald-900/30 shrink-0">
         <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 grid place-items-center text-base">

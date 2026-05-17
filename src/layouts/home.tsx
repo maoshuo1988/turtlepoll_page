@@ -53,12 +53,13 @@ export default function HomeLayout() {
       onAuthModalOpenChange={setAuthModalOpen}
     >
       {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}
-      {({ darkMode, onToggleTheme }) => (
+      {({ darkMode, onToggleTheme, aiPushMessages }) => (
         <HomeLayoutProvider
           value={{
             darkMode,
             onToggleTheme,
             onOpenAuth: () => setAuthModalOpen(true),
+            aiPushMessages,
           }}
         >
           <Outlet />

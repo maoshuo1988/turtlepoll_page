@@ -3,7 +3,7 @@
  */
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Users, MessageSquare, Trophy, Clock3, Lock, Coins } from 'lucide-react';
+import { ShieldCheck, MessageSquare, Trophy, Clock3, Lock, Coins } from 'lucide-react';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { usePredictionCardItems, type PredictionCardItem } from './predictionCards';
 import { PredictionBetModal } from './PredictionBetModal';
@@ -185,11 +185,7 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/5 to-black/0" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#09111e] via-[#09111e]/58 to-transparent" />
 
-          <div className="absolute left-3 right-3 top-3 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1 text-[11px] text-white/65">
-              <Users size={12} />
-              {totalVotes.toLocaleString()} 参与
-            </div>
+          <div className="absolute left-3 right-3 top-3 flex items-center justify-end gap-2">
             <div className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${statusMeta.badgeClassName}`}>
               {item.status === 'open' ? <Coins size={11} /> : item.status === 'closed' ? <Lock size={11} /> : item.betSettleResult === 'WIN' ? <Trophy size={11} /> : <Clock3 size={11} />}
               {statusMeta.badgeLabel}
@@ -271,14 +267,23 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
             </button>
           </div>
 
-          <div className="legacy-pred-card-foot mt-2.5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2.5">
-            <button
-              onClick={() => void handlePrimaryAction()}
-              disabled={primaryAction.disabled || coinSettleMutation.isLoading}
-              className="flex h-[32px] md:h-[28px] min-w-0 items-center justify-center rounded-full border border-[#5d5245] bg-[#181716] px-3 text-[11px] font-semibold text-[#ecd0a7] transition hover:border-[#8a7457] hover:bg-[#211f1d] disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              {coinSettleMutation.isLoading ? '处理中...' : primaryAction.label}
-            </button>
+          <div
+            className={
+              item.status === 'open'
+                ? 'legacy-pred-card-foot mt-2.5 flex justify-end items-center gap-2.5'
+                : 'legacy-pred-card-foot mt-2.5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2.5'
+            }
+          >
+            {item.status !== 'open' ? (
+              <button
+                type="button"
+                onClick={() => void handlePrimaryAction()}
+                disabled={primaryAction.disabled || coinSettleMutation.isLoading}
+                className="flex h-[32px] md:h-[28px] min-w-0 items-center justify-center rounded-full border border-[#5d5245] bg-[#181716] px-3 text-[11px] font-semibold text-[#ecd0a7] transition hover:border-[#8a7457] hover:bg-[#211f1d] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {coinSettleMutation.isLoading ? '处理中...' : primaryAction.label}
+              </button>
+            ) : null}
             {onEnterBattle && (
               <button
                 onClick={() => onEnterBattle(item)}

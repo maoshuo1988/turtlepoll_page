@@ -9,8 +9,10 @@ import {
   Zap,
   Shield,
   Check,
+  MessageCircle,
 } from 'lucide-react';
 import { PetChat } from './PetChat';
+import type { AiPushMessage } from '@/hooks/aiTypes';
 import type {
   PetInfo,
   PetSkin,
@@ -28,12 +30,13 @@ import {
   getPetStatusAiText,
 } from '@/utils/petHelpers';
 
-type PetTab = 'status' | 'species' | 'abilities';
+type PetTab = 'status' | 'species' | 'abilities' | 'aiChat';
 
 const TAB_LIST: { key: PetTab; label: string; icon: React.ReactNode }[] = [
   { key: 'status', label: '状态', icon: <Heart size={14} /> },
   { key: 'species', label: '龟种', icon: <Shield size={14} /> },
   { key: 'abilities', label: '能力', icon: <Zap size={14} /> },
+  { key: 'aiChat', label: 'AI对话', icon: <MessageCircle size={14} /> },
 ];
 
 const card = 'rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
@@ -54,6 +57,8 @@ interface PetPageProps {
   onEquipPet?: (petId: number | string) => Promise<unknown>;
   equippingPetId?: number | string | null;
   onStaminaChange?: (newStamina: number) => void;
+  /** 与 PC 侧栏一致的 AI 推送，传入 PetChat */
+  aiPushMessages?: AiPushMessage[];
 }
 
 /* ── Rarity badge ── */
@@ -526,9 +531,9 @@ export const PetPage: React.FC<PetPageProps> = ({
   onEquipPet,
   equippingPetId,
   onStaminaChange,
+  aiPushMessages = [],
 }) => {
   const [activeTab, setActiveTab] = useState<PetTab>('status');
-  const [chatOpen, setChatOpen] = useState(false);
   const [currentDialogue, setCurrentDialogue] = useState(petDialogues.idle[0]);
   const [dialogueKey, setDialogueKey] = useState(0);
   const equippedOwnedPet = ownedPets?.find((item) => item.isEquipped) ?? null;
@@ -547,11 +552,7 @@ export const PetPage: React.FC<PetPageProps> = ({
     <div className="legacy-pet-page w-full space-y-5">
 
       {/* ━━━ 上半：宠物形象 & 空间 ━━━ */}
-      <div className={`${card} overflow-hidden`}>
-        {chatOpen ? (
-          <PetChat pet={pet} onClose={() => setChatOpen(false)} stamina={pet.stamina} onStaminaChange={onStaminaChange} />
-        ) : (
-          <>
+      <div className={`relative ${card} overflow-hidden`}>
             {/* 返回按钮浮层 */}
             <button
               onClick={onBack}
@@ -799,26 +800,25 @@ export const PetPage: React.FC<PetPageProps> = ({
                 </div>
               </div> */}
             </div>
-          </>
-        )}
       </div>
 
       {/* ━━━ 下半：Tab 面板 ━━━ */}
       <div>
         {/* Tab bar */}
-        <div className={`${card} p-1 mb-4 flex gap-1`}>
+        <div className="mb-4 flex gap-1 rounded-xl border border-slate-200 bg-slate-100 p-1 dark:border-white/10 dark:bg-[#14151a]">
           {TAB_LIST.map((tab) => (
             <button
               key={tab.key}
+              type="button"
               onClick={() => setActiveTab(tab.key)}
-              className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-[12px] font-medium cursor-pointer transition-all border-0 ${
+              className={`flex min-w-0 flex-1 cursor-pointer items-center justify-center gap-1 rounded-lg border-0 px-1.5 py-2 text-[11px] font-medium transition-all sm:gap-1.5 sm:px-2 sm:py-2.5 sm:text-[12px] ${
                 activeTab === tab.key
-                  ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-bold shadow-sm'
-                  : 'bg-transparent text-slate-500 dark:text-rdark-text2 hover:bg-slate-50 dark:hover:bg-rdark-hover'
+                  ? 'bg-emerald-500/15 font-semibold text-emerald-700 shadow-sm dark:bg-emerald-950/40 dark:text-emerald-400'
+                  : 'bg-transparent text-slate-500 hover:bg-white/70 dark:text-zinc-500 dark:hover:bg-white/[0.06]'
               }`}
             >
               {tab.icon}
-              {tab.label}
+              <span className="truncate">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -857,6 +857,18 @@ export const PetPage: React.FC<PetPageProps> = ({
               />
             )}
             {activeTab === 'abilities' && <AbilitiesTab pet={pet} equippedPet={equippedPet} />}
+            {activeTab === 'aiChat' && (
+              <div className={`${card} overflow-hidden p-0`}>
+                <PetChat
+                  pet={pet}
+                  embedded
+                  onClose={() => setActiveTab('status')}
+                  stamina={pet.stamina}
+                  onStaminaChange={onStaminaChange}
+                  aiPushMessages={aiPushMessages}
+                />
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
       </div>

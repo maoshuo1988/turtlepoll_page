@@ -2,6 +2,7 @@
  * 文件说明：App Page Layout，布局组件层，承接 Header、Footer、Sidebar 和页面内容区域。
  */
 import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from '@umijs/renderer-react';
 import { MobileFooter } from '@/components/footer';
 import { MobileHeader, PcHeader } from '@/components/header';
@@ -32,7 +33,6 @@ type SidebarProps = React.ComponentProps<typeof Sidebar>;
 type AppPageLayoutProps = HeaderProps & {
   children: React.ReactNode;
   contentClassName?: string;
-  footerClassName?: string;
   sidebarProps?: SidebarProps;
   showSidebar?: boolean;
   showFooter?: boolean;
@@ -46,6 +46,7 @@ type AppPageLayoutProps = HeaderProps & {
  */
 export function AppLayoutHeader(props: HeaderProps) {
   const navigate = useNavigate();
+  const openGames = props.onOpenGames ?? (() => navigate('/games'));
 
   return (
     <>
@@ -61,9 +62,13 @@ export function AppLayoutHeader(props: HeaderProps) {
       />
       <MobileHeader
         darkMode={props.darkMode}
-        onOpenGames={props.onOpenGames ?? (() => {
-          navigate('/games');
-        })}
+        onOpenGames={openGames}
+        onOpenWorldCup={() => navigate('/world-cup')}
+        onOpenPet={() => navigate('/pet')}
+        onOpenShop={() => navigate('/shop')}
+        onOpenAuth={props.onOpenAuth}
+        onOpenProfile={props.onOpenProfile}
+        onSignOut={props.onSignOut}
       />
     </>
   );
@@ -74,13 +79,13 @@ export function AppLayoutHeader(props: HeaderProps) {
  *
  * PC 展示普通 footer，移动端展示底部选项卡导航。
  */
-export function AppLayoutFooter() {
+export function AppLayoutFooter(props: { mobileTabBarVisible?: boolean }) {
   return (
     <>
       {/* <div className="hidden lg:block">
         <PcFooter />
       </div> */}
-      <MobileFooter />
+      <MobileFooter visible={props.mobileTabBarVisible ?? true} />
     </>
   );
 }
@@ -100,7 +105,6 @@ export function AppLayoutSidebar(props: SidebarProps) {
 export function AppPageLayout({
   children,
   contentClassName = 'min-h-full w-full px-0 pb-0 pt-0',
-  footerClassName = 'border-t border-white/8 bg-[#080808]/96 px-3 py-3 dark:border-rdark-border dark:bg-rdark/96',
   darkMode,
   onToggleTheme,
   onOpenAuth,
@@ -114,6 +118,41 @@ export function AppPageLayout({
   showSidebar = false,
   showFooter = true,
 }: AppPageLayoutProps) {
+  const [scrollContainer, setScrollContainer] = useState<HTMLElement | null>(null);
+  const captureScrollContainerRef = useCallback((node: HTMLElement | null) => {
+    setScrollContainer(node);
+  }, []);
+  const [mobileTabBarVisible, setMobileTabBarVisible] = useState(true);
+  const lastScrollTopRef = useRef(0);
+
+  useEffect(() => {
+    if (!scrollContainer) return;
+    lastScrollTopRef.current = scrollContainer.scrollTop;
+    const onScroll = () => {
+      const y = scrollContainer.scrollTop;
+      const dy = y - lastScrollTopRef.current;
+      lastScrollTopRef.current = y;
+      if (y < 36) {
+        setMobileTabBarVisible(true);
+        return;
+      }
+      if (dy > 14) setMobileTabBarVisible(false);
+      else if (dy < -14) setMobileTabBarVisible(true);
+    };
+    scrollContainer.addEventListener('scroll', onScroll, { passive: true });
+    return () => scrollContainer.removeEventListener('scroll', onScroll);
+  }, [scrollContainer]);
+
+  const mobileBottomPaddingClass =
+    showFooter
+      ? mobileTabBarVisible
+        ? 'max-lg:pb-[calc(56px+env(safe-area-inset-bottom,0px)+10px)]'
+        : 'max-lg:pb-[calc(12px+env(safe-area-inset-bottom,0px))]'
+      : '';
+
+  const contentInnerClassName =
+    `${contentClassName} max-lg:transition-[padding-bottom] max-lg:duration-200 max-lg:ease-out ${mobileBottomPaddingClass}`.trim();
+
   return (
     <div className="legacy-fusion-app fixed-sidebar-style flex h-screen flex-col overflow-hidden bg-[#080808] text-white transition-colors dark:bg-rdark">
       <AppLayoutHeader
@@ -137,17 +176,27 @@ export function AppPageLayout({
             </div>
           </aside>
           {/* 页面内容区域默认铺满右侧剩余空间，具体页面只需要管理自己的内部布局。 */}
-          <div className="app-content min-w-0 flex-1 overflow-x-hidden rounded-none border-0 bg-transparent shadow-none lg:h-full lg:min-h-0 lg:overflow-y-auto">
-            <div className={contentClassName}>{children}</div>
+          <div
+            ref={captureScrollContainerRef}
+            data-app-scroll-root
+            className="app-content min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto rounded-none border-0 bg-transparent shadow-none lg:h-full lg:overflow-y-auto"
+          >
+            <div className={contentInnerClassName}>{children}</div>
           </div>
         </main>
       ) : (
-        <main className={`min-h-0 flex-1 overflow-y-auto ${contentClassName}`}>{children}</main>
+        <main
+          ref={captureScrollContainerRef}
+          data-app-scroll-root
+          className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto lg:overflow-y-auto"
+        >
+          <div className={contentInnerClassName}>{children}</div>
+        </main>
       )}
 
       {showFooter ? (
-        <div className={`shrink-0 lg:hidden ${footerClassName}`}>
-          <AppLayoutFooter />
+        <div className="pointer-events-none shrink-0 border-0 bg-transparent p-0 lg:hidden">
+          <AppLayoutFooter mobileTabBarVisible={mobileTabBarVisible} />
         </div>
       ) : null}
     </div>

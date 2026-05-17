@@ -437,7 +437,7 @@ html:not(.dark) .page-primary-button {
   }
 
   .app-content > div {
-    padding: 0 0 84px;
+    padding: 0;
   }
 
   .view-shell,

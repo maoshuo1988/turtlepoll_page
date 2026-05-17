@@ -3,7 +3,7 @@
  */
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, MessageSquare, Users } from 'lucide-react';
+import { Flame, MessageSquare } from 'lucide-react';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { usePredictionCardItems, type PredictionCardItem } from './predictionCards';
 import { PredictionBetModal } from './PredictionBetModal';
@@ -94,24 +94,18 @@ export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news: newsOverri
             </motion.button>
           </div>
 
-          <div className="relative !mt-3 sm:!mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-            <div className="hidden sm:block pointer-events-none absolute left-1/2 top-1/2 h-6 w-px -translate-x-1/2 -translate-y-1/2 bg-[#3e4f73]" />
-            <div className="flex h-[36px] sm:h-[38px] items-center justify-center gap-2 rounded-full border border-[#3ad9be]/30 bg-[#10273d]/20 text-[12px] sm:text-[13px] font-bold text-[#d2e0f3]">
-              <Users size={14} className="text-[#7decd6]" />
-              {totalVotes.toLocaleString()} 人参与
-            </div>
-            {onEnterBattle ? (
+          {onEnterBattle ? (
+            <div className="relative !mt-3 sm:!mt-4">
               <button
+                type="button"
                 onClick={() => onEnterBattle(news)}
-                className="flex h-[36px] sm:h-[38px] items-center justify-center gap-2 rounded-full border border-[#4f6489]/45 bg-[#10273d]/20 text-[12px] sm:text-[13px] font-bold text-[#ffd7de] transition-colors hover:bg-[#163252]"
+                className="flex h-[36px] sm:h-[38px] w-full items-center justify-center gap-2 rounded-full border border-[#4f6489]/45 bg-[#10273d]/20 text-[12px] sm:text-[13px] font-bold text-[#ffd7de] transition-colors hover:bg-[#163252]"
               >
                 <MessageSquare size={14} className="text-[#5df3d7]" />
                 进入撕裂带
               </button>
-            ) : (
-              <div className="hidden md:block" />
-            )}
-          </div>
+            </div>
+          ) : null}
           </div>
         </div>
       </div>

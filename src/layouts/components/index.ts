@@ -11,3 +11,4 @@ export {
 } from './AppPageLayout';
 export type { SidebarHotTag, SidebarHotTopic, ViewType } from './AppPageLayout';
 export { StandalonePageShell } from './StandalonePageShell';
+export type { HomeShellRenderProps } from './StandalonePageShell';

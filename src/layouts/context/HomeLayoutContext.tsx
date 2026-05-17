@@ -3,11 +3,14 @@
  */
 import { createContext, useContext } from 'react';
 import type React from 'react';
+import type { AiPushMessage } from '@/hooks/aiTypes';
 
 type HomeLayoutContextValue = {
   darkMode: boolean;
   onToggleTheme: () => void;
   onOpenAuth: () => void;
+  /** 与 PC 侧栏宠物卡片一致的 AI 推送流，供宠物页 AI 对话去重展示 */
+  aiPushMessages: AiPushMessage[];
 };
 
 // 页面需要调用 layout 能力时走这个 context。
@@ -41,6 +44,7 @@ export function useHomeLayoutContext() {
       darkMode: true,
       onToggleTheme: () => {},
       onOpenAuth: () => {},
+      aiPushMessages: [] as AiPushMessage[],
     };
   }
 

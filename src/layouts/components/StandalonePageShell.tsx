@@ -41,9 +41,16 @@ const THEME_KEY = 'theme';
 
 export type ThemeMode = 'light' | 'dark';
 
+/** StandalonePageShell 向子页面注入的布局上下文（函数式 children）。 */
+export type HomeShellRenderProps = {
+  darkMode: boolean;
+  onToggleTheme: () => void;
+  aiPushMessages: AiPushMessage[];
+};
+
 // 连接业务数据和纯展示 layout 的页面壳参数。
 type StandalonePageShellProps = {
-  children: React.ReactNode | ((context: { darkMode: boolean; onToggleTheme: () => void }) => React.ReactNode);
+  children: React.ReactNode | ((context: HomeShellRenderProps) => React.ReactNode);
   contentClassName?: string;
   activeView?: ViewType;
   showSidebar?: boolean;
@@ -395,7 +402,7 @@ export function StandalonePageShell({
       showSidebar={showSidebar && Boolean(sidebarProps)}
       sidebarProps={sidebarProps}
     >
-      {typeof children === 'function' ? children({ darkMode, onToggleTheme: handleToggleTheme }) : children}
+      {typeof children === 'function' ? children({ darkMode, onToggleTheme: handleToggleTheme, aiPushMessages }) : children}
 
       <AuthModal
         open={authModalOpen}

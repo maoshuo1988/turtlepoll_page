@@ -15,9 +15,11 @@ import {
 } from '@/hooks/usePetRequests';
 import { PetPageView } from './components/PetPageView';
 import { getPetMoodLabel } from './components/petDisplay';
+import { useHomeLayoutContext } from '@/layouts/context';
 
 export default function PetPage() {
   const navigate = useNavigate();
+  const { aiPushMessages } = useHomeLayoutContext();
   const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);
   const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);
 
@@ -92,6 +94,7 @@ export default function PetPage() {
           : null
       }
       onStaminaChange={setPetStamina}
+      aiPushMessages={aiPushMessages}
     />
   );
 }

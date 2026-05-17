@@ -1246,7 +1246,9 @@ function DuelCard({
                   <div className="bcmt-body">
                     <div className="bcmt-head">
                       <div className="bcmt-name">{comment.name}</div>
-                      <div className={`bcmt-side ${comment.side === 'banker' ? 'bside-r' : 'bside-b'}`}>
+                      <div
+                        className={`bcmt-side ${comment.side === 'banker' ? 'bside-r' : 'bside-b lg:hidden'}`}
+                      >
                         {comment.side === 'banker' ? '庄家' : '挑战者'}
                       </div>
                       <div className="bcmt-time">{comment.time}</div>
