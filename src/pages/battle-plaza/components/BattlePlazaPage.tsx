@@ -853,10 +853,10 @@ html.dark #page-battle-square .dm-stake-input {
 /* PC：宽屏下列宽居中，指标与 Tab 更易扫读（与 max-width:1279px 手机壳样式分界对齐） */
 @media (min-width: 1280px) {
   #page-battle-square .bp-wrap {
-    max-width:min(1180px, 100%);
-    margin-inline:auto;
+    max-width:none;
+    margin-inline:0;
     gap:20px;
-    padding:0 8px 40px;
+    padding:0 0 40px;
   }
   #page-battle-square .bp-hub {
     border-radius:24px;

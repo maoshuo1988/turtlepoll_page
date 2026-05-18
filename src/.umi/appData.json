@@ -117,6 +117,7 @@
         "hooks": {
           "modifyRoutes": [
             0,
+            0,
             0
           ]
         },
@@ -141,7 +142,11 @@
             4,
             5,
             4,
-            5
+            5,
+            4,
+            4,
+            3,
+            3
           ]
         },
         "register": 1
@@ -162,7 +167,8 @@
           ],
           "onGenerateFiles": [
             0,
-            10
+            10,
+            6
           ]
         },
         "register": 10
@@ -179,6 +185,7 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
             0,
             0
           ]
@@ -206,9 +213,11 @@
             0,
             0,
             0,
+            0,
             0
           ],
           "onCheckCode": [
+            0,
             0,
             0,
             0,
@@ -1218,6 +1227,8 @@
           ],
           "modifyHTMLFavicon": [
             0,
+            0,
+            0,
             0
           ]
         },
@@ -1236,9 +1247,11 @@
         "hooks": {
           "onGenerateFiles": [
             1,
+            0,
             0
           ],
           "addRuntimePlugin": [
+            0,
             0,
             0
           ]
@@ -1315,9 +1328,12 @@
         "hooks": {
           "onGenerateFiles": [
             0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
             0,
             0,
             0,
@@ -1355,13 +1371,16 @@
           ],
           "onGenerateFiles": [
             35,
-            16
+            16,
+            12
           ],
           "addPolyfillImports": [
             0,
             0,
             0,
-            1
+            1,
+            0,
+            0
           ]
         },
         "register": 1
@@ -1377,6 +1396,8 @@
       "time": {
         "hooks": {
           "addPolyfillImports": [
+            0,
+            0,
             0,
             0,
             0,
@@ -1398,6 +1419,7 @@
         "hooks": {
           "onGenerateFiles": [
             73,
+            0,
             0
           ]
         },
@@ -1442,6 +1464,7 @@
         "hooks": {
           "onGenerateFiles": [
             0,
+            0,
             0
           ],
           "addBeforeMiddlewares": [
@@ -1465,6 +1488,8 @@
             5,
             2,
             11,
+            1,
+            5,
             1
           ]
         },
@@ -1521,7 +1546,8 @@
         "hooks": {
           "onGenerateFiles": [
             187,
-            14
+            14,
+            8
           ]
         },
         "register": 0
@@ -1607,7 +1633,8 @@
         "hooks": {
           "onGenerateFiles": [
             2,
-            1
+            1,
+            0
           ]
         },
         "register": 0
@@ -1740,6 +1767,8 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
+            0,
+            0,
             0,
             0
           ]
@@ -5633,7 +5662,7 @@
             "format": "esm"
           },
           "src/pages/battle-plaza/components/BattlePlazaPage.tsx": {
-            "bytes": 111215,
+            "bytes": 111197,
             "imports": [
               {
                 "path": "react",
@@ -8757,7 +8786,7 @@
                 "bytesInOutput": 4892
               },
               "src/pages/battle-plaza/components/BattlePlazaPage.tsx": {
-                "bytesInOutput": 116905
+                "bytesInOutput": 116887
               },
               "src/pages/battle-plaza/components/BattlePlazaPageView.tsx": {
                 "bytesInOutput": 1202
@@ -8874,7 +8903,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 975983
+            "bytes": 975965
           }
         }
       }
