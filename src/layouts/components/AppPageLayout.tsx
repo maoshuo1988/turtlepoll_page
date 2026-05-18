@@ -33,6 +33,7 @@ type SidebarProps = React.ComponentProps<typeof Sidebar>;
 type AppPageLayoutProps = HeaderProps & {
   children: React.ReactNode;
   contentClassName?: string;
+  mainClassName?: string;
   sidebarProps?: SidebarProps;
   showSidebar?: boolean;
   showFooter?: boolean;
@@ -105,6 +106,7 @@ export function AppLayoutSidebar(props: SidebarProps) {
 export function AppPageLayout({
   children,
   contentClassName = 'min-h-full w-full px-0 pb-0 pt-0',
+  mainClassName = '',
   darkMode,
   onToggleTheme,
   onOpenAuth,
@@ -168,7 +170,7 @@ export function AppPageLayout({
       />
 
       {showSidebar && sidebarProps ? (
-        <main className="app-main flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
+        <main className={`app-main flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row ${mainClassName}`.trim()}>
           {/* PC 端左侧栏固定宽度，移动端导航交给 MobileFooter。 */}
           <aside className="app-sidebar hidden w-[276px] shrink-0 self-stretch overflow-hidden lg:flex lg:flex-col">
             <div className="min-h-0 flex-1 overflow-hidden">

@@ -6,7 +6,7 @@ type ProfilePageViewProps = ComponentProps<typeof ProfilePage>;
 
 export function ProfilePageView(props: ProfilePageViewProps) {
   return (
-    <section className="page-frame view-profile">
+    <section className="view-profile h-full min-h-full xl:bg-[#080808]">
       <ProfilePage {...props} />
     </section>
   );

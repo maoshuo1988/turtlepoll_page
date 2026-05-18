@@ -3,47 +3,37 @@
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from '@umijs/renderer-react';
-import {
-  ArrowLeft,
-  ChevronRight,
-  Eye,
-  Image as ImageIcon,
-  LogIn,
-  MessageSquarePlus,
-  Moon,
-  Plus,
-  Settings2,
-  Sun,
-} from 'lucide-react';
-import type { TopicResponse } from '@/hooks/topicTypes';
+import { ArrowLeft, ChevronRight, Eye, Image as ImageIcon, LogIn, MessageSquarePlus, Plus, Settings2 } from 'lucide-react';
 import type { OwnedPetItem } from '@/hooks/petTypes';
-import { useInfiniteRequestTopicUserTopics } from '@/hooks/useTopicRequests';
+import {
+  useInfiniteRequestUserCenterComments,
+  useInfiniteRequestUserCenterFavorites,
+  useInfiniteRequestUserCenterTopics,
+} from '@/hooks/useUserCenterRequests';
+import type {
+  UserCenterCommentResponse,
+  UserCenterFavoriteResponse,
+  UserCenterTopicResponse,
+} from '@/hooks/userCenterTypes';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 import {
-  type MockForumEntry,
-  type ForumComment,
   type PetInfo,
   type PetSkin,
 } from '@/data/mockData';
 import { ProfilePetArchive } from './ProfilePetArchive';
 
 type ProfileTab = 'overview' | 'posts' | 'comments' | 'saved' | 'history' | 'hidden' | 'upvoted' | 'downvoted';
-type FeedSort = 'new' | 'hot';
 
 interface ProfilePageProps {
-  userId: number | string ;
   userName: string;
   userHandle: string;
   avatar: string;
-  posts: MockForumEntry[];
   pet: PetInfo;
   skins: PetSkin[];
   balance: number;
-  darkMode: boolean;
   onBack: () => void;
   onOpenForum: () => void;
   onOpenAuth: () => void;
-  onToggleTheme: () => void;
   ownedPets?: OwnedPetItem[];
 }
 
@@ -60,7 +50,7 @@ const PROFILE_TABS: { key: ProfileTab; label: string }[] = [
 
 /** xl 以下与 Profile 手机壳一致：外层不再叠一层大卡 */
 const cardClass =
-  'rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,#111315_0%,#0b0c0e_100%)] shadow-[0_18px_50px_rgba(0,0,0,0.28)] max-xl:rounded-none max-xl:border-0 max-xl:bg-transparent max-xl:shadow-none';
+  'rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,#111315_0%,#0b0c0e_100%)] shadow-[0_18px_50px_rgba(0,0,0,0.28)] xl:rounded-none xl:border-0 xl:bg-[#080808] xl:shadow-none max-xl:rounded-none max-xl:border-0 max-xl:bg-transparent max-xl:shadow-none';
 
 /** 列表项：窄屏圆角与边框略收（与 xl:hidden 布局同断点） */
 const feedCard =
@@ -120,60 +110,100 @@ const ProfileTabButton: React.FC<{
 );
 
 export const ProfilePage: React.FC<ProfilePageProps> = ({
-  userId,
   userName,
   userHandle,
   avatar,
-  posts,
   pet,
   skins,
   balance,
-  darkMode,
   onBack,
   onOpenForum,
   onOpenAuth,
-  onToggleTheme,
   ownedPets,
 }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
-  const [sort, setSort] = useState<FeedSort>('new');
   const location = useLocation();
-  const userPostsQuery = useInfiniteRequestTopicUserTopics({ userId: userId, cursor: 0 });
   const isAuthenticated = Boolean(getAuthToken());
   const storedUser = getStoredUserInfo();
+  const userTopicsQuery = useInfiniteRequestUserCenterTopics({ enabled: isAuthenticated, limit: 20 });
+  const userCommentsQuery = useInfiniteRequestUserCenterComments({ enabled: isAuthenticated, limit: 20 });
+  const userFavoritesQuery = useInfiniteRequestUserCenterFavorites({ enabled: isAuthenticated, limit: 20 });
 
-  const userPosts = useMemo(
-    () => posts.filter((post) => post.author.name === '你' || post.author.handle === '@me_fox'),
-    [posts],
+  const profileTopics = useMemo<UserCenterTopicResponse[]>(
+    () => (userTopicsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
+    [userTopicsQuery.data],
   );
-
-  const profileTopics = useMemo<TopicResponse[]>(
-    () => (userPostsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
-    [userPostsQuery.data],
+  const profileComments = useMemo<UserCenterCommentResponse[]>(
+    () => (userCommentsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
+    [userCommentsQuery.data],
   );
-
-  const userComments = useMemo(
-    () =>
-      posts.flatMap((post) =>
-        post.comments
-          .filter((comment: ForumComment) => comment.author.name === '你' || comment.author.handle === '@me_fox')
-          .map((comment: ForumComment) => ({ ...comment, postTitle: post.content })),
-      ),
-    [posts],
+  const profileFavorites = useMemo<UserCenterFavoriteResponse[]>(
+    () => (userFavoritesQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
+    [userFavoritesQuery.data],
   );
+  const profileTopicsTotal = userTopicsQuery.data?.pages?.[0]?.page.total ?? 0;
+  const profileCommentsTotal = userCommentsQuery.data?.pages?.[0]?.page.total ?? 0;
+  const profileFavoritesTotal = userFavoritesQuery.data?.pages?.[0]?.page.total ?? 0;
 
   const overviewStats = useMemo(
     () => [
-      { label: '帖子', value: userPosts.length },
-      { label: '评论', value: userComments.length },
-      { label: '获赞', value: userPosts.reduce((sum, post) => sum + post.likes, 0) + userComments.reduce((sum, comment) => sum + comment.likes, 0) },
+      { label: '帖子', value: profileTopicsTotal },
+      { label: '评论', value: profileCommentsTotal },
+      { label: '收藏', value: profileFavoritesTotal },
     ],
-    [userComments, userPosts],
+    [profileCommentsTotal, profileFavoritesTotal, profileTopicsTotal],
   );
   const equippedSkin = useMemo(
     () => skins.find((skin) => skin.equipped) ?? skins.find((skin) => skin.owned) ?? null,
     [skins],
   );
+
+  const formatTimestamp = (value?: number | string) => {
+    const num = Number(value ?? 0);
+    if (!num) return '刚刚';
+    const timestamp = num < 1_000_000_000_000 ? num * 1000 : num;
+    return new Date(timestamp).toLocaleString('zh-CN', {
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const renderLoginRequired = (title: string, description: string) => (
+    <div className="border-t border-white/10">
+      <EmptyState title={title} description={description} actionLabel="立即登录" onAction={onOpenAuth} />
+    </div>
+  );
+
+  const renderPageError = (message: string) => (
+    <div className="mt-5 rounded-[20px] border border-rose-400/20 bg-rose-500/8 p-5 text-[14px] text-rose-200 max-xl:rounded-[16px] md:mt-6 md:p-6">
+      {message}
+    </div>
+  );
+
+  const renderLoadMore = (
+    query: {
+      hasNextPage?: boolean;
+      isFetchingNextPage: boolean;
+      fetchNextPage: () => Promise<unknown>;
+    },
+  ) => {
+    if (!query.hasNextPage) return null;
+
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          void query.fetchNextPage();
+        }}
+        disabled={query.isFetchingNextPage}
+        className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {query.isFetchingNextPage ? '加载中...' : '加载更多'}
+      </button>
+    );
+  };
 
   useEffect(() => {
     const raw = location.hash?.replace(/^#/, '') ?? '';
@@ -188,7 +218,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderOverview = () => (
     <>
-      <div className={bannerRow}>
+      {/* <div className={bannerRow}>
         <button className="flex w-full items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <Eye size={18} className="text-[#cad2d9]" />
@@ -196,7 +226,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
           <ChevronRight size={18} className="text-[#cad2d9]" />
         </button>
-      </div>
+      </div> */}
 
       <div className="mt-4 hidden flex-wrap items-center gap-3 xl:flex">
         <button
@@ -220,30 +250,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         ))}
       </div>
 
-      {userPosts.length === 0 ? (
+      {!isAuthenticated ? renderLoginRequired('登录后查看你的个人中心', '帖子、评论和收藏会在登录后同步展示。') : profileTopics.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
           <EmptyState
             title="你还没有任何帖子"
-            description="在社区中发帖后，帖子将显示在此处。如果你想隐藏帖子，请更新设置。"
-            actionLabel="更新设置"
+            description="在社区中发帖后，帖子会显示在这里。"
+            actionLabel="去发帖"
             onAction={onOpenForum}
           />
         </div>
       ) : (
         <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
-          {userPosts.slice(0, 3).map((post) => (
-            <article key={post.id} className={`${feedCard} p-4 md:p-5`}>
+          {profileTopics.slice(0, 3).map((post) => (
+            <article key={String(post.id)} className={`${feedCard} p-4 md:p-5`}>
               <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
-                <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">{post.tag}</span>
-                <span>{post.time}</span>
+                <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">我的帖子</span>
+                <span>{formatTimestamp(post.createTime)}</span>
               </div>
-              <p className="mt-3 line-clamp-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.content}</p>
-              {post.images?.[0] && (
-                <div className="mt-4 flex items-center gap-2 text-[12px] text-[#7e8790]">
-                  <ImageIcon size={14} />
-                  <span>{post.images.length} 张配图</span>
-                </div>
-              )}
+              {post.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{post.title}</div>}
+              <p className="mt-3 line-clamp-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.content || '暂无正文内容'}</p>
             </article>
           ))}
         </div>
@@ -253,7 +278,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderPosts = () => (
     <>
-      <div className={bannerRow}>
+      {/* <div className={bannerRow}>
         <button className="flex w-full items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <Eye size={18} className="text-[#cad2d9]" />
@@ -261,7 +286,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
           <ChevronRight size={18} className="text-[#cad2d9]" />
         </button>
-      </div>
+      </div> */}
 
       <div className="mt-4 hidden flex-wrap items-center gap-3 xl:flex">
         <button
@@ -276,57 +301,37 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </button>
       </div>
 
-      {userPostsQuery.isLoading && profileTopics.length === 0 ? (
+      {!isAuthenticated ? renderLoginRequired('登录后查看你发布的帖子', '这里只展示当前登录账号自己发布的帖子。') : userTopicsQuery.isLoading && profileTopics.length === 0 ? (
         <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
           正在加载帖子...
         </div>
-      ) : userPostsQuery.isError && profileTopics.length === 0 ? (
-        <div className="mt-5 rounded-[20px] border border-rose-400/20 bg-rose-500/8 p-5 text-[14px] text-rose-200 max-xl:rounded-[16px] md:mt-6 md:p-6">
-          {userPostsQuery.error instanceof Error ? userPostsQuery.error.message : '帖子加载失败'}
-        </div>
+      ) : userTopicsQuery.isError && profileTopics.length === 0 ? (
+        renderPageError(userTopicsQuery.error instanceof Error ? userTopicsQuery.error.message : '帖子加载失败')
       ) : profileTopics.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
           <EmptyState
             title="你还没有任何帖子"
-            description="在社区中发帖后，帖子将显示在此处。如果你想隐藏帖子，请更新设置。"
-            actionLabel="更新设置"
+            description="在社区中发帖后，帖子会显示在这里。"
+            actionLabel="去发帖"
             onAction={onOpenForum}
           />
         </div>
       ) : (
         <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
           {profileTopics.map((post) => (
-            <article key={post.id} className={`${feedCard} p-4 md:p-5`}>
+            <article key={String(post.id)} className={`${feedCard} p-4 md:p-5`}>
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
-                  {post.node?.name && (
-                    <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">{post.node.name}</span>
-                  )}
-                  <span>{post.createTime ? new Date(post.createTime).toLocaleString() : '刚刚'}</span>
+                  <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">我的帖子</span>
+                  <span>{formatTimestamp(post.createTime)}</span>
                 </div>
-                <span className="text-[12px] text-[#7e8790]">{post.commentCount ?? 0} 条评论</span>
+                <span className="text-[12px] text-[#7e8790]">作者 ID {post.userId || '-'}</span>
               </div>
               {post.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{post.title}</div>}
-              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.summary || post.content || '暂无正文内容'}</p>
-              {post.imageList && post.imageList.length > 0 && (
-                <div className="mt-4 flex items-center gap-2 text-[12px] text-[#7e8790]">
-                  <ImageIcon size={14} />
-                  <span>{post.imageList.length} 张配图</span>
-                </div>
-              )}
+              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.content || '暂无正文内容'}</p>
             </article>
           ))}
-
-          {userPostsQuery.hasNextPage && (
-            <button
-              type="button"
-              onClick={() => userPostsQuery.fetchNextPage()}
-              disabled={userPostsQuery.isFetchingNextPage}
-              className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {userPostsQuery.isFetchingNextPage ? '加载中...' : '加载更多'}
-            </button>
-          )}
+          {renderLoadMore(userTopicsQuery)}
         </div>
       )}
     </>
@@ -334,7 +339,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderComments = () => (
     <>
-      <div className={bannerRow}>
+      {/* <div className={bannerRow}>
         <button className="flex w-full items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <Eye size={18} className="text-[#cad2d9]" />
@@ -342,44 +347,81 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
           <ChevronRight size={18} className="text-[#cad2d9]" />
         </button>
-      </div>
+      </div> */}
 
-      <div className="mt-4 flex items-center gap-2 text-[13px] text-[#8e98a0]">
-        <button
-          onClick={() => setSort('new')}
-          className={`rounded-full px-3 py-1.5 transition-colors ${sort === 'new' ? 'bg-white/8 text-white' : 'hover:bg-white/6'}`}
-        >
-          新
-        </button>
-        <button
-          onClick={() => setSort('hot')}
-          className={`rounded-full px-3 py-1.5 transition-colors ${sort === 'hot' ? 'bg-white/8 text-white' : 'hover:bg-white/6'}`}
-        >
-          热
-        </button>
-      </div>
-
-      {userComments.length === 0 ? (
+      {!isAuthenticated ? renderLoginRequired('登录后查看你评论过的帖子', '这里只展示当前登录账号评论过的主题帖。') : userCommentsQuery.isLoading && profileComments.length === 0 ? (
+        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
+          正在加载评论...
+        </div>
+      ) : userCommentsQuery.isError && profileComments.length === 0 ? (
+        renderPageError(userCommentsQuery.error instanceof Error ? userCommentsQuery.error.message : '评论加载失败')
+      ) : profileComments.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
           <EmptyState
             title="你还没有任何评论"
-            description="在社区中发表评论后，评论将显示在此处。如果你想隐藏评论，请更新设置。"
-            actionLabel="更新设置"
+            description="在社区中发表评论后，评论会显示在这里。"
+            actionLabel="去社区看看"
             onAction={onOpenForum}
           />
         </div>
       ) : (
         <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
-          {(sort === 'hot'
-            ? [...userComments].sort((a, b) => b.likes - a.likes)
-            : userComments
-          ).map((comment) => (
-            <article key={comment.id} className={`${feedCard} p-4 md:p-5`}>
-              <div className="text-[12px] text-[#7e8790]">{comment.time}</div>
-              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{comment.content}</p>
-              <p className="mt-3 line-clamp-2 text-[13px] leading-6 text-[#7e8790]">原帖：{comment.postTitle}</p>
+          {profileComments.map((comment) => (
+            <article key={String(comment.id)} className={`${feedCard} p-4 md:p-5`}>
+              <div className="flex items-center justify-between gap-3 text-[12px] text-[#7e8790]">
+                <span>{formatTimestamp(comment.createTime)}</span>
+                <span>评论 ID {comment.id}</span>
+              </div>
+              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{comment.content || '暂无评论内容'}</p>
+              <p className="mt-3 line-clamp-2 text-[13px] leading-6 text-[#7e8790]">原帖：{comment.title || '未命名帖子'}</p>
             </article>
           ))}
+          {renderLoadMore(userCommentsQuery)}
+        </div>
+      )}
+    </>
+  );
+
+  const renderSaved = () => (
+    <>
+      {/* <div className={bannerRow}>
+        <button className="flex w-full items-center justify-between text-left">
+          <div className="flex items-center gap-3">
+            <Eye size={18} className="text-[#cad2d9]" />
+            <span className="text-[15px] font-semibold">显示所有收藏</span>
+          </div>
+          <ChevronRight size={18} className="text-[#cad2d9]" />
+        </button>
+      </div> */}
+
+      {!isAuthenticated ? renderLoginRequired('登录后查看你收藏的帖子', '这里只展示当前登录账号收藏过的主题帖。') : userFavoritesQuery.isLoading && profileFavorites.length === 0 ? (
+        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
+          正在加载收藏...
+        </div>
+      ) : userFavoritesQuery.isError && profileFavorites.length === 0 ? (
+        renderPageError(userFavoritesQuery.error instanceof Error ? userFavoritesQuery.error.message : '收藏加载失败')
+      ) : profileFavorites.length === 0 ? (
+        <div className="!mt-4 border-t border-white/10">
+          <EmptyState
+            title="你还没有收藏任何帖子"
+            description="收藏感兴趣的帖子后，会在这里集中查看。"
+            actionLabel="去社区看看"
+            onAction={onOpenForum}
+          />
+        </div>
+      ) : (
+        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
+          {profileFavorites.map((favorite) => (
+            <article key={String(favorite.id)} className={`${feedCard} p-4 md:p-5`}>
+              <div className="flex items-center justify-between gap-3 text-[12px] text-[#7e8790]">
+                <span>{formatTimestamp(favorite.createTime)}</span>
+                <span>帖子 ID {favorite.entityId || '-'}</span>
+              </div>
+              {favorite.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{favorite.title}</div>}
+              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{favorite.content || '暂无正文内容'}</p>
+            </article>
+          ))}
+          {renderLoadMore(userFavoritesQuery)}
         </div>
       )}
     </>
@@ -403,7 +445,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       case 'comments':
         return renderComments();
       case 'saved':
-        return renderStaticEmpty('你似乎尚未保存任何内容', '保存后的帖子、评论或收藏内容会出现在这里。');
+        return renderSaved();
       case 'history':
         return renderStaticEmpty('你似乎尚未访问任何帖子', '最近访问过的内容会被记录在这里，方便你快速找回。');
       case 'hidden':
@@ -418,7 +460,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   };
 
   return (
-    <section className={`w-full min-w-0 overflow-x-hidden text-white ${cardClass}`}>
+    <section className={`h-full min-h-full w-full min-w-0 overflow-x-hidden text-white ${cardClass}`}>
       <div className="xl:hidden min-w-0 overflow-x-hidden px-3 pb-1 pt-2">
         <div className="min-w-0 rounded-[18px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] px-3 py-3 shadow-[0_10px_28px_rgba(0,0,0,0.2)]">
           <div className="flex items-start justify-between gap-3">
@@ -540,7 +582,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               <ChevronRight size={17} className="shrink-0 text-[#8a949d]" />
             </button>
 
-            <button
+            {/* <button
               type="button"
               onClick={onToggleTheme}
               className="flex w-full items-center justify-between rounded-[14px] border border-white/[0.08] bg-black/22 px-3 py-2.5 text-left"
@@ -559,7 +601,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               <div className="rounded-full border border-emerald-400/15 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-300">
                 切换
               </div>
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -581,7 +623,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </div>
       </div>
 
-      <div className="hidden xl:flex xl:min-h-[calc(100vh-140px)] xl:w-full xl:flex-col xl:overflow-hidden xl:px-8 xl:py-7">
+      <div className="hidden xl:flex xl:h-full xl:min-h-full xl:w-full xl:flex-col xl:overflow-hidden xl:bg-transparent xl:px-0 xl:pb-0 xl:pt-[10px]">
         <div className="flex items-start gap-4">
           <button
             onClick={onBack}
@@ -619,8 +661,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </div>
 
         <div className="mt-8 flex min-h-0 flex-1 flex-col border-t border-white/10 pt-8 xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-6">
-          <div className="min-w-0 min-h-0 overflow-y-auto pr-1">{renderContent()}</div>
-          <aside className="mt-8 min-h-0 overflow-y-auto xl:mt-0 xl:px-4 xl:py-4">
+          <div className="min-h-0 min-w-0 overflow-y-auto pr-3 pb-2 [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.16)_transparent] [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/15">
+            {renderContent()}
+          </div>
+          <aside className="mt-8 xl:mt-0 xl:flex xl:h-full xl:flex-col xl:px-4 xl:py-4">
             {/* <div id="profile-settings-xl" className="mb-4 shrink-0 rounded-[22px] border border-white/8 bg-white/[0.03] px-4 py-4">
               <div className="text-[14px] font-bold text-white">设置</div>
               <div className="mt-1 text-[12px] text-[#8a949d]">主题与显示偏好（顶部头像菜单可快速进入）</div>
@@ -643,7 +687,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 </div>
               </button>
             </div> */}
-            <div>
+            <div className="xl:sticky xl:top-0">
               <ProfilePetArchive pet={pet} ownedPets={ownedPets} />
             </div>
           </aside>

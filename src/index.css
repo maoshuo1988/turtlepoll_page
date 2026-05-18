@@ -122,6 +122,15 @@ html.dark ::-webkit-scrollbar-thumb { background: #343536; }
   padding: 0;
 }
 
+.app-main.app-main-profile {
+  background: transparent;
+}
+
+.app-main.app-main-profile .app-content,
+.app-main.app-main-profile .app-content > div {
+  background: #080808;
+}
+
 .view-shell {
   width: 100%;
   max-width: none;

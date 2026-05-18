@@ -68,7 +68,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -85,7 +85,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -118,6 +118,19 @@
           "modifyRoutes": [
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -135,17 +148,68 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            12,
-            4,
+            14,
             5,
+            4,
             6,
             4,
+            8,
             5,
+            6,
+            6,
             4,
-            5,
             4,
             4,
             3,
+            6,
+            6,
+            4,
+            3,
+            3,
+            3,
+            5,
+            6,
+            5,
+            3,
+            9,
+            3,
+            3,
+            4,
+            5,
+            4,
+            4,
+            4,
+            14,
+            8,
+            5,
+            9,
+            8,
+            5,
+            5,
+            5,
+            6,
+            5,
+            5,
+            6,
+            7,
+            10,
+            4,
+            4,
+            9,
+            4,
+            6,
+            8,
+            5,
+            4,
+            6,
+            10,
+            8,
+            7,
+            6,
+            4,
+            2,
+            5,
+            5,
             3
           ]
         },
@@ -163,12 +227,25 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            11
+            23
           ],
           "onGenerateFiles": [
-            0,
+            1,
+            5,
+            6,
             10,
-            6
+            8,
+            11,
+            9,
+            15,
+            12,
+            7,
+            4,
+            7,
+            6,
+            6,
+            11,
+            5
           ]
         },
         "register": 10
@@ -185,6 +262,19 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0
@@ -210,6 +300,20 @@
             0
           ],
           "onPrepareBuildSuccess": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -217,6 +321,27 @@
             0
           ],
           "onCheckCode": [
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -251,7 +376,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -264,7 +389,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1150,7 +1275,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1180,7 +1305,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 42
+        "register": 39
       },
       "enableBy": "register"
     },
@@ -1193,7 +1318,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 14
+        "register": 15
       },
       "enableBy": "config"
     },
@@ -1229,10 +1354,19 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1248,9 +1382,35 @@
           "onGenerateFiles": [
             1,
             0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
             0
           ],
           "addRuntimePlugin": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0
@@ -1289,7 +1449,7 @@
             1
           ]
         },
-        "register": 17
+        "register": 15
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1301,7 +1461,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1329,9 +1489,48 @@
           "onGenerateFiles": [
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1353,7 +1552,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1370,15 +1569,54 @@
             0
           ],
           "onGenerateFiles": [
-            35,
+            36,
+            10,
+            10,
+            15,
             16,
-            12
+            14,
+            12,
+            22,
+            26,
+            13,
+            9,
+            11,
+            13,
+            14,
+            12,
+            7
           ],
           "addPolyfillImports": [
             0,
             0,
             0,
-            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0
           ]
@@ -1401,6 +1639,32 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1418,12 +1682,25 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            73,
+            71,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1449,7 +1726,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1465,13 +1742,26 @@
           "onGenerateFiles": [
             0,
             0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addBeforeMiddlewares": [
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1487,10 +1777,36 @@
           "onGenerateFiles": [
             5,
             2,
-            11,
+            6,
             1,
+            6,
+            0,
+            9,
+            0,
+            6,
+            1,
+            7,
+            1,
+            4,
+            1,
+            7,
+            1,
+            6,
+            1,
+            9,
+            0,
+            6,
+            2,
             5,
-            1
+            1,
+            35,
+            0,
+            8,
+            0,
+            6,
+            0,
+            4,
+            0
           ]
         },
         "register": 1
@@ -1531,7 +1847,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 4
       },
       "enableBy": "config"
     },
@@ -1545,12 +1861,25 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            187,
-            14,
-            8
+            201,
+            8,
+            5,
+            6,
+            11,
+            5,
+            7,
+            5,
+            4,
+            6,
+            9,
+            6,
+            8,
+            4,
+            5,
+            4
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1618,7 +1947,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 9
+        "register": 10
       },
       "enableBy": "config"
     },
@@ -1633,7 +1962,20 @@
         "hooks": {
           "onGenerateFiles": [
             2,
+            0,
             1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            3,
+            0,
             0
           ]
         },
@@ -1649,7 +1991,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1662,7 +2004,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1717,7 +2059,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1729,7 +2071,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1767,13 +2109,22 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
+            12,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
             0
           ]
         },
-        "register": 13
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1785,7 +2136,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1799,10 +2150,10 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            257
+            268
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1815,7 +2166,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1828,7 +2179,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 20
       },
       "enableBy": "register"
     },
@@ -1842,10 +2193,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            5
+            6
           ]
         },
-        "register": 17
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1857,7 +2208,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1870,7 +2221,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1896,7 +2247,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1961,7 +2312,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1987,7 +2338,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2039,7 +2390,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2065,7 +2416,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2448,7 +2799,7 @@
       "parentId": "2",
       "id": "12",
       "absPath": "/profile",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockCommunityPosts, mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { getStoredUserInfo } from '@/utils/authStorage';\nimport { ProfilePageView } from './components/ProfilePageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ProfilePage() {\n  const navigate = useNavigate();\n  const [skins] = useState<PetSkin[]>(mockPetSkins);\n  const { darkMode, onToggleTheme, onOpenAuth } = useHomeLayoutContext();\n\n  // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。\n  const { userInfo, coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const storedUser = getStoredUserInfo();\n  const petStamina = petStaminaQuery.data?.current ?? mockUser.petInfo.stamina;\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  return (\n    <ProfilePageView\n      userId={userInfo.data?.id ?? storedUser?.id ?? ''}\n      userName={storedUser?.username ?? '路边社社长'}\n      userHandle=\"预测达人\"\n      avatar=\"🦊\"\n      posts={mockCommunityPosts}\n      pet={currentPet}\n      skins={skins}\n      balance={coinMe.data?.balance ?? mockUser.balance}\n      darkMode={darkMode}\n      onBack={() => {\n        navigate('/');\n      }}\n      onOpenForum={() => {\n        navigate('/forum');\n      }}\n      onOpenAuth={onOpenAuth}\n      onToggleTheme={onToggleTheme}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { getStoredUserInfo } from '@/utils/authStorage';\nimport { ProfilePageView } from './components/ProfilePageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ProfilePage() {\n  const navigate = useNavigate();\n  const [skins] = useState<PetSkin[]>(mockPetSkins);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const storedUser = getStoredUserInfo();\n  const displayName = storedUser?.nickname ?? storedUser?.username ?? '路边社社长';\n  const displayHandle = storedUser?.username ? `@${storedUser.username}` : '预测达人';\n  const displayAvatar = storedUser?.nickname?.slice(0, 1).toUpperCase() ?? '🦊';\n  const petStamina = petStaminaQuery.data?.current ?? mockUser.petInfo.stamina;\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  return (\n    <ProfilePageView\n      userName={displayName}\n      userHandle={displayHandle}\n      avatar={displayAvatar}\n      pet={currentPet}\n      skins={skins}\n      balance={coinMe.data?.balance ?? mockUser.balance}\n      onBack={() => {\n        navigate('/');\n      }}\n      onOpenForum={() => {\n        navigate('/forum');\n      }}\n      onOpenAuth={onOpenAuth}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/profile/index.tsx"
     },
@@ -4489,7 +4840,7 @@
             "format": "esm"
           },
           "src/layouts/components/AppPageLayout.tsx": {
-            "bytes": 7046,
+            "bytes": 7120,
             "imports": [
               {
                 "path": "react",
@@ -4727,7 +5078,7 @@
             "format": "esm"
           },
           "src/layouts/components/StandalonePageShell.tsx": {
-            "bytes": 14834,
+            "bytes": 15076,
             "imports": [
               {
                 "path": "react",
@@ -6077,6 +6428,37 @@
             ],
             "format": "esm"
           },
+          "src/api/userApi.ts": {
+            "bytes": 356,
+            "imports": [],
+            "format": "esm"
+          },
+          "src/hooks/useUserCenterRequests.ts": {
+            "bytes": 4588,
+            "imports": [
+              {
+                "path": "react-query",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/api/httpClient.ts",
+                "kind": "import-statement",
+                "original": "@/api/httpClient"
+              },
+              {
+                "path": "src/api/userApi.ts",
+                "kind": "import-statement",
+                "original": "@/api/userApi"
+              },
+              {
+                "path": "src/utils/requestUtils.ts",
+                "kind": "import-statement",
+                "original": "@/utils/requestUtils"
+              }
+            ],
+            "format": "esm"
+          },
           "src/pages/profile/components/petDisplay.ts": {
             "bytes": 2243,
             "imports": [],
@@ -6104,7 +6486,7 @@
             "format": "esm"
           },
           "src/pages/profile/components/ProfilePage.tsx": {
-            "bytes": 29659,
+            "bytes": 33052,
             "imports": [
               {
                 "path": "react",
@@ -6122,9 +6504,9 @@
                 "external": true
               },
               {
-                "path": "src/hooks/useTopicRequests.ts",
+                "path": "src/hooks/useUserCenterRequests.ts",
                 "kind": "import-statement",
-                "original": "@/hooks/useTopicRequests"
+                "original": "@/hooks/useUserCenterRequests"
               },
               {
                 "path": "src/utils/authStorage.ts",
@@ -6145,7 +6527,7 @@
             "format": "esm"
           },
           "src/pages/profile/components/ProfilePageView.tsx": {
-            "bytes": 436,
+            "bytes": 459,
             "imports": [
               {
                 "path": "src/pages/profile/components/ProfilePage.tsx",
@@ -6156,7 +6538,7 @@
             "format": "esm"
           },
           "src/pages/profile/index.tsx": {
-            "bytes": 2893,
+            "bytes": 2929,
             "imports": [
               {
                 "path": "react",
@@ -7266,6 +7648,11 @@
               },
               {
                 "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react-query",
                 "kind": "import-statement",
                 "external": true
               },
@@ -8633,7 +9020,7 @@
                 "bytesInOutput": 94
               },
               "src/layouts/components/AppPageLayout.tsx": {
-                "bytesInOutput": 5052
+                "bytesInOutput": 5098
               },
               "src/utils/petHelpers.ts": {
                 "bytesInOutput": 2425
@@ -8657,7 +9044,7 @@
                 "bytesInOutput": 337
               },
               "src/data/mockData.ts": {
-                "bytesInOutput": 22256
+                "bytesInOutput": 16165
               },
               "src/components/shared/predictions/ui/predictionCards.ts": {
                 "bytesInOutput": 1692
@@ -8675,7 +9062,7 @@
                 "bytesInOutput": 12864
               },
               "src/layouts/components/StandalonePageShell.tsx": {
-                "bytesInOutput": 11768
+                "bytesInOutput": 12011
               },
               "src/layouts/components/index.ts": {
                 "bytesInOutput": 136
@@ -8696,10 +9083,10 @@
                 "bytesInOutput": 6905
               },
               "src/api/topicApi.ts": {
-                "bytesInOutput": 408
+                "bytesInOutput": 331
               },
               "src/hooks/useTopicRequests.ts": {
-                "bytesInOutput": 4377
+                "bytesInOutput": 3800
               },
               "src/pages/home/components/EventBattleLiveRoom.tsx": {
                 "bytesInOutput": 72640
@@ -8839,6 +9226,12 @@
               "src/pages/pet/index.tsx": {
                 "bytesInOutput": 3311
               },
+              "src/api/userApi.ts": {
+                "bytesInOutput": 321
+              },
+              "src/hooks/useUserCenterRequests.ts": {
+                "bytesInOutput": 3090
+              },
               "src/pages/profile/components/petDisplay.ts": {
                 "bytesInOutput": 2521
               },
@@ -8846,13 +9239,13 @@
                 "bytesInOutput": 7718
               },
               "src/pages/profile/components/ProfilePage.tsx": {
-                "bytesInOutput": 32326
+                "bytesInOutput": 32629
               },
               "src/pages/profile/components/ProfilePageView.tsx": {
-                "bytesInOutput": 323
+                "bytesInOutput": 346
               },
               "src/pages/profile/index.tsx": {
-                "bytesInOutput": 2511
+                "bytesInOutput": 2588
               },
               "src/pages/active-predictions/components/ActivePredictionsPage.tsx": {
                 "bytesInOutput": 7153
@@ -8903,7 +9296,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 975965
+            "bytes": 973385
           }
         }
       }
@@ -11308,6 +11701,7 @@
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/pkApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/predictionApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/topicApi.ts": [],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/userApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/app.ts": [
         {
           "end": 148,
@@ -15411,6 +15805,118 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useUserCenterRequests.ts": [
+        {
+          "end": 141,
+          "importKind": "value",
+          "source": "react-query",
+          "specifiers": [
+            {
+              "imported": "useInfiniteQuery",
+              "local": "useInfiniteQuery",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 94,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 189,
+          "importKind": "value",
+          "source": "@/api/httpClient",
+          "specifiers": [
+            {
+              "imported": "axiosCustom",
+              "local": "axiosCustom",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 142,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 305,
+          "importKind": "value",
+          "source": "@/api/userApi",
+          "specifiers": [
+            {
+              "imported": "API_User_Center_Comments",
+              "local": "API_User_Center_Comments",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "API_User_Center_Favorites",
+              "local": "API_User_Center_Favorites",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "API_User_Center_Topics",
+              "local": "API_User_Center_Topics",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 190,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 384,
+          "importKind": "value",
+          "source": "@/utils/requestUtils",
+          "specifiers": [
+            {
+              "imported": "assertSuccess",
+              "local": "assertSuccess",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "getAuthorizationHeaders",
+              "local": "getAuthorizationHeaders",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 306,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 582,
+          "importKind": "type",
+          "source": "./userCenterTypes",
+          "specifiers": [
+            {
+              "imported": "UserCenterCommentResponse",
+              "local": "UserCenterCommentResponse",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "UserCenterFavoriteResponse",
+              "local": "UserCenterFavoriteResponse",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "UserCenterListParams",
+              "local": "UserCenterListParams",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "UserCenterPageInfo",
+              "local": "UserCenterPageInfo",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "UserCenterPageResult",
+              "local": "UserCenterPageResult",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "UserCenterTopicResponse",
+              "local": "UserCenterTopicResponse",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 385,
+          "type": "ImportDeclaration"
+        }
+      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/components/AppPageLayout.tsx": [
         {
           "end": 152,
@@ -19277,7 +19783,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 339,
+          "end": 307,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
@@ -19312,11 +19818,6 @@
               "type": "ImportSpecifier"
             },
             {
-              "imported": "Moon",
-              "local": "Moon",
-              "type": "ImportSpecifier"
-            },
-            {
               "imported": "Plus",
               "local": "Plus",
               "type": "ImportSpecifier"
@@ -19325,32 +19826,13 @@
               "imported": "Settings2",
               "local": "Settings2",
               "type": "ImportSpecifier"
-            },
-            {
-              "imported": "Sun",
-              "local": "Sun",
-              "type": "ImportSpecifier"
             }
           ],
           "start": 184,
           "type": "ImportDeclaration"
         },
         {
-          "end": 396,
-          "importKind": "type",
-          "source": "@/hooks/topicTypes",
-          "specifiers": [
-            {
-              "imported": "TopicResponse",
-              "local": "TopicResponse",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 340,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 450,
+          "end": 361,
           "importKind": "type",
           "source": "@/hooks/petTypes",
           "specifiers": [
@@ -19360,25 +19842,59 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 397,
+          "start": 308,
           "type": "ImportDeclaration"
         },
         {
-          "end": 528,
+          "end": 529,
           "importKind": "value",
-          "source": "@/hooks/useTopicRequests",
+          "source": "@/hooks/useUserCenterRequests",
           "specifiers": [
             {
-              "imported": "useInfiniteRequestTopicUserTopics",
-              "local": "useInfiniteRequestTopicUserTopics",
+              "imported": "useInfiniteRequestUserCenterComments",
+              "local": "useInfiniteRequestUserCenterComments",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useInfiniteRequestUserCenterFavorites",
+              "local": "useInfiniteRequestUserCenterFavorites",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useInfiniteRequestUserCenterTopics",
+              "local": "useInfiniteRequestUserCenterTopics",
               "type": "ImportSpecifier"
             }
           ],
-          "start": 451,
+          "start": 362,
           "type": "ImportDeclaration"
         },
         {
-          "end": 599,
+          "end": 663,
+          "importKind": "type",
+          "source": "@/hooks/userCenterTypes",
+          "specifiers": [
+            {
+              "imported": "UserCenterCommentResponse",
+              "local": "UserCenterCommentResponse",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "UserCenterFavoriteResponse",
+              "local": "UserCenterFavoriteResponse",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "UserCenterTopicResponse",
+              "local": "UserCenterTopicResponse",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 530,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 734,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -19393,24 +19909,14 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 529,
+          "start": 664,
           "type": "ImportDeclaration"
         },
         {
-          "end": 710,
+          "end": 801,
           "importKind": "value",
           "source": "@/data/mockData",
           "specifiers": [
-            {
-              "imported": "MockForumEntry",
-              "local": "MockForumEntry",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "ForumComment",
-              "local": "ForumComment",
-              "type": "ImportSpecifier"
-            },
             {
               "imported": "PetInfo",
               "local": "PetInfo",
@@ -19422,11 +19928,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 600,
+          "start": 735,
           "type": "ImportDeclaration"
         },
         {
-          "end": 767,
+          "end": 858,
           "importKind": "value",
           "source": "./ProfilePetArchive",
           "specifiers": [
@@ -19436,7 +19942,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 711,
+          "start": 802,
           "type": "ImportDeclaration"
         }
       ],
@@ -19602,15 +20108,10 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 302,
+          "end": 282,
           "importKind": "value",
           "source": "@/data/mockData",
           "specifiers": [
-            {
-              "imported": "mockCommunityPosts",
-              "local": "mockCommunityPosts",
-              "type": "ImportSpecifier"
-            },
             {
               "imported": "mockPetSkins",
               "local": "mockPetSkins",
@@ -19631,7 +20132,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 360,
+          "end": 340,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -19641,11 +20142,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 303,
+          "start": 283,
           "type": "ImportDeclaration"
         },
         {
-          "end": 415,
+          "end": 395,
           "importKind": "value",
           "source": "@/hooks/useAppSession",
           "specifiers": [
@@ -19655,11 +20156,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 361,
+          "start": 341,
           "type": "ImportDeclaration"
         },
         {
-          "end": 572,
+          "end": 552,
           "importKind": "value",
           "source": "@/hooks/usePetRequests",
           "specifiers": [
@@ -19689,11 +20190,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 416,
+          "start": 396,
           "type": "ImportDeclaration"
         },
         {
-          "end": 629,
+          "end": 609,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -19703,11 +20204,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 573,
+          "start": 553,
           "type": "ImportDeclaration"
         },
         {
-          "end": 693,
+          "end": 673,
           "importKind": "value",
           "source": "./components/ProfilePageView",
           "specifiers": [
@@ -19717,11 +20218,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 630,
+          "start": 610,
           "type": "ImportDeclaration"
         },
         {
-          "end": 752,
+          "end": 732,
           "importKind": "value",
           "source": "./components/petDisplay",
           "specifiers": [
@@ -19731,7 +20232,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 694,
+          "start": 674,
           "type": "ImportDeclaration"
         }
       ],

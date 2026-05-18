@@ -379,9 +379,15 @@ export function StandalonePageShell({
     onAuthModalOpenChange(false);
   }, [onAuthModalOpenChange, onAuthSuccess]);
 
+  const resolvedContentClassName =
+    activeView === 'profile'
+      ? `${contentClassName} lg:h-full lg:min-h-full lg:bg-[#080808]`
+      : contentClassName;
+
   return (
     <AppPageLayout
-      contentClassName={contentClassName}
+      contentClassName={resolvedContentClassName}
+      mainClassName={activeView === 'profile' ? 'app-main-profile' : ''}
       darkMode={darkMode}
       onToggleTheme={handleToggleTheme}
       onOpenAuth={() => onAuthModalOpenChange(true)}
