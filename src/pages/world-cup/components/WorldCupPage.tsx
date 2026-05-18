@@ -756,31 +756,34 @@ export function WorldCupPage() {
             </div>
 
             {/* 大屏统计 */}
-            <div className="mt-3 grid gap-3 sm:grid-cols-3">
-              <div className="relative overflow-hidden rounded-[10px] border border-emerald-400/25 bg-black/55 p-4 backdrop-blur">
-                <div className="h-[3px] rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400" />
-                <div className="mt-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-300/75">
-                  TOTAL TURTLE COIN · 总龟币量
+            <div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-3">
+              <div className="relative flex min-w-0 items-center justify-center gap-1 overflow-hidden rounded-[10px] border border-emerald-400/25 bg-black/55 px-1.5 py-2 backdrop-blur sm:block sm:p-4">
+                <div className="hidden h-[3px] rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 sm:block" />
+                <div className="shrink-0 whitespace-nowrap text-[9.5px] font-black uppercase tracking-0 text-emerald-300/75 sm:mt-3 sm:text-[10px] sm:tracking-[0.2em]">
+                  <span className="sm:hidden">总龟币量</span>
+                  <span className="hidden sm:inline">TOTAL TURTLE COIN · 总龟币量</span>
                 </div>
-                <div className="mt-1 font-sans text-[30px] font-black leading-none tracking-tight text-emerald-300 [text-shadow:0_0_14px_rgba(52,255,139,0.45)]">
+                <div className="shrink-0 whitespace-nowrap font-sans text-[15px] font-black leading-none tracking-tight text-emerald-300 [text-shadow:0_0_14px_rgba(52,255,139,0.45)] sm:mt-1 sm:text-[30px]">
                   2.88M
                 </div>
               </div>
-              <div className="relative overflow-hidden rounded-[10px] border border-cyan-400/25 bg-black/55 p-4 backdrop-blur">
-                <div className="h-[3px] rounded-full bg-gradient-to-r from-cyan-400 to-sky-400" />
-                <div className="mt-3 text-[10px] font-black uppercase tracking-[0.2em] text-cyan-300/75">
-                  OPEN MARKETS · 开盘数
+              <div className="relative flex min-w-0 items-center justify-center gap-1 overflow-hidden rounded-[10px] border border-cyan-400/25 bg-black/55 px-1.5 py-2 backdrop-blur sm:block sm:p-4">
+                <div className="hidden h-[3px] rounded-full bg-gradient-to-r from-cyan-400 to-sky-400 sm:block" />
+                <div className="shrink-0 whitespace-nowrap text-[9.5px] font-black uppercase tracking-0 text-cyan-300/75 sm:mt-3 sm:text-[10px] sm:tracking-[0.2em]">
+                  <span className="sm:hidden">开盘数</span>
+                  <span className="hidden sm:inline">OPEN MARKETS · 开盘数</span>
                 </div>
-                <div className="mt-1 font-sans text-[30px] font-black leading-none tracking-tight text-cyan-300 [text-shadow:0_0_14px_rgba(34,211,238,0.4)]">
+                <div className="shrink-0 whitespace-nowrap font-sans text-[15px] font-black leading-none tracking-tight text-cyan-300 [text-shadow:0_0_14px_rgba(34,211,238,0.4)] sm:mt-1 sm:text-[30px]">
                   36
                 </div>
               </div>
-              <div className="relative overflow-hidden rounded-[10px] border border-rose-400/25 bg-black/55 p-4 backdrop-blur">
-                <div className="h-[3px] rounded-full bg-gradient-to-r from-rose-400 to-amber-300" />
-                <div className="mt-3 text-[10px] font-black uppercase tracking-[0.2em] text-rose-300/75">
-                  UPSET RATE · 爆冷率
+              <div className="relative flex min-w-0 items-center justify-center gap-1 overflow-hidden rounded-[10px] border border-rose-400/25 bg-black/55 px-1.5 py-2 backdrop-blur sm:block sm:p-4">
+                <div className="hidden h-[3px] rounded-full bg-gradient-to-r from-rose-400 to-amber-300 sm:block" />
+                <div className="shrink-0 whitespace-nowrap text-[9.5px] font-black uppercase tracking-0 text-rose-300/75 sm:mt-3 sm:text-[10px] sm:tracking-[0.2em]">
+                  <span className="sm:hidden">爆冷率</span>
+                  <span className="hidden sm:inline">UPSET RATE · 爆冷率</span>
                 </div>
-                <div className="mt-1 font-sans text-[30px] font-black leading-none tracking-tight text-rose-300 [text-shadow:0_0_14px_rgba(255,46,99,0.4)]">
+                <div className="shrink-0 whitespace-nowrap font-sans text-[15px] font-black leading-none tracking-tight text-rose-300 [text-shadow:0_0_14px_rgba(255,46,99,0.4)] sm:mt-1 sm:text-[30px]">
                   19%
                 </div>
               </div>
