@@ -33,13 +33,16 @@ import {
   useRequestPKReplyComment,
   useRequestPKTopic,
 } from '@/hooks/usePkRequests';
+import type { PKBet } from '@/hooks/pkTypes';
 import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
 import type { PetSkin } from '@/data/mockData';
 import type { PredictionCardItem } from '@/pages/home/components/predictionCards';
+import { resolveEventBattleTheme } from './eventBattleThemes';
 import './EventBattleLiveRoom.css';
 
 type CommentSide = 'A' | 'B';
 type ParticleStyle = React.CSSProperties & Record<`--${string}`, string>;
+type ThemeStyle = React.CSSProperties & Record<`--${string}`, string>;
 
 interface EventBattleProps {
   news: PredictionCardItem;
@@ -545,6 +548,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
   const [betBurst, setBetBurst] = useState<{ side: CommentSide; token: number } | null>(null);
   const [betDialogSide, setBetDialogSide] = useState<CommentSide | null>(null);
+  const [optimisticPkBet, setOptimisticPkBet] = useState<PKBet | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
   const currentUserName = currentUserQuery.data?.nickname || currentUserQuery.data?.username || '你';
   const pkTopicId = typeof news.marketId === 'number' && news.marketId > 0 ? news.marketId : undefined;
@@ -586,7 +590,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const pkRound = pkDetail?.round;
   const pkHeat = pkHeatQuery.data;
   const pkPhase = pkHeat?.phase ?? pkRound?.phase;
-  const pkMyBet = pkDetail?.myBet;
+  const pkMyBet = optimisticPkBet ?? pkDetail?.myBet ?? null;
   const hasPkBet = Boolean(pkMyBet && hasValue(pkMyBet.id));
   const shouldUsePkBet = hasPkTopic && hasValue(pkPhase) && !pkDetailQuery.isError && !pkHeatQuery.isError;
   const optionA = pkTopic?.sideAName || news.optionA;
@@ -623,11 +627,12 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     () => buildEnergyBubbles('B', rightPct, rightEnergyDuration),
     [rightEnergyDuration, rightPct],
   );
-  const effectiveBetAmount = shouldUsePkBet ? 100 : numericBetAmount;
+  const effectiveBetAmount = Number.isFinite(numericBetAmount) && numericBetAmount > 0 ? numericBetAmount : 0;
   const isBetting = (typeof news.marketId === 'number' && bettingMarketId === news.marketId) || pkBetMutation.isLoading;
   const canPlaceBet = shouldUsePkBet
     ? pkPhase === 'betting' && !hasPkBet
     : typeof onBet === 'function' && news.status === 'open';
+  const pkBetAmount = Number(pkMyBet?.amount ?? 0);
   const activeBetOdds = betIntent === 'A' ? oddsA : oddsB;
   const estimatedPayout = Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
     ? Math.floor(effectiveBetAmount * activeBetOdds)
@@ -637,6 +642,15 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const dialogEstimatedPayout = Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
     ? Math.floor(effectiveBetAmount * dialogBetOdds)
     : 0;
+  const betStatusText = shouldUsePkBet
+    ? hasPkBet
+      ? `已下注 ${formatVotes(pkBetAmount || effectiveBetAmount)}`
+      : pkPhase === 'betting'
+        ? '进行中'
+        : '已暂停'
+    : canPlaceBet
+      ? '进行中'
+      : '已暂停';
   const displayNews = useMemo<PredictionCardItem>(() => ({
     ...news,
     title: battleTitle,
@@ -646,6 +660,24 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     oddsB,
     votes: { A: leftVotes, B: rightVotes },
   }), [battleTitle, leftVotes, news, oddsA, oddsB, optionA, optionB, rightVotes]);
+  const visualTheme = useMemo(
+    () => resolveEventBattleTheme(news.marketId ?? news.id, optionA, optionB),
+    [news.id, news.marketId, optionA, optionB],
+  );
+  const themeStyle = useMemo<ThemeStyle>(() => ({
+    '--eb-blue': visualTheme.sideA.primary,
+    '--eb-blue-soft': visualTheme.sideA.accent,
+    '--eb-blue-deep': visualTheme.sideA.deep,
+    '--eb-blue-rgb': visualTheme.sideA.rgb,
+    '--eb-red': visualTheme.sideB.primary,
+    '--eb-red-soft': visualTheme.sideB.accent,
+    '--eb-red-deep': visualTheme.sideB.deep,
+    '--eb-red-rgb': visualTheme.sideB.rgb,
+    '--eb-left-button-gradient': visualTheme.sideA.buttonGradient,
+    '--eb-right-button-gradient': visualTheme.sideB.buttonGradient,
+    '--eb-left-hero-glow': visualTheme.sideA.heroGlow,
+    '--eb-right-hero-glow': visualTheme.sideB.heroGlow,
+  }), [visualTheme]);
 
   const appendFeed = useCallback((side: CommentSide, text: string) => {
     setFeedItems((prev) => [
@@ -701,6 +733,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     setFeedItems([]);
     setLatestReplyEvent(null);
     setMobilePanelOpen(false);
+    setOptimisticPkBet(null);
   }, [battleEntityId, news.id, userSide]);
 
   useEffect(() => {
@@ -930,11 +963,17 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     if (!Number.isFinite(effectiveBetAmount) || effectiveBetAmount <= 0 || effectiveBetAmount > balance) return;
     if (shouldUsePkBet && pkTopicId) {
       try {
-        await pkBetMutation.mutateAsync({
+        const result = await pkBetMutation.mutateAsync({
           topicId: pkTopicId,
           side: targetSide,
+          amount: effectiveBetAmount,
           requestId: createRequestId(`pk-bet-${pkTopicId}`),
         });
+        if (result.bet) {
+          setOptimisticPkBet(result.bet);
+          setBetIntent((result.bet.side as CommentSide | undefined) ?? targetSide);
+          if (result.bet.amount) setBetAmount(String(result.bet.amount));
+        }
       } catch (error) {
         const message = error instanceof Error ? error.message : '';
         if (message.includes('NotLogin')) ensureAuth();
@@ -944,6 +983,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       onBet?.(news.id, targetSide, targetOdds, effectiveBetAmount);
     }
     setBetBurst({ side: targetSide, token: Date.now() });
+    setBetDialogSide(null);
+    setMobilePanelOpen(false);
     appendFeed(targetSide, `${currentUserName} 为${targetSide === 'A' ? optionA : optionB}阵营追加了 ${formatVotes(effectiveBetAmount)} 龟币`);
   }, [
     appendFeed,
@@ -976,7 +1017,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const confirmBetDialog = useCallback(async () => {
     if (!betDialogSide) return;
     await handleBet(betDialogSide);
-    setBetDialogSide(null);
   }, [betDialogSide, handleBet]);
 
   const countdownText = useMemo(() => {
@@ -992,7 +1032,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const rightScore = rightVotes + rightHeat * 120 + rightComments.length * 18000;
   const scoreDiff = Math.abs(leftScore - rightScore);
   const liveEvents = feedItems.slice(-5).reverse();
-  const heroImage = news.image || DEFAULT_BATTLE_IMAGE;
+  const leftHeroImage = visualTheme.sideA.imageUrl || news.image || DEFAULT_BATTLE_IMAGE;
+  const rightHeroImage = visualTheme.sideB.imageUrl || news.image || DEFAULT_BATTLE_IMAGE;
   const pkParticles = useMemo<PkParticle[]>(() => Array.from({ length: 28 }, (_, index) => {
     const angle = (index / 28) * Math.PI * 2 + (Math.random() - 0.5) * 0.9;
     const distance = 78 + Math.random() * 112;
@@ -1160,7 +1201,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const quickAmounts = [100, 520, 1000, 5000];
 
   return (
-    <div className="eb-live-page">
+    <div className="eb-live-page" style={themeStyle}>
       <div className="eb-main">
         <section className="eb-arena-card">
           <button type="button" className="eb-back" onClick={onBack}>
@@ -1199,10 +1240,10 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           </div>
 
           <div className="eb-player eb-player-left">
-            <img src={heroImage} alt={displayNews.optionA} />
+            <img src={leftHeroImage} alt={displayNews.optionA} />
           </div>
           <div className="eb-player eb-player-right">
-            <img src={heroImage} alt={displayNews.optionB} />
+            <img src={rightHeroImage} alt={displayNews.optionB} />
           </div>
 
           <div className="eb-hero-stats eb-left-stats">
@@ -1460,7 +1501,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           </div>
           <div className="eb-rank-list">
             {mobileLeaderBoard.map((item, index) => (
-              <div className="eb-rank-item" key={item.id}>
+              <div className={`eb-rank-item ${item.side === 'A' ? 'eb-rank-item-side-a' : 'eb-rank-item-side-b'}`} key={item.id}>
                 <i>{index + 1}</i>
                 <img src={item.avatar || FALLBACK_AVATAR} alt={item.name} />
                 <b>{item.name}</b>
@@ -1470,7 +1511,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           </div>
         </section>
 
-        <section className="eb-mobile-info-card eb-mobile-personal-card">
+        <section className={`eb-mobile-info-card eb-mobile-personal-card ${personalContribution.side === 'A' ? 'eb-personal-side-a' : personalContribution.side === 'B' ? 'eb-personal-side-b' : 'eb-personal-side-neutral'}`}>
           <div className="eb-mobile-info-title">
             <Shield size={16} />
             个人贡献
@@ -1557,7 +1598,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         onClick={() => setMobilePanelOpen(true)}
       >
         <span>下注助威</span>
-        <strong>{canPlaceBet ? '进行中' : '已暂停'}</strong>
+        <strong>{betStatusText}</strong>
       </button>
 
       {mobilePanelOpen ? (
@@ -1573,7 +1614,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         <div className="eb-mobile-panel-head">
           <div>
             <span>下注助威</span>
-            <strong>选择阵营 · 输入龟币</strong>
+            <strong>{hasPkBet ? '本场已下注' : '选择阵营 · 输入龟币'}</strong>
           </div>
           <button type="button" onClick={() => setMobilePanelOpen(false)}>×</button>
         </div>
@@ -1581,7 +1622,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           <div className="eb-side-title"><Trophy size={18} /> 热度贡献榜 <span>总榜</span><span>本方榜</span></div>
           <div className="eb-rank-list">
             {displayLeaderBoard.map((item, index) => (
-              <div className="eb-rank-item" key={item.id}>
+              <div className={`eb-rank-item ${item.side === 'A' ? 'eb-rank-item-side-a' : 'eb-rank-item-side-b'}`} key={item.id}>
                 <i>{index + 1}</i>
                 <img src={item.avatar || FALLBACK_AVATAR} alt={item.name} />
                 <b>{item.name}</b>
@@ -1592,7 +1633,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         </section>
 
         <section className="eb-side-card eb-bet-side-card">
-          <div className="eb-side-title"><Zap size={18} /> 下注助威 <span>{canPlaceBet ? '进行中' : '已暂停'}</span></div>
+          <div className="eb-side-title"><Zap size={18} /> 下注助威 <span>{betStatusText}</span></div>
           <div className={`eb-bet-panel ${betIntent === 'A' ? 'bet-blue' : 'bet-red'}`}>
             <div className="eb-bet-switch">
               <button
@@ -1633,6 +1674,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                   key={amount}
                   className={Number(betAmount) === amount ? 'active' : ''}
                   onClick={() => setBetAmount(String(amount))}
+                  disabled={hasPkBet}
                 >
                   {formatVotes(amount)}
                 </button>
@@ -1643,6 +1685,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
               <input
                 value={betAmount}
                 inputMode="numeric"
+                disabled={hasPkBet}
                 onChange={(event) => setBetAmount(event.target.value.replace(/[^\d]/g, ''))}
                 placeholder="输入金额"
               />
@@ -1663,7 +1706,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           </div>
         </section>
 
-        <section className="eb-side-card eb-personal-card">
+        <section className={`eb-side-card eb-personal-card ${personalContribution.side === 'A' ? 'eb-personal-side-a' : personalContribution.side === 'B' ? 'eb-personal-side-b' : 'eb-personal-side-neutral'}`}>
           <div className="eb-side-title">
             <Shield size={18} /> 个人贡献
             <span>{personalContribution.side === 'A' ? '蓝方' : personalContribution.side === 'B' ? '红方' : '未站队'}</span>
