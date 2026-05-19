@@ -75,6 +75,8 @@
 .eb-main {
   display: grid;
   grid-template-rows: 630px 12px minmax(0, 1fr);
+  min-height: 0;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -794,13 +796,16 @@
   grid-template-columns: 1fr 1fr;
   gap: 14px;
   min-height: 0;
+  height: 100%;
+  overflow: hidden;
   padding: 12px 16px 16px;
 }
 
 .eb-comment-column {
   display: grid;
-  grid-template-rows: 58px minmax(0, 1fr) 58px;
+  grid-template-rows: 58px 38px minmax(0, 1fr) 64px;
   min-height: 0;
+  height: 100%;
   overflow: hidden;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -6830,9 +6835,13 @@
 
 @media (min-width: 768px) {
   .eb-comments-grid {
-    transform: translateY(-20px);
+    transform: none;
     padding-top: 0;
     padding-bottom: 10px;
+  }
+
+  .eb-comment-column {
+    grid-template-rows: 58px 38px minmax(0, 1fr) 64px;
   }
 
   .eb-comment-list {
@@ -7208,6 +7217,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 0;
+    height: auto;
     padding: 0 10px 12px;
   }
 
@@ -7220,6 +7230,7 @@
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     min-height: 0;
+    height: auto;
     overflow: visible;
     border-radius: 14px;
   }

@@ -3,7 +3,7 @@
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from '@umijs/renderer-react';
-import { ArrowLeft, ChevronRight, Eye, Image as ImageIcon, LogIn, MessageSquarePlus, Plus, Settings2 } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Image as ImageIcon, LogIn, MessageSquarePlus, Plus, Settings2 } from 'lucide-react';
 import type { OwnedPetItem } from '@/hooks/petTypes';
 import {
   useInfiniteRequestUserCenterComments,
@@ -55,9 +55,6 @@ const cardClass =
 /** 列表项：窄屏圆角与边框略收（与 xl:hidden 布局同断点） */
 const feedCard =
   'rounded-[20px] border border-white/8 bg-white/[0.03] max-xl:rounded-[16px] max-xl:border-white/[0.06]';
-
-const bannerRow =
-  'rounded-[20px] bg-black/70 px-4 py-4 text-white max-xl:rounded-[16px] max-xl:px-3 max-xl:py-3';
 
 const emptyArt = (
   <div className="relative h-[116px] w-[116px]">
@@ -218,16 +215,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderOverview = () => (
     <>
-      {/* <div className={bannerRow}>
-        <button className="flex w-full items-center justify-between text-left">
-          <div className="flex items-center gap-3">
-            <Eye size={18} className="text-[#cad2d9]" />
-            <span className="text-[15px] font-semibold">显示所有内容</span>
-          </div>
-          <ChevronRight size={18} className="text-[#cad2d9]" />
-        </button>
-      </div> */}
-
       <div className="mt-4 hidden flex-wrap items-center gap-3 xl:flex">
         <button
           onClick={onOpenForum}
@@ -278,16 +265,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderPosts = () => (
     <>
-      {/* <div className={bannerRow}>
-        <button className="flex w-full items-center justify-between text-left">
-          <div className="flex items-center gap-3">
-            <Eye size={18} className="text-[#cad2d9]" />
-            <span className="text-[15px] font-semibold">显示所有帖子</span>
-          </div>
-          <ChevronRight size={18} className="text-[#cad2d9]" />
-        </button>
-      </div> */}
-
       <div className="mt-4 hidden flex-wrap items-center gap-3 xl:flex">
         <button
           onClick={onOpenForum}
@@ -339,16 +316,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderComments = () => (
     <>
-      {/* <div className={bannerRow}>
-        <button className="flex w-full items-center justify-between text-left">
-          <div className="flex items-center gap-3">
-            <Eye size={18} className="text-[#cad2d9]" />
-            <span className="text-[15px] font-semibold">显示所有评论</span>
-          </div>
-          <ChevronRight size={18} className="text-[#cad2d9]" />
-        </button>
-      </div> */}
-
       {!isAuthenticated ? renderLoginRequired('登录后查看你评论过的帖子', '这里只展示当前登录账号评论过的主题帖。') : userCommentsQuery.isLoading && profileComments.length === 0 ? (
         <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
           正在加载评论...
@@ -384,16 +351,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderSaved = () => (
     <>
-      {/* <div className={bannerRow}>
-        <button className="flex w-full items-center justify-between text-left">
-          <div className="flex items-center gap-3">
-            <Eye size={18} className="text-[#cad2d9]" />
-            <span className="text-[15px] font-semibold">显示所有收藏</span>
-          </div>
-          <ChevronRight size={18} className="text-[#cad2d9]" />
-        </button>
-      </div> */}
-
       {!isAuthenticated ? renderLoginRequired('登录后查看你收藏的帖子', '这里只展示当前登录账号收藏过的主题帖。') : userFavoritesQuery.isLoading && profileFavorites.length === 0 ? (
         <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
           正在加载收藏...

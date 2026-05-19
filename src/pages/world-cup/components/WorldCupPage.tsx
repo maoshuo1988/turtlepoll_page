@@ -563,7 +563,7 @@ export function WorldCupPage() {
   /** 首页撕裂带按 marketId 拉齐数据；state 直达 EventBattle，避免 Hero 仍错用默认列表 */
   const goToTearZone = useCallback((item: PredictionCardItem | undefined) => {
     if (!item?.marketId) return;
-    navigate(`/?market=${item.marketId}`, { state: { openBattleNews: item } });
+    navigate(`/event-battle?market=${item.marketId}`, { state: { openBattleNews: item } });
   }, [navigate]);
 
   const handleBetSuccess = (item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {

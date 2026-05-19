@@ -69,6 +69,7 @@ const ROUTE_PATHS: Partial<Record<ViewType, string>> = {
   forum: '/forum',
   games: '/games',
   battlePlaza: '/battle-plaza',
+  battleStage: '/battle-stage',
   rank: '/rank',
   shop: '/shop',
   pet: '/pet',
@@ -119,13 +120,14 @@ export function StandalonePageShell({
   const darkMode = theme === 'dark';
   const { coinMe } = useAppSession();
   const isAuthenticated = Boolean(getAuthToken());
+  const isEventBattleRoute = location.pathname === '/event-battle';
   // 左侧栏宠物卡片需要同时读取装备、拥有、体力和心情状态。
   const petEquipQuery = useRequestPetEquip();
   const petOwnedQuery = useRequestPetOwned();
   const petStaminaQuery = useRequestPetStamina();
   const petStatusQuery = useRequestPetStatus();
   const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
-  const aiUnreadPushesQuery = useRequestAiUnreadPushes(20, isAuthenticated);
+  const aiUnreadPushesQuery = useRequestAiUnreadPushes(20, isAuthenticated && !isEventBattleRoute);
   const aiPushesReadMutation = useRequestAiPushesRead();
   const aiPresenceMutation = useRequestAiPresence();
   const displayedAiPushIdsRef = useRef<Set<string>>(new Set());
@@ -192,7 +194,7 @@ export function StandalonePageShell({
   }, [appendAiPushMessages, aiUnreadPushesQuery.data?.results]);
 
   useAiPushStream({
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && !isEventBattleRoute,
     onPush: useCallback((message) => {
       appendAiPushMessages([message]);
     }, [appendAiPushMessages]),

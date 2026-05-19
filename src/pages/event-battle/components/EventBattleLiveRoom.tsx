@@ -35,7 +35,7 @@ import {
 } from '@/hooks/usePkRequests';
 import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
 import type { PetSkin } from '@/data/mockData';
-import type { PredictionCardItem } from './predictionCards';
+import type { PredictionCardItem } from '@/pages/home/components/predictionCards';
 import './EventBattleLiveRoom.css';
 
 type CommentSide = 'A' | 'B';
@@ -539,7 +539,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [likePendingIds, setLikePendingIds] = useState<Set<string>>(new Set());
   const [countdownLeft, setCountdownLeft] = useState(() => getCountdownSeconds(news.closeTime));
-  const [activeTab, setActiveTab] = useState('全部');
+  const activeTab: string = '全部';
   const [mobileActiveSide, setMobileActiveSide] = useState<CommentSide>(userSide ?? 'A');
   const [mobileRankMode, setMobileRankMode] = useState<'all' | 'side'>('all');
   const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
@@ -1158,7 +1158,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     ? displayLeaderBoard.filter((item) => item.side === mobileActiveSide)
     : displayLeaderBoard;
   const quickAmounts = [100, 520, 1000, 5000];
-  const tabs = ['战报', '弹幕 99+', '全部', '热门', '只看我方', '只看对方', '精华'];
 
   return (
     <div className="eb-live-page">
@@ -1315,7 +1314,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         </section>
 
         <nav className="eb-tabs eb-tabs-hidden-gap pointer-events-none" aria-hidden="true">
-          {tabs.map((tab, index) => (
+          {/* {tabs.map((tab, index) => (
             <button
               key={tab}
               type="button"
@@ -1325,7 +1324,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             >
               {tab}
             </button>
-          ))}
+          ))} */}
           <button type="button" className="eb-sort" tabIndex={-1}>最新评论 <ChevronDown size={14} /></button>
         </nav>
 

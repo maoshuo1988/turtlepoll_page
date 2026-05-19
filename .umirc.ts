@@ -21,11 +21,13 @@ export default defineConfig({
       component: '@/layouts/home',
       routes: [
         { path: '/', component: 'home' },
+        { path: '/event-battle', component: 'event-battle' },
         { path: '/world-cup', component: 'world-cup' },
         { path: '/rivalry', component: 'rivalry' },
         { path: '/forum', component: 'forum' },
         { path: '/games', component: 'games' },
         { path: '/battle-plaza', component: 'battle-plaza' },
+        { path: '/battle-stage', component: 'battle-stage' },
         { path: '/rank', component: 'rank' },
         { path: '/shop', component: 'shop' },
         { path: '/pet', component: 'pet' },

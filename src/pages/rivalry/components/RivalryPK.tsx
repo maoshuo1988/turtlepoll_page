@@ -48,6 +48,146 @@ const fallbackImages = [
   'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=900&q=80',
 ];
 
+type RivalryVisualTheme = {
+  sideA: {
+    primary: string;
+    accent: string;
+    soft: string;
+    portrait: string;
+  };
+  sideB: {
+    primary: string;
+    accent: string;
+    soft: string;
+    portrait: string;
+  };
+};
+
+function buildPortrait({
+  label,
+  emoji,
+  start,
+  end,
+  glow,
+}: {
+  label: string;
+  emoji: string;
+  start: string;
+  end: string;
+  glow: string;
+}) {
+  const initial = label.slice(0, 2).toUpperCase();
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${start}" />
+          <stop offset="100%" stop-color="${end}" />
+        </linearGradient>
+        <radialGradient id="halo" cx="75%" cy="28%" r="62%">
+          <stop offset="0%" stop-color="${glow}" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="${glow}" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="240" height="240" rx="34" fill="url(#bg)" />
+      <rect x="12" y="12" width="216" height="216" rx="28" fill="none" stroke="rgba(255,255,255,0.24)" />
+      <circle cx="182" cy="62" r="74" fill="url(#halo)" />
+      <circle cx="66" cy="174" r="54" fill="${glow}" fill-opacity="0.18" />
+      <text x="26" y="62" fill="rgba(255,255,255,0.94)" font-size="42" font-family="Arial, sans-serif" font-weight="700">${emoji}</text>
+      <text x="24" y="160" fill="rgba(255,255,255,0.98)" font-size="78" font-family="Arial, sans-serif" font-weight="900">${initial}</text>
+      <text x="26" y="198" fill="rgba(255,255,255,0.64)" font-size="18" font-family="Arial, sans-serif" letter-spacing="3">${label}</text>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function createTheme(
+  sideA: { label: string; emoji: string; primary: string; accent: string; end?: string },
+  sideB: { label: string; emoji: string; primary: string; accent: string; end?: string },
+): RivalryVisualTheme {
+  return {
+    sideA: {
+      primary: sideA.primary,
+      accent: sideA.accent,
+      soft: `${sideA.primary}22`,
+      portrait: buildPortrait({
+        label: sideA.label,
+        emoji: sideA.emoji,
+        start: sideA.primary,
+        end: sideA.end ?? '#08111f',
+        glow: sideA.accent,
+      }),
+    },
+    sideB: {
+      primary: sideB.primary,
+      accent: sideB.accent,
+      soft: `${sideB.primary}22`,
+      portrait: buildPortrait({
+        label: sideB.label,
+        emoji: sideB.emoji,
+        start: sideB.primary,
+        end: sideB.end ?? '#08111f',
+        glow: sideB.accent,
+      }),
+    },
+  };
+}
+
+const defaultRivalryTheme = createTheme(
+  { label: 'A', emoji: '⚔️', primary: '#1dbfd0', accent: '#5df3d7', end: '#10273d' },
+  { label: 'B', emoji: '🔥', primary: '#A2343B', accent: '#ff6f8f', end: '#35131a' },
+);
+
+function getRivalryVisualTheme(item: RivalryNewsItem): RivalryVisualTheme {
+  const text = `${item.title} ${item.optionA} ${item.optionB}`.toLowerCase();
+
+  if (item.id === 'pk-hero' || text.includes('梅西') || text.includes('c罗')) {
+    return createTheme(
+      { label: item.optionA, emoji: '🐐', primary: '#14b8a6', accent: '#67e8f9', end: '#0f2f35' },
+      { label: item.optionB, emoji: '👑', primary: '#ef4444', accent: '#fda4af', end: '#3b0f19' },
+    );
+  }
+  if (text.includes('中国') || text.includes('美国')) {
+    return createTheme(
+      { label: item.optionA, emoji: '🐉', primary: '#dc2626', accent: '#f87171', end: '#4c0519' },
+      { label: item.optionB, emoji: '🦅', primary: '#2563eb', accent: '#93c5fd', end: '#172554' },
+    );
+  }
+  if (text.includes('iphone') || text.includes('安卓')) {
+    return createTheme(
+      { label: item.optionA, emoji: '📱', primary: '#7c3aed', accent: '#c4b5fd', end: '#2e1065' },
+      { label: item.optionB, emoji: '🤖', primary: '#16a34a', accent: '#86efac', end: '#052e16' },
+    );
+  }
+  if (text.includes('漫威') || text.includes('dc')) {
+    return createTheme(
+      { label: item.optionA, emoji: '🦸', primary: '#b91c1c', accent: '#fca5a5', end: '#450a0a' },
+      { label: item.optionB, emoji: '🦇', primary: '#1d4ed8', accent: '#93c5fd', end: '#172554' },
+    );
+  }
+  if (text.includes('faker') || text.includes('uzi')) {
+    return createTheme(
+      { label: item.optionA, emoji: '🎮', primary: '#f97316', accent: '#fdba74', end: '#431407' },
+      { label: item.optionB, emoji: '⚡', primary: '#ec4899', accent: '#f9a8d4', end: '#500724' },
+    );
+  }
+  if (text.includes('猫') || text.includes('狗')) {
+    return createTheme(
+      { label: item.optionA, emoji: '🐱', primary: '#f59e0b', accent: '#fde68a', end: '#451a03' },
+      { label: item.optionB, emoji: '🐶', primary: '#0ea5e9', accent: '#7dd3fc', end: '#082f49' },
+    );
+  }
+  if (text.includes('张元英') || text.includes('柳智敏')) {
+    return createTheme(
+      { label: item.optionA, emoji: '✨', primary: '#f472b6', accent: '#fbcfe8', end: '#831843' },
+      { label: item.optionB, emoji: '💿', primary: '#8b5cf6', accent: '#ddd6fe', end: '#4c1d95' },
+    );
+  }
+
+  return defaultRivalryTheme;
+}
+
 function pad(value: number) {
   return String(Math.floor(value)).padStart(2, '0');
 }
@@ -269,14 +409,23 @@ function HeroPK({
   const heatPctA = Math.round((pk.currentHeatA / heatTotal) * 100);
   const heatPctB = 100 - heatPctA;
   const leading = pk.currentHeatA > pk.currentHeatB ? 'A' : pk.currentHeatB > pk.currentHeatA ? 'B' : null;
+  const theme = getRivalryVisualTheme(item);
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[24px] border border-slate-700/60 bg-[#0a111f] shadow-[0_18px_44px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.06)]">
       <div className="absolute inset-0">
         <img src={item.image} alt="" className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#091121]/95 via-[#0b1426]/84 to-[#0f1a2a]/42" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_88%,rgba(45,212,191,0.2),transparent_42%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_76%,rgba(249,115,22,0.15),transparent_26%)]" />
+        <div className="absolute inset-y-0 left-0 w-[42%] overflow-hidden">
+          <img src={theme.sideA.portrait} alt="" className="h-full w-full object-cover opacity-[0.34] mix-blend-screen" />
+          <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${theme.sideA.primary}66 0%, transparent 100%)` }} />
+        </div>
+        <div className="absolute inset-y-0 right-0 w-[42%] overflow-hidden">
+          <img src={theme.sideB.portrait} alt="" className="h-full w-full object-cover opacity-[0.34] mix-blend-screen" />
+          <div className="absolute inset-0" style={{ background: `linear-gradient(270deg, ${theme.sideB.primary}66 0%, transparent 100%)` }} />
+        </div>
+        <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 14% 88%, ${theme.sideA.accent}44, transparent 42%)` }} />
+        <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 88% 18%, ${theme.sideB.accent}36, transparent 30%)` }} />
       </div>
 
       <div className="relative p-5 md:p-7">
@@ -304,20 +453,34 @@ function HeroPK({
         <div className="mb-4">
           <div className="mb-1.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-gradient-to-r from-[#1dbfd0] to-[#38f0d1]" />
+              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/25">
+                <img src={theme.sideA.portrait} alt="" className="h-full w-full object-cover" />
+              </span>
               <span className="text-sm font-bold text-white">{item.optionA}</span>
-              <span className="text-lg font-bold text-[#40ead0]">{pk.currentHeatA.toFixed(1)}</span>
+              <span className="text-lg font-bold" style={{ color: theme.sideA.accent }}>{pk.currentHeatA.toFixed(1)}</span>
             </div>
             <div className="text-xs font-black tracking-[0.3em] text-white/30">VS</div>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-[#ff6f8f]">{pk.currentHeatB.toFixed(1)}</span>
+              <span className="text-lg font-bold" style={{ color: theme.sideB.accent }}>{pk.currentHeatB.toFixed(1)}</span>
               <span className="text-sm font-bold text-white">{item.optionB}</span>
-              <span className="h-3 w-3 rounded-full bg-gradient-to-r from-[#ff4f75] to-[#A2343B]" />
+              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/25">
+                <img src={theme.sideB.portrait} alt="" className="h-full w-full object-cover" />
+              </span>
             </div>
           </div>
           <div className="relative flex h-4 overflow-hidden rounded-full bg-white/10">
-            <motion.div className="h-full bg-gradient-to-r from-[#1dbfd0] via-[#27d8cf] to-[#38f0d1]" animate={{ width: `${heatPctA}%` }} transition={{ type: 'spring', stiffness: 120, damping: 20 }} />
-            <motion.div className="h-full bg-gradient-to-r from-[#ff4f75] to-[#A2343B]" animate={{ width: `${heatPctB}%` }} transition={{ type: 'spring', stiffness: 120, damping: 20 }} />
+            <motion.div
+              className="h-full"
+              style={{ background: `linear-gradient(90deg, ${theme.sideA.primary}, ${theme.sideA.accent})` }}
+              animate={{ width: `${heatPctA}%` }}
+              transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+            />
+            <motion.div
+              className="h-full"
+              style={{ background: `linear-gradient(90deg, ${theme.sideB.accent}, ${theme.sideB.primary})` }}
+              animate={{ width: `${heatPctB}%` }}
+              transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+            />
             <motion.div
               className="absolute top-1/2 z-10 flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-lg"
               animate={{ left: `${heatPctA}%` }}
@@ -357,11 +520,18 @@ function HeroPK({
             disabled={isBetting || !!voted || pk.phase !== 'betting'}
             className={`flex flex-1 items-center justify-center gap-2 rounded-xl border-0 py-3 text-sm font-bold ${
               voted === 'A'
-                ? 'border border-[#48ddc2]/58 bg-[#2fdbbc]/28 text-[#dcfff8] shadow-[0_0_20px_rgba(45,207,178,0.22)]'
+                ? 'text-[#dcfff8] shadow-[0_0_20px_rgba(45,207,178,0.22)]'
                 : isBetting || pk.phase !== 'betting'
                   ? 'cursor-not-allowed bg-white/5 text-white/30'
-                  : 'border border-[#48ddc2]/42 bg-[#2fdbbc]/22 text-[#dcfff8] shadow-[0_0_20px_rgba(45,207,178,0.16)]'
+                  : 'text-[#dcfff8] shadow-[0_0_20px_rgba(45,207,178,0.16)]'
             }`}
+            style={
+              voted === 'A'
+                ? { border: `1px solid ${theme.sideA.accent}93`, background: `${theme.sideA.primary}40`, color: '#ecfeff' }
+                : isBetting || pk.phase !== 'betting'
+                  ? undefined
+                  : { border: `1px solid ${theme.sideA.accent}66`, background: `${theme.sideA.primary}33`, color: '#ecfeff' }
+            }
           >
             <Crown size={16} />
             {isBetting ? '下注中...' : item.optionA}
@@ -376,11 +546,18 @@ function HeroPK({
             disabled={isBetting || !!voted || pk.phase !== 'betting'}
             className={`flex flex-1 items-center justify-center gap-2 rounded-xl border-0 py-3 text-sm font-bold ${
               voted === 'B'
-                ? 'border border-[#ff5f7e]/34 bg-[#A2343B]/26 text-[#ffd7de] shadow-[0_14px_28px_rgba(255,79,117,0.16)]'
+                ? 'text-[#ffd7de] shadow-[0_14px_28px_rgba(255,79,117,0.16)]'
                 : isBetting || pk.phase !== 'betting'
                   ? 'cursor-not-allowed bg-white/5 text-white/30'
-                  : 'border border-[#ff5f7e]/28 bg-[#A2343B]/20 text-[#ffd7de] shadow-[0_14px_28px_rgba(255,79,117,0.12)]'
+                  : 'text-[#ffd7de] shadow-[0_14px_28px_rgba(255,79,117,0.12)]'
             }`}
+            style={
+              voted === 'B'
+                ? { border: `1px solid ${theme.sideB.accent}73`, background: `${theme.sideB.primary}40`, color: '#fff1f2' }
+                : isBetting || pk.phase !== 'betting'
+                  ? undefined
+                  : { border: `1px solid ${theme.sideB.accent}55`, background: `${theme.sideB.primary}30`, color: '#fff1f2' }
+            }
           >
             <Crown size={16} />
             {isBetting ? '下注中...' : item.optionB}
@@ -431,6 +608,7 @@ function PKCard({
   const heatTotal = pk.currentHeatA + pk.currentHeatB || 1;
   const heatPctA = Math.round((pk.currentHeatA / heatTotal) * 100);
   const leading = pk.currentHeatA > pk.currentHeatB ? 'A' : pk.currentHeatB > pk.currentHeatA ? 'B' : null;
+  const theme = getRivalryVisualTheme(item);
 
   return (
     <motion.div
@@ -442,6 +620,14 @@ function PKCard({
       <div className="relative h-32 overflow-hidden">
         <img src={item.image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-72" loading="lazy" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,14,30,0.18),rgba(5,10,20,0.2))]" />
+        <div className="absolute inset-y-0 left-0 w-[34%] overflow-hidden">
+          <img src={theme.sideA.portrait} alt="" className="h-full w-full object-cover opacity-[0.36] mix-blend-screen" />
+          <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${theme.sideA.primary}7a, transparent 100%)` }} />
+        </div>
+        <div className="absolute inset-y-0 right-0 w-[34%] overflow-hidden">
+          <img src={theme.sideB.portrait} alt="" className="h-full w-full object-cover opacity-[0.36] mix-blend-screen" />
+          <div className="absolute inset-0" style={{ background: `linear-gradient(270deg, ${theme.sideB.primary}7a, transparent 100%)` }} />
+        </div>
         <div className="absolute left-2 top-2 flex items-center gap-1.5">
           <PhaseTag phase={pk.phase} />
           <span className="rounded-full bg-black/40 px-2 py-0.5 text-[10px] font-bold text-white/90 backdrop-blur-sm">第{pk.currentRound}局</span>
@@ -460,12 +646,12 @@ function PKCard({
 
         <div className="mb-2">
           <div className="mb-0.5 flex justify-between text-[10px]">
-            <span className="font-semibold text-[#40ead0]">{item.optionA} {pk.currentHeatA.toFixed(0)}</span>
-            <span className="font-semibold text-[#ff6f8f]">{pk.currentHeatB.toFixed(0)} {item.optionB}</span>
+            <span className="font-semibold" style={{ color: theme.sideA.accent }}>{item.optionA} {pk.currentHeatA.toFixed(0)}</span>
+            <span className="font-semibold" style={{ color: theme.sideB.accent }}>{pk.currentHeatB.toFixed(0)} {item.optionB}</span>
           </div>
           <div className="flex h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-rdark-border">
-            <div className="h-full bg-gradient-to-r from-[#1dbfd0] via-[#27d8cf] to-[#38f0d1] transition-all" style={{ width: `${heatPctA}%` }} />
-            <div className="h-full bg-gradient-to-r from-[#ff4f75] to-[#A2343B] transition-all" style={{ width: `${100 - heatPctA}%` }} />
+            <div className="h-full transition-all" style={{ width: `${heatPctA}%`, background: `linear-gradient(90deg, ${theme.sideA.primary}, ${theme.sideA.accent})` }} />
+            <div className="h-full transition-all" style={{ width: `${100 - heatPctA}%`, background: `linear-gradient(90deg, ${theme.sideB.accent}, ${theme.sideB.primary})` }} />
           </div>
         </div>
 
@@ -481,11 +667,18 @@ function PKCard({
             disabled={isBetting || !!voted || pk.phase !== 'betting'}
             className={`flex-1 rounded-xl border-0 py-2 text-xs font-bold ${
               voted === 'A'
-                ? 'border border-[#48ddc2]/42 bg-[#2fdbbc]/22 text-[#dcfff8]'
+                ? 'text-[#dcfff8]'
                 : isBetting || pk.phase !== 'betting'
                   ? 'cursor-not-allowed bg-white/5 text-white/30'
-                  : 'border border-[#48ddc2]/32 bg-[#2fdbbc]/16 text-[#dcfff8]'
+                  : 'text-[#dcfff8]'
             }`}
+            style={
+              voted === 'A'
+                ? { border: `1px solid ${theme.sideA.accent}66`, background: `${theme.sideA.primary}33`, color: '#ecfeff' }
+                : isBetting || pk.phase !== 'betting'
+                  ? undefined
+                  : { border: `1px solid ${theme.sideA.accent}55`, background: `${theme.sideA.primary}26`, color: '#ecfeff' }
+            }
           >
             {isBetting ? '下注中...' : item.optionA}
           </button>
@@ -494,11 +687,18 @@ function PKCard({
             disabled={isBetting || !!voted || pk.phase !== 'betting'}
             className={`flex-1 rounded-xl border-0 py-2 text-xs font-bold ${
               voted === 'B'
-                ? 'border border-[#ff5f7e]/28 bg-[#A2343B]/20 text-[#ffd7de]'
+                ? 'text-[#ffd7de]'
                 : isBetting || pk.phase !== 'betting'
                   ? 'cursor-not-allowed bg-white/5 text-white/30'
-                  : 'border border-[#ff5f7e]/26 bg-[#A2343B]/16 text-[#ffd7de]'
+                  : 'text-[#ffd7de]'
             }`}
+            style={
+              voted === 'B'
+                ? { border: `1px solid ${theme.sideB.accent}55`, background: `${theme.sideB.primary}30`, color: '#fff1f2' }
+                : isBetting || pk.phase !== 'betting'
+                  ? undefined
+                  : { border: `1px solid ${theme.sideB.accent}48`, background: `${theme.sideB.primary}22`, color: '#fff1f2' }
+            }
           >
             {isBetting ? '下注中...' : item.optionB}
           </button>

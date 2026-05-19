@@ -1,7 +1,7 @@
 /**
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { useHomeLayoutContext } from '@/layouts/context';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
@@ -20,7 +20,6 @@ const FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;
 
 type HomeLocationState = {
   sidebarTopic?: SidebarHotTopic;
-  openBattleNews?: PredictionCardItem;
 };
 
 function mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {
@@ -45,8 +44,6 @@ function mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCar
 }
 
 export default function HomePage() {
-  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});
-  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { onOpenAuth } = useHomeLayoutContext();
@@ -107,47 +104,30 @@ export default function HomePage() {
     sidebarTopicItem,
   ]);
 
-  /** 世界杯等路由传入 state，直达撕裂带；消费后丢掉避免刷新重复进入 */
-  useEffect(() => {
-    const raw = location.state as HomeLocationState | null;
-    if (!raw?.openBattleNews) return;
-    setSelectedBattleNews(raw.openBattleNews);
-    navigate(`${location.pathname}${location.search || ''}`, {
-      replace: true,
-      state: raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {},
-    });
-  }, [location.state, location.pathname, location.search, navigate]);
-
-  /** URL ?market= 与当前撕裂带场次不一致时再关掉撕裂带 */
-  useEffect(() => {
-    if (selectedMarketId === null) return;
-    setSelectedBattleNews((prev) => {
-      if (!prev) return prev;
-      return prev.marketId === selectedMarketId ? prev : null;
-    });
-  }, [selectedMarketId]);
-
-  const handlePredictionBetSuccess = useCallback((item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {
-    setUserVotes((prev) => ({ ...prev, [item.id]: option }));
+  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {
   }, []);
 
-  const battleNews = selectedBattleNews;
-
-  const handleBattleBack = useCallback(() => {
-    setSelectedBattleNews(null);
-  }, []);
+  const handleEnterBattle = useCallback((item: PredictionCardItem) => {
+    const nextSearch = new URLSearchParams();
+    if (selectedTag) nextSearch.set('tag', selectedTag);
+    if (item.marketId !== undefined && item.marketId !== null) {
+      nextSearch.set('market', String(item.marketId));
+    } else {
+      nextSearch.set('market', item.id);
+    }
+    navigate(`/event-battle?${nextSearch.toString()}`, {
+      state: { openBattleNews: item },
+    });
+  }, [navigate, selectedTag]);
 
   return (
     <div className="pt-[10px]">
       <HomePageView
-        battleNews={battleNews}
-        userSide={battleNews ? (userVotes[battleNews.id] ?? null) : null}
         selectedTag={selectedTag}
         selectedPrediction={selectedPrediction}
-        onBattleBack={handleBattleBack}
         onPredictionBetSuccess={handlePredictionBetSuccess}
         onRequireAuth={onOpenAuth}
-        onEnterBattle={setSelectedBattleNews}
+        onEnterBattle={handleEnterBattle}
       />
     </div>
   );

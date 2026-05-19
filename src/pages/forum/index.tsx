@@ -17,7 +17,7 @@ export default function ForumPage() {
   }, [footballMarkets.data]);
 
   const handleOpenLinkedPrediction = (item: PredictionCardItem) => {
-    navigate(`/?market=${item.marketId ?? item.id}`);
+    navigate(`/event-battle?market=${item.marketId ?? item.id}`, { state: { openBattleNews: item } });
   };
 
   return (
