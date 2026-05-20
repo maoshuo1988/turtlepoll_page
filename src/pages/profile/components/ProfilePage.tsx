@@ -8,11 +8,15 @@ import type { OwnedPetItem } from '@/hooks/petTypes';
 import {
   useInfiniteRequestUserCenterComments,
   useInfiniteRequestUserCenterFavorites,
+  useInfiniteRequestUserCenterHiddenTopics,
   useInfiniteRequestUserCenterTopics,
+  useMutateUserTopicHide,
+  useMutateUserTopicUnhide,
 } from '@/hooks/useUserCenterRequests';
 import type {
   UserCenterCommentResponse,
   UserCenterFavoriteResponse,
+  UserCenterHideTopicResponse,
   UserCenterTopicResponse,
 } from '@/hooks/userCenterTypes';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
@@ -125,6 +129,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const userTopicsQuery = useInfiniteRequestUserCenterTopics({ enabled: isAuthenticated, limit: 20 });
   const userCommentsQuery = useInfiniteRequestUserCenterComments({ enabled: isAuthenticated, limit: 20 });
   const userFavoritesQuery = useInfiniteRequestUserCenterFavorites({ enabled: isAuthenticated, limit: 20 });
+  const userHiddenTopicsQuery = useInfiniteRequestUserCenterHiddenTopics({ enabled: isAuthenticated, limit: 20 });
+  const hideTopicMutation = useMutateUserTopicHide();
+  const unhideTopicMutation = useMutateUserTopicUnhide();
 
   const profileTopics = useMemo<UserCenterTopicResponse[]>(
     () => (userTopicsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
@@ -138,10 +145,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     () => (userFavoritesQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
     [userFavoritesQuery.data],
   );
+  const profileHiddenTopics = useMemo<UserCenterHideTopicResponse[]>(
+    () => (userHiddenTopicsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
+    [userHiddenTopicsQuery.data],
+  );
   const profileTopicsTotal = userTopicsQuery.data?.pages?.[0]?.page.total ?? 0;
   const profileCommentsTotal = userCommentsQuery.data?.pages?.[0]?.page.total ?? 0;
   const profileFavoritesTotal = userFavoritesQuery.data?.pages?.[0]?.page.total ?? 0;
-
   const overviewStats = useMemo(
     () => [
       { label: '帖子', value: profileTopicsTotal },
@@ -156,6 +166,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   );
 
   const formatTimestamp = (value?: number | string) => {
+    if (typeof value === 'string' && value.trim()) {
+      const directDate = new Date(value.replace(' ', 'T'));
+      if (!Number.isNaN(directDate.getTime())) {
+        return directDate.toLocaleString('zh-CN', {
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      }
+    }
+
     const num = Number(value ?? 0);
     if (!num) return '刚刚';
     const timestamp = num < 1_000_000_000_000 ? num * 1000 : num;
@@ -165,6 +187,36 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       hour: '2-digit',
       minute: '2-digit',
     });
+  };
+
+  const actionPendingTopicId = String(
+    hideTopicMutation.variables?.topicId ?? unhideTopicMutation.variables?.topicId ?? '',
+  );
+
+  const handleHideTopic = async (topicId: number | string) => {
+    if (!isAuthenticated) {
+      onOpenAuth();
+      return;
+    }
+
+    try {
+      await hideTopicMutation.mutateAsync({ topicId });
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : '隐藏帖子失败');
+    }
+  };
+
+  const handleUnhideTopic = async (topicId: number | string) => {
+    if (!isAuthenticated) {
+      onOpenAuth();
+      return;
+    }
+
+    try {
+      await unhideTopicMutation.mutateAsync({ topicId });
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : '取消隐藏失败');
+    }
   };
 
   const renderLoginRequired = (title: string, description: string) => (
@@ -302,7 +354,17 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">我的帖子</span>
                   <span>{formatTimestamp(post.createTime)}</span>
                 </div>
-                <span className="text-[12px] text-[#7e8790]">作者 ID {post.userId || '-'}</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-[12px] text-[#7e8790]">作者 ID {post.userId || '-'}</span>
+                  <button
+                    type="button"
+                    onClick={() => void handleHideTopic(post.id)}
+                    disabled={hideTopicMutation.isLoading || unhideTopicMutation.isLoading}
+                    className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {hideTopicMutation.isLoading && actionPendingTopicId === String(post.id) ? '隐藏中...' : '隐藏'}
+                  </button>
+                </div>
               </div>
               {post.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{post.title}</div>}
               <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.content || '暂无正文内容'}</p>
@@ -384,6 +446,49 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     </>
   );
 
+  const renderHidden = () => (
+    <>
+      {!isAuthenticated ? renderLoginRequired('登录后查看你隐藏的帖子', '这里只展示当前登录账号自己隐藏的帖子。') : userHiddenTopicsQuery.isLoading && profileHiddenTopics.length === 0 ? (
+        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
+          正在加载隐藏帖子...
+        </div>
+      ) : userHiddenTopicsQuery.isError && profileHiddenTopics.length === 0 ? (
+        renderPageError(userHiddenTopicsQuery.error instanceof Error ? userHiddenTopicsQuery.error.message : '隐藏帖子加载失败')
+      ) : profileHiddenTopics.length === 0 ? (
+        <div className="!mt-4 border-t border-white/10">
+          <EmptyState
+            title="你还没有隐藏任何帖子"
+            description="隐藏后的帖子会统一展示在这里，方便你随时恢复。"
+          />
+        </div>
+      ) : (
+        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
+          {profileHiddenTopics.map((post) => (
+            <article key={String(post.id)} className={`${feedCard} p-4 md:p-5`}>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
+                  <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">已隐藏</span>
+                  <span>{formatTimestamp(post.createTime)}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void handleUnhideTopic(post.id)}
+                  disabled={hideTopicMutation.isLoading || unhideTopicMutation.isLoading}
+                  className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-[12px] font-semibold text-emerald-200 transition-colors hover:bg-emerald-500/16 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {unhideTopicMutation.isLoading && actionPendingTopicId === String(post.id) ? '恢复中...' : '取消隐藏'}
+                </button>
+              </div>
+              {post.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{post.title}</div>}
+              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.content || '暂无正文内容'}</p>
+            </article>
+          ))}
+          {renderLoadMore(userHiddenTopicsQuery)}
+        </div>
+      )}
+    </>
+  );
+
   const renderStaticEmpty = (
     title: string,
     description: string,
@@ -406,7 +511,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       case 'history':
         return renderStaticEmpty('你似乎尚未访问任何帖子', '最近访问过的内容会被记录在这里，方便你快速找回。');
       case 'hidden':
-        return renderStaticEmpty('你还没有隐藏任何内容', '被你隐藏的帖子和评论，之后会统一展示在这里。');
+        return renderHidden();
       case 'upvoted':
         return renderStaticEmpty('你还没有点赞任何内容', '你点过赞的帖子和评论，之后会出现在这里。');
       case 'downvoted':

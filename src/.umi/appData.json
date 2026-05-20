@@ -68,7 +68,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -102,7 +102,7 @@
             1
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -116,57 +116,10 @@
       "time": {
         "hooks": {
           "modifyRoutes": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -180,129 +133,11 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            16,
-            4,
-            13,
-            9,
-            17,
-            5,
-            7,
-            7,
-            8,
-            5,
-            6,
-            8,
-            12,
-            7,
-            5,
-            4,
-            3,
-            9,
-            7,
-            8,
-            11,
-            10,
-            6,
-            14,
-            6,
-            12,
-            21,
-            12,
-            9,
-            8,
-            6,
-            8,
-            9,
-            6,
-            8,
-            9,
-            10,
-            6,
-            10,
-            5,
-            8,
-            9,
-            4,
-            8,
-            7,
             12,
             5,
-            10,
-            9,
-            11,
-            9,
-            10,
             5,
-            12,
-            6,
-            9,
-            4,
-            8,
-            4,
-            52,
-            5,
-            5,
-            7,
-            5,
-            8,
-            10,
-            6,
-            6,
-            9,
-            6,
-            4,
-            5,
-            8,
-            6,
-            8,
-            7,
-            7,
-            6,
-            8,
-            6,
-            10,
-            6,
-            8,
-            5,
-            7,
-            11,
-            8,
-            16,
-            7,
-            5,
-            4,
-            10,
-            4,
-            10,
-            6,
-            11,
-            3,
-            10,
-            4,
-            9,
-            3,
-            5,
-            8,
-            3,
-            8,
-            5,
-            4,
-            4,
-            3,
-            3,
-            4,
-            4,
-            3,
             6,
             5,
-            4,
-            6,
-            4,
-            4,
-            4,
-            4,
-            10,
-            6,
             9
           ]
         },
@@ -320,57 +155,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            13
+            7
           ],
           "onGenerateFiles": [
-            1,
-            19,
-            9,
-            13,
-            12,
-            14,
-            11,
-            7,
-            9,
-            7,
-            13,
-            10,
-            6,
-            10,
-            10,
-            7,
-            9,
-            12,
-            7,
-            8,
-            14,
-            10,
-            11,
-            15,
-            9,
-            13,
-            12,
-            11,
-            12,
-            11,
-            13,
-            12,
-            12,
-            20,
-            13,
-            11,
-            10,
-            10,
-            36,
-            7,
-            15,
-            13,
-            6,
-            13,
-            10,
-            14,
-            39,
-            12
+            1
           ]
         },
         "register": 11
@@ -387,53 +175,6 @@
       "time": {
         "hooks": {
           "addEntryCode": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -454,34 +195,9 @@
             0
           ],
           "onCheck": [
-            0
+            1
           ],
           "onPrepareBuildSuccess": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0
@@ -489,168 +205,9 @@
           "onCheckCode": [
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             1,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
             0,
             0,
             0,
@@ -678,7 +235,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -691,7 +248,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -705,7 +262,7 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
         "register": 3
@@ -1560,7 +1117,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1594,7 +1151,7 @@
             5
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1607,7 +1164,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 40
+        "register": 37
       },
       "enableBy": "register"
     },
@@ -1654,26 +1211,6 @@
           ],
           "modifyHTMLFavicon": [
             0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -1683,7 +1220,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1697,103 +1234,9 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            0,
-            1,
-            1,
-            0,
-            1,
-            1,
-            0,
-            0,
-            1,
-            0,
-            1,
-            0,
-            0,
-            1,
-            1,
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            0,
-            1,
-            1,
-            2,
-            0,
-            1,
-            2,
-            1,
-            1,
-            1,
-            4,
-            0,
-            0,
-            2,
-            0,
-            1,
-            2,
             0
           ],
           "addRuntimePlugin": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -1830,7 +1273,7 @@
             1
           ]
         },
-        "register": 14
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1842,7 +1285,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1868,150 +1311,9 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ],
           "addEntryImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0
           ]
@@ -2029,7 +1331,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2043,158 +1345,17 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            0
+            1
           ],
           "onGenerateFiles": [
-            36,
-            36,
-            14,
-            8,
-            20,
-            13,
-            16,
-            14,
-            18,
-            6,
-            16,
-            14,
-            7,
-            12,
-            14,
-            16,
-            11,
-            10,
-            14,
-            15,
-            9,
-            13,
-            12,
-            10,
-            11,
-            13,
-            14,
-            10,
-            9,
-            8,
-            10,
-            9,
-            10,
-            21,
-            10,
-            8,
-            8,
-            8,
-            27,
-            10,
-            9,
-            11,
-            9,
-            13,
-            12,
-            8,
-            63,
-            9
+            35
           ],
           "addPolyfillImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -2207,100 +1368,6 @@
       "time": {
         "hooks": {
           "addPolyfillImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0
           ]
@@ -2319,54 +1386,7 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            69,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
+            71
           ]
         },
         "register": 1
@@ -2409,60 +1429,13 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
             1
           ],
           "addBeforeMiddlewares": [
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2476,105 +1449,11 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            6,
-            1,
-            12,
-            1,
-            6,
-            1,
-            14,
-            1,
-            6,
-            0,
-            13,
-            1,
-            7,
-            1,
-            7,
-            1,
-            7,
-            1,
-            7,
-            1,
-            22,
-            2,
-            6,
-            0,
-            8,
-            0,
-            8,
-            1,
-            5,
-            1,
-            11,
-            2,
-            8,
-            1,
-            8,
-            0,
-            7,
-            1,
-            8,
-            0,
-            8,
-            1,
-            5,
-            1,
-            11,
-            1,
-            12,
-            2,
-            5,
-            1,
-            8,
-            1,
-            6,
-            1,
-            6,
-            1,
-            9,
-            1,
-            5,
-            1,
-            8,
-            1,
-            9,
-            1,
-            7,
-            0,
-            14,
-            1,
-            7,
-            2,
-            7,
-            1,
-            9,
-            1,
-            12,
-            1,
-            15,
-            1,
-            8,
-            1,
-            9,
-            1,
-            9,
-            1,
-            9,
-            0,
-            10,
-            1,
-            7,
-            0,
-            7,
-            1,
-            15,
-            3,
-            9,
+            4,
             1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -2600,7 +1479,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -2612,7 +1491,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2626,54 +1505,7 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            186,
-            12,
-            5,
-            7,
-            5,
-            6,
-            4,
-            4,
-            8,
-            6,
-            16,
-            4,
-            7,
-            5,
-            9,
-            9,
-            6,
-            4,
-            9,
-            3,
-            4,
-            4,
-            4,
-            4,
-            4,
-            3,
-            7,
-            6,
-            4,
-            5,
-            4,
-            4,
-            6,
-            7,
-            4,
-            8,
-            7,
-            6,
-            10,
-            5,
-            4,
-            6,
-            3,
-            5,
-            5,
-            3,
-            15,
-            5
+            180
           ]
         },
         "register": 1
@@ -2719,7 +1551,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2732,7 +1564,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -2758,53 +1590,6 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            1,
-            1,
-            0,
-            1,
-            1,
-            2,
-            1,
-            1,
-            1,
-            1,
-            2,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            1,
-            0,
-            1,
-            4,
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            0,
-            1,
-            0,
-            1,
-            2,
-            1,
-            1,
-            0,
-            1,
-            2,
-            1,
-            1,
-            1,
-            1,
-            0,
-            1,
-            1,
-            2,
             1
           ]
         },
@@ -2820,7 +1605,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2833,7 +1618,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2859,7 +1644,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -2875,7 +1660,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2900,7 +1685,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2938,37 +1723,17 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             1,
             0,
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
             0,
             0,
             0
           ]
         },
-        "register": 13
+        "register": 12
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -2980,7 +1745,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2994,10 +1759,10 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            255
+            253
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -3010,7 +1775,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -3023,7 +1788,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 16
       },
       "enableBy": "register"
     },
@@ -3040,7 +1805,7 @@
             5
           ]
         },
-        "register": 14
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -3156,7 +1921,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -3169,7 +1934,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -3234,7 +1999,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -3247,7 +2012,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -3757,7 +2522,7 @@
       "id": "userApi",
       "file": "userApi.ts",
       "absPath": "/userApi",
-      "__content": "/**\n * 文件说明：user Api 接口地址常量，供用户中心请求 Hook 统一引用。\n */\n\n/// MARK: 用户中心\n/// 基础路径: /api/user\nexport const API_User_Center_Topics = '/api/user/center/topics';\nexport const API_User_Center_Comments = '/api/user/center/comments';\nexport const API_User_Center_Favorites = '/api/user/center/favorites';\n"
+      "__content": "/**\n * 文件说明：user Api 接口地址常量，供用户中心请求 Hook 统一引用。\n */\n\n/// MARK: 用户中心\n/// 基础路径: /api/user\nexport const API_User_Center_Topics = '/api/user/center/topics';\nexport const API_User_Center_Comments = '/api/user/center/comments';\nexport const API_User_Center_Favorites = '/api/user/center/favorites';\nexport const API_User_Topic_Hide_List = '/api/user/topic/hide/list';\nexport const API_User_Topic_Hide = '/api/user/topic/hide';\nexport const API_User_Topic_Unhide = '/api/user/topic/unhide';\n"
     },
     "petApi": {
       "path": "petApi",
@@ -6388,7 +5153,7 @@
             "format": "esm"
           },
           "src/pages/event-battle/components/eventBattleThemes.ts": {
-            "bytes": 6927,
+            "bytes": 7334,
             "imports": [],
             "format": "esm"
           },
@@ -7400,12 +6165,12 @@
             "format": "esm"
           },
           "src/api/userApi.ts": {
-            "bytes": 356,
+            "bytes": 547,
             "imports": [],
             "format": "esm"
           },
           "src/hooks/useUserCenterRequests.ts": {
-            "bytes": 4588,
+            "bytes": 7586,
             "imports": [
               {
                 "path": "react-query",
@@ -7457,7 +6222,7 @@
             "format": "esm"
           },
           "src/pages/profile/components/ProfilePage.tsx": {
-            "bytes": 31225,
+            "bytes": 35988,
             "imports": [
               {
                 "path": "react",
@@ -10121,7 +8886,7 @@
                 "bytesInOutput": 3800
               },
               "src/pages/event-battle/components/eventBattleThemes.ts": {
-                "bytesInOutput": 6754
+                "bytesInOutput": 7109
               },
               "src/pages/event-battle/components/EventBattleLiveRoom.tsx": {
                 "bytesInOutput": 74513
@@ -10253,10 +9018,10 @@
                 "bytesInOutput": 3314
               },
               "src/api/userApi.ts": {
-                "bytesInOutput": 321
+                "bytesInOutput": 555
               },
               "src/hooks/useUserCenterRequests.ts": {
-                "bytesInOutput": 3090
+                "bytesInOutput": 5773
               },
               "src/pages/profile/components/petDisplay.ts": {
                 "bytesInOutput": 2521
@@ -10265,7 +9030,7 @@
                 "bytesInOutput": 7718
               },
               "src/pages/profile/components/ProfilePage.tsx": {
-                "bytesInOutput": 32629
+                "bytesInOutput": 37735
               },
               "src/pages/profile/components/ProfilePageView.tsx": {
                 "bytesInOutput": 346
@@ -10322,7 +9087,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1034608
+            "bytes": 1042986
           }
         }
       }
@@ -16838,7 +15603,7 @@
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useUserCenterRequests.ts": [
         {
-          "end": 141,
+          "end": 191,
           "importKind": "value",
           "source": "react-query",
           "specifiers": [
@@ -16846,13 +15611,23 @@
               "imported": "useInfiniteQuery",
               "local": "useInfiniteQuery",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMutation",
+              "local": "useMutation",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useQueryClient",
+              "local": "useQueryClient",
+              "type": "ImportSpecifier"
             }
           ],
-          "start": 94,
+          "start": 115,
           "type": "ImportDeclaration"
         },
         {
-          "end": 189,
+          "end": 239,
           "importKind": "value",
           "source": "@/api/httpClient",
           "specifiers": [
@@ -16862,11 +15637,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 142,
+          "start": 192,
           "type": "ImportDeclaration"
         },
         {
-          "end": 305,
+          "end": 431,
           "importKind": "value",
           "source": "@/api/userApi",
           "specifiers": [
@@ -16884,13 +15659,28 @@
               "imported": "API_User_Center_Topics",
               "local": "API_User_Center_Topics",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "API_User_Topic_Hide",
+              "local": "API_User_Topic_Hide",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "API_User_Topic_Hide_List",
+              "local": "API_User_Topic_Hide_List",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "API_User_Topic_Unhide",
+              "local": "API_User_Topic_Unhide",
+              "type": "ImportSpecifier"
             }
           ],
-          "start": 190,
+          "start": 240,
           "type": "ImportDeclaration"
         },
         {
-          "end": 384,
+          "end": 510,
           "importKind": "value",
           "source": "@/utils/requestUtils",
           "specifiers": [
@@ -16905,11 +15695,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 306,
+          "start": 432,
           "type": "ImportDeclaration"
         },
         {
-          "end": 582,
+          "end": 763,
           "importKind": "type",
           "source": "./userCenterTypes",
           "specifiers": [
@@ -16921,6 +15711,11 @@
             {
               "imported": "UserCenterFavoriteResponse",
               "local": "UserCenterFavoriteResponse",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "UserCenterHideTopicResponse",
+              "local": "UserCenterHideTopicResponse",
               "type": "ImportSpecifier"
             },
             {
@@ -16942,9 +15737,14 @@
               "imported": "UserCenterTopicResponse",
               "local": "UserCenterTopicResponse",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "UserTopicHidePayload",
+              "local": "UserTopicHidePayload",
+              "type": "ImportSpecifier"
             }
           ],
-          "start": 385,
+          "start": 511,
           "type": "ImportDeclaration"
         }
       ],
@@ -21190,7 +19990,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 524,
+          "end": 622,
           "importKind": "value",
           "source": "@/hooks/useUserCenterRequests",
           "specifiers": [
@@ -21205,8 +20005,23 @@
               "type": "ImportSpecifier"
             },
             {
+              "imported": "useInfiniteRequestUserCenterHiddenTopics",
+              "local": "useInfiniteRequestUserCenterHiddenTopics",
+              "type": "ImportSpecifier"
+            },
+            {
               "imported": "useInfiniteRequestUserCenterTopics",
               "local": "useInfiniteRequestUserCenterTopics",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMutateUserTopicHide",
+              "local": "useMutateUserTopicHide",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMutateUserTopicUnhide",
+              "local": "useMutateUserTopicUnhide",
               "type": "ImportSpecifier"
             }
           ],
@@ -21214,7 +20029,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 658,
+          "end": 787,
           "importKind": "type",
           "source": "@/hooks/userCenterTypes",
           "specifiers": [
@@ -21229,16 +20044,21 @@
               "type": "ImportSpecifier"
             },
             {
+              "imported": "UserCenterHideTopicResponse",
+              "local": "UserCenterHideTopicResponse",
+              "type": "ImportSpecifier"
+            },
+            {
               "imported": "UserCenterTopicResponse",
               "local": "UserCenterTopicResponse",
               "type": "ImportSpecifier"
             }
           ],
-          "start": 525,
+          "start": 623,
           "type": "ImportDeclaration"
         },
         {
-          "end": 729,
+          "end": 858,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -21253,11 +20073,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 659,
+          "start": 788,
           "type": "ImportDeclaration"
         },
         {
-          "end": 796,
+          "end": 925,
           "importKind": "value",
           "source": "@/data/mockData",
           "specifiers": [
@@ -21272,11 +20092,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 730,
+          "start": 859,
           "type": "ImportDeclaration"
         },
         {
-          "end": 853,
+          "end": 982,
           "importKind": "value",
           "source": "./ProfilePetArchive",
           "specifiers": [
@@ -21286,7 +20106,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 797,
+          "start": 926,
           "type": "ImportDeclaration"
         }
       ],
