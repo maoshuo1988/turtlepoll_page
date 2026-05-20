@@ -1,5 +1,6 @@
 /** 文件说明：龟势对决页面展示组件，负责展示错误提示和对决下注视图。 */
 import { Flame } from 'lucide-react';
+import type { RivalryNewsItem } from './rivalryMockData';
 import { RivalryPK } from './RivalryPK';
 
 interface RivalryPageViewProps {
@@ -7,9 +8,10 @@ interface RivalryPageViewProps {
   betError: string | null;
   pendingBetId: string | null;
   onBet: (newsId: string, option: 'A' | 'B', odds: number, amount?: number) => void;
+  onEnterBattle: (item: RivalryNewsItem) => void;
 }
 
-export function RivalryPageView({ userVotes, betError, pendingBetId, onBet }: RivalryPageViewProps) {
+export function RivalryPageView({ userVotes, betError, pendingBetId, onBet, onEnterBattle }: RivalryPageViewProps) {
   return (
     <section className="page-frame page-frame-wide view-rivalry">
       <header className="page-header">
@@ -33,6 +35,7 @@ export function RivalryPageView({ userVotes, betError, pendingBetId, onBet }: Ri
         userVotes={userVotes}
         onBet={onBet}
         pendingBetId={pendingBetId}
+        onEnterBattle={onEnterBattle}
       />
     </section>
   );

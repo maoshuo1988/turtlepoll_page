@@ -1,6 +1,6 @@
 /** 文件说明：世界杯专题页面，体育转播 HUD 风格 —— 预测板、暗盘赛程、最新消息等。 */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from '@umijs/renderer-react';
+import { useLocation, useNavigate } from '@umijs/renderer-react';
 import {
   Activity,
   CalendarClock,
@@ -500,6 +500,7 @@ function CornerBrackets() {
 }
 
 export function WorldCupPage() {
+  const location = useLocation();
   const [expandedNewsId, setExpandedNewsId] = useState<string | null>(null);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [postedComments, setPostedComments] = useState<Record<string, NewsComment[]>>({});
@@ -563,8 +564,13 @@ export function WorldCupPage() {
   /** 首页撕裂带按 marketId 拉齐数据；state 直达 EventBattle，避免 Hero 仍错用默认列表 */
   const goToTearZone = useCallback((item: PredictionCardItem | undefined) => {
     if (!item?.marketId) return;
-    navigate(`/event-battle?market=${item.marketId}`, { state: { openBattleNews: item } });
-  }, [navigate]);
+    navigate(`/event-battle?market=${item.marketId}`, {
+      state: {
+        openBattleNews: item,
+        returnTo: `${location.pathname}${location.search || ''}`,
+      },
+    });
+  }, [location.pathname, location.search, navigate]);
 
   const handleBetSuccess = (item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {
     setLocalBetSides((prev) => ({ ...prev, [item.id]: option }));

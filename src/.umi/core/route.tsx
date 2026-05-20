@@ -4,7 +4,7 @@
 import React from 'react';
 
 export async function getRoutes() {
-  const routes = {"1":{"path":"/jump","parentId":"@@/global-layout","id":"1"},"2":{"path":"/","parentId":"@@/global-layout","id":"2"},"3":{"path":"/","parentId":"2","id":"3"},"4":{"path":"/event-battle","parentId":"2","id":"4"},"5":{"path":"/world-cup","parentId":"2","id":"5"},"6":{"path":"/rivalry","parentId":"2","id":"6"},"7":{"path":"/forum","parentId":"2","id":"7"},"8":{"path":"/games","parentId":"2","id":"8"},"9":{"path":"/battle-plaza","parentId":"2","id":"9"},"10":{"path":"/battle-stage","parentId":"2","id":"10"},"11":{"path":"/rank","parentId":"2","id":"11"},"12":{"path":"/shop","parentId":"2","id":"12"},"13":{"path":"/pet","parentId":"2","id":"13"},"14":{"path":"/profile","parentId":"2","id":"14"},"15":{"path":"/active-predictions","parentId":"2","id":"15"},"@@/global-layout":{"id":"@@/global-layout","path":"/","isLayout":true}} as const;
+  const routes = {"1":{"path":"/jump","name":"跳一跳","parentId":"@@/global-layout","id":"1"},"2":{"path":"/","name":"首页","parentId":"@@/global-layout","id":"2"},"3":{"path":"/","name":"首页","parentId":"2","id":"3"},"4":{"path":"/event-battle","name":"撕裂带","parentId":"2","id":"4"},"5":{"path":"/world-cup","name":"世界杯","parentId":"2","id":"5"},"6":{"path":"/rivalry","name":"开撕台","parentId":"2","id":"6"},"7":{"path":"/forum","name":"论坛","parentId":"2","id":"7"},"8":{"path":"/games","name":"游戏","parentId":"2","id":"8"},"9":{"path":"/battle-plaza","name":"撕裂带广场","parentId":"2","id":"9"},"10":{"path":"/rank","name":"排行榜","parentId":"2","id":"10"},"11":{"path":"/shop","name":"商店","parentId":"2","id":"11"},"12":{"path":"/pet","name":"宠物","parentId":"2","id":"12"},"13":{"path":"/profile","name":"个人中心","parentId":"2","id":"13"},"14":{"path":"/active-predictions","name":"活跃预测","parentId":"2","id":"14"},"@@/global-layout":{"id":"@@/global-layout","path":"/","isLayout":true}} as const;
   return {
     routes,
     routeComponents: {
@@ -17,12 +17,11 @@ export async function getRoutes() {
 '7': React.lazy(() => import(/* webpackChunkName: "p__forum__index" */'@/pages/forum/index.tsx')),
 '8': React.lazy(() => import(/* webpackChunkName: "p__games__index" */'@/pages/games/index.tsx')),
 '9': React.lazy(() => import(/* webpackChunkName: "p__battle-plaza__index" */'@/pages/battle-plaza/index.tsx')),
-'10': React.lazy(() => import(/* webpackChunkName: "p__battle-stage__index" */'@/pages/battle-stage/index.tsx')),
-'11': React.lazy(() => import(/* webpackChunkName: "p__rank__index" */'@/pages/rank/index.tsx')),
-'12': React.lazy(() => import(/* webpackChunkName: "p__shop__index" */'@/pages/shop/index.tsx')),
-'13': React.lazy(() => import(/* webpackChunkName: "p__pet__index" */'@/pages/pet/index.tsx')),
-'14': React.lazy(() => import(/* webpackChunkName: "p__profile__index" */'@/pages/profile/index.tsx')),
-'15': React.lazy(() => import(/* webpackChunkName: "p__active-predictions__index" */'@/pages/active-predictions/index.tsx')),
+'10': React.lazy(() => import(/* webpackChunkName: "p__rank__index" */'@/pages/rank/index.tsx')),
+'11': React.lazy(() => import(/* webpackChunkName: "p__shop__index" */'@/pages/shop/index.tsx')),
+'12': React.lazy(() => import(/* webpackChunkName: "p__pet__index" */'@/pages/pet/index.tsx')),
+'13': React.lazy(() => import(/* webpackChunkName: "p__profile__index" */'@/pages/profile/index.tsx')),
+'14': React.lazy(() => import(/* webpackChunkName: "p__active-predictions__index" */'@/pages/active-predictions/index.tsx')),
 '@@/global-layout': React.lazy(() => import(/* webpackChunkName: "layouts__index" */'/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/index.tsx')),
 },
   };

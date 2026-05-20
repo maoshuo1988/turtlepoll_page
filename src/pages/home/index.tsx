@@ -116,9 +116,12 @@ export default function HomePage() {
       nextSearch.set('market', item.id);
     }
     navigate(`/event-battle?${nextSearch.toString()}`, {
-      state: { openBattleNews: item },
+      state: {
+        openBattleNews: item,
+        returnTo: `${location.pathname}${location.search || ''}`,
+      },
     });
-  }, [navigate, selectedTag]);
+  }, [location.pathname, location.search, navigate, selectedTag]);
 
   return (
     <div className="pt-[10px]">

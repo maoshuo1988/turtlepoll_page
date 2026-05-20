@@ -2,12 +2,13 @@
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
 import { useMemo } from 'react';
-import { useNavigate } from '@umijs/renderer-react';
+import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
 import { ForumPageView } from './components/ForumPageView';
 import { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';
 
 export default function ForumPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
   const newsByMarketId = useMemo(() => {
@@ -17,7 +18,12 @@ export default function ForumPage() {
   }, [footballMarkets.data]);
 
   const handleOpenLinkedPrediction = (item: PredictionCardItem) => {
-    navigate(`/event-battle?market=${item.marketId ?? item.id}`, { state: { openBattleNews: item } });
+    navigate(`/event-battle?market=${item.marketId ?? item.id}`, {
+      state: {
+        openBattleNews: item,
+        returnTo: `${location.pathname}${location.search || ''}`,
+      },
+    });
   };
 
   return (
