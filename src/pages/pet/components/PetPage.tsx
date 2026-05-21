@@ -12,6 +12,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { PetChat } from './PetChat';
+import { CommonSpine } from '@/components/shared/spine';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type {
   PetInfo,
@@ -682,11 +683,7 @@ export const PetPage: React.FC<PetPageProps> = ({
               />
 
               {/* Pet character — centered */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute bottom-[65px] left-1/2 -translate-x-1/2 flex flex-col items-center z-10"
-              >
+              <div className="absolute bottom-[65px] left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
                 {/* Dialogue bubble */}
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -704,9 +701,12 @@ export const PetPage: React.FC<PetPageProps> = ({
                 </AnimatePresence>
 
                 {/* Pet emoji — larger */}
-                <div className="text-[88px] leading-none select-none drop-shadow-lg">
-                  {heroAvatar}
-                </div>
+                <CommonSpine
+                  width={120}
+                  height={120}
+                  fallback={heroAvatar}
+                  className="drop-shadow-[0_14px_24px_rgba(15,23,42,0.24)]"
+                />
 
                 {/* Name + level */}
                 <div className="flex items-center gap-1.5 mt-1">
@@ -715,7 +715,7 @@ export const PetPage: React.FC<PetPageProps> = ({
                     Lv.{pet.level}
                   </span>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Shadow */}
               <motion.div
@@ -754,7 +754,7 @@ export const PetPage: React.FC<PetPageProps> = ({
 
               {/* Pet info — top-left glass panel */}
               
-              <div className="absolute top-3 left-3 z-10">
+              <div className="absolute top-3 left-16 z-10">
                  <RarityBadge rarity={equippedPet?.rarity} size="lg" />
                 {/* <div className="bg-white/70 dark:bg-rdark-card/70 backdrop-blur-sm rounded-lg px-3 py-2 shadow-sm border border-white/40 dark:border-rdark-border/50 flex items-center gap-3">
                   <div>

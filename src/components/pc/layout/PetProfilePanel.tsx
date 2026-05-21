@@ -2,6 +2,7 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, Coins, Flame } from 'lucide-react';
+import { CommonSpine } from '@/components/shared/spine';
 
 /** 面板内展示的上阵宠物字段（与全局 PetInfo 的展示子集对齐）。 */
 export interface SidebarPetProfilePet {
@@ -41,13 +42,20 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
   onViewPet,
   onOpenActivePredictions: _onOpenActivePredictions,
   petBadgeName = '寒冰龟',
-  petBadgeIcon = '❄️',
+  petBadgeIcon: _petBadgeIcon = '❄️',
 }) => {
   return (
     <div className="overflow-hidden rounded-2xl border border-emerald-400/22 bg-gradient-to-b from-[#0c1318] via-[#0e1a18] to-[#0a1614] shadow-[0_14px_34px_rgba(0,0,0,0.36)] dark:border-emerald-500/25">
       <div className="flex items-center justify-between gap-2 border-b border-white/6 bg-gradient-to-r from-sky-500/18 via-cyan-500/10 to-emerald-500/8 px-3 py-2 backdrop-blur dark:border-white/8">
         <div className="flex min-w-0 items-center gap-1.5">
-          <span className="text-[14px] leading-none">{petBadgeIcon}</span>
+          <CommonSpine
+            width={16}
+            height={16}
+            fallback={pet.avatar}
+            padding={1}
+            offsetY={0}
+            className="pointer-events-none shrink-0"
+          />
           <span className="truncate text-[13px] font-bold text-sky-100 [text-shadow:0_0_8px_rgba(125,211,252,0.4)] dark:text-sky-50">
             {petBadgeName}
           </span>
@@ -133,7 +141,7 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
         <motion.div animate={{ y: [0, 50, 0], x: [0, -6, 4, 0], opacity: [0, 0.5, 0.5, 0] }} transition={{ duration: 8, repeat: Infinity, delay: 2 }} className="absolute left-[65%] top-4 h-1 w-1 rounded-full bg-pink-300/50" />
         <motion.div animate={{ y: [0, 45, 0], x: [0, 5, -3, 0], opacity: [0, 0.6, 0.6, 0] }} transition={{ duration: 7, repeat: Infinity, delay: 4 }} className="absolute left-[45%] top-8 h-0.5 w-0.5 rounded-full bg-amber-200/65" />
 
-        <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className="absolute bottom-[42px] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center">
+        <div className="absolute bottom-[42px] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={dialogueKey}
@@ -146,8 +154,15 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
               <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-emerald-400/28 bg-[#0a1614]/85 dark:border-emerald-500/35 dark:bg-rdark-card/90" />
             </motion.div>
           </AnimatePresence>
-          <div className="select-none text-[44px] leading-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.45)]">{pet.avatar}</div>
-        </motion.div>
+          <CommonSpine
+            width={88}
+            height={72}
+            fallback={pet.avatar}
+            padding={6}
+            offsetY={2}
+            className="pointer-events-none select-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.45)]"
+          />
+        </div>
 
         <motion.div animate={{ scale: [1, 0.9, 1], opacity: [0.22, 0.14, 0.22] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className="absolute bottom-[34px] left-1/2 z-0 h-2.5 w-14 -translate-x-1/2 rounded-full bg-black/45 blur-[2px]" />
 
