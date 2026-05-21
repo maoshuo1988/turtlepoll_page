@@ -619,6 +619,9 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     '--left-charge-duration': `${(leftEnergyDuration + 0.8).toFixed(2)}s`,
     '--right-charge-duration': `${(rightEnergyDuration + 0.8).toFixed(2)}s`,
   };
+  const pkOverlayStyle: React.CSSProperties = {
+    left: `${leftPct}%`,
+  };
   const leftEnergyBubbles = useMemo(
     () => buildEnergyBubbles('A', leftPct, leftEnergyDuration),
     [leftEnergyDuration, leftPct],
@@ -660,6 +663,16 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     oddsB,
     votes: { A: leftVotes, B: rightVotes },
   }), [battleTitle, leftVotes, news, oddsA, oddsB, optionA, optionB, rightVotes]);
+  const liveTopicEyebrow = useMemo(() => {
+    const t = battleTitle.trim();
+    if (!t) return '正在直播';
+    if (/[：:？?！!。.]$/.test(t)) return t;
+    return `${t}：`;
+  }, [battleTitle]);
+  const liveTopicSub = useMemo(
+    () => displayNews.summary?.trim() ?? '',
+    [displayNews.summary],
+  );
   const visualTheme = useMemo(
     () => resolveEventBattleTheme(news.marketId ?? news.id, optionA, optionB),
     [news.id, news.marketId, optionA, optionB],
@@ -781,9 +794,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const combatDiff = Math.abs(leftHeat - rightHeat);
   const leftRole = userSide === 'A' ? '你当前在蓝方阵营' : '意见领袖';
   const rightRole = userSide === 'B' ? '你当前在红方阵营' : '破光杀手';
-  const liveText = replyingTo
-    ? `正在回复 @${replyingTo.authorName}`
-    : feedItems[feedItems.length - 1]?.text || 'LIVE 实时对战中';
 
   const handleOpenReply = useCallback((comment: BattleComment, side: CommentSide) => {
     if (!canComment) {
@@ -1031,7 +1041,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const leftScore = leftVotes + leftHeat * 120 + leftComments.length * 18000;
   const rightScore = rightVotes + rightHeat * 120 + rightComments.length * 18000;
   const scoreDiff = Math.abs(leftScore - rightScore);
-  const liveEvents = feedItems.slice(-5).reverse();
   const leftHeroImage = visualTheme.sideA.imageUrl || news.image || DEFAULT_BATTLE_IMAGE;
   const rightHeroImage = visualTheme.sideB.imageUrl || news.image || DEFAULT_BATTLE_IMAGE;
   const pkParticles = useMemo<PkParticle[]>(() => Array.from({ length: 28 }, (_, index) => {
@@ -1064,35 +1073,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         '--trail': `${(6 + Math.random() * 18).toFixed(1)}px`,
         '--duration': `${(0.58 + Math.random() * 0.42).toFixed(2)}s`,
         '--delay': `${(-1 + Math.random()).toFixed(2)}s`,
-        color,
-      },
-    };
-  }), []);
-  const pkSparkShards = useMemo<PkParticle[]>(() => Array.from({ length: 18 }, (_, index) => {
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 96 + Math.random() * 126;
-    const midDistance = distance * (0.2 + Math.random() * 0.28);
-    const endX = Math.cos(angle) * distance;
-    const endY = Math.sin(angle) * distance * 0.68;
-    const midX = Math.cos(angle) * midDistance + (Math.random() - 0.5) * 42;
-    const midY = Math.sin(angle) * midDistance * 0.68 + (Math.random() - 0.5) * 30;
-    const color = index % 4 === 0
-      ? '#ffffff'
-      : endX < 0
-        ? ['#19b8ff', '#5fe2ff'][index % 2]
-        : ['#ff2c36', '#ff6167'][index % 2];
-
-    return {
-      id: `pk-spark-shard-${index}`,
-      style: {
-        '--x': `${endX.toFixed(1)}px`,
-        '--y': `${endY.toFixed(1)}px`,
-        '--mx': `${midX.toFixed(1)}px`,
-        '--my': `${midY.toFixed(1)}px`,
-        '--r': `${(angle * 180 / Math.PI).toFixed(1)}deg`,
-        '--len': `${(14 + Math.random() * 26).toFixed(1)}px`,
-        '--duration': `${(0.42 + Math.random() * 0.34).toFixed(2)}s`,
-        '--delay': `${(-0.76 + Math.random() * 0.76).toFixed(2)}s`,
         color,
       },
     };
@@ -1208,10 +1188,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             <ChevronLeft size={16} />
             返回
           </button>
-          <div className="eb-top-ticker">
-            <span><Radio size={15} /> 正在直播：{displayNews.title}</span>
-            <strong><Flame size={15} /> {liveText}</strong>
-          </div>
           <div className="eb-barrage-layer">
             <div className="eb-barrage-lane eb-barrage-lane-blue">
               {sideBarrages.A.map((item, index) => (
@@ -1267,42 +1243,56 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             </em>
           </div>
 
-          <div className="eb-countdown">
-            <span>战斗倒计时</span>
-            <strong>{countdownText}</strong>
-            <em>差值 {formatVotes(combatDiff)}</em>
-          </div>
-          <div className="eb-pk-core">
-            <span className="eb-pk-letter-blue">P</span><span className="eb-pk-letter-red">K</span>
-            <i className="eb-pk-ring eb-pk-ring-one" />
-            <i className="eb-pk-ring eb-pk-ring-two" />
-            <div className="eb-pk-particles" aria-hidden="true">
-              {pkParticles.map((particle) => (
-                <i key={particle.id} style={particle.style} />
-              ))}
+          <div className="eb-headline-stack">
+            <div className="eb-countdown">
+              <span>战斗倒计时</span>
+              <strong>{countdownText}</strong>
+              <em>差值 {formatVotes(combatDiff)}</em>
             </div>
-            <div className="eb-pk-spark-shards" aria-hidden="true">
-              {pkSparkShards.map((spark) => (
-                <i key={spark.id} style={spark.style} />
-              ))}
+            <div className="eb-live-topic" aria-live="polite">
+              <p className="eb-live-topic-kicker">
+                <Radio size={14} strokeWidth={2.4} className="eb-live-topic-kicker-ico" aria-hidden />
+                <span className="eb-live-topic-kicker-text">{liveTopicEyebrow}</span>
+              </p>
+              <p className="eb-live-topic-vs">
+                <span className="eb-live-topic-side">{displayNews.optionA}</span>
+                <span className="eb-live-topic-vs-sep">vs</span>
+                <span className="eb-live-topic-side">{displayNews.optionB}</span>
+              </p>
+              {liveTopicSub ? <p className="eb-live-topic-sub">{liveTopicSub}</p> : null}
             </div>
           </div>
 
           <div className="eb-energy-panel">
-            <div className="eb-energy-track" style={energyTrackStyle}>
-              <div className="eb-energy-blue" style={{ width: `${leftPct}%` }} />
-              <div className="eb-energy-red" />
-              <div className="eb-energy-bubbles eb-energy-bubbles-blue" aria-hidden="true">
-                {leftEnergyBubbles.map((bubble) => (
-                  <i key={bubble.id} style={bubble.style} />
-                ))}
+            <div className="eb-energy-track-wrap">
+              <div className="eb-energy-track" style={energyTrackStyle}>
+                <div className="eb-energy-blue" style={{ width: `${leftPct}%` }} />
+                <div className="eb-energy-red" style={{ width: `${rightPct}%` }} />
+                <div className="eb-energy-bubbles eb-energy-bubbles-blue" aria-hidden="true">
+                  {leftEnergyBubbles.map((bubble) => (
+                    <i key={bubble.id} style={bubble.style} />
+                  ))}
+                </div>
+                <div className="eb-energy-bubbles eb-energy-bubbles-red" aria-hidden="true">
+                  {rightEnergyBubbles.map((bubble) => (
+                    <i key={bubble.id} style={bubble.style} />
+                  ))}
+                </div>
+                <div className="eb-energy-crash" style={{ left: `${leftPct}%` }} />
               </div>
-              <div className="eb-energy-bubbles eb-energy-bubbles-red" aria-hidden="true">
-                {rightEnergyBubbles.map((bubble) => (
-                  <i key={bubble.id} style={bubble.style} />
-                ))}
+              <div className="eb-pk-overlay" style={pkOverlayStyle}>
+                <div className="eb-pk-backdrop" />
+                <div className="eb-pk-energy-field" />
+                <div className="eb-pk-sparks" aria-hidden="true">
+                  {pkParticles.map((particle) => (
+                    <i key={particle.id} className="eb-pk-spark" style={particle.style} />
+                  ))}
+                </div>
+                <div className="eb-pk-core">
+                  <span className="eb-pk-letter eb-pk-letter-blue">P</span>
+                  <span className="eb-pk-letter eb-pk-letter-red">K</span>
+                </div>
               </div>
-              <span className="eb-energy-crash" style={{ left: `${leftPct}%` }} />
             </div>
             <div className="eb-energy-foot">
               <span>{displayNews.oddsA.toFixed(2)}倍</span>
@@ -1738,18 +1728,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           </div>
         </section>
 
-        <section className="eb-side-card eb-events-card eb-events-card-hidden pointer-events-none" aria-hidden="true">
-          <div className="eb-side-title"><Crosshair size={18} /> 直播事件</div>
-          <div ref={feedRef} className="eb-event-list">
-            {(liveEvents.length ? liveEvents : buildInitialFeed(displayNews, leftComments, rightComments)).map((item, index) => (
-              <div className="eb-event-item" key={item.id}>
-                <span>23:{25 - index}</span>
-                <img src={FALLBACK_AVATAR} alt="" />
-                <p>{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
       </aside>
     </div>
   );

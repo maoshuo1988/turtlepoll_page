@@ -60,6 +60,9 @@ export interface PKTopicState {
   nextRoundTime?: number;
   currentHeatA: number;
   currentHeatB: number;
+  /** 本局下注人次（接口 round 对齐；无则仅用热度展示）。 */
+  betCountA?: number;
+  betCountB?: number;
   roundHistory: PKRoundResult[];
   season: PKSeason;
   history: PKHistory;
@@ -215,6 +218,8 @@ export const mockPKStates: PKTopicState[] = [
     newsItem: mockRivalryHero,
     currentRound: 8,
     phase: 'betting',
+    betCountA: 842,
+    betCountB: 796,
     roundStartTime: Date.now() - 18 * 3600000,
     roundEndTime: Date.now() + 54 * 3600000,
     lockTime: Date.now() + 30 * 3600000,
