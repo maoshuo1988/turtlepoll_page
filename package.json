@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "umi dev",
+    "dev:test": "UMI_ENV=test umi dev",
     "build": "tsc -b && umi build",
+    "build:test": "UMI_ENV=test tsc -b && UMI_ENV=test umi build",
     "lint": "eslint .",
     "preview": "umi preview"
   },

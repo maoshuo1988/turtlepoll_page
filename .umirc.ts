@@ -1,7 +1,8 @@
 import tailwindcss from '@tailwindcss/postcss';
 import { defineConfig } from 'umi';
+import { resolveApiTarget } from './src/config/apiTargets';
 
-const DEV_API_TARGET = 'https://52.220.192.18';
+const apiTarget = resolveApiTarget();
 
 export default defineConfig({
   // Umi replaces the previous Vite entry and owns routing/build/dev-server now.
@@ -15,6 +16,9 @@ export default defineConfig({
   },
   alias: {
     '@': '/src',
+  },
+  define: {
+    'process.env.TURTLE_API_ORIGIN': JSON.stringify(apiTarget),
   },
   routes: [
     { path: '/jump', component: 'jump', name: '跳一跳' },
@@ -45,7 +49,7 @@ export default defineConfig({
   ],
   proxy: {
     '/api': {
-      target: DEV_API_TARGET,
+      target: apiTarget,
       changeOrigin: true,
       secure: false,
     },

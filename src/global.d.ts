@@ -2,3 +2,9 @@
  * 文件说明：项目全局类型声明，补充静态资源和运行时类型。
  */
 declare module '*.css';
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    readonly TURTLE_API_ORIGIN?: string;
+  }
+}
