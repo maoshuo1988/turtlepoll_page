@@ -105,6 +105,7 @@ export type TopicResponse = {
   recommend?: boolean;
   sticky?: boolean;
   favorited?: boolean;
+  favoriteCount?: number;
   ipLocation?: string;
   hideContent?: string;
   contentType?: string;

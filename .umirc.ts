@@ -1,6 +1,8 @@
 import tailwindcss from '@tailwindcss/postcss';
 import { defineConfig } from 'umi';
 
+const DEV_API_TARGET = 'https://52.220.192.18';
+
 export default defineConfig({
   // Umi replaces the previous Vite entry and owns routing/build/dev-server now.
   npmClient: 'npm',
@@ -41,4 +43,11 @@ export default defineConfig({
     // Keep the existing Tailwind v4 styles working under Umi's build pipeline.
     tailwindcss(),
   ],
+  proxy: {
+    '/api': {
+      target: DEV_API_TARGET,
+      changeOrigin: true,
+      secure: false,
+    },
+  },
 });

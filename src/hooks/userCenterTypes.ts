@@ -57,3 +57,19 @@ export type UserCenterHideTopicResponse = {
 export type UserTopicHidePayload = {
   topicId: number | string;
 };
+
+export type UserCenterDislikeResponse = {
+  id: number | string;
+  userId: number | string;
+  entityId: number | string;
+  entityType: string;
+  title: string;
+  content: string;
+  topicUserId: number | string;
+  createTime: number | string;
+};
+
+export type DislikeEntityPayload = {
+  entityType: 'topic';
+  entityId: number | string;
+};

@@ -1,7 +1,7 @@
 /**
  * 文件说明：Forum，论坛线报页面组件。
  */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
@@ -15,6 +15,10 @@ import {
   useRequestTopicNodeNavs,
   useRequestUnlikeEntity,
 } from '@/hooks/useTopicRequests';
+import { useMutateUserTopicHide } from '@/hooks/useUserCenterRequests';
+import { useMutateDislikeTopic, useMutateUndislikeTopic } from '@/hooks/useDislikeRequests';
+import { useHomeLayoutContext } from '@/layouts/context';
+import { getAuthToken } from '@/utils/authStorage';
 import type { PredictionCardItem } from './predictionCards';
 
 dayjs.extend(relativeTime);
@@ -85,6 +89,11 @@ export const Forum: React.FC<ForumProps> = ({
   const favoriteTopicMutation = useRequestFavoriteTopic();
   const likeEntityMutation = useRequestLikeEntity();
   const unlikeEntityMutation = useRequestUnlikeEntity();
+  const hideTopicMutation = useMutateUserTopicHide();
+  const dislikeTopicMutation = useMutateDislikeTopic();
+  const undislikeTopicMutation = useMutateUndislikeTopic();
+  const { onOpenAuth } = useHomeLayoutContext();
+  const [hiddenPostIds, setHiddenPostIds] = useState<Set<string>>(() => new Set());
 
   const createNodeId = useMemo(() => {
     const firstCustomNode = (nodeNavsQuery.data ?? []).find((nav) => nav.id > 0);
@@ -97,6 +106,15 @@ export const Forum: React.FC<ForumProps> = ({
     () => (topicFeedQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
     [topicFeedQuery.data],
   );
+
+  const visiblePosts = useMemo(
+    () => posts.filter((post) => !hiddenPostIds.has(String(post.id))),
+    [hiddenPostIds, posts],
+  );
+
+  const hidingPostId = hideTopicMutation.isLoading
+    ? String(hideTopicMutation.variables?.topicId ?? '')
+    : '';
 
   const handleCreatePost = async (payload: ForumComposeSubmitPayload) => {
     const rawTitle = payload.title.trim();
@@ -132,12 +150,49 @@ export const Forum: React.FC<ForumProps> = ({
     await favoriteTopicMutation.mutateAsync(postId);
   };
 
+  const handleHideTopic = async (postId: string) => {
+    if (!getAuthToken()) {
+      onOpenAuth();
+      return;
+    }
+
+    try {
+      await hideTopicMutation.mutateAsync({ topicId: postId });
+      setHiddenPostIds((prev) => {
+        const next = new Set(prev);
+        next.add(String(postId));
+        return next;
+      });
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : '隐藏帖子失败');
+      throw error;
+    }
+  };
+
   const handleLike = async (postId: string) => {
     await likeEntityMutation.mutateAsync({ entityType: 'topic', entityId: postId });
   };
 
   const handleUnlike = async (postId: string) => {
     await unlikeEntityMutation.mutateAsync({ entityType: 'topic', entityId: postId });
+  };
+
+  const handleDislike = async (postId: string) => {
+    if (!getAuthToken()) {
+      onOpenAuth();
+      return;
+    }
+
+    await dislikeTopicMutation.mutateAsync({ entityType: 'topic', entityId: postId });
+  };
+
+  const handleUndislike = async (postId: string) => {
+    if (!getAuthToken()) {
+      onOpenAuth();
+      return;
+    }
+
+    await undislikeTopicMutation.mutateAsync({ entityType: 'topic', entityId: postId });
   };
 
   return (
@@ -157,7 +212,7 @@ export const Forum: React.FC<ForumProps> = ({
       )}
 
       <div className="space-y-3 pb-6 pt-2 md:space-y-4 md:pb-10 md:pt-4">
-        {topicFeedQuery.isFetching && posts.length > 0 && (
+        {topicFeedQuery.isFetching && visiblePosts.length > 0 && (
           <div className="py-3 text-center text-[13px] text-zinc-500">正在刷新...</div>
         )}
 
@@ -175,7 +230,7 @@ export const Forum: React.FC<ForumProps> = ({
           <div className="py-10 text-center text-[14px] text-zinc-500">还没有内容，发第一条试试。</div>
         )}
 
-        {posts.map((post, i) => {
+        {visiblePosts.map((post, i) => {
           const linkedPrediction = buildLinkedPrediction(
             post,
             typeof post.context?.marketId === 'number' ? newsByMarketId?.get(post.context.marketId) : undefined,
@@ -190,7 +245,11 @@ export const Forum: React.FC<ForumProps> = ({
               onOpenLinkedPrediction={onOpenLinkedPrediction}
               onLike={handleLike}
               onUnlike={handleUnlike}
+              onDislike={handleDislike}
+              onUndislike={handleUndislike}
               onToggleFavorite={handleToggleFavorite}
+              onHideTopic={handleHideTopic}
+              isHidingTopic={hidingPostId === String(post.id)}
             />
           );
         })}
@@ -206,7 +265,7 @@ export const Forum: React.FC<ForumProps> = ({
               {topicFeedQuery.isFetchingNextPage ? '加载中…' : '加载更多'}
             </button>
           ) : (
-            posts.length > 0 && (
+            visiblePosts.length > 0 && (
               <div className="text-[12px] font-medium text-zinc-600">
                 — 已经到底 —
               </div>

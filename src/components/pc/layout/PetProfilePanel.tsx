@@ -3,6 +3,10 @@ import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, Coins, Flame } from 'lucide-react';
 import { CommonSpine } from '@/components/shared/spine';
+import { usePetSceneIsNight } from '@/utils/petSceneBackground';
+
+const PET_SCENE_BG_SUN = '/image/gui-bg1-sun.png';
+const PET_SCENE_BG_MOON = '/image/gui-bg1-moon.png';
 
 /** 面板内展示的上阵宠物字段（与全局 PetInfo 的展示子集对齐）。 */
 export interface SidebarPetProfilePet {
@@ -44,6 +48,8 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
   petBadgeName = '寒冰龟',
   petBadgeIcon: _petBadgeIcon = '❄️',
 }) => {
+  const isNightScene = usePetSceneIsNight();
+
   return (
     <div className="overflow-hidden rounded-2xl border border-emerald-400/22 bg-gradient-to-b from-[#0c1318] via-[#0e1a18] to-[#0a1614] shadow-[0_14px_34px_rgba(0,0,0,0.36)] dark:border-emerald-500/25">
       <div className="flex items-center justify-between gap-2 border-b border-white/6 bg-gradient-to-r from-sky-500/18 via-cyan-500/10 to-emerald-500/8 px-3 py-2 backdrop-blur dark:border-white/8">
@@ -74,74 +80,14 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
       </div>
 
       <div className="group relative h-[190px] cursor-pointer overflow-hidden" onClick={onViewPet}>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#162028] via-[#13211f] to-[#0a1614]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_15%,rgba(186,230,253,0.18),transparent_60%)]" />
+        <img
+          src={isNightScene ? PET_SCENE_BG_MOON : PET_SCENE_BG_SUN}
+          alt=""
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
 
-        <motion.div
-          animate={{ scale: [1, 1.05, 1], opacity: [0.9, 1, 0.9] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute right-6 top-3"
-        >
-          <div className="h-7 w-7 rounded-full bg-gradient-to-br from-amber-200 to-orange-300 shadow-[0_0_12px_rgba(251,191,36,0.45)] dark:from-amber-300 dark:to-orange-400" />
-        </motion.div>
-
-        <motion.div animate={{ x: [-10, 40, -10] }} transition={{ duration: 30, repeat: Infinity, ease: 'linear' }} className="absolute left-2 top-4">
-          <div className="relative">
-            <div className="h-4 w-14 rounded-full bg-white/35 dark:bg-white/25" />
-            <div className="absolute -top-1.5 left-3 h-4 w-8 rounded-full bg-white/30 dark:bg-white/18" />
-            <div className="absolute -top-0.5 left-8 h-3 w-5 rounded-full bg-white/25 dark:bg-white/14" />
-          </div>
-        </motion.div>
-        <motion.div animate={{ x: [10, -25, 10] }} transition={{ duration: 22, repeat: Infinity, ease: 'linear' }} className="absolute right-4 top-9">
-          <div className="relative">
-            <div className="h-3 w-10 rounded-full bg-white/28 dark:bg-white/16" />
-            <div className="absolute -top-1 left-2 h-3 w-6 rounded-full bg-white/22 dark:bg-white/12" />
-          </div>
-        </motion.div>
-        <motion.div animate={{ x: [0, 20, 0] }} transition={{ duration: 35, repeat: Infinity, ease: 'linear' }} className="absolute left-1/4 top-14">
-          <div className="h-2.5 w-8 rounded-full bg-white/18 dark:bg-white/10" />
-        </motion.div>
-
-        <div className="absolute bottom-[52px] left-0 right-0 h-[30px]">
-          <svg viewBox="0 0 260 30" className="h-full w-full" preserveAspectRatio="none">
-            <path d="M0 30 Q30 8 65 18 Q100 5 130 14 Q165 2 195 12 Q225 6 260 16 L260 30 Z" className="fill-cyan-500/22 dark:fill-cyan-600/18" />
-          </svg>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-[50px]">
-          <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/85 via-emerald-700/55 to-emerald-500/20 dark:from-emerald-950/90 dark:via-emerald-900/60" />
-          <svg viewBox="0 0 260 12" className="absolute -top-1 left-0 h-3 w-full" preserveAspectRatio="none">
-            <path d="M0 12 Q8 4 16 8 Q24 2 32 7 Q40 3 48 8 Q56 1 64 6 Q72 3 80 8 Q88 2 96 7 Q104 4 112 8 Q120 1 128 6 Q136 3 144 8 Q152 2 160 7 Q168 4 176 8 Q184 1 192 6 Q200 3 208 8 Q216 2 224 7 Q232 4 240 8 Q248 2 260 6 L260 12 Z" className="fill-emerald-600/55 dark:fill-emerald-700/45" />
-          </svg>
-          <div className="absolute bottom-[8px] left-3 flex items-end gap-[2px]">
-            <div className="h-[10px] w-[3px] -rotate-6 rounded-t-full bg-emerald-300/55 dark:bg-emerald-500/45" />
-            <div className="h-[13px] w-[2px] rounded-t-full bg-emerald-200/55 dark:bg-emerald-500/40" />
-            <div className="h-[9px] w-[3px] rotate-6 rounded-t-full bg-emerald-300/55 dark:bg-emerald-500/45" />
-          </div>
-          <div className="absolute bottom-[8px] left-12 flex items-end gap-[2px]">
-            <div className="h-[8px] w-[2px] -rotate-3 rounded-t-full bg-emerald-300/50 dark:bg-emerald-500/38" />
-            <div className="h-[11px] w-[3px] rotate-2 rounded-t-full bg-emerald-200/45 dark:bg-emerald-500/35" />
-          </div>
-          <div className="absolute bottom-[8px] right-5 flex items-end gap-[2px]">
-            <div className="h-[11px] w-[3px] -rotate-4 rounded-t-full bg-emerald-300/55 dark:bg-emerald-500/45" />
-            <div className="h-[14px] w-[2px] rotate-2 rounded-t-full bg-emerald-200/50 dark:bg-emerald-500/40" />
-            <div className="h-[9px] w-[2px] rotate-[8deg] rounded-t-full bg-emerald-300/45 dark:bg-emerald-500/38" />
-          </div>
-          <div className="absolute bottom-[8px] right-16 flex items-end gap-[2px]">
-            <div className="h-[7px] w-[2px] rounded-t-full bg-emerald-200/40 dark:bg-emerald-500/32" />
-            <div className="h-[10px] w-[3px] -rotate-3 rounded-t-full bg-emerald-300/50 dark:bg-emerald-500/40" />
-          </div>
-          <div className="absolute bottom-[14px] left-[70px] text-[6px] opacity-80">🌼</div>
-          <div className="absolute bottom-[12px] right-[55px] text-[5px] opacity-70">🌸</div>
-          <div className="absolute bottom-[6px] left-[45%] h-1.5 w-3 rounded-full bg-slate-500/30 dark:bg-slate-600/35" />
-          <div className="absolute bottom-[5px] left-[30%] h-1 w-2 rounded-full bg-slate-500/20 dark:bg-slate-600/28" />
-        </div>
-
-        <motion.div animate={{ y: [0, 60, 0], x: [0, 8, -5, 0], opacity: [0, 0.7, 0.7, 0] }} transition={{ duration: 6, repeat: Infinity, delay: 0 }} className="absolute left-[20%] top-6 h-1 w-1 rounded-full bg-amber-300/55" />
-        <motion.div animate={{ y: [0, 50, 0], x: [0, -6, 4, 0], opacity: [0, 0.5, 0.5, 0] }} transition={{ duration: 8, repeat: Infinity, delay: 2 }} className="absolute left-[65%] top-4 h-1 w-1 rounded-full bg-pink-300/50" />
-        <motion.div animate={{ y: [0, 45, 0], x: [0, 5, -3, 0], opacity: [0, 0.6, 0.6, 0] }} transition={{ duration: 7, repeat: Infinity, delay: 4 }} className="absolute left-[45%] top-8 h-0.5 w-0.5 rounded-full bg-amber-200/65" />
-
-        <div className="absolute bottom-[42px] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center">
+        <div className="absolute bottom-[4px] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={dialogueKey}
@@ -155,8 +101,8 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
             </motion.div>
           </AnimatePresence>
           <CommonSpine
-            width={88}
-            height={72}
+            width={120}
+            height={120}
             fallback={pet.avatar}
             padding={6}
             offsetY={2}
@@ -164,7 +110,6 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
           />
         </div>
 
-        <motion.div animate={{ scale: [1, 0.9, 1], opacity: [0.22, 0.14, 0.22] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className="absolute bottom-[34px] left-1/2 z-0 h-2.5 w-14 -translate-x-1/2 rounded-full bg-black/45 blur-[2px]" />
 
         {/* <div className="absolute left-2 top-2 z-10 flex flex-col gap-1.5">
           <div className="flex items-center gap-1.5 rounded-lg border border-emerald-400/22 bg-black/55 px-1.5 py-1 shadow-[0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-sm dark:border-emerald-500/25 dark:bg-black/65">

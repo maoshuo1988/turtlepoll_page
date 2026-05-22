@@ -10,7 +10,7 @@ import { HeroPrediction } from '../../predictions/ui/HeroPrediction';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import type { SidebarHotTopic } from '@/components/shared/layout';
 import { usePredictionCardItems, type PredictionCardItem } from '../../predictions/ui/predictionCards';
-import { SERVER_API } from '@/config';
+import { SERVER_ASSET_ORIGIN } from '@/config';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hooks/useCommentRequests';
 
@@ -29,8 +29,8 @@ const hasValue = (value: unknown) => value !== undefined && value !== null && va
 const resolveAssetUrl = (src?: string) => {
   if (!src) return '';
   if (/^(https?:)?\/\//.test(src) || src.startsWith('data:') || src.startsWith('blob:')) return src;
-  if (src.startsWith('/')) return `${SERVER_API}${src}`;
-  return `${SERVER_API}/${src}`;
+  if (src.startsWith('/')) return `${SERVER_ASSET_ORIGIN}${src}`;
+  return `${SERVER_ASSET_ORIGIN}/${src}`;
 };
 
 const mergeComments = (prev: CommentResponse[], next: CommentResponse[]) => {

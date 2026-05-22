@@ -5,17 +5,20 @@ import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query';
 import { axiosCustom } from '@/api/httpClient';
 import {
   API_User_Center_Comments,
+  API_User_Center_Dislike_List,
   API_User_Center_Favorites,
   API_User_Center_Topics,
   API_User_Topic_Hide,
   API_User_Topic_Hide_List,
   API_User_Topic_Unhide,
 } from '@/api/userApi';
+import { USER_CENTER_DISLIKES_QUERY_KEY } from './useDislikeRequests';
 import { assertSuccess, getAuthorizationHeaders } from '@/utils/requestUtils';
 import type {
   UserCenterCommentResponse,
   UserCenterFavoriteResponse,
   UserCenterHideTopicResponse,
+  UserCenterDislikeResponse,
   UserCenterListParams,
   UserCenterPageInfo,
   UserCenterPageResult,
@@ -75,6 +78,22 @@ type UserCenterRawFavorite = {
   create_time?: number | string;
 };
 
+type UserCenterRawDislike = {
+  id?: number | string;
+  userId?: number | string;
+  user_id?: number | string;
+  entityId?: number | string;
+  entity_id?: number | string;
+  entityType?: string;
+  entity_type?: string;
+  title?: string;
+  content?: string;
+  topicUserId?: number | string;
+  topic_user_id?: number | string;
+  createTime?: number | string;
+  create_time?: number | string;
+};
+
 const normalizePageInfo = (raw: UserCenterRawPageResult<unknown>): UserCenterPageInfo => {
   const nestedPage = typeof raw.page === 'object' && raw.page !== null ? raw.page : undefined;
   const rootPage = typeof raw.page === 'number' ? raw.page : undefined;
@@ -109,6 +128,17 @@ const normalizeFavorite = (item: UserCenterRawFavorite): UserCenterFavoriteRespo
   entityId: item.entityId ?? item.entity_id ?? '',
   title: item.title ?? '',
   content: item.content ?? '',
+  createTime: item.createTime ?? item.create_time ?? '',
+});
+
+const normalizeDislike = (item: UserCenterRawDislike): UserCenterDislikeResponse => ({
+  id: item.id ?? '',
+  userId: item.userId ?? item.user_id ?? '',
+  entityId: item.entityId ?? item.entity_id ?? '',
+  entityType: item.entityType ?? item.entity_type ?? 'topic',
+  title: item.title ?? '',
+  content: item.content ?? '',
+  topicUserId: item.topicUserId ?? item.topic_user_id ?? '',
   createTime: item.createTime ?? item.create_time ?? '',
 });
 
@@ -196,6 +226,16 @@ export function useInfiniteRequestUserCenterFavorites(params?: UserCenterListPar
     'get',
     API_User_Center_Favorites,
     normalizeFavorite,
+    params,
+  );
+}
+
+export function useInfiniteRequestUserCenterDislikes(params?: UserCenterListParams) {
+  return createUserCenterInfiniteQuery<UserCenterRawDislike, UserCenterDislikeResponse>(
+    USER_CENTER_DISLIKES_QUERY_KEY,
+    'get',
+    API_User_Center_Dislike_List,
+    normalizeDislike,
     params,
   );
 }

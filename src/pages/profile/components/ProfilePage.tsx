@@ -9,6 +9,7 @@ import {
   useInfiniteRequestUserCenterComments,
   useInfiniteRequestUserCenterFavorites,
   useInfiniteRequestUserCenterHiddenTopics,
+  useInfiniteRequestUserCenterDislikes,
   useInfiniteRequestUserCenterTopics,
   useMutateUserTopicHide,
   useMutateUserTopicUnhide,
@@ -17,6 +18,7 @@ import type {
   UserCenterCommentResponse,
   UserCenterFavoriteResponse,
   UserCenterHideTopicResponse,
+  UserCenterDislikeResponse,
   UserCenterTopicResponse,
 } from '@/hooks/userCenterTypes';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
@@ -130,6 +132,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const userCommentsQuery = useInfiniteRequestUserCenterComments({ enabled: isAuthenticated, limit: 20 });
   const userFavoritesQuery = useInfiniteRequestUserCenterFavorites({ enabled: isAuthenticated, limit: 20 });
   const userHiddenTopicsQuery = useInfiniteRequestUserCenterHiddenTopics({ enabled: isAuthenticated, limit: 20 });
+  const userDislikesQuery = useInfiniteRequestUserCenterDislikes({ enabled: isAuthenticated, limit: 20 });
   const hideTopicMutation = useMutateUserTopicHide();
   const unhideTopicMutation = useMutateUserTopicUnhide();
 
@@ -148,6 +151,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const profileHiddenTopics = useMemo<UserCenterHideTopicResponse[]>(
     () => (userHiddenTopicsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
     [userHiddenTopicsQuery.data],
+  );
+  const profileDislikes = useMemo<UserCenterDislikeResponse[]>(
+    () => (userDislikesQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
+    [userDislikesQuery.data],
   );
   const profileTopicsTotal = userTopicsQuery.data?.pages?.[0]?.page.total ?? 0;
   const profileCommentsTotal = userCommentsQuery.data?.pages?.[0]?.page.total ?? 0;
@@ -489,6 +496,42 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     </>
   );
 
+  const renderDownvoted = () => (
+    <>
+      {!isAuthenticated ? renderLoginRequired('登录后查看你点踩过的帖子', '这里只展示当前登录账号点踩过的别人的帖子。') : userDislikesQuery.isLoading && profileDislikes.length === 0 ? (
+        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
+          正在加载点踩记录...
+        </div>
+      ) : userDislikesQuery.isError && profileDislikes.length === 0 ? (
+        renderPageError(userDislikesQuery.error instanceof Error ? userDislikesQuery.error.message : '点踩记录加载失败')
+      ) : profileDislikes.length === 0 ? (
+        <div className="!mt-4 border-t border-white/10">
+          <EmptyState
+            title="你还没有点踩任何帖子"
+            description="在线报点踩过的帖子会集中展示在这里。"
+            actionLabel="去社区看看"
+            onAction={onOpenForum}
+          />
+        </div>
+      ) : (
+        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
+          {profileDislikes.map((dislike) => (
+            <article key={String(dislike.id)} className={`${feedCard} p-4 md:p-5`}>
+              <div className="flex items-center justify-between gap-3 text-[12px] text-[#7e8790]">
+                <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">已点踩</span>
+                <span>{formatTimestamp(dislike.createTime)}</span>
+                <span>帖子 ID {dislike.entityId || '-'}</span>
+              </div>
+              {dislike.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{dislike.title}</div>}
+              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{dislike.content || '暂无正文内容'}</p>
+            </article>
+          ))}
+          {renderLoadMore(userDislikesQuery)}
+        </div>
+      )}
+    </>
+  );
+
   const renderStaticEmpty = (
     title: string,
     description: string,
@@ -515,7 +558,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       case 'upvoted':
         return renderStaticEmpty('你还没有点赞任何内容', '你点过赞的帖子和评论，之后会出现在这里。');
       case 'downvoted':
-        return renderStaticEmpty('你还没有点踩任何内容', '你点踩过的帖子和评论，之后会出现在这里。');
+        return renderDownvoted();
       default:
         return null;
     }

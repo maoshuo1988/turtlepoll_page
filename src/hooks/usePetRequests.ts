@@ -2,7 +2,7 @@
  * 文件说明：use Pet Requests，封装对应业务域的接口请求和缓存更新逻辑。
  */
 import { axiosCustom } from "@/api/httpClient";
-import { SERVER_API } from "@/config";
+import { SERVER_ASSET_ORIGIN } from "@/config";
 import { normalizePetRarityGrade, PetRarityGrade } from "@/components/shared/pet/petRarity";
 import {
   API_Admin_Pet_Defs,
@@ -95,7 +95,7 @@ function resolveApiAssetUrl(path: string): string {
   if (!p) return "";
   if (p.startsWith("http://") || p.startsWith("https://")) return p;
   const normalized = p.startsWith("/") ? p : `/${p}`;
-  return `${SERVER_API}${normalized}`;
+  return `${SERVER_ASSET_ORIGIN}${normalized}`;
 }
 
 function pickPetDefAvatarUrl(row: Record<string, unknown>): string | undefined {
