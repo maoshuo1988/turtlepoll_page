@@ -1,14 +1,7 @@
 /**
  * 文件说明：项目全局配置，集中维护服务地址和本地存储键名。
  */
-<<<<<<< HEAD
-export const SERVER_API =
-  process.env.UMI_APP_SERVER_API || "https://turtle.cloud-ip.cc";
-
-
-=======
 import { API_TARGETS } from './apiTargets';
->>>>>>> dev
 
 const API_ORIGIN = process.env.TURTLE_API_ORIGIN || API_TARGETS.production;
 
