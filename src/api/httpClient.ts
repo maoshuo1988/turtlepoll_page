@@ -3,6 +3,7 @@
  */
 import { SERVER_API } from "@/config";
 import axios from "axios";
+import { clearInfo, markAuthRequired } from "@/utils/authStorage";
 
 export function axiosCustom({
   cmd = "",
@@ -38,13 +39,21 @@ export function axiosCustom({
         success:resData?.success ?? false
       });
     } catch (e: any) {
-      console.log(e.response?.status, "eeeee");
+      const status = e.response?.status;
+      const responseMessage = e.response?.data?.message ?? e.response?.data?.msg;
+
+      console.log(status, "eeeee");
       //twitter user me 如果用户账号异常 也会返回403 但不能重新授权
       if (
-        (e.response?.status === 403 && successCode !== 312454645) ||
-        e.response?.status === 411
+        (status === 403 && successCode !== 312454645) ||
+        status === 411
       ) {
         localStorage.setItem("url_token", "{}");
+      }
+
+      if (status === 401) {
+        clearInfo();
+        markAuthRequired();
       }
 
       console.log({
@@ -55,9 +64,9 @@ export function axiosCustom({
       resolve({
         cmd: cmd,
         method: method,
-        code: 0, //失败的code
-        msg: e,
-        success:false
+        code: status ?? 0,
+        msg: responseMessage ?? e.message ?? "Request failed",
+        success: false,
       });
     }
   });

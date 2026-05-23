@@ -15,6 +15,7 @@ import {
   API_Battle_Stats,
   API_Battle_Withdraw,
 } from "@/api/battleApi";
+import { getAuthToken } from "@/utils/authStorage";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { COIN_ME_QUERY_KEY } from "./useCoinRequests";
@@ -84,6 +85,8 @@ async function invalidateBattleQueries(queryClient: ReturnType<typeof useQueryCl
 
 // 赌局列表
 export function useRequestBattleList(params: BattleListParams = {}, options: BattleQueryOptions = {}) {
+  const token = getAuthToken();
+
   return useQuery<BattleListResponse>({
     queryKey: battleQueryKeys.list(params),
     queryFn: async () => {
@@ -101,13 +104,15 @@ export function useRequestBattleList(params: BattleListParams = {}, options: Bat
       return assertSuccess(res);
     },
     staleTime: 5 * 1000,
-    enabled: options.enabled ?? true,
-    refetchOnWindowFocus: true,
+    enabled: Boolean(token) && (options.enabled ?? true),
+    refetchOnWindowFocus: false,
   });
 }
 
 // 赌局统计
 export function useRequestBattleStats(options: BattleQueryOptions = {}) {
+  const token = getAuthToken();
+
   return useQuery<BattleStatsResponse>({
     queryKey: battleQueryKeys.stats(),
     queryFn: async () => {
@@ -119,19 +124,21 @@ export function useRequestBattleStats(options: BattleQueryOptions = {}) {
       return assertSuccess(res);
     },
     staleTime: 5 * 1000,
-    enabled: options.enabled ?? true,
-    refetchOnWindowFocus: true,
+    enabled: Boolean(token) && (options.enabled ?? true),
+    refetchOnWindowFocus: false,
   });
 }
 
 // 赌局详情
 export function useRequestBattleDetail(battleId?: number, options: BattleQueryOptions = {}) {
+  const token = getAuthToken();
+
   return useQuery<BattleDetailResponse>({
     queryKey: battleQueryKeys.detail(battleId),
     queryFn: async () => fetchBattleDetail(battleId),
-    enabled: (options.enabled ?? true) && typeof battleId === "number",
+    enabled: Boolean(token) && (options.enabled ?? true) && typeof battleId === "number",
     staleTime: 5 * 1000,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
   });
 }
 

@@ -12,6 +12,7 @@ import { getPetMoodLabel } from '@/components/shared/pet/ui/petDisplay';
 import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/shared/predictions/ui/predictionCards';
 import { heroNews, mockNews, mockPetSkins, mockUser, petDialogues } from '@/data/mockData';
 import { useAppSession } from '@/hooks/useAppSession';
+import { battleQueryKeys } from '@/hooks/useBattleRequests';
 import { COIN_ME_QUERY_KEY } from '@/hooks/useCoinRequests';
 import {
   PET_EQUIP_QUERY_KEY,
@@ -35,7 +36,7 @@ import {
   useRequestAiUnreadPushes,
 } from '@/hooks/useAiRequests';
 import type { AiPushMessage } from '@/hooks/aiTypes';
-import { clearInfo, getAuthToken } from '@/utils/authStorage';
+import { AUTH_REQUIRED_EVENT, clearAuthRequiredFlag, clearInfo, getAuthToken, hasAuthRequiredFlag } from '@/utils/authStorage';
 
 const THEME_KEY = 'theme';
 
@@ -353,6 +354,7 @@ export function StandalonePageShell({
     queryClient.removeQueries(['requestBadgeBadges']);
     queryClient.removeQueries(['requestUserMsgRecent']);
     queryClient.removeQueries(['requestFootballMarkets']);
+    queryClient.removeQueries(battleQueryKeys.all);
     queryClient.removeQueries(COIN_ME_QUERY_KEY);
     queryClient.removeQueries(PET_EQUIP_QUERY_KEY);
     queryClient.removeQueries(PET_OWNED_QUERY_KEY);
@@ -377,9 +379,26 @@ export function StandalonePageShell({
   }, [clearSessionCaches, onAfterSignOut, onAuthModalOpenChange, signOutMutation]);
 
   const handleAuthSuccess = useCallback(() => {
+    clearAuthRequiredFlag();
     onAuthSuccess?.();
     onAuthModalOpenChange(false);
   }, [onAuthModalOpenChange, onAuthSuccess]);
+
+  useEffect(() => {
+    const handleAuthRequired = () => {
+      clearSessionCaches();
+      onAuthModalOpenChange(true);
+    };
+
+    if (hasAuthRequiredFlag()) {
+      handleAuthRequired();
+    }
+
+    window.addEventListener(AUTH_REQUIRED_EVENT, handleAuthRequired);
+    return () => {
+      window.removeEventListener(AUTH_REQUIRED_EVENT, handleAuthRequired);
+    };
+  }, [clearSessionCaches, onAuthModalOpenChange]);
 
   const resolvedContentClassName =
     activeView === 'profile'

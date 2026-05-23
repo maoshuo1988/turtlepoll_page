@@ -1449,7 +1449,7 @@ export const BattlePlazaPage: React.FC = () => {
   // 登录提示按 token 判断，避免“已登录但 userInfo 还在加载”时误闪未登录提示。
   const isAuthenticated = Boolean(authToken);
   const queryClient = useQueryClient();
-  const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 });
+  const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 }, { enabled: isAuthenticated });
   const battleStatsQuery = useRequestBattleStats({ enabled: isAuthenticated });
   const myBankerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'banker' }, { enabled: isAuthenticated });
   const myChallengerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'challenger' }, { enabled: isAuthenticated });
@@ -1485,7 +1485,7 @@ export const BattlePlazaPage: React.FC = () => {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [feedback, setFeedback] = useState<{ tone: 'success' | 'error' | 'info'; text: string } | null>(null);
   const lastPopupMessageRef = useRef<string>('');
-  const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, { enabled: detailBattleId !== null });
+  const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, { enabled: isAuthenticated && detailBattleId !== null });
 
   const myRoleBattleItems = useMemo(() => {
     const map = new Map<number, BattleListItem>();
@@ -1539,7 +1539,7 @@ export const BattlePlazaPage: React.FC = () => {
           });
           return assertSuccess(res) as { results?: CommentResponse[] };
         },
-        enabled: isOpen,
+        enabled: isAuthenticated && isOpen,
         staleTime: 10 * 1000,
       };
     }),
@@ -1687,9 +1687,9 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!plazaQuery.isError) return;
+    if (!isAuthenticated || !plazaQuery.isError) return;
     setMappedError(plazaQuery.error);
-  }, [plazaQuery.error, plazaQuery.isError]);
+  }, [isAuthenticated, plazaQuery.error, plazaQuery.isError]);
 
   useEffect(() => {
     if (!isAuthenticated || activeTab !== 'my-banker' || !myBankerQuery.isError) return;
@@ -2280,7 +2280,13 @@ export const BattlePlazaPage: React.FC = () => {
 
           {activeTab === 'plaza' && (
             <>
-              {plazaQuery.isLoading ? (
+              {!isAuthenticated ? (
+                <div className="empty-state">
+                  <div className="empty-ico">🔐</div>
+                  <div className="empty-title">请先登录</div>
+                  <div className="empty-sub">登录后可查看地下钱庄的实时赌局。</div>
+                </div>
+              ) : plazaQuery.isLoading ? (
                 <div className="empty-state">
                   <div className="empty-ico">⏳</div>
                   <div className="empty-title">开战广场加载中</div>
