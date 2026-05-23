@@ -1449,10 +1449,10 @@ export const BattlePlazaPage: React.FC = () => {
   // 登录提示按 token 判断，避免“已登录但 userInfo 还在加载”时误闪未登录提示。
   const isAuthenticated = Boolean(authToken);
   const queryClient = useQueryClient();
-  const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 });
+  const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 }, { enabled: isAuthenticated });
   const battleStatsQuery = useRequestBattleStats({ enabled: isAuthenticated });
-  const myBankerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'banker' });
-  const myChallengerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'challenger' });
+  const myBankerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'banker' }, { enabled: isAuthenticated });
+  const myChallengerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'challenger' }, { enabled: isAuthenticated });
   const createBattleMutation = useRequestBattleCreate();
   const joinBattleMutation = useRequestBattleJoin();
   const addStakeMutation = useRequestBattleBankerAddStake();
@@ -1485,7 +1485,7 @@ export const BattlePlazaPage: React.FC = () => {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [feedback, setFeedback] = useState<{ tone: 'success' | 'error' | 'info'; text: string } | null>(null);
   const lastPopupMessageRef = useRef<string>('');
-  const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, { enabled: detailBattleId !== null });
+  const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, { enabled: isAuthenticated && detailBattleId !== null });
 
   const myRoleBattleItems = useMemo(() => {
     const map = new Map<number, BattleListItem>();
@@ -1509,7 +1509,7 @@ export const BattlePlazaPage: React.FC = () => {
     myRoleBattleItems.map((item) => ({
       queryKey: battleQueryKeys.detail(item.battle.id),
       queryFn: async () => fetchBattleDetail(item.battle.id),
-      enabled: activeTab !== 'plaza',
+      enabled: activeTab !== 'plaza' && isAuthenticated,
     })),
   ) as Array<{ data?: BattleDetailResponse }>;
 
@@ -1539,7 +1539,7 @@ export const BattlePlazaPage: React.FC = () => {
           });
           return assertSuccess(res) as { results?: CommentResponse[] };
         },
-        enabled: isOpen,
+        enabled: isAuthenticated && isOpen,
         staleTime: 10 * 1000,
       };
     }),
@@ -1687,19 +1687,19 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!plazaQuery.isError) return;
+    if (!isAuthenticated || !plazaQuery.isError) return;
     setMappedError(plazaQuery.error);
-  }, [plazaQuery.error, plazaQuery.isError]);
+  }, [isAuthenticated, plazaQuery.error, plazaQuery.isError]);
 
   useEffect(() => {
-    if (activeTab !== 'my-banker' || !myBankerQuery.isError) return;
+    if (!isAuthenticated || activeTab !== 'my-banker' || !myBankerQuery.isError) return;
     setMappedError(myBankerQuery.error);
-  }, [activeTab, myBankerQuery.error, myBankerQuery.isError]);
+  }, [activeTab, isAuthenticated, myBankerQuery.error, myBankerQuery.isError]);
 
   useEffect(() => {
-    if (activeTab !== 'my-challenger' || !myChallengerQuery.isError) return;
+    if (!isAuthenticated || activeTab !== 'my-challenger' || !myChallengerQuery.isError) return;
     setMappedError(myChallengerQuery.error);
-  }, [activeTab, myChallengerQuery.error, myChallengerQuery.isError]);
+  }, [activeTab, isAuthenticated, myChallengerQuery.error, myChallengerQuery.isError]);
 
   // 创建前先在页面层挡一轮基础校验，避免无意义请求直接打后端。
   const handleCreate = async () => {
@@ -2280,7 +2280,13 @@ export const BattlePlazaPage: React.FC = () => {
 
           {activeTab === 'plaza' && (
             <>
-              {plazaQuery.isLoading ? (
+              {!isAuthenticated ? (
+                <div className="empty-state">
+                  <div className="empty-ico">🔐</div>
+                  <div className="empty-title">请先登录</div>
+                  <div className="empty-sub">登录后可查看地下钱庄的实时赌局。</div>
+                </div>
+              ) : plazaQuery.isLoading ? (
                 <div className="empty-state">
                   <div className="empty-ico">⏳</div>
                   <div className="empty-title">开战广场加载中</div>
@@ -2322,6 +2328,12 @@ export const BattlePlazaPage: React.FC = () => {
                   <div className="empty-title">正在加载我的庄局</div>
                   <div className="empty-sub">稍等一下，我们正在拉取你的做庄记录。</div>
                 </div>
+              ) : !isAuthenticated ? (
+                <div className="empty-state">
+                  <div className="empty-ico">🔐</div>
+                  <div className="empty-title">请先登录</div>
+                  <div className="empty-sub">登录后可查看和管理你的做庄记录。</div>
+                </div>
               ) : myBankerQuery.isError ? (
                 <div className="empty-state">
                   <div className="empty-ico">⚠️</div>
@@ -2348,6 +2360,12 @@ export const BattlePlazaPage: React.FC = () => {
                   <div className="empty-ico">⏳</div>
                   <div className="empty-title">正在加载我的挑战</div>
                   <div className="empty-sub">稍等一下，我们正在拉取你参与过的赌局。</div>
+                </div>
+              ) : !isAuthenticated ? (
+                <div className="empty-state">
+                  <div className="empty-ico">🔐</div>
+                  <div className="empty-title">请先登录</div>
+                  <div className="empty-sub">登录后可查看你参与过的挑战记录。</div>
                 </div>
               ) : myChallengerQuery.isError ? (
                 <div className="empty-state">

@@ -15,7 +15,7 @@ import {
   API_User_Msg_recent,
 } from "@/api/authApi";
 import { axiosCustom } from "@/api/httpClient";
-import { saveUserInfo } from "@/utils/authStorage";
+import { getAuthToken, saveUserInfo } from "@/utils/authStorage";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { useMutation, useQuery } from "react-query";
 import type {
@@ -110,6 +110,8 @@ export function useRequestSignout() {
 
 //获取用户信息
 export function useRequestUserCurrent() {
+  const token = getAuthToken();
+
   return useQuery<AuthUser | null>({
     queryKey: ["requestUserCurrent"],
     queryFn: async () => {
@@ -125,6 +127,7 @@ export function useRequestUserCurrent() {
       }
       return data;
     },
+    enabled: Boolean(token),
   });
 }
 

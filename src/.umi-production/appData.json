@@ -72,7 +72,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 7
       },
       "enableBy": "register"
     },
@@ -89,7 +89,7 @@
             0
           ]
         },
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -106,7 +106,7 @@
             1
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -123,7 +123,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -136,7 +136,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -150,10 +150,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            11
+            9
           ]
         },
-        "register": 9
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -166,7 +166,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -203,7 +203,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -216,7 +216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -230,7 +230,7 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
         "register": 3
@@ -1128,7 +1128,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 43
+        "register": 40
       },
       "enableBy": "register"
     },
@@ -1141,7 +1141,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 17
       },
       "enableBy": "config"
     },
@@ -1171,7 +1171,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1210,7 +1210,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 17
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1222,7 +1222,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1260,7 +1260,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1277,7 +1277,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1289,7 +1289,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1328,7 +1328,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1341,7 +1341,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1354,7 +1354,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1367,7 +1367,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1405,7 +1405,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1431,7 +1431,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1457,7 +1457,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1469,7 +1469,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 11
       },
       "enableBy": "config"
     },
@@ -1482,7 +1482,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1494,7 +1494,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/legacy/legacy": {
@@ -1519,7 +1519,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1586,7 +1586,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1598,7 +1598,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1661,7 +1661,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 18
       },
       "enableBy": "register"
     },
@@ -1674,7 +1674,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 8
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1686,7 +1686,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1777,7 +1777,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1790,7 +1790,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1829,7 +1829,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1881,7 +1881,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1907,7 +1907,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2407,7 +2407,7 @@
       "id": "httpClient",
       "file": "httpClient.ts",
       "absPath": "/httpClient",
-      "__content": "/**\n * 文件说明：HTTP 客户端封装，统一拼接服务地址、透传参数并归一化响应。\n */\nimport { SERVER_API } from \"@/config\";\nimport axios from \"axios\";\n\nexport function axiosCustom({\n  cmd = \"\",\n  headers = {},\n  params = {},\n  method = \"get\",\n  data = {},\n  successCode = 0,\n}): Promise<any> {\n  return new Promise(async (resolve) => {\n    try {\n      const res = await axios({\n        url: SERVER_API + cmd,\n        method: method,\n        headers,\n        params,\n        data,\n        withCredentials: true,\n      });\n      const resData = res.data;\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: resData,\n      });\n\n      resolve({\n        code: resData.errorCode,\n        cmd: cmd,\n        method: method,\n        msg: resData.message,\n        data: resData?.data ?? {},\n        success:resData?.success ?? false\n      });\n    } catch (e: any) {\n      console.log(e.response?.status, \"eeeee\");\n      //twitter user me 如果用户账号异常 也会返回403 但不能重新授权\n      if (\n        (e.response?.status === 403 && successCode !== 312454645) ||\n        e.response?.status === 411\n      ) {\n        localStorage.setItem(\"url_token\", \"{}\");\n      }\n\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: e,\n      });\n      resolve({\n        cmd: cmd,\n        method: method,\n        code: 0, //失败的code\n        msg: e,\n        success:false\n      });\n    }\n  });\n}\n"
+      "__content": "/**\n * 文件说明：HTTP 客户端封装，统一拼接服务地址、透传参数并归一化响应。\n */\nimport { SERVER_API } from \"@/config\";\nimport axios from \"axios\";\nimport { clearInfo, markAuthRequired } from \"@/utils/authStorage\";\n\nexport function axiosCustom({\n  cmd = \"\",\n  headers = {},\n  params = {},\n  method = \"get\",\n  data = {},\n  successCode = 0,\n}): Promise<any> {\n  return new Promise(async (resolve) => {\n    try {\n      const res = await axios({\n        url: SERVER_API + cmd,\n        method: method,\n        headers,\n        params,\n        data,\n        withCredentials: true,\n      });\n      const resData = res.data;\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: resData,\n      });\n\n      resolve({\n        code: resData.errorCode,\n        cmd: cmd,\n        method: method,\n        msg: resData.message,\n        data: resData?.data ?? {},\n        success:resData?.success ?? false\n      });\n    } catch (e: any) {\n      const status = e.response?.status;\n      const responseMessage = e.response?.data?.message ?? e.response?.data?.msg;\n\n      console.log(status, \"eeeee\");\n      //twitter user me 如果用户账号异常 也会返回403 但不能重新授权\n      if (\n        (status === 403 && successCode !== 312454645) ||\n        status === 411\n      ) {\n        localStorage.setItem(\"url_token\", \"{}\");\n      }\n\n      if (status === 401) {\n        clearInfo();\n        markAuthRequired();\n      }\n\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: e,\n      });\n      resolve({\n        cmd: cmd,\n        method: method,\n        code: status ?? 0,\n        msg: responseMessage ?? e.message ?? \"Request failed\",\n        success: false,\n      });\n    }\n  });\n}\n"
     },
     "battleApi": {
       "path": "battleApi",
@@ -2500,7 +2500,7 @@
   "overridesCSS": [],
   "bundler": "webpack",
   "git": {
-    "originUrl": "git@github.com:maoshuo1988/turtle_project.git"
+    "originUrl": "git@github.com:maoshuo1988/turtlepoll_page.git"
   },
   "framework": "react",
   "typescript": {

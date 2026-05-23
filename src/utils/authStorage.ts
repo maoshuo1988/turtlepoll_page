@@ -4,6 +4,9 @@
 import { AUTH_TOKEN_STORAGE_KEY, DAILY_SETTLE_STORAGE_KEY, USER_INFO_STORAGE_KEY } from "@/config";
 import type { DailySettleSummary } from "@/hooks/authTypes";
 
+const AUTH_REQUIRED_STORAGE_KEY = "turtle_auth_required";
+export const AUTH_REQUIRED_EVENT = "turtle:auth-required";
+
 ///token 相关
 export function getAuthToken() {
   return localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ?? '';
@@ -48,8 +51,26 @@ export function saveDailySettle(data?: DailySettleSummary | null) {
   }
 }
 
+export function hasAuthRequiredFlag() {
+  return sessionStorage.getItem(AUTH_REQUIRED_STORAGE_KEY) === "1";
+}
+
+export function markAuthRequired() {
+  const alreadyMarked = hasAuthRequiredFlag();
+  sessionStorage.setItem(AUTH_REQUIRED_STORAGE_KEY, "1");
+
+  if (!alreadyMarked && typeof window !== "undefined") {
+    window.dispatchEvent(new Event(AUTH_REQUIRED_EVENT));
+  }
+}
+
+export function clearAuthRequiredFlag() {
+  sessionStorage.removeItem(AUTH_REQUIRED_STORAGE_KEY);
+}
+
 export function clearInfo() {
   localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
   localStorage.removeItem(USER_INFO_STORAGE_KEY);
   localStorage.removeItem(DAILY_SETTLE_STORAGE_KEY);
+  clearAuthRequiredFlag();
 }
