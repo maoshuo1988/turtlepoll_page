@@ -13,6 +13,7 @@ import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
 import { getAuthToken } from '@/utils/authStorage';
 import { useHomeLayoutContext } from '@/layouts/context';
+import { CommonSpine } from '@/components/shared/spine';
 
 interface ChatMessage {
   id: string;
@@ -42,6 +43,27 @@ function getAiChatErrorMessage(error: unknown, fallback: string) {
   if (message.includes('ai chat is disabled')) return '小龟的 AI 聊天暂时没有开启，稍后再来看看。';
   if (message.includes('content is required')) return '先输入想问的问题，小龟才能开口。';
   return fallback;
+}
+
+interface PetChatSpineAvatarProps {
+  fallback: React.ReactNode;
+  size?: number;
+  className?: string;
+}
+
+function PetChatSpineAvatar({ fallback, size = 24, className = '' }: PetChatSpineAvatarProps) {
+  return (
+    <div className={`shrink-0 ${className}`} style={{ width: size, height: size }}>
+      <CommonSpine
+        width={size}
+        height={size}
+        fallback={fallback}
+        padding={2}
+        offsetY={0}
+        className="pointer-events-none"
+      />
+    </div>
+  );
 }
 
 export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embedded, stamina, aiPushMessages = [] }) => {
@@ -176,9 +198,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embe
     >
       {/* Header */}
       <div className="flex items-center gap-2.5 px-3 py-2.5 border-b border-emerald-100 dark:border-emerald-900/30 shrink-0">
-        <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 grid place-items-center text-base">
-          {pet.avatar}
-        </div>
+        <PetChatSpineAvatar fallback={pet.avatar} size={32} />
         <div className="flex-1 min-w-0">
           <div className="text-[12px] font-semibold text-slate-700 dark:text-rdark-text">{pet.name}</div>
           <div className="text-[9px] text-emerald-500 dark:text-emerald-400 flex items-center gap-0.5">
@@ -210,7 +230,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embe
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.role === 'pet' && (
-                <span className="text-sm shrink-0 mr-1.5 mt-0.5">{pet.avatar}</span>
+                <PetChatSpineAvatar fallback={pet.avatar} className="mr-1.5 mt-0.5" />
               )}
               <div
                 className={`max-w-[85%] px-3 py-2 rounded-xl text-[11px] leading-relaxed whitespace-pre-wrap ${
@@ -232,7 +252,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embe
             animate={{ opacity: 1 }}
             className="flex justify-start"
           >
-            <span className="text-sm shrink-0 mr-1.5 mt-0.5">{pet.avatar}</span>
+            <PetChatSpineAvatar fallback={pet.avatar} className="mr-1.5 mt-0.5" />
             <div className="bg-slate-100 dark:bg-rdark-input rounded-xl rounded-bl-sm px-3 py-2.5 flex items-center gap-1">
               <motion.span
                 animate={{ opacity: [0.3, 1, 0.3] }}

@@ -197,6 +197,23 @@ function asNumber(value: unknown, fallback = 0) {
   return Number.isFinite(next) ? next : fallback;
 }
 
+/** 阵营热度合计为 100% 的占比（与对抗条宽度严格一致）。 */
+function heatSharePct(heatA: number, heatB: number): { pctA: number; pctB: number } {
+  const a = Math.max(0, heatA);
+  const b = Math.max(0, heatB);
+  const sum = a + b;
+  if (sum <= 0) return { pctA: 50, pctB: 50 };
+  const pctA = Math.min(100, Math.max(0, Math.round((a / sum) * 100)));
+  return { pctA, pctB: 100 - pctA };
+}
+
+function formatPkHeatValue(n: number): string {
+  if (Number.isFinite(n) && (n >= 100 || Number.isInteger(n))) {
+    return n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  }
+  return Number.isFinite(n) ? n.toFixed(1) : '0';
+}
+
 function formatShortDate(value?: number) {
   if (!value) return '--';
   const date = new Date(value);
@@ -217,8 +234,8 @@ function mapRound(round: ApiPKRound): PKRoundResult {
     heatA,
     heatB,
     winner: round.winner === 'A' ? 'A' : 'B',
-    betCountA: asNumber(round.betCountA),
-    betCountB: asNumber(round.betCountB),
+    betCountA: asNumber(round?.betCountA),
+    betCountB: asNumber(round?.betCountB),
     commentCount: 0,
     likeCount: 0,
   };
@@ -312,6 +329,8 @@ function mapTopicSummaryToPK(summary: PKTopicSummary, index: number): RivalryPKS
     nextRoundTime: round?.nextRoundTime,
     currentHeatA: heatA,
     currentHeatB: heatB,
+    betCountA: asNumber(round?.betCountA),
+    betCountB: asNumber(round?.betCountB),
     roundHistory,
     season: mappedSeason,
     history: {
@@ -362,6 +381,63 @@ function PhaseTag({ phase }: { phase: PKPhase }) {
   return <span className="flex items-center gap-1 rounded-full border border-[#f1c27d]/25 bg-[#463420]/82 px-2 py-0.5 text-[10px] font-bold text-[#f1c27d]"><Clock size={10} />冷却中</span>;
 }
 
+function RivalryHeatMeter({
+  heatA,
+  heatB,
+  theme,
+  variant,
+}: {
+  heatA: number;
+  heatB: number;
+  theme: RivalryVisualTheme;
+  variant: 'hero' | 'compact';
+}) {
+  const { pctA, pctB } = heatSharePct(heatA, heatB);
+  const splitStyle = pctA > 0 && pctB > 0 ? ({ left: `${pctA}%` } as React.CSSProperties) : undefined;
+
+  return (
+    <div className={variant === 'hero' ? 'space-y-2' : ''}>
+      {variant === 'hero' ? (
+        <div className="flex items-center justify-between gap-4 text-[11px] font-semibold tabular-nums tracking-tight">
+          <span style={{ color: theme.sideA.accent }}>{pctA}%</span>
+          <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">阵营热度</span>
+          <span style={{ color: theme.sideB.accent }}>{pctB}%</span>
+        </div>
+      ) : null}
+      <div
+        className={
+          variant === 'hero'
+            ? 'relative h-4 w-full overflow-hidden rounded-full bg-black/35 p-[3px] ring-1 ring-white/14 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]'
+            : 'relative h-2.5 w-full overflow-hidden rounded-full bg-white/[0.07] ring-1 ring-white/12'
+        }
+      >
+        <div className={variant === 'hero' ? 'relative h-full w-full overflow-hidden rounded-full bg-white/[0.05]' : 'relative h-full w-full overflow-hidden rounded-full'}>
+          <motion.div
+            className="absolute inset-y-0 left-0 rounded-l-full shadow-[inset_0_-1px_0_rgba(0,0,0,0.25)]"
+            style={{ background: `linear-gradient(90deg, ${theme.sideA.primary}, ${theme.sideA.accent})` }}
+            initial={false}
+            animate={{ width: `${pctA}%` }}
+            transition={{ type: 'spring', stiffness: 140, damping: 24 }}
+          />
+          <motion.div
+            className="absolute inset-y-0 right-0 rounded-r-full shadow-[inset_0_-1px_0_rgba(0,0,0,0.22)]"
+            style={{ background: `linear-gradient(270deg, ${theme.sideB.primary}, ${theme.sideB.accent})` }}
+            initial={false}
+            animate={{ width: `${pctB}%` }}
+            transition={{ type: 'spring', stiffness: 140, damping: 24 }}
+          />
+          {splitStyle ? (
+            <div
+              className="pointer-events-none absolute top-1/2 z-[1] h-[70%] w-px -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/55 shadow-[0_0_10px_rgba(255,255,255,0.35)]"
+              style={splitStyle}
+            />
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SeasonBar({ winsA, winsB, nameA, nameB }: { winsA: number; winsB: number; nameA: string; nameB: string }) {
   const total = winsA + winsB || 1;
   return (
@@ -404,10 +480,12 @@ function HeroPK({
   isBetting?: boolean;
 }) {
   const item = pk.newsItem;
-  const total = item.votes.A + item.votes.B;
-  const heatTotal = pk.currentHeatA + pk.currentHeatB || 1;
-  const heatPctA = Math.round((pk.currentHeatA / heatTotal) * 100);
-  const heatPctB = 100 - heatPctA;
+  const betTotal = asNumber(pk.betCountA) + asNumber(pk.betCountB);
+  const heatTotal = pk.currentHeatA + pk.currentHeatB;
+  const heatLabel =
+    heatTotal >= 100 || Number.isInteger(heatTotal)
+      ? heatTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })
+      : heatTotal.toFixed(1);
   const leading = pk.currentHeatA > pk.currentHeatB ? 'A' : pk.currentHeatB > pk.currentHeatA ? 'B' : null;
   const theme = getRivalryVisualTheme(item);
 
@@ -435,9 +513,9 @@ function HeroPK({
           <span className="rounded-full bg-white/15 px-2.5 py-1 text-xs text-white/80 backdrop-blur-sm">
             第{pk.currentRound}局 · 赛季{pk.season.season}
           </span>
-          <span className="flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-xs text-white/80 backdrop-blur-sm">
+          <span className="flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-xs text-white/80 backdrop-blur-sm" title={betTotal > 0 ? `本局累计热度 ${heatLabel}` : '阵营热度之和'}>
             <Users size={12} />
-            {total.toLocaleString()} 参战
+            {betTotal > 0 ? `${betTotal.toLocaleString()} 人次下注` : `热度合计 ${heatLabel}`}
           </span>
           {pk.lastRoundWinner && leading ? (
             <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${pk.lastRoundWinner === leading ? 'bg-[#123a3d]/82 text-[#9affec]' : 'bg-[#4a1824]/82 text-[#ffb9c6]'}`}>
@@ -450,45 +528,37 @@ function HeroPK({
         <h1 className="mb-1 text-xl font-extrabold leading-tight text-white md:text-2xl">{item.title}</h1>
         <p className="mb-4 max-w-xl text-sm text-white/50">{item.summary}</p>
 
-        <div className="mb-4">
-          <div className="mb-1.5 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/25">
+        <div className="mb-4 rounded-2xl border border-white/[0.1] bg-black/25 px-4 py-3 backdrop-blur-sm">
+          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="flex min-w-0 flex-1 items-start gap-2.5 sm:items-center">
+              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/12 bg-black/30">
                 <img src={theme.sideA.portrait} alt="" className="h-full w-full object-cover" />
               </span>
-              <span className="text-sm font-bold text-white">{item.optionA}</span>
-              <span className="text-lg font-bold" style={{ color: theme.sideA.accent }}>{pk.currentHeatA.toFixed(1)}</span>
+              <div className="min-w-0">
+                <div className="truncate text-[13px] font-bold text-white">{item.optionA}</div>
+                <div className="mt-0.5 text-xl font-black tabular-nums leading-none" style={{ color: theme.sideA.accent }}>
+                  {formatPkHeatValue(pk.currentHeatA)}
+                  <span className="ml-1 text-[11px] font-semibold text-white/45">热度</span>
+                </div>
+              </div>
             </div>
-            <div className="text-xs font-black tracking-[0.3em] text-white/30">VS</div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold" style={{ color: theme.sideB.accent }}>{pk.currentHeatB.toFixed(1)}</span>
-              <span className="text-sm font-bold text-white">{item.optionB}</span>
-              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/25">
+            <div className="flex shrink-0 items-center justify-center px-2 sm:flex-col sm:pb-8">
+              <span className="rounded-full border border-white/14 bg-white/[0.08] px-3 py-1 text-[11px] font-black tracking-[0.25em] text-white/55">VS</span>
+            </div>
+            <div className="flex min-w-0 flex-1 items-start gap-2.5 text-right sm:items-center sm:flex-row-reverse">
+              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/12 bg-black/30">
                 <img src={theme.sideB.portrait} alt="" className="h-full w-full object-cover" />
               </span>
+              <div className="min-w-0 flex-1 sm:flex-initial">
+                <div className="truncate text-[13px] font-bold text-white">{item.optionB}</div>
+                <div className="mt-0.5 text-xl font-black tabular-nums leading-none sm:text-right" style={{ color: theme.sideB.accent }}>
+                  {formatPkHeatValue(pk.currentHeatB)}
+                  <span className="ml-1 text-[11px] font-semibold text-white/45">热度</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="relative flex h-4 overflow-hidden rounded-full bg-white/10">
-            <motion.div
-              className="h-full"
-              style={{ background: `linear-gradient(90deg, ${theme.sideA.primary}, ${theme.sideA.accent})` }}
-              animate={{ width: `${heatPctA}%` }}
-              transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-            />
-            <motion.div
-              className="h-full"
-              style={{ background: `linear-gradient(90deg, ${theme.sideB.accent}, ${theme.sideB.primary})` }}
-              animate={{ width: `${heatPctB}%` }}
-              transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-            />
-            <motion.div
-              className="absolute top-1/2 z-10 flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-lg"
-              animate={{ left: `${heatPctA}%` }}
-              transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-            >
-              <span className="text-[8px] font-black text-slate-900">VS</span>
-            </motion.div>
-          </div>
+          <RivalryHeatMeter heatA={pk.currentHeatA} heatB={pk.currentHeatB} theme={theme} variant="hero" />
         </div>
 
         <div className="mb-4 flex flex-wrap items-center gap-4">
@@ -605,8 +675,7 @@ function PKCard({
   isBetting?: boolean;
 }) {
   const item = pk.newsItem;
-  const heatTotal = pk.currentHeatA + pk.currentHeatB || 1;
-  const heatPctA = Math.round((pk.currentHeatA / heatTotal) * 100);
+  const { pctA, pctB } = heatSharePct(pk.currentHeatA, pk.currentHeatB);
   const leading = pk.currentHeatA > pk.currentHeatB ? 'A' : pk.currentHeatB > pk.currentHeatA ? 'B' : null;
   const theme = getRivalryVisualTheme(item);
 
@@ -645,14 +714,16 @@ function PKCard({
         <h3 className="mb-2 line-clamp-2 text-sm font-bold leading-snug text-white">{item.title}</h3>
 
         <div className="mb-2">
-          <div className="mb-0.5 flex justify-between text-[10px]">
-            <span className="font-semibold" style={{ color: theme.sideA.accent }}>{item.optionA} {pk.currentHeatA.toFixed(0)}</span>
-            <span className="font-semibold" style={{ color: theme.sideB.accent }}>{pk.currentHeatB.toFixed(0)} {item.optionB}</span>
+          <div className="mb-1 flex justify-between gap-2 text-[10px]">
+            <span className="max-w-[46%] truncate font-semibold" style={{ color: theme.sideA.accent }} title={`${item.optionA} · 热度 ${formatPkHeatValue(pk.currentHeatA)}`}>
+              {item.optionA} <span className="tabular-nums text-white/80">{formatPkHeatValue(pk.currentHeatA)}</span> · {pctA}%
+            </span>
+            <span className="shrink-0 font-bold uppercase tracking-wider text-white/35">阵营</span>
+            <span className="max-w-[46%] truncate text-right font-semibold" style={{ color: theme.sideB.accent }} title={`${item.optionB} · 热度 ${formatPkHeatValue(pk.currentHeatB)}`}>
+              {pctB}% · <span className="tabular-nums text-white/80">{formatPkHeatValue(pk.currentHeatB)}</span> {item.optionB}
+            </span>
           </div>
-          <div className="flex h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-rdark-border">
-            <div className="h-full transition-all" style={{ width: `${heatPctA}%`, background: `linear-gradient(90deg, ${theme.sideA.primary}, ${theme.sideA.accent})` }} />
-            <div className="h-full transition-all" style={{ width: `${100 - heatPctA}%`, background: `linear-gradient(90deg, ${theme.sideB.accent}, ${theme.sideB.primary})` }} />
-          </div>
+          <RivalryHeatMeter heatA={pk.currentHeatA} heatB={pk.currentHeatB} theme={theme} variant="compact" />
         </div>
 
         <div className="mb-2">

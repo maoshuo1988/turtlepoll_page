@@ -2,7 +2,7 @@
  * 文件说明：Sidebar Main Panels，PC 左侧栏相关展示组件。
  */
 import React from 'react';
-import { Flag, MessageSquare, Swords, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, Gamepad2, Flame, Turtle, Crosshair } from 'lucide-react';
+import { Flag, MessageSquare, Swords, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, Gamepad2, Flame, Turtle } from 'lucide-react';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
 import { SidebarProfileCard } from './SidebarProfileCard';
@@ -20,7 +20,7 @@ export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'forum', label: '线报', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
   { key: 'games', label: '游戏管理', icon: <Gamepad2 size={22} />, view: 'games', enabled: true },
   { key: 'battle-plaza', label: '地下钱庄', icon: <Swords size={22} />, view: 'battlePlaza', enabled: true },
-  { key: 'battle-stage', label: '撕裂带模板', icon: <Crosshair size={22} />, view: 'battleStage', enabled: true },
+  // { key: 'battle-stage', label: '撕裂带模板', icon: <Crosshair size={22} />, view: 'battleStage', enabled: true },
   { key: 'shop', label: '黑市', icon: <Gift size={22} />, view: 'shop', enabled: false },
   { key: 'pet', label: '宠物空间', icon: <Turtle size={22} />, view: 'pet', enabled: false },
   { key: 'inventory', label: '背包&资产', icon: <Backpack size={22} />, enabled: false },

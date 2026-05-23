@@ -2,9 +2,11 @@
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
 import { useCallback, useState } from 'react';
+import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { useRequestPKBet } from '@/hooks/usePkRequests';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { getAuthToken } from '@/utils/authStorage';
+import type { RivalryNewsItem } from './components/rivalryMockData';
 import { RivalryPageView } from './components/RivalryPageView';
 
 function createRequestId(prefix: string) {
@@ -15,6 +17,8 @@ function createRequestId(prefix: string) {
 }
 
 export default function RivalryPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});
   const [betError, setBetError] = useState<string | null>(null);
   const [pendingBetId, setPendingBetId] = useState<string | null>(null);
@@ -55,6 +59,15 @@ export default function RivalryPage() {
     }
   }, [onOpenAuth, pkBetMutation]);
 
+  const handleEnterBattle = useCallback((item: RivalryNewsItem) => {
+    navigate(`/event-battle?market=${item.id}`, {
+      state: {
+        openBattleNews: item,
+        returnTo: `${location.pathname}${location.search || ''}`,
+      },
+    });
+  }, [location.pathname, location.search, navigate]);
+
   return (
     <div className="pt-[10px]">
       <RivalryPageView
@@ -62,6 +75,7 @@ export default function RivalryPage() {
         betError={betError}
         pendingBetId={pendingBetId}
         onBet={handleRivalryBet}
+        onEnterBattle={handleEnterBattle}
       />
     </div>
   );

@@ -15,13 +15,14 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  EyeClosed,
 } from 'lucide-react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
 import type { TopicResponse } from '@/hooks/topicTypes';
 import { FORUM_TAGS } from '@/data/mockData';
-import { SERVER_API } from '@/config';
+import { SERVER_ASSET_ORIGIN } from '@/config';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hooks/useCommentRequests';
 import type { PredictionCardItem } from './predictionCards';
@@ -37,6 +38,7 @@ export type TopicPostCardData = Partial<TopicResponse> & {
   id: string;
   tag?: TopicPostTag;
   likes?: number;
+  favoriteCount?: number;
   content?: string;
   time?: string;
   images?: string[];
@@ -60,6 +62,8 @@ interface TopicPostCardProps {
   onDislike?: (postId: string) => void | Promise<void>;
   onUndislike?: (postId: string) => void | Promise<void>;
   onToggleFavorite?: (postId: string, nextFavorited: boolean) => void | Promise<void>;
+  onHideTopic?: (postId: string) => void | Promise<void>;
+  isHidingTopic?: boolean;
 }
 
 const mergeComments = (prev: CommentResponse[], next: CommentResponse[]) => {
@@ -71,9 +75,10 @@ const mergeComments = (prev: CommentResponse[], next: CommentResponse[]) => {
 };
 
 const formatCount = (n: number) => {
-  if (n >= 10000) return `${(n / 10000).toFixed(1)}万`;
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-  return n > 0 ? String(n) : '';
+  const value = Math.max(0, Number.isFinite(n) ? n : 0);
+  if (value >= 10000) return `${(value / 10000).toFixed(1)}万`;
+  if (value >= 1000) return `${(value / 1000).toFixed(1)}k`;
+  return String(value);
 };
 
 const formatTopicTime = (createTime?: number, fallbackTime?: string) => {
@@ -102,9 +107,9 @@ const resolveAssetUrl = (src?: string) => {
     return src;
   }
   if (src.startsWith('/')) {
-    return `${SERVER_API}${src}`;
+    return `${SERVER_ASSET_ORIGIN}${src}`;
   }
-  return `${SERVER_API}/${src}`;
+  return `${SERVER_ASSET_ORIGIN}/${src}`;
 };
 
 const getUserDisplayName = (comment?: CommentResponse | null) =>
@@ -326,7 +331,7 @@ const ActionBtn: React.FC<{
     <div className={`p-2 rounded-full transition-colors ${active ? '' : `group-hover:${hoverColor}`}`}>
       {icon}
     </div>
-    {count && (
+    {count !== undefined && (
       <span className={`min-w-0 truncate text-[12px] md:text-[13px] -ml-0.5 transition-colors ${active ? '' : `group-hover:${hoverColor.replace('bg-', 'text-').replace('/20', '').replace('/10', '').replace('50', '500')}`}`}>
         {count}
       </span>
@@ -532,6 +537,8 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   onDislike,
   onUndislike,
   onToggleFavorite,
+  onHideTopic,
+  isHidingTopic = false,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [textExpanded, setTextExpanded] = useState(false);
@@ -549,6 +556,23 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
     cursor,
     enabled: expanded,
   });
+
+  useEffect(() => {
+    setBookmarked(Boolean(post.favorited));
+  }, [post.favorited, post.id]);
+
+  useEffect(() => {
+    setDisliked(Boolean(post.disliked));
+  }, [post.disliked, post.id]);
+
+  const handleHideTopic = async () => {
+    if (isHidingTopic || !onHideTopic) return;
+    try {
+      await onHideTopic(post.id);
+    } catch {
+      // 失败提示由页面层处理
+    }
+  };
 
   useEffect(() => {
     if (!expanded) return;
@@ -585,8 +609,14 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const displayTime = formatTopicTime(post.createTime, post.time);
   const displayLikes = post.likeCount ?? post.likes ?? 0;
   const displayDislikes = post.dislikeCount ?? 0;
+  const displayFavorites = post.favoriteCount ?? (post as { favorite_count?: number }).favorite_count ?? 0;
   const commentCount = Math.max(typeof post.commentCount === 'number' ? post.commentCount : 0, comments.length);
   const canComment = Boolean(currentUserQuery.data?.id);
+  const isOwnPost = Boolean(
+    currentUserQuery.data?.id &&
+      post.user?.id &&
+      String(currentUserQuery.data.id) === String(post.user.id),
+  );
 
   const handleLike = async () => {
     if (liked) {
@@ -658,6 +688,8 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const likeCount = likeBase + (liked ? 1 : 0);
   const dislikeBase = displayDislikes - (post.disliked ? 1 : 0);
   const dislikeCount = dislikeBase + (disliked ? 1 : 0);
+  const favoriteBase = displayFavorites - (post.favorited ? 1 : 0);
+  const favoriteCount = favoriteBase + (bookmarked ? 1 : 0);
   const canExpandText = content.length > 52;
   const renderCommentsPanel = (className: string) => (
     <div className={className}>
@@ -917,19 +949,23 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                   setBookmarked(!nextFavorited);
                 });
               }}
-              className={`group flex items-center justify-center rounded-full py-1 cursor-pointer border-0 bg-transparent transition-colors md:block md:rounded-none md:py-0 ${
+              className={`group flex min-w-0 items-center justify-center gap-1 rounded-full py-1 cursor-pointer border-0 bg-transparent transition-colors md:flex-none md:justify-start md:rounded-none md:py-0 ${
                 bookmarked ? 'text-blue-500' : 'text-slate-500 dark:text-rdark-text2'
               }`}
             >
               <div className={`p-2 rounded-full transition-colors ${bookmarked ? '' : 'group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20'}`}>
                 <Bookmark size={17} fill={bookmarked ? 'currentColor' : 'none'} className={bookmarked ? '' : 'group-hover:text-blue-500 transition-colors'} />
               </div>
+              <span className={`min-w-0 truncate text-[12px] md:text-[13px] -ml-0.5 transition-colors ${bookmarked ? '' : 'group-hover:text-blue-500'}`}>
+                {formatCount(favoriteCount)}
+              </span>
             </button>
             {/* <button className="group flex items-center justify-center rounded-full py-1 cursor-pointer border-0 bg-transparent text-slate-500 dark:text-rdark-text2 transition-colors md:block md:rounded-none md:py-0">
               <div className="p-2 rounded-full group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
                 <Share size={17} className="group-hover:text-blue-500 transition-colors" />
               </div>
             </button> */}
+            {!isOwnPost ? (
             <button
               type="button"
               onClick={(e) => {
@@ -964,6 +1000,23 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
                 {formatCount(dislikeCount)}
               </span>
             </button>
+            ) : null}
+            {isOwnPost ? (
+              <button
+                type="button"
+                title="隐藏帖子"
+                disabled={isHidingTopic}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void handleHideTopic();
+                }}
+                className="group flex items-center justify-center rounded-full border-0 bg-transparent py-1 text-slate-500 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 dark:text-rdark-text2 md:block md:rounded-none md:py-0"
+              >
+                <div className="rounded-full p-2 transition-colors group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20">
+                  <EyeClosed size={17} className="transition-colors group-hover:text-blue-500" />
+                </div>
+              </button>
+            ) : null}
           </div>
 
           <AnimatePresence>

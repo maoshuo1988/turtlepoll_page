@@ -24,7 +24,8 @@ export type UserCenterTopicResponse = {
   userId: number | string;
   title: string;
   content: string;
-  createTime: number;
+  createTime: number | string;
+  displayStatus?: number;
 };
 
 export type UserCenterCommentResponse = {
@@ -32,7 +33,7 @@ export type UserCenterCommentResponse = {
   userId: number | string;
   content: string;
   title: string;
-  createTime: number;
+  createTime: number | string;
 };
 
 export type UserCenterFavoriteResponse = {
@@ -41,5 +42,34 @@ export type UserCenterFavoriteResponse = {
   entityId: number | string;
   title: string;
   content: string;
-  createTime: number;
+  createTime: number | string;
+};
+
+export type UserCenterHideTopicResponse = {
+  id: number | string;
+  userId: number | string;
+  title: string;
+  content: string;
+  createTime: number | string;
+  displayStatus: number;
+};
+
+export type UserTopicHidePayload = {
+  topicId: number | string;
+};
+
+export type UserCenterDislikeResponse = {
+  id: number | string;
+  userId: number | string;
+  entityId: number | string;
+  entityType: string;
+  title: string;
+  content: string;
+  topicUserId: number | string;
+  createTime: number | string;
+};
+
+export type DislikeEntityPayload = {
+  entityType: 'topic';
+  entityId: number | string;
 };

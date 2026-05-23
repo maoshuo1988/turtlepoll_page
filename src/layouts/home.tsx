@@ -37,6 +37,10 @@ const PATH_VIEW_MAP: Record<string, ViewType> = {
   '/active-predictions': 'activePredictions',
 };
 
+type EventBattleRouteState = {
+  returnTo?: string;
+};
+
 /**
  * 业务主 layout。
  *
@@ -48,7 +52,16 @@ const PATH_VIEW_MAP: Record<string, ViewType> = {
 export default function HomeLayout() {
   const location = useLocation();
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const activeView = useMemo(() => PATH_VIEW_MAP[location.pathname] ?? 'predictions', [location.pathname]);
+  const activeView = useMemo(() => {
+    if (location.pathname === '/event-battle') {
+      const routeState = location.state as EventBattleRouteState | null;
+      const returnPath = routeState?.returnTo?.split('?')[0];
+      if (returnPath && PATH_VIEW_MAP[returnPath]) {
+        return PATH_VIEW_MAP[returnPath];
+      }
+    }
+    return PATH_VIEW_MAP[location.pathname] ?? 'predictions';
+  }, [location.pathname, location.state]);
 
   return (
     <StandalonePageShell

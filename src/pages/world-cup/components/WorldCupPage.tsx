@@ -1,6 +1,6 @@
 /** 文件说明：世界杯专题页面，体育转播 HUD 风格 —— 预测板、暗盘赛程、最新消息等。 */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from '@umijs/renderer-react';
+import { useLocation, useNavigate } from '@umijs/renderer-react';
 import {
   Activity,
   CalendarClock,
@@ -28,6 +28,7 @@ import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
 import { useHomeLayoutContext } from '@/layouts/context';
+import { WorldCupCardPitchTexture, WorldCupPitchBackdropLayers } from './WorldCupPitchBackdrop';
 
 type FixtureOdds = {
   home: number;
@@ -500,6 +501,7 @@ function CornerBrackets() {
 }
 
 export function WorldCupPage() {
+  const location = useLocation();
   const [expandedNewsId, setExpandedNewsId] = useState<string | null>(null);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [postedComments, setPostedComments] = useState<Record<string, NewsComment[]>>({});
@@ -563,8 +565,13 @@ export function WorldCupPage() {
   /** 首页撕裂带按 marketId 拉齐数据；state 直达 EventBattle，避免 Hero 仍错用默认列表 */
   const goToTearZone = useCallback((item: PredictionCardItem | undefined) => {
     if (!item?.marketId) return;
-    navigate(`/event-battle?market=${item.marketId}`, { state: { openBattleNews: item } });
-  }, [navigate]);
+    navigate(`/event-battle?market=${item.marketId}`, {
+      state: {
+        openBattleNews: item,
+        returnTo: `${location.pathname}${location.search || ''}`,
+      },
+    });
+  }, [location.pathname, location.search, navigate]);
 
   const handleBetSuccess = (item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {
     setLocalBetSides((prev) => ({ ...prev, [item.id]: option }));
@@ -599,7 +606,11 @@ export function WorldCupPage() {
   };
 
   return (
-    <section className="page-frame page-frame-wide view-world-cup pb-8 pt-[10px] font-mono text-zinc-100">
+    <section className="relative overflow-x-hidden bg-transparent page-frame page-frame-wide view-world-cup pb-8 pt-[10px] font-mono text-zinc-100">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[min(260px,32vh)] bg-[radial-gradient(ellipse_130%_90%_at_50%_120%,rgba(16,185,129,0.28),rgba(52,211,153,0.08)_48%,transparent_70%)]"
+      />
       {/* Hero —— HUD 顶部直播看板 */}
       <div className="relative isolate overflow-hidden rounded-[20px] border border-emerald-400/30 shadow-[0_0_40px_rgba(52,255,139,0.12),0_20px_60px_rgba(0,0,0,0.55)]">
         {/* 基底 */}
@@ -623,6 +634,7 @@ export function WorldCupPage() {
               'repeating-linear-gradient(0deg, rgba(255,255,255,0.7) 0 1px, transparent 1px 3px)',
           }}
         />
+        <WorldCupPitchBackdropLayers />
         <CornerBrackets />
 
         {/* 大屏弹幕 */}
@@ -792,6 +804,7 @@ export function WorldCupPage() {
 
           {/* 夺冠赔率排行榜 TOP 10 */}
           <div className="relative overflow-hidden rounded-[14px] border border-emerald-400/30 bg-black/55 p-4 backdrop-blur-md">
+            <WorldCupCardPitchTexture />
             <CornerBrackets />
             <header className="relative flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -936,6 +949,7 @@ export function WorldCupPage() {
                   key={market.title}
                   className="relative overflow-hidden rounded-[14px] border border-emerald-400/22 bg-[linear-gradient(150deg,rgba(6,21,27,0.92),rgba(4,11,15,0.96)_60%)] p-5 shadow-[0_0_24px_rgba(52,255,139,0.08),0_18px_42px_rgba(0,0,0,0.35)]"
                 >
+                  <WorldCupCardPitchTexture />
                   <CornerBrackets />
                   <div
                     className="absolute inset-0 opacity-[0.06] pointer-events-none"
@@ -1060,7 +1074,8 @@ export function WorldCupPage() {
               </span>
             </header>
 
-            <div className={`mt-3 flex flex-col overflow-hidden rounded-[14px] border border-cyan-400/22 bg-[linear-gradient(160deg,rgba(6,21,27,0.96),rgba(4,11,15,0.98))] shadow-[0_0_24px_rgba(34,211,238,0.08),0_18px_42px_rgba(0,0,0,0.32)] ${FIXTURE_LIST_MAX_HEIGHT_CLASS}`}>
+            <div className={`relative mt-3 flex flex-col overflow-hidden rounded-[14px] border border-cyan-400/22 bg-[linear-gradient(160deg,rgba(6,21,27,0.96),rgba(4,11,15,0.98))] shadow-[0_0_24px_rgba(34,211,238,0.08),0_18px_42px_rgba(0,0,0,0.32)] ${FIXTURE_LIST_MAX_HEIGHT_CLASS}`}>
+              <WorldCupCardPitchTexture />
               <div className="grid shrink-0 grid-cols-[110px_1fr_auto] items-center gap-3 border-b border-cyan-400/15 bg-black/40 px-4 py-2.5 text-[9.5px] font-black uppercase tracking-[0.22em] text-cyan-300/65">
                 <span>TIME / STAGE</span>
                 <span>MATCH · SIGNAL</span>

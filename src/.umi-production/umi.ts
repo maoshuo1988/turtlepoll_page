@@ -76,6 +76,6 @@ render();
 
     if (typeof window !== 'undefined') {
       window.g_umi = {
-        version: '4.6.48',
+        version: '4.6.49',
       };
     }

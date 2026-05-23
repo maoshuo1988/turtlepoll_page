@@ -12,6 +12,7 @@ import type { PredictionCardItem } from '@/pages/home/components/predictionCards
 type EventBattleLocationState = {
   sidebarTopic?: SidebarHotTopic;
   openBattleNews?: PredictionCardItem;
+  returnTo?: string;
 };
 
 function mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {
@@ -43,8 +44,10 @@ export default function EventBattleRoutePage() {
   const searchParams = new URLSearchParams(location.search);
   const selectedTag = searchParams.get('tag');
   const selectedMarket = searchParams.get('market');
-  const sidebarTopic = (location.state as EventBattleLocationState | null)?.sidebarTopic;
-  const routeStateBattleNews = (location.state as EventBattleLocationState | null)?.openBattleNews ?? null;
+  const routeState = location.state as EventBattleLocationState | null;
+  const sidebarTopic = routeState?.sidebarTopic;
+  const routeStateBattleNews = routeState?.openBattleNews ?? null;
+  const returnTo = routeState?.returnTo;
   const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);
 
   const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];
@@ -75,7 +78,10 @@ export default function EventBattleRoutePage() {
     setSelectedBattleNews(raw.openBattleNews);
     navigate(`${location.pathname}${location.search || ''}`, {
       replace: true,
-      state: raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {},
+      state: {
+        ...(raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {}),
+        ...(raw.returnTo ? { returnTo: raw.returnTo } : {}),
+      },
     });
   }, [location.state, location.pathname, location.search, navigate]);
 
@@ -85,11 +91,15 @@ export default function EventBattleRoutePage() {
   }, [selectedPrediction]);
 
   const handleBack = useCallback(() => {
+    if (returnTo) {
+      navigate(returnTo);
+      return;
+    }
     const nextSearch = new URLSearchParams();
     if (selectedTag) nextSearch.set('tag', selectedTag);
     const nextUrl = nextSearch.toString() ? `/?${nextSearch.toString()}` : '/';
     navigate(nextUrl);
-  }, [navigate, selectedTag]);
+  }, [navigate, returnTo, selectedTag]);
 
   return (
     <EventBattlePage

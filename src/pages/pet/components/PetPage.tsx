@@ -12,6 +12,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { PetChat } from './PetChat';
+import { CommonSpine } from '@/components/shared/spine';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type {
   PetInfo,
@@ -29,14 +30,20 @@ import {
   getPetApiErrorMessage,
   getPetStatusAiText,
 } from '@/utils/petHelpers';
+import { useIsMobileViewport, usePetSceneIsNight } from '@/utils/petSceneBackground';
+
+const PET_PAGE_SCENE_BG_SUN = '/image/gui-bg-sun.png';
+const PET_PAGE_SCENE_BG_MOON = '/image/gui-bg-moon.png';
+const PET_PAGE_SCENE_BG_SUN_MOBILE = '/image/gui-bg1-sun.png';
+const PET_PAGE_SCENE_BG_MOON_MOBILE = '/image/gui-bg1-moon.png';
 
 type PetTab = 'status' | 'species' | 'abilities' | 'aiChat';
 
-const TAB_LIST: { key: PetTab; label: string; icon: React.ReactNode }[] = [
+const TAB_LIST: { key: PetTab; label: string; icon: React.ReactNode; mobileOnly?: boolean }[] = [
   { key: 'status', label: '状态', icon: <Heart size={14} /> },
   { key: 'species', label: '龟种', icon: <Shield size={14} /> },
   { key: 'abilities', label: '能力', icon: <Zap size={14} /> },
-  { key: 'aiChat', label: 'AI对话', icon: <MessageCircle size={14} /> },
+  { key: 'aiChat', label: 'AI对话', icon: <MessageCircle size={14} />, mobileOnly: true },
 ];
 
 const card = 'rounded-xl bg-white dark:bg-rdark-card border border-slate-200 dark:border-rdark-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none';
@@ -538,6 +545,11 @@ export const PetPage: React.FC<PetPageProps> = ({
   const [dialogueKey, setDialogueKey] = useState(0);
   const equippedOwnedPet = ownedPets?.find((item) => item.isEquipped) ?? null;
   const heroAvatar = getPetDisplayAvatar(equippedPet?.petKey, equippedPet?.petName) || pet.avatar;
+  const isNightScene = usePetSceneIsNight();
+  const isMobileViewport = useIsMobileViewport();
+  const sceneBgSrc = isMobileViewport
+    ? (isNightScene ? PET_PAGE_SCENE_BG_MOON_MOBILE : PET_PAGE_SCENE_BG_SUN_MOBILE)
+    : (isNightScene ? PET_PAGE_SCENE_BG_MOON : PET_PAGE_SCENE_BG_SUN);
 
   useEffect(() => {
     const iv = setInterval(() => {
@@ -547,6 +559,18 @@ export const PetPage: React.FC<PetPageProps> = ({
     }, 5000);
     return () => clearInterval(iv);
   }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    const syncTabForViewport = () => {
+      if (mediaQuery.matches && activeTab === 'aiChat') {
+        setActiveTab('status');
+      }
+    };
+    syncTabForViewport();
+    mediaQuery.addEventListener('change', syncTabForViewport);
+    return () => mediaQuery.removeEventListener('change', syncTabForViewport);
+  }, [activeTab]);
 
   return (
     <div className="legacy-pet-page w-full space-y-5">
@@ -563,130 +587,15 @@ export const PetPage: React.FC<PetPageProps> = ({
 
             {/* 2D 全宽场景 */}
             <div className="relative h-[340px] overflow-hidden">
-              {/* Sky */}
-              <div className="absolute inset-0 bg-gradient-to-b from-sky-200 via-sky-100 to-emerald-50 dark:from-indigo-950 dark:via-slate-900 dark:to-emerald-950" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(253,230,138,0.25),transparent_60%)] dark:bg-[radial-gradient(ellipse_at_70%_20%,rgba(253,230,138,0.08),transparent_60%)]" />
-
-              {/* Sun / Moon */}
-              <motion.div
-                animate={{ scale: [1, 1.05, 1], opacity: [0.9, 1, 0.9] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute top-6 right-[12%]"
-              >
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-200 to-orange-300 dark:from-slate-300 dark:to-slate-400 shadow-[0_0_20px_rgba(251,191,36,0.4)] dark:shadow-[0_0_20px_rgba(203,213,225,0.2)]" />
-              </motion.div>
-
-              {/* Clouds — wider scene, more clouds */}
-              <motion.div
-                animate={{ x: [-20, 80, -20] }}
-                transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
-                className="absolute top-6 left-[5%]"
-              >
-                <div className="relative">
-                  <div className="w-24 h-6 bg-white/60 dark:bg-white/8 rounded-full" />
-                  <div className="absolute -top-2 left-5 w-12 h-6 bg-white/50 dark:bg-white/6 rounded-full" />
-                  <div className="absolute -top-1 left-12 w-8 h-5 bg-white/40 dark:bg-white/5 rounded-full" />
-                </div>
-              </motion.div>
-              <motion.div
-                animate={{ x: [15, -40, 15] }}
-                transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-                className="absolute top-14 right-[15%]"
-              >
-                <div className="relative">
-                  <div className="w-16 h-5 bg-white/45 dark:bg-white/6 rounded-full" />
-                  <div className="absolute -top-1.5 left-4 w-9 h-4 bg-white/35 dark:bg-white/5 rounded-full" />
-                </div>
-              </motion.div>
-              <motion.div
-                animate={{ x: [0, 30, 0] }}
-                transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-                className="absolute top-20 left-[35%]"
-              >
-                <div className="w-12 h-3.5 bg-white/30 dark:bg-white/4 rounded-full" />
-              </motion.div>
-              <motion.div
-                animate={{ x: [-10, 25, -10] }}
-                transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
-                className="absolute top-10 left-[60%]"
-              >
-                <div className="relative">
-                  <div className="w-14 h-4 bg-white/35 dark:bg-white/5 rounded-full" />
-                  <div className="absolute -top-1 left-3 w-7 h-3.5 bg-white/25 dark:bg-white/4 rounded-full" />
-                </div>
-              </motion.div>
-
-              {/* Hills — wider */}
-              <div className="absolute bottom-[75px] left-0 right-0 h-[45px]">
-                <svg viewBox="0 0 800 45" className="w-full h-full" preserveAspectRatio="none">
-                  <path d="M0 45 Q60 12 140 28 Q220 5 320 20 Q400 2 480 18 Q560 8 640 22 Q720 5 800 15 L800 45 Z"
-                    className="fill-emerald-200/60 dark:fill-emerald-900/30" />
-                </svg>
-              </div>
-
-              {/* Ground */}
-              <div className="absolute bottom-0 left-0 right-0 h-[70px]">
-                <div className="absolute inset-0 bg-gradient-to-t from-emerald-600/30 via-emerald-400/40 to-emerald-200/30 dark:from-emerald-950/80 dark:via-emerald-900/50 dark:to-emerald-900/20" />
-                <svg viewBox="0 0 800 12" className="absolute -top-1 left-0 w-full h-3" preserveAspectRatio="none">
-                  <path d="M0 12 Q10 4 20 8 Q30 2 40 7 Q50 3 60 8 Q70 1 80 6 Q90 3 100 8 Q110 2 120 7 Q130 4 140 8 Q150 1 160 6 Q170 3 180 8 Q190 2 200 7 Q210 4 220 8 Q230 1 240 6 Q250 3 260 8 Q270 2 280 7 Q290 4 300 8 Q310 1 320 6 Q330 3 340 8 Q350 2 360 7 Q370 4 380 8 Q390 1 400 6 Q410 3 420 8 Q430 2 440 7 Q450 4 460 8 Q470 1 480 6 Q490 3 500 8 Q510 2 520 7 Q530 4 540 8 Q550 1 560 6 Q570 3 580 8 Q590 2 600 7 Q610 4 620 8 Q630 1 640 6 Q650 3 660 8 Q670 2 680 7 Q690 4 700 8 Q710 1 720 6 Q730 3 740 8 Q750 2 760 7 Q770 4 780 8 Q790 2 800 6 L800 12 Z"
-                    className="fill-emerald-300/70 dark:fill-emerald-800/50" />
-                </svg>
-                {/* Grass clusters */}
-                <div className="absolute bottom-[12px] left-[5%] flex gap-[2px] items-end">
-                  <div className="w-[3px] h-[14px] bg-emerald-500/60 dark:bg-emerald-600/40 rounded-t-full -rotate-6" />
-                  <div className="w-[2px] h-[17px] bg-emerald-600/50 dark:bg-emerald-500/35 rounded-t-full" />
-                  <div className="w-[3px] h-[12px] bg-emerald-500/55 dark:bg-emerald-600/40 rounded-t-full rotate-6" />
-                </div>
-                <div className="absolute bottom-[12px] left-[18%] flex gap-[2px] items-end">
-                  <div className="w-[2px] h-[10px] bg-emerald-500/50 dark:bg-emerald-600/35 rounded-t-full -rotate-3" />
-                  <div className="w-[3px] h-[13px] bg-emerald-600/45 dark:bg-emerald-500/30 rounded-t-full rotate-2" />
-                </div>
-                <div className="absolute bottom-[12px] right-[8%] flex gap-[2px] items-end">
-                  <div className="w-[3px] h-[15px] bg-emerald-500/55 dark:bg-emerald-600/40 rounded-t-full -rotate-4" />
-                  <div className="w-[2px] h-[18px] bg-emerald-600/50 dark:bg-emerald-500/35 rounded-t-full rotate-2" />
-                  <div className="w-[2px] h-[12px] bg-emerald-500/45 dark:bg-emerald-600/30 rounded-t-full rotate-8" />
-                </div>
-                <div className="absolute bottom-[12px] right-[22%] flex gap-[2px] items-end">
-                  <div className="w-[2px] h-[9px] bg-emerald-600/40 dark:bg-emerald-500/25 rounded-t-full" />
-                  <div className="w-[3px] h-[12px] bg-emerald-500/50 dark:bg-emerald-600/35 rounded-t-full -rotate-3" />
-                </div>
-                {/* Flowers */}
-                <div className="absolute bottom-[18px] left-[12%] text-[8px] opacity-70">🌼</div>
-                <div className="absolute bottom-[16px] right-[15%] text-[7px] opacity-60">🌸</div>
-                <div className="absolute bottom-[17px] left-[42%] text-[6px] opacity-50">🌻</div>
-                {/* Stones */}
-                <div className="absolute bottom-[8px] left-[30%] w-4 h-2 bg-slate-400/30 dark:bg-slate-600/30 rounded-full" />
-                <div className="absolute bottom-[7px] right-[35%] w-3 h-1.5 bg-slate-400/20 dark:bg-slate-600/20 rounded-full" />
-              </div>
-
-              {/* Particles */}
-              <motion.div
-                animate={{ y: [0, 90, 0], x: [0, 12, -8, 0], opacity: [0, 0.7, 0.7, 0] }}
-                transition={{ duration: 7, repeat: Infinity, delay: 0 }}
-                className="absolute top-10 left-[15%] w-1.5 h-1.5 rounded-full bg-amber-300/60 dark:bg-amber-400/40"
-              />
-              <motion.div
-                animate={{ y: [0, 70, 0], x: [0, -10, 6, 0], opacity: [0, 0.5, 0.5, 0] }}
-                transition={{ duration: 9, repeat: Infinity, delay: 2 }}
-                className="absolute top-8 left-[70%] w-1.5 h-1.5 rounded-full bg-pink-300/50 dark:bg-pink-400/30"
-              />
-              <motion.div
-                animate={{ y: [0, 60, 0], x: [0, 7, -5, 0], opacity: [0, 0.6, 0.6, 0] }}
-                transition={{ duration: 8, repeat: Infinity, delay: 4 }}
-                className="absolute top-14 left-[40%] w-1 h-1 rounded-full bg-amber-200/70 dark:bg-amber-300/40"
-              />
-              <motion.div
-                animate={{ y: [0, 50, 0], x: [0, -5, 8, 0], opacity: [0, 0.4, 0.4, 0] }}
-                transition={{ duration: 10, repeat: Infinity, delay: 6 }}
-                className="absolute top-16 left-[85%] w-1 h-1 rounded-full bg-pink-200/50 dark:bg-pink-300/25"
+              <img
+                src={sceneBgSrc}
+                alt=""
+                draggable={false}
+                className="absolute inset-0 h-full w-full object-cover object-center"
               />
 
               {/* Pet character — centered */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute bottom-[65px] left-1/2 -translate-x-1/2 flex flex-col items-center z-10"
-              >
+              <div className="absolute bottom-[12px] left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
                 {/* Dialogue bubble */}
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -704,25 +613,23 @@ export const PetPage: React.FC<PetPageProps> = ({
                 </AnimatePresence>
 
                 {/* Pet emoji — larger */}
-                <div className="text-[88px] leading-none select-none drop-shadow-lg">
-                  {heroAvatar}
-                </div>
+                <CommonSpine
+                  width={180}
+                  height={180}
+                  fallback={heroAvatar}
+                  className="drop-shadow-[0_14px_24px_rgba(15,23,42,0.24)]"
+                />
 
                 {/* Name + level */}
-                <div className="flex items-center gap-1.5 mt-1">
+                {/* <div className="flex items-center gap-1.5 mt-1">
                   <span className="text-[12px] font-bold text-slate-600 dark:text-slate-300 drop-shadow-sm">{pet.name}</span>
                   <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/80 text-white font-bold shadow-sm">
                     Lv.{pet.level}
                   </span>
-                </div>
-              </motion.div>
+                </div> */}
+              </div>
 
-              {/* Shadow */}
-              <motion.div
-                animate={{ scale: [1, 0.9, 1], opacity: [0.15, 0.1, 0.15] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute bottom-[56px] left-1/2 -translate-x-1/2 w-24 h-4 bg-black/15 dark:bg-black/25 rounded-full blur-[3px] z-0"
-              />
+            
 
               {/* Mood & Stamina — top-left glass panels */}
               <div className="absolute top-3 left-14 z-10 flex gap-2">
@@ -754,7 +661,7 @@ export const PetPage: React.FC<PetPageProps> = ({
 
               {/* Pet info — top-left glass panel */}
               
-              <div className="absolute top-3 left-3 z-10">
+              <div className="absolute top-3 left-16 z-10">
                  <RarityBadge rarity={equippedPet?.rarity} size="lg" />
                 {/* <div className="bg-white/70 dark:bg-rdark-card/70 backdrop-blur-sm rounded-lg px-3 py-2 shadow-sm border border-white/40 dark:border-rdark-border/50 flex items-center gap-3">
                   <div>
@@ -812,6 +719,8 @@ export const PetPage: React.FC<PetPageProps> = ({
               type="button"
               onClick={() => setActiveTab(tab.key)}
               className={`flex min-w-0 flex-1 cursor-pointer items-center justify-center gap-1 rounded-lg border-0 px-1.5 py-2 text-[11px] font-medium transition-all sm:gap-1.5 sm:px-2 sm:py-2.5 sm:text-[12px] ${
+                tab.mobileOnly ? 'lg:hidden' : ''
+              } ${
                 activeTab === tab.key
                   ? 'bg-emerald-500/15 font-semibold text-emerald-700 shadow-sm dark:bg-emerald-950/40 dark:text-emerald-400'
                   : 'bg-transparent text-slate-500 hover:bg-white/70 dark:text-zinc-500 dark:hover:bg-white/[0.06]'
@@ -858,7 +767,7 @@ export const PetPage: React.FC<PetPageProps> = ({
             )}
             {activeTab === 'abilities' && <AbilitiesTab pet={pet} equippedPet={equippedPet} />}
             {activeTab === 'aiChat' && (
-              <div className={`${card} overflow-hidden p-0`}>
+              <div className={`${card} overflow-hidden p-0 lg:hidden`}>
                 <PetChat
                   pet={pet}
                   embedded

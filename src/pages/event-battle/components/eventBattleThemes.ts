@@ -22,6 +22,11 @@ type ThemePalette = {
   sideB: Omit<EventBattleThemeSide, 'imageUrl'> & { icon: string };
 };
 
+type TopicBattleImagePair = {
+  sideA: string;
+  sideB: string;
+};
+
 const THEME_PALETTES: ThemePalette[] = [
   {
     id: 'neon-cyan-crimson',
@@ -130,6 +135,17 @@ const THEME_PALETTES: ThemePalette[] = [
   },
 ];
 
+const TOPIC_BATTLE_IMAGE_MAP: Record<string, TopicBattleImagePair> = {
+  '1': {
+    sideA: '/sports/2.jpg',
+    sideB: '/sports/1.jpg',
+  },
+  '2': {
+    sideA: '/sports/4.jpg',
+    sideB: '/sports/3.jpg',
+  },
+};
+
 function hashSeed(seed: string) {
   let hash = 0;
   for (let index = 0; index < seed.length; index += 1) {
@@ -183,6 +199,7 @@ function buildSideImage({
 export function resolveEventBattleTheme(seed: string | number, leftLabel: string, rightLabel: string): EventBattleTheme {
   const normalizedSeed = String(seed || 'event-battle');
   const palette = THEME_PALETTES[hashSeed(normalizedSeed) % THEME_PALETTES.length];
+  const topicBattleImages = TOPIC_BATTLE_IMAGE_MAP[normalizedSeed];
 
   return {
     id: palette.id,
@@ -193,7 +210,7 @@ export function resolveEventBattleTheme(seed: string | number, leftLabel: string
       rgb: palette.sideA.rgb,
       buttonGradient: palette.sideA.buttonGradient,
       heroGlow: palette.sideA.heroGlow,
-      imageUrl: buildSideImage({
+      imageUrl: topicBattleImages?.sideA ?? buildSideImage({
         icon: palette.sideA.icon,
         label: leftLabel,
         primary: palette.sideA.primary,
@@ -208,7 +225,7 @@ export function resolveEventBattleTheme(seed: string | number, leftLabel: string
       rgb: palette.sideB.rgb,
       buttonGradient: palette.sideB.buttonGradient,
       heroGlow: palette.sideB.heroGlow,
-      imageUrl: buildSideImage({
+      imageUrl: topicBattleImages?.sideB ?? buildSideImage({
         icon: palette.sideB.icon,
         label: rightLabel,
         primary: palette.sideB.primary,

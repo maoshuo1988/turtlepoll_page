@@ -7,3 +7,7 @@
 export const API_User_Center_Topics = '/api/user/center/topics';
 export const API_User_Center_Comments = '/api/user/center/comments';
 export const API_User_Center_Favorites = '/api/user/center/favorites';
+export const API_User_Center_Dislike_List = '/api/user/center/dislike/list';
+export const API_User_Topic_Hide_List = '/api/user/topic/hide/list';
+export const API_User_Topic_Hide = '/api/user/topic/hide';
+export const API_User_Topic_Unhide = '/api/user/topic/unhide';
