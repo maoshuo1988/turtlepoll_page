@@ -10,7 +10,12 @@ export const API_TARGETS = {
 export type ApiDeployEnv = keyof typeof API_TARGETS;
 
 /** 根据 UMI_ENV / NODE_ENV 解析当前应使用的 API 基址 */
-export function resolveApiTarget(umiEnv = process.env.UMI_ENV, nodeEnv = process.env.NODE_ENV): string {
+export function resolveApiTarget(
+  customApiOrigin = process.env.UMI_APP_SERVER_API,
+  umiEnv = process.env.UMI_ENV,
+  nodeEnv = process.env.NODE_ENV,
+): string {
+  if (customApiOrigin?.trim()) return customApiOrigin.trim();
   if (umiEnv === 'test') return API_TARGETS.test;
   if (umiEnv === 'prod' || umiEnv === 'production') return API_TARGETS.production;
   if (umiEnv === 'dev' || umiEnv === 'development') return API_TARGETS.development;
