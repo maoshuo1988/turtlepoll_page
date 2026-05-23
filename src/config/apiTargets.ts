@@ -9,17 +9,24 @@ export const API_TARGETS = {
 
 export type ApiDeployEnv = keyof typeof API_TARGETS;
 
+function normalizeApiOrigin(value?: string) {
+  const normalized = value?.trim();
+  if (!normalized) return '';
+  return normalized.replace(/^['"]+|['"]+$/g, '');
+}
+
 /** 根据 UMI_ENV / NODE_ENV 解析当前应使用的 API 基址 */
 export function resolveApiTarget(
   customApiOrigin = process.env.UMI_APP_SERVER_API,
   umiEnv = process.env.UMI_ENV,
   nodeEnv = process.env.NODE_ENV,
 ): string {
-  // if (customApiOrigin?.trim()) return customApiOrigin.trim();
-  // if (umiEnv === 'test') return API_TARGETS.test;
-  // if (umiEnv === 'prod' || umiEnv === 'production') return API_TARGETS.production;
-  // if (umiEnv === 'dev' || umiEnv === 'development') return API_TARGETS.development;
-  // if (nodeEnv === 'production') return API_TARGETS.production;
-  // return API_TARGETS.development;
-  return ''
+  const normalizedCustomApiOrigin = normalizeApiOrigin(customApiOrigin);
+
+  if (normalizedCustomApiOrigin) return normalizedCustomApiOrigin;
+  if (umiEnv === 'test') return API_TARGETS.test;
+  if (umiEnv === 'prod' || umiEnv === 'production') return API_TARGETS.production;
+  if (umiEnv === 'dev' || umiEnv === 'development') return API_TARGETS.development;
+  if (nodeEnv === 'production') return API_TARGETS.production;
+  return API_TARGETS.development;
 }
