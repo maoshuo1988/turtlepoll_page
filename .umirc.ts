@@ -17,9 +17,9 @@ export default defineConfig({
   alias: {
     '@': '/src',
   },
-  define: {
-    'process.env.TURTLE_API_ORIGIN': JSON.stringify(apiTarget),
-  },
+  // define: {
+  //   'process.env.TURTLE_API_ORIGIN': JSON.stringify(apiTarget),
+  // },
   routes: [
     { path: '/jump', component: 'jump', name: '跳一跳' },
     {
