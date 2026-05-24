@@ -7,6 +7,8 @@ export type FootballMarketsParams = {
   limit?: number;
   sourceModel?: string;
   sourceModelId?: number;
+  /** 为 false 时未登录也允许请求公开列表接口 */
+  requireAuth?: boolean;
 };
 
 export type FootballMarketsByTagParams = {
@@ -15,6 +17,8 @@ export type FootballMarketsByTagParams = {
   limit?: number;
   /** 为 false 时不发起请求（用于按条件补充拉取） */
   enabled?: boolean;
+  /** 为 false 时未登录也允许请求公开列表接口 */
+  requireAuth?: boolean;
 };
 
 export type FootballPredictContextHotParams = {

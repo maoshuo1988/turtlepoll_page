@@ -64,6 +64,11 @@ export type PetStatusResponse = {
   spark?: number;
   daily?: PetStatusDaily;
   ai?: PetStatusAiMessage[];
+  dialogues?: PetStatusAiMessage[];
+  idleDialogues?: PetStatusAiMessage[];
+  dialogue?: PetStatusAiMessage;
+  message?: PetStatusAiMessage;
+  greeting?: PetStatusAiMessage;
 };
 
 export type PetEquipPayload =

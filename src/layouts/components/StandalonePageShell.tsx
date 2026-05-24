@@ -9,8 +9,8 @@ import { AppPageLayout, type SidebarHotTag, type SidebarHotTopic, type ViewType 
 import { AuthModal } from '@/components/common/auth/AuthModal';
 import { GuideTourModal } from '@/components/common/layout/GuideTourModal';
 import { getPetMoodLabel } from '@/components/common/pet/petDisplay';
+import { getPetIdleDialogues } from '@/components/common/pet/petDialogue';
 import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/common/predictions/predictionCards';
-import { heroNews, mockNews, mockPetSkins, mockUser, petDialogues } from '@/data/mockData';
 import { useAppSession } from '@/hooks/useAppSession';
 import { battleQueryKeys } from '@/hooks/useBattleRequests';
 import { COIN_ME_QUERY_KEY } from '@/hooks/useCoinRequests';
@@ -36,7 +36,7 @@ import {
   useRequestAiUnreadPushes,
 } from '@/hooks/useAiRequests';
 import type { AiPushMessage } from '@/hooks/aiTypes';
-import { AUTH_REQUIRED_EVENT, clearAuthRequiredFlag, clearInfo, getAuthToken, hasAuthRequiredFlag } from '@/utils/authStorage';
+import { AUTH_REQUIRED_EVENT, clearAuthRequiredFlag, clearInfo, getAuthToken, hasAuthRequiredFlag, requireAuthOrOpen } from '@/utils/authStorage';
 
 const THEME_KEY = 'theme';
 
@@ -134,8 +134,8 @@ export function StandalonePageShell({
   const aiPushesReadAsyncRef = useRef(aiPushesReadMutation.mutateAsync);
   const aiPresenceMutateRef = useRef(aiPresenceMutation.mutate);
   const aiPetDialogueTimerRef = useRef<number | null>(null);
-  const [sidebarBalance, setSidebarBalance] = useState(mockUser.balance);
-  const [sidebarPetStamina, setSidebarPetStamina] = useState(mockUser.petInfo.stamina);
+  const [sidebarBalance, setSidebarBalance] = useState(0);
+  const [sidebarPetStamina, setSidebarPetStamina] = useState(0);
   const handleToggleTheme = useCallback(() => {
     setTheme((value) => (value === 'dark' ? 'light' : 'dark'));
   }, []);
@@ -235,7 +235,7 @@ export function StandalonePageShell({
     }
   }, []);
 
-  // 钱包和体力接口有数据后，替换 mock 默认值，避免接口慢时页面空白。
+  // 钱包和体力接口有数据后同步到侧边栏展示。
   useEffect(() => {
     if (typeof coinMe.data?.balance === 'number') {
       setSidebarBalance(coinMe.data.balance);
@@ -248,20 +248,16 @@ export function StandalonePageShell({
     }
   }, [petStaminaQuery.data?.current]);
 
-  // 左侧栏宠物展示数据的统一出口。
-  // 后端没有返回的字段继续使用 mock 兜底，保证布局稳定。
   const sidebarPet = useMemo(() => {
-    const equippedSkin = mockPetSkins.find((skin) => skin.equipped && skin.owned);
     const equippedOwnedPet = findEquippedOwnedPet(petOwnedQuery.data);
 
     return {
-      ...mockUser.petInfo,
-      name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,
-      status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,
-      level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,
+      name: petEquipQuery.data?.petName ?? '',
+      status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',
+      level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,
       stamina: sidebarPetStamina,
-      maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,
-      avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,
+      maxStamina: petStaminaQuery.data?.cap ?? 0,
+      avatar: '',
     };
   }, [
     petEquipQuery.data?.level,
@@ -272,11 +268,10 @@ export function StandalonePageShell({
     sidebarPetStamina,
   ]);
 
-  // 侧边栏热榜需要预测市场数据；接口为空时用本地 mock 保持内容密度。
   const sidebarNews = useMemo<PredictionCardItem[]>(() => {
     const list = footballMarkets.data?.list ?? [];
     if (!Array.isArray(list) || list.length === 0) {
-      return [heroNews, ...mockNews] as PredictionCardItem[];
+      return [];
     }
 
     return list.map(mapMarketToPredictionCard);
@@ -286,6 +281,7 @@ export function StandalonePageShell({
     () => new Map(sidebarNews.filter((item) => typeof item.marketId === 'number').map((item) => [item.marketId as number, item])),
     [sidebarNews],
   );
+  const sidebarIdleDialogues = useMemo(() => getPetIdleDialogues(petStatusQuery.data), [petStatusQuery.data]);
 
   // 侧边栏导航统一从这里跳转，避免 Sidebar 内部直接依赖路由实现。
   const handleSidebarViewChange = useCallback((view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag | null) => {
@@ -333,6 +329,12 @@ export function StandalonePageShell({
     setGuideTourOpen(true);
   }, []);
 
+  const handleRequireAuthNavigation = useCallback((path: string) => {
+    if (!requireAuthOrOpen(() => onAuthModalOpenChange(true))) return;
+
+    navigate(path);
+  }, [navigate, onAuthModalOpenChange]);
+
   // showSidebar=false 的页面不需要传 sidebarProps，普通业务页都会进入这里。
   const sidebarProps = activeView
       ? {
@@ -341,8 +343,9 @@ export function StandalonePageShell({
         newsByMarketId: sidebarNewsByMarketId,
         petDialogue: aiPetDialogue,
         aiPushMessages,
-        idleDialogues: petDialogues.idle,
+        idleDialogues: sidebarIdleDialogues,
         activeView,
+        onOpenAuth: () => onAuthModalOpenChange(true),
         onViewChange: handleSidebarViewChange,
       }
     : undefined;
@@ -402,7 +405,9 @@ export function StandalonePageShell({
   const resolvedContentClassName =
     activeView === 'profile'
       ? `${contentClassName} lg:h-full lg:min-h-full lg:bg-[#080808]`
-      : contentClassName;
+      : activeView === 'pet'
+        ? `${contentClassName} px-3 pb-4 pt-[10px] lg:px-4`
+        : contentClassName;
 
   return (
     <AppPageLayout
@@ -416,13 +421,15 @@ export function StandalonePageShell({
       }}
       onSignOut={handleSignOut}
       onOpenProfile={() => {
-        navigate('/profile');
+        handleRequireAuthNavigation('/profile');
       }}
       onOpenHelp={handleOpenGuideTour}
       onOpenRank={() => {
-        navigate('/rank');
+        handleRequireAuthNavigation('/rank');
       }}
       onOpenSettings={() => {
+        if (!requireAuthOrOpen(() => onAuthModalOpenChange(true))) return;
+
         navigate({ pathname: '/profile', hash: 'settings' });
       }}
       showSidebar={showSidebar && Boolean(sidebarProps)}

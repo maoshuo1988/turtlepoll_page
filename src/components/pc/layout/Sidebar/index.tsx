@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { PetChat } from '@/components/common/pet/PetChat';
 import type { AiPushMessage } from '@/hooks/aiTypes';
-import type { PetInfo } from '@/data/mockData';
+import type { PetInfo } from '@/components/common/pet/petTypes';
 import { SidebarDesktopHotPanel } from '../SidebarDesktopHotPanel';
 import { SidebarDesktopNavPanel } from '../SidebarDesktopNavPanel';
 import { SidebarDesktopProfilePanel } from '../SidebarDesktopProfilePanel';

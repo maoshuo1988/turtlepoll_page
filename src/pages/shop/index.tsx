@@ -3,7 +3,7 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from '@umijs/renderer-react';
-import { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';
+import type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { useAppSession } from '@/hooks/useAppSession';
 import {
@@ -18,9 +18,9 @@ import { getPetMoodLabel } from './components/petDisplay';
 
 export default function ShopPage() {
   const navigate = useNavigate();
-  const [balance, setBalance] = useState(mockUser.balance);
-  const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);
-  const [skins] = useState<PetSkin[]>(mockPetSkins);
+  const [balance, setBalance] = useState(0);
+  const [petStamina, setPetStamina] = useState(0);
+  const [skins] = useState<PetSkin[]>([]);
   const { onOpenAuth } = useHomeLayoutContext();
 
   // 商城页自己维护它需要的金币和宠物接口，页面壳统一交给 layouts/home。
@@ -32,14 +32,13 @@ export default function ShopPage() {
 
   const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);
   const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);
-  const currentPet = useMemo(() => ({
-    ...mockUser.petInfo,
-    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,
-    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,
-    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,
+  const currentPet = useMemo<PetInfo>(() => ({
+    name: petEquipQuery.data?.petName ?? '',
+    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',
+    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,
     stamina: petStamina,
-    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,
-    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,
+    maxStamina: petStaminaQuery.data?.cap ?? 0,
+    avatar: equippedSkin?.avatar ?? '',
   }), [
     equippedOwnedPet?.level,
     equippedSkin?.avatar,

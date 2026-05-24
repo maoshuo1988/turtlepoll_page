@@ -4,7 +4,7 @@
 import React from 'react';
 import { PetChat } from '@/components/common/pet/PetChat';
 import type { AiPushMessage } from '@/hooks/aiTypes';
-import type { PetInfo } from '@/data/mockData';
+import type { PetInfo } from '@/components/common/pet/petTypes';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { useRequestCoinMe } from '@/hooks/useCoinRequests';
 import { PetProfilePanel } from './PetProfilePanel';

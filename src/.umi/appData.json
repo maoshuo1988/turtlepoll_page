@@ -15,6 +15,8 @@
       "preview": "umi preview"
     },
     "dependencies": {
+      "@dicebear/collection": "^9.4.2",
+      "@dicebear/core": "^9.4.2",
       "@esotericsoftware/spine-pixi-v8": "~4.3.0",
       "@tsparticles/react": "^3.0.0",
       "animation": "^0.1.3",
@@ -90,7 +92,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -107,7 +109,7 @@
             1
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -121,9 +123,6 @@
       "time": {
         "hooks": {
           "modifyRoutes": [
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -158,75 +157,115 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
+            24,
+            7,
+            24,
+            7,
+            9,
             19,
-            7,
+            26,
+            5,
+            15,
             9,
-            5,
-            5,
-            5,
-            4,
-            6,
-            10,
-            11,
-            5,
-            6,
-            16,
-            3,
-            5,
-            3,
-            4,
-            4,
-            10,
-            7,
-            3,
-            4,
-            3,
-            5,
-            34,
-            3,
-            4,
-            8,
-            5,
-            6,
-            4,
-            86,
-            3,
-            5,
-            4,
-            10,
-            8,
-            8,
-            3,
-            8,
-            8,
-            5,
-            8,
-            7,
-            4,
-            6,
-            4,
-            9,
-            13,
-            3,
+            65,
             9,
             3,
-            7,
             4,
+            12,
+            10,
+            3,
+            14,
+            10,
+            4,
+            17,
             5,
             7,
-            4,
             6,
             5,
+            4,
             6,
+            7,
             12,
             8,
-            7,
+            5,
+            112,
+            8,
+            12,
+            12,
+            18,
+            4,
             9,
             14,
-            6
+            5,
+            4,
+            7,
+            6,
+            5,
+            4,
+            3,
+            5,
+            23,
+            7,
+            5,
+            8,
+            6,
+            12,
+            4,
+            5,
+            9,
+            4,
+            5,
+            4,
+            3,
+            8,
+            12,
+            16,
+            5,
+            18,
+            27,
+            4,
+            20,
+            8,
+            7,
+            71,
+            386,
+            26,
+            22,
+            14,
+            9,
+            17,
+            33,
+            13,
+            10,
+            4,
+            9,
+            8,
+            14,
+            7,
+            12,
+            11,
+            10,
+            31,
+            26,
+            9,
+            5,
+            4,
+            4,
+            4,
+            5,
+            5,
+            10,
+            3,
+            5,
+            8,
+            4,
+            4,
+            7,
+            5,
+            10
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -240,30 +279,27 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            12
+            9
           ],
           "onGenerateFiles": [
-            1,
-            11,
+            0,
             12,
-            24,
-            5,
-            12,
-            8,
-            17,
-            5,
-            24,
-            5,
+            9,
+            10,
             13,
             15,
-            13,
-            11,
+            21,
             6,
-            15,
-            14,
             11,
-            5,
-            11
+            19,
+            82,
+            13,
+            7,
+            7,
+            12,
+            9,
+            15,
+            14
           ]
         },
         "register": 10
@@ -297,10 +333,7 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0
+            1
           ]
         },
         "register": 0
@@ -317,12 +350,57 @@
       "time": {
         "hooks": {
           "onCheckConfig": [
+            0,
+            0,
+            0,
             0
           ],
           "onCheck": [
-            0
+            1
           ],
           "onPrepareBuildSuccess": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -545,37 +623,10 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -589,7 +640,7 @@
       "time": {
         "hooks": {
           "onCheck": [
-            1
+            0
           ]
         },
         "register": 0
@@ -605,7 +656,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -619,10 +670,13 @@
       "time": {
         "hooks": {
           "modifyConfig": [
+            0,
+            0,
+            0,
             0
           ]
         },
-        "register": 3
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -1521,7 +1575,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 43
+        "register": 38
       },
       "enableBy": "register"
     },
@@ -1534,7 +1588,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 15
       },
       "enableBy": "config"
     },
@@ -1547,7 +1601,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 10
       },
       "enableBy": "config"
     },
@@ -1579,6 +1633,30 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1596,27 +1674,24 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
+            1,
+            1,
+            0,
+            0,
             0,
             1,
             1,
             0,
             0,
-            1,
             0,
+            3,
+            3,
             0,
+            2,
             0,
-            1,
-            1,
-            1,
+            3,
             0,
-            1,
-            7,
-            1,
-            0,
-            1,
-            0,
-            0,
-            0
+            1
           ],
           "addRuntimePlugin": [
             0,
@@ -1636,13 +1711,10 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1655,7 +1727,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1669,13 +1741,13 @@
       "time": {
         "hooks": {
           "onStart": [
-            1
+            0
           ],
           "addBeforeMiddlewares": [
             1
           ]
         },
-        "register": 19
+        "register": 15
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1687,7 +1759,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1721,10 +1793,7 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
+            1,
             0,
             0,
             0,
@@ -1743,17 +1812,11 @@
             0,
             0,
             0,
+            1,
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            1,
             0,
             0,
             0,
@@ -1793,7 +1856,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1807,38 +1870,32 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0,
+            0,
+            0,
+            0
           ],
           "onGenerateFiles": [
-            42,
-            24,
-            13,
-            27,
-            7,
-            15,
-            8,
-            20,
-            10,
+            36,
+            22,
             20,
             6,
-            19,
-            9,
-            23,
-            47,
-            4,
+            20,
+            17,
+            40,
             12,
+            12,
+            24,
+            221,
+            23,
+            13,
+            29,
             13,
             17,
-            9,
-            22
+            25,
+            21
           ],
           "addPolyfillImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -1917,13 +1974,7 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            1,
             0,
             0,
             0,
@@ -1948,10 +1999,7 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            74,
-            0,
-            0,
-            0,
+            77,
             0,
             0,
             0,
@@ -2020,16 +2068,13 @@
             0,
             0,
             0,
+            0,
+            2,
             1,
             0,
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            1,
-            1,
             0,
             0
           ],
@@ -2051,48 +2096,42 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            6,
-            1,
-            8,
-            1,
             7,
             1,
-            6,
-            1,
-            3,
-            0,
-            8,
-            0,
-            8,
-            1,
-            9,
-            0,
-            4,
-            0,
-            8,
-            0,
-            3,
-            0,
-            8,
-            1,
-            8,
-            1,
-            6,
-            0,
-            7,
-            1,
-            3,
-            0,
-            6,
-            0,
             11,
             1,
-            9,
+            5,
             0,
             4,
             0,
+            7,
+            0,
+            6,
+            0,
+            8,
+            2,
+            5,
+            0,
+            8,
+            1,
+            9,
+            2,
+            21,
+            2,
+            11,
+            1,
+            449,
+            2,
+            11,
+            1,
             10,
-            2
+            0,
+            9,
+            1,
+            7,
+            1,
+            12,
+            1
           ]
         },
         "register": 2
@@ -2108,7 +2147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2121,7 +2160,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -2133,7 +2172,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2147,27 +2186,24 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            196,
-            9,
+            194,
+            17,
+            5,
+            5,
+            16,
+            91,
+            11,
+            4,
+            6,
             7,
-            9,
-            3,
+            332,
             5,
-            4,
+            19,
             8,
-            3,
+            12,
+            6,
             9,
-            3,
-            6,
-            4,
-            5,
-            6,
-            3,
-            8,
-            4,
-            10,
-            3,
-            11
+            8
           ]
         },
         "register": 1
@@ -2213,7 +2249,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2238,7 +2274,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 9
       },
       "enableBy": "config"
     },
@@ -2252,30 +2288,27 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            3,
+            0,
             2,
             1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            1,
-            0,
             1,
             0,
             0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1,
-            1,
-            1,
-            0
+            1
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -2287,7 +2320,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2355,7 +2388,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -2405,13 +2438,37 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
-            16,
-            16,
-            7,
+            22,
+            22,
+            6,
+            21,
             0,
             0,
             0,
-            81,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            10,
+            0,
+            0,
             0,
             0,
             0,
@@ -2420,7 +2477,7 @@
             0
           ]
         },
-        "register": 15
+        "register": 13
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -2432,7 +2489,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2446,7 +2503,7 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            475
+            412
           ]
         },
         "register": 1
@@ -2462,7 +2519,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2475,7 +2532,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 19
+        "register": 15
       },
       "enableBy": "register"
     },
@@ -2489,10 +2546,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            8
+            7
           ]
         },
-        "register": 13
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -2504,7 +2561,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2543,7 +2600,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2556,7 +2613,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2569,7 +2626,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2595,7 +2652,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2634,7 +2691,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2647,7 +2704,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2699,7 +2756,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2712,7 +2769,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2738,7 +2795,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 13
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -2777,7 +2834,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     }
@@ -2850,7 +2907,10 @@
           {
             "path": "/rank",
             "component": "rank",
-            "name": "排行榜"
+            "name": "排行榜",
+            "wrappers": [
+              "@/wrappers/RequireAuth"
+            ]
           },
           {
             "path": "/shop",
@@ -2860,12 +2920,18 @@
           {
             "path": "/pet",
             "component": "pet",
-            "name": "宠物"
+            "name": "宠物",
+            "wrappers": [
+              "@/wrappers/RequireAuth"
+            ]
           },
           {
             "path": "/profile",
             "component": "profile",
-            "name": "个人中心"
+            "name": "个人中心",
+            "wrappers": [
+              "@/wrappers/RequireAuth"
+            ]
           },
           {
             "path": "/active-predictions",
@@ -2979,7 +3045,10 @@
           {
             "path": "/rank",
             "component": "rank",
-            "name": "排行榜"
+            "name": "排行榜",
+            "wrappers": [
+              "@/wrappers/RequireAuth"
+            ]
           },
           {
             "path": "/shop",
@@ -2989,12 +3058,18 @@
           {
             "path": "/pet",
             "component": "pet",
-            "name": "宠物"
+            "name": "宠物",
+            "wrappers": [
+              "@/wrappers/RequireAuth"
+            ]
           },
           {
             "path": "/profile",
             "component": "profile",
-            "name": "个人中心"
+            "name": "个人中心",
+            "wrappers": [
+              "@/wrappers/RequireAuth"
+            ]
           },
           {
             "path": "/active-predictions",
@@ -3058,7 +3133,7 @@
       "parentId": "2",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },
@@ -3069,7 +3144,7 @@
       "parentId": "2",
       "id": "4",
       "absPath": "/event-battle",
-      "__content": "/**\n * 文件说明：event-battle 页面路由入口，负责根据 market 参数装配真实撕裂带页面。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { EventBattlePage } from './components/EventBattlePage';\nimport type { PredictionCardItem } from '@/pages/home/components/predictionCards';\n\ntype EventBattleLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n  returnTo?: string;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function EventBattleRoutePage() {\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const routeState = location.state as EventBattleLocationState | null;\n  const sidebarTopic = routeState?.sidebarTopic;\n  const routeStateBattleNews = routeState?.openBattleNews ?? null;\n  const returnTo = routeState?.returnTo;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n\n  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const selectedPrediction = useMemo(() => {\n    if (routeStateBattleNews) return routeStateBattleNews;\n    if (!selectedMarket || selectedMarketId === null) return null;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allFallbackItems,\n    routeStateBattleNews,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  useEffect(() => {\n    const raw = location.state as EventBattleLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: {\n        ...(raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {}),\n        ...(raw.returnTo ? { returnTo: raw.returnTo } : {}),\n      },\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  useEffect(() => {\n    if (!selectedPrediction) return;\n    setSelectedBattleNews(selectedPrediction);\n  }, [selectedPrediction]);\n\n  const handleBack = useCallback(() => {\n    if (returnTo) {\n      navigate(returnTo);\n      return;\n    }\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    const nextUrl = nextSearch.toString() ? `/?${nextSearch.toString()}` : '/';\n    navigate(nextUrl);\n  }, [navigate, returnTo, selectedTag]);\n\n  return (\n    <EventBattlePage\n      battleNews={selectedPrediction ?? selectedBattleNews}\n      userSide={null}\n      isLoading={false}\n      onBack={handleBack}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：event-battle 页面路由入口，负责根据 market 参数装配真实撕裂带页面。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { EventBattlePage } from './components/EventBattlePage';\nimport type { PredictionCardItem } from '@/pages/home/components/predictionCards';\n\ntype EventBattleLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n  returnTo?: string;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function EventBattleRoutePage() {\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const routeState = location.state as EventBattleLocationState | null;\n  const sidebarTopic = routeState?.sidebarTopic;\n  const routeStateBattleNews = routeState?.openBattleNews ?? null;\n  const returnTo = routeState?.returnTo;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const selectedPrediction = useMemo(() => {\n    if (routeStateBattleNews) return routeStateBattleNews;\n    if (!selectedMarket || selectedMarketId === null) return null;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allFallbackItems,\n    routeStateBattleNews,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  useEffect(() => {\n    const raw = location.state as EventBattleLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: {\n        ...(raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {}),\n        ...(raw.returnTo ? { returnTo: raw.returnTo } : {}),\n      },\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  useEffect(() => {\n    if (!selectedPrediction) return;\n    setSelectedBattleNews(selectedPrediction);\n  }, [selectedPrediction]);\n\n  const handleBack = useCallback(() => {\n    if (returnTo) {\n      navigate(returnTo);\n      return;\n    }\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    const nextUrl = nextSearch.toString() ? `/?${nextSearch.toString()}` : '/';\n    navigate(nextUrl);\n  }, [navigate, returnTo, selectedTag]);\n\n  return (\n    <EventBattlePage\n      battleNews={selectedPrediction ?? selectedBattleNews}\n      userSide={null}\n      isLoading={false}\n      onBack={handleBack}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/event-battle/index.tsx"
     },
@@ -3091,7 +3166,7 @@
       "parentId": "2",
       "id": "6",
       "absPath": "/rivalry",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useRequestPKBet } from '@/hooks/usePkRequests';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken } from '@/utils/authStorage';\nimport type { RivalryNewsItem } from './components/rivalryMockData';\nimport { RivalryPageView } from './components/RivalryPageView';\n\nfunction createRequestId(prefix: string) {\n  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {\n    return `${prefix}-${crypto.randomUUID()}`;\n  }\n  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;\n}\n\nexport default function RivalryPage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [betError, setBetError] = useState<string | null>(null);\n  const [pendingBetId, setPendingBetId] = useState<string | null>(null);\n  const pkBetMutation = useRequestPKBet();\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  const handleRivalryBet = useCallback(async (newsId: string, option: 'A' | 'B', _odds: number, amount?: number) => {\n    setBetError(null);\n\n    if (!getAuthToken()) {\n      onOpenAuth();\n      return;\n    }\n\n    if (newsId.startsWith('pk-')) {\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n      return;\n    }\n\n    try {\n      setPendingBetId(newsId);\n      await pkBetMutation.mutateAsync({\n        topicId: newsId,\n        side: option,\n        requestId: createRequestId(`pk-bet-${newsId}`),\n        amount,\n      });\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n    } catch (error) {\n      const message = error instanceof Error ? error.message : '下注失败，请稍后再试';\n      if (message.includes('NotLogin')) {\n        onOpenAuth();\n        return;\n      }\n      setBetError(message);\n    } finally {\n      setPendingBetId(null);\n    }\n  }, [onOpenAuth, pkBetMutation]);\n\n  const handleEnterBattle = useCallback((item: RivalryNewsItem) => {\n    navigate(`/event-battle?market=${item.id}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <RivalryPageView\n        userVotes={userVotes}\n        betError={betError}\n        pendingBetId={pendingBetId}\n        onBet={handleRivalryBet}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useRequestPKBet } from '@/hooks/usePkRequests';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useRequireAuth } from '@/hooks/useRequireAuth';\nimport type { RivalryNewsItem } from './components/rivalryTypes';\nimport { RivalryPageView } from './components/RivalryPageView';\n\nfunction createRequestId(prefix: string) {\n  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {\n    return `${prefix}-${crypto.randomUUID()}`;\n  }\n  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;\n}\n\nexport default function RivalryPage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [betError, setBetError] = useState<string | null>(null);\n  const [pendingBetId, setPendingBetId] = useState<string | null>(null);\n  const pkBetMutation = useRequestPKBet();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const requireAuth = useRequireAuth(onOpenAuth);\n\n  const handleRivalryBet = useCallback(async (newsId: string, option: 'A' | 'B', _odds: number, amount?: number) => {\n    setBetError(null);\n\n    if (!requireAuth()) return;\n\n    if (newsId.startsWith('pk-')) {\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n      return;\n    }\n\n    try {\n      setPendingBetId(newsId);\n      await pkBetMutation.mutateAsync({\n        topicId: newsId,\n        side: option,\n        requestId: createRequestId(`pk-bet-${newsId}`),\n        amount,\n      });\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n    } catch (error) {\n      const message = error instanceof Error ? error.message : '下注失败，请稍后再试';\n      if (message.includes('NotLogin')) {\n        onOpenAuth();\n        return;\n      }\n      setBetError(message);\n    } finally {\n      setPendingBetId(null);\n    }\n  }, [onOpenAuth, pkBetMutation, requireAuth]);\n\n  const handleEnterBattle = useCallback((item: RivalryNewsItem) => {\n    navigate(`/event-battle?market=${item.id}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <RivalryPageView\n        userVotes={userVotes}\n        betError={betError}\n        pendingBetId={pendingBetId}\n        onBet={handleRivalryBet}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rivalry/index.tsx"
     },
@@ -3102,7 +3177,7 @@
       "parentId": "2",
       "id": "7",
       "absPath": "/forum",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ForumPageView } from './components/ForumPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ForumPage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });\n  const newsByMarketId = useMemo(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const cards = Array.isArray(list) ? list.map(mapMarketToPredictionCard) : [];\n    return new Map(cards.filter((item) => typeof item.marketId === 'number').map((item) => [item.marketId as number, item]));\n  }, [footballMarkets.data]);\n\n  const handleOpenLinkedPrediction = (item: PredictionCardItem) => {\n    navigate(`/event-battle?market=${item.marketId ?? item.id}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  };\n\n  return (\n    <div className=\"pt-[10px]\">\n      <ForumPageView\n        newsByMarketId={newsByMarketId}\n        onOpenLinkedPrediction={handleOpenLinkedPrediction}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ForumPageView } from './components/ForumPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ForumPage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });\n  const newsByMarketId = useMemo(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const cards = Array.isArray(list) ? list.map(mapMarketToPredictionCard) : [];\n    return new Map(cards.filter((item) => typeof item.marketId === 'number').map((item) => [item.marketId as number, item]));\n  }, [footballMarkets.data]);\n\n  const handleOpenLinkedPrediction = (item: PredictionCardItem) => {\n    navigate(`/event-battle?market=${item.marketId ?? item.id}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  };\n\n  return (\n    <div className=\"pt-[10px]\">\n      <ForumPageView\n        newsByMarketId={newsByMarketId}\n        onOpenLinkedPrediction={handleOpenLinkedPrediction}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/forum/index.tsx"
     },
@@ -3129,57 +3204,93 @@
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/battle-plaza/index.tsx"
     },
     "10": {
-      "path": "/rank",
+      "path": "",
       "name": "排行榜",
       "file": "@/pages/rank/index.tsx",
-      "parentId": "2",
+      "parentId": "11",
       "id": "10",
       "absPath": "/rank",
+      "originPath": "/rank",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { RankPageView } from './components/RankPageView';\n\nexport default function RankPage() {\n  return <RankPageView />;\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rank/index.tsx"
     },
     "11": {
+      "path": "/rank",
+      "isWrapper": true,
+      "file": "@/wrappers/RequireAuth.tsx",
+      "parentId": "2",
+      "id": "11",
+      "absPath": "/rank",
+      "__content": "/**\n * 文件说明：需要登录的路由访问拦截。\n */\nimport type { ReactNode } from 'react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\ninterface RequireAuthProps {\n  children: ReactNode;\n}\n\nexport default function RequireAuth({ children }: RequireAuthProps) {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const isAuthenticated = Boolean(getAuthToken());\n\n  if (!isAuthenticated) {\n    markAuthRequired();\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <>{children}</>;\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx"
+    },
+    "12": {
       "path": "/shop",
       "name": "商店",
       "file": "@/pages/shop/index.tsx",
       "parentId": "2",
-      "id": "11",
+      "id": "12",
       "absPath": "/shop",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { ShopPageView } from './components/ShopPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ShopPage() {\n  const navigate = useNavigate();\n  const [balance, setBalance] = useState(mockUser.balance);\n  const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);\n  const [skins] = useState<PetSkin[]>(mockPetSkins);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 商城页自己维护它需要的金币和宠物接口，页面壳统一交给 layouts/home。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof coinMe.data?.balance === 'number') {\n      setBalance(coinMe.data.balance);\n    }\n  }, [coinMe.data?.balance]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  return (\n    <ShopPageView\n      balance={balance}\n      pet={currentPet}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onBack={() => {\n        navigate('/');\n      }}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { ShopPageView } from './components/ShopPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ShopPage() {\n  const navigate = useNavigate();\n  const [balance, setBalance] = useState(0);\n  const [petStamina, setPetStamina] = useState(0);\n  const [skins] = useState<PetSkin[]>([]);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 商城页自己维护它需要的金币和宠物接口，页面壳统一交给 layouts/home。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof coinMe.data?.balance === 'number') {\n      setBalance(coinMe.data.balance);\n    }\n  }, [coinMe.data?.balance]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  return (\n    <ShopPageView\n      balance={balance}\n      pet={currentPet}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onBack={() => {\n        navigate('/');\n      }}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/shop/index.tsx"
     },
-    "12": {
-      "path": "/pet",
+    "13": {
+      "path": "",
       "name": "宠物",
       "file": "@/pages/pet/index.tsx",
-      "parentId": "2",
-      "id": "12",
+      "parentId": "14",
+      "id": "13",
       "absPath": "/pet",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetEquipUpdate,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { PetPageView } from './components/PetPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\nimport { useHomeLayoutContext } from '@/layouts/context';\n\nexport default function PetPage() {\n  const navigate = useNavigate();\n  const { aiPushMessages } = useHomeLayoutContext();\n  const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);\n  const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);\n\n  // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n  const petEquipMutation = useRequestPetEquipUpdate();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  const handleEquipSkin = useCallback((skinId: string) => {\n    setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));\n  }, []);\n\n  const handleEquipPet = useCallback(async (petId: number | string) => {\n    const result = await petEquipMutation.mutateAsync({ petId });\n    void Promise.all([\n      petEquipQuery.refetch(),\n      petOwnedQuery.refetch(),\n      petStatusQuery.refetch(),\n    ]);\n    return result;\n  }, [petEquipMutation, petEquipQuery, petOwnedQuery, petStatusQuery]);\n\n  return (\n    <PetPageView\n      pet={currentPet}\n      balance={coinMe.data?.balance ?? mockUser.balance}\n      winRate={0.68}\n      winStreak={mockUser.winStreak}\n      totalPredictions={42}\n      onBack={() => {\n        navigate('/');\n      }}\n      skins={skins}\n      onEquipSkin={handleEquipSkin}\n      equippedPet={petEquipQuery.data ?? null}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n      petStatus={petStatusQuery.data ?? null}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onEquipPet={handleEquipPet}\n      equippingPetId={\n        petEquipMutation.isLoading\n          ? (petEquipMutation.variables?.petId ?? petEquipMutation.variables?.petKey ?? null)\n          : null\n      }\n      onStaminaChange={setPetStamina}\n      aiPushMessages={aiPushMessages}\n    />\n  );\n}\n",
+      "originPath": "/pet",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetEquipUpdate,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { PetPageView } from './components/PetPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\nimport { useHomeLayoutContext } from '@/layouts/context';\n\nexport default function PetPage() {\n  const navigate = useNavigate();\n  const { aiPushMessages } = useHomeLayoutContext();\n  const [petStamina, setPetStamina] = useState(0);\n  const [skins, setSkins] = useState<PetSkin[]>([]);\n\n  // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n  const petEquipMutation = useRequestPetEquipUpdate();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  const handleEquipSkin = useCallback((skinId: string) => {\n    setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));\n  }, []);\n\n  const handleEquipPet = useCallback(async (petId: number | string) => {\n    const result = await petEquipMutation.mutateAsync({ petId });\n    void Promise.all([\n      petEquipQuery.refetch(),\n      petOwnedQuery.refetch(),\n      petStatusQuery.refetch(),\n    ]);\n    return result;\n  }, [petEquipMutation, petEquipQuery, petOwnedQuery, petStatusQuery]);\n\n  return (\n    <PetPageView\n      pet={currentPet}\n      balance={coinMe.data?.balance ?? 0}\n      winRate={0}\n      winStreak={0}\n      totalPredictions={0}\n      onBack={() => {\n        navigate('/');\n      }}\n      skins={skins}\n      onEquipSkin={handleEquipSkin}\n      equippedPet={petEquipQuery.data ?? null}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n      petStatus={petStatusQuery.data ?? null}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onEquipPet={handleEquipPet}\n      equippingPetId={\n        petEquipMutation.isLoading\n          ? (petEquipMutation.variables?.petId ?? petEquipMutation.variables?.petKey ?? null)\n          : null\n      }\n      onStaminaChange={setPetStamina}\n      aiPushMessages={aiPushMessages}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/pet/index.tsx"
     },
-    "13": {
-      "path": "/profile",
+    "14": {
+      "path": "/pet",
+      "isWrapper": true,
+      "file": "@/wrappers/RequireAuth.tsx",
+      "parentId": "2",
+      "id": "14",
+      "absPath": "/pet",
+      "__content": "/**\n * 文件说明：需要登录的路由访问拦截。\n */\nimport type { ReactNode } from 'react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\ninterface RequireAuthProps {\n  children: ReactNode;\n}\n\nexport default function RequireAuth({ children }: RequireAuthProps) {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const isAuthenticated = Boolean(getAuthToken());\n\n  if (!isAuthenticated) {\n    markAuthRequired();\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <>{children}</>;\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx"
+    },
+    "15": {
+      "path": "",
       "name": "个人中心",
       "file": "@/pages/profile/index.tsx",
-      "parentId": "2",
-      "id": "13",
+      "parentId": "16",
+      "id": "15",
       "absPath": "/profile",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { getStoredUserInfo } from '@/utils/authStorage';\nimport { ProfilePageView } from './components/ProfilePageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ProfilePage() {\n  const navigate = useNavigate();\n  const [skins] = useState<PetSkin[]>(mockPetSkins);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const storedUser = getStoredUserInfo();\n  const displayName = storedUser?.nickname ?? storedUser?.username ?? '路边社社长';\n  const displayHandle = storedUser?.username ? `@${storedUser.username}` : '预测达人';\n  const displayAvatar = storedUser?.nickname?.slice(0, 1).toUpperCase() ?? '🦊';\n  const petStamina = petStaminaQuery.data?.current ?? mockUser.petInfo.stamina;\n  const currentPet = useMemo(() => ({\n    ...mockUser.petInfo,\n    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,\n    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  return (\n    <ProfilePageView\n      userName={displayName}\n      userHandle={displayHandle}\n      avatar={displayAvatar}\n      pet={currentPet}\n      skins={skins}\n      balance={coinMe.data?.balance ?? mockUser.balance}\n      onBack={() => {\n        navigate('/');\n      }}\n      onOpenForum={() => {\n        navigate('/forum');\n      }}\n      onOpenAuth={onOpenAuth}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n    />\n  );\n}\n",
+      "originPath": "/profile",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { getStoredUserInfo } from '@/utils/authStorage';\nimport { ProfilePageView } from './components/ProfilePageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ProfilePage() {\n  const navigate = useNavigate();\n  const [skins] = useState<PetSkin[]>([]);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const storedUser = getStoredUserInfo();\n  const displayName = storedUser?.nickname ?? storedUser?.username ?? '未登录用户';\n  const displayHandle = storedUser?.username ? `@${storedUser.username}` : '';\n  const displayAvatar = storedUser?.nickname?.slice(0, 1).toUpperCase() ?? '';\n  const petStamina = petStaminaQuery.data?.current ?? 0;\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  return (\n    <ProfilePageView\n      userName={displayName}\n      userHandle={displayHandle}\n      avatar={displayAvatar}\n      pet={currentPet}\n      skins={skins}\n      balance={coinMe.data?.balance ?? 0}\n      onBack={() => {\n        navigate('/');\n      }}\n      onOpenForum={() => {\n        navigate('/forum');\n      }}\n      onOpenAuth={onOpenAuth}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/profile/index.tsx"
     },
-    "14": {
+    "16": {
+      "path": "/profile",
+      "isWrapper": true,
+      "file": "@/wrappers/RequireAuth.tsx",
+      "parentId": "2",
+      "id": "16",
+      "absPath": "/profile",
+      "__content": "/**\n * 文件说明：需要登录的路由访问拦截。\n */\nimport type { ReactNode } from 'react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\ninterface RequireAuthProps {\n  children: ReactNode;\n}\n\nexport default function RequireAuth({ children }: RequireAuthProps) {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const isAuthenticated = Boolean(getAuthToken());\n\n  if (!isAuthenticated) {\n    markAuthRequired();\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <>{children}</>;\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx"
+    },
+    "17": {
       "path": "/active-predictions",
       "name": "活跃预测",
       "file": "@/pages/active-predictions/index.tsx",
       "parentId": "2",
-      "id": "14",
+      "id": "17",
       "absPath": "/active-predictions",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { heroNews, mockNews } from '@/data/mockData';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ActivePredictionsPageView } from './components/ActivePredictionsPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ActivePredictionsPage() {\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });\n  const activePredictionItems = useMemo<PredictionCardItem[]>(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const liveNews = Array.isArray(list) && list.length > 0\n      ? list.map(mapMarketToPredictionCard)\n      : ([heroNews, ...mockNews] as PredictionCardItem[]);\n    return liveNews.filter((item) => item.status === 'open');\n  }, [footballMarkets.data]);\n\n  return (\n    <ActivePredictionsPageView\n      items={activePredictionItems}\n      onBack={() => {\n        navigate('/');\n      }}\n      onEnterBattle={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ActivePredictionsPageView } from './components/ActivePredictionsPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ActivePredictionsPage() {\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });\n  const activePredictionItems = useMemo<PredictionCardItem[]>(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const liveNews = Array.isArray(list) && list.length > 0\n      ? list.map(mapMarketToPredictionCard)\n      : [];\n    return liveNews.filter((item) => item.status === 'open');\n  }, [footballMarkets.data]);\n\n  return (\n    <ActivePredictionsPageView\n      items={activePredictionItems}\n      onBack={() => {\n        navigate('/');\n      }}\n      onEnterBattle={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/active-predictions/index.tsx"
     },
@@ -3219,7 +3330,7 @@
       "id": "httpClient",
       "file": "httpClient.ts",
       "absPath": "/httpClient",
-      "__content": "/**\n * 文件说明：HTTP 客户端封装，统一拼接服务地址、透传参数并归一化响应。\n */\nimport { SERVER_API } from \"@/config\";\nimport axios from \"axios\";\nimport { clearInfo, markAuthRequired } from \"@/utils/authStorage\";\n\nexport function axiosCustom({\n  cmd = \"\",\n  headers = {},\n  params = {},\n  method = \"get\",\n  data = {},\n  successCode = 0,\n}): Promise<any> {\n  return new Promise(async (resolve) => {\n    try {\n      const res = await axios({\n        url: SERVER_API + cmd,\n        method: method,\n        headers,\n        params,\n        data,\n        withCredentials: true,\n      });\n      const resData = res.data;\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: resData,\n      });\n\n      resolve({\n        code: resData.errorCode,\n        cmd: cmd,\n        method: method,\n        msg: resData.message,\n        data: resData?.data ?? {},\n        success:resData?.success ?? false\n      });\n    } catch (e: any) {\n      const status = e.response?.status;\n      const responseMessage = e.response?.data?.message ?? e.response?.data?.msg;\n\n      console.log(status, \"eeeee\");\n      //twitter user me 如果用户账号异常 也会返回403 但不能重新授权\n      if (\n        (status === 403 && successCode !== 312454645) ||\n        status === 411\n      ) {\n        localStorage.setItem(\"url_token\", \"{}\");\n      }\n\n      if (status === 401) {\n        clearInfo();\n        markAuthRequired();\n      }\n\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: e,\n      });\n      resolve({\n        cmd: cmd,\n        method: method,\n        code: status ?? 0,\n        msg: responseMessage ?? e.message ?? \"Request failed\",\n        success: false,\n      });\n    }\n  });\n}\n"
+      "__content": "/**\n * 文件说明：HTTP 客户端封装，统一拼接服务地址、透传参数并归一化响应。\n */\nimport { SERVER_API } from \"@/config\";\nimport axios from \"axios\";\nimport { handleUnauthorizedSession } from \"@/utils/authStorage\";\n\nexport function axiosCustom({\n  cmd = \"\",\n  headers = {},\n  params = {},\n  method = \"get\",\n  data = {},\n  successCode = 0,\n}): Promise<any> {\n  return new Promise(async (resolve) => {\n    try {\n      const res = await axios({\n        url: SERVER_API + cmd,\n        method: method,\n        headers,\n        params,\n        data,\n        withCredentials: true,\n      });\n      const resData = res.data;\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: resData,\n      });\n\n      resolve({\n        code: resData.errorCode,\n        cmd: cmd,\n        method: method,\n        msg: resData.message,\n        data: resData?.data ?? {},\n        success:resData?.success ?? false\n      });\n    } catch (e: any) {\n      const status = e.response?.status;\n      const responseMessage = e.response?.data?.message ?? e.response?.data?.msg;\n\n      console.log(status, \"eeeee\");\n      //twitter user me 如果用户账号异常 也会返回403 但不能重新授权\n      if (\n        (status === 403 && successCode !== 312454645) ||\n        status === 411\n      ) {\n        localStorage.setItem(\"url_token\", \"{}\");\n      }\n\n      if (status === 401) {\n        handleUnauthorizedSession();\n      }\n\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: e,\n      });\n      resolve({\n        cmd: cmd,\n        method: method,\n        code: status ?? 0,\n        msg: responseMessage ?? e.message ?? \"Request failed\",\n        success: false,\n      });\n    }\n  });\n}\n"
     },
     "battleApi": {
       "path": "battleApi",
@@ -3262,6 +3373,13 @@
       "file": "petApi.ts",
       "absPath": "/petApi",
       "__content": "/**\n * 文件说明：pet Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 用户侧宠物（user_pet）\n/// 基础路径: /api/pet\n\n// 当前装备龟种\nexport const API_Pet_Equip = \"/api/pet/equip\";\n// 用户龟种资产\nexport const API_Pet_Owned = \"/api/pet/owned\";\n// 体力查询\nexport const API_Pet_Stamina = \"/api/pet/stamina\";\n// 体力消耗\nexport const API_Pet_Stamina_Consume = \"/api/pet/stamina/consume\";\n// 体力恢复 / 喂食\nexport const API_Pet_Stamina_Feed = \"/api/pet/stamina/feed\";\n// 开蛋\nexport const API_Pet_Egg_Hatch = \"/api/pet/egg/hatch\";\n// 状态页聚合\nexport const API_Pet_Status = \"/api/pet/status\";\n// 抽奖配置\nexport const API_Admin_Pet_Gacha_Config = \"/api/admin/pet/gacha/config\";\n// 宠物定义列表（奖池预览等）\nexport const API_Admin_Pet_Defs = \"/api/admin/pet/defs\";\n"
+    },
+    "tagApi": {
+      "path": "tagApi",
+      "id": "tagApi",
+      "file": "tagApi.ts",
+      "absPath": "/tagApi",
+      "__content": "/**\n * 文件说明：tag Api 接口地址常量，供标签请求 Hook 统一引用。\n */\n\nexport const API_Tag_Tags = '/api/tag/tags';\n"
     },
     "aiApi": {
       "path": "aiApi",
@@ -4509,7 +4627,7 @@
             "format": "esm"
           },
           "src/config/index.ts": {
-            "bytes": 613,
+            "bytes": 601,
             "imports": [
               {
                 "path": "src/config/apiTargets.ts",
@@ -4520,7 +4638,7 @@
             "format": "esm"
           },
           "src/utils/authStorage.ts": {
-            "bytes": 2037,
+            "bytes": 2312,
             "imports": [
               {
                 "path": "src/config/index.ts",
@@ -4609,7 +4727,7 @@
             "format": "esm"
           },
           "src/api/httpClient.ts": {
-            "bytes": 1749,
+            "bytes": 1735,
             "imports": [
               {
                 "path": "src/config/index.ts",
@@ -4640,7 +4758,7 @@
             "format": "esm"
           },
           "src/utils/requestUtils.ts": {
-            "bytes": 1246,
+            "bytes": 1179,
             "imports": [
               {
                 "path": "src/utils/authStorage.ts",
@@ -4651,7 +4769,7 @@
             "format": "esm"
           },
           "src/hooks/useCoinRequests.ts": {
-            "bytes": 4696,
+            "bytes": 4546,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -4682,7 +4800,7 @@
             "format": "esm"
           },
           "src/hooks/useAiRequests.ts": {
-            "bytes": 7607,
+            "bytes": 7555,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -4775,8 +4893,29 @@
             ],
             "format": "esm"
           },
+          "src/hooks/useRequireAuth.ts": {
+            "bytes": 479,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/layouts/context/index.ts",
+                "kind": "import-statement",
+                "original": "@/layouts/context"
+              },
+              {
+                "path": "src/utils/authStorage.ts",
+                "kind": "import-statement",
+                "original": "@/utils/authStorage"
+              }
+            ],
+            "format": "esm"
+          },
           "src/components/common/pet/PetChat.tsx": {
-            "bytes": 13412,
+            "bytes": 13486,
             "imports": [
               {
                 "path": "react",
@@ -4812,6 +4951,11 @@
                 "path": "src/components/common/spine/CommonSpine.tsx",
                 "kind": "import-statement",
                 "original": "@/components/common/spine/CommonSpine"
+              },
+              {
+                "path": "src/hooks/useRequireAuth.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useRequireAuth"
               }
             ],
             "format": "esm"
@@ -4927,7 +5071,7 @@
             "format": "esm"
           },
           "src/components/pc/layout/SidebarProfileCard.tsx": {
-            "bytes": 5082,
+            "bytes": 5099,
             "imports": [
               {
                 "path": "react",
@@ -4973,7 +5117,7 @@
             "format": "esm"
           },
           "src/hooks/usePredictionRequests.ts": {
-            "bytes": 7300,
+            "bytes": 7496,
             "imports": [
               {
                 "path": "src/api/predictionApi.ts",
@@ -5057,7 +5201,7 @@
             "format": "esm"
           },
           "src/components/pc/layout/SidebarMainPanels.tsx": {
-            "bytes": 5756,
+            "bytes": 5773,
             "imports": [
               {
                 "path": "react",
@@ -5104,7 +5248,7 @@
             "format": "esm"
           },
           "src/components/pc/layout/SidebarDesktopProfilePanel.tsx": {
-            "bytes": 3949,
+            "bytes": 3966,
             "imports": [
               {
                 "path": "react",
@@ -5140,7 +5284,7 @@
             "format": "esm"
           },
           "src/components/pc/layout/Sidebar/index.tsx": {
-            "bytes": 5977,
+            "bytes": 5994,
             "imports": [
               {
                 "path": "react",
@@ -5335,13 +5479,19 @@
             "imports": [],
             "format": "esm"
           },
-          "src/data/mockData.ts": {
-            "bytes": 36625,
-            "imports": [],
+          "src/components/common/pet/petDialogue.ts": {
+            "bytes": 1993,
+            "imports": [
+              {
+                "path": "src/utils/petHelpers.ts",
+                "kind": "import-statement",
+                "original": "@/utils/petHelpers"
+              }
+            ],
             "format": "esm"
           },
           "src/components/common/predictions/predictionCards.ts": {
-            "bytes": 4021,
+            "bytes": 3883,
             "imports": [
               {
                 "path": "react",
@@ -5352,11 +5502,6 @@
                 "path": "src/hooks/usePredictionRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/usePredictionRequests"
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               }
             ],
             "format": "esm"
@@ -5383,7 +5528,7 @@
             "format": "esm"
           },
           "src/hooks/useBattleRequests.ts": {
-            "bytes": 10328,
+            "bytes": 10317,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -5429,7 +5574,7 @@
             "format": "esm"
           },
           "src/hooks/usePetRequests.ts": {
-            "bytes": 16427,
+            "bytes": 16345,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -5475,7 +5620,7 @@
             "format": "esm"
           },
           "src/layouts/components/StandalonePageShell.tsx": {
-            "bytes": 15837,
+            "bytes": 15828,
             "imports": [
               {
                 "path": "react",
@@ -5513,14 +5658,14 @@
                 "original": "@/components/common/pet/petDisplay"
               },
               {
+                "path": "src/components/common/pet/petDialogue.ts",
+                "kind": "import-statement",
+                "original": "@/components/common/pet/petDialogue"
+              },
+              {
                 "path": "src/components/common/predictions/predictionCards.ts",
                 "kind": "import-statement",
                 "original": "@/components/common/predictions/predictionCards"
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               },
               {
                 "path": "src/hooks/useAppSession.ts",
@@ -5608,7 +5753,7 @@
             "format": "esm"
           },
           "src/pages/home/components/predictionCards.ts": {
-            "bytes": 4015,
+            "bytes": 3877,
             "imports": [
               {
                 "path": "react",
@@ -5619,11 +5764,6 @@
                 "path": "src/hooks/usePredictionRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/usePredictionRequests"
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               }
             ],
             "format": "esm"
@@ -5754,7 +5894,7 @@
             "format": "esm"
           },
           "src/pages/home/index.tsx": {
-            "bytes": 4984,
+            "bytes": 4931,
             "imports": [
               {
                 "path": "react",
@@ -5775,11 +5915,6 @@
                 "path": "src/hooks/usePredictionRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/usePredictionRequests"
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               },
               {
                 "path": "src/pages/home/components/HomePageView.tsx",
@@ -5867,7 +6002,7 @@
             "format": "esm"
           },
           "src/hooks/useTopicRequests.ts": {
-            "bytes": 13077,
+            "bytes": 12940,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -5903,7 +6038,7 @@
             "format": "esm"
           },
           "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-            "bytes": 67710,
+            "bytes": 67727,
             "imports": [
               {
                 "path": "react",
@@ -5981,7 +6116,7 @@
             "format": "esm"
           },
           "src/pages/event-battle/index.tsx": {
-            "bytes": 4172,
+            "bytes": 4095,
             "imports": [
               {
                 "path": "react",
@@ -5997,11 +6132,6 @@
                 "path": "src/layouts/context/index.ts",
                 "kind": "import-statement",
                 "original": "@/layouts/context"
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               },
               {
                 "path": "src/pages/event-battle/components/EventBattlePage.tsx",
@@ -6023,7 +6153,7 @@
             "format": "esm"
           },
           "src/pages/world-cup/components/WorldCupPageContent/index.tsx": {
-            "bytes": 71323,
+            "bytes": 71347,
             "imports": [
               {
                 "path": "./index.module.scss",
@@ -6090,13 +6220,8 @@
             ],
             "format": "esm"
           },
-          "src/pages/rivalry/components/rivalryMockData.ts": {
-            "bytes": 13452,
-            "imports": [],
-            "format": "esm"
-          },
           "src/pages/rivalry/components/RivalryBetModal.tsx": {
-            "bytes": 8791,
+            "bytes": 8788,
             "imports": [
               {
                 "path": "react",
@@ -6122,7 +6247,7 @@
             "format": "esm"
           },
           "src/pages/rivalry/components/RivalryPKContent.tsx": {
-            "bytes": 50623,
+            "bytes": 50510,
             "imports": [
               {
                 "path": "react",
@@ -6138,11 +6263,6 @@
                 "path": "lucide-react",
                 "kind": "import-statement",
                 "external": true
-              },
-              {
-                "path": "src/pages/rivalry/components/rivalryMockData.ts",
-                "kind": "import-statement",
-                "original": "./rivalryMockData"
               },
               {
                 "path": "src/pages/rivalry/components/RivalryBetModal.tsx",
@@ -6169,7 +6289,7 @@
             "format": "esm"
           },
           "src/pages/rivalry/components/RivalryPageView.tsx": {
-            "bytes": 1083,
+            "bytes": 1080,
             "imports": [
               {
                 "path": "src/pages/rivalry/components/RivalryPK.tsx",
@@ -6180,7 +6300,7 @@
             "format": "esm"
           },
           "src/pages/rivalry/index.tsx": {
-            "bytes": 2691,
+            "bytes": 2721,
             "imports": [
               {
                 "path": "react",
@@ -6203,9 +6323,9 @@
                 "original": "@/layouts/context"
               },
               {
-                "path": "src/utils/authStorage.ts",
+                "path": "src/hooks/useRequireAuth.ts",
                 "kind": "import-statement",
-                "original": "@/utils/authStorage"
+                "original": "@/hooks/useRequireAuth"
               },
               {
                 "path": "src/pages/rivalry/components/RivalryPageView.tsx",
@@ -6215,13 +6335,18 @@
             ],
             "format": "esm"
           },
+          "src/pages/forum/components/forumTags.ts": {
+            "bytes": 565,
+            "imports": [],
+            "format": "esm"
+          },
           "src/utils/imageCompress.ts": {
             "bytes": 2797,
             "imports": [],
             "format": "esm"
           },
           "src/pages/forum/components/ForumCompose.tsx": {
-            "bytes": 23889,
+            "bytes": 24116,
             "imports": [
               {
                 "path": "react",
@@ -6239,9 +6364,9 @@
                 "external": true
               },
               {
-                "path": "src/data/mockData.ts",
+                "path": "src/pages/forum/components/forumTags.ts",
                 "kind": "import-statement",
-                "original": "@/data/mockData"
+                "original": "./forumTags"
               },
               {
                 "path": "src/hooks/useAuthRequests.ts",
@@ -6256,8 +6381,24 @@
             ],
             "format": "esm"
           },
+          "src/utils/userAvatar.ts": {
+            "bytes": 1493,
+            "imports": [
+              {
+                "path": "@dicebear/core",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@dicebear/collection",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
           "src/pages/forum/components/TopicPostCard.tsx": {
-            "bytes": 45821,
+            "bytes": 47133,
             "imports": [
               {
                 "path": "react",
@@ -6290,14 +6431,19 @@
                 "external": true
               },
               {
-                "path": "src/data/mockData.ts",
+                "path": "src/pages/forum/components/forumTags.ts",
                 "kind": "import-statement",
-                "original": "@/data/mockData"
+                "original": "./forumTags"
               },
               {
                 "path": "src/config/index.ts",
                 "kind": "import-statement",
                 "original": "@/config"
+              },
+              {
+                "path": "src/utils/userAvatar.ts",
+                "kind": "import-statement",
+                "original": "@/utils/userAvatar"
               },
               {
                 "path": "src/hooks/useAuthRequests.ts",
@@ -6379,8 +6525,39 @@
             ],
             "format": "esm"
           },
+          "src/api/tagApi.ts": {
+            "bytes": 138,
+            "imports": [],
+            "format": "esm"
+          },
+          "src/hooks/useTagRequests.ts": {
+            "bytes": 1248,
+            "imports": [
+              {
+                "path": "src/api/httpClient.ts",
+                "kind": "import-statement",
+                "original": "@/api/httpClient"
+              },
+              {
+                "path": "src/api/tagApi.ts",
+                "kind": "import-statement",
+                "original": "@/api/tagApi"
+              },
+              {
+                "path": "react-query",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/utils/requestUtils.ts",
+                "kind": "import-statement",
+                "original": "@/utils/requestUtils"
+              }
+            ],
+            "format": "esm"
+          },
           "src/pages/forum/components/Forum.tsx": {
-            "bytes": 9645,
+            "bytes": 10049,
             "imports": [
               {
                 "path": "react",
@@ -6433,41 +6610,31 @@
                 "original": "@/layouts/context"
               },
               {
-                "path": "src/utils/authStorage.ts",
+                "path": "src/hooks/useRequireAuth.ts",
                 "kind": "import-statement",
-                "original": "@/utils/authStorage"
+                "original": "@/hooks/useRequireAuth"
+              },
+              {
+                "path": "src/hooks/useTagRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useTagRequests"
               }
             ],
             "format": "esm"
           },
           "src/pages/forum/components/ForumPageView/index.tsx": {
-            "bytes": 1597,
+            "bytes": 761,
             "imports": [
-              {
-                "path": "react",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "lucide-react",
-                "kind": "import-statement",
-                "external": true
-              },
               {
                 "path": "src/pages/forum/components/Forum.tsx",
                 "kind": "import-statement",
                 "original": "../Forum"
-              },
-              {
-                "path": "./index.module.scss",
-                "kind": "import-statement",
-                "external": true
               }
             ],
             "format": "esm"
           },
           "src/pages/forum/components/predictionCards.ts": {
-            "bytes": 4015,
+            "bytes": 3877,
             "imports": [
               {
                 "path": "react",
@@ -6478,17 +6645,12 @@
                 "path": "src/hooks/usePredictionRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/usePredictionRequests"
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               }
             ],
             "format": "esm"
           },
           "src/pages/forum/index.tsx": {
-            "bytes": 1423,
+            "bytes": 1443,
             "imports": [
               {
                 "path": "react",
@@ -6566,8 +6728,19 @@
             "imports": [],
             "format": "esm"
           },
+          "src/components/common/state/PageState.tsx": {
+            "bytes": 3168,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
           "src/pages/battle-plaza/components/BattlePlazaExperience/index.tsx": {
-            "bytes": 75932,
+            "bytes": 75948,
             "imports": [
               {
                 "path": "./index.module.scss",
@@ -6613,6 +6786,16 @@
                 "path": "src/hooks/useTopicRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/useTopicRequests"
+              },
+              {
+                "path": "src/components/common/state/PageState.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/state/PageState"
+              },
+              {
+                "path": "src/hooks/useRequireAuth.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useRequireAuth"
               }
             ],
             "format": "esm"
@@ -6651,7 +6834,7 @@
             "format": "esm"
           },
           "src/pages/rank/components/RankPage/index.tsx": {
-            "bytes": 4014,
+            "bytes": 4588,
             "imports": [
               {
                 "path": "react",
@@ -6664,9 +6847,9 @@
                 "external": true
               },
               {
-                "path": "src/data/mockData.ts",
+                "path": "src/components/common/state/PageState.tsx",
                 "kind": "import-statement",
-                "original": "@/data/mockData"
+                "original": "@/components/common/state/PageState"
               },
               {
                 "path": "./index.module.scss",
@@ -6694,6 +6877,27 @@
                 "path": "src/pages/rank/components/RankPageView.tsx",
                 "kind": "import-statement",
                 "original": "./components/RankPageView"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/wrappers/RequireAuth.tsx": {
+            "bytes": 804,
+            "imports": [
+              {
+                "path": "src/components/common/state/PageState.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/state/PageState"
+              },
+              {
+                "path": "src/layouts/context/index.ts",
+                "kind": "import-statement",
+                "original": "@/layouts/context"
+              },
+              {
+                "path": "src/utils/authStorage.ts",
+                "kind": "import-statement",
+                "original": "@/utils/authStorage"
               }
             ],
             "format": "esm"
@@ -6726,7 +6930,7 @@
             "format": "esm"
           },
           "src/pages/shop/components/Shop.tsx": {
-            "bytes": 63811,
+            "bytes": 64336,
             "imports": [
               {
                 "path": "react",
@@ -6742,11 +6946,6 @@
                 "path": "lucide-react",
                 "kind": "import-statement",
                 "external": true
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               },
               {
                 "path": "src/hooks/useAiRequests.ts",
@@ -6774,9 +6973,19 @@
                 "original": "@/utils/petHelpers"
               },
               {
+                "path": "src/hooks/useRequireAuth.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useRequireAuth"
+              },
+              {
                 "path": "src/components/common/pet/petRarity.ts",
                 "kind": "import-statement",
                 "original": "@/components/common/pet/petRarity"
+              },
+              {
+                "path": "src/components/common/state/PageState.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/state/PageState"
               }
             ],
             "format": "esm"
@@ -6793,7 +7002,7 @@
             "format": "esm"
           },
           "src/pages/shop/index.tsx": {
-            "bytes": 2736,
+            "bytes": 2566,
             "imports": [
               {
                 "path": "react",
@@ -6804,11 +7013,6 @@
                 "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               },
               {
                 "path": "src/layouts/context/index.ts",
@@ -6855,7 +7059,7 @@
             "format": "esm"
           },
           "src/pages/pet/components/PetPage.tsx": {
-            "bytes": 38792,
+            "bytes": 40012,
             "imports": [
               {
                 "path": "react",
@@ -6883,11 +7087,6 @@
                 "original": "@/components/common/spine/CommonSpine"
               },
               {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
-              },
-              {
                 "path": "src/components/common/pet/petRarity.ts",
                 "kind": "import-statement",
                 "original": "@/components/common/pet/petRarity"
@@ -6911,6 +7110,11 @@
                 "path": "src/utils/petSceneBackground.ts",
                 "kind": "import-statement",
                 "original": "@/utils/petSceneBackground"
+              },
+              {
+                "path": "src/components/common/pet/petDialogue.ts",
+                "kind": "import-statement",
+                "original": "@/components/common/pet/petDialogue"
               }
             ],
             "format": "esm"
@@ -6927,7 +7131,7 @@
             "format": "esm"
           },
           "src/pages/pet/index.tsx": {
-            "bytes": 3717,
+            "bytes": 3526,
             "imports": [
               {
                 "path": "react",
@@ -6938,11 +7142,6 @@
                 "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               },
               {
                 "path": "src/hooks/useAppSession.ts",
@@ -6978,7 +7177,7 @@
             "format": "esm"
           },
           "src/pages/profile/components/ProfilePetArchive.tsx": {
-            "bytes": 7553,
+            "bytes": 7570,
             "imports": [
               {
                 "path": "react",
@@ -6999,7 +7198,7 @@
             "format": "esm"
           },
           "src/pages/profile/components/ProfilePage.tsx": {
-            "bytes": 38175,
+            "bytes": 35926,
             "imports": [
               {
                 "path": "react",
@@ -7027,9 +7226,14 @@
                 "original": "@/utils/authStorage"
               },
               {
-                "path": "@/data/mockData",
+                "path": "@/components/common/pet/petTypes",
                 "kind": "import-statement",
                 "external": true
+              },
+              {
+                "path": "src/components/common/state/PageState.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/state/PageState"
               },
               {
                 "path": "src/pages/profile/components/ProfilePetArchive.tsx",
@@ -7051,7 +7255,7 @@
             "format": "esm"
           },
           "src/pages/profile/index.tsx": {
-            "bytes": 2929,
+            "bytes": 2743,
             "imports": [
               {
                 "path": "react",
@@ -7062,11 +7266,6 @@
                 "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               },
               {
                 "path": "src/layouts/context/index.ts",
@@ -7134,7 +7333,7 @@
             "format": "esm"
           },
           "src/pages/active-predictions/components/predictionCards.ts": {
-            "bytes": 4015,
+            "bytes": 3877,
             "imports": [
               {
                 "path": "react",
@@ -7145,17 +7344,12 @@
                 "path": "src/hooks/usePredictionRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/usePredictionRequests"
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               }
             ],
             "format": "esm"
           },
           "src/pages/active-predictions/index.tsx": {
-            "bytes": 1258,
+            "bytes": 1177,
             "imports": [
               {
                 "path": "react",
@@ -7166,11 +7360,6 @@
                 "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
-              },
-              {
-                "path": "src/data/mockData.ts",
-                "kind": "import-statement",
-                "original": "@/data/mockData"
               },
               {
                 "path": "src/hooks/usePredictionRequests.ts",
@@ -7207,7 +7396,7 @@
             "format": "esm"
           },
           "src/.umi/core/route.tsx": {
-            "bytes": 2888,
+            "bytes": 3460,
             "imports": [
               {
                 "path": "react",
@@ -7265,6 +7454,11 @@
                 "original": "@/pages/rank/index.tsx"
               },
               {
+                "path": "src/wrappers/RequireAuth.tsx",
+                "kind": "dynamic-import",
+                "original": "@/wrappers/RequireAuth.tsx"
+              },
+              {
                 "path": "src/pages/shop/index.tsx",
                 "kind": "dynamic-import",
                 "original": "@/pages/shop/index.tsx"
@@ -7275,9 +7469,19 @@
                 "original": "@/pages/pet/index.tsx"
               },
               {
+                "path": "src/wrappers/RequireAuth.tsx",
+                "kind": "dynamic-import",
+                "original": "@/wrappers/RequireAuth.tsx"
+              },
+              {
                 "path": "src/pages/profile/index.tsx",
                 "kind": "dynamic-import",
                 "original": "@/pages/profile/index.tsx"
+              },
+              {
+                "path": "src/wrappers/RequireAuth.tsx",
+                "kind": "dynamic-import",
+                "original": "@/wrappers/RequireAuth.tsx"
               },
               {
                 "path": "src/pages/active-predictions/index.tsx",
@@ -7293,7 +7497,7 @@
             "format": "esm"
           },
           "src/queryClient.ts": {
-            "bytes": 561,
+            "bytes": 533,
             "imports": [
               {
                 "path": "react-query",
@@ -7640,6 +7844,11 @@
                 "external": true
               },
               {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "framer-motion",
                 "kind": "import-statement",
                 "external": true
@@ -8040,6 +8249,16 @@
                 "external": true
               },
               {
+                "path": "@dicebear/core",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@dicebear/collection",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "react",
                 "kind": "import-statement",
                 "external": true
@@ -8080,6 +8299,11 @@
                 "external": true
               },
               {
+                "path": "react-query",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "react",
                 "kind": "import-statement",
                 "external": true
@@ -8105,21 +8329,6 @@
                 "external": true
               },
               {
-                "path": "lucide-react",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "./index.module.scss",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "react",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
                 "path": "react",
                 "kind": "import-statement",
                 "external": true
@@ -8141,6 +8350,11 @@
               },
               {
                 "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -9477,10 +9691,10 @@
                 "bytesInOutput": 983
               },
               "src/config/index.ts": {
-                "bytesInOutput": 541
+                "bytesInOutput": 523
               },
               "src/utils/authStorage.ts": {
-                "bytesInOutput": 1699
+                "bytesInOutput": 1945
               },
               "src/components/mobile/header/mobileHeaderMetrics.ts": {
                 "bytesInOutput": 182
@@ -9495,7 +9709,7 @@
                 "bytesInOutput": 7053
               },
               "src/api/httpClient.ts": {
-                "bytesInOutput": 1436
+                "bytesInOutput": 1424
               },
               "src/api/aiApi.ts": {
                 "bytesInOutput": 514
@@ -9504,13 +9718,13 @@
                 "bytesInOutput": 222
               },
               "src/utils/requestUtils.ts": {
-                "bytesInOutput": 1066
+                "bytesInOutput": 1002
               },
               "src/hooks/useCoinRequests.ts": {
-                "bytesInOutput": 2983
+                "bytesInOutput": 2834
               },
               "src/hooks/useAiRequests.ts": {
-                "bytesInOutput": 5491
+                "bytesInOutput": 5441
               },
               "src/layouts/context/HomeLayoutContext.tsx": {
                 "bytesInOutput": 634
@@ -9521,8 +9735,11 @@
               "src/components/common/spine/CommonSpine.tsx": {
                 "bytesInOutput": 6537
               },
+              "src/hooks/useRequireAuth.ts": {
+                "bytesInOutput": 374
+              },
               "src/components/common/pet/PetChat.tsx": {
-                "bytesInOutput": 14417
+                "bytesInOutput": 14455
               },
               "src/components/pc/layout/SidebarDesktopHotPanel.tsx": {
                 "bytesInOutput": 4710
@@ -9549,7 +9766,7 @@
                 "bytesInOutput": 458
               },
               "src/hooks/usePredictionRequests.ts": {
-                "bytesInOutput": 2599
+                "bytesInOutput": 2791
               },
               "src/components/common/layout/sidebarHotTopics.ts": {
                 "bytesInOutput": 1575
@@ -9596,11 +9813,11 @@
               "src/components/common/pet/petDisplay.ts": {
                 "bytesInOutput": 334
               },
-              "src/data/mockData.ts": {
-                "bytesInOutput": 16165
+              "src/components/common/pet/petDialogue.ts": {
+                "bytesInOutput": 1694
               },
               "src/components/common/predictions/predictionCards.ts": {
-                "bytesInOutput": 1689
+                "bytesInOutput": 1668
               },
               "src/hooks/useAppSession.ts": {
                 "bytesInOutput": 460
@@ -9609,7 +9826,7 @@
                 "bytesInOutput": 804
               },
               "src/hooks/useBattleRequests.ts": {
-                "bytesInOutput": 7483
+                "bytesInOutput": 7458
               },
               "src/components/common/pet/petRarity.ts": {
                 "bytesInOutput": 1956
@@ -9618,10 +9835,10 @@
                 "bytesInOutput": 510
               },
               "src/hooks/usePetRequests.ts": {
-                "bytesInOutput": 12873
+                "bytesInOutput": 12794
               },
               "src/layouts/components/StandalonePageShell.tsx": {
-                "bytesInOutput": 12670
+                "bytesInOutput": 12921
               },
               "src/layouts/components/index.ts": {
                 "bytesInOutput": 136
@@ -9630,7 +9847,7 @@
                 "bytesInOutput": 2607
               },
               "src/pages/home/components/predictionCards.ts": {
-                "bytesInOutput": 2838
+                "bytesInOutput": 2757
               },
               "src/pages/home/components/PredictionBetModal.tsx": {
                 "bytesInOutput": 9994
@@ -9648,7 +9865,7 @@
                 "bytesInOutput": 615
               },
               "src/pages/home/index.tsx": {
-                "bytesInOutput": 4278
+                "bytesInOutput": 4260
               },
               "src/api/commentApi.ts": {
                 "bytesInOutput": 285
@@ -9666,7 +9883,7 @@
                 "bytesInOutput": 331
               },
               "src/hooks/useTopicRequests.ts": {
-                "bytesInOutput": 3800
+                "bytesInOutput": 3663
               },
               "src/pages/event-battle/components/eventBattleThemes.ts": {
                 "bytesInOutput": 7109
@@ -9681,13 +9898,13 @@
                 "bytesInOutput": 2342
               },
               "src/pages/event-battle/index.tsx": {
-                "bytesInOutput": 3784
+                "bytesInOutput": 3742
               },
               "src/pages/world-cup/components/WorldCupPitchBackdrop/index.tsx": {
                 "bytesInOutput": 8937
               },
               "src/pages/world-cup/components/WorldCupPageContent/index.tsx": {
-                "bytesInOutput": 70695
+                "bytesInOutput": 70719
               },
               "src/pages/world-cup/components/WorldCupPage.tsx": {
                 "bytesInOutput": 128
@@ -9695,14 +9912,11 @@
               "src/pages/world-cup/index.tsx": {
                 "bytesInOutput": 258
               },
-              "src/pages/rivalry/components/rivalryMockData.ts": {
-                "bytesInOutput": 14333
-              },
               "src/pages/rivalry/components/RivalryBetModal.tsx": {
                 "bytesInOutput": 9530
               },
               "src/pages/rivalry/components/RivalryPKContent.tsx": {
-                "bytesInOutput": 53185
+                "bytesInOutput": 53129
               },
               "src/pages/rivalry/components/RivalryPK.tsx": {
                 "bytesInOutput": 117
@@ -9711,16 +9925,22 @@
                 "bytesInOutput": 700
               },
               "src/pages/rivalry/index.tsx": {
-                "bytesInOutput": 2512
+                "bytesInOutput": 2543
+              },
+              "src/pages/forum/components/forumTags.ts": {
+                "bytesInOutput": 540
               },
               "src/utils/imageCompress.ts": {
                 "bytesInOutput": 2733
               },
               "src/pages/forum/components/ForumCompose.tsx": {
-                "bytesInOutput": 25628
+                "bytesInOutput": 25842
+              },
+              "src/utils/userAvatar.ts": {
+                "bytesInOutput": 1152
               },
               "src/pages/forum/components/TopicPostCard.tsx": {
-                "bytesInOutput": 46128
+                "bytesInOutput": 47484
               },
               "src/api/userApi.ts": {
                 "bytesInOutput": 653
@@ -9734,17 +9954,23 @@
               "src/hooks/useUserCenterRequests.ts": {
                 "bytesInOutput": 6469
               },
+              "src/api/tagApi.ts": {
+                "bytesInOutput": 114
+              },
+              "src/hooks/useTagRequests.ts": {
+                "bytesInOutput": 1030
+              },
               "src/pages/forum/components/Forum.tsx": {
-                "bytesInOutput": 9074
+                "bytesInOutput": 9403
               },
               "src/pages/forum/components/ForumPageView/index.tsx": {
-                "bytesInOutput": 1367
+                "bytesInOutput": 529
               },
               "src/pages/forum/components/predictionCards.ts": {
-                "bytesInOutput": 1685
+                "bytesInOutput": 1664
               },
               "src/pages/forum/index.tsx": {
-                "bytesInOutput": 1356
+                "bytesInOutput": 1376
               },
               "src/pages/games/components/GameHubPage.tsx": {
                 "bytesInOutput": 4664
@@ -9758,8 +9984,11 @@
               "src/hooks/battleTypes.ts": {
                 "bytesInOutput": 4892
               },
+              "src/components/common/state/PageState.tsx": {
+                "bytesInOutput": 3157
+              },
               "src/pages/battle-plaza/components/BattlePlazaExperience/index.tsx": {
-                "bytesInOutput": 81585
+                "bytesInOutput": 80872
               },
               "src/pages/battle-plaza/components/BattlePlazaPage.tsx": {
                 "bytesInOutput": 240
@@ -9771,13 +10000,16 @@
                 "bytesInOutput": 395
               },
               "src/pages/rank/components/RankPage/index.tsx": {
-                "bytesInOutput": 4456
+                "bytesInOutput": 5020
               },
               "src/pages/rank/components/RankPageView.tsx": {
                 "bytesInOutput": 360
               },
               "src/pages/rank/index.tsx": {
                 "bytesInOutput": 260
+              },
+              "src/wrappers/RequireAuth.tsx": {
+                "bytesInOutput": 803
               },
               "src/pages/shop/components/shopPetPreviewStyles.ts": {
                 "bytesInOutput": 1009
@@ -9789,13 +10021,13 @@
                 "bytesInOutput": 2517
               },
               "src/pages/shop/components/Shop.tsx": {
-                "bytesInOutput": 63492
+                "bytesInOutput": 64039
               },
               "src/pages/shop/components/ShopPageView.tsx": {
                 "bytesInOutput": 355
               },
               "src/pages/shop/index.tsx": {
-                "bytesInOutput": 2421
+                "bytesInOutput": 2219
               },
               "src/pages/pet/components/petDisplay.ts": {
                 "bytesInOutput": 2517
@@ -9804,13 +10036,13 @@
                 "bytesInOutput": 8824
               },
               "src/pages/pet/components/PetPage.tsx": {
-                "bytesInOutput": 21827
+                "bytesInOutput": 23184
               },
               "src/pages/pet/components/PetPageView.tsx": {
                 "bytesInOutput": 356
               },
               "src/pages/pet/index.tsx": {
-                "bytesInOutput": 3314
+                "bytesInOutput": 3091
               },
               "src/pages/profile/components/petDisplay.ts": {
                 "bytesInOutput": 2521
@@ -9819,25 +10051,25 @@
                 "bytesInOutput": 7718
               },
               "src/pages/profile/components/ProfilePage.tsx": {
-                "bytesInOutput": 40242
+                "bytesInOutput": 37487
               },
               "src/pages/profile/components/ProfilePageView.tsx": {
                 "bytesInOutput": 346
               },
               "src/pages/profile/index.tsx": {
-                "bytesInOutput": 2588
+                "bytesInOutput": 2353
               },
               "src/pages/active-predictions/components/ActivePredictionsPage/index.tsx": {
-                "bytesInOutput": 7425
+                "bytesInOutput": 7423
               },
               "src/pages/active-predictions/components/ActivePredictionsPageView.tsx": {
                 "bytesInOutput": 537
               },
               "src/pages/active-predictions/components/predictionCards.ts": {
-                "bytesInOutput": 1698
+                "bytesInOutput": 1677
               },
               "src/pages/active-predictions/index.tsx": {
-                "bytesInOutput": 1165
+                "bytesInOutput": 1143
               },
               "src/layouts/index.tsx": {
                 "bytesInOutput": 434
@@ -9849,13 +10081,13 @@
                 "bytesInOutput": 1827
               },
               "src/.umi/core/route.tsx": {
-                "bytesInOutput": 2918
+                "bytesInOutput": 3517
               },
               "src/app.ts": {
                 "bytesInOutput": 1575
               },
               "src/queryClient.ts": {
-                "bytesInOutput": 416
+                "bytesInOutput": 389
               },
               "src/.umi/core/helmet.ts": {
                 "bytesInOutput": 361
@@ -9876,7 +10108,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 977212
+            "bytes": 955740
           }
         }
       }
@@ -12278,18 +12510,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 243,
+          "end": 241,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
             {
-              "imported": "clearInfo",
-              "local": "clearInfo",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "markAuthRequired",
-              "local": "markAuthRequired",
+              "imported": "handleUnauthorizedSession",
+              "local": "handleUnauthorizedSession",
               "type": "ImportSpecifier"
             }
           ],
@@ -12300,6 +12527,7 @@
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/petApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/pkApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/predictionApi.ts": [],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/tagApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/topicApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/userApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/app.ts": [
@@ -12939,9 +13167,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 472,
+          "end": 489,
           "importKind": "type",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetInfo",
@@ -12953,7 +13181,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 524,
+          "end": 541,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -12963,11 +13191,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 473,
+          "start": 490,
           "type": "ImportDeclaration"
         },
         {
-          "end": 582,
+          "end": 599,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -12977,11 +13205,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 525,
+          "start": 542,
           "type": "ImportDeclaration"
         },
         {
-          "end": 651,
+          "end": 668,
           "importKind": "value",
           "source": "@/components/common/spine/CommonSpine",
           "specifiers": [
@@ -12991,7 +13219,56 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 583,
+          "start": 600,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 725,
+          "importKind": "value",
+          "source": "@/hooks/useRequireAuth",
+          "specifiers": [
+            {
+              "imported": "useRequireAuth",
+              "local": "useRequireAuth",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 669,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/pet/petDialogue.ts": [
+        {
+          "end": 157,
+          "importKind": "type",
+          "source": "@/hooks/petTypes",
+          "specifiers": [
+            {
+              "imported": "PetStatusAiMessage",
+              "local": "PetStatusAiMessage",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PetStatusResponse",
+              "local": "PetStatusResponse",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 79,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 214,
+          "importKind": "value",
+          "source": "@/utils/petHelpers",
+          "specifiers": [
+            {
+              "imported": "getPetStatusAiText",
+              "local": "getPetStatusAiText",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 158,
           "type": "ImportDeclaration"
         }
       ],
@@ -13043,25 +13320,6 @@
             }
           ],
           "start": 197,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 357,
-          "importKind": "value",
-          "source": "@/data/mockData",
-          "specifiers": [
-            {
-              "imported": "heroNews",
-              "local": "heroNews",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockNews",
-              "local": "mockNews",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 304,
           "type": "ImportDeclaration"
         }
       ],
@@ -13172,6 +13430,21 @@
             }
           ],
           "start": 407,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/state/PageState.tsx": [
+        {
+          "end": 123,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "local": "React",
+              "type": "ImportDefaultSpecifier"
+            }
+          ],
+          "start": 97,
           "type": "ImportDeclaration"
         }
       ],
@@ -13649,9 +13922,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 283,
+          "end": 300,
           "importKind": "type",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetInfo",
@@ -13663,7 +13936,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 351,
+          "end": 368,
           "importKind": "value",
           "source": "../SidebarDesktopHotPanel",
           "specifiers": [
@@ -13673,11 +13946,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 284,
+          "start": 301,
           "type": "ImportDeclaration"
         },
         {
-          "end": 419,
+          "end": 436,
           "importKind": "value",
           "source": "../SidebarDesktopNavPanel",
           "specifiers": [
@@ -13687,11 +13960,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 352,
+          "start": 369,
           "type": "ImportDeclaration"
         },
         {
-          "end": 495,
+          "end": 512,
           "importKind": "value",
           "source": "../SidebarDesktopProfilePanel",
           "specifiers": [
@@ -13701,11 +13974,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 420,
+          "start": 437,
           "type": "ImportDeclaration"
         },
         {
-          "end": 579,
+          "end": 596,
           "importKind": "value",
           "source": "../SidebarMainPanels",
           "specifiers": [
@@ -13725,11 +13998,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 496,
+          "start": 513,
           "type": "ImportDeclaration"
         },
         {
-          "end": 723,
+          "end": 740,
           "importKind": "value",
           "source": "@/components/common/layout/sidebarHotTopics",
           "specifiers": [
@@ -13754,11 +14027,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 580,
+          "start": 597,
           "type": "ImportDeclaration"
         },
         {
-          "end": 814,
+          "end": 831,
           "importKind": "type",
           "source": "@/components/common/predictions/predictionCards",
           "specifiers": [
@@ -13768,11 +14041,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 724,
+          "start": 741,
           "type": "ImportDeclaration"
         },
         {
-          "end": 856,
+          "end": 873,
           "importKind": "value",
           "source": "./index.module.scss",
           "specifiers": [
@@ -13781,11 +14054,11 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 815,
+          "start": 832,
           "type": "ImportDeclaration"
         },
         {
-          "end": 5977,
+          "end": 5994,
           "exportKind": "type",
           "source": "../SidebarMainPanels",
           "specifiers": [
@@ -13795,7 +14068,7 @@
               "type": "ExportSpecifier"
             }
           ],
-          "start": 5924,
+          "start": 5941,
           "type": "ExportNamedDeclaration"
         }
       ],
@@ -13939,9 +14212,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 280,
+          "end": 297,
           "importKind": "type",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetInfo",
@@ -13953,7 +14226,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 345,
+          "end": 362,
           "importKind": "value",
           "source": "@/hooks/useAuthRequests",
           "specifiers": [
@@ -13963,11 +14236,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 281,
+          "start": 298,
           "type": "ImportDeclaration"
         },
         {
-          "end": 405,
+          "end": 422,
           "importKind": "value",
           "source": "@/hooks/useCoinRequests",
           "specifiers": [
@@ -13977,11 +14250,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 346,
+          "start": 363,
           "type": "ImportDeclaration"
         },
         {
-          "end": 458,
+          "end": 475,
           "importKind": "value",
           "source": "./PetProfilePanel",
           "specifiers": [
@@ -13991,11 +14264,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 406,
+          "start": 423,
           "type": "ImportDeclaration"
         },
         {
-          "end": 513,
+          "end": 530,
           "importKind": "value",
           "source": "./ShopShortcutCard",
           "specifiers": [
@@ -14005,7 +14278,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 459,
+          "start": 476,
           "type": "ImportDeclaration"
         }
       ],
@@ -14180,9 +14453,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 364,
+          "end": 381,
           "importKind": "type",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetInfo",
@@ -14194,7 +14467,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 423,
+          "end": 440,
           "importKind": "value",
           "source": "./SidebarProfileCard",
           "specifiers": [
@@ -14204,11 +14477,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 365,
+          "start": 382,
           "type": "ImportDeclaration"
         },
         {
-          "end": 488,
+          "end": 505,
           "importKind": "value",
           "source": "./SidebarHotTopicsPanel",
           "specifiers": [
@@ -14218,11 +14491,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 424,
+          "start": 441,
           "type": "ImportDeclaration"
         },
         {
-          "end": 560,
+          "end": 577,
           "importKind": "value",
           "source": "./SidebarNavMenu",
           "specifiers": [
@@ -14237,11 +14510,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 489,
+          "start": 506,
           "type": "ImportDeclaration"
         },
         {
-          "end": 659,
+          "end": 676,
           "importKind": "type",
           "source": "@/components/common/layout/sidebarHotTopics",
           "specifiers": [
@@ -14256,11 +14529,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 561,
+          "start": 578,
           "type": "ImportDeclaration"
         },
         {
-          "end": 750,
+          "end": 767,
           "importKind": "type",
           "source": "@/components/common/predictions/predictionCards",
           "specifiers": [
@@ -14270,7 +14543,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 660,
+          "start": 677,
           "type": "ImportDeclaration"
         }
       ],
@@ -14359,9 +14632,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 317,
+          "end": 334,
           "importKind": "type",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetInfo",
@@ -14373,7 +14646,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 382,
+          "end": 399,
           "importKind": "value",
           "source": "@/hooks/useAuthRequests",
           "specifiers": [
@@ -14383,11 +14656,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 318,
+          "start": 335,
           "type": "ImportDeclaration"
         },
         {
-          "end": 442,
+          "end": 459,
           "importKind": "value",
           "source": "@/hooks/useCoinRequests",
           "specifiers": [
@@ -14397,11 +14670,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 383,
+          "start": 400,
           "type": "ImportDeclaration"
         },
         {
-          "end": 495,
+          "end": 512,
           "importKind": "value",
           "source": "./PetProfilePanel",
           "specifiers": [
@@ -14411,11 +14684,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 443,
+          "start": 460,
           "type": "ImportDeclaration"
         },
         {
-          "end": 550,
+          "end": 567,
           "importKind": "value",
           "source": "./ShopShortcutCard",
           "specifiers": [
@@ -14425,7 +14698,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 496,
+          "start": 513,
           "type": "ImportDeclaration"
         }
       ],
@@ -14451,7 +14724,6 @@
           "type": "ImportDeclaration"
         }
       ],
-      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/data/mockData.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/battleTypes.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useAiRequests.ts": [
         {
@@ -16121,6 +16393,132 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useRequireAuth.ts": [
+        {
+          "end": 127,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "useCallback",
+              "local": "useCallback",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 91,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 185,
+          "importKind": "value",
+          "source": "@/layouts/context",
+          "specifiers": [
+            {
+              "imported": "useHomeLayoutContext",
+              "local": "useHomeLayoutContext",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 128,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 242,
+          "importKind": "value",
+          "source": "@/utils/authStorage",
+          "specifiers": [
+            {
+              "imported": "requireAuthOrOpen",
+              "local": "requireAuthOrOpen",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 186,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useTagRequests.ts": [
+        {
+          "end": 133,
+          "importKind": "value",
+          "source": "@/api/httpClient",
+          "specifiers": [
+            {
+              "imported": "axiosCustom",
+              "local": "axiosCustom",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 86,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 178,
+          "importKind": "value",
+          "source": "@/api/tagApi",
+          "specifiers": [
+            {
+              "imported": "API_Tag_Tags",
+              "local": "API_Tag_Tags",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 134,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 218,
+          "importKind": "value",
+          "source": "react-query",
+          "specifiers": [
+            {
+              "imported": "useQuery",
+              "local": "useQuery",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 179,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 297,
+          "importKind": "value",
+          "source": "@/utils/requestUtils",
+          "specifiers": [
+            {
+              "imported": "assertSuccess",
+              "local": "assertSuccess",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "getAuthorizationHeaders",
+              "local": "getAuthorizationHeaders",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 219,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 363,
+          "importKind": "type",
+          "source": "./tagTypes",
+          "specifiers": [
+            {
+              "imported": "TagListParams",
+              "local": "TagListParams",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "TagListResponse",
+              "local": "TagListResponse",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 298,
+          "type": "ImportDeclaration"
+        }
+      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useTopicRequests.ts": [
         {
           "end": 156,
@@ -16861,7 +17259,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 779,
+          "end": 736,
+          "importKind": "value",
+          "source": "@/components/common/pet/petDialogue",
+          "specifiers": [
+            {
+              "imported": "getPetIdleDialogues",
+              "local": "getPetIdleDialogues",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 662,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 854,
           "importKind": "value",
           "source": "@/components/common/predictions/predictionCards",
           "specifiers": [
@@ -16876,45 +17288,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 662,
+          "start": 737,
           "type": "ImportDeclaration"
         },
         {
-          "end": 871,
-          "importKind": "value",
-          "source": "@/data/mockData",
-          "specifiers": [
-            {
-              "imported": "heroNews",
-              "local": "heroNews",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockNews",
-              "local": "mockNews",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockPetSkins",
-              "local": "mockPetSkins",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockUser",
-              "local": "mockUser",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "petDialogues",
-              "local": "petDialogues",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 780,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 926,
+          "end": 909,
           "importKind": "value",
           "source": "@/hooks/useAppSession",
           "specifiers": [
@@ -16924,11 +17302,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 872,
+          "start": 855,
           "type": "ImportDeclaration"
         },
         {
-          "end": 987,
+          "end": 970,
           "importKind": "value",
           "source": "@/hooks/useBattleRequests",
           "specifiers": [
@@ -16938,11 +17316,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 927,
+          "start": 910,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1048,
+          "end": 1031,
           "importKind": "value",
           "source": "@/hooks/useCoinRequests",
           "specifiers": [
@@ -16952,11 +17330,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 988,
+          "start": 971,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1300,
+          "end": 1283,
           "importKind": "value",
           "source": "@/hooks/usePetRequests",
           "specifiers": [
@@ -17006,11 +17384,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1049,
+          "start": 1032,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1375,
+          "end": 1358,
           "importKind": "value",
           "source": "@/hooks/usePredictionRequests",
           "specifiers": [
@@ -17020,11 +17398,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1301,
+          "start": 1284,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1436,
+          "end": 1419,
           "importKind": "value",
           "source": "@/hooks/useAuthRequests",
           "specifiers": [
@@ -17034,11 +17412,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1376,
+          "start": 1359,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1628,
+          "end": 1611,
           "importKind": "value",
           "source": "@/hooks/useAiRequests",
           "specifiers": [
@@ -17073,11 +17451,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1437,
+          "start": 1420,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1682,
+          "end": 1665,
           "importKind": "type",
           "source": "@/hooks/aiTypes",
           "specifiers": [
@@ -17087,11 +17465,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1629,
+          "start": 1612,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1810,
+          "end": 1812,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -17119,9 +17497,14 @@
               "imported": "hasAuthRequiredFlag",
               "local": "hasAuthRequiredFlag",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "requireAuthOrOpen",
+              "local": "requireAuthOrOpen",
+              "type": "ImportSpecifier"
             }
           ],
-          "start": 1683,
+          "start": 1666,
           "type": "ImportDeclaration"
         }
       ],
@@ -17528,25 +17911,6 @@
           ],
           "start": 191,
           "type": "ImportDeclaration"
-        },
-        {
-          "end": 351,
-          "importKind": "value",
-          "source": "@/data/mockData",
-          "specifiers": [
-            {
-              "imported": "heroNews",
-              "local": "heroNews",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockNews",
-              "local": "mockNews",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 298,
-          "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/active-predictions/index.tsx": [
@@ -17579,26 +17943,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 254,
-          "importKind": "value",
-          "source": "@/data/mockData",
-          "specifiers": [
-            {
-              "imported": "heroNews",
-              "local": "heroNews",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockNews",
-              "local": "mockNews",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 201,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 329,
+          "end": 275,
           "importKind": "value",
           "source": "@/hooks/usePredictionRequests",
           "specifiers": [
@@ -17608,11 +17953,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 255,
+          "start": 201,
           "type": "ImportDeclaration"
         },
         {
-          "end": 413,
+          "end": 359,
           "importKind": "value",
           "source": "./components/ActivePredictionsPageView",
           "specifiers": [
@@ -17622,11 +17967,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 330,
+          "start": 276,
           "type": "ImportDeclaration"
         },
         {
-          "end": 512,
+          "end": 458,
           "importKind": "value",
           "source": "./components/predictionCards",
           "specifiers": [
@@ -17641,7 +17986,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 414,
+          "start": 360,
           "type": "ImportDeclaration"
         }
       ],
@@ -17898,6 +18243,34 @@
             }
           ],
           "start": 1051,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1209,
+          "importKind": "value",
+          "source": "@/components/common/state/PageState",
+          "specifiers": [
+            {
+              "imported": "TextEmptyState",
+              "local": "TextEmptyState",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1140,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1266,
+          "importKind": "value",
+          "source": "@/hooks/useRequireAuth",
+          "specifiers": [
+            {
+              "imported": "useRequireAuth",
+              "local": "useRequireAuth",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1210,
           "type": "ImportDeclaration"
         }
       ],
@@ -18208,9 +18581,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 1013,
+          "end": 1030,
           "importKind": "type",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetSkin",
@@ -18222,7 +18595,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 1096,
+          "end": 1113,
           "importKind": "type",
           "source": "@/pages/home/components/predictionCards",
           "specifiers": [
@@ -18232,11 +18605,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1014,
+          "start": 1031,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1159,
+          "end": 1176,
           "importKind": "value",
           "source": "./eventBattleThemes",
           "specifiers": [
@@ -18246,15 +18619,15 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1097,
+          "start": 1114,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1195,
+          "end": 1212,
           "importKind": "value",
           "source": "./EventBattleLiveRoom.css",
           "specifiers": [],
-          "start": 1160,
+          "start": 1177,
           "type": "ImportDeclaration"
         }
       ],
@@ -18381,26 +18754,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 446,
-          "importKind": "value",
-          "source": "@/data/mockData",
-          "specifiers": [
-            {
-              "imported": "heroNews",
-              "local": "heroNews",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockNews",
-              "local": "mockNews",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 393,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 510,
+          "end": 456,
           "importKind": "value",
           "source": "./components/EventBattlePage",
           "specifiers": [
@@ -18410,11 +18764,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 447,
+          "start": 393,
           "type": "ImportDeclaration"
         },
         {
-          "end": 593,
+          "end": 539,
           "importKind": "type",
           "source": "@/pages/home/components/predictionCards",
           "specifiers": [
@@ -18424,7 +18778,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 511,
+          "start": 457,
           "type": "ImportDeclaration"
         }
       ],
@@ -18606,13 +18960,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 831,
+          "end": 836,
           "importKind": "value",
-          "source": "@/utils/authStorage",
+          "source": "@/hooks/useRequireAuth",
           "specifiers": [
             {
-              "imported": "getAuthToken",
-              "local": "getAuthToken",
+              "imported": "useRequireAuth",
+              "local": "useRequireAuth",
               "type": "ImportSpecifier"
             }
           ],
@@ -18620,7 +18974,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 892,
+          "end": 896,
+          "importKind": "value",
+          "source": "@/hooks/useTagRequests",
+          "specifiers": [
+            {
+              "imported": "useRequestTagTags",
+              "local": "useRequestTagTags",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 837,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 957,
           "importKind": "type",
           "source": "./predictionCards",
           "specifiers": [
@@ -18630,7 +18998,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 832,
+          "start": 897,
           "type": "ImportDeclaration"
         }
       ],
@@ -18731,13 +19099,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 415,
+          "end": 417,
           "importKind": "value",
-          "source": "@/data/mockData",
+          "source": "./forumTags",
           "specifiers": [
             {
-              "imported": "FORUM_TAGS",
-              "local": "FORUM_TAGS",
+              "imported": "getForumTagClass",
+              "local": "getForumTagClass",
               "type": "ImportSpecifier"
             }
           ],
@@ -18745,7 +19113,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 480,
+          "end": 482,
           "importKind": "value",
           "source": "@/hooks/useAuthRequests",
           "specifiers": [
@@ -18755,11 +19123,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 416,
+          "start": 418,
           "type": "ImportDeclaration"
         },
         {
-          "end": 544,
+          "end": 546,
           "importKind": "value",
           "source": "@/utils/imageCompress",
           "specifiers": [
@@ -18769,41 +19137,13 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 481,
+          "start": 483,
           "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/forum/components/ForumPageView/index.tsx": [
         {
           "end": 132,
-          "importKind": "value",
-          "source": "react",
-          "specifiers": [
-            {
-              "imported": "useState",
-              "local": "useState",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 99,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 172,
-          "importKind": "value",
-          "source": "lucide-react",
-          "specifiers": [
-            {
-              "imported": "PenLine",
-              "local": "PenLine",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 133,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 206,
           "importKind": "value",
           "source": "../Forum",
           "specifiers": [
@@ -18813,11 +19153,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 173,
+          "start": 99,
           "type": "ImportDeclaration"
         },
         {
-          "end": 268,
+          "end": 194,
           "importKind": "type",
           "source": "../predictionCards",
           "specifiers": [
@@ -18827,20 +19167,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 207,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 310,
-          "importKind": "value",
-          "source": "./index.module.scss",
-          "specifiers": [
-            {
-              "local": "styles",
-              "type": "ImportDefaultSpecifier"
-            }
-          ],
-          "start": 269,
+          "start": 133,
           "type": "ImportDeclaration"
         }
       ],
@@ -19010,13 +19337,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 594,
+          "end": 596,
           "importKind": "value",
-          "source": "@/data/mockData",
+          "source": "./forumTags",
           "specifiers": [
             {
-              "imported": "FORUM_TAGS",
-              "local": "FORUM_TAGS",
+              "imported": "getForumTagClass",
+              "local": "getForumTagClass",
               "type": "ImportSpecifier"
             }
           ],
@@ -19024,7 +19351,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 642,
+          "end": 644,
           "importKind": "value",
           "source": "@/config",
           "specifiers": [
@@ -19034,11 +19361,25 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 595,
+          "start": 597,
           "type": "ImportDeclaration"
         },
         {
-          "end": 707,
+          "end": 712,
+          "importKind": "value",
+          "source": "@/utils/userAvatar",
+          "specifiers": [
+            {
+              "imported": "resolveGeneratedUserAvatarUrl",
+              "local": "resolveGeneratedUserAvatarUrl",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 645,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 777,
           "importKind": "value",
           "source": "@/hooks/useAuthRequests",
           "specifiers": [
@@ -19048,11 +19389,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 643,
+          "start": 713,
           "type": "ImportDeclaration"
         },
         {
-          "end": 852,
+          "end": 922,
           "importKind": "value",
           "source": "@/hooks/useCommentRequests",
           "specifiers": [
@@ -19077,11 +19418,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 708,
+          "start": 778,
           "type": "ImportDeclaration"
         },
         {
-          "end": 913,
+          "end": 983,
           "importKind": "type",
           "source": "./predictionCards",
           "specifiers": [
@@ -19091,10 +19432,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 853,
+          "start": 923,
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/forum/components/forumTags.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/forum/components/predictionCards.ts": [
         {
           "end": 118,
@@ -19141,25 +19483,6 @@
             }
           ],
           "start": 191,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 351,
-          "importKind": "value",
-          "source": "@/data/mockData",
-          "specifiers": [
-            {
-              "imported": "heroNews",
-              "local": "heroNews",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockNews",
-              "local": "mockNews",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 298,
           "type": "ImportDeclaration"
         }
       ],
@@ -19842,25 +20165,6 @@
           ],
           "start": 191,
           "type": "ImportDeclaration"
-        },
-        {
-          "end": 351,
-          "importKind": "value",
-          "source": "@/data/mockData",
-          "specifiers": [
-            {
-              "imported": "heroNews",
-              "local": "heroNews",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockNews",
-              "local": "mockNews",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 298,
-          "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx": [
@@ -19959,26 +20263,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 559,
-          "importKind": "value",
-          "source": "@/data/mockData",
-          "specifiers": [
-            {
-              "imported": "heroNews",
-              "local": "heroNews",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockNews",
-              "local": "mockNews",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 506,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 617,
+          "end": 563,
           "importKind": "value",
           "source": "./components/HomePageView",
           "specifiers": [
@@ -19988,11 +20273,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 560,
+          "start": 506,
           "type": "ImportDeclaration"
         },
         {
-          "end": 747,
+          "end": 693,
           "importKind": "value",
           "source": "./components/predictionCards",
           "specifiers": [
@@ -20012,7 +20297,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 618,
+          "start": 564,
           "type": "ImportDeclaration"
         }
       ],
@@ -20141,7 +20426,7 @@
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/pet/components/PetPage.tsx": [
         {
-          "end": 117,
+          "end": 126,
           "importKind": "value",
           "source": "react",
           "specifiers": [
@@ -20158,13 +20443,18 @@
               "imported": "useEffect",
               "local": "useEffect",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
             }
           ],
           "start": 66,
           "type": "ImportDeclaration"
         },
         {
-          "end": 174,
+          "end": 183,
           "importKind": "value",
           "source": "framer-motion",
           "specifiers": [
@@ -20179,11 +20469,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 118,
+          "start": 127,
           "type": "ImportDeclaration"
         },
         {
-          "end": 271,
+          "end": 280,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
@@ -20218,11 +20508,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 175,
+          "start": 184,
           "type": "ImportDeclaration"
         },
         {
-          "end": 330,
+          "end": 339,
           "importKind": "value",
           "source": "@/components/common/pet/PetChat",
           "specifiers": [
@@ -20232,11 +20522,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 272,
+          "start": 281,
           "type": "ImportDeclaration"
         },
         {
-          "end": 399,
+          "end": 408,
           "importKind": "value",
           "source": "@/components/common/spine/CommonSpine",
           "specifiers": [
@@ -20246,11 +20536,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 331,
+          "start": 340,
           "type": "ImportDeclaration"
         },
         {
-          "end": 453,
+          "end": 462,
           "importKind": "type",
           "source": "@/hooks/aiTypes",
           "specifiers": [
@@ -20260,13 +20550,13 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 400,
+          "start": 409,
           "type": "ImportDeclaration"
         },
         {
-          "end": 515,
+          "end": 541,
           "importKind": "type",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetInfo",
@@ -20279,25 +20569,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 454,
+          "start": 463,
           "type": "ImportDeclaration"
         },
         {
-          "end": 566,
-          "importKind": "value",
-          "source": "@/data/mockData",
-          "specifiers": [
-            {
-              "imported": "petDialogues",
-              "local": "petDialogues",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 516,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 673,
+          "end": 648,
           "importKind": "type",
           "source": "@/hooks/petTypes",
           "specifiers": [
@@ -20322,11 +20598,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 567,
+          "start": 542,
           "type": "ImportDeclaration"
         },
         {
-          "end": 797,
+          "end": 772,
           "importKind": "value",
           "source": "@/components/common/pet/petRarity",
           "specifiers": [
@@ -20346,11 +20622,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 674,
+          "start": 649,
           "type": "ImportDeclaration"
         },
         {
-          "end": 849,
+          "end": 824,
           "importKind": "value",
           "source": "./petDisplay",
           "specifiers": [
@@ -20360,11 +20636,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 798,
+          "start": 773,
           "type": "ImportDeclaration"
         },
         {
-          "end": 900,
+          "end": 875,
           "importKind": "value",
           "source": "./petAbilities",
           "specifiers": [
@@ -20374,11 +20650,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 850,
+          "start": 825,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1010,
+          "end": 985,
           "importKind": "value",
           "source": "@/utils/petHelpers",
           "specifiers": [
@@ -20398,11 +20674,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 901,
+          "start": 876,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1096,
+          "end": 1071,
           "importKind": "value",
           "source": "@/utils/petSceneBackground",
           "specifiers": [
@@ -20417,7 +20693,21 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1011,
+          "start": 986,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1146,
+          "importKind": "value",
+          "source": "@/components/common/pet/petDialogue",
+          "specifiers": [
+            {
+              "imported": "getPetIdleDialogues",
+              "local": "getPetIdleDialogues",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1072,
           "type": "ImportDeclaration"
         }
       ],
@@ -20527,18 +20817,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 306,
-          "importKind": "value",
-          "source": "@/data/mockData",
+          "end": 308,
+          "importKind": "type",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
-              "imported": "mockPetSkins",
-              "local": "mockPetSkins",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockUser",
-              "local": "mockUser",
+              "imported": "PetInfo",
+              "local": "PetInfo",
               "type": "ImportSpecifier"
             },
             {
@@ -20551,7 +20836,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 361,
+          "end": 363,
           "importKind": "value",
           "source": "@/hooks/useAppSession",
           "specifiers": [
@@ -20561,11 +20846,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 307,
+          "start": 309,
           "type": "ImportDeclaration"
         },
         {
-          "end": 546,
+          "end": 548,
           "importKind": "value",
           "source": "@/hooks/usePetRequests",
           "specifiers": [
@@ -20600,11 +20885,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 362,
+          "start": 364,
           "type": "ImportDeclaration"
         },
         {
-          "end": 602,
+          "end": 604,
           "importKind": "value",
           "source": "./components/PetPageView",
           "specifiers": [
@@ -20614,11 +20899,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 547,
+          "start": 549,
           "type": "ImportDeclaration"
         },
         {
-          "end": 661,
+          "end": 663,
           "importKind": "value",
           "source": "./components/petDisplay",
           "specifiers": [
@@ -20628,11 +20913,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 603,
+          "start": 605,
           "type": "ImportDeclaration"
         },
         {
-          "end": 719,
+          "end": 721,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -20642,7 +20927,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 662,
+          "start": 664,
           "type": "ImportDeclaration"
         }
       ],
@@ -20845,9 +21130,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 994,
+          "end": 1011,
           "importKind": "value",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetInfo",
@@ -20864,7 +21149,26 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 1051,
+          "end": 1099,
+          "importKind": "value",
+          "source": "@/components/common/state/PageState",
+          "specifiers": [
+            {
+              "imported": "EmptyDataPage",
+              "local": "EmptyDataPage",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "LoginRequiredPage",
+              "local": "LoginRequiredPage",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1012,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1156,
           "importKind": "value",
           "source": "./ProfilePetArchive",
           "specifiers": [
@@ -20874,7 +21178,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 995,
+          "start": 1100,
           "type": "ImportDeclaration"
         }
       ],
@@ -20962,9 +21266,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 294,
+          "end": 311,
           "importKind": "type",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetInfo",
@@ -20976,7 +21280,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 348,
+          "end": 365,
           "importKind": "type",
           "source": "@/hooks/petTypes",
           "specifiers": [
@@ -20986,11 +21290,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 295,
+          "start": 312,
           "type": "ImportDeclaration"
         },
         {
-          "end": 400,
+          "end": 417,
           "importKind": "value",
           "source": "./petDisplay",
           "specifiers": [
@@ -21000,7 +21304,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 349,
+          "start": 366,
           "type": "ImportDeclaration"
         }
       ],
@@ -21040,18 +21344,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 282,
-          "importKind": "value",
-          "source": "@/data/mockData",
+          "end": 284,
+          "importKind": "type",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
-              "imported": "mockPetSkins",
-              "local": "mockPetSkins",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockUser",
-              "local": "mockUser",
+              "imported": "PetInfo",
+              "local": "PetInfo",
               "type": "ImportSpecifier"
             },
             {
@@ -21064,7 +21363,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 340,
+          "end": 342,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -21074,11 +21373,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 283,
+          "start": 285,
           "type": "ImportDeclaration"
         },
         {
-          "end": 395,
+          "end": 397,
           "importKind": "value",
           "source": "@/hooks/useAppSession",
           "specifiers": [
@@ -21088,11 +21387,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 341,
+          "start": 343,
           "type": "ImportDeclaration"
         },
         {
-          "end": 552,
+          "end": 554,
           "importKind": "value",
           "source": "@/hooks/usePetRequests",
           "specifiers": [
@@ -21122,11 +21421,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 396,
+          "start": 398,
           "type": "ImportDeclaration"
         },
         {
-          "end": 609,
+          "end": 611,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -21136,11 +21435,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 553,
+          "start": 555,
           "type": "ImportDeclaration"
         },
         {
-          "end": 673,
+          "end": 675,
           "importKind": "value",
           "source": "./components/ProfilePageView",
           "specifiers": [
@@ -21150,11 +21449,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 610,
+          "start": 612,
           "type": "ImportDeclaration"
         },
         {
-          "end": 732,
+          "end": 734,
           "importKind": "value",
           "source": "./components/petDisplay",
           "specifiers": [
@@ -21164,7 +21463,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 674,
+          "start": 676,
           "type": "ImportDeclaration"
         }
       ],
@@ -21197,13 +21496,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 177,
+          "end": 197,
           "importKind": "value",
-          "source": "@/data/mockData",
+          "source": "@/components/common/state/PageState",
           "specifiers": [
             {
-              "imported": "mockRankUsers",
-              "local": "mockRankUsers",
+              "imported": "EmptyDataPage",
+              "local": "EmptyDataPage",
               "type": "ImportSpecifier"
             }
           ],
@@ -21211,7 +21510,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 219,
+          "end": 239,
           "importKind": "value",
           "source": "./index.module.scss",
           "specifiers": [
@@ -21220,7 +21519,7 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 178,
+          "start": 198,
           "type": "ImportDeclaration"
         }
       ],
@@ -21334,9 +21633,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 340,
+          "end": 337,
           "importKind": "type",
-          "source": "./rivalryMockData",
+          "source": "./rivalryTypes",
           "specifiers": [
             {
               "imported": "RivalryNewsItem",
@@ -21487,9 +21786,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 467,
+          "end": 464,
           "importKind": "type",
-          "source": "./rivalryMockData",
+          "source": "./rivalryTypes",
           "specifiers": [
             {
               "imported": "PKPhase",
@@ -21516,31 +21815,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 552,
-          "importKind": "value",
-          "source": "./rivalryMockData",
-          "specifiers": [
-            {
-              "imported": "mockPKStates",
-              "local": "mockPKStates",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockRivalryHero",
-              "local": "mockRivalryHero",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockRivalryItems",
-              "local": "mockRivalryItems",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 468,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 605,
+          "end": 517,
           "importKind": "value",
           "source": "./RivalryBetModal",
           "specifiers": [
@@ -21550,11 +21825,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 553,
+          "start": 465,
           "type": "ImportDeclaration"
         },
         {
-          "end": 707,
+          "end": 619,
           "importKind": "value",
           "source": "@/hooks/usePkRequests",
           "specifiers": [
@@ -21574,11 +21849,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 606,
+          "start": 518,
           "type": "ImportDeclaration"
         },
         {
-          "end": 810,
+          "end": 722,
           "importKind": "type",
           "source": "@/hooks/pkTypes",
           "specifiers": [
@@ -21598,15 +21873,15 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 708,
+          "start": 620,
           "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rivalry/components/RivalryPageView.tsx": [
         {
-          "end": 162,
+          "end": 159,
           "importKind": "type",
-          "source": "./rivalryMockData",
+          "source": "./rivalryTypes",
           "specifiers": [
             {
               "imported": "RivalryNewsItem",
@@ -21618,7 +21893,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 203,
+          "end": 200,
           "importKind": "value",
           "source": "./RivalryPK",
           "specifiers": [
@@ -21628,11 +21903,10 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 163,
+          "start": 160,
           "type": "ImportDeclaration"
         }
       ],
-      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rivalry/components/rivalryMockData.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rivalry/index.tsx": [
         {
           "end": 161,
@@ -21701,13 +21975,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 394,
+          "end": 399,
           "importKind": "value",
-          "source": "@/utils/authStorage",
+          "source": "@/hooks/useRequireAuth",
           "specifiers": [
             {
-              "imported": "getAuthToken",
-              "local": "getAuthToken",
+              "imported": "useRequireAuth",
+              "local": "useRequireAuth",
               "type": "ImportSpecifier"
             }
           ],
@@ -21715,9 +21989,9 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 463,
+          "end": 465,
           "importKind": "type",
-          "source": "./components/rivalryMockData",
+          "source": "./components/rivalryTypes",
           "specifiers": [
             {
               "imported": "RivalryNewsItem",
@@ -21725,11 +21999,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 395,
+          "start": 400,
           "type": "ImportDeclaration"
         },
         {
-          "end": 527,
+          "end": 529,
           "importKind": "value",
           "source": "./components/RivalryPageView",
           "specifiers": [
@@ -21739,7 +22013,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 464,
+          "start": 466,
           "type": "ImportDeclaration"
         }
       ],
@@ -21861,18 +22135,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 316,
+          "end": 323,
           "importKind": "type",
-          "source": "@/data/mockData",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
               "imported": "PetInfo",
               "local": "PetInfo",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "ShopItem",
-              "local": "ShopItem",
               "type": "ImportSpecifier"
             }
           ],
@@ -21880,21 +22149,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 365,
-          "importKind": "value",
-          "source": "@/data/mockData",
+          "end": 368,
+          "importKind": "type",
+          "source": "./shopTypes",
           "specifiers": [
             {
-              "imported": "shopApples",
-              "local": "shopApples",
+              "imported": "ShopItem",
+              "local": "ShopItem",
               "type": "ImportSpecifier"
             }
           ],
-          "start": 317,
+          "start": 324,
           "type": "ImportDeclaration"
         },
         {
-          "end": 431,
+          "end": 434,
           "importKind": "value",
           "source": "@/hooks/useAiRequests",
           "specifiers": [
@@ -21904,11 +22173,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 366,
+          "start": 369,
           "type": "ImportDeclaration"
         },
         {
-          "end": 560,
+          "end": 563,
           "importKind": "value",
           "source": "@/hooks/usePetRequests",
           "specifiers": [
@@ -21933,11 +22202,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 432,
+          "start": 435,
           "type": "ImportDeclaration"
         },
         {
-          "end": 641,
+          "end": 644,
           "importKind": "type",
           "source": "@/hooks/petTypes",
           "specifiers": [
@@ -21952,11 +22221,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 561,
+          "start": 564,
           "type": "ImportDeclaration"
         },
         {
-          "end": 700,
+          "end": 703,
           "importKind": "value",
           "source": "./PetPoolPreviewTile",
           "specifiers": [
@@ -21966,11 +22235,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 642,
+          "start": 645,
           "type": "ImportDeclaration"
         },
         {
-          "end": 752,
+          "end": 755,
           "importKind": "value",
           "source": "./petDisplay",
           "specifiers": [
@@ -21980,11 +22249,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 701,
+          "start": 704,
           "type": "ImportDeclaration"
         },
         {
-          "end": 825,
+          "end": 828,
           "importKind": "value",
           "source": "@/utils/petHelpers",
           "specifiers": [
@@ -21999,11 +22268,25 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 753,
+          "start": 756,
           "type": "ImportDeclaration"
         },
         {
-          "end": 949,
+          "end": 885,
+          "importKind": "value",
+          "source": "@/hooks/useRequireAuth",
+          "specifiers": [
+            {
+              "imported": "useRequireAuth",
+              "local": "useRequireAuth",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 829,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1009,
           "importKind": "value",
           "source": "@/components/common/pet/petRarity",
           "specifiers": [
@@ -22023,7 +22306,21 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 826,
+          "start": 886,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1079,
+          "importKind": "value",
+          "source": "@/components/common/state/PageState",
+          "specifiers": [
+            {
+              "imported": "TextEmptyState",
+              "local": "TextEmptyState",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1010,
           "type": "ImportDeclaration"
         }
       ],
@@ -22119,18 +22416,13 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 293,
-          "importKind": "value",
-          "source": "@/data/mockData",
+          "end": 295,
+          "importKind": "type",
+          "source": "@/components/common/pet/petTypes",
           "specifiers": [
             {
-              "imported": "mockPetSkins",
-              "local": "mockPetSkins",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "mockUser",
-              "local": "mockUser",
+              "imported": "PetInfo",
+              "local": "PetInfo",
               "type": "ImportSpecifier"
             },
             {
@@ -22143,7 +22435,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 351,
+          "end": 353,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -22153,11 +22445,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 294,
+          "start": 296,
           "type": "ImportDeclaration"
         },
         {
-          "end": 406,
+          "end": 408,
           "importKind": "value",
           "source": "@/hooks/useAppSession",
           "specifiers": [
@@ -22167,11 +22459,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 352,
+          "start": 354,
           "type": "ImportDeclaration"
         },
         {
-          "end": 563,
+          "end": 565,
           "importKind": "value",
           "source": "@/hooks/usePetRequests",
           "specifiers": [
@@ -22201,11 +22493,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 407,
+          "start": 409,
           "type": "ImportDeclaration"
         },
         {
-          "end": 621,
+          "end": 623,
           "importKind": "value",
           "source": "./components/ShopPageView",
           "specifiers": [
@@ -22215,11 +22507,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 564,
+          "start": 566,
           "type": "ImportDeclaration"
         },
         {
-          "end": 680,
+          "end": 682,
           "importKind": "value",
           "source": "./components/petDisplay",
           "specifiers": [
@@ -22229,7 +22521,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 622,
+          "start": 624,
           "type": "ImportDeclaration"
         }
       ],
@@ -22675,15 +22967,103 @@
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/utils/requestUtils.ts": [
         {
-          "end": 170,
+          "end": 168,
           "importKind": "value",
           "source": "./authStorage",
           "specifiers": [
             {
-              "imported": "clearInfo",
-              "local": "clearInfo",
+              "imported": "getAuthToken",
+              "local": "getAuthToken",
               "type": "ImportSpecifier"
             },
+            {
+              "imported": "handleUnauthorizedSession",
+              "local": "handleUnauthorizedSession",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 96,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/utils/userAvatar.ts": [
+        {
+          "end": 124,
+          "importKind": "value",
+          "source": "@dicebear/core",
+          "specifiers": [
+            {
+              "imported": "createAvatar",
+              "local": "createAvatar",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 78,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 173,
+          "importKind": "value",
+          "source": "@dicebear/collection",
+          "specifiers": [
+            {
+              "imported": "pixelArt",
+              "local": "pixelArt",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 125,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx": [
+        {
+          "end": 103,
+          "importKind": "type",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "ReactNode",
+              "local": "ReactNode",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 64,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 176,
+          "importKind": "value",
+          "source": "@/components/common/state/PageState",
+          "specifiers": [
+            {
+              "imported": "LoginRequiredPage",
+              "local": "LoginRequiredPage",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 104,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 234,
+          "importKind": "value",
+          "source": "@/layouts/context",
+          "specifiers": [
+            {
+              "imported": "useHomeLayoutContext",
+              "local": "useHomeLayoutContext",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 177,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 304,
+          "importKind": "value",
+          "source": "@/utils/authStorage",
+          "specifiers": [
             {
               "imported": "getAuthToken",
               "local": "getAuthToken",
@@ -22695,7 +23075,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 96,
+          "start": 235,
           "type": "ImportDeclaration"
         }
       ]

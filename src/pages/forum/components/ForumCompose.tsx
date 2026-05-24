@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Image as ImageIcon, SendHorizonal, X } from 'lucide-react';
 import type { TopicPostTag } from './TopicPostCard';
-import { FORUM_TAGS } from '@/data/mockData';
+import { getForumTagClass } from './forumTags';
 import { useRequestUploadImage } from '@/hooks/useAuthRequests';
 import { compressImageForUpload } from '@/utils/imageCompress';
 
@@ -25,9 +25,9 @@ interface ForumComposeProps {
   onCloseComposer?: () => void;
   showEntryButton?: boolean;
   mobileBottomSheet?: boolean;
+  categoryTags?: TopicPostTag[];
 }
 
-const categoryTags: TopicPostTag[] = ['讨论', '爆料', '分析'];
 const MAX_IMAGES = 9;
 const TITLE_MAX = 100;
 const CONTENT_MAX = 3000;
@@ -56,11 +56,12 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
   onCloseComposer,
   showEntryButton = true,
   mobileBottomSheet = false,
+  categoryTags = [],
 }) => {
   const uploadImageMutation = useRequestUploadImage();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [tag, setTag] = useState<TopicPostTag>('讨论');
+  const [tag, setTag] = useState<TopicPostTag>('');
   const [images, setImages] = useState<LocalComposeImage[]>([]);
   const [mobileComposerOpen, setMobileComposerOpen] = useState(false);
   const [toolbarHint, setToolbarHint] = useState(
@@ -126,6 +127,16 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
       setPreviewIndex(images.length - 1);
     }
   }, [previewIndex, images.length]);
+
+  useEffect(() => {
+    if (categoryTags.length === 0) {
+      setTag('');
+      return;
+    }
+    if (!tag || !categoryTags.includes(tag)) {
+      setTag(categoryTags[0]);
+    }
+  }, [categoryTags, tag]);
 
   useEffect(() => {
     if (previewIndex === null) return;
@@ -311,7 +322,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
   const scrollbarHide =
     '[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 
-  const renderTagSection = () => (
+  const renderTagSection = () => categoryTags.length > 0 ? (
     <div className="mt-2 flex flex-wrap items-center gap-2">
       <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">标签</span>
       <div className="flex flex-wrap gap-1.5">
@@ -322,7 +333,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
             onClick={() => setTag(item)}
             className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition-all ${
               tag === item
-                ? `${FORUM_TAGS[item]} shadow-[0_0_12px_rgba(16,185,129,0.12)]`
+                ? `${getForumTagClass(item)} shadow-[0_0_12px_rgba(16,185,129,0.12)]`
                 : 'bg-white/[0.06] text-zinc-400 ring-1 ring-white/[0.08] hover:bg-white/[0.1] hover:text-emerald-200 hover:ring-emerald-400/20'
             }`}
           >
@@ -331,7 +342,7 @@ export const ForumCompose: React.FC<ForumComposeProps> = ({
         ))}
       </div>
     </div>
-  );
+  ) : null;
 
   const thumbnailEls = images.map((image, index) => (
     <div

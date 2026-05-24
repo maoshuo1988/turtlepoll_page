@@ -10,7 +10,7 @@ import { mapMarketToPredictionCard, type PredictionCardItem } from './components
 export default function ForumPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
+  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });
   const newsByMarketId = useMemo(() => {
     const list = footballMarkets.data?.list ?? [];
     const cards = Array.isArray(list) ? list.map(mapMarketToPredictionCard) : [];

@@ -56,9 +56,10 @@ export function useRequestFootballBetSettleResult(params: FootballBetSettleResul
 // 查询预测市场（聚合 market + context）
 export function useRequestFootballMarkets(params: FootballMarketsParams = {}) {
     const token = getAuthToken();
+    const requireAuth = params.requireAuth ?? true;
 
     return useQuery<FootballMarketsResponse>({
-        queryKey: ["requestFootballMarkets", params],
+        queryKey: ["requestFootballMarkets", params, requireAuth, Boolean(token)],
         queryFn: async () => {
             const res = await axiosCustom({
                 method: "get",
@@ -73,7 +74,7 @@ export function useRequestFootballMarkets(params: FootballMarketsParams = {}) {
             });
             return assertSuccess(res);
         },
-        enabled: Boolean(token),
+        enabled: Boolean(!requireAuth || token),
     });
 }
 
@@ -81,9 +82,10 @@ export function useRequestFootballMarkets(params: FootballMarketsParams = {}) {
 export function useRequestFootballMarketsByTag(params: FootballMarketsByTagParams = {}) {
     const token = getAuthToken();
     const normalizedTag = params.tag?.trim().replace(/^#/, "");
+    const requireAuth = params.requireAuth ?? true;
 
     return useQuery<FootballMarketsByTagResponse>({
-        queryKey: ["requestFootballMarketsByTag", normalizedTag, params.page ?? 1, params.limit ?? 20],
+        queryKey: ["requestFootballMarketsByTag", normalizedTag, params.page ?? 1, params.limit ?? 20, requireAuth, Boolean(token)],
         queryFn: async () => {
             const res = await axiosCustom({
                 method: "get",
@@ -97,7 +99,7 @@ export function useRequestFootballMarketsByTag(params: FootballMarketsByTagParam
             });
             return assertSuccess(res);
         },
-        enabled: Boolean(token && normalizedTag) && params.enabled !== false,
+        enabled: Boolean((!requireAuth || token) && normalizedTag) && params.enabled !== false,
     });
 }
 

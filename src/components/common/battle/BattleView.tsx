@@ -3,7 +3,7 @@
  */
 import React, { useMemo, useState } from 'react';
 import { Crown, Coins, Flame, MessageCircle, Heart, Clock3 } from 'lucide-react';
-import type { Battle, BattleSide, BattleStatus } from '@/data/mockData';
+import type { Battle, BattleSide, BattleStatus } from './battleTypes';
 
 interface BattleViewProps {
   battles: Battle[];

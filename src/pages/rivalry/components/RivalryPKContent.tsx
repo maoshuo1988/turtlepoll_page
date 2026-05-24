@@ -19,8 +19,7 @@ import {
   Users,
   Zap,
 } from 'lucide-react';
-import type { PKPhase, PKRoundResult, PKTopicState, RivalryNewsItem } from './rivalryMockData';
-import { mockPKStates, mockRivalryHero, mockRivalryItems } from './rivalryMockData';
+import type { PKPhase, PKRoundResult, PKTopicState, RivalryNewsItem } from './rivalryTypes';
 import { RivalryBetModal } from './RivalryBetModal';
 import { useRequestPKHistory, useRequestPKSeasons, useRequestPKTopics } from '@/hooks/usePkRequests';
 import type { PKRound as ApiPKRound, PKSeason as ApiPKSeason, PKTopicSummary } from '@/hooks/pkTypes';
@@ -964,8 +963,6 @@ function HistoryPage({ pk, onBack }: { pk: RivalryPKState; onBack: () => void })
 }
 
 export const RivalryPK: React.FC<RivalryPKProps> = ({
-  hero = mockRivalryHero,
-  items = mockRivalryItems,
   userVotes = {},
   onBet,
   onEnterBattle,
@@ -978,11 +975,7 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
     () => (topicsQuery.data?.list ?? []).map(mapTopicSummaryToPK).filter((pk): pk is RivalryPKState => Boolean(pk)),
     [topicsQuery.data?.list],
   );
-  const mockPKs = useMemo(
-    () => mockPKStates.filter((pk) => [hero.id, ...items.map((item) => item.id)].includes(pk.id)) as RivalryPKState[],
-    [hero.id, items],
-  );
-  const allPKs = apiPKs.length > 0 ? apiPKs : mockPKs;
+  const allPKs = apiPKs;
   const heroPK = allPKs[0];
 
   if (historyId) {
@@ -1002,12 +995,14 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
         <h2 className="text-base font-bold text-slate-100">开撕台</h2>
         <span className="text-xs text-white/48">
           身份对立 · 回合制 · 热度决胜
-          {topicsQuery.isLoading ? ' · 接口加载中' : apiPKs.length > 0 ? ' · 已接入接口' : ' · 本地预览'}
+          {topicsQuery.isLoading ? ' · 接口加载中' : apiPKs.length > 0 ? ' · 已接入接口' : ' · 暂无数据'}
         </span>
       </div>
 
       <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[#0d1118] shadow-[0_14px_30px_rgba(0,0,0,0.24),inset_0_1px_0_rgba(255,255,255,0.05)]">
-        <img src={heroPK?.newsItem.image ?? hero.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-[0.14]" />
+        {heroPK?.newsItem.image ? (
+          <img src={heroPK.newsItem.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-[0.14]" />
+        ) : null}
         <div className="absolute inset-0 bg-gradient-to-r from-[#091121]/92 via-[#0b1426]/86 to-[#0f1a2a]/72" />
         <div className="relative flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
@@ -1042,7 +1037,11 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
           voted={userVotes[heroPK.newsItem.id] ?? heroPK.mySide}
           isBetting={pendingBetId === heroPK.newsItem.id}
         />
-      ) : null}
+      ) : (
+        <div className="rounded-[22px] border border-dashed border-white/10 bg-white/[0.03] px-6 py-12 text-center text-sm text-white/50">
+          暂无开撕台数据
+        </div>
+      )}
 
       {allPKs.filter((pk) => pk.id !== heroPK?.id).length > 0 ? (
         <div className="relative">

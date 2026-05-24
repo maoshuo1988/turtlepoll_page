@@ -405,7 +405,6 @@ export function useRequestPetStamina() {
       return assertSuccess<PetStaminaResponse>(res);
     },
     enabled: Boolean(token),
-    staleTime: 30 * 1000,
   });
 }
 
@@ -437,7 +436,6 @@ export function useRequestPetGachaConfig() {
       });
       return normalizePetGachaConfig(assertSuccess<unknown>(res));
     },
-    staleTime: 60 * 1000,
   });
 }
 
@@ -456,7 +454,6 @@ export function useRequestPetDefs(params: { page?: number; size?: number } = {})
       });
       return normalizePetDefsResponse(assertSuccess<unknown>(res));
     },
-    staleTime: 5 * 60 * 1000,
   });
 }
 

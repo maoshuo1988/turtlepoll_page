@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from '@umijs/renderer-react';
 import type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 import { useHomeLayoutContext } from '@/layouts/context';
-import { heroNews, mockNews } from '@/data/mockData';
 import { EventBattlePage } from './components/EventBattlePage';
 import type { PredictionCardItem } from '@/pages/home/components/predictionCards';
 
@@ -50,7 +49,7 @@ export default function EventBattleRoutePage() {
   const returnTo = routeState?.returnTo;
   const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);
 
-  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];
+  const allFallbackItems: PredictionCardItem[] = [];
   const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;
 
   const selectedPrediction = useMemo(() => {

@@ -1,7 +1,7 @@
 /**
  * 文件说明：request Utils 工具方法，封装跨模块复用的基础能力。
  */
-import { clearInfo, getAuthToken, markAuthRequired } from "./authStorage";
+import { getAuthToken, handleUnauthorizedSession } from "./authStorage";
 
 export const getAuthorizationHeaders = () => {
   const token = getAuthToken();
@@ -20,11 +20,6 @@ export function isUnauthorizedError(error: unknown) {
   return isUnauthorizedCode(code) || message.includes("NotLogin") || message.includes("401");
 }
 
-function handleUnauthorized() {
-  clearInfo();
-  markAuthRequired();
-}
-
 export const assertSuccess = <T>(res: {
   success?: boolean;
   msg?: unknown;
@@ -37,7 +32,7 @@ export const assertSuccess = <T>(res: {
     };
     error.code = res.code;
     if (isUnauthorizedCode(res.code) || String(res.msg ?? "").includes("NotLogin")) {
-      handleUnauthorized();
+      handleUnauthorizedSession();
     }
     throw error;
   }

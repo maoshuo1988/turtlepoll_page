@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Flame } from 'lucide-react';
-import { mockRankUsers } from '@/data/mockData';
+import { EmptyDataPage } from '@/components/common/state/PageState';
 import styles from './index.module.scss';
 
 function css(...classNames: Array<string | false | null | undefined>) {
@@ -21,13 +21,26 @@ const medalColor: Record<number, string> = {
   3: 'text-amber-700 dark:text-amber-500',
 };
 
+interface RankUser {
+  rank: number;
+  name: string;
+  avatar: string;
+  coins: number;
+  winRate: number;
+  streak?: number;
+  isMe?: boolean;
+}
+
 export const RankPage: React.FC = () => {
-  const rankList = [...mockRankUsers].sort((a, b) => a.rank - b.rank);
+  const rankList: RankUser[] = [];
   const me = rankList.find((u) => u.isMe);
 
   return (
     <section className="grid gap-4">
       <div className={css("page-card hidden overflow-hidden md:block")}>
+        {rankList.length === 0 ? (
+          <EmptyDataPage title="暂无排行榜数据" description="榜单数据同步后会展示在这里。" />
+        ) : null}
         {rankList.map((u) => (
           <div
             key={`${u.rank}-${u.name}`}
@@ -56,6 +69,11 @@ export const RankPage: React.FC = () => {
       </div>
 
       <div className="grid gap-3 md:hidden">
+        {rankList.length === 0 ? (
+          <div className={css("page-card")}>
+            <EmptyDataPage title="暂无排行榜数据" description="榜单数据同步后会展示在这里。" className="min-h-[260px] md:min-h-[320px]" />
+          </div>
+        ) : null}
         {rankList.map((u) => (
           <article
             key={`${u.rank}-${u.name}-mobile`}

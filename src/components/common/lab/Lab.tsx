@@ -59,7 +59,7 @@ function genId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function mockSign(score: number, sid: string, dur: number): string {
+function createLocalGameSign(score: number, sid: string, dur: number): string {
   const raw = `${score}:${sid}:${dur}:turtle_dash_2026`;
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = ((h << 5) - h + raw.charCodeAt(i)) | 0;
@@ -539,7 +539,7 @@ export const Lab: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
   const duration = state.phase === 'GAMEOVER' ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
   const depthM = Math.floor(state.depth / 10);
-  const sign = state.phase === 'GAMEOVER' ? mockSign(state.score, state.sessionId, duration) : '';
+  const sign = state.phase === 'GAMEOVER' ? createLocalGameSign(state.score, state.sessionId, duration) : '';
 
   return (
     <div className="flex flex-col gap-2 md:gap-3">

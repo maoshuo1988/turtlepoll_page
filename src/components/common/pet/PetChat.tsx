@@ -10,10 +10,11 @@ import {
   useRequestAiStaminaApple,
 } from '@/hooks/useAiRequests';
 import type { AiPushMessage } from '@/hooks/aiTypes';
-import type { PetInfo } from '@/data/mockData';
+import type { PetInfo } from '@/components/common/pet/petTypes';
 import { getAuthToken } from '@/utils/authStorage';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { CommonSpine } from '@/components/common/spine/CommonSpine';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 
 interface ChatMessage {
   id: string;
@@ -75,6 +76,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embe
   const inputRef = useRef<HTMLInputElement>(null);
   const isAuthenticated = Boolean(getAuthToken());
   const { onOpenAuth } = useHomeLayoutContext();
+  const requireAuth = useRequireAuth(onOpenAuth);
   const aiStaminaQuery = useRequestAiStamina();
   const aiChatMutation = useRequestAiChat();
   const aiAppleMutation = useRequestAiStaminaApple();
@@ -126,7 +128,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embe
         text: '先登录一下，小龟才能记住你们的聊天和 AI 体力。',
       };
       setMessages((prev) => [...prev, warnMsg]);
-      onOpenAuth();
+      requireAuth();
       return;
     }
 
@@ -155,13 +157,10 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embe
       };
       setMessages((prev) => [...prev, petMsg]);
     }
-  }, [aiChatMutation, input, isAuthenticated, isBusy, onOpenAuth]);
+  }, [aiChatMutation, input, isAuthenticated, isBusy, requireAuth]);
 
   const handleRecoverStamina = useCallback(async () => {
-    if (!isAuthenticated) {
-      onOpenAuth();
-      return;
-    }
+    if (!requireAuth()) return;
 
     try {
       const result = await aiAppleMutation.mutateAsync({ count: 1 });
@@ -181,7 +180,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embe
       };
       setMessages((prev) => [...prev, petMsg]);
     }
-  }, [aiAppleMutation, isAuthenticated, onOpenAuth]);
+  }, [aiAppleMutation, requireAuth]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

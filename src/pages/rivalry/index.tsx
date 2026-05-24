@@ -5,8 +5,8 @@ import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { useRequestPKBet } from '@/hooks/usePkRequests';
 import { useHomeLayoutContext } from '@/layouts/context';
-import { getAuthToken } from '@/utils/authStorage';
-import type { RivalryNewsItem } from './components/rivalryMockData';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
+import type { RivalryNewsItem } from './components/rivalryTypes';
 import { RivalryPageView } from './components/RivalryPageView';
 
 function createRequestId(prefix: string) {
@@ -24,14 +24,12 @@ export default function RivalryPage() {
   const [pendingBetId, setPendingBetId] = useState<string | null>(null);
   const pkBetMutation = useRequestPKBet();
   const { onOpenAuth } = useHomeLayoutContext();
+  const requireAuth = useRequireAuth(onOpenAuth);
 
   const handleRivalryBet = useCallback(async (newsId: string, option: 'A' | 'B', _odds: number, amount?: number) => {
     setBetError(null);
 
-    if (!getAuthToken()) {
-      onOpenAuth();
-      return;
-    }
+    if (!requireAuth()) return;
 
     if (newsId.startsWith('pk-')) {
       setUserVotes((prev) => ({ ...prev, [newsId]: option }));
@@ -57,7 +55,7 @@ export default function RivalryPage() {
     } finally {
       setPendingBetId(null);
     }
-  }, [onOpenAuth, pkBetMutation]);
+  }, [onOpenAuth, pkBetMutation, requireAuth]);
 
   const handleEnterBattle = useCallback((item: RivalryNewsItem) => {
     navigate(`/event-battle?market=${item.id}`, {

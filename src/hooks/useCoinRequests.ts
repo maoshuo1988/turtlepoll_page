@@ -41,8 +41,6 @@ export function useRequestCoinMe() {
       return assertSuccess(res);
     },
     enabled: Boolean(token),
-    // 金币余额会被 mutation 直接写入缓存，这里给一点 staleTime，减少多组件挂载时的重复请求
-    staleTime: 30 * 1000,
   });
 }
 

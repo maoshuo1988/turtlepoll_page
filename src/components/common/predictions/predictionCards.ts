@@ -4,7 +4,6 @@
 import { useMemo } from 'react';
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
 import { useRequestFootballMarkets, useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
-import { heroNews, mockNews } from '@/data/mockData';
 
 export type PredictionCardType = 'politics' | 'tech' | 'sports' | 'entertainment' | 'finance';
 
@@ -80,11 +79,12 @@ export function mapMarketToPredictionCard(item: FootballMarketAggregate): Predic
 }
 
 export function usePredictionCardItems(selectedTag: string | null) {
-  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
+  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });
   const footballMarketsByTag = useRequestFootballMarketsByTag({
     tag: selectedTag ?? undefined,
     page: 1,
     limit: 20,
+    requireAuth: false,
   });
 
   return useMemo(() => {
@@ -100,11 +100,10 @@ export function usePredictionCardItems(selectedTag: string | null) {
 
     const list = footballMarkets.data?.list ?? [];
     if (!Array.isArray(list) || list.length === 0) {
-      const fallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];
       return {
-        heroItem: fallbackItems[0] ?? null,
-        feedItems: fallbackItems.slice(1),
-        allItems: fallbackItems,
+        heroItem: null,
+        feedItems: [],
+        allItems: [],
       };
     }
 

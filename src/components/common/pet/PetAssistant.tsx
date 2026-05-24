@@ -4,7 +4,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
-import type { PetInfo } from '@/data/mockData';
+import type { PetInfo } from '@/components/common/pet/petTypes';
+import { DEFAULT_PET_IDLE_DIALOGUES } from './petDialogue';
 
 interface PetAssistantProps {
   pet: PetInfo;
@@ -17,7 +18,8 @@ export const PetAssistant: React.FC<PetAssistantProps> = ({
   dialogue,
   idleDialogues,
 }) => {
-  const [currentDialogue, setCurrentDialogue] = useState(idleDialogues[0]);
+  const safeIdleDialogues = idleDialogues.length > 0 ? idleDialogues : DEFAULT_PET_IDLE_DIALOGUES;
+  const [currentDialogue, setCurrentDialogue] = useState(safeIdleDialogues[0]);
   const [dialogueKey, setDialogueKey] = useState(0);
 
   // Cycle idle dialogues every 5s if no external dialogue
@@ -29,13 +31,13 @@ export const PetAssistant: React.FC<PetAssistantProps> = ({
     }
 
     const interval = setInterval(() => {
-      const idx = Math.floor(Math.random() * idleDialogues.length);
-      setCurrentDialogue(idleDialogues[idx]);
+      const idx = Math.floor(Math.random() * safeIdleDialogues.length);
+      setCurrentDialogue(safeIdleDialogues[idx]);
       setDialogueKey((k) => k + 1);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [dialogue, idleDialogues]);
+  }, [dialogue, safeIdleDialogues]);
 
   return (
     <div className="rounded-2xl bg-white dark:bg-rdark-card p-5 shadow-sm border border-slate-100 dark:border-rdark-border flex flex-col items-center">

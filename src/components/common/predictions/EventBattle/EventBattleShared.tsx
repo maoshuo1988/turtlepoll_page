@@ -10,7 +10,7 @@ import { ThumbsUp, Send, Flame, Sparkles, Zap, MessageCircleReply } from 'lucide
 import CountUp from 'react-countup';
 import type { PredictionCardItem } from '../predictionCards';
 import { type CommentResponse, useRequestCommentReplies } from '@/hooks/useCommentRequests';
-import type { PetSkin } from '@/data/mockData';
+import type { PetSkin } from '@/components/common/pet/petTypes';
 export function css(...classNames: Array<string | false | null | undefined>) {
   return classNames
     .filter(Boolean)

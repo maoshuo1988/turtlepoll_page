@@ -4,7 +4,7 @@
 import React from 'react';
 import { Flag, MessageSquare, Swords, Settings, HelpCircle, TrendingUp, Gift, Backpack, Users, Newspaper, Gamepad2, Flame, Turtle } from 'lucide-react';
 import type { AiPushMessage } from '@/hooks/aiTypes';
-import type { PetInfo } from '@/data/mockData';
+import type { PetInfo } from '@/components/common/pet/petTypes';
 import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
 import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';

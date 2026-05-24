@@ -13,6 +13,8 @@
     "preview": "umi preview"
   },
   "dependencies": {
+    "@dicebear/collection": "^9.4.2",
+    "@dicebear/core": "^9.4.2",
     "@esotericsoftware/spine-pixi-v8": "~4.3.0",
     "@tsparticles/react": "^3.0.0",
     "animation": "^0.1.3",

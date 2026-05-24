@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Coins, Swords, X } from 'lucide-react';
 import { useRequestCoinMe } from '@/hooks/useCoinRequests';
-import type { RivalryNewsItem } from './rivalryMockData';
+import type { RivalryNewsItem } from './rivalryTypes';
 
 interface RivalryBetModalProps {
   open: boolean;

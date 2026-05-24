@@ -3,7 +3,7 @@
  */
 import { SERVER_API } from "@/config";
 import axios from "axios";
-import { clearInfo, markAuthRequired } from "@/utils/authStorage";
+import { handleUnauthorizedSession } from "@/utils/authStorage";
 
 export function axiosCustom({
   cmd = "",
@@ -52,8 +52,7 @@ export function axiosCustom({
       }
 
       if (status === 401) {
-        clearInfo();
-        markAuthRequired();
+        handleUnauthorizedSession();
       }
 
       console.log({

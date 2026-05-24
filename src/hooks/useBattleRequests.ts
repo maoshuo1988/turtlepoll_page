@@ -49,6 +49,10 @@ type BattleQueryOptions = {
   enabled?: boolean;
 };
 
+function battleListRequiresAuth(params: BattleListParams) {
+  return Boolean(params.role);
+}
+
 export async function fetchBattleDetail(battleId?: number) {
   const res = await axiosCustom({
     method: "get",
@@ -86,6 +90,7 @@ async function invalidateBattleQueries(queryClient: ReturnType<typeof useQueryCl
 // 赌局列表
 export function useRequestBattleList(params: BattleListParams = {}, options: BattleQueryOptions = {}) {
   const token = getAuthToken();
+  const requiresAuth = battleListRequiresAuth(params);
 
   return useQuery<BattleListResponse>({
     queryKey: battleQueryKeys.list(params),
@@ -103,16 +108,13 @@ export function useRequestBattleList(params: BattleListParams = {}, options: Bat
       });
       return assertSuccess(res);
     },
-    staleTime: 5 * 1000,
-    enabled: Boolean(token) && (options.enabled ?? true),
+    enabled: (options.enabled ?? true) && (!requiresAuth || Boolean(token)),
     refetchOnWindowFocus: false,
   });
 }
 
 // 赌局统计
 export function useRequestBattleStats(options: BattleQueryOptions = {}) {
-  const token = getAuthToken();
-
   return useQuery<BattleStatsResponse>({
     queryKey: battleQueryKeys.stats(),
     queryFn: async () => {
@@ -123,21 +125,17 @@ export function useRequestBattleStats(options: BattleQueryOptions = {}) {
       });
       return assertSuccess(res);
     },
-    staleTime: 5 * 1000,
-    enabled: Boolean(token) && (options.enabled ?? true),
+    enabled: options.enabled ?? true,
     refetchOnWindowFocus: false,
   });
 }
 
 // 赌局详情
 export function useRequestBattleDetail(battleId?: number, options: BattleQueryOptions = {}) {
-  const token = getAuthToken();
-
   return useQuery<BattleDetailResponse>({
     queryKey: battleQueryKeys.detail(battleId),
     queryFn: async () => fetchBattleDetail(battleId),
-    enabled: Boolean(token) && (options.enabled ?? true) && typeof battleId === "number",
-    staleTime: 5 * 1000,
+    enabled: (options.enabled ?? true) && typeof battleId === "number",
     refetchOnWindowFocus: false,
   });
 }

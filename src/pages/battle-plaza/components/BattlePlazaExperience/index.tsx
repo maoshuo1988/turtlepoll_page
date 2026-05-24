@@ -10,6 +10,8 @@ import { useAppSession } from '@/hooks/useAppSession';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 import { fetchCommentComments, type CommentResponse, useRequestCreateComment } from '@/hooks/useCommentRequests';
 import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
+import { TextEmptyState } from '@/components/common/state/PageState';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 
 function css(...classNames: Array<string | false | null | undefined>) {
   return classNames
@@ -657,9 +659,10 @@ export const BattlePlazaPage: React.FC = () => {
   const userBalance = coin?.balance ?? 0;
   // 登录提示按 token 判断，避免“已登录但 userInfo 还在加载”时误闪未登录提示。
   const isAuthenticated = Boolean(authToken);
+  const requireAuth = useRequireAuth();
   const queryClient = useQueryClient();
-  const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 }, { enabled: isAuthenticated });
-  const battleStatsQuery = useRequestBattleStats({ enabled: isAuthenticated });
+  const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 });
+  const battleStatsQuery = useRequestBattleStats();
   const myBankerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'banker' }, { enabled: isAuthenticated });
   const myChallengerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'challenger' }, { enabled: isAuthenticated });
   const createBattleMutation = useRequestBattleCreate();
@@ -694,7 +697,7 @@ export const BattlePlazaPage: React.FC = () => {
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [feedback, setFeedback] = useState<{ tone: 'success' | 'error' | 'info'; text: string } | null>(null);
   const lastPopupMessageRef = useRef<string>('');
-  const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, { enabled: isAuthenticated && detailBattleId !== null });
+  const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, { enabled: detailBattleId !== null });
 
   const myRoleBattleItems = useMemo(() => {
     const map = new Map<number, BattleListItem>();
@@ -741,7 +744,6 @@ export const BattlePlazaPage: React.FC = () => {
           entityId: item.battle.id,
         }),
         enabled: isAuthenticated && isOpen,
-        staleTime: 10 * 1000,
       };
     }),
   ) as Array<{ data?: { results?: CommentResponse[] } }>;
@@ -835,7 +837,7 @@ export const BattlePlazaPage: React.FC = () => {
       await Promise.all([
         queryClient.invalidateQueries(battleQueryKeys.lists()),
         queryClient.invalidateQueries(battleQueryKeys.details()),
-        ...(isAuthenticated ? [queryClient.invalidateQueries(battleQueryKeys.stats())] : []),
+        queryClient.invalidateQueries(battleQueryKeys.stats()),
       ]);
     })();
   };
@@ -888,7 +890,7 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isAuthenticated || !plazaQuery.isError) return;
+    if (!plazaQuery.isError || !isAuthenticated) return;
     setMappedError(plazaQuery.error);
   }, [isAuthenticated, plazaQuery.error, plazaQuery.isError]);
 
@@ -903,11 +905,18 @@ export const BattlePlazaPage: React.FC = () => {
   }, [activeTab, isAuthenticated, myChallengerQuery.error, myChallengerQuery.isError]);
 
   // 创建前先在页面层挡一轮基础校验，避免无意义请求直接打后端。
+  const handleOpenCompose = () => {
+    if (!requireAuth()) return;
+    setComposeOpen(true);
+  };
+
+  const handleTabChange = (tab: PlazaTab) => {
+    if (tab !== 'plaza' && !requireAuth()) return;
+    setActiveTab(tab);
+  };
+
   const handleCreate = async () => {
-    if (!isAuthenticated) {
-      pushFeedback('error', '请先登录后再创建赌局。');
-      return;
-    }
+    if (!requireAuth()) return;
     if (!topic.trim() || !bankerOpinion.trim() || !challengerOpinion.trim()) {
       pushFeedback('error', '请先完整填写议题和双方立场。');
       return;
@@ -964,10 +973,7 @@ export const BattlePlazaPage: React.FC = () => {
 
   const handleJoinBattle = async () => {
     if (!joinModal) return;
-    if (!isAuthenticated) {
-      pushFeedback('error', '请先登录后再加入赌局。');
-      return;
-    }
+    if (!requireAuth()) return;
     if (joinModal.visibility === 'private' && inviteInput.trim().length === 0) {
       pushFeedback('error', '私密赌局需要先填写邀请码。');
       return;
@@ -996,10 +1002,7 @@ export const BattlePlazaPage: React.FC = () => {
 
   const handleBankerAddStake = async () => {
     if (!addStakeModal) return;
-    if (!isAuthenticated) {
-      pushFeedback('error', '请先登录后再追加押注。');
-      return;
-    }
+    if (!requireAuth()) return;
     if (normalizedAddStakeAmount > userBalance) {
       pushFeedback('error', '余额不足，无法追加押注。');
       return;
@@ -1018,10 +1021,7 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   const handleDeclareResult = async (duel: DuelItem, result: 'banker_wins' | 'banker_loses') => {
-    if (!isAuthenticated) {
-      pushFeedback('error', '请先登录后再进行宣判。');
-      return;
-    }
+    if (!requireAuth()) return;
     try {
       await declareBattleMutation.mutateAsync({ battleId: duel.battleId, result });
       pushFeedback('success', '宣判结果已提交。');
@@ -1031,10 +1031,7 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   const handleChallengeConfirm = async (duel: DuelItem) => {
-    if (!isAuthenticated) {
-      pushFeedback('error', '请先登录后再确认结果。');
-      return;
-    }
+    if (!requireAuth()) return;
     try {
       await confirmBattleMutation.mutateAsync({
         battleId: duel.battleId,
@@ -1048,10 +1045,7 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   const handleChallengeDispute = async (duel: DuelItem) => {
-    if (!isAuthenticated) {
-      pushFeedback('error', '请先登录后再发起异议。');
-      return;
-    }
+    if (!requireAuth()) return;
     try {
       await disputeBattleMutation.mutateAsync({
         battleId: duel.battleId,
@@ -1065,10 +1059,7 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   const handleWithdraw = async (duel: DuelItem) => {
-    if (!isAuthenticated) {
-      pushFeedback('error', '请先登录后再提取奖励。');
-      return;
-    }
+    if (!requireAuth()) return;
     try {
       await withdrawBattleMutation.mutateAsync({
         battleId: duel.battleId,
@@ -1081,10 +1072,7 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   const handleToggleBattleLike = async (duel: DuelItem) => {
-    if (!isAuthenticated) {
-      pushFeedback('error', '请先登录后再点赞。');
-      return;
-    }
+    if (!requireAuth()) return;
 
     const nextLiked = !likedMap[duel.id];
     setLikedMap((prev) => ({ ...prev, [duel.id]: nextLiked }));
@@ -1103,10 +1091,7 @@ export const BattlePlazaPage: React.FC = () => {
 
   const handleCreateBattleComment = async (duel: DuelItem) => {
     const draft = commentDraftMap[duel.id]?.trim() ?? '';
-    if (!isAuthenticated) {
-      pushFeedback('error', '请先登录后再发表评论。');
-      return;
-    }
+    if (!requireAuth()) return;
     if (!draft) {
       pushFeedback('error', '评论内容不能为空。');
       return;
@@ -1125,7 +1110,7 @@ export const BattlePlazaPage: React.FC = () => {
     }
   };
 
-  const renderList = (items: DuelItem[]) =>
+  const renderList = (items: DuelItem[], emptyText = '暂无赌局') =>
     items.length > 0 ? (
       items.map((duel) => (
         <DuelCard
@@ -1133,9 +1118,13 @@ export const BattlePlazaPage: React.FC = () => {
           duel={duel}
           commentsOpen={!!commentOpen[duel.id]}
           liked={!!likedMap[duel.id]}
-          onToggleComments={() => setCommentOpen((prev) => ({ ...prev, [duel.id]: !prev[duel.id] }))}
+          onToggleComments={() => {
+            if (!requireAuth()) return;
+            setCommentOpen((prev) => ({ ...prev, [duel.id]: !prev[duel.id] }));
+          }}
           onToggleLike={() => void handleToggleBattleLike(duel)}
           onJoin={() => {
+            if (!requireAuth()) return;
             setJoinModal({
               duelId: duel.battleId,
               title: duel.topic,
@@ -1147,6 +1136,7 @@ export const BattlePlazaPage: React.FC = () => {
             void navigator.clipboard?.writeText(code);
           }}
           onAddStake={() => {
+            if (!requireAuth()) return;
             setAddStakeModal({
               duelId: duel.battleId,
               title: duel.topic,
@@ -1164,11 +1154,7 @@ export const BattlePlazaPage: React.FC = () => {
         />
       ))
     ) : (
-      <div className={css("empty-state")}>
-        <div className={css("empty-ico")}>🐢</div>
-        <div className={css("empty-title")}>这里还没有内容</div>
-        <div className={css("empty-sub")}>切换其他 Tab 或先发起一场赌局。</div>
-      </div>
+      <TextEmptyState text={emptyText} className="min-h-[180px] md:min-h-[220px]" />
     );
 
   const detailBattle = detailBattleQuery.data?.battle ?? null;
@@ -1209,12 +1195,22 @@ export const BattlePlazaPage: React.FC = () => {
                 borderColor: 'rgba(245,158,11,.22)',
                 background: 'linear-gradient(135deg, rgba(24,24,27,.96), rgba(15,23,42,.94))',
                 boxShadow: '0 18px 40px rgba(0,0,0,.28)',
+                cursor: 'pointer',
+              }}
+              onClick={() => requireAuth()}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  requireAuth();
+                }
               }}
             >
               <div className={css("dc-header")}>
                 <div className={css("dc-ava")}>🔐</div>
-                <div className={css("dc-placeholder")} style={{ cursor: 'default', color: '#f8d27a' }}>
-                  当前未登录。开战广场浏览正常，但创建、挑战、宣判、确认、异议和提取都需要先登录。
+                <div className={css("dc-placeholder")} style={{ cursor: 'pointer', color: '#f8d27a' }}>
+                  当前未登录。可浏览赌局广场，创建、挑战、评论等操作需先登录。
                 </div>
               </div>
             </div>
@@ -1294,8 +1290,8 @@ export const BattlePlazaPage: React.FC = () => {
             <div className={css("duel-compose")}>
               <div className={css("dc-header")}>
                 <div className={css("dc-ava")}>🦊</div>
-                <div className={css("dc-placeholder")} onClick={() => setComposeOpen(true)}>想开一局？点击做庄，设定议题和押注…</div>
-                <button type="button" className={css("dc-btn")} onClick={() => setComposeOpen(true)}>我要做庄</button>
+                <div className={css("dc-placeholder")} onClick={handleOpenCompose}>想开一局？点击做庄，设定议题和押注…</div>
+                <button type="button" className={css("dc-btn")} onClick={handleOpenCompose}>我要做庄</button>
               </div>
               {composeOpen && (
                 <div className={css("dc-form")}>
@@ -1418,7 +1414,7 @@ export const BattlePlazaPage: React.FC = () => {
                 role="tab"
                 aria-selected={activeTab === 'plaza'}
                 className={css("bp-segment")}
-                onClick={() => setActiveTab('plaza')}
+                onClick={() => handleTabChange('plaza')}
               >
                 赌局广场
               </button>
@@ -1427,7 +1423,7 @@ export const BattlePlazaPage: React.FC = () => {
                 role="tab"
                 aria-selected={activeTab === 'my-banker'}
                 className={css("bp-segment")}
-                onClick={() => setActiveTab('my-banker')}
+                onClick={() => handleTabChange('my-banker')}
               >
                 我做的庄
               </button>
@@ -1436,7 +1432,7 @@ export const BattlePlazaPage: React.FC = () => {
                 role="tab"
                 aria-selected={activeTab === 'my-challenger'}
                 className={css("bp-segment")}
-                onClick={() => setActiveTab('my-challenger')}
+                onClick={() => handleTabChange('my-challenger')}
               >
                 我的挑战
               </button>
@@ -1480,13 +1476,7 @@ export const BattlePlazaPage: React.FC = () => {
 
           {activeTab === 'plaza' && (
             <>
-              {!isAuthenticated ? (
-                <div className={css("empty-state")}>
-                  <div className={css("empty-ico")}>🔐</div>
-                  <div className={css("empty-title")}>请先登录</div>
-                  <div className={css("empty-sub")}>登录后可查看地下钱庄的实时赌局。</div>
-                </div>
-              ) : plazaQuery.isLoading ? (
+              {plazaQuery.isLoading ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⏳</div>
                   <div className={css("empty-title")}>开战广场加载中</div>
@@ -1499,7 +1489,10 @@ export const BattlePlazaPage: React.FC = () => {
                   <div className={css("empty-sub")}>请稍后重试，或刷新页面重新拉取 battle 列表。</div>
                 </div>
               ) : (
-                renderList(sortedPlazaDuels)
+                renderList(
+                  sortedPlazaDuels,
+                  activeSort === '最新' ? '暂无赌局' : `当前「${activeSort}」筛选下暂无赌局`,
+                )
               )}
             </>
           )}
@@ -1533,6 +1526,9 @@ export const BattlePlazaPage: React.FC = () => {
                   <div className={css("empty-ico")}>🔐</div>
                   <div className={css("empty-title")}>请先登录</div>
                   <div className={css("empty-sub")}>登录后可查看和管理你的做庄记录。</div>
+                  <button type="button" className={css("dc-btn")} style={{ marginTop: 16 }} onClick={() => requireAuth()}>
+                    去登录
+                  </button>
                 </div>
               ) : myBankerQuery.isError ? (
                 <div className={css("empty-state")}>
@@ -1541,7 +1537,7 @@ export const BattlePlazaPage: React.FC = () => {
                   <div className={css("empty-sub")}>当前无法同步你的 battle 数据，请稍后再试。</div>
                 </div>
               ) : (
-                renderList(myBankerDuels)
+                renderList(myBankerDuels, '暂无做庄记录')
               )}
             </>
           )}
@@ -1566,6 +1562,9 @@ export const BattlePlazaPage: React.FC = () => {
                   <div className={css("empty-ico")}>🔐</div>
                   <div className={css("empty-title")}>请先登录</div>
                   <div className={css("empty-sub")}>登录后可查看你参与过的挑战记录。</div>
+                  <button type="button" className={css("dc-btn")} style={{ marginTop: 16 }} onClick={() => requireAuth()}>
+                    去登录
+                  </button>
                 </div>
               ) : myChallengerQuery.isError ? (
                 <div className={css("empty-state")}>
@@ -1574,7 +1573,7 @@ export const BattlePlazaPage: React.FC = () => {
                   <div className={css("empty-sub")}>当前无法同步你的 challenge 记录，请稍后再试。</div>
                 </div>
               ) : (
-                renderList(myChallengerDuels)
+                renderList(myChallengerDuels, '暂无挑战记录')
               )}
             </>
           )}

@@ -49,7 +49,6 @@ export function useRequestAiStamina() {
       return assertSuccess<AiStaminaResponse>(res);
     },
     enabled: Boolean(token),
-    staleTime: 30 * 1000,
   });
 }
 
@@ -69,7 +68,6 @@ export function useRequestAiUnreadPushes(limit = 20, enabled = true) {
       return assertSuccess<AiUnreadPushesResponse>(res);
     },
     enabled: Boolean(token) && enabled,
-    staleTime: 60 * 1000,
   });
 }
 

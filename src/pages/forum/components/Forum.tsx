@@ -18,7 +18,8 @@ import {
 import { useMutateUserTopicHide } from '@/hooks/useUserCenterRequests';
 import { useMutateDislikeTopic, useMutateUndislikeTopic } from '@/hooks/useDislikeRequests';
 import { useHomeLayoutContext } from '@/layouts/context';
-import { getAuthToken } from '@/utils/authStorage';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { useRequestTagTags } from '@/hooks/useTagRequests';
 import type { PredictionCardItem } from './predictionCards';
 
 dayjs.extend(relativeTime);
@@ -74,6 +75,8 @@ function buildLinkedPrediction(
 /** 帖子流固定为「最新」内置频道 nodeId = 0 */
 const LATEST_NODE_ID = 0;
 
+const FORUM_TAG_LIST_PARAMS = { page: 1, limit: 200 } as const;
+
 export const Forum: React.FC<ForumProps> = ({
   newsByMarketId,
   onOpenLinkedPrediction,
@@ -84,6 +87,14 @@ export const Forum: React.FC<ForumProps> = ({
   mobileBottomSheetComposer = false,
 }) => {
   const nodeNavsQuery = useRequestTopicNodeNavs();
+  const tagListQuery = useRequestTagTags(FORUM_TAG_LIST_PARAMS);
+  const categoryTags = useMemo(
+    () =>
+      (tagListQuery.data?.results ?? [])
+        .map((item) => item.name.trim())
+        .filter((item) => Boolean(item)),
+    [tagListQuery.data?.results],
+  );
 
   const createTopicMutation = useRequestCreateTopic();
   const favoriteTopicMutation = useRequestFavoriteTopic();
@@ -93,6 +104,7 @@ export const Forum: React.FC<ForumProps> = ({
   const dislikeTopicMutation = useMutateDislikeTopic();
   const undislikeTopicMutation = useMutateUndislikeTopic();
   const { onOpenAuth } = useHomeLayoutContext();
+  const requireAuth = useRequireAuth(onOpenAuth);
   const [hiddenPostIds, setHiddenPostIds] = useState<Set<string>>(() => new Set());
 
   const createNodeId = useMemo(() => {
@@ -135,7 +147,7 @@ export const Forum: React.FC<ForumProps> = ({
       content: topicContent,
       contentType: 'text',
       hideContent: '',
-      tags: [payload.tag],
+      tags: payload.tag ? [payload.tag] : [],
       imageList: payload.images.map((url) => ({ url })),
       vote: null,
       captchaId: '',
@@ -151,10 +163,7 @@ export const Forum: React.FC<ForumProps> = ({
   };
 
   const handleHideTopic = async (postId: string) => {
-    if (!getAuthToken()) {
-      onOpenAuth();
-      return;
-    }
+    if (!requireAuth()) return;
 
     try {
       await hideTopicMutation.mutateAsync({ topicId: postId });
@@ -178,19 +187,13 @@ export const Forum: React.FC<ForumProps> = ({
   };
 
   const handleDislike = async (postId: string) => {
-    if (!getAuthToken()) {
-      onOpenAuth();
-      return;
-    }
+    if (!requireAuth()) return;
 
     await dislikeTopicMutation.mutateAsync({ entityType: 'topic', entityId: postId });
   };
 
   const handleUndislike = async (postId: string) => {
-    if (!getAuthToken()) {
-      onOpenAuth();
-      return;
-    }
+    if (!requireAuth()) return;
 
     await undislikeTopicMutation.mutateAsync({ entityType: 'topic', entityId: postId });
   };
@@ -207,6 +210,7 @@ export const Forum: React.FC<ForumProps> = ({
             onCloseComposer={onCloseComposer}
             showEntryButton={!mobileBottomSheetComposer}
             mobileBottomSheet={mobileBottomSheetComposer}
+            categoryTags={categoryTags}
           />
         </div>
       )}

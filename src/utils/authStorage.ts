@@ -72,5 +72,19 @@ export function clearInfo() {
   localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
   localStorage.removeItem(USER_INFO_STORAGE_KEY);
   localStorage.removeItem(DAILY_SETTLE_STORAGE_KEY);
+  localStorage.removeItem("url_token");
   clearAuthRequiredFlag();
+}
+
+export function handleUnauthorizedSession() {
+  clearInfo();
+  markAuthRequired();
+}
+
+export function requireAuthOrOpen(openAuth: () => void) {
+  if (getAuthToken()) return true;
+
+  markAuthRequired();
+  openAuth();
+  return false;
 }

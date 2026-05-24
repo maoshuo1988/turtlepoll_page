@@ -149,8 +149,6 @@ export function useInfiniteRequestTopicTopics(nodeId: number) {
     },
     getNextPageParam: (lastPage) => (lastPage?.hasMore ? lastPage.cursor : undefined),
     enabled: typeof nodeId === "number",
-    // 推荐/关注切换时需要立刻按当前 nodeId 重新拉取，避免 30s staleTime 直接复用旧缓存。
-    staleTime: 0,
     refetchOnMount: "always",
   });
 }

@@ -25,7 +25,8 @@ import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 import {
   type PetInfo,
   type PetSkin,
-} from '@/data/mockData';
+} from '@/components/common/pet/petTypes';
+import { EmptyDataPage, LoginRequiredPage } from '@/components/common/state/PageState';
 import { ProfilePetArchive } from './ProfilePetArchive';
 
 type ProfileTab = 'overview' | 'posts' | 'comments' | 'saved' | 'history' | 'hidden' | 'upvoted' | 'downvoted';
@@ -61,41 +62,6 @@ const cardClass =
 /** 列表项：窄屏圆角与边框略收（与 xl:hidden 布局同断点） */
 const feedCard =
   'rounded-[20px] border border-white/8 bg-white/[0.03] max-xl:rounded-[16px] max-xl:border-white/[0.06]';
-
-const emptyArt = (
-  <div className="relative h-[116px] w-[116px]">
-    <div className="absolute inset-x-[18px] bottom-[10px] h-[58px] rounded-[32px] bg-[radial-gradient(circle_at_50%_16%,#ffffff_0%,#f3f7fb_36%,#dce5ec_72%,#d0d6df_100%)] shadow-[0_10px_24px_rgba(255,255,255,0.07)]" />
-    <div className="absolute left-[7px] top-[28px] h-[34px] w-[34px] rounded-full bg-[radial-gradient(circle_at_40%_30%,#f7fbff_0%,#dbe7ef_78%,#c7d1db_100%)]" />
-    <div className="absolute right-[7px] top-[28px] h-[34px] w-[34px] rounded-full bg-[radial-gradient(circle_at_40%_30%,#f7fbff_0%,#dbe7ef_78%,#c7d1db_100%)]" />
-    <div className="absolute left-[30px] top-[50px] h-[21px] w-[21px] rounded-full bg-[radial-gradient(circle_at_40%_35%,#ffb25b_0%,#ff5c1c_44%,#ff3a00_100%)] shadow-[0_0_16px_rgba(255,92,28,0.55)]" />
-    <div className="absolute right-[30px] top-[50px] h-[21px] w-[21px] rounded-full bg-[radial-gradient(circle_at_40%_35%,#ffb25b_0%,#ff5c1c_44%,#ff3a00_100%)] shadow-[0_0_16px_rgba(255,92,28,0.55)]" />
-    <div className="absolute left-[37px] top-[57px] h-[7px] w-[7px] rounded-full bg-white/75" />
-    <div className="absolute right-[37px] top-[57px] h-[7px] w-[7px] rounded-full bg-white/75" />
-    <div className="absolute left-[59px] top-[14px] h-[26px] w-[8px] rounded-full bg-[#3b2e35]" />
-    <div className="absolute left-[59px] top-[10px] h-[24px] w-[24px] rounded-full bg-[radial-gradient(circle_at_35%_35%,#ffffff_0%,#eef5fa_38%,#d4e1ea_100%)] shadow-[0_4px_12px_rgba(255,255,255,0.12)]" />
-  </div>
-);
-
-const EmptyState: React.FC<{
-  title: string;
-  description?: string;
-  actionLabel?: string;
-  onAction?: () => void;
-}> = ({ title, description, actionLabel, onAction }) => (
-  <div className="flex min-h-[280px] flex-col items-center justify-center px-5 py-8 text-center md:min-h-[420px] md:!px-6 md:!py-10">
-    {emptyArt}
-    <h3 className="mt-6 text-[22px] font-black tracking-[-0.02em] text-white md:!mt-7 md:text-[24px]">{title}</h3>
-    {description && <p className="mt-3 max-w-[560px] text-[13px] leading-6 text-[#7e8790] md:text-[14px] md:leading-7">{description}</p>}
-    {actionLabel && onAction && (
-      <button
-        onClick={onAction}
-        className="mt-5 rounded-full bg-[#115bdb] px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-[#1d67e5]"
-      >
-        {actionLabel}
-      </button>
-    )}
-  </div>
-);
 
 const ProfileTabButton: React.FC<{
   active: boolean;
@@ -228,7 +194,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderLoginRequired = (title: string, description: string) => (
     <div className="border-t border-white/10">
-      <EmptyState title={title} description={description} actionLabel="立即登录" onAction={onOpenAuth} />
+      <LoginRequiredPage title={title} description={description} actionLabel="立即登录" onAction={onOpenAuth} />
     </div>
   );
 
@@ -298,7 +264,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
       {!isAuthenticated ? renderLoginRequired('登录后查看你的个人中心', '帖子、评论和收藏会在登录后同步展示。') : profileTopics.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
-          <EmptyState
+          <EmptyDataPage
             title="你还没有任何帖子"
             description="在社区中发帖后，帖子会显示在这里。"
             actionLabel="去发帖"
@@ -345,7 +311,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         renderPageError(userTopicsQuery.error instanceof Error ? userTopicsQuery.error.message : '帖子加载失败')
       ) : profileTopics.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
-          <EmptyState
+          <EmptyDataPage
             title="你还没有任何帖子"
             description="在社区中发帖后，帖子会显示在这里。"
             actionLabel="去发帖"
@@ -393,7 +359,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         renderPageError(userCommentsQuery.error instanceof Error ? userCommentsQuery.error.message : '评论加载失败')
       ) : profileComments.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
-          <EmptyState
+          <EmptyDataPage
             title="你还没有任何评论"
             description="在社区中发表评论后，评论会显示在这里。"
             actionLabel="去社区看看"
@@ -428,7 +394,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         renderPageError(userFavoritesQuery.error instanceof Error ? userFavoritesQuery.error.message : '收藏加载失败')
       ) : profileFavorites.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
-          <EmptyState
+          <EmptyDataPage
             title="你还没有收藏任何帖子"
             description="收藏感兴趣的帖子后，会在这里集中查看。"
             actionLabel="去社区看看"
@@ -463,7 +429,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         renderPageError(userHiddenTopicsQuery.error instanceof Error ? userHiddenTopicsQuery.error.message : '隐藏帖子加载失败')
       ) : profileHiddenTopics.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
-          <EmptyState
+          <EmptyDataPage
             title="你还没有隐藏任何帖子"
             description="隐藏后的帖子会统一展示在这里，方便你随时恢复。"
           />
@@ -506,7 +472,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         renderPageError(userDislikesQuery.error instanceof Error ? userDislikesQuery.error.message : '点踩记录加载失败')
       ) : profileDislikes.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
-          <EmptyState
+          <EmptyDataPage
             title="你还没有点踩任何帖子"
             description="在线报点踩过的帖子会集中展示在这里。"
             actionLabel="去社区看看"
@@ -537,7 +503,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     description: string,
   ) => (
     <div className="border-t border-white/10">
-      <EmptyState title={title} description={description} />
+      <EmptyDataPage title={title} description={description} />
     </div>
   );
 

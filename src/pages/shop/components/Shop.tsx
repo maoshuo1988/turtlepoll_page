@@ -4,17 +4,17 @@
 import React, { useState, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ChevronDown, Coins, Heart } from 'lucide-react';
-import type { PetInfo, ShopItem } from '@/data/mockData';
-import {
-  shopApples,
-} from '@/data/mockData';
+import type { PetInfo } from '@/components/common/pet/petTypes';
+import type { ShopItem } from './shopTypes';
 import { useRequestAiStaminaApple } from '@/hooks/useAiRequests';
 import { useRequestPetEggHatch, useRequestPetGachaConfig, useRequestPetOwned, useRequestPetDefs } from '@/hooks/usePetRequests';
 import type { PetEggHatchResponse, PetStaminaResponse } from '@/hooks/petTypes';
 import { PetPoolPreviewTile } from './PetPoolPreviewTile';
 import { getPetDisplayAvatar } from './petDisplay';
 import { getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
+import { TextEmptyState } from '@/components/common/state/PageState';
 
 const card =
   'rounded-[24px] max-lg:rounded-[18px] border border-cyan-400/18 max-lg:border-cyan-400/11 bg-[linear-gradient(180deg,rgba(7,15,31,0.96),rgba(6,12,24,0.98))] shadow-[0_14px_40px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.06)] max-lg:shadow-[0_10px_26px_rgba(0,0,0,0.22),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl';
@@ -44,7 +44,7 @@ const APPLE_IMAGE_BY_ITEM: Record<string, string> = {
   apple3: '/shop/apple2.png',
 };
 const STAMINA_SHOP_META: Record<string, { title: string; frame: string; pill: string }> = {
-  apple1: { title: '小苹果', frame: 'border-[#b86cff] bg-[linear-gradient(180deg,#5e2ea3,#2d185f)]', pill: 'border-[#8458dc] bg-[linear-gradient(180deg,#1f2147,#111528)]' },
+  apple1: { title: '小苹果', frame: '', pill: '' },
   apple2: { title: '大苹果', frame: 'border-[#4ea0ff] bg-[linear-gradient(180deg,#1e5fa7,#16234d)]', pill: 'border-[#3d82d8] bg-[linear-gradient(180deg,#182e63,#101525)]' },
   apple3: { title: '黄金苹果', frame: 'border-[#d8b74c] bg-[linear-gradient(180deg,#8f6d17,#3e2d14)]', pill: 'border-[#b9962f] bg-[linear-gradient(180deg,#3a3018,#1d170f)]' },
 };
@@ -67,6 +67,16 @@ const FEED_COUNT_BY_ITEM: Record<string, number> = {
   apple2: 2,
   apple3: 3,
 };
+const staminaShopItems: ShopItem[] = [
+  {
+    id: 'apple1',
+    name: '小苹果',
+    icon: '🍎',
+    description: '补充 AI 体力',
+    price: SMALL_APPLE_PRICE,
+    effect: { type: 'stamina', value: SMALL_APPLE_RECOVERY },
+  },
+];
 
 /* ═══════════════════════ Main Component ═══════════════════════ */
 export const Shop: React.FC<ShopProps> = ({
@@ -94,6 +104,7 @@ export const Shop: React.FC<ShopProps> = ({
   const ownedPetsQuery = useRequestPetOwned();
   const gachaConfigQuery = useRequestPetGachaConfig();
   const petDefsQuery = useRequestPetDefs({ page: 1, size: 200 });
+  const requireAuth = useRequireAuth(onRequireAuth);
   const gachaCost =
     typeof gachaConfigQuery.data?.cost === 'number' ? gachaConfigQuery.data.cost : GACHA_COST;
   const aiAppleMutation = useRequestAiStaminaApple();
@@ -106,6 +117,8 @@ export const Shop: React.FC<ShopProps> = ({
   /* ── Gacha logic ── */
   const doGacha = useCallback(() => {
     if (phase !== 'idle' || hatchMutation.isLoading) return;
+    if (!requireAuth()) return;
+
     clearTimers();
     setActionError(null);
     setActionSuccess(null);
@@ -145,7 +158,7 @@ export const Shop: React.FC<ShopProps> = ({
         }
       }, 2500),
     );
-  }, [clearTimers, hatchMutation, onRequireAuth, phase]);
+  }, [clearTimers, hatchMutation, onRequireAuth, phase, requireAuth]);
 
   const resetGacha = useCallback(() => {
     clearTimers();
@@ -160,6 +173,8 @@ export const Shop: React.FC<ShopProps> = ({
   const buyApple = useCallback(
     async (item: ShopItem, count = FEED_COUNT_BY_ITEM[item.id] ?? 1) => {
       if (aiAppleMutation.isLoading) return;
+      if (!requireAuth()) return;
+
       setActionError(null);
       setActionSuccess(null);
 
@@ -181,14 +196,14 @@ export const Shop: React.FC<ShopProps> = ({
         }
       }
     },
-    [aiAppleMutation, onRequireAuth],
+    [aiAppleMutation, onRequireAuth, requireAuth],
   );
 
-  const smallApple = shopApples[0];
+  const firstStaminaItem = staminaShopItems[0];
   const confirmSmallApplePurchase = useCallback(() => {
-    if (!smallApple) return;
-    void buyApple(smallApple, Math.max(1, Math.floor(appleBuyCount)));
-  }, [appleBuyCount, buyApple, smallApple]);
+    if (!firstStaminaItem) return;
+    void buyApple(firstStaminaItem, Math.max(1, Math.floor(appleBuyCount)));
+  }, [appleBuyCount, buyApple, firstStaminaItem]);
 
   const handlePreviewMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     if (event.button !== 0 || !previewScrollRef.current) return;
@@ -220,15 +235,7 @@ export const Shop: React.FC<ShopProps> = ({
   // const featuredPets = ownedPetList.slice(0, 5);
   const heroAvatar = hatchResult ? getPetDisplayAvatar(hatchResult.pet.petKey, hatchResult.pet.name) : '🥚';
   // const heroName = hatchResult?.pet.name ?? hatchResult?.pet.petKey ?? '极光蛋池';
-  const fallbackProbabilityRows = [
-    { rarity: '4', label: 'S', value: '1.00%' },
-    { rarity: '3', label: 'A', value: '5.00%' },
-    { rarity: '2', label: 'B', value: '20.00%' },
-    { rarity: '1', label: 'C', value: '74.00%' },
-  ];
-  const probabilityRows = (gachaConfigQuery.data?.probabilities.length
-    ? gachaConfigQuery.data.probabilities
-    : fallbackProbabilityRows).map((item) => {
+  const probabilityRows = (gachaConfigQuery.data?.probabilities ?? []).map((item) => {
       const rarity = normalizePetRarityGrade(item.rarity);
       return {
         ...item,
@@ -352,7 +359,7 @@ export const Shop: React.FC<ShopProps> = ({
             <div>
               <p className="mb-2 text-[11px] font-semibold tracking-wide text-white/48">快速补给 · AI 体力</p>
               <div className="flex gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {shopApples.slice(0, 3).map((item) => (
+                {staminaShopItems.slice(0, 3).map((item) => (
                   <button
                     key={item.id}
                     type="button"
@@ -429,7 +436,7 @@ export const Shop: React.FC<ShopProps> = ({
               查看全部龟种预览
             </button>
             <div className="flex gap-2 overflow-x-auto pb-0.5 [-webkit-overflow-scrolling:touch] snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {probabilityRows.map((item) => (
+              {probabilityRows.length > 0 ? probabilityRows.map((item) => (
                 <div
                   key={item.label}
                   className="flex shrink-0 snap-start items-center gap-2 rounded-full border border-white/12 bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(30,27,75,0.9))] py-1.5 pl-2 pr-3 shadow-[0_6px_16px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] dark:border-white/14 dark:bg-[#0a1228]"
@@ -438,7 +445,9 @@ export const Shop: React.FC<ShopProps> = ({
                   <span className={`text-[12px] font-black sm:text-[13px] ${item.tone}`}>{item.label}</span>
                   <span className={`text-[12px] font-black sm:text-[13px] ${item.tone}`}>{item.value}</span>
                 </div>
-              ))}
+              )) : (
+                <TextEmptyState text="暂无概率数据" className="shrink-0 snap-start rounded-full border-white/12 bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(30,27,75,0.9))] py-1.5 text-[12px] font-black shadow-[0_6px_16px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.06)] dark:border-white/14" />
+              )}
             </div>
             <div
               ref={previewScrollMobileRef}
@@ -468,42 +477,41 @@ export const Shop: React.FC<ShopProps> = ({
             </div>
           </div>
           {ownedPetList.length === 0 ? (
-            <div className="px-4 py-10 text-center">
-              <p className="text-[14px] font-semibold text-slate-700 dark:text-white/88">还没有龟种</p>
-              <p className="mt-2 text-[12px] leading-relaxed text-slate-500 dark:text-white/50">点击下方孵化，把第一只龟带回家</p>
+            <div className="px-3 py-4 sm:px-4 sm:py-5">
+              <TextEmptyState text="暂无已拥有龟种" />
             </div>
           ) : (
-          <div
-            ref={ownedPetsScrollRef}
-            onMouseDown={handleOwnedPetsMouseDown}
-            onMouseMove={handleOwnedPetsMouseMove}
-            onMouseUp={stopOwnedPetsDrag}
-            onMouseLeave={stopOwnedPetsDrag}
-            className="flex gap-2 overflow-x-auto px-3 py-4 snap-x snap-mandatory select-none scroll-smooth overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing sm:gap-3 sm:px-4 sm:py-5"
-          >
-            {ownedPetList.map((petItem) => (
-              <div
-                key={String(petItem.petId)}
-                className={`relative w-[104px] shrink-0 snap-start rounded-[16px] border px-2.5 py-3 text-center sm:w-[112px] sm:rounded-[18px] sm:px-3 sm:py-4 ${petItem.isEquipped
-                  ? 'border-cyan-400/75 bg-cyan-50/90 ring-2 ring-cyan-400/55 ring-offset-2 ring-offset-white dark:bg-[#0c162e] dark:ring-cyan-400/45 dark:ring-offset-[#070d18]'
-                  : 'border-slate-200/95 bg-slate-50/85 dark:border-white/10 dark:bg-[#0f172a]/92'
-                  }`}
-              >
-                {petItem.isEquipped ? (
-                  <div className="absolute left-1/2 top-1 z-10 -translate-x-1/2 rounded-full bg-cyan-400 px-2 py-0.5 text-[10px] font-black text-[#06242c] shadow-[0_6px_14px_rgba(34,211,238,0.28)]">
-                    已装备
+            <div
+              ref={ownedPetsScrollRef}
+              onMouseDown={handleOwnedPetsMouseDown}
+              onMouseMove={handleOwnedPetsMouseMove}
+              onMouseUp={stopOwnedPetsDrag}
+              onMouseLeave={stopOwnedPetsDrag}
+              className="flex gap-2 overflow-x-auto px-3 py-4 snap-x snap-mandatory select-none scroll-smooth overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing sm:gap-3 sm:px-4 sm:py-5"
+            >
+              {ownedPetList.map((petItem) => (
+                <div
+                  key={String(petItem.petId)}
+                  className={`relative w-[104px] shrink-0 snap-start rounded-[16px] border px-2.5 py-3 text-center sm:w-[112px] sm:rounded-[18px] sm:px-3 sm:py-4 ${petItem.isEquipped
+                    ? 'border-cyan-400/75 bg-cyan-50/90 ring-2 ring-cyan-400/55 ring-offset-2 ring-offset-white dark:bg-[#0c162e] dark:ring-cyan-400/45 dark:ring-offset-[#070d18]'
+                    : 'border-slate-200/95 bg-slate-50/85 dark:border-white/10 dark:bg-[#0f172a]/92'
+                    }`}
+                >
+                  {petItem.isEquipped ? (
+                    <div className="absolute left-1/2 top-1 z-10 -translate-x-1/2 rounded-full bg-cyan-400 px-2 py-0.5 text-[10px] font-black text-[#06242c] shadow-[0_6px_14px_rgba(34,211,238,0.28)]">
+                      已装备
+                    </div>
+                  ) : null}
+                  <div className="text-4xl sm:text-5xl">{getPetDisplayAvatar(petItem.petKey, petItem.petName)}</div>
+                  <div className="mt-3 truncate text-[12px] font-bold text-slate-800 dark:text-white sm:text-[13px]">
+                    {petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}
                   </div>
-                ) : null}
-                <div className="text-4xl sm:text-5xl">{getPetDisplayAvatar(petItem.petKey, petItem.petName)}</div>
-                <div className="mt-3 truncate text-[12px] font-bold text-slate-800 dark:text-white sm:text-[13px]">
-                  {petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}
+                  <div className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ${getPetRarityBadgeClass(petItem.rarity)}`}>
+                    {normalizePetRarityGrade(petItem.rarity)}
+                  </div>
                 </div>
-                <div className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ${getPetRarityBadgeClass(petItem.rarity)}`}>
-                  {normalizePetRarityGrade(petItem.rarity)}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           )}
         </section>
 
@@ -519,7 +527,7 @@ export const Shop: React.FC<ShopProps> = ({
           </div>
           <div className="px-3 py-3 sm:px-4 sm:py-4">
             <div className="grid gap-2.5 sm:gap-3">
-              {shopApples.map((item) => {
+              {staminaShopItems.map((item) => {
                 const isFull = pet.stamina >= pet.maxStamina;
                 const cantAfford = balance < item.price;
                 const disabled = isFull;
@@ -633,7 +641,11 @@ export const Shop: React.FC<ShopProps> = ({
             <div className="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,transparent,rgba(195,128,255,0.92),rgba(101,151,255,0.88),rgba(113,255,225,0.65),transparent)]" />
             <div className="relative rounded-[22px] border border-white/12 bg-[linear-gradient(135deg,rgba(22,16,54,0.36),rgba(88,44,144,0.3),rgba(38,82,156,0.26),rgba(18,92,92,0.18))] p-3 shadow-[inset_0_1px_0_rgba(222,212,255,0.12)]">
               <div className="text-base font-black text-white">奖池概率</div>
-              <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">{probabilityRows.map((item) => <div key={item.label} className="flex min-w-0 items-center justify-between rounded-[18px] border border-white/10 bg-[linear-gradient(135deg,rgba(10,20,48,0.92),rgba(35,31,84,0.9),rgba(16,78,85,0.88))] px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"><div className="flex min-w-0 items-center gap-2"><img src={item.icon} alt={item.label} className="h-6 w-6 shrink-0 object-contain" /><span className={`truncate text-[15px] font-black ${item.tone}`}>{item.label}</span></div><span className={`shrink-0 text-[16px] font-black ${item.tone}`}>{item.value}</span></div>)}</div>
+              <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2">
+                {probabilityRows.length > 0 ? probabilityRows.map((item) => <div key={item.label} className="flex min-w-0 items-center justify-between rounded-[18px] border border-white/10 bg-[linear-gradient(135deg,rgba(10,20,48,0.92),rgba(35,31,84,0.9),rgba(16,78,85,0.88))] px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"><div className="flex min-w-0 items-center gap-2"><img src={item.icon} alt={item.label} className="h-6 w-6 shrink-0 object-contain" /><span className={`truncate text-[15px] font-black ${item.tone}`}>{item.label}</span></div><span className={`shrink-0 text-[16px] font-black ${item.tone}`}>{item.value}</span></div>) : (
+                  <TextEmptyState text="暂无概率数据" className="xl:col-span-2" />
+                )}
+              </div>
             </div>
             <div className="relative mt-5 overflow-hidden rounded-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(22,16,56,0.38),rgba(98,42,154,0.32),rgba(44,86,160,0.28),rgba(18,92,92,0.18),rgba(14,20,52,0.4))] p-3 shadow-[0_14px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(222,212,255,0.14)]">
               <div className="flex items-center justify-between">
@@ -657,10 +669,10 @@ export const Shop: React.FC<ShopProps> = ({
           <section className="relative min-w-0 overflow-hidden rounded-[24px] border border-white/12 bg-[linear-gradient(180deg,rgba(28,14,64,0.42),rgba(98,42,154,0.34),rgba(44,86,160,0.24),rgba(12,20,50,0.42))] px-4 py-4 shadow-[0_16px_36px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(230,210,255,0.12)]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(195,120,255,0.18),transparent_36%),radial-gradient(circle_at_100%_0%,rgba(105,122,255,0.14),transparent_30%)]" />
             <div className="relative text-[15px] font-black text-white">体力商店</div>
-            {smallApple ? (
+            {firstStaminaItem ? (
               <div className="relative mt-4 grid grid-cols-1 gap-3">
-                <div className={`relative min-w-0 overflow-hidden rounded-[22px] border px-3 py-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${STAMINA_SHOP_META.apple1.frame}`}>
-                  {buyFlash === smallApple.id && <motion.div initial={{ opacity: 0.5 }} animate={{ opacity: 0 }} transition={{ duration: 0.6 }} className="absolute inset-0 bg-white/20" />}
+                <div className={`relative min-w-0 overflow-hidden  px-3 py-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${STAMINA_SHOP_META.apple1.frame}`}>
+                  {buyFlash === firstStaminaItem.id && <motion.div initial={{ opacity: 0.5 }} animate={{ opacity: 0 }} transition={{ duration: 0.6 }} className="absolute inset-0 bg-white/20" />}
                   <div className="truncate text-[13px] font-black text-white">小苹果</div>
                   <img src={APPLE_IMAGE_BY_ITEM.apple1} alt="小苹果" className="mx-auto mt-3 h-[clamp(64px,8vw,96px)] w-[clamp(64px,8vw,96px)] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]" />
                   <div className="mt-3 text-[18px] font-black text-white">+{SMALL_APPLE_RECOVERY}</div>
@@ -688,17 +700,17 @@ export const Shop: React.FC<ShopProps> = ({
         </div>
       </div>
       <AnimatePresence>
-          {isPreviewDialogOpen && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-end justify-center bg-[#020817]/82 p-0 backdrop-blur-sm sm:items-center sm:p-4">
-              <motion.div initial={{ scale: 0.96, opacity: 0, y: 16 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0, y: 16 }} className="flex max-h-[min(92dvh,920px)] min-h-0 w-full max-w-[860px] flex-col overflow-hidden rounded-t-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(8,18,48,0.96),rgba(75,37,123,0.9),rgba(20,101,98,0.88),rgba(9,20,45,0.96))] p-3 pb-[max(12px,env(safe-area-inset-bottom))] shadow-[0_20px_60px_rgba(0,0,0,0.46)] sm:max-h-[90vh] sm:rounded-[28px] sm:p-4 sm:pb-4">
-                <div className="flex shrink-0 items-center justify-between gap-3">
-                  <div className="text-base font-black text-white sm:text-lg">全部预览</div>
-                  <button type="button" onClick={() => setIsPreviewDialogOpen(false)} className="touch-manipulation rounded-full border border-white/12 px-3 py-1.5 text-sm font-bold text-white/72">
-                    关闭
-                  </button>
-                </div>
-                <div className="mt-3 min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1 [scrollbar-gutter:stable] sm:mt-4">
-                  <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4">
+        {isPreviewDialogOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-end justify-center bg-[#020817]/82 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+            <motion.div initial={{ scale: 0.96, opacity: 0, y: 16 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0, y: 16 }} className="flex max-h-[min(92dvh,920px)] min-h-0 w-full max-w-[860px] flex-col overflow-hidden rounded-t-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(8,18,48,0.96),rgba(75,37,123,0.9),rgba(20,101,98,0.88),rgba(9,20,45,0.96))] p-3 pb-[max(12px,env(safe-area-inset-bottom))] shadow-[0_20px_60px_rgba(0,0,0,0.46)] sm:max-h-[90vh] sm:rounded-[28px] sm:p-4 sm:pb-4">
+              <div className="flex shrink-0 items-center justify-between gap-3">
+                <div className="text-base font-black text-white sm:text-lg">全部预览</div>
+                <button type="button" onClick={() => setIsPreviewDialogOpen(false)} className="touch-manipulation rounded-full border border-white/12 px-3 py-1.5 text-sm font-bold text-white/72">
+                  关闭
+                </button>
+              </div>
+              <div className="mt-3 min-h-0 flex-1 overflow-y-auto overflow-x-hidden pr-1 [scrollbar-gutter:stable] sm:mt-4">
+                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4">
                   {petPoolPreviewRows.map((item) => (
                     <PetPoolPreviewTile
                       key={`dialog-${item.key}`}
@@ -709,67 +721,67 @@ export const Shop: React.FC<ShopProps> = ({
                       imageAlt={item.label}
                     />
                   ))}
-                  </div>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
-          )}
+          </motion.div>
+        )}
       </AnimatePresence>
       <AnimatePresence>
-          {appleBuyOpen && smallApple ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-end justify-center bg-[#020817]/82 p-0 backdrop-blur-sm sm:items-center sm:p-4">
-              <motion.div initial={{ scale: 0.96, opacity: 0, y: 14 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0, y: 14 }} className="w-full max-w-[420px] overflow-hidden rounded-t-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(18,12,48,0.98),rgba(64,34,112,0.94),rgba(12,42,58,0.94))] p-4 pb-[max(12px,env(safe-area-inset-bottom))] shadow-[0_20px_60px_rgba(0,0,0,0.46)] sm:rounded-[26px] sm:p-5 sm:pb-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-lg font-black text-white">购买小苹果</div>
-                    <div className="mt-1 text-xs font-semibold text-white/58">每个恢复 {SMALL_APPLE_RECOVERY} 点体力，单价 {SMALL_APPLE_PRICE} 龟币</div>
-                  </div>
-                  <button type="button" onClick={() => setAppleBuyOpen(false)} className="touch-manipulation rounded-full border border-white/12 px-3 py-1 text-sm font-bold text-white/72 transition hover:text-white">
-                    关闭
-                  </button>
+        {appleBuyOpen && firstStaminaItem ? (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-end justify-center bg-[#020817]/82 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+            <motion.div initial={{ scale: 0.96, opacity: 0, y: 14 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0, y: 14 }} className="w-full max-w-[420px] overflow-hidden rounded-t-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(18,12,48,0.98),rgba(64,34,112,0.94),rgba(12,42,58,0.94))] p-4 pb-[max(12px,env(safe-area-inset-bottom))] shadow-[0_20px_60px_rgba(0,0,0,0.46)] sm:rounded-[26px] sm:p-5 sm:pb-5">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-lg font-black text-white">购买小苹果</div>
+                  <div className="mt-1 text-xs font-semibold text-white/58">每个恢复 {SMALL_APPLE_RECOVERY} 点体力，单价 {SMALL_APPLE_PRICE} 龟币</div>
                 </div>
+                <button type="button" onClick={() => setAppleBuyOpen(false)} className="touch-manipulation rounded-full border border-white/12 px-3 py-1 text-sm font-bold text-white/72 transition hover:text-white">
+                  关闭
+                </button>
+              </div>
 
-                <div className="mt-5 rounded-[22px] border border-white/10 bg-white/[0.06] p-4">
-                  <div className="flex items-center gap-4">
-                    <img src={APPLE_IMAGE_BY_ITEM.apple1} alt="小苹果" className="h-16 w-16 shrink-0 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]" />
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm font-black text-white">小苹果</div>
-                      <div className="mt-1 text-xs text-white/58">本次恢复 +{appleBuyCount * SMALL_APPLE_RECOVERY} 体力</div>
-                      <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-2.5 py-1 text-sm font-black text-emerald-200">
-                        <Coins size={14} /> {appleBuyCount * SMALL_APPLE_PRICE}
-                      </div>
+              <div className="mt-5 rounded-[22px] border border-white/10 bg-white/[0.06] p-4">
+                <div className="flex items-center gap-4">
+                  <img src={APPLE_IMAGE_BY_ITEM.apple1} alt="小苹果" className="h-16 w-16 shrink-0 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]" />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-black text-white">小苹果</div>
+                    <div className="mt-1 text-xs text-white/58">本次恢复 +{appleBuyCount * SMALL_APPLE_RECOVERY} 体力</div>
+                    <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-2.5 py-1 text-sm font-black text-emerald-200">
+                      <Coins size={14} /> {appleBuyCount * SMALL_APPLE_PRICE}
                     </div>
                   </div>
-
-                  <label className="mt-5 block text-xs font-bold text-white/62" htmlFor="small-apple-count">购买数量</label>
-                  <input
-                    id="small-apple-count"
-                    type="number"
-                    min={1}
-                    step={1}
-                    value={appleBuyCount}
-                    onChange={(event) => setAppleBuyCount(Math.max(1, Math.floor(Number(event.target.value) || 1)))}
-                    className="mt-2 h-12 w-full rounded-2xl border border-white/12 bg-[#071127]/70 px-4 text-base font-black text-white outline-none transition focus:border-emerald-300/45"
-                  />
                 </div>
 
-                <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-                  <button type="button" onClick={() => setAppleBuyOpen(false)} className="touch-manipulation rounded-2xl border border-white/12 py-2.5 text-sm font-bold text-white/62 transition hover:text-white sm:px-4">
-                    取消
-                  </button>
-                  <button
-                    type="button"
-                    onClick={confirmSmallApplePurchase}
-                    disabled={aiAppleMutation.isLoading}
-                    className="inline-flex touch-manipulation items-center justify-center gap-2 rounded-2xl bg-emerald-500 py-2.5 text-sm font-black text-white shadow-[0_12px_28px_rgba(16,185,129,0.28)] transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-55 sm:px-5"
-                  >
-                    <Coins size={15} />
-                    {aiAppleMutation.isLoading ? '购买中...' : '确认购买'}
-                  </button>
-                </div>
-              </motion.div>
+                <label className="mt-5 block text-xs font-bold text-white/62" htmlFor="small-apple-count">购买数量</label>
+                <input
+                  id="small-apple-count"
+                  type="number"
+                  min={1}
+                  step={1}
+                  value={appleBuyCount}
+                  onChange={(event) => setAppleBuyCount(Math.max(1, Math.floor(Number(event.target.value) || 1)))}
+                  className="mt-2 h-12 w-full rounded-2xl border border-white/12 bg-[#071127]/70 px-4 text-base font-black text-white outline-none transition focus:border-emerald-300/45"
+                />
+              </div>
+
+              <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                <button type="button" onClick={() => setAppleBuyOpen(false)} className="touch-manipulation rounded-2xl border border-white/12 py-2.5 text-sm font-bold text-white/62 transition hover:text-white sm:px-4">
+                  取消
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmSmallApplePurchase}
+                  disabled={aiAppleMutation.isLoading}
+                  className="inline-flex touch-manipulation items-center justify-center gap-2 rounded-2xl bg-emerald-500 py-2.5 text-sm font-black text-white shadow-[0_12px_28px_rgba(16,185,129,0.28)] transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-55 sm:px-5"
+                >
+                  <Coins size={15} />
+                  {aiAppleMutation.isLoading ? '购买中...' : '确认购买'}
+                </button>
+              </div>
             </motion.div>
-          ) : null}
+          </motion.div>
+        ) : null}
       </AnimatePresence>
 
       {/* ━━━ Gacha Section ━━━ */}
@@ -1014,7 +1026,7 @@ export const Shop: React.FC<ShopProps> = ({
           onMouseLeave={stopOwnedPetsDrag}
           className="-mx-1 flex gap-3 overflow-x-auto px-3 py-3 snap-x snap-mandatory select-none scroll-smooth overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
         >
-          {ownedPetList.map((petItem) => (
+          {ownedPetList.length > 0 ? ownedPetList.map((petItem) => (
             <div
               key={String(petItem.petId)}
               className={`relative flex h-40 w-[132px] shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-[22px] border border-white/12 bg-[linear-gradient(180deg,rgba(22,16,56,0.38),rgba(98,42,154,0.32),rgba(44,86,160,0.28),rgba(14,20,52,0.4))] px-3 text-center shadow-[0_12px_24px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(222,212,255,0.12)] transition ${petItem.isEquipped ? 'border-cyan-300/70 ring-2 ring-cyan-400/75 ring-offset-2 ring-offset-[#071527]' : ''}`}
@@ -1037,7 +1049,9 @@ export const Shop: React.FC<ShopProps> = ({
               </span>
               <span className="truncate text-[11px] font-bold text-white">{petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}</span>
             </div>
-          ))}
+          )) : (
+            <TextEmptyState text="暂无已拥有龟种" className="min-h-40 w-full" />
+          )}
         </div>
       </div>
     </div>

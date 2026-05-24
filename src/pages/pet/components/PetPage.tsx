@@ -1,7 +1,7 @@
 /**
  * 文件说明：Pet Page，宠物系统页面组件。
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -17,10 +17,7 @@ import type { AiPushMessage } from '@/hooks/aiTypes';
 import type {
   PetInfo,
   PetSkin,
-} from '@/data/mockData';
-import {
-  petDialogues,
-} from '@/data/mockData';
+} from '@/components/common/pet/petTypes';
 import type { OwnedPetItem, PetEquipInfo, PetStaminaResponse, PetStatusResponse } from '@/hooks/petTypes';
 import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
 import { getPetDisplayAvatar } from './petDisplay';
@@ -31,11 +28,21 @@ import {
   getPetStatusAiText,
 } from '@/utils/petHelpers';
 import { useIsMobileViewport, usePetSceneIsNight } from '@/utils/petSceneBackground';
+import { getPetIdleDialogues } from '@/components/common/pet/petDialogue';
 
 const PET_PAGE_SCENE_BG_SUN = '/image/gui-bg-sun.png';
 const PET_PAGE_SCENE_BG_MOON = '/image/gui-bg-moon.png';
 const PET_PAGE_SCENE_BG_SUN_MOBILE = '/image/gui-bg1-sun.png';
 const PET_PAGE_SCENE_BG_MOON_MOBILE = '/image/gui-bg1-moon.png';
+
+const DEFAULT_PET_DISPLAY_INFO: PetInfo = {
+  name: '基础小龟',
+  status: '状态稳定',
+  level: 1,
+  avatar: '🐢',
+  stamina: 0,
+  maxStamina: 0,
+};
 
 type PetTab = 'status' | 'species' | 'abilities' | 'aiChat';
 
@@ -541,10 +548,32 @@ export const PetPage: React.FC<PetPageProps> = ({
   aiPushMessages = [],
 }) => {
   const [activeTab, setActiveTab] = useState<PetTab>('status');
-  const [currentDialogue, setCurrentDialogue] = useState(petDialogues.idle[0]);
+  const idleDialogues = useMemo(() => getPetIdleDialogues(petStatus), [petStatus]);
+  const [currentDialogue, setCurrentDialogue] = useState(idleDialogues[0] ?? '');
   const [dialogueKey, setDialogueKey] = useState(0);
   const equippedOwnedPet = ownedPets?.find((item) => item.isEquipped) ?? null;
-  const heroAvatar = getPetDisplayAvatar(equippedPet?.petKey, equippedPet?.petName) || pet.avatar;
+  const displayPet = useMemo<PetInfo>(() => ({
+    name: pet.name || equippedPet?.petName || equippedOwnedPet?.petName || DEFAULT_PET_DISPLAY_INFO.name,
+    status: pet.status || DEFAULT_PET_DISPLAY_INFO.status,
+    level: pet.level || equippedPet?.level || equippedOwnedPet?.level || DEFAULT_PET_DISPLAY_INFO.level,
+    avatar: pet.avatar || DEFAULT_PET_DISPLAY_INFO.avatar,
+    stamina: pet.stamina,
+    maxStamina: pet.maxStamina,
+  }), [
+    equippedOwnedPet?.level,
+    equippedOwnedPet?.petName,
+    equippedPet?.level,
+    equippedPet?.petName,
+    pet.avatar,
+    pet.level,
+    pet.maxStamina,
+    pet.name,
+    pet.stamina,
+    pet.status,
+  ]);
+  const heroAvatar =
+    getPetDisplayAvatar(equippedPet?.petKey ?? equippedOwnedPet?.petKey, equippedPet?.petName ?? equippedOwnedPet?.petName) ||
+    displayPet.avatar;
   const isNightScene = usePetSceneIsNight();
   const isMobileViewport = useIsMobileViewport();
   const sceneBgSrc = isMobileViewport
@@ -552,13 +581,18 @@ export const PetPage: React.FC<PetPageProps> = ({
     : (isNightScene ? PET_PAGE_SCENE_BG_MOON : PET_PAGE_SCENE_BG_SUN);
 
   useEffect(() => {
-    const iv = setInterval(() => {
-      const idx = Math.floor(Math.random() * petDialogues.idle.length);
-      setCurrentDialogue(petDialogues.idle[idx]);
+    setCurrentDialogue(idleDialogues[0] ?? '');
+    setDialogueKey((k) => k + 1);
+
+    if (idleDialogues.length <= 1) return undefined;
+
+    const iv = window.setInterval(() => {
+      const idx = Math.floor(Math.random() * idleDialogues.length);
+      setCurrentDialogue(idleDialogues[idx] ?? '');
       setDialogueKey((k) => k + 1);
     }, 5000);
-    return () => clearInterval(iv);
-  }, []);
+    return () => window.clearInterval(iv);
+  }, [idleDialogues]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)');
@@ -743,7 +777,7 @@ export const PetPage: React.FC<PetPageProps> = ({
           >
             {activeTab === 'status' && (
               <StatusTab
-                pet={pet}
+                pet={displayPet}
                 winRate={winRate}
                 winStreak={winStreak}
                 totalPredictions={totalPredictions}
@@ -758,21 +792,21 @@ export const PetPage: React.FC<PetPageProps> = ({
             )}
             {activeTab === 'species' && (
               <SpeciesTab
-                pet={pet}
+                pet={displayPet}
                 ownedPets={ownedPets}
                 equippedPet={equippedPet}
                 equippingPetId={equippingPetId}
                 onEquipPet={onEquipPet}
               />
             )}
-            {activeTab === 'abilities' && <AbilitiesTab pet={pet} equippedPet={equippedPet} />}
+            {activeTab === 'abilities' && <AbilitiesTab pet={displayPet} equippedPet={equippedPet} />}
             {activeTab === 'aiChat' && (
               <div className={`${card} overflow-hidden p-0 lg:hidden`}>
                 <PetChat
-                  pet={pet}
+                  pet={displayPet}
                   embedded
                   onClose={() => setActiveTab('status')}
-                  stamina={pet.stamina}
+                  stamina={displayPet.stamina}
                   onStaminaChange={onStaminaChange}
                   aiPushMessages={aiPushMessages}
                 />

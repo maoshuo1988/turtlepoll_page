@@ -3,11 +3,8 @@
  */
 import React, { useMemo } from 'react';
 import { Sparkles } from 'lucide-react';
-import {
-  RARITY_COLORS,
-  type PetInfo,
-  type PetSkin,
-} from '@/data/mockData';
+import type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';
+import { RARITY_COLORS } from '@/components/common/pet/petSkinStyles';
 
 interface ProfilePetRailProps {
   pet: PetInfo;
@@ -163,7 +160,7 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
           </div>
           <div className="rounded-2xl border border-white/8 bg-black/25 !px-4 !py-4">
             <div className="text-[11px] text-[#82919a]">回忆记录</div>
-            <div className="!mt-2 text-[22px] font-black text-white">{mockPetMemories.length}</div>
+            <div className="!mt-2 text-[22px] font-black text-white">{petMemories.length}</div>
           </div>
         </div>
       </PetPanel> */}
@@ -223,7 +220,7 @@ export const ProfilePetRail: React.FC<ProfilePetRailProps> = ({
           <div>
             <div className="!mb-3 text-[12px] font-bold text-[#dbe2e8]">成就墙</div>
             <div className="grid gap-3">
-              {mockPetAchievements.map((achievement) => (
+              {petAchievements.map((achievement) => (
                 <div
                   key={achievement.id}
                   className={`rounded-2xl border !px-4 !py-3 ${

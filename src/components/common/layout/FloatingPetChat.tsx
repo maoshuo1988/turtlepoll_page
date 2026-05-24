@@ -5,7 +5,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X } from 'lucide-react';
 import { PetChat } from '../pet/PetChat';
-import type { PetInfo } from '@/data/mockData';
+import type { PetInfo } from '@/components/common/pet/petTypes';
 
 interface FloatingPetChatProps {
   open: boolean;

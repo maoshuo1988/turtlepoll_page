@@ -21,8 +21,9 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
 import type { TopicResponse } from '@/hooks/topicTypes';
-import { FORUM_TAGS } from '@/data/mockData';
+import { getForumTagClass } from './forumTags';
 import { SERVER_ASSET_ORIGIN } from '@/config';
+import { resolveGeneratedUserAvatarUrl } from '@/utils/userAvatar';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hooks/useCommentRequests';
 import type { PredictionCardItem } from './predictionCards';
@@ -32,7 +33,7 @@ dayjs.locale('zh-cn');
 
 const DISLIKE_ICON_SRC = '/image/cai.svg';
 
-export type TopicPostTag = '讨论' | '爆料' | '分析';
+export type TopicPostTag = string;
 
 export type TopicPostCardData = Partial<TopicResponse> & {
   id: string;
@@ -96,6 +97,7 @@ const formatCommentTime = (timestamp?: number) => {
 const resolveTag = (post: TopicPostCardData): TopicPostTag => {
   if (post.tag) return post.tag;
   const firstTag = post.tags?.[0]?.name ?? '';
+  if (firstTag) return firstTag;
   if (post.recommend || /爆料|独家|快讯/.test(firstTag)) return '爆料';
   if (/分析|研判|复盘/.test(firstTag)) return '分析';
   return '讨论';
@@ -110,6 +112,16 @@ const resolveAssetUrl = (src?: string) => {
     return `${SERVER_ASSET_ORIGIN}${src}`;
   }
   return `${SERVER_ASSET_ORIGIN}/${src}`;
+};
+
+const looksLikeRemoteAvatar = (src?: string) => {
+  const trimmed = src?.trim();
+  if (!trimmed) return false;
+  if (/^(https?:)?\/\//.test(trimmed) || trimmed.startsWith('data:') || trimmed.startsWith('blob:')) {
+    return true;
+  }
+  if (trimmed.startsWith('/')) return true;
+  return /\.(png|jpe?g|gif|webp|svg|avif)(\?.*)?$/i.test(trimmed);
 };
 
 const getUserDisplayName = (comment?: CommentResponse | null) =>
@@ -540,6 +552,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   onHideTopic,
   isHidingTopic = false,
 }) => {
+  const [remoteAvatarFailed, setRemoteAvatarFailed] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [textExpanded, setTextExpanded] = useState(false);
   const [liked, setLiked] = useState(Boolean(post.liked));
@@ -599,7 +612,23 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const handleSeed = post.user?.username || post.user?.id || post.author?.handle || nickname;
   const handle = handleSeed.startsWith('@') ? handleSeed : `@${handleSeed}`;
   const avatarText = post.author?.avatar || nickname.slice(0, 1).toUpperCase();
-  const avatarUrl = resolveAssetUrl(post.user?.avatar || post.user?.smallAvatar || post.author?.avatarUrl);
+  const remoteAvatarRaw = post.user?.avatar || post.user?.smallAvatar || post.author?.avatarUrl;
+  const remoteAvatarUrl = looksLikeRemoteAvatar(remoteAvatarRaw) ? resolveAssetUrl(remoteAvatarRaw) : '';
+  const generatedAvatarUrl = resolveGeneratedUserAvatarUrl(
+    {
+      id: post.user?.id,
+      username: post.user?.username,
+      nickname: post.user?.nickname,
+    },
+    handleSeed,
+  );
+  const displayAvatarUrl = remoteAvatarFailed
+    ? generatedAvatarUrl
+    : remoteAvatarUrl || generatedAvatarUrl;
+
+  useEffect(() => {
+    setRemoteAvatarFailed(false);
+  }, [post.id, remoteAvatarUrl, generatedAvatarUrl]);
   const content = post.content || [post.title, post.summary].filter(Boolean).join('\n').trim() || '该帖子暂无正文内容';
   const images =
     post.images ??
@@ -800,9 +829,18 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
       <div className="legacy-forum-post-row">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="legacy-forum-post-avatar grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#14212d] text-xl text-cyan-300 cursor-pointer transition-opacity hover:opacity-80 md:h-15 md:w-15 md:bg-slate-100 dark:md:bg-rdark-input">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt={nickname} className="h-full w-full rounded-full object-cover" />
+            <div className="legacy-forum-post-avatar grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full bg-[#14212d] text-xl text-cyan-300 cursor-pointer transition-opacity hover:opacity-80 md:h-15 md:w-15 md:bg-slate-100 dark:md:bg-rdark-input">
+              {displayAvatarUrl ? (
+                <img
+                  src={displayAvatarUrl}
+                  alt={nickname}
+                  className="h-full w-full rounded-full object-cover"
+                  onError={() => {
+                    if (remoteAvatarUrl && generatedAvatarUrl && !remoteAvatarFailed) {
+                      setRemoteAvatarFailed(true);
+                    }
+                  }}
+                />
               ) : (
                 avatarText
               )}
@@ -830,7 +868,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
         </div>
 
         <div className="mt-2 min-w-0">
-          <span className={`inline-block text-[10px] md:text-[11px] font-semibold px-2 !py-1 md:!py-2 rounded-full mt-1 mb-1.5 ${FORUM_TAGS[tag] ?? FORUM_TAGS['讨论']}`}>
+          <span className={`inline-block text-[10px] md:text-[11px] font-semibold px-2 !py-1 md:!py-2 rounded-full mt-1 mb-1.5 ${getForumTagClass(tag)}`}>
             #{tag}
           </span>
 

@@ -3,7 +3,7 @@
  */
 import React, { useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
-import type { PetInfo } from '@/data/mockData';
+import type { PetInfo } from '@/components/common/pet/petTypes';
 import type { OwnedPetItem } from '@/hooks/petTypes';
 import { getPetDisplayAvatar } from './petDisplay';
 

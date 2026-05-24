@@ -35,7 +35,7 @@ import {
 } from '@/hooks/usePkRequests';
 import type { PKBet } from '@/hooks/pkTypes';
 import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
-import type { PetSkin } from '@/data/mockData';
+import type { PetSkin } from '@/components/common/pet/petTypes';
 import type { PredictionCardItem } from '@/pages/home/components/predictionCards';
 import { resolveEventBattleTheme } from './eventBattleThemes';
 import './EventBattleLiveRoom.css';

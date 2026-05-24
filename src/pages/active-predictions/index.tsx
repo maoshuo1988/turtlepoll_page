@@ -3,19 +3,18 @@
  */
 import { useMemo } from 'react';
 import { useNavigate } from '@umijs/renderer-react';
-import { heroNews, mockNews } from '@/data/mockData';
 import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
 import { ActivePredictionsPageView } from './components/ActivePredictionsPageView';
 import { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';
 
 export default function ActivePredictionsPage() {
   const navigate = useNavigate();
-  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
+  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });
   const activePredictionItems = useMemo<PredictionCardItem[]>(() => {
     const list = footballMarkets.data?.list ?? [];
     const liveNews = Array.isArray(list) && list.length > 0
       ? list.map(mapMarketToPredictionCard)
-      : ([heroNews, ...mockNews] as PredictionCardItem[]);
+      : [];
     return liveNews.filter((item) => item.status === 'open');
   }, [footballMarkets.data]);
 

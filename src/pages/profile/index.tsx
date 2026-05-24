@@ -3,7 +3,7 @@
  */
 import { useMemo, useState } from 'react';
 import { useNavigate } from '@umijs/renderer-react';
-import { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';
+import type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { useAppSession } from '@/hooks/useAppSession';
 import {
@@ -19,7 +19,7 @@ import { getPetMoodLabel } from './components/petDisplay';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const [skins] = useState<PetSkin[]>(mockPetSkins);
+  const [skins] = useState<PetSkin[]>([]);
   const { onOpenAuth } = useHomeLayoutContext();
 
   // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。
@@ -32,18 +32,17 @@ export default function ProfilePage() {
   const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);
   const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);
   const storedUser = getStoredUserInfo();
-  const displayName = storedUser?.nickname ?? storedUser?.username ?? '路边社社长';
-  const displayHandle = storedUser?.username ? `@${storedUser.username}` : '预测达人';
-  const displayAvatar = storedUser?.nickname?.slice(0, 1).toUpperCase() ?? '🦊';
-  const petStamina = petStaminaQuery.data?.current ?? mockUser.petInfo.stamina;
-  const currentPet = useMemo(() => ({
-    ...mockUser.petInfo,
-    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,
-    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,
-    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,
+  const displayName = storedUser?.nickname ?? storedUser?.username ?? '未登录用户';
+  const displayHandle = storedUser?.username ? `@${storedUser.username}` : '';
+  const displayAvatar = storedUser?.nickname?.slice(0, 1).toUpperCase() ?? '';
+  const petStamina = petStaminaQuery.data?.current ?? 0;
+  const currentPet = useMemo<PetInfo>(() => ({
+    name: petEquipQuery.data?.petName ?? '',
+    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',
+    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,
     stamina: petStamina,
-    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,
-    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,
+    maxStamina: petStaminaQuery.data?.cap ?? 0,
+    avatar: equippedSkin?.avatar ?? '',
   }), [
     equippedOwnedPet?.level,
     equippedSkin?.avatar,
@@ -61,7 +60,7 @@ export default function ProfilePage() {
       avatar={displayAvatar}
       pet={currentPet}
       skins={skins}
-      balance={coinMe.data?.balance ?? mockUser.balance}
+      balance={coinMe.data?.balance ?? 0}
       onBack={() => {
         navigate('/');
       }}

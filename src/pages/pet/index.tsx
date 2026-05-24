@@ -3,7 +3,7 @@
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from '@umijs/renderer-react';
-import { mockPetSkins, mockUser, type PetSkin } from '@/data/mockData';
+import type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';
 import { useAppSession } from '@/hooks/useAppSession';
 import {
   findEquippedOwnedPet,
@@ -20,8 +20,8 @@ import { useHomeLayoutContext } from '@/layouts/context';
 export default function PetPage() {
   const navigate = useNavigate();
   const { aiPushMessages } = useHomeLayoutContext();
-  const [petStamina, setPetStamina] = useState(mockUser.petInfo.stamina);
-  const [skins, setSkins] = useState<PetSkin[]>(mockPetSkins);
+  const [petStamina, setPetStamina] = useState(0);
+  const [skins, setSkins] = useState<PetSkin[]>([]);
 
   // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。
   const { coinMe } = useAppSession();
@@ -33,14 +33,13 @@ export default function PetPage() {
 
   const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);
   const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);
-  const currentPet = useMemo(() => ({
-    ...mockUser.petInfo,
-    name: petEquipQuery.data?.petName ?? mockUser.petInfo.name,
-    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? mockUser.petInfo.status,
-    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? mockUser.petInfo.level,
+  const currentPet = useMemo<PetInfo>(() => ({
+    name: petEquipQuery.data?.petName ?? '',
+    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',
+    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,
     stamina: petStamina,
-    maxStamina: petStaminaQuery.data?.cap ?? mockUser.petInfo.maxStamina,
-    avatar: equippedSkin?.avatar ?? mockUser.petInfo.avatar,
+    maxStamina: petStaminaQuery.data?.cap ?? 0,
+    avatar: equippedSkin?.avatar ?? '',
   }), [
     equippedOwnedPet?.level,
     equippedSkin?.avatar,
@@ -74,10 +73,10 @@ export default function PetPage() {
   return (
     <PetPageView
       pet={currentPet}
-      balance={coinMe.data?.balance ?? mockUser.balance}
-      winRate={0.68}
-      winStreak={mockUser.winStreak}
-      totalPredictions={42}
+      balance={coinMe.data?.balance ?? 0}
+      winRate={0}
+      winStreak={0}
+      totalPredictions={0}
       onBack={() => {
         navigate('/');
       }}

@@ -7,7 +7,6 @@ import { useHomeLayoutContext } from '@/layouts/context';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 import { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
-import { heroNews, mockNews } from '@/data/mockData';
 import { HomePageView } from './components/HomePageView';
 import {
   mapMarketToPredictionCard,
@@ -54,7 +53,7 @@ export default function HomePage() {
   const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);
   const { allItems } = usePredictionCardItems(selectedTag);
 
-  const allFallbackItems = [heroNews, ...mockNews] as PredictionCardItem[];
+  const allFallbackItems: PredictionCardItem[] = [];
   const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;
 
   const needsFootballDeepLink =
@@ -71,6 +70,7 @@ export default function HomePage() {
     page: 1,
     limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,
     enabled: needsFootballDeepLink,
+    requireAuth: false,
   });
 
   const selectedPrediction = useMemo(() => {

@@ -530,6 +530,7 @@ export function WorldCupPage() {
     tag: 'football',
     page: footballPage,
     limit: FIXTURE_VISIBLE_CHUNK,
+    requireAuth: false,
   });
   const footballMarketsPage = footballMarketsQuery.data?.list ?? [];
 

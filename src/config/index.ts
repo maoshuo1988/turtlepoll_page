@@ -5,9 +5,9 @@ import { API_TARGETS, resolveApiTarget } from './apiTargets';
 
 const API_ORIGIN = resolveApiTarget() || API_TARGETS.production;
 
-/** 开发态走 Umi 代理，其余环境直连对应 API 基址 */
+/** 优先 UMI_APP_SERVER_API，否则使用 apiTargets 对应环境 IP */
 export const SERVER_API =
-  process.env.UMI_APP_SERVER_API || "https://turtle.cloud-ip.cc";
+  process.env.UMI_APP_SERVER_API || API_ORIGIN;
 export const SERVER_ASSET_ORIGIN = API_ORIGIN;
 
 export const AUTH_TOKEN_STORAGE_KEY = 'turtle_auth_token';

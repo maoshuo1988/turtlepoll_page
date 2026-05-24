@@ -1,5 +1,5 @@
 /** 文件说明：龟势对决页面展示组件，负责展示错误提示和对决下注视图。 */
-import type { RivalryNewsItem } from './rivalryMockData';
+import type { RivalryNewsItem } from './rivalryTypes';
 import { RivalryPK } from './RivalryPK';
 
 interface RivalryPageViewProps {
