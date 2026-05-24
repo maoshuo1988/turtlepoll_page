@@ -11,8 +11,8 @@ import {
   Check,
   MessageCircle,
 } from 'lucide-react';
-import { PetChat } from '@/components/shared/pet/ui/PetChat';
-import { CommonSpine } from '@/components/shared/spine';
+import { PetChat } from '@/components/common/pet/PetChat';
+import { CommonSpine } from '@/components/common/spine/CommonSpine';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type {
   PetInfo,
@@ -22,7 +22,7 @@ import {
   petDialogues,
 } from '@/data/mockData';
 import type { OwnedPetItem, PetEquipInfo, PetStaminaResponse, PetStatusResponse } from '@/hooks/petTypes';
-import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/shared/pet/petRarity';
+import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
 import { getPetDisplayAvatar } from './petDisplay';
 import { getTurtleAbility } from './petAbilities';
 import {

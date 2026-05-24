@@ -996,7 +996,7 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
   };
 
   return (
-    <section className="view-shell view-rhythm mx-0 grid w-full max-w-none gap-6">
+    <section className="mx-0 grid w-full max-w-none gap-6 max-lg:gap-3">
       <div className="flex items-center gap-3">
         <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-[#27d8cf] to-[#ff4f75]" />
         <h2 className="text-base font-bold text-slate-100">开撕台</h2>

@@ -3,7 +3,7 @@
  */
 import React, { useState } from 'react';
 import { ChevronDown, Flame, Hash } from 'lucide-react';
-import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';
+import type { SidebarHotTag, SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 
 interface SidebarDesktopHotPanelProps {
   hotTopics: SidebarHotTopic[];

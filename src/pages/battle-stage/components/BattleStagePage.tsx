@@ -721,7 +721,7 @@ export const BattleStagePage: React.FC = () => {
   const theme = useMemo(() => THEMES[themeIdx], [themeIdx]);
 
   return (
-    <section className="page-frame page-frame-wide view-battle-stage grid gap-3 pb-8">
+    <section className="w-full max-w-none min-h-full mx-0 grid content-start gap-3 pb-8 view-battle-stage">
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-amber-400/22 bg-amber-400/[0.05] px-3 py-2">
         <div className="flex items-center gap-2 text-[12px] text-amber-200/85">
           <Crown size={14} />

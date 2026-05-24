@@ -2,7 +2,7 @@
  * 文件说明：Sidebar Desktop Profile Panel，PC 左侧栏相关展示组件。
  */
 import React from 'react';
-import { PetChat } from '../../shared/pet/ui/PetChat';
+import { PetChat } from '@/components/common/pet/PetChat';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/data/mockData';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';

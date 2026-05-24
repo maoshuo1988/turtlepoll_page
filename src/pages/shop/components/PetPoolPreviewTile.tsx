@@ -1,7 +1,7 @@
 /**
  * 文件说明：奖池预览单个宠物卡片，稀有度配色与商城列表一致。
  */
-import type { PetRarityGrade } from '@/components/shared/pet/petRarity';
+import type { PetRarityGrade } from '@/components/common/pet/petRarity';
 import { getPetPoolPreviewBadgeTextClass, getPetPoolPreviewFrameClass } from './shopPetPreviewStyles';
 
 export interface PetPoolPreviewTileProps {

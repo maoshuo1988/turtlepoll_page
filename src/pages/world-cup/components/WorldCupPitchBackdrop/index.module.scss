@@ -1,0 +1,54 @@
+          
+  @keyframes wcfx-turf-drift {
+            0% { background-position: 0 0; }
+            100% { background-position: 144px 0; }
+          
+  }
+
+          
+  @keyframes wcfx-flood-sweep {
+            0% { transform: translateX(-38%) skewX(-12deg); opacity: 0; }
+            22% { opacity: 1; }
+            100% { transform: translateX(145%) skewX(-12deg); opacity: 0; }
+          
+  }
+
+          
+  @keyframes wcfx-flood-soft {
+            0%, 100% { opacity: 0.38; transform: scale(1); }
+            50% { opacity: 0.56; transform: scale(1.07); }
+          
+  }
+
+          
+  @keyframes wcfx-ball-float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            40% { transform: translate(-5px, 4px) rotate(-10deg); }
+            70% { transform: translate(5px, -3px) rotate(8deg); }
+          
+  }
+
+          
+  @keyframes wcfx-grass-rise {
+            0% { transform: translateY(12%) scale(0.65); opacity: 0; }
+            35% { opacity: 1; }
+            100% { transform: translateY(-120%) scale(1); opacity: 0; }
+          
+  }
+
+          
+  @keyframes wcfx-center-pulse {
+            0%, 100% { opacity: 0.35; }
+            45% { opacity: 1; }
+          
+  }
+
+          @media (prefers-reduced-motion: reduce) {
+            .wcfx-turf-stripes,
+            .wcfx-flood-sheet,
+            .wcfx-ball-orbit,
+            .wcfx-grass-bit,
+            .wcfx-field-pulse {
+              animation: none !important;
+            }
+          }

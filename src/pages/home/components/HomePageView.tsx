@@ -1,5 +1,4 @@
 /** 文件说明：首页展示组件，负责在预测列表和单场对战视图之间切换。 */
-import { TrendingUp } from 'lucide-react';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { PredictionsView } from './PredictionsView';
 import type { PredictionCardItem } from './predictionCards';
@@ -20,19 +19,7 @@ export function HomePageView({
   onEnterBattle,
 }: HomePageViewProps) {
   return (
-    <section className="page-frame page-frame-wide view-predictions">
-      <header className="page-header">
-        <div className="page-header-row">
-          <div>
-            <div className="page-eyebrow">
-              <TrendingUp size={14} />
-              Prediction Market
-            </div>
-            <h1 className="page-title">暗盘</h1>
-            <p className="page-description">集中展示热门预测、实时盘口和下注入口。主要行动保持在卡片内，点击下注会先进入确认弹框。</p>
-          </div>
-        </div>
-      </header>
+    <section className="w-full max-w-none min-h-full mx-0 grid content-start gap-4 max-lg:gap-3 view-predictions">
       <PredictionsView
         selectedTag={selectedTag}
         selectedPrediction={selectedPrediction}

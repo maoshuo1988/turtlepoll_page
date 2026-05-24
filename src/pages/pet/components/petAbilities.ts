@@ -2,7 +2,7 @@
  * 文件说明：pet Abilities，维护龟种特殊能力展示映射。
  */
 import type { PetEquipInfo } from '@/hooks/petTypes';
-import { normalizePetRarityGrade } from '@/components/shared/pet/petRarity';
+import { normalizePetRarityGrade } from '@/components/common/pet/petRarity';
 
 export type TurtleAbilityInfo = {
   id: string;

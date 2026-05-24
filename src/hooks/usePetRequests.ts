@@ -3,7 +3,7 @@
  */
 import { axiosCustom } from "@/api/httpClient";
 import { SERVER_ASSET_ORIGIN } from "@/config";
-import { normalizePetRarityGrade, PetRarityGrade } from "@/components/shared/pet/petRarity";
+import { normalizePetRarityGrade, PetRarityGrade } from "@/components/common/pet/petRarity";
 import {
   API_Admin_Pet_Defs,
   API_Admin_Pet_Gacha_Config,

@@ -14,7 +14,7 @@ import type { PetEggHatchResponse, PetStaminaResponse } from '@/hooks/petTypes';
 import { PetPoolPreviewTile } from './PetPoolPreviewTile';
 import { getPetDisplayAvatar } from './petDisplay';
 import { getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
-import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/shared/pet/petRarity';
+import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
 
 const card =
   'rounded-[24px] max-lg:rounded-[18px] border border-cyan-400/18 max-lg:border-cyan-400/11 bg-[linear-gradient(180deg,rgba(7,15,31,0.96),rgba(6,12,24,0.98))] shadow-[0_14px_40px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.06)] max-lg:shadow-[0_10px_26px_rgba(0,0,0,0.22),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl';

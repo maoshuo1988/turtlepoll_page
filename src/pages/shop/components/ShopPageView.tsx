@@ -6,7 +6,7 @@ type ShopPageViewProps = ComponentProps<typeof Shop>;
 
 export function ShopPageView(props: ShopPageViewProps) {
   return (
-    <section className="page-frame view-shop">
+    <section className="w-full max-w-none min-h-full mx-0 grid content-start gap-4 max-lg:gap-3 view-shop">
       <Shop {...props} />
     </section>
   );

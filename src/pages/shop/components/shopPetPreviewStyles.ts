@@ -1,7 +1,7 @@
 /**
  * 文件说明：商城奖池预览卡片按稀有度等级的边框与标签文字配色（与原先中文档位视觉一致）。
  */
-import { PetRarityGrade, type PetRarityGrade as PetGrade } from '@/components/shared/pet/petRarity';
+import { PetRarityGrade, type PetRarityGrade as PetGrade } from '@/components/common/pet/petRarity';
 
 export function getPetPoolPreviewFrameClass(grade: PetGrade): string {
   if (grade === PetRarityGrade.SSS || grade === PetRarityGrade.SS || grade === PetRarityGrade.S) {

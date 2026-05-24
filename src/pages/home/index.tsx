@@ -5,7 +5,7 @@ import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { useHomeLayoutContext } from '@/layouts/context';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
-import type { SidebarHotTopic } from '@/components/shared/layout';
+import type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 import { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 import { heroNews, mockNews } from '@/data/mockData';
 import { HomePageView } from './components/HomePageView';

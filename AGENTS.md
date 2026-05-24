@@ -18,18 +18,34 @@
 - 每个页面必须有对应的页面文件夹：`src/pages/<route>/`。
 - 页面专属组件优先放在该页面文件夹下，例如 `src/pages/<route>/components/<Xxx>.tsx`、`src/pages/<route>/components/<XxxSection>.tsx`、`src/pages/<route>/components/<XxxModal>.tsx`。
 - 页面主体展示组件可以放在 `src/pages/<route>/components/<RoutePage>.tsx`；`src/pages/<route>/index.tsx` 负责页面级业务逻辑和渲染组装。
-- 页面级业务 UI 必须归属当前 page：`src/pages/<route>/components/` 里不能只做一层薄封装然后继续引用 `src/components/shared/<module>/ui/<Page>`。
-- 如果一个组件只服务某一个页面，即使体量很大，也先放在该页面 `components/` 下；不要放到 `shared`。
-- `shared` 只允许放真正跨两个以上页面复用的基础业务组件、布局组件或工具型组件；页面自己的弹框、列表项、区块、页面主体都放回对应 page。
+- 页面级业务 UI 必须归属当前 page：`src/pages/<route>/components/` 里不能只做一层薄封装然后继续引用 `src/components/common/<module>/<Page>`。
+- 如果一个组件只服务某一个页面，即使体量很大，也先放在该页面 `components/` 下；不要放到 `common`。
+- `common` 只允许放真正跨两个以上页面复用的基础业务组件、布局组件或工具型组件；页面自己的弹框、列表项、区块、页面主体都放回对应 page。
 - 页面组件可以引用 hooks、types、api、utils、data 等非 UI 基础能力；但页面 UI 组件之间优先本页面相对路径引用。
 - 复杂页面优先按端拆分：`<Xxx>Desktop.tsx` / `<Xxx>Mobile.tsx`，或 `components/desktop/` / `components/mobile/`；拆分后由页面级组件按响应式 class 或设备判断组合。
 - 页面专属的数据映射、常量、类型可以放在 `src/pages/<route>/components/` 或 `src/pages/<route>/model.ts` / `types.ts`，但不要散落到无关目录。
-- `src/components/<module>/` 用于模块级组件；`src/components/shared/<module>/` 只用于真正跨页面复用的业务组件。
-- 只有真正跨页面复用的业务组件才放进 `src/components/shared/<module>/`。
+- 单个源码文件必须控制在 2000 行以内，包括 `.ts`、`.tsx`、`.css`、`.scss`。接近或超过 2000 行时必须按功能拆分到同级子组件、hooks、types、data、style 分片或专属目录中。
+- 拆分大文件时优先按业务功能边界拆：主容器保留状态编排和数据流，展示区块拆组件，数据映射拆 `model.ts` / `types.ts` / `data.ts`，长 CSS 按页面区块或效果拆成多个同级样式文件并由入口样式文件按顺序引入。
+- 拆分不能改变页面逻辑、接口 payload、路由和用户可见交互；拆分后必须修正 import，并通过 `yarn build` 验证。
+- `src/components/` 顶层只允许三类目录：`pc/`、`mobile/`、`common/`。
+- `src/components/pc/` 放 PC 专属组件；`src/components/mobile/` 放移动端专属组件；PC 和移动端都会使用的组件放 `src/components/common/`。
+- `src/components/common/<module>/` 只用于真正跨页面复用的业务组件、基础能力组件或工具型展示组件。
+- `src/components` 下不要再新增 `shared/`、`header/`、`footer/`、`layout/` 这类顶层目录；对应内容分别放入 `common/`、`pc/` 或 `mobile/`。
+- `src/components` 下不要再新增 `ui/` 分层；功能组件直接放在对应功能目录中，例如 `src/components/common/pet/PetChat.tsx`。
+- `src/components` 下不要新增桶导出 `index.ts` / `index.tsx`；调用方必须直接 import 到具体文件，例如 `@/components/common/pet/PetChat`。
+- 组件文件夹里的 `index.tsx` 只允许用于“同名组件文件夹 + index.module.scss”的组件本体，不允许作为统一导出口。
 - 页面内复杂区块必须继续拆成 `src/pages/<route>/components/` 下的独立组件文件，避免单文件过大。
 - 路由必须同步维护 `.umirc.ts`。新增页面后，不允许只建页面不加 route。
-- 共享业务 UI 只有在确认跨页面复用时才放在 `src/components/shared/<module>/ui/`；页面专属 UI 必须放在 `src/pages/<route>/components/`。
+- 共享业务 UI 只有在确认跨页面复用时才放在 `src/components/common/<module>/`；页面专属 UI 必须放在 `src/pages/<route>/components/`。
+- TSX 需要配套 `index.module.scss` 时，必须以当前 TSX 文件名新建同名文件夹，把原 TSX 改为该文件夹下的 `index.tsx`，并把样式放在同级 `index.module.scss`，例如 `Foo.tsx` 迁移为 `Foo/index.tsx` 和 `Foo/index.module.scss`。
+- Tailwind CSS 和 CSS Module 可以同时使用：布局、间距、响应式优先保留 Tailwind class；复杂动画、长样式、伪元素、局部主题样式放到 `index.module.scss`。
+- CSS Module 里组件自己的 class 必须通过 `styles.xxx`、`styles['xxx']` 或组件内 `css(...)` 映射使用，不要把组件 class 写成大范围 `:global`。
+- `:global` 只用于真正的全局根选择器、浏览器/第三方选择器或主题根节点，例如 `html.dark`；不要用 `:global` 绕开 CSS Module。
+- 如果 CSS Module 的 `@keyframes` 在 TSX inline `style.animation` 中使用，TSX 必须通过模块导出的动画名映射，例如 `styles['foo-spin'] ?? 'foo-spin'`，避免动画名 hash 后失效。
+- `src/index.css` 只允许放全局配置：Tailwind 入口、全局主题变量、基础 `html/body/#root`、滚动条、全局字体、全局 reduced-motion 等。页面壳、卡片、按钮、导航、布局、业务组件样式必须迁到对应组件的 `index.module.scss` 或直接用 Tailwind。
 - PC 左侧栏和布局相关内容放在 `src/components/pc/layout/`。
+- PC 顶栏放在 `src/components/pc/header/`；PC 底栏如存在放在 `src/components/pc/footer/`。
+- 移动端顶栏放在 `src/components/mobile/header/`；移动端底栏放在 `src/components/mobile/footer/`。
 - 顶层布局放在 `src/layouts/`，页面壳组件放在 `src/layouts/components/`。
 - 接口请求统一放在 `src/hooks/use*Requests.ts`。
 - 接口类型统一放在 `src/hooks/*Types.ts`。
@@ -44,8 +60,8 @@
 - 新增页面必须创建对应的页面展示组件文件，优先为 `src/pages/<route>/components/<RoutePage>.tsx`；`index.tsx` 可以保留页面级业务逻辑，但不能承载大块 UI。
 - 页面组件命名使用业务名 + `Page`，例如 `WorldCupPage`、`RivalryPage`。
 - 同一页面的子组件、弹框、列表项、数据映射应封装在 `src/pages/<route>/components/` 或页面同级 `model.ts` / `types.ts` 下，方便一起维护。
-- 页面组件不能从 `src/components/shared/<module>/ui/` 引用该页面主体或页面专属区块；需要用到就迁回当前页面目录。
-- 不要为了满足拆分规则把页面专属组件硬塞进 `shared`；`shared` 只放确认会复用的组件。
+- 页面组件不能从 `src/components/common/<module>/` 引用该页面主体或页面专属区块；需要用到就迁回当前页面目录。
+- 不要为了满足拆分规则把页面专属组件硬塞进 `common`；`common` 只放确认会复用的组件。
 - 页面组件和子组件的 props 必须定义明确类型：使用 `interface XxxProps` 或 `type XxxProps`，不要在参数里写大型内联类型。
 - props 命名必须表达业务含义；回调统一用 `onXxx`，布尔值统一用 `is/has/can/should` 前缀。
 - 单个组件参数过多时，要拆组件或合并成明确的领域对象，不能无限往一个组件上传散参数。

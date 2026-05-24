@@ -2,7 +2,7 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, Coins, Flame } from 'lucide-react';
-import { CommonSpine } from '@/components/shared/spine';
+import { CommonSpine } from '@/components/common/spine/CommonSpine';
 import { usePetSceneIsNight } from '@/utils/petSceneBackground';
 
 const PET_SCENE_BG_SUN = '/image/gui-bg1-sun.png';

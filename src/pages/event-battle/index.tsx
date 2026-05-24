@@ -3,7 +3,7 @@
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from '@umijs/renderer-react';
-import type { SidebarHotTopic } from '@/components/shared/layout';
+import type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { heroNews, mockNews } from '@/data/mockData';
 import { EventBattlePage } from './components/EventBattlePage';

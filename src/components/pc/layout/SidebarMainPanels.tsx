@@ -8,8 +8,8 @@ import type { PetInfo } from '@/data/mockData';
 import { SidebarProfileCard } from './SidebarProfileCard';
 import { SidebarHotTopicsPanel } from './SidebarHotTopicsPanel';
 import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
-import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';
-import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCards';
+import type { SidebarHotTag, SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
+import type { PredictionCardItem } from '@/components/common/predictions/predictionCards';
 
 export type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'lab' | 'battle' | 'battlePlaza' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 

@@ -20,7 +20,7 @@ export function EventBattlePage({
 }: EventBattlePageProps) {
   if (isLoading) {
     return (
-      <section className="page-frame page-frame-wide grid min-h-full place-items-center">
+      <section className="w-full max-w-none min-h-full mx-0 grid content-start gap-4 max-lg:gap-3 place-items-center">
         <div className="rounded-2xl border border-white/8 bg-white/4 px-5 py-4 text-sm font-medium text-white/72">
           撕裂带加载中...
         </div>
@@ -30,7 +30,7 @@ export function EventBattlePage({
 
   if (!battleNews) {
     return (
-      <section className="page-frame page-frame-wide grid min-h-full place-items-center">
+      <section className="w-full max-w-none min-h-full mx-0 grid content-start gap-4 max-lg:gap-3 place-items-center">
         <div className="flex max-w-md flex-col items-center gap-3 rounded-3xl border border-white/8 bg-[#0b1018] px-6 py-8 text-center shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/6 text-white/72">
             <AlertCircle size={22} />
@@ -52,7 +52,7 @@ export function EventBattlePage({
   }
 
   return (
-    <section className="view-shell view-rhythm view-event-battle mx-0 grid h-full min-h-0 w-full max-w-none gap-0">
+    <section className="view-event-battle mx-0 grid h-full min-h-0 w-full max-w-none gap-0">
       <EventBattle
         news={battleNews}
         onBack={onBack}

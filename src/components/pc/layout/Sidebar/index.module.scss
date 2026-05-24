@@ -1,0 +1,9 @@
+.legacy-sidebar {
+  padding: 0;
+}
+
+.legacy-sidebar > div,
+.legacy-sidebar :global(.rounded-xl),
+.legacy-sidebar :global(.legacy-sidebar-nav) {
+  transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
