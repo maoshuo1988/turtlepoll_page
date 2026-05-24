@@ -4,6 +4,7 @@
     "name": "turtle",
     "private": true,
     "version": "0.0.0",
+    "packageManager": "yarn@1.22.22",
     "type": "module",
     "scripts": {
       "dev": "umi dev",
@@ -59,7 +60,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -72,7 +73,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -106,7 +107,7 @@
             1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -123,7 +124,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -150,7 +151,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            8
+            7
           ]
         },
         "register": 11
@@ -1099,7 +1100,7 @@
       "time": {
         "hooks": {
           "onStart": [
-            0
+            1
           ]
         },
         "register": 1
@@ -1128,7 +1129,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 44
+        "register": 38
       },
       "enableBy": "register"
     },
@@ -1154,7 +1155,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 7
       },
       "enableBy": "config"
     },
@@ -1184,7 +1185,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1197,7 +1198,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1210,7 +1211,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 17
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1222,7 +1223,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1274,10 +1275,10 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1289,7 +1290,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1380,7 +1381,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1431,7 +1432,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1506,7 +1507,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1532,7 +1533,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1598,7 +1599,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1661,7 +1662,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 20
+        "register": 18
       },
       "enableBy": "register"
     },
@@ -1674,7 +1675,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 12
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1686,7 +1687,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1725,7 +1726,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1738,7 +1739,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1751,7 +1752,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1764,7 +1765,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1816,7 +1817,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1829,7 +1830,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1920,7 +1921,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 12
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -1970,7 +1971,7 @@
     "_": []
   },
   "userConfig": {
-    "npmClient": "npm",
+    "npmClient": "yarn",
     "publicPath": "/",
     "title": "龟投",
     "favicons": [
@@ -2106,7 +2107,7 @@
       "@@": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/.umi-production",
       "regenerator-runtime": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/node_modules/regenerator-runtime"
     },
-    "npmClient": "npm",
+    "npmClient": "yarn",
     "title": "龟投",
     "favicons": [
       "/logo.png"
@@ -2229,7 +2230,7 @@
       "parentId": "@@/global-layout",
       "id": "2",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 真实撕裂带直达页：复用首页撕裂带逻辑，支持独立路径访问。\n  '/event-battle': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 撕裂带模板页：独立预览左右阵营配色和图片素材。\n  '/battle-stage': 'battleStage',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\ntype EventBattleRouteState = {\n  returnTo?: string;\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => {\n    if (location.pathname === '/event-battle') {\n      const routeState = location.state as EventBattleRouteState | null;\n      const returnPath = routeState?.returnTo?.split('?')[0];\n      if (returnPath && PATH_VIEW_MAP[returnPath]) {\n        return PATH_VIEW_MAP[returnPath];\n      }\n    }\n    return PATH_VIEW_MAP[location.pathname] ?? 'predictions';\n  }, [location.pathname, location.state]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme, aiPushMessages }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n            aiPushMessages,\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 真实撕裂带直达页：复用首页撕裂带逻辑，支持独立路径访问。\n  '/event-battle': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\ntype EventBattleRouteState = {\n  returnTo?: string;\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => {\n    if (location.pathname === '/event-battle') {\n      const routeState = location.state as EventBattleRouteState | null;\n      const returnPath = routeState?.returnTo?.split('?')[0];\n      if (returnPath && PATH_VIEW_MAP[returnPath]) {\n        return PATH_VIEW_MAP[returnPath];\n      }\n    }\n    return PATH_VIEW_MAP[location.pathname] ?? 'predictions';\n  }, [location.pathname, location.state]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme, aiPushMessages }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n            aiPushMessages,\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/home.tsx"
     },
@@ -2461,7 +2462,7 @@
     }
   },
   "hasSrcDir": true,
-  "npmClient": "npm",
+  "npmClient": "yarn",
   "umi": {
     "version": "4.6.49",
     "name": "Umi",

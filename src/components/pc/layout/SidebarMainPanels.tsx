@@ -11,7 +11,7 @@ import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/shared/layout';
 import type { PredictionCardItem } from '../../shared/predictions/ui/predictionCards';
 
-export type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'lab' | 'battle' | 'battlePlaza' | 'battleStage' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
+export type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'lab' | 'battle' | 'battlePlaza' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'world-cup', label: '世界杯', icon: <Flag size={22} />, view: 'worldCup', enabled: true },
@@ -20,7 +20,6 @@ export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'forum', label: '线报', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
   { key: 'games', label: '游戏管理', icon: <Gamepad2 size={22} />, view: 'games', enabled: true },
   { key: 'battle-plaza', label: '地下钱庄', icon: <Swords size={22} />, view: 'battlePlaza', enabled: true },
-  // { key: 'battle-stage', label: '撕裂带模板', icon: <Crosshair size={22} />, view: 'battleStage', enabled: true },
   { key: 'shop', label: '黑市', icon: <Gift size={22} />, view: 'shop', enabled: false },
   { key: 'pet', label: '宠物空间', icon: <Turtle size={22} />, view: 'pet', enabled: false },
   { key: 'inventory', label: '背包&资产', icon: <Backpack size={22} />, enabled: false },

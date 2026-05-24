@@ -123,21 +123,23 @@ const buildCreateCommentForm = (payload: CreateCommentPayload) => {
 /// MARK: 内容域 - 评论
 /// 基础路径: /api/comment
 
+export async function fetchCommentComments(params: Omit<CommentListParams, "enabled">): Promise<CursorResult<CommentResponse>> {
+  const res = await axiosCustom({
+    method: "get",
+    cmd: API_Comment_Comments,
+    params,
+    headers: getAuthorizationHeaders(),
+  });
+  return normalizeCursorResult<CommentResponse>(assertSuccess(res));
+}
+
 // 评论列表（cursor 分页）
 export function useRequestCommentComments(params: CommentListParams) {
   const { enabled = true, ...queryParams } = params;
 
   return useQuery<CursorResult<CommentResponse>>({
     queryKey: ["requestCommentComments", params],
-    queryFn: async () => {
-      const res = await axiosCustom({
-        method: "get",
-        cmd: API_Comment_Comments,
-        params: queryParams,
-        headers: getAuthorizationHeaders(),
-      });
-      return normalizeCursorResult<CommentResponse>(assertSuccess(res));
-    },
+    queryFn: () => fetchCommentComments(queryParams),
     enabled: enabled && Boolean(params?.entityType) && hasValue(params?.entityId),
   });
 }

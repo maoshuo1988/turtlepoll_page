@@ -5,8 +5,8 @@
 ## 项目基础
 
 - 技术栈：Umi 4 + React 19 + TypeScript + Tailwind CSS v4。
-- 包管理：使用 `npm`，不要新增 yarn/pnpm 相关配置。
-- 构建验证：重要改动后必须跑 `npm run build`。
+- 包管理：使用 `yarn`，不要新增 npm/pnpm 相关配置。
+- 构建验证：重要改动后必须跑 `yarn build`。
 - 路径别名：使用 `@/` 指向 `src/`。
 - 代码风格：保持现有函数组件、hooks、Tailwind class 的写法，不引入新的状态管理库或 UI 框架。
 
@@ -113,7 +113,7 @@
 ## 验证规则
 
 - TypeScript 报错必须修复，不留未使用 import、未使用 props。
-- 功能改动后至少跑 `npm run build`。
+- 功能改动后至少跑 `yarn build`。
 - 如果因为环境问题无法验证，要在交付说明里明确说明。
 - 不要提交 `dist/` 构建产物作为源码改动，除非用户明确要求。
 

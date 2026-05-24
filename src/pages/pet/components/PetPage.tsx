@@ -11,7 +11,7 @@ import {
   Check,
   MessageCircle,
 } from 'lucide-react';
-import { PetChat } from './PetChat';
+import { PetChat } from '@/components/shared/pet/ui/PetChat';
 import { CommonSpine } from '@/components/shared/spine';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type {

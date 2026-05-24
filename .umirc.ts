@@ -6,7 +6,7 @@ const apiTarget = resolveApiTarget();
 
 export default defineConfig({
   // Umi replaces the previous Vite entry and owns routing/build/dev-server now.
-  npmClient: 'npm',
+  npmClient: 'yarn',
   publicPath: '/',
   title: '龟投',
   favicons: ['/logo.png'],
@@ -34,7 +34,6 @@ export default defineConfig({
         { path: '/forum', component: 'forum', name: '论坛' },
         { path: '/games', component: 'games', name: '游戏' },
         { path: '/battle-plaza', component: 'battle-plaza', name: '撕裂带广场' },
-        // { path: '/battle-stage', component: 'battle-stage', name: '撕裂带模板' },
         { path: '/rank', component: 'rank', name: '排行榜' },
         { path: '/shop', component: 'shop', name: '商店' },
         { path: '/pet', component: 'pet', name: '宠物' },

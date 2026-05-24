@@ -70,7 +70,6 @@ const ROUTE_PATHS: Partial<Record<ViewType, string>> = {
   forum: '/forum',
   games: '/games',
   battlePlaza: '/battle-plaza',
-  battleStage: '/battle-stage',
   rank: '/rank',
   shop: '/shop',
   pet: '/pet',

@@ -23,8 +23,6 @@ const PATH_VIEW_MAP: Record<string, ViewType> = {
   '/games': 'games',
   // 撕裂带广场页：展示战斗广场和下注对局。
   '/battle-plaza': 'battlePlaza',
-  // 撕裂带模板页：独立预览左右阵营配色和图片素材。
-  '/battle-stage': 'battleStage',
   // 排行榜页：展示用户、宠物或战绩排名。
   '/rank': 'rank',
   // 商城页：展示宠物蛋、体力补给等商品。
