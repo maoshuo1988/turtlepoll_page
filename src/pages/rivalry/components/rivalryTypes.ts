@@ -3,9 +3,15 @@
  */
 export type RivalryNewsItem = {
   id: string;
+  marketId: number;
   title: string;
   summary: string;
   image: string;
+  listImage?: string;
+  sideABgImage?: string;
+  sideBBgImage?: string;
+  sideABgColor?: string;
+  sideBBgColor?: string;
   type: 'rivalry';
   votes: { A: number; B: number };
   optionA: string;

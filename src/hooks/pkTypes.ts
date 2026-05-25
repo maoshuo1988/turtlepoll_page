@@ -14,6 +14,12 @@ export type PKTopic = {
   title?: string;
   sideAName?: string;
   sideBName?: string;
+  cover?: string;
+  listImage?: string;
+  sideABgImage?: string;
+  sideBBgImage?: string;
+  sideABgColor?: string;
+  sideBBgColor?: string;
   status?: 'enabled' | 'disabled' | string;
   currentRoundId?: number | string;
   currentSeasonId?: number | string;

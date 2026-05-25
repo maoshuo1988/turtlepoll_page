@@ -16,6 +16,13 @@ export interface EventBattleTheme {
   sideB: EventBattleThemeSide;
 }
 
+export interface EventBattleThemeOverrides {
+  sideAImage?: string;
+  sideBImage?: string;
+  sideAColor?: string;
+  sideBColor?: string;
+}
+
 type ThemePalette = {
   id: string;
   sideA: Omit<EventBattleThemeSide, 'imageUrl'> & { icon: string };
@@ -154,6 +161,46 @@ function hashSeed(seed: string) {
   return hash;
 }
 
+function normalizeThemeColor(value?: string) {
+  const color = value?.trim();
+  return color && /^#[0-9a-f]{6}$/i.test(color) ? color : undefined;
+}
+
+function hexToRgb(color: string) {
+  return [
+    Number.parseInt(color.slice(1, 3), 16),
+    Number.parseInt(color.slice(3, 5), 16),
+    Number.parseInt(color.slice(5, 7), 16),
+  ].join(', ');
+}
+
+function applyThemeOverride(
+  side: EventBattleThemeSide,
+  image: string | undefined,
+  color: string | undefined,
+  glowPosition: '0' | '100%',
+) {
+  const normalizedImage = image?.trim();
+  const normalizedColor = normalizeThemeColor(color);
+  if (!normalizedImage && !normalizedColor) return side;
+
+  const rgb = normalizedColor ? hexToRgb(normalizedColor) : side.rgb;
+  return {
+    ...side,
+    ...(normalizedColor
+      ? {
+          primary: normalizedColor,
+          accent: normalizedColor,
+          deep: normalizedColor,
+          rgb,
+          buttonGradient: `linear-gradient(135deg,${normalizedColor},${normalizedColor}cc)`,
+          heroGlow: `radial-gradient(circle at ${glowPosition} 42%, rgba(${rgb},0.44), transparent 54%)`,
+        }
+      : {}),
+    imageUrl: normalizedImage || side.imageUrl,
+  };
+}
+
 function buildSideImage({
   icon,
   label,
@@ -196,14 +243,19 @@ function buildSideImage({
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
-export function resolveEventBattleTheme(seed: string | number, leftLabel: string, rightLabel: string): EventBattleTheme {
+export function resolveEventBattleTheme(
+  seed: string | number,
+  leftLabel: string,
+  rightLabel: string,
+  overrides: EventBattleThemeOverrides = {},
+): EventBattleTheme {
   const normalizedSeed = String(seed || 'event-battle');
   const palette = THEME_PALETTES[hashSeed(normalizedSeed) % THEME_PALETTES.length];
   const topicBattleImages = TOPIC_BATTLE_IMAGE_MAP[normalizedSeed];
 
   return {
     id: palette.id,
-    sideA: {
+    sideA: applyThemeOverride({
       primary: palette.sideA.primary,
       accent: palette.sideA.accent,
       deep: palette.sideA.deep,
@@ -217,8 +269,8 @@ export function resolveEventBattleTheme(seed: string | number, leftLabel: string
         accent: palette.sideA.accent,
         deep: palette.sideA.deep,
       }),
-    },
-    sideB: {
+    }, overrides.sideAImage, overrides.sideAColor, '0'),
+    sideB: applyThemeOverride({
       primary: palette.sideB.primary,
       accent: palette.sideB.accent,
       deep: palette.sideB.deep,
@@ -232,6 +284,6 @@ export function resolveEventBattleTheme(seed: string | number, leftLabel: string
         accent: palette.sideB.accent,
         deep: palette.sideB.deep,
       }),
-    },
+    }, overrides.sideBImage, overrides.sideBColor, '100%'),
   };
 }

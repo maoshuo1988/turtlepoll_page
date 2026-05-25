@@ -138,7 +138,7 @@ const defaultRivalryTheme = createTheme(
   { label: 'B', emoji: '🔥', primary: '#A2343B', accent: '#ff6f8f', end: '#35131a' },
 );
 
-function getRivalryVisualTheme(item: RivalryNewsItem): RivalryVisualTheme {
+function getPresetRivalryTheme(item: RivalryNewsItem): RivalryVisualTheme {
   const text = `${item.title} ${item.optionA} ${item.optionB}`.toLowerCase();
 
   if (item.id === 'pk-hero' || text.includes('梅西') || text.includes('c罗')) {
@@ -185,6 +185,34 @@ function getRivalryVisualTheme(item: RivalryNewsItem): RivalryVisualTheme {
   }
 
   return defaultRivalryTheme;
+}
+
+function normalizeThemeColor(value?: string) {
+  const trimmed = value?.trim();
+  return trimmed && /^#[0-9a-f]{6}$/i.test(trimmed) ? trimmed : undefined;
+}
+
+function getRivalryVisualTheme(item: RivalryNewsItem): RivalryVisualTheme {
+  const preset = getPresetRivalryTheme(item);
+  const sideAColor = normalizeThemeColor(item.sideABgColor);
+  const sideBColor = normalizeThemeColor(item.sideBBgColor);
+
+  return {
+    sideA: {
+      ...preset.sideA,
+      primary: sideAColor ?? preset.sideA.primary,
+      accent: sideAColor ?? preset.sideA.accent,
+      soft: sideAColor ? `${sideAColor}22` : preset.sideA.soft,
+      portrait: item.sideABgImage?.trim() || preset.sideA.portrait,
+    },
+    sideB: {
+      ...preset.sideB,
+      primary: sideBColor ?? preset.sideB.primary,
+      accent: sideBColor ?? preset.sideB.accent,
+      soft: sideBColor ? `${sideBColor}22` : preset.sideB.soft,
+      portrait: item.sideBBgImage?.trim() || preset.sideB.portrait,
+    },
+  };
 }
 
 function pad(value: number) {
@@ -302,6 +330,7 @@ function mapTopicSummaryToPK(summary: PKTopicSummary, index: number): RivalryPKS
   const sideB = topic.sideBName || '反方';
   const heatA = asNumber(round?.heatA);
   const heatB = asNumber(round?.heatB);
+  const cover = topic.cover?.trim() || topic.listImage?.trim() || fallbackImages[index % fallbackImages.length];
 
   return {
     id: String(topic.id),
@@ -309,9 +338,15 @@ function mapTopicSummaryToPK(summary: PKTopicSummary, index: number): RivalryPKS
     isApi: true,
     newsItem: {
       id: String(topic.id),
+      marketId: Number(topic.id),
       title,
       summary: summary.streakStatus || '接口话题已接入，历史战绩会从开撕台接口实时读取。',
-      image: fallbackImages[index % fallbackImages.length],
+      image: cover,
+      listImage: topic.listImage?.trim() || cover,
+      sideABgImage: topic.sideABgImage?.trim(),
+      sideBBgImage: topic.sideBBgImage?.trim(),
+      sideABgColor: topic.sideABgColor?.trim(),
+      sideBBgColor: topic.sideBBgColor?.trim(),
       type: 'rivalry',
       votes: { A: Math.round(heatA), B: Math.round(heatB) },
       optionA: sideA,
@@ -492,17 +527,7 @@ function HeroPK({
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[24px] border border-slate-700/60 bg-[#0a111f] shadow-[0_18px_44px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.06)]">
       <div className="absolute inset-0">
         <img src={item.image} alt="" className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#091121]/95 via-[#0b1426]/84 to-[#0f1a2a]/42" />
-        <div className="absolute inset-y-0 left-0 w-[42%] overflow-hidden">
-          <img src={theme.sideA.portrait} alt="" className="h-full w-full object-cover opacity-[0.34] mix-blend-screen" />
-          <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${theme.sideA.primary}66 0%, transparent 100%)` }} />
-        </div>
-        <div className="absolute inset-y-0 right-0 w-[42%] overflow-hidden">
-          <img src={theme.sideB.portrait} alt="" className="h-full w-full object-cover opacity-[0.34] mix-blend-screen" />
-          <div className="absolute inset-0" style={{ background: `linear-gradient(270deg, ${theme.sideB.primary}66 0%, transparent 100%)` }} />
-        </div>
-        <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 14% 88%, ${theme.sideA.accent}44, transparent 42%)` }} />
-        <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 88% 18%, ${theme.sideB.accent}36, transparent 30%)` }} />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#091121]/82 via-[#0b1426]/62 to-[#0f1a2a]/44" />
       </div>
 
       <div className="relative p-5 md:p-7">
@@ -686,16 +711,8 @@ function PKCard({
       className="group overflow-hidden rounded-[22px] border border-white/10 bg-[#0d1118] shadow-[0_14px_40px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#3ad9be]/24 hover:shadow-[0_20px_44px_rgba(0,0,0,0.34)]"
     >
       <div className="relative h-32 overflow-hidden">
-        <img src={item.image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-72" loading="lazy" />
+        <img src={item.listImage || item.image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-72" loading="lazy" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,14,30,0.18),rgba(5,10,20,0.2))]" />
-        <div className="absolute inset-y-0 left-0 w-[34%] overflow-hidden">
-          <img src={theme.sideA.portrait} alt="" className="h-full w-full object-cover opacity-[0.36] mix-blend-screen" />
-          <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${theme.sideA.primary}7a, transparent 100%)` }} />
-        </div>
-        <div className="absolute inset-y-0 right-0 w-[34%] overflow-hidden">
-          <img src={theme.sideB.portrait} alt="" className="h-full w-full object-cover opacity-[0.36] mix-blend-screen" />
-          <div className="absolute inset-0" style={{ background: `linear-gradient(270deg, ${theme.sideB.primary}7a, transparent 100%)` }} />
-        </div>
         <div className="absolute left-2 top-2 flex items-center gap-1.5">
           <PhaseTag phase={pk.phase} />
           <span className="rounded-full bg-black/40 px-2 py-0.5 text-[10px] font-bold text-white/90 backdrop-blur-sm">第{pk.currentRound}局</span>

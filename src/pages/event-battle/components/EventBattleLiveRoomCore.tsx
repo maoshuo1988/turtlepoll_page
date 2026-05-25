@@ -551,7 +551,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const [optimisticPkBet, setOptimisticPkBet] = useState<PKBet | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
   const currentUserName = currentUserQuery.data?.nickname || currentUserQuery.data?.username || '你';
-  const pkTopicId = typeof news.marketId === 'number' && news.marketId > 0 ? news.marketId : undefined;
+  const numericTopicId = Number(news.marketId || news.id);
+  const pkTopicId = Number.isFinite(numericTopicId) && numericTopicId > 0 ? numericTopicId : undefined;
   const hasPkTopic = hasValue(pkTopicId);
   const pkDetailQuery = useRequestPKTopic({ topicId: pkTopicId, enabled: hasPkTopic });
   const pkHeatQuery = useRequestPKHeat({ topicId: pkTopicId, enabled: hasPkTopic });
@@ -656,13 +657,20 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       : '已暂停';
   const displayNews = useMemo<PredictionCardItem>(() => ({
     ...news,
+    image: pkTopic?.cover?.trim() || news.cover?.trim() || news.image,
+    cover: pkTopic?.cover?.trim() || news.cover?.trim(),
+    listImage: pkTopic?.listImage?.trim() || news.listImage?.trim(),
+    sideABgImage: pkTopic?.sideABgImage?.trim() || news.sideABgImage?.trim(),
+    sideBBgImage: pkTopic?.sideBBgImage?.trim() || news.sideBBgImage?.trim(),
+    sideABgColor: pkTopic?.sideABgColor?.trim() || news.sideABgColor?.trim(),
+    sideBBgColor: pkTopic?.sideBBgColor?.trim() || news.sideBBgColor?.trim(),
     title: battleTitle,
     optionA,
     optionB,
     oddsA,
     oddsB,
     votes: { A: leftVotes, B: rightVotes },
-  }), [battleTitle, leftVotes, news, oddsA, oddsB, optionA, optionB, rightVotes]);
+  }), [battleTitle, leftVotes, news, oddsA, oddsB, optionA, optionB, pkTopic, rightVotes]);
   const liveTopicEyebrow = useMemo(() => {
     const t = battleTitle.trim();
     if (!t) return '正在直播';
@@ -674,8 +682,22 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     [displayNews.summary],
   );
   const visualTheme = useMemo(
-    () => resolveEventBattleTheme(news.marketId ?? news.id, optionA, optionB),
-    [news.id, news.marketId, optionA, optionB],
+    () => resolveEventBattleTheme(displayNews.marketId ?? displayNews.id, displayNews.optionA, displayNews.optionB, {
+      sideAImage: displayNews.sideABgImage,
+      sideBImage: displayNews.sideBBgImage,
+      sideAColor: displayNews.sideABgColor,
+      sideBColor: displayNews.sideBBgColor,
+    }),
+    [
+      displayNews.id,
+      displayNews.marketId,
+      displayNews.optionA,
+      displayNews.optionB,
+      displayNews.sideABgColor,
+      displayNews.sideABgImage,
+      displayNews.sideBBgColor,
+      displayNews.sideBBgImage,
+    ],
   );
   const themeStyle = useMemo<ThemeStyle>(() => ({
     '--eb-blue': visualTheme.sideA.primary,
@@ -1041,8 +1063,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const leftScore = leftVotes + leftHeat * 120 + leftComments.length * 18000;
   const rightScore = rightVotes + rightHeat * 120 + rightComments.length * 18000;
   const scoreDiff = Math.abs(leftScore - rightScore);
-  const leftHeroImage = visualTheme.sideA.imageUrl || news.image || DEFAULT_BATTLE_IMAGE;
-  const rightHeroImage = visualTheme.sideB.imageUrl || news.image || DEFAULT_BATTLE_IMAGE;
+  const leftHeroImage = visualTheme.sideA.imageUrl || displayNews.image || DEFAULT_BATTLE_IMAGE;
+  const rightHeroImage = visualTheme.sideB.imageUrl || displayNews.image || DEFAULT_BATTLE_IMAGE;
   const pkParticles = useMemo<PkParticle[]>(() => Array.from({ length: 28 }, (_, index) => {
     const angle = (index / 28) * Math.PI * 2 + (Math.random() - 0.5) * 0.9;
     const distance = 78 + Math.random() * 112;

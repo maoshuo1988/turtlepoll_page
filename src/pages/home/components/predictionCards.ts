@@ -13,6 +13,12 @@ export type PredictionCardItem = {
   title: string;
   summary: string;
   image: string;
+  cover?: string;
+  listImage?: string;
+  sideABgImage?: string;
+  sideBBgImage?: string;
+  sideABgColor?: string;
+  sideBBgColor?: string;
   votes: { A: number; B: number };
   optionA: string;
   optionB: string;
