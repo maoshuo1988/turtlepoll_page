@@ -6,6 +6,13 @@ import type { DailySettleSummary } from "@/hooks/authTypes";
 
 const AUTH_REQUIRED_STORAGE_KEY = "turtle_auth_required";
 export const AUTH_REQUIRED_EVENT = "turtle:auth-required";
+export const AUTH_SESSION_CHANGED_EVENT = "turtle:auth-session-changed";
+
+function notifyAuthSessionChanged() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event(AUTH_SESSION_CHANGED_EVENT));
+  }
+}
 
 ///token 相关
 export function getAuthToken() {
@@ -15,6 +22,7 @@ export function getAuthToken() {
 export function saveAuthToken(token: string) {
   if (token) {
     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
+    notifyAuthSessionChanged();
   }
 }
 
@@ -74,6 +82,7 @@ export function clearInfo() {
   localStorage.removeItem(DAILY_SETTLE_STORAGE_KEY);
   localStorage.removeItem("url_token");
   clearAuthRequiredFlag();
+  notifyAuthSessionChanged();
 }
 
 export function handleUnauthorizedSession() {

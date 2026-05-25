@@ -75,7 +75,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 7
       },
       "enableBy": "register"
     },
@@ -92,7 +92,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -126,7 +126,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -139,7 +139,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -153,10 +153,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            8
+            10
           ]
         },
-        "register": 10
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -219,7 +219,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -236,7 +236,7 @@
             0
           ]
         },
-        "register": 4
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -1118,7 +1118,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1131,7 +1131,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 38
+        "register": 43
       },
       "enableBy": "register"
     },
@@ -1144,7 +1144,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 18
       },
       "enableBy": "config"
     },
@@ -1157,7 +1157,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 7
       },
       "enableBy": "config"
     },
@@ -1213,7 +1213,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 19
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1225,7 +1225,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1370,7 +1370,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1472,7 +1472,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 11
       },
       "enableBy": "config"
     },
@@ -1485,7 +1485,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1497,7 +1497,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/legacy/legacy": {
@@ -1522,7 +1522,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1535,7 +1535,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1589,7 +1589,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1601,7 +1601,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1613,7 +1613,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 14
+        "register": 15
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1664,7 +1664,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 18
       },
       "enableBy": "register"
     },
@@ -1677,7 +1677,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 19
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1689,7 +1689,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1702,7 +1702,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1754,7 +1754,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1767,7 +1767,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1793,7 +1793,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1832,7 +1832,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1845,7 +1845,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1923,7 +1923,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 13
       },
       "enableBy": "register"
     },
@@ -2344,7 +2344,7 @@
       "parentId": "2",
       "id": "11",
       "absPath": "/rank",
-      "__content": "/**\n * 文件说明：需要登录的路由访问拦截。\n */\nimport type { ReactNode } from 'react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\ninterface RequireAuthProps {\n  children: ReactNode;\n}\n\nexport default function RequireAuth({ children }: RequireAuthProps) {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const isAuthenticated = Boolean(getAuthToken());\n\n  if (!isAuthenticated) {\n    markAuthRequired();\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <>{children}</>;\n}\n",
+      "__content": "/**\n * 文件说明：需要登录的路由访问拦截（Umi wrapper，通过 Outlet 渲染子页面）。\n */\nimport { useEffect, useRef, useState } from 'react';\nimport { Outlet } from '@umijs/renderer-react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { AUTH_SESSION_CHANGED_EVENT, getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\nexport default function RequireAuth() {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getAuthToken()));\n  const hasPromptedAuthRef = useRef(false);\n\n  useEffect(() => {\n    const syncAuthStatus = () => {\n      setIsAuthenticated(Boolean(getAuthToken()));\n    };\n\n    window.addEventListener(AUTH_SESSION_CHANGED_EVENT, syncAuthStatus);\n    window.addEventListener('storage', syncAuthStatus);\n    return () => {\n      window.removeEventListener(AUTH_SESSION_CHANGED_EVENT, syncAuthStatus);\n      window.removeEventListener('storage', syncAuthStatus);\n    };\n  }, []);\n\n  useEffect(() => {\n    if (isAuthenticated) {\n      hasPromptedAuthRef.current = false;\n      return;\n    }\n\n    markAuthRequired();\n    if (!hasPromptedAuthRef.current) {\n      hasPromptedAuthRef.current = true;\n      onOpenAuth();\n    }\n  }, [isAuthenticated, onOpenAuth]);\n\n  if (!isAuthenticated) {\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <Outlet />;\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx"
     },
@@ -2389,7 +2389,7 @@
       "parentId": "2",
       "id": "15",
       "absPath": "/profile",
-      "__content": "/**\n * 文件说明：需要登录的路由访问拦截。\n */\nimport type { ReactNode } from 'react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\ninterface RequireAuthProps {\n  children: ReactNode;\n}\n\nexport default function RequireAuth({ children }: RequireAuthProps) {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const isAuthenticated = Boolean(getAuthToken());\n\n  if (!isAuthenticated) {\n    markAuthRequired();\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <>{children}</>;\n}\n",
+      "__content": "/**\n * 文件说明：需要登录的路由访问拦截（Umi wrapper，通过 Outlet 渲染子页面）。\n */\nimport { useEffect, useRef, useState } from 'react';\nimport { Outlet } from '@umijs/renderer-react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { AUTH_SESSION_CHANGED_EVENT, getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\nexport default function RequireAuth() {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getAuthToken()));\n  const hasPromptedAuthRef = useRef(false);\n\n  useEffect(() => {\n    const syncAuthStatus = () => {\n      setIsAuthenticated(Boolean(getAuthToken()));\n    };\n\n    window.addEventListener(AUTH_SESSION_CHANGED_EVENT, syncAuthStatus);\n    window.addEventListener('storage', syncAuthStatus);\n    return () => {\n      window.removeEventListener(AUTH_SESSION_CHANGED_EVENT, syncAuthStatus);\n      window.removeEventListener('storage', syncAuthStatus);\n    };\n  }, []);\n\n  useEffect(() => {\n    if (isAuthenticated) {\n      hasPromptedAuthRef.current = false;\n      return;\n    }\n\n    markAuthRequired();\n    if (!hasPromptedAuthRef.current) {\n      hasPromptedAuthRef.current = true;\n      onOpenAuth();\n    }\n  }, [isAuthenticated, onOpenAuth]);\n\n  if (!isAuthenticated) {\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <Outlet />;\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx"
     },
