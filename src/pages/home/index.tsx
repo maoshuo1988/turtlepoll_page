@@ -29,7 +29,12 @@ function mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCar
     marketId: topic.context.marketId,
     title: topic.context.eventName || topic.title,
     summary: topic.context.detail || '查看当前热点争议与讨论风向。',
-    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
+    image: topic.context.imageUrl?.trim() || topic.context.listImage?.trim() || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
+    listImage: topic.context.listImage?.trim() || undefined,
+    sideABgImage: topic.context.sideABgImage?.trim() || undefined,
+    sideBBgImage: topic.context.sideBBgImage?.trim() || undefined,
+    sideABgColor: topic.context.sideABgColor?.trim() || undefined,
+    sideBBgColor: topic.context.sideBBgColor?.trim() || undefined,
     votes: {
       A: topic.context.proVoteCount ?? 0,
       B: topic.context.conVoteCount ?? 0,

@@ -62,7 +62,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -92,7 +92,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -106,10 +106,10 @@
       "time": {
         "hooks": {
           "onStart": [
-            1
+            2
           ]
         },
-        "register": 1
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -134,16 +134,10 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -157,112 +151,61 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            24,
-            7,
-            24,
-            7,
+            36,
             9,
-            19,
-            26,
-            5,
+            6,
+            7,
+            33,
             15,
+            20,
             9,
-            65,
-            9,
-            3,
-            4,
-            12,
-            10,
-            3,
+            20,
             14,
-            10,
-            4,
+            23,
+            8,
+            6,
+            11,
+            6,
+            36,
+            25,
+            14,
+            9,
+            13,
+            8,
+            8,
             17,
-            5,
-            7,
-            6,
-            5,
-            4,
-            6,
-            7,
-            12,
             8,
+            7,
+            15,
             5,
-            112,
-            8,
-            12,
-            12,
-            18,
-            4,
+            3,
             9,
-            14,
-            5,
-            4,
-            7,
-            6,
             5,
             4,
             3,
+            8,
+            7,
+            12,
             5,
+            4,
+            6,
+            15,
+            14,
+            34,
+            11,
+            11,
+            14,
             23,
             7,
-            5,
-            8,
+            13,
+            4,
+            46,
             6,
             12,
-            4,
-            5,
-            9,
-            4,
-            5,
-            4,
-            3,
-            8,
             12,
-            16,
-            5,
-            18,
-            27,
-            4,
-            20,
-            8,
-            7,
-            71,
-            386,
-            26,
-            22,
-            14,
-            9,
-            17,
-            33,
-            13,
-            10,
-            4,
-            9,
-            8,
-            14,
-            7,
-            12,
-            11,
-            10,
-            31,
-            26,
-            9,
-            5,
-            4,
-            4,
-            4,
-            5,
-            5,
-            10,
-            3,
-            5,
-            8,
-            4,
-            4,
             7,
             5,
-            10
+            8
           ]
         },
         "register": 1
@@ -279,30 +222,24 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            9
+            18
           ],
           "onGenerateFiles": [
-            0,
-            12,
-            9,
-            10,
-            13,
+            1,
+            14,
+            25,
             15,
-            21,
             6,
-            11,
-            19,
-            82,
-            13,
-            7,
-            7,
-            12,
-            9,
+            17,
             15,
-            14
+            19,
+            27,
+            12,
+            10,
+            19
           ]
         },
-        "register": 10
+        "register": 20
       },
       "enableBy": "register"
     },
@@ -317,13 +254,7 @@
         "hooks": {
           "addEntryCode": [
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            1,
             0,
             0,
             0,
@@ -351,12 +282,12 @@
         "hooks": {
           "onCheckConfig": [
             0,
-            0,
+            1,
             0,
             0
           ],
           "onCheck": [
-            1
+            0
           ],
           "onPrepareBuildSuccess": [
             0,
@@ -376,45 +307,13 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
+            1
           ],
           "onCheckCode": [
             0,
             0,
             0,
+            1,
             0,
             0,
             0,
@@ -464,6 +363,7 @@
             0,
             0,
             0,
+            1,
             0,
             0,
             0,
@@ -556,6 +456,7 @@
             0,
             0,
             0,
+            1,
             0,
             0,
             0,
@@ -573,48 +474,7 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            1,
             0,
             0,
             0,
@@ -656,7 +516,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -676,7 +536,7 @@
             0
           ]
         },
-        "register": 4
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -1528,7 +1388,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1545,7 +1405,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1559,7 +1419,7 @@
       "time": {
         "hooks": {
           "addBeforeMiddlewares": [
-            5
+            7
           ]
         },
         "register": 0
@@ -1575,7 +1435,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 38
+        "register": 57
       },
       "enableBy": "register"
     },
@@ -1588,7 +1448,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 26
       },
       "enableBy": "config"
     },
@@ -1601,7 +1461,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 15
       },
       "enableBy": "config"
     },
@@ -1657,10 +1517,32 @@
             0,
             0,
             0,
-            0
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1674,32 +1556,20 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            1,
-            1,
-            0,
-            0,
             0,
             1,
             1,
-            0,
-            0,
-            0,
+            1,
             3,
-            3,
-            0,
             2,
+            1,
             0,
             3,
-            0,
-            1
+            1,
+            2,
+            6
           ],
           "addRuntimePlugin": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -1741,13 +1611,13 @@
       "time": {
         "hooks": {
           "onStart": [
-            0
+            1
           ],
           "addBeforeMiddlewares": [
             1
           ]
         },
-        "register": 15
+        "register": 19
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1759,7 +1629,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1772,7 +1642,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides": {
@@ -1793,13 +1663,7 @@
             0,
             0,
             0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            3,
             0,
             0,
             0
@@ -1812,28 +1676,16 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -1870,44 +1722,26 @@
       "time": {
         "hooks": {
           "modifyConfig": [
+            1,
             0,
             0,
-            0,
-            0
+            10
           ],
           "onGenerateFiles": [
-            36,
-            22,
-            20,
-            6,
-            20,
-            17,
-            40,
-            12,
-            12,
-            24,
-            221,
-            23,
+            71,
+            33,
+            62,
+            48,
+            27,
+            18,
+            19,
+            14,
+            67,
             13,
-            29,
-            13,
-            17,
-            25,
-            21
+            18,
+            55
           ],
           "addPolyfillImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -1970,18 +1804,6 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -1999,13 +1821,7 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            77,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            116,
             0,
             0,
             0,
@@ -2045,7 +1861,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2060,17 +1876,11 @@
         "hooks": {
           "onGenerateFiles": [
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            2,
             1,
+            2,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2096,42 +1906,30 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            7,
-            1,
             11,
-            1,
-            5,
-            0,
-            4,
-            0,
+            3,
+            25,
+            3,
+            91,
             7,
-            0,
-            6,
-            0,
-            8,
+            15,
             2,
-            5,
-            0,
-            8,
-            1,
+            15,
+            2,
             9,
-            2,
-            21,
-            2,
-            11,
-            1,
-            449,
-            2,
-            11,
             1,
             10,
+            1,
+            8,
+            1,
+            117,
+            3,
+            5,
             0,
-            9,
-            1,
-            7,
-            1,
-            12,
-            1
+            10,
+            2,
+            25,
+            5
           ]
         },
         "register": 2
@@ -2147,7 +1945,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2160,7 +1958,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -2172,7 +1970,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 3
       },
       "enableBy": "config"
     },
@@ -2186,27 +1984,21 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            194,
-            17,
-            5,
-            5,
-            16,
-            91,
-            11,
-            4,
-            6,
-            7,
-            332,
-            5,
-            19,
-            8,
-            12,
-            6,
+            267,
+            13,
+            33,
             9,
-            8
+            19,
+            10,
+            12,
+            5,
+            70,
+            4,
+            16,
+            26
           ]
         },
-        "register": 1
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -2223,7 +2015,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -2236,7 +2028,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -2249,7 +2041,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2262,7 +2054,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 3
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -2274,7 +2066,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 9
+        "register": 18
       },
       "enableBy": "config"
     },
@@ -2290,25 +2082,19 @@
           "onGenerateFiles": [
             1,
             1,
-            0,
-            1,
-            0,
-            1,
-            1,
-            1,
-            1,
-            0,
-            3,
-            0,
-            2,
-            1,
+            5,
             1,
             0,
             0,
-            1
+            0,
+            0,
+            1,
+            1,
+            1,
+            3
           ]
         },
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -2320,7 +2106,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2333,7 +2119,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 3
       },
       "enableBy": "config"
     },
@@ -2388,7 +2174,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -2425,7 +2211,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 3
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -2438,10 +2224,43 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
-            22,
-            22,
-            6,
-            21,
+            33,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
             0,
             0,
             0,
@@ -2453,31 +2272,20 @@
             1,
             0,
             0,
-            4,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             1,
             0,
             0,
             0,
-            10,
             0,
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0
+            1
           ]
         },
-        "register": 13
+        "register": 31
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -2503,10 +2311,10 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            412
+            302
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -2519,7 +2327,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -2532,7 +2340,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 35
       },
       "enableBy": "register"
     },
@@ -2546,10 +2354,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            7
+            13
           ]
         },
-        "register": 16
+        "register": 19
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -2561,7 +2369,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2600,7 +2408,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -2639,7 +2447,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2678,7 +2486,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2691,7 +2499,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2704,7 +2512,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2756,7 +2564,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2769,7 +2577,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2795,7 +2603,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 19
       },
       "enableBy": "register"
     },
@@ -2808,7 +2616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2821,7 +2629,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -2920,10 +2728,7 @@
           {
             "path": "/pet",
             "component": "pet",
-            "name": "宠物",
-            "wrappers": [
-              "@/wrappers/RequireAuth"
-            ]
+            "name": "宠物"
           },
           {
             "path": "/profile",
@@ -3058,10 +2863,7 @@
           {
             "path": "/pet",
             "component": "pet",
-            "name": "宠物",
-            "wrappers": [
-              "@/wrappers/RequireAuth"
-            ]
+            "name": "宠物"
           },
           {
             "path": "/profile",
@@ -3133,7 +2935,7 @@
       "parentId": "2",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl?.trim() || topic.context.listImage?.trim() || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    listImage: topic.context.listImage?.trim() || undefined,\n    sideABgImage: topic.context.sideABgImage?.trim() || undefined,\n    sideBBgImage: topic.context.sideBBgImage?.trim() || undefined,\n    sideABgColor: topic.context.sideABgColor?.trim() || undefined,\n    sideBBgColor: topic.context.sideBBgColor?.trim() || undefined,\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },
@@ -3238,57 +3040,45 @@
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/shop/index.tsx"
     },
     "13": {
-      "path": "",
+      "path": "/pet",
       "name": "宠物",
       "file": "@/pages/pet/index.tsx",
-      "parentId": "14",
+      "parentId": "2",
       "id": "13",
       "absPath": "/pet",
-      "originPath": "/pet",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetEquipUpdate,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { PetPageView } from './components/PetPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\nimport { useHomeLayoutContext } from '@/layouts/context';\n\nexport default function PetPage() {\n  const navigate = useNavigate();\n  const { aiPushMessages } = useHomeLayoutContext();\n  const [petStamina, setPetStamina] = useState(0);\n  const [skins, setSkins] = useState<PetSkin[]>([]);\n\n  // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n  const petEquipMutation = useRequestPetEquipUpdate();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  const handleEquipSkin = useCallback((skinId: string) => {\n    setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));\n  }, []);\n\n  const handleEquipPet = useCallback(async (petId: number | string) => {\n    const result = await petEquipMutation.mutateAsync({ petId });\n    void Promise.all([\n      petEquipQuery.refetch(),\n      petOwnedQuery.refetch(),\n      petStatusQuery.refetch(),\n    ]);\n    return result;\n  }, [petEquipMutation, petEquipQuery, petOwnedQuery, petStatusQuery]);\n\n  return (\n    <PetPageView\n      pet={currentPet}\n      balance={coinMe.data?.balance ?? 0}\n      winRate={0}\n      winStreak={0}\n      totalPredictions={0}\n      onBack={() => {\n        navigate('/');\n      }}\n      skins={skins}\n      onEquipSkin={handleEquipSkin}\n      equippedPet={petEquipQuery.data ?? null}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n      petStatus={petStatusQuery.data ?? null}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onEquipPet={handleEquipPet}\n      equippingPetId={\n        petEquipMutation.isLoading\n          ? (petEquipMutation.variables?.petId ?? petEquipMutation.variables?.petKey ?? null)\n          : null\n      }\n      onStaminaChange={setPetStamina}\n      aiPushMessages={aiPushMessages}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/pet/index.tsx"
     },
     "14": {
-      "path": "/pet",
-      "isWrapper": true,
-      "file": "@/wrappers/RequireAuth.tsx",
-      "parentId": "2",
-      "id": "14",
-      "absPath": "/pet",
-      "__content": "/**\n * 文件说明：需要登录的路由访问拦截。\n */\nimport type { ReactNode } from 'react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\ninterface RequireAuthProps {\n  children: ReactNode;\n}\n\nexport default function RequireAuth({ children }: RequireAuthProps) {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const isAuthenticated = Boolean(getAuthToken());\n\n  if (!isAuthenticated) {\n    markAuthRequired();\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <>{children}</>;\n}\n",
-      "__isJSFile": true,
-      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx"
-    },
-    "15": {
       "path": "",
       "name": "个人中心",
       "file": "@/pages/profile/index.tsx",
-      "parentId": "16",
-      "id": "15",
+      "parentId": "15",
+      "id": "14",
       "absPath": "/profile",
       "originPath": "/profile",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { getStoredUserInfo } from '@/utils/authStorage';\nimport { ProfilePageView } from './components/ProfilePageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ProfilePage() {\n  const navigate = useNavigate();\n  const [skins] = useState<PetSkin[]>([]);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const storedUser = getStoredUserInfo();\n  const displayName = storedUser?.nickname ?? storedUser?.username ?? '未登录用户';\n  const displayHandle = storedUser?.username ? `@${storedUser.username}` : '';\n  const displayAvatar = storedUser?.nickname?.slice(0, 1).toUpperCase() ?? '';\n  const petStamina = petStaminaQuery.data?.current ?? 0;\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  return (\n    <ProfilePageView\n      userName={displayName}\n      userHandle={displayHandle}\n      avatar={displayAvatar}\n      pet={currentPet}\n      skins={skins}\n      balance={coinMe.data?.balance ?? 0}\n      onBack={() => {\n        navigate('/');\n      }}\n      onOpenForum={() => {\n        navigate('/forum');\n      }}\n      onOpenAuth={onOpenAuth}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/profile/index.tsx"
     },
-    "16": {
+    "15": {
       "path": "/profile",
       "isWrapper": true,
       "file": "@/wrappers/RequireAuth.tsx",
       "parentId": "2",
-      "id": "16",
+      "id": "15",
       "absPath": "/profile",
       "__content": "/**\n * 文件说明：需要登录的路由访问拦截。\n */\nimport type { ReactNode } from 'react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\ninterface RequireAuthProps {\n  children: ReactNode;\n}\n\nexport default function RequireAuth({ children }: RequireAuthProps) {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const isAuthenticated = Boolean(getAuthToken());\n\n  if (!isAuthenticated) {\n    markAuthRequired();\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <>{children}</>;\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx"
     },
-    "17": {
+    "16": {
       "path": "/active-predictions",
       "name": "活跃预测",
       "file": "@/pages/active-predictions/index.tsx",
       "parentId": "2",
-      "id": "17",
+      "id": "16",
       "absPath": "/active-predictions",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ActivePredictionsPageView } from './components/ActivePredictionsPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ActivePredictionsPage() {\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });\n  const activePredictionItems = useMemo<PredictionCardItem[]>(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const liveNews = Array.isArray(list) && list.length > 0\n      ? list.map(mapMarketToPredictionCard)\n      : [];\n    return liveNews.filter((item) => item.status === 'open');\n  }, [footballMarkets.data]);\n\n  return (\n    <ActivePredictionsPageView\n      items={activePredictionItems}\n      onBack={() => {\n        navigate('/');\n      }}\n      onEnterBattle={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
@@ -5753,7 +5543,7 @@
             "format": "esm"
           },
           "src/pages/home/components/predictionCards.ts": {
-            "bytes": 3877,
+            "bytes": 4353,
             "imports": [
               {
                 "path": "react",
@@ -5894,7 +5684,7 @@
             "format": "esm"
           },
           "src/pages/home/index.tsx": {
-            "bytes": 4931,
+            "bytes": 5303,
             "imports": [
               {
                 "path": "react",
@@ -6033,12 +5823,12 @@
             "format": "esm"
           },
           "src/pages/event-battle/components/eventBattleThemes.ts": {
-            "bytes": 7334,
+            "bytes": 8845,
             "imports": [],
             "format": "esm"
           },
           "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-            "bytes": 67727,
+            "bytes": 68821,
             "imports": [
               {
                 "path": "react",
@@ -6116,7 +5906,7 @@
             "format": "esm"
           },
           "src/pages/event-battle/index.tsx": {
-            "bytes": 4095,
+            "bytes": 4467,
             "imports": [
               {
                 "path": "react",
@@ -6153,7 +5943,7 @@
             "format": "esm"
           },
           "src/pages/world-cup/components/WorldCupPageContent/index.tsx": {
-            "bytes": 71347,
+            "bytes": 71683,
             "imports": [
               {
                 "path": "./index.module.scss",
@@ -6247,7 +6037,7 @@
             "format": "esm"
           },
           "src/pages/rivalry/components/RivalryPKContent.tsx": {
-            "bytes": 50510,
+            "bytes": 50128,
             "imports": [
               {
                 "path": "react",
@@ -6634,7 +6424,7 @@
             "format": "esm"
           },
           "src/pages/forum/components/predictionCards.ts": {
-            "bytes": 3877,
+            "bytes": 4335,
             "imports": [
               {
                 "path": "react",
@@ -7396,7 +7186,7 @@
             "format": "esm"
           },
           "src/.umi/core/route.tsx": {
-            "bytes": 3460,
+            "bytes": 3271,
             "imports": [
               {
                 "path": "react",
@@ -7467,11 +7257,6 @@
                 "path": "src/pages/pet/index.tsx",
                 "kind": "dynamic-import",
                 "original": "@/pages/pet/index.tsx"
-              },
-              {
-                "path": "src/wrappers/RequireAuth.tsx",
-                "kind": "dynamic-import",
-                "original": "@/wrappers/RequireAuth.tsx"
               },
               {
                 "path": "src/pages/profile/index.tsx",
@@ -9847,7 +9632,7 @@
                 "bytesInOutput": 2607
               },
               "src/pages/home/components/predictionCards.ts": {
-                "bytesInOutput": 2757
+                "bytesInOutput": 3084
               },
               "src/pages/home/components/PredictionBetModal.tsx": {
                 "bytesInOutput": 9994
@@ -9865,7 +9650,7 @@
                 "bytesInOutput": 615
               },
               "src/pages/home/index.tsx": {
-                "bytesInOutput": 4260
+                "bytesInOutput": 4617
               },
               "src/api/commentApi.ts": {
                 "bytesInOutput": 285
@@ -9886,10 +9671,10 @@
                 "bytesInOutput": 3663
               },
               "src/pages/event-battle/components/eventBattleThemes.ts": {
-                "bytesInOutput": 7109
+                "bytesInOutput": 8286
               },
               "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-                "bytesInOutput": 73292
+                "bytesInOutput": 74476
               },
               "src/pages/event-battle/components/EventBattleLiveRoom.tsx": {
                 "bytesInOutput": 149
@@ -9898,13 +9683,13 @@
                 "bytesInOutput": 2342
               },
               "src/pages/event-battle/index.tsx": {
-                "bytesInOutput": 3742
+                "bytesInOutput": 4099
               },
               "src/pages/world-cup/components/WorldCupPitchBackdrop/index.tsx": {
                 "bytesInOutput": 8937
               },
               "src/pages/world-cup/components/WorldCupPageContent/index.tsx": {
-                "bytesInOutput": 70719
+                "bytesInOutput": 71046
               },
               "src/pages/world-cup/components/WorldCupPage.tsx": {
                 "bytesInOutput": 128
@@ -9916,7 +9701,7 @@
                 "bytesInOutput": 9530
               },
               "src/pages/rivalry/components/RivalryPKContent.tsx": {
-                "bytesInOutput": 53129
+                "bytesInOutput": 52251
               },
               "src/pages/rivalry/components/RivalryPK.tsx": {
                 "bytesInOutput": 117
@@ -9967,7 +9752,7 @@
                 "bytesInOutput": 529
               },
               "src/pages/forum/components/predictionCards.ts": {
-                "bytesInOutput": 1664
+                "bytesInOutput": 1991
               },
               "src/pages/forum/index.tsx": {
                 "bytesInOutput": 1376
@@ -10081,7 +9866,7 @@
                 "bytesInOutput": 1827
               },
               "src/.umi/core/route.tsx": {
-                "bytesInOutput": 3517
+                "bytesInOutput": 3319
               },
               "src/app.ts": {
                 "bytesInOutput": 1575
@@ -10108,7 +9893,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 955740
+            "bytes": 958720
           }
         }
       }

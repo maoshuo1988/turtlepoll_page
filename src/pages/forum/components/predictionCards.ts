@@ -13,6 +13,11 @@ export type PredictionCardItem = {
   title: string;
   summary: string;
   image: string;
+  listImage?: string;
+  sideABgImage?: string;
+  sideBBgImage?: string;
+  sideABgColor?: string;
+  sideBBgColor?: string;
   votes: { A: number; B: number };
   optionA: string;
   optionB: string;
@@ -60,7 +65,12 @@ export function mapMarketToPredictionCard(item: FootballMarketAggregate): Predic
     marketId,
     title: context.eventName || item.market.title || `预测市场 #${marketId}`,
     summary: context.detail || item.market.title || '查看当前预测双方观点与热度变化。',
-    image: context.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
+    image: context.imageUrl?.trim() || context.listImage?.trim() || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
+    listImage: context.listImage?.trim() || undefined,
+    sideABgImage: context.sideABgImage?.trim() || undefined,
+    sideBBgImage: context.sideBBgImage?.trim() || undefined,
+    sideABgColor: context.sideABgColor?.trim() || undefined,
+    sideBBgColor: context.sideBBgColor?.trim() || undefined,
     votes: { A: votesA, B: votesB },
     optionA: context.proText || '正方',
     optionB: context.conText || '反方',
