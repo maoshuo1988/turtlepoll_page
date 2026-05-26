@@ -197,7 +197,7 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embe
     >
       {/* Header */}
       <div className="flex items-center gap-2.5 px-3 py-2.5 border-b border-emerald-100 dark:border-emerald-900/30 shrink-0">
-        <PetChatSpineAvatar fallback={pet.avatar} size={32} />
+        {/* <PetChatSpineAvatar fallback={pet.avatar} size={32} /> */}
         <div className="flex-1 min-w-0">
           <div className="text-[12px] font-semibold text-slate-700 dark:text-rdark-text">{pet.name}</div>
           <div className="text-[9px] text-emerald-500 dark:text-emerald-400 flex items-center gap-0.5">
@@ -228,9 +228,9 @@ export const PetChat: React.FC<PetChatProps> = ({ pet, onClose, fullScreen, embe
               transition={{ duration: 0.25 }}
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              {msg.role === 'pet' && (
+              {/* {msg.role === 'pet' && (
                 <PetChatSpineAvatar fallback={pet.avatar} className="mr-1.5 mt-0.5" />
-              )}
+              )} */}
               <div
                 className={`max-w-[85%] px-3 py-2 rounded-xl text-[11px] leading-relaxed whitespace-pre-wrap ${
                   msg.role === 'user'

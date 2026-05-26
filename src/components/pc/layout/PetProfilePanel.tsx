@@ -65,9 +65,9 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
           <span className="truncate text-[13px] font-bold text-sky-100 [text-shadow:0_0_8px_rgba(125,211,252,0.4)] dark:text-sky-50">
             {petBadgeName}
           </span>
-          <span className="rounded-full bg-emerald-500/85 px-1.5 py-[1px] text-[9px] font-black text-white shadow-sm dark:bg-emerald-600/90">
+          {/* <span className="rounded-full bg-emerald-500/85 px-1.5 py-[1px] text-[9px] font-black text-white shadow-sm dark:bg-emerald-600/90">
             Lv.{pet.level}
-          </span>
+          </span> */}
         </div>
         <button
           type="button"

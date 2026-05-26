@@ -372,9 +372,9 @@ const SpeciesTab: React.FC<{
         </div> */}
 
         <div className="flex items-center gap-4 rounded-lg dark:border-cyan-900/30 dark:from-cyan-950/20 dark:to-sky-950/20">
-          <div className="grid h-16 w-16 place-items-center rounded-xl border border-cyan-100 bg-white text-3xl shadow-sm dark:border-cyan-900/30 dark:bg-rdark-card">
+          {/* <div className="grid h-16 w-16 place-items-center rounded-xl border border-cyan-100 bg-white text-3xl shadow-sm dark:border-cyan-900/30 dark:bg-rdark-card">
             {getPetDisplayAvatar(currentEquippedPet?.petKey, currentEquippedPet?.petName)}
-          </div>
+          </div> */}
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex items-center gap-2">
               <span className="truncate text-[13px] font-bold text-slate-700 dark:text-rdark-text">
