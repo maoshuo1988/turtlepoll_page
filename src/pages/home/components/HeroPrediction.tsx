@@ -7,6 +7,7 @@ import { Flame, MessageSquare } from 'lucide-react';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { usePredictionCardItems, type PredictionCardItem } from './predictionCards';
 import { PredictionBetModal } from './PredictionBetModal';
+import { PredictionCardCover } from './PredictionCardCover';
 
 interface HeroPredictionProps {
   news?: PredictionCardItem | null;
@@ -30,7 +31,12 @@ export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news: newsOverri
   return (
     <>
     <div className="!my-1 legacy-hero-card legacy-pred-hero relative min-h-[420px] md:h-[500px] lg:h-[420px] overflow-hidden rounded-[24px] md:rounded-xl border border-slate-700/70 bg-[#0a111f] dark:border-slate-700/60">
-      <img src={news.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      <PredictionCardCover
+        item={news}
+        className="absolute inset-0"
+        imageClassName="h-full w-full object-cover"
+        loading="eager"
+      />
       <div className="absolute inset-0 bg-gradient-to-r from-[#091121]/95 via-[#0b1426]/82 to-[#0f1a2a]/35" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_88%,rgba(45,212,191,0.2),transparent_42%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_76%,rgba(249,115,22,0.15),transparent_26%)]" />

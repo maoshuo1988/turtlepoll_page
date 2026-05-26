@@ -2,7 +2,7 @@
  * 文件说明：prediction Cards，预测市场和撕裂带页面组件。
  */
 import { useMemo } from 'react';
-import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
+import type { FootballMarketAggregate, PredictContext } from '@/hooks/predictionTypes';
 import { useRequestFootballMarkets, useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 
 export type PredictionCardType = 'politics' | 'tech' | 'sports' | 'entertainment' | 'finance';
@@ -46,6 +46,27 @@ export const PREDICTION_TYPE_COLORS: Record<PredictionCardType, string> = {
   finance: 'bg-amber-100/70 text-amber-700',
 };
 
+export const PREDICTION_CARD_FALLBACK_IMAGE =
+  'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80';
+
+export function resolvePredictionCardImageFields(context: Partial<PredictContext>) {
+  const cover = context.imageUrl?.trim() || undefined;
+  const listImage = context.listImage?.trim() || undefined;
+  const sideABgImage = context.sideABgImage?.trim() || undefined;
+  const sideBBgImage = context.sideBBgImage?.trim() || undefined;
+  const coverImage = cover || listImage;
+
+  return {
+    cover,
+    listImage,
+    sideABgImage,
+    sideBBgImage,
+    sideABgColor: context.sideABgColor?.trim() || undefined,
+    sideBBgColor: context.sideBBgColor?.trim() || undefined,
+    image: coverImage || PREDICTION_CARD_FALLBACK_IMAGE,
+  };
+}
+
 export function mapMarketToPredictionCard(item: FootballMarketAggregate): PredictionCardItem {
   const marketId = item.market.id;
   const context = item.context ?? {};
@@ -66,12 +87,7 @@ export function mapMarketToPredictionCard(item: FootballMarketAggregate): Predic
     marketId,
     title: context.eventName || item.market.title || `预测市场 #${marketId}`,
     summary: context.detail || item.market.title || '查看当前预测双方观点与热度变化。',
-    image: context.imageUrl?.trim() || context.listImage?.trim() || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
-    listImage: context.listImage?.trim() || undefined,
-    sideABgImage: context.sideABgImage?.trim() || undefined,
-    sideBBgImage: context.sideBBgImage?.trim() || undefined,
-    sideABgColor: context.sideABgColor?.trim() || undefined,
-    sideBBgColor: context.sideBBgColor?.trim() || undefined,
+    ...resolvePredictionCardImageFields(context),
     votes: { A: votesA, B: votesB },
     optionA: context.proText || '正方',
     optionB: context.conText || '反方',

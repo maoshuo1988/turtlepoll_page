@@ -123,6 +123,13 @@
       "time": {
         "hooks": {
           "modifyRoutes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -152,7 +159,23 @@
             5,
             10,
             5,
-            5
+            5,
+            7,
+            9,
+            85,
+            87,
+            19,
+            100,
+            8,
+            5,
+            24,
+            21,
+            4,
+            3,
+            8,
+            5,
+            10,
+            7
           ]
         },
         "register": 0
@@ -172,7 +195,14 @@
             9
           ],
           "onGenerateFiles": [
-            1
+            1,
+            6,
+            117,
+            21,
+            23,
+            7,
+            13,
+            9
           ]
         },
         "register": 11
@@ -189,6 +219,13 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
             0
           ]
         },
@@ -206,7 +243,9 @@
       "time": {
         "hooks": {
           "onCheckConfig": [
-            1
+            1,
+            0,
+            0
           ],
           "onCheck": [
             1
@@ -221,11 +260,47 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "onCheckCode": [
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -291,6 +366,8 @@
       "time": {
         "hooks": {
           "modifyConfig": [
+            0,
+            3,
             0
           ]
         },
@@ -1241,6 +1318,36 @@
           "modifyHTMLFavicon": [
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1258,9 +1365,23 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
+            0,
+            1,
+            9,
+            6,
+            1,
+            1,
+            2,
             0
           ],
           "addRuntimePlugin": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1335,9 +1456,30 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0
           ]
@@ -1369,12 +1511,35 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            0
+            0,
+            8,
+            1
           ],
           "onGenerateFiles": [
-            41
+            41,
+            16,
+            110,
+            52,
+            49,
+            17,
+            18,
+            11
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0
           ]
@@ -1393,6 +1558,20 @@
         "hooks": {
           "addPolyfillImports": [
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1410,7 +1589,14 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            72
+            72,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
           ]
         },
         "register": 0
@@ -1453,6 +1639,13 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
             0
           ],
           "addBeforeMiddlewares": [
@@ -1474,7 +1667,21 @@
         "hooks": {
           "onGenerateFiles": [
             6,
-            2
+            2,
+            12,
+            1,
+            45,
+            2,
+            22,
+            1,
+            31,
+            7,
+            10,
+            1,
+            6,
+            1,
+            7,
+            1
           ]
         },
         "register": 2
@@ -1529,7 +1736,14 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            186
+            186,
+            12,
+            24,
+            11,
+            32,
+            6,
+            9,
+            4
           ]
         },
         "register": 1
@@ -1614,6 +1828,13 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
+            0,
+            1,
+            2,
+            0,
+            3,
+            0,
+            1,
             0
           ]
         },
@@ -1749,7 +1970,37 @@
           "addHTMLHeadScripts": [
             0,
             0,
-            1
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
           ]
         },
         "register": 13
@@ -2402,7 +2653,7 @@
       "parentId": "2",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl?.trim() || topic.context.listImage?.trim() || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    listImage: topic.context.listImage?.trim() || undefined,\n    sideABgImage: topic.context.sideABgImage?.trim() || undefined,\n    sideBBgImage: topic.context.sideBBgImage?.trim() || undefined,\n    sideABgColor: topic.context.sideABgColor?.trim() || undefined,\n    sideBBgColor: topic.context.sideBBgColor?.trim() || undefined,\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  resolvePredictionCardImageFields,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },
@@ -4279,7 +4530,7 @@
             "format": "esm"
           },
           "src/components/pc/layout/PetProfilePanel.tsx": {
-            "bytes": 9512,
+            "bytes": 9520,
             "imports": [
               {
                 "path": "react",
@@ -5008,7 +5259,7 @@
             "format": "esm"
           },
           "src/pages/home/components/predictionCards.ts": {
-            "bytes": 4353,
+            "bytes": 4735,
             "imports": [
               {
                 "path": "react",
@@ -5049,8 +5300,19 @@
             ],
             "format": "esm"
           },
+          "src/pages/home/components/PredictionCardCover.tsx": {
+            "bytes": 2154,
+            "imports": [
+              {
+                "path": "src/pages/home/components/predictionCards.ts",
+                "kind": "import-statement",
+                "original": "./predictionCards"
+              }
+            ],
+            "format": "esm"
+          },
           "src/pages/home/components/HeroPrediction.tsx": {
-            "bytes": 7084,
+            "bytes": 7220,
             "imports": [
               {
                 "path": "react",
@@ -5076,12 +5338,17 @@
                 "path": "src/pages/home/components/PredictionBetModal.tsx",
                 "kind": "import-statement",
                 "original": "./PredictionBetModal"
+              },
+              {
+                "path": "src/pages/home/components/PredictionCardCover.tsx",
+                "kind": "import-statement",
+                "original": "./PredictionCardCover"
               }
             ],
             "format": "esm"
           },
           "src/pages/home/components/NewsFeed.tsx": {
-            "bytes": 14845,
+            "bytes": 14917,
             "imports": [
               {
                 "path": "react",
@@ -5107,6 +5374,11 @@
                 "path": "src/pages/home/components/PredictionBetModal.tsx",
                 "kind": "import-statement",
                 "original": "./PredictionBetModal"
+              },
+              {
+                "path": "src/pages/home/components/PredictionCardCover.tsx",
+                "kind": "import-statement",
+                "original": "./PredictionCardCover"
               },
               {
                 "path": "src/hooks/useCoinRequests.ts",
@@ -5149,7 +5421,7 @@
             "format": "esm"
           },
           "src/pages/home/index.tsx": {
-            "bytes": 5303,
+            "bytes": 4910,
             "imports": [
               {
                 "path": "react",
@@ -9004,7 +9276,7 @@
                 "bytesInOutput": 1220
               },
               "src/components/pc/layout/PetProfilePanel.tsx": {
-                "bytesInOutput": 7168
+                "bytesInOutput": 6972
               },
               "src/components/pc/layout/ShopShortcutCard.tsx": {
                 "bytesInOutput": 1857
@@ -9097,16 +9369,19 @@
                 "bytesInOutput": 2607
               },
               "src/pages/home/components/predictionCards.ts": {
-                "bytesInOutput": 3084
+                "bytesInOutput": 3437
               },
               "src/pages/home/components/PredictionBetModal.tsx": {
                 "bytesInOutput": 9994
               },
+              "src/pages/home/components/PredictionCardCover.tsx": {
+                "bytesInOutput": 1860
+              },
               "src/pages/home/components/HeroPrediction.tsx": {
-                "bytesInOutput": 7621
+                "bytesInOutput": 7762
               },
               "src/pages/home/components/NewsFeed.tsx": {
-                "bytesInOutput": 15949
+                "bytesInOutput": 15982
               },
               "src/pages/home/components/PredictionsView.tsx": {
                 "bytesInOutput": 684
@@ -9115,7 +9390,7 @@
                 "bytesInOutput": 615
               },
               "src/pages/home/index.tsx": {
-                "bytesInOutput": 4617
+                "bytesInOutput": 4203
               },
               "src/api/commentApi.ts": {
                 "bytesInOutput": 285
@@ -9358,7 +9633,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 958200
+            "bytes": 960031
           }
         }
       }
@@ -19006,6 +19281,20 @@
           ],
           "start": 361,
           "type": "ImportDeclaration"
+        },
+        {
+          "end": 480,
+          "importKind": "value",
+          "source": "./PredictionCardCover",
+          "specifiers": [
+            {
+              "imported": "PredictionCardCover",
+              "local": "PredictionCardCover",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 420,
+          "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/components/HomePageView.tsx": [
@@ -19172,7 +19461,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 512,
+          "end": 509,
+          "importKind": "value",
+          "source": "./PredictionCardCover",
+          "specifiers": [
+            {
+              "imported": "PredictionCardCover",
+              "local": "PredictionCardCover",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 449,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 573,
           "importKind": "value",
           "source": "@/hooks/useCoinRequests",
           "specifiers": [
@@ -19182,7 +19485,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 449,
+          "start": 510,
           "type": "ImportDeclaration"
         }
       ],
@@ -19297,6 +19600,27 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/components/PredictionCardCover.tsx": [
+        {
+          "end": 201,
+          "importKind": "value",
+          "source": "./predictionCards",
+          "specifiers": [
+            {
+              "imported": "PREDICTION_CARD_FALLBACK_IMAGE",
+              "local": "PREDICTION_CARD_FALLBACK_IMAGE",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictionCardItem",
+              "local": "PredictionCardItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 104,
+          "type": "ImportDeclaration"
+        }
+      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/components/PredictionsView.tsx": [
         {
           "end": 112,
@@ -19384,7 +19708,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 190,
+          "end": 206,
           "importKind": "type",
           "source": "@/hooks/predictionTypes",
           "specifiers": [
@@ -19392,13 +19716,18 @@
               "imported": "FootballMarketAggregate",
               "local": "FootballMarketAggregate",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictContext",
+              "local": "PredictContext",
+              "type": "ImportSpecifier"
             }
           ],
           "start": 119,
           "type": "ImportDeclaration"
         },
         {
-          "end": 297,
+          "end": 313,
           "importKind": "value",
           "source": "@/hooks/usePredictionRequests",
           "specifiers": [
@@ -19413,7 +19742,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 191,
+          "start": 207,
           "type": "ImportDeclaration"
         }
       ],
@@ -19527,13 +19856,18 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 693,
+          "end": 729,
           "importKind": "value",
           "source": "./components/predictionCards",
           "specifiers": [
             {
               "imported": "mapMarketToPredictionCard",
               "local": "mapMarketToPredictionCard",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolvePredictionCardImageFields",
+              "local": "resolvePredictionCardImageFields",
               "type": "ImportSpecifier"
             },
             {

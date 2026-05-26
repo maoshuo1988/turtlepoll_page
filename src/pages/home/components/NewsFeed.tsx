@@ -7,6 +7,7 @@ import { ShieldCheck, MessageSquare, Trophy, Clock3, Lock, Coins } from 'lucide-
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { usePredictionCardItems, type PredictionCardItem } from './predictionCards';
 import { PredictionBetModal } from './PredictionBetModal';
+import { PredictionCardCover } from './PredictionCardCover';
 import { useRequestCoinSettle } from '@/hooks/useCoinRequests';
 
 interface NewsFeedProps {
@@ -176,11 +177,10 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
         className="legacy-news-card legacy-pred-card group overflow-hidden rounded-[22px] md:rounded-[18px] border border-[#243149] bg-[#0b1220] shadow-[0_16px_36px_rgba(3,8,19,0.38)] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_rgba(3,8,19,0.48)]"
       >
         <div className="legacy-pred-card-media relative h-[168px] md:h-[180px] overflow-hidden">
-          <img
-            src={item.image}
-            alt=""
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-            loading="lazy"
+          <PredictionCardCover
+            item={item}
+            className="absolute inset-0"
+            imageClassName="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/5 to-black/0" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#09111e] via-[#09111e]/58 to-transparent" />

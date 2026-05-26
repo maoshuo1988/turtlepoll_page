@@ -62,7 +62,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -106,10 +106,10 @@
       "time": {
         "hooks": {
           "onStart": [
-            0
+            1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -153,10 +153,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            8
+            11
           ]
         },
-        "register": 10
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -189,7 +189,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -206,7 +206,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1131,7 +1131,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 38
+        "register": 45
       },
       "enableBy": "register"
     },
@@ -1144,7 +1144,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 20
       },
       "enableBy": "config"
     },
@@ -1157,7 +1157,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 7
       },
       "enableBy": "config"
     },
@@ -1187,7 +1187,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1200,7 +1200,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1213,7 +1213,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 20
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1277,7 +1277,7 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            0
+            1
           ]
         },
         "register": 0
@@ -1305,7 +1305,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1331,7 +1331,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1357,7 +1357,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1472,7 +1472,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 12
       },
       "enableBy": "config"
     },
@@ -1485,7 +1485,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1497,7 +1497,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/legacy/legacy": {
@@ -1509,7 +1509,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1535,7 +1535,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1548,10 +1548,10 @@
       "time": {
         "hooks": {
           "addOnDemandDeps": [
-            1
+            0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1564,7 +1564,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1576,7 +1576,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1589,7 +1589,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1613,7 +1613,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 14
+        "register": 15
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1664,7 +1664,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 20
       },
       "enableBy": "register"
     },
@@ -1677,7 +1677,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 21
+        "register": 22
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1702,7 +1702,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1728,7 +1728,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 5
       },
       "enableBy": "register"
     },
@@ -1754,7 +1754,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1767,7 +1767,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1793,7 +1793,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1819,7 +1819,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1832,7 +1832,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1845,7 +1845,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1897,7 +1897,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1910,7 +1910,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1923,7 +1923,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 13
       },
       "enableBy": "register"
     },
@@ -1936,7 +1936,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1949,7 +1949,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -2255,7 +2255,7 @@
       "parentId": "2",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl?.trim() || topic.context.listImage?.trim() || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    listImage: topic.context.listImage?.trim() || undefined,\n    sideABgImage: topic.context.sideABgImage?.trim() || undefined,\n    sideBBgImage: topic.context.sideBBgImage?.trim() || undefined,\n    sideABgColor: topic.context.sideABgColor?.trim() || undefined,\n    sideBBgColor: topic.context.sideBBgColor?.trim() || undefined,\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  resolvePredictionCardImageFields,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },
