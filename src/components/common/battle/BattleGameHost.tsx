@@ -1,5 +1,5 @@
 /**
- * 文件说明：Battle Game Host，战斗游戏相关共享组件。
+ * 文件说明：Battle Game Host，旧版 JS 龟龟对战宿主。
  */
 import React from 'react';
 import type { OwnedPetItem, PetEquipInfo } from '@/hooks/petTypes';

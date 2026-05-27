@@ -68,6 +68,7 @@ export function AppLayoutHeader(props: HeaderProps) {
         onOpenAuth={props.onOpenAuth}
         onSignOut={props.onSignOut}
         onOpenProfile={props.onOpenProfile}
+        onOpenGames={openGames}
         onOpenHelp={props.onOpenHelp}
         onOpenRank={props.onOpenRank}
         onOpenSettings={props.onOpenSettings}

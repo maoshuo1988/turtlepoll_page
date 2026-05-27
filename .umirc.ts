@@ -33,6 +33,7 @@ export default defineConfig({
         { path: '/rivalry', component: 'rivalry', name: '开撕台' },
         { path: '/forum', component: 'forum', name: '论坛' },
         { path: '/games', component: 'games', name: '游戏' },
+        { path: '/turtle-contest', component: 'turtle-contest', name: '龟龟争霸' },
         { path: '/battle-plaza', component: 'battle-plaza', name: '撕裂带广场' },
         { path: '/rank', component: 'rank', name: '排行榜', wrappers: ['@/wrappers/RequireAuth'] },
         { path: '/shop', component: 'shop', name: '商店' },

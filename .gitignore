@@ -3,3 +3,5 @@ dist
 .tmp_pylibs/*
 docs/*
 py/*
+games/turtle-contest-phaser/node_modules
+games/turtle-contest-phaser/public

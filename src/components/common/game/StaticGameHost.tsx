@@ -242,7 +242,7 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
         </>
       ) : null}
 
-      <div
+      {/* <div
         className={`relative flex items-center gap-3 border-b border-white/10 bg-[linear-gradient(135deg,rgba(7,18,24,0.96),rgba(11,30,40,0.96))] ${
           mobileMode ? 'px-4 py-3' : 'px-5 py-4'
         }`}
@@ -286,7 +286,7 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
             <ExternalLink size={16} />
           </a>
         ) : null}
-      </div>
+      </div> */}
 
       <div className={mobileMode ? 'px-0 py-0' : immersive ? 'flex h-[calc(100%-72px)] flex-col p-0' : 'p-3 sm:p-4'}>
         {showProjectBrief ? (

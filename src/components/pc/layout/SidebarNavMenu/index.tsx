@@ -4,7 +4,7 @@
 import React from 'react';
 import styles from './index.module.scss';
 
-type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'battle' | 'battlePlaza' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
+type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'turtleContest' | 'jump' | 'battle' | 'battlePlaza' | 'pet' | 'lab' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export interface SidebarNavItem {
   key: string;

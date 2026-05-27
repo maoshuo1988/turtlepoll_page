@@ -21,6 +21,8 @@ const PATH_VIEW_MAP: Record<string, ViewType> = {
   '/forum': 'forum',
   // 游戏管理页：展示龟龟跳海等游戏入口。
   '/games': 'games',
+  // 龟龟争霸：Phaser 版对战（与旧版游戏管理独立）。
+  '/turtle-contest': 'turtleContest',
   // 撕裂带广场页：展示战斗广场和下注对局。
   '/battle-plaza': 'battlePlaza',
   // 排行榜页：展示用户、宠物或战绩排名。

@@ -9,7 +9,10 @@
     "scripts": {
       "dev": "umi dev",
       "dev:test": "UMI_ENV=test umi dev",
-      "build": "tsc -b && umi build",
+      "dev:phaser-battle": "cd games/turtle-contest-phaser && yarn dev",
+      "sync:phaser-battle": "cd games/turtle-contest-phaser && yarn sync",
+      "build:phaser-battle": "cd games/turtle-contest-phaser && yarn install && yarn build",
+      "build": "yarn build:phaser-battle && tsc -b && umi build",
       "build:test": "UMI_ENV=test tsc -b && UMI_ENV=test umi build",
       "lint": "eslint .",
       "preview": "umi preview"
@@ -62,7 +65,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -75,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 8
       },
       "enableBy": "register"
     },
@@ -92,7 +95,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -109,7 +112,7 @@
             1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -123,12 +126,6 @@
       "time": {
         "hooks": {
           "modifyRoutes": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -146,27 +143,24 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            16,
+            61,
             7,
-            23,
+            10,
+            8,
+            6,
+            12,
+            10,
             7,
-            83,
-            20,
-            5,
-            5,
-            4,
+            13,
             7,
-            14,
-            4,
-            21,
-            22,
-            31,
-            16,
-            57,
-            18
+            11,
+            7,
+            7,
+            7,
+            7
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -183,16 +177,10 @@
             9
           ],
           "onGenerateFiles": [
-            0,
-            13,
-            11,
-            47,
-            8,
-            12,
-            25
+            1
           ]
         },
-        "register": 10
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -206,12 +194,6 @@
       "time": {
         "hooks": {
           "addEntryCode": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -229,8 +211,6 @@
       "time": {
         "hooks": {
           "onCheckConfig": [
-            0,
-            3,
             0
           ],
           "onCheck": [
@@ -243,12 +223,113 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
             0
           ],
           "onCheckCode": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -303,7 +384,6 @@
             0,
             0,
             0,
-            0,
             0
           ]
         },
@@ -324,7 +404,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -337,7 +417,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -351,8 +431,6 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            0,
-            0,
             0
           ]
         },
@@ -1225,7 +1303,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1242,7 +1320,7 @@
             5
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1255,7 +1333,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 39
+        "register": 63
       },
       "enableBy": "register"
     },
@@ -1268,7 +1346,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 18
       },
       "enableBy": "config"
     },
@@ -1281,7 +1359,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 12
       },
       "enableBy": "config"
     },
@@ -1304,6 +1382,30 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1321,21 +1423,9 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            1,
-            0,
-            0,
-            3,
-            1,
-            1,
-            1
+            0
           ],
           "addRuntimePlugin": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -1352,7 +1442,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1366,7 +1456,7 @@
       "time": {
         "hooks": {
           "onStart": [
-            0
+            1
           ],
           "addBeforeMiddlewares": [
             1
@@ -1410,27 +1500,9 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ],
           "addEntryImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0
           ]
@@ -1462,37 +1534,17 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1,
-            6,
-            7
+            1
           ],
           "onGenerateFiles": [
-            36,
-            26,
-            26,
-            72,
-            47,
-            17,
-            17
+            38
           ],
           "addPolyfillImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1506,22 +1558,10 @@
         "hooks": {
           "addPolyfillImports": [
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1535,13 +1575,7 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            75,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
+            71
           ]
         },
         "register": 0
@@ -1570,7 +1604,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1584,19 +1618,13 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            0,
-            0,
-            0,
-            1,
-            0,
-            1,
             0
           ],
           "addBeforeMiddlewares": [
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1610,20 +1638,8 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            6,
-            1,
-            22,
-            1,
-            15,
-            0,
-            16,
-            2,
-            11,
-            2,
-            12,
-            2,
-            18,
-            2
+            7,
+            1
           ]
         },
         "register": 1
@@ -1678,13 +1694,7 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            186,
-            17,
-            8,
-            8,
-            8,
-            12,
-            13
+            187
           ]
         },
         "register": 1
@@ -1730,7 +1740,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1743,7 +1753,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1755,7 +1765,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 11
       },
       "enableBy": "config"
     },
@@ -1769,13 +1779,7 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            1,
-            1,
-            1,
-            1,
-            1,
-            2,
-            0
+            1
           ]
         },
         "register": 0
@@ -1790,7 +1794,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1803,7 +1807,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1829,7 +1833,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1858,7 +1862,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1870,7 +1874,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1883,7 +1887,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1895,7 +1899,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1908,13 +1912,37 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
+            54,
+            53,
+            6,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
             0,
             0,
             0,
             0
           ]
         },
-        "register": 13
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1940,7 +1968,7 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            314
+            440
           ]
         },
         "register": 0
@@ -1956,7 +1984,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1969,7 +1997,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 18
       },
       "enableBy": "register"
     },
@@ -1983,10 +2011,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            6
+            7
           ]
         },
-        "register": 17
+        "register": 18
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1998,7 +2026,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2024,7 +2052,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2050,7 +2078,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2063,7 +2091,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2076,7 +2104,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2115,7 +2143,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2141,7 +2169,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2193,7 +2221,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2219,7 +2247,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2258,7 +2286,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2271,7 +2299,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     }
@@ -2335,6 +2363,11 @@
             "path": "/games",
             "component": "games",
             "name": "游戏"
+          },
+          {
+            "path": "/turtle-contest",
+            "component": "turtle-contest",
+            "name": "龟龟争霸"
           },
           {
             "path": "/battle-plaza",
@@ -2472,6 +2505,11 @@
             "name": "游戏"
           },
           {
+            "path": "/turtle-contest",
+            "component": "turtle-contest",
+            "name": "龟龟争霸"
+          },
+          {
             "path": "/battle-plaza",
             "component": "battle-plaza",
             "name": "撕裂带广场"
@@ -2553,7 +2591,7 @@
       "parentId": "@@/global-layout",
       "id": "2",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 真实撕裂带直达页：复用首页撕裂带逻辑，支持独立路径访问。\n  '/event-battle': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\ntype EventBattleRouteState = {\n  returnTo?: string;\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => {\n    if (location.pathname === '/event-battle') {\n      const routeState = location.state as EventBattleRouteState | null;\n      const returnPath = routeState?.returnTo?.split('?')[0];\n      if (returnPath && PATH_VIEW_MAP[returnPath]) {\n        return PATH_VIEW_MAP[returnPath];\n      }\n    }\n    return PATH_VIEW_MAP[location.pathname] ?? 'predictions';\n  }, [location.pathname, location.state]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme, aiPushMessages }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n            aiPushMessages,\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 真实撕裂带直达页：复用首页撕裂带逻辑，支持独立路径访问。\n  '/event-battle': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 龟龟争霸：Phaser 版对战（与旧版游戏管理独立）。\n  '/turtle-contest': 'turtleContest',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\ntype EventBattleRouteState = {\n  returnTo?: string;\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => {\n    if (location.pathname === '/event-battle') {\n      const routeState = location.state as EventBattleRouteState | null;\n      const returnPath = routeState?.returnTo?.split('?')[0];\n      if (returnPath && PATH_VIEW_MAP[returnPath]) {\n        return PATH_VIEW_MAP[returnPath];\n      }\n    }\n    return PATH_VIEW_MAP[location.pathname] ?? 'predictions';\n  }, [location.pathname, location.state]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme, aiPushMessages }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n            aiPushMessages,\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/home.tsx"
     },
@@ -2624,90 +2662,101 @@
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/games/index.tsx"
     },
     "9": {
+      "path": "/turtle-contest",
+      "name": "龟龟争霸",
+      "file": "@/pages/turtle-contest/index.tsx",
+      "parentId": "2",
+      "id": "9",
+      "absPath": "/turtle-contest",
+      "__content": "/**\n * 文件说明：turtle-contest 页面路由入口，负责挂载 Phaser 版龟龟争霸。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { TurtleContestPageView } from './components/TurtleContestPageView';\n\nexport default function TurtleContestPage() {\n  const navigate = useNavigate();\n\n  return (\n    <TurtleContestPageView\n      isMobileMode={typeof window !== 'undefined' ? window.innerWidth < 1024 : false}\n      onBack={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/turtle-contest/index.tsx"
+    },
+    "10": {
       "path": "/battle-plaza",
       "name": "撕裂带广场",
       "file": "@/pages/battle-plaza/index.tsx",
       "parentId": "2",
-      "id": "9",
+      "id": "10",
       "absPath": "/battle-plaza",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { BattlePlazaPageView } from './components/BattlePlazaPageView';\n\nexport default function BattlePlazaPage() {\n  return (\n    <div className=\"pt-0 lg:pt-3\">\n      <BattlePlazaPageView />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/battle-plaza/index.tsx"
     },
-    "10": {
+    "11": {
       "path": "",
       "name": "排行榜",
       "file": "@/pages/rank/index.tsx",
-      "parentId": "11",
-      "id": "10",
+      "parentId": "12",
+      "id": "11",
       "absPath": "/rank",
       "originPath": "/rank",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { RankPageView } from './components/RankPageView';\n\nexport default function RankPage() {\n  return <RankPageView />;\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rank/index.tsx"
     },
-    "11": {
+    "12": {
       "path": "/rank",
       "isWrapper": true,
       "file": "@/wrappers/RequireAuth.tsx",
       "parentId": "2",
-      "id": "11",
+      "id": "12",
       "absPath": "/rank",
       "__content": "/**\n * 文件说明：需要登录的路由访问拦截。\n */\nimport type { ReactNode } from 'react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\ninterface RequireAuthProps {\n  children: ReactNode;\n}\n\nexport default function RequireAuth({ children }: RequireAuthProps) {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const isAuthenticated = Boolean(getAuthToken());\n\n  if (!isAuthenticated) {\n    markAuthRequired();\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <>{children}</>;\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx"
     },
-    "12": {
+    "13": {
       "path": "/shop",
       "name": "商店",
       "file": "@/pages/shop/index.tsx",
       "parentId": "2",
-      "id": "12",
+      "id": "13",
       "absPath": "/shop",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { ShopPageView } from './components/ShopPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ShopPage() {\n  const navigate = useNavigate();\n  const [balance, setBalance] = useState(0);\n  const [petStamina, setPetStamina] = useState(0);\n  const [skins] = useState<PetSkin[]>([]);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 商城页自己维护它需要的金币和宠物接口，页面壳统一交给 layouts/home。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof coinMe.data?.balance === 'number') {\n      setBalance(coinMe.data.balance);\n    }\n  }, [coinMe.data?.balance]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  return (\n    <ShopPageView\n      balance={balance}\n      pet={currentPet}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onBack={() => {\n        navigate('/');\n      }}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/shop/index.tsx"
     },
-    "13": {
+    "14": {
       "path": "/pet",
       "name": "宠物",
       "file": "@/pages/pet/index.tsx",
       "parentId": "2",
-      "id": "13",
+      "id": "14",
       "absPath": "/pet",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetEquipUpdate,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { PetPageView } from './components/PetPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\nimport { useHomeLayoutContext } from '@/layouts/context';\n\nexport default function PetPage() {\n  const navigate = useNavigate();\n  const { aiPushMessages } = useHomeLayoutContext();\n  const [petStamina, setPetStamina] = useState(0);\n  const [skins, setSkins] = useState<PetSkin[]>([]);\n\n  // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n  const petEquipMutation = useRequestPetEquipUpdate();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  const handleEquipSkin = useCallback((skinId: string) => {\n    setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));\n  }, []);\n\n  const handleEquipPet = useCallback(async (petId: number | string) => {\n    const result = await petEquipMutation.mutateAsync({ petId });\n    void Promise.all([\n      petEquipQuery.refetch(),\n      petOwnedQuery.refetch(),\n      petStatusQuery.refetch(),\n    ]);\n    return result;\n  }, [petEquipMutation, petEquipQuery, petOwnedQuery, petStatusQuery]);\n\n  return (\n    <PetPageView\n      pet={currentPet}\n      balance={coinMe.data?.balance ?? 0}\n      winRate={0}\n      winStreak={0}\n      totalPredictions={0}\n      onBack={() => {\n        navigate('/');\n      }}\n      skins={skins}\n      onEquipSkin={handleEquipSkin}\n      equippedPet={petEquipQuery.data ?? null}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n      petStatus={petStatusQuery.data ?? null}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onEquipPet={handleEquipPet}\n      equippingPetId={\n        petEquipMutation.isLoading\n          ? (petEquipMutation.variables?.petId ?? petEquipMutation.variables?.petKey ?? null)\n          : null\n      }\n      onStaminaChange={setPetStamina}\n      aiPushMessages={aiPushMessages}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/pet/index.tsx"
     },
-    "14": {
+    "15": {
       "path": "",
       "name": "个人中心",
       "file": "@/pages/profile/index.tsx",
-      "parentId": "15",
-      "id": "14",
+      "parentId": "16",
+      "id": "15",
       "absPath": "/profile",
       "originPath": "/profile",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { getStoredUserInfo } from '@/utils/authStorage';\nimport { ProfilePageView } from './components/ProfilePageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ProfilePage() {\n  const navigate = useNavigate();\n  const [skins] = useState<PetSkin[]>([]);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const storedUser = getStoredUserInfo();\n  const displayName = storedUser?.nickname ?? storedUser?.username ?? '未登录用户';\n  const displayHandle = storedUser?.username ? `@${storedUser.username}` : '';\n  const displayAvatar = storedUser?.nickname?.slice(0, 1).toUpperCase() ?? '';\n  const petStamina = petStaminaQuery.data?.current ?? 0;\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  return (\n    <ProfilePageView\n      userName={displayName}\n      userHandle={displayHandle}\n      avatar={displayAvatar}\n      pet={currentPet}\n      skins={skins}\n      balance={coinMe.data?.balance ?? 0}\n      onBack={() => {\n        navigate('/');\n      }}\n      onOpenForum={() => {\n        navigate('/forum');\n      }}\n      onOpenAuth={onOpenAuth}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/profile/index.tsx"
     },
-    "15": {
+    "16": {
       "path": "/profile",
       "isWrapper": true,
       "file": "@/wrappers/RequireAuth.tsx",
       "parentId": "2",
-      "id": "15",
+      "id": "16",
       "absPath": "/profile",
       "__content": "/**\n * 文件说明：需要登录的路由访问拦截。\n */\nimport type { ReactNode } from 'react';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { getAuthToken, markAuthRequired } from '@/utils/authStorage';\n\ninterface RequireAuthProps {\n  children: ReactNode;\n}\n\nexport default function RequireAuth({ children }: RequireAuthProps) {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const isAuthenticated = Boolean(getAuthToken());\n\n  if (!isAuthenticated) {\n    markAuthRequired();\n    return (\n      <LoginRequiredPage\n        description=\"登录后即可查看和管理你的专属内容。\"\n        actionLabel=\"去登录\"\n        onAction={onOpenAuth}\n      />\n    );\n  }\n\n  return <>{children}</>;\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/wrappers/RequireAuth.tsx"
     },
-    "16": {
+    "17": {
       "path": "/active-predictions",
       "name": "活跃预测",
       "file": "@/pages/active-predictions/index.tsx",
       "parentId": "2",
-      "id": "16",
+      "id": "17",
       "absPath": "/active-predictions",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ActivePredictionsPageView } from './components/ActivePredictionsPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ActivePredictionsPage() {\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });\n  const activePredictionItems = useMemo<PredictionCardItem[]>(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const liveNews = Array.isArray(list) && list.length > 0\n      ? list.map(mapMarketToPredictionCard)\n      : [];\n    return liveNews.filter((item) => item.status === 'open');\n  }, [footballMarkets.data]);\n\n  return (\n    <ActivePredictionsPageView\n      items={activePredictionItems}\n      onBack={() => {\n        navigate('/');\n      }}\n      onEnterBattle={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
@@ -2865,7 +2914,7 @@
   },
   "port": 8000,
   "host": "0.0.0.0",
-  "ip": "192.168.1.13",
+  "ip": "192.168.1.2",
   "prepare": {
     "buildResult": {
       "errors": [],
@@ -4123,7 +4172,7 @@
             "format": "esm"
           },
           "src/components/pc/header/PcHeader.tsx": {
-            "bytes": 7137,
+            "bytes": 7497,
             "imports": [
               {
                 "path": "react",
@@ -4612,7 +4661,7 @@
             "format": "esm"
           },
           "src/components/pc/layout/SidebarNavMenu/index.tsx": {
-            "bytes": 3277,
+            "bytes": 3295,
             "imports": [
               {
                 "path": "react",
@@ -4628,7 +4677,7 @@
             "format": "esm"
           },
           "src/components/pc/layout/SidebarMainPanels.tsx": {
-            "bytes": 5773,
+            "bytes": 5808,
             "imports": [
               {
                 "path": "react",
@@ -4757,7 +4806,7 @@
             "format": "esm"
           },
           "src/layouts/components/AppPageLayout/index.tsx": {
-            "bytes": 7596,
+            "bytes": 7628,
             "imports": [
               {
                 "path": "react",
@@ -5047,7 +5096,7 @@
             "format": "esm"
           },
           "src/layouts/components/StandalonePageShell.tsx": {
-            "bytes": 15828,
+            "bytes": 15960,
             "imports": [
               {
                 "path": "react",
@@ -5154,7 +5203,7 @@
             "format": "esm"
           },
           "src/layouts/home.tsx": {
-            "bytes": 3107,
+            "bytes": 3218,
             "imports": [
               {
                 "path": "react",
@@ -6191,6 +6240,65 @@
             ],
             "format": "esm"
           },
+          "src/components/common/game/StaticGameHost.tsx": {
+            "bytes": 13744,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
+          "src/components/common/game/TurtleContestGameHost.tsx": {
+            "bytes": 1533,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/components/common/game/StaticGameHost.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/game/StaticGameHost"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/turtle-contest/components/TurtleContestPageView.tsx": {
+            "bytes": 1051,
+            "imports": [
+              {
+                "path": "src/components/common/game/TurtleContestGameHost.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/game/TurtleContestGameHost"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/turtle-contest/index.tsx": {
+            "bytes": 504,
+            "imports": [
+              {
+                "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/pages/turtle-contest/components/TurtleContestPageView.tsx",
+                "kind": "import-statement",
+                "original": "./components/TurtleContestPageView"
+              }
+            ],
+            "format": "esm"
+          },
           "src/hooks/battleTypes.ts": {
             "bytes": 8270,
             "imports": [],
@@ -6864,7 +6972,7 @@
             "format": "esm"
           },
           "src/.umi/core/route.tsx": {
-            "bytes": 3271,
+            "bytes": 3468,
             "imports": [
               {
                 "path": "react",
@@ -6910,6 +7018,11 @@
                 "path": "src/pages/games/index.tsx",
                 "kind": "dynamic-import",
                 "original": "@/pages/games/index.tsx"
+              },
+              {
+                "path": "src/pages/turtle-contest/index.tsx",
+                "kind": "dynamic-import",
+                "original": "@/pages/turtle-contest/index.tsx"
               },
               {
                 "path": "src/pages/battle-plaza/index.tsx",
@@ -7808,6 +7921,21 @@
               },
               {
                 "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -9169,7 +9297,7 @@
                 "bytesInOutput": 3981
               },
               "src/components/pc/header/PcHeader.tsx": {
-                "bytesInOutput": 7053
+                "bytesInOutput": 7468
               },
               "src/api/httpClient.ts": {
                 "bytesInOutput": 1424
@@ -9244,7 +9372,7 @@
                 "bytesInOutput": 3038
               },
               "src/components/pc/layout/SidebarMainPanels.tsx": {
-                "bytesInOutput": 5356
+                "bytesInOutput": 5373
               },
               "src/components/pc/layout/SidebarDesktopNavPanel.tsx": {
                 "bytesInOutput": 1661
@@ -9256,7 +9384,7 @@
                 "bytesInOutput": 5188
               },
               "src/layouts/components/AppPageLayout/index.tsx": {
-                "bytesInOutput": 5417
+                "bytesInOutput": 5447
               },
               "src/utils/petHelpers.ts": {
                 "bytesInOutput": 2425
@@ -9304,13 +9432,13 @@
                 "bytesInOutput": 12794
               },
               "src/layouts/components/StandalonePageShell.tsx": {
-                "bytesInOutput": 12921
+                "bytesInOutput": 13057
               },
               "src/layouts/components/index.ts": {
                 "bytesInOutput": 136
               },
               "src/layouts/home.tsx": {
-                "bytesInOutput": 2607
+                "bytesInOutput": 2726
               },
               "src/pages/home/components/predictionCards.ts": {
                 "bytesInOutput": 5437
@@ -9450,6 +9578,18 @@
               "src/pages/games/index.tsx": {
                 "bytesInOutput": 766
               },
+              "src/components/common/game/StaticGameHost.tsx": {
+                "bytesInOutput": 11135
+              },
+              "src/components/common/game/TurtleContestGameHost.tsx": {
+                "bytesInOutput": 1412
+              },
+              "src/pages/turtle-contest/components/TurtleContestPageView.tsx": {
+                "bytesInOutput": 934
+              },
+              "src/pages/turtle-contest/index.tsx": {
+                "bytesInOutput": 594
+              },
               "src/hooks/battleTypes.ts": {
                 "bytesInOutput": 4892
               },
@@ -9550,7 +9690,7 @@
                 "bytesInOutput": 1827
               },
               "src/.umi/core/route.tsx": {
-                "bytesInOutput": 3319
+                "bytesInOutput": 3532
               },
               "src/app.ts": {
                 "bytesInOutput": 1575
@@ -9577,7 +9717,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 969117
+            "bytes": 984334
           }
         }
       }
@@ -12417,6 +12557,137 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/game/StaticGameHost.tsx": [
+        {
+          "end": 167,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "local": "React",
+              "type": "ImportDefaultSpecifier"
+            },
+            {
+              "imported": "useCallback",
+              "local": "useCallback",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRef",
+              "local": "useRef",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useState",
+              "local": "useState",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 95,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 230,
+          "importKind": "value",
+          "source": "lucide-react",
+          "specifiers": [
+            {
+              "imported": "ArrowLeft",
+              "local": "ArrowLeft",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Coins",
+              "local": "Coins",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "ExternalLink",
+              "local": "ExternalLink",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 168,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 298,
+          "importKind": "type",
+          "source": "@/hooks/petTypes",
+          "specifiers": [
+            {
+              "imported": "OwnedPetItem",
+              "local": "OwnedPetItem",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PetEquipInfo",
+              "local": "PetEquipInfo",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 231,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/game/TurtleContestGameHost.tsx": [
+        {
+          "end": 153,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "local": "React",
+              "type": "ImportDefaultSpecifier"
+            },
+            {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 112,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 221,
+          "importKind": "type",
+          "source": "@/hooks/petTypes",
+          "specifiers": [
+            {
+              "imported": "OwnedPetItem",
+              "local": "OwnedPetItem",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PetEquipInfo",
+              "local": "PetEquipInfo",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 154,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 295,
+          "importKind": "value",
+          "source": "@/components/common/game/StaticGameHost",
+          "specifiers": [
+            {
+              "imported": "StaticGameHost",
+              "local": "StaticGameHost",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 222,
+          "type": "ImportDeclaration"
+        }
+      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/layout/GuideTourModal.tsx": [
         {
           "end": 61,
@@ -13165,13 +13436,18 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 199,
+          "end": 209,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
             {
               "imported": "CircleHelp",
               "local": "CircleHelp",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Gamepad2",
+              "local": "Gamepad2",
               "type": "ImportSpecifier"
             },
             {
@@ -13204,7 +13480,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 270,
+          "end": 280,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -13219,7 +13495,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 200,
+          "start": 210,
           "type": "ImportDeclaration"
         }
       ],
@@ -22174,6 +22450,52 @@
             }
           ],
           "start": 624,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/turtle-contest/components/TurtleContestPageView.tsx": [
+        {
+          "end": 207,
+          "importKind": "value",
+          "source": "@/components/common/game/TurtleContestGameHost",
+          "specifiers": [
+            {
+              "imported": "TurtleContestGameHost",
+              "local": "TurtleContestGameHost",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 120,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/turtle-contest/index.tsx": [
+        {
+          "end": 154,
+          "importKind": "value",
+          "source": "@umijs/renderer-react",
+          "specifiers": [
+            {
+              "imported": "useNavigate",
+              "local": "useNavigate",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 102,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 230,
+          "importKind": "value",
+          "source": "./components/TurtleContestPageView",
+          "specifiers": [
+            {
+              "imported": "TurtleContestPageView",
+              "local": "TurtleContestPageView",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 155,
           "type": "ImportDeclaration"
         }
       ],

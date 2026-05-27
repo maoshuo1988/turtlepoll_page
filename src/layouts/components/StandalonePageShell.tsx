@@ -69,6 +69,7 @@ const ROUTE_PATHS: Partial<Record<ViewType, string>> = {
   rivalry: '/rivalry',
   forum: '/forum',
   games: '/games',
+  turtleContest: '/turtle-contest',
   battlePlaza: '/battle-plaza',
   rank: '/rank',
   shop: '/shop',
@@ -302,6 +303,10 @@ export function StandalonePageShell({
     }
     if (view === 'battle') {
       window.location.href = '/games/turtle-battle/index.html';
+      return;
+    }
+    if (view === 'turtleContest') {
+      navigateInApp('/turtle-contest');
       return;
     }
     if (view === 'predictions') {

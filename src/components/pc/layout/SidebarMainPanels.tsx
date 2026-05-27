@@ -11,14 +11,14 @@ import { SidebarNavMenu, type SidebarNavItem } from './SidebarNavMenu';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 import type { PredictionCardItem } from '@/components/common/predictions/predictionCards';
 
-export type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'jump' | 'lab' | 'battle' | 'battlePlaza' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
+export type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'turtleContest' | 'jump' | 'lab' | 'battle' | 'battlePlaza' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
   { key: 'world-cup', label: '世界杯', icon: <Flag size={22} />, view: 'worldCup', enabled: true },
   { key: 'predictions', label: '暗盘', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
   { key: 'rivalry', label: '开撕台', icon: <Flame size={22} />, view: 'rivalry', enabled: true },
   { key: 'forum', label: '线报', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },
-  { key: 'games', label: '游戏管理', icon: <Gamepad2 size={22} />, view: 'games', enabled: true },
+  { key: 'turtle-contest', label: '龟龟争霸', icon: <Gamepad2 size={22} />, view: 'turtleContest', enabled: true },
   { key: 'battle-plaza', label: '地下钱庄', icon: <Swords size={22} />, view: 'battlePlaza', enabled: true },
   { key: 'shop', label: '黑市', icon: <Gift size={22} />, view: 'shop', enabled: false },
   { key: 'pet', label: '宠物空间', icon: <Turtle size={22} />, view: 'pet', enabled: false },

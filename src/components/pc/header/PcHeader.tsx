@@ -2,7 +2,7 @@
  * 文件说明：pc Header 组件，负责对应端的顶部导航展示。
  */
 import React from 'react';
-import { CircleHelp, LogIn, LogOut, Settings, Trophy, UserRound } from 'lucide-react';
+import { CircleHelp, Gamepad2, LogIn, LogOut, Settings, Trophy, UserRound } from 'lucide-react';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 
 export interface PcHeaderProps {
@@ -11,6 +11,7 @@ export interface PcHeaderProps {
   onOpenAuth: () => void;
   onSignOut?: () => void | Promise<void>;
   onOpenProfile?: () => void;
+  onOpenGames?: () => void;
   onOpenHelp?: () => void;
   onOpenRank?: () => void;
   /** 已登录时头像菜单「设置」 */
@@ -21,6 +22,7 @@ export const PcHeader: React.FC<PcHeaderProps> = ({
   onOpenAuth,
   onSignOut,
   onOpenProfile,
+  onOpenGames,
   onOpenHelp,
   onOpenRank,
   onOpenSettings,
@@ -50,6 +52,12 @@ export const PcHeader: React.FC<PcHeaderProps> = ({
         </div>
 
         <div className="ml-auto flex items-center gap-2">
+          {onOpenGames ? (
+            <button type="button" className={pillShortcut} onClick={onOpenGames} aria-label="游戏">
+              <Gamepad2 size={18} className="shrink-0 text-violet-400" strokeWidth={2} aria-hidden />
+              <span>游戏</span>
+            </button>
+          ) : null}
           {onOpenHelp ? (
             <button type="button" className={pillShortcut} onClick={onOpenHelp} aria-label="新手引导">
               <CircleHelp size={18} className="shrink-0 text-sky-400" strokeWidth={2} aria-hidden />
