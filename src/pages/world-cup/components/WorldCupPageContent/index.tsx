@@ -24,7 +24,8 @@ import {
   Zap,
 } from 'lucide-react';
 import { PredictionBetModal } from '@/pages/home/components/PredictionBetModal';
-import type { PredictionCardItem } from '@/pages/home/components/predictionCards';
+import type { PredictionBetOption, PredictionCardItem } from '@/pages/home/components/predictionCards';
+import { calcPredictionMarketOdds } from '@/pages/home/components/predictionCards';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
@@ -415,7 +416,7 @@ function calcMarketOdds(item: FootballMarketAggregate) {
 
 function mapFootballMarketToPredictionItem(item: FootballMarketAggregate): PredictionCardItem {
   const context = item.context ?? {};
-  const { oddsA, oddsB, votesA, votesB } = calcMarketOdds(item);
+  const { votesA, votesB, votesC, oddsA, oddsB, oddsDraw } = calcPredictionMarketOdds(item);
 
   return {
     id: `market-${item.market.id}`,
@@ -428,11 +429,13 @@ function mapFootballMarketToPredictionItem(item: FootballMarketAggregate): Predi
     sideBBgImage: context.sideBBgImage?.trim() || undefined,
     sideABgColor: context.sideABgColor?.trim() || undefined,
     sideBBgColor: context.sideBBgColor?.trim() || undefined,
-    votes: { A: votesA, B: votesB },
+    votes: { A: votesA, B: votesB, C: votesC },
     optionA: context.proText || '支持',
     optionB: context.conText || '反对',
+    optionDraw: context.drawText?.trim() || '平局',
     oddsA,
     oddsB,
+    oddsDraw,
     status:
       item.market.status === 'OPEN'
         ? 'open'
@@ -527,8 +530,8 @@ export function WorldCupPage() {
   const [footballPage, setFootballPage] = useState(1);
   const [visibleFixtureCount, setVisibleFixtureCount] = useState(FIXTURE_VISIBLE_CHUNK);
   const [loadedFootballMarkets, setLoadedFootballMarkets] = useState<FootballMarketAggregate[]>([]);
-  const [betModal, setBetModal] = useState<{ item: PredictionCardItem; option: 'A' | 'B' } | null>(null);
-  const [localBetSides, setLocalBetSides] = useState<Record<string, 'A' | 'B'>>({});
+  const [betModal, setBetModal] = useState<{ item: PredictionCardItem; option: PredictionBetOption } | null>(null);
+  const [localBetSides, setLocalBetSides] = useState<Record<string, PredictionBetOption>>({});
   const { onOpenAuth } = useHomeLayoutContext();
   const navigate = useNavigate();
   const footballMarketsQuery = useRequestFootballMarketsByTag({
@@ -577,7 +580,7 @@ export function WorldCupPage() {
   const canRevealLoadedFixtures = visibleFixtureCount < todayFixtures.length;
   const canViewMoreFixtures = canRevealLoadedFixtures || hasMoreFootballMarkets;
 
-  const openPredictionBet = (item: PredictionCardItem | undefined, option: 'A' | 'B') => {
+  const openPredictionBet = (item: PredictionCardItem | undefined, option: PredictionBetOption) => {
     if (!item || item.status !== 'open' || item.hasBet || localBetSides[item.id]) return;
     setBetModal({ item, option });
   };
@@ -593,7 +596,7 @@ export function WorldCupPage() {
     });
   }, [location.pathname, location.search, navigate]);
 
-  const handleBetSuccess = (item: PredictionCardItem, option: 'A' | 'B', _result: PlaceBetResult) => {
+  const handleBetSuccess = (item: PredictionCardItem, option: PredictionBetOption, _result: PlaceBetResult) => {
     setLocalBetSides((prev) => ({ ...prev, [item.id]: option }));
   };
 

@@ -6,7 +6,13 @@ import { useLocation, useNavigate } from '@umijs/renderer-react';
 import type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { EventBattlePage } from './components/EventBattlePage';
-import type { PredictionCardItem } from '@/pages/home/components/predictionCards';
+import {
+  normalizePredictionCardItem,
+  resolveDrawText,
+  resolveDrawVoteCount,
+  resolvePredictionCardImageFields,
+  type PredictionCardItem,
+} from '@/pages/home/components/predictionCards';
 
 type EventBattleLocationState = {
   sidebarTopic?: SidebarHotTopic;
@@ -17,27 +23,25 @@ type EventBattleLocationState = {
 function mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {
   if (!topic?.context?.marketId) return null;
 
-  return {
+  return normalizePredictionCardItem({
     id: `market-${topic.context.marketId}`,
     marketId: topic.context.marketId,
     title: topic.context.eventName || topic.title,
     summary: topic.context.detail || '查看当前热点争议与讨论风向。',
-    image: topic.context.imageUrl?.trim() || topic.context.listImage?.trim() || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
-    listImage: topic.context.listImage?.trim() || undefined,
-    sideABgImage: topic.context.sideABgImage?.trim() || undefined,
-    sideBBgImage: topic.context.sideBBgImage?.trim() || undefined,
-    sideABgColor: topic.context.sideABgColor?.trim() || undefined,
-    sideBBgColor: topic.context.sideBBgColor?.trim() || undefined,
+    ...resolvePredictionCardImageFields(topic.context),
     votes: {
       A: topic.context.proVoteCount ?? 0,
       B: topic.context.conVoteCount ?? 0,
+      C: resolveDrawVoteCount(topic.context),
     },
     optionA: topic.context.proText || '支持',
     optionB: topic.context.conText || '反对',
+    optionDraw: resolveDrawText(topic.context),
     oddsA: 1.8,
     oddsB: 1.8,
+    oddsDraw: 1.8,
     status: 'open',
-  };
+  });
 }
 
 export default function EventBattleRoutePage() {

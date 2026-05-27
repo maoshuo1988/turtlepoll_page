@@ -7,6 +7,8 @@ import { useRequestFootballMarkets, useRequestFootballMarketsByTag } from '@/hoo
 
 export type PredictionCardType = 'politics' | 'tech' | 'sports' | 'entertainment' | 'finance';
 
+export type PredictionBetOption = 'A' | 'B' | 'C';
+
 export type PredictionCardItem = {
   id: string;
   marketId: number;
@@ -19,11 +21,14 @@ export type PredictionCardItem = {
   sideBBgImage?: string;
   sideABgColor?: string;
   sideBBgColor?: string;
-  votes: { A: number; B: number };
+  votes: { A: number; B: number; C: number };
   optionA: string;
   optionB: string;
+  optionDraw: string;
   oddsA: number;
   oddsB: number;
+  oddsDraw: number;
+  supportsDrawBet?: boolean;
   status: 'open' | 'closed' | 'settled';
   hasBet?: boolean;
   betSettleResult?: 'WIN' | 'LOSE' | string;
@@ -67,32 +72,97 @@ export function resolvePredictionCardImageFields(context: Partial<PredictContext
   };
 }
 
-export function mapMarketToPredictionCard(item: FootballMarketAggregate): PredictionCardItem {
-  const marketId = item.market.id;
+export function resolveDrawText(context: Partial<PredictContext>) {
+  return context.drawText?.trim() || context.neutralText?.trim() || context.tieText?.trim() || '平局';
+}
+
+export function resolveDrawVoteCount(context: Partial<PredictContext>) {
+  if (typeof context.drawVoteCount === 'number') return context.drawVoteCount;
+  if (typeof context.neutralVoteCount === 'number') return context.neutralVoteCount;
+  return 0;
+}
+
+export function normalizePredictionCardItem(
+  item: Partial<PredictionCardItem> & Pick<PredictionCardItem, 'id' | 'marketId' | 'title' | 'summary' | 'image' | 'status'>,
+): PredictionCardItem {
+  const votesA = item.votes?.A ?? 0;
+  const votesB = item.votes?.B ?? 0;
+  const votesC = item.votes?.C ?? 0;
+  const oddsA = Number.isFinite(item.oddsA) ? Number(item.oddsA) : 1.8;
+  const oddsB = Number.isFinite(item.oddsB) ? Number(item.oddsB) : 1.8;
+  const oddsDraw = Number.isFinite(item.oddsDraw)
+    ? Number(item.oddsDraw)
+    : Number(((oddsA + oddsB) / 2).toFixed(1));
+
+  return {
+    ...item,
+    votes: { A: votesA, B: votesB, C: votesC },
+    optionA: item.optionA || '正方',
+    optionB: item.optionB || '反方',
+    optionDraw: item.optionDraw?.trim() || '平局',
+    oddsA,
+    oddsB,
+    oddsDraw,
+    supportsDrawBet: item.supportsDrawBet ?? true,
+  } as PredictionCardItem;
+}
+
+export function calcPredictionMarketOdds(item: FootballMarketAggregate) {
   const context = item.context ?? {};
   const votesA = context.proVoteCount ?? 0;
   const votesB = context.conVoteCount ?? 0;
+  const votesC = resolveDrawVoteCount(context);
   const poolA = item.market.poolA ?? votesA;
   const poolB = item.market.poolB ?? votesB;
+  const poolC = item.market.poolC ?? votesC;
   const baseA = item.market.baseA ?? 500;
   const baseB = item.market.baseB ?? 500;
+  const baseC = item.market.baseC ?? 500;
   const effectiveA = Math.max(1, baseA + poolA);
   const effectiveB = Math.max(1, baseB + poolB);
-  const total = effectiveA + effectiveB;
-  const oddsA = Number((Math.max(1.2, Math.min(5, total / effectiveA))).toFixed(1));
-  const oddsB = Number((Math.max(1.2, Math.min(5, total / effectiveB))).toFixed(1));
+  const effectiveC = Math.max(1, baseC + poolC);
+  const total = effectiveA + effectiveB + effectiveC;
+  const clampOdds = (value: number) => Number((Math.max(1.2, Math.min(5, value))).toFixed(1));
 
   return {
+    votesA,
+    votesB,
+    votesC,
+    oddsA: clampOdds(total / effectiveA),
+    oddsB: clampOdds(total / effectiveB),
+    oddsDraw: clampOdds(total / effectiveC),
+  };
+}
+
+export function getPredictionOptionLabel(item: Pick<PredictionCardItem, 'optionA' | 'optionB' | 'optionDraw'>, option: PredictionBetOption) {
+  if (option === 'A') return item.optionA;
+  if (option === 'B') return item.optionB;
+  return item.optionDraw;
+}
+
+export function getPredictionOptionOdds(item: Pick<PredictionCardItem, 'oddsA' | 'oddsB' | 'oddsDraw'>, option: PredictionBetOption) {
+  if (option === 'A') return item.oddsA;
+  if (option === 'B') return item.oddsB;
+  return item.oddsDraw;
+}
+
+export function mapMarketToPredictionCard(item: FootballMarketAggregate): PredictionCardItem {
+  const marketId = item.market.id;
+  const context = item.context ?? {};
+  const { votesA, votesB, votesC, oddsA, oddsB, oddsDraw } = calcPredictionMarketOdds(item);
+  return normalizePredictionCardItem({
     id: `market-${marketId}`,
     marketId,
     title: context.eventName || item.market.title || `预测市场 #${marketId}`,
     summary: context.detail || item.market.title || '查看当前预测双方观点与热度变化。',
     ...resolvePredictionCardImageFields(context),
-    votes: { A: votesA, B: votesB },
+    votes: { A: votesA, B: votesB, C: votesC },
     optionA: context.proText || '正方',
     optionB: context.conText || '反方',
+    optionDraw: resolveDrawText(context),
     oddsA,
     oddsB,
+    oddsDraw,
     status:
       item.market.status === 'OPEN'
         ? 'open'
@@ -102,7 +172,7 @@ export function mapMarketToPredictionCard(item: FootballMarketAggregate): Predic
     hasBet: item.hasBet ?? false,
     betSettleResult: item.betSettleResult,
     closeTime: item.market.closeTime,
-  };
+  });
 }
 
 export function usePredictionCardItems(selectedTag: string | null) {

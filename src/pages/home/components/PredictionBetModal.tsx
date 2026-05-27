@@ -6,14 +6,15 @@ import { createPortal } from 'react-dom';
 import { Coins, TrendingUp, X } from 'lucide-react';
 import { useRequestCoinBet, useRequestCoinMe } from '@/hooks/useCoinRequests';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
-import type { PredictionCardItem } from './predictionCards';
+import type { PredictionCardItem, PredictionBetOption } from './predictionCards';
+import { getPredictionOptionLabel, getPredictionOptionOdds } from './predictionCards';
 
 interface PredictionBetModalProps {
   open: boolean;
   item: PredictionCardItem | null;
-  option: 'A' | 'B' | null;
+  option: PredictionBetOption | null;
   onClose: () => void;
-  onSuccess?: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
+  onSuccess?: (item: PredictionCardItem, option: PredictionBetOption, result: PlaceBetResult) => void;
   onRequireAuth?: () => void;
 }
 
@@ -39,8 +40,8 @@ export function PredictionBetModal({
 
   const balance = coinMe.data?.balance ?? 0;
   const numericAmount = Number(amount);
-  const selectedOdds = option === 'A' ? (item?.oddsA ?? 0) : option === 'B' ? (item?.oddsB ?? 0) : 0;
-  const selectedLabel = option === 'A' ? (item?.optionA ?? '') : option === 'B' ? (item?.optionB ?? '') : '';
+  const selectedOdds = option && item ? getPredictionOptionOdds(item, option) : 0;
+  const selectedLabel = option && item ? getPredictionOptionLabel(item, option) : '';
   const expectedPayout = useMemo(() => {
     if (!Number.isFinite(numericAmount) || numericAmount <= 0 || !selectedOdds) return 0;
     return Math.floor(numericAmount * selectedOdds);

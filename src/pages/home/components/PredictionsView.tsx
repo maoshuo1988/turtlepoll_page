@@ -4,13 +4,13 @@
 import React from 'react';
 import { HeroPrediction } from './HeroPrediction';
 import { NewsFeed } from './NewsFeed';
-import type { PredictionCardItem } from './predictionCards';
+import type { PredictionBetOption, PredictionCardItem } from './predictionCards';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 
 interface PredictionsViewProps {
   selectedTag: string | null;
   selectedPrediction?: PredictionCardItem | null;
-  onBetSuccess?: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
+  onBetSuccess?: (item: PredictionCardItem, option: PredictionBetOption, result: PlaceBetResult) => void;
   onRequireAuth?: () => void;
   onEnterBattle?: (item: PredictionCardItem) => void;
 }

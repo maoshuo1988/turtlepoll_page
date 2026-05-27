@@ -5,14 +5,14 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, MessageSquare, Trophy, Clock3, Lock, Coins } from 'lucide-react';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
-import { usePredictionCardItems, type PredictionCardItem } from './predictionCards';
+import { normalizePredictionCardItem, usePredictionCardItems, type PredictionBetOption, type PredictionCardItem } from './predictionCards';
 import { PredictionBetModal } from './PredictionBetModal';
 import { PredictionCardCover } from './PredictionCardCover';
 import { useRequestCoinSettle } from '@/hooks/useCoinRequests';
 
 interface NewsFeedProps {
   selectedTag: string | null;
-  onBetSuccess?: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
+  onBetSuccess?: (item: PredictionCardItem, option: PredictionBetOption, result: PlaceBetResult) => void;
   onRequireAuth?: () => void;
   onEnterBattle?: (item: PredictionCardItem) => void;
 }
@@ -143,15 +143,18 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
   onRequireAuth,
   onEnterBattle,
 }) => {
-  const [betModalOption, setBetModalOption] = useState<'A' | 'B' | null>(null);
+  const [betModalOption, setBetModalOption] = useState<PredictionBetOption | null>(null);
   const coinSettleMutation = useRequestCoinSettle();
-  const totalVotes = item.votes.A + item.votes.B;
-  const pctANum = totalVotes > 0 ? Math.round((item.votes.A / totalVotes) * 100) : 50;
-  const pctBNum = 100 - pctANum;
-  const statusMeta = getCardStatusMeta(item);
-  const primaryAction = getPrimaryAction(item);
-  const canOpenBet = item.status === 'open';
-  const canSettle = item.status === 'settled' && item.hasBet && !item.betSettleResult;
+  const card = normalizePredictionCardItem(item);
+  const showDrawBet = card.supportsDrawBet !== false;
+  const totalVotes = card.votes.A + card.votes.B + card.votes.C;
+  const pctANum = totalVotes > 0 ? Math.round((card.votes.A / totalVotes) * 100) : (showDrawBet ? 34 : 50);
+  const pctCNum = showDrawBet ? (totalVotes > 0 ? Math.round((card.votes.C / totalVotes) * 100) : 33) : 0;
+  const pctBNum = showDrawBet ? Math.max(0, 100 - pctANum - pctCNum) : 100 - pctANum;
+  const statusMeta = getCardStatusMeta(card);
+  const primaryAction = getPrimaryAction(card);
+  const canOpenBet = card.status === 'open';
+  const canSettle = card.status === 'settled' && card.hasBet && !card.betSettleResult;
 
   const handlePrimaryAction = async () => {
     if (canOpenBet) {
@@ -161,7 +164,7 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
 
     if (canSettle) {
       try {
-        await coinSettleMutation.mutateAsync({ marketId: item.marketId });
+        await coinSettleMutation.mutateAsync({ marketId: card.marketId });
       } catch (error) {
         console.error(error);
       }
@@ -178,7 +181,7 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
       >
         <div className="legacy-pred-card-media relative h-[168px] md:h-[180px] overflow-hidden">
           <PredictionCardCover
-            item={item}
+            item={card}
             className="absolute inset-0"
             imageClassName="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
@@ -187,17 +190,17 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
 
           <div className="absolute left-3 right-3 top-3 flex items-center justify-end gap-2">
             <div className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${statusMeta.badgeClassName}`}>
-              {item.status === 'open' ? <Coins size={11} /> : item.status === 'closed' ? <Lock size={11} /> : item.betSettleResult === 'WIN' ? <Trophy size={11} /> : <Clock3 size={11} />}
+              {card.status === 'open' ? <Coins size={11} /> : card.status === 'closed' ? <Lock size={11} /> : card.betSettleResult === 'WIN' ? <Trophy size={11} /> : <Clock3 size={11} />}
               {statusMeta.badgeLabel}
             </div>
           </div>
 
           <div className="absolute inset-x-3 bottom-3">
             <h3 className="mb-1 line-clamp-2 text-[18px] md:text-[22px] font-black leading-[1.08] md:leading-[1.02] tracking-[-0.03em] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)]">
-              {item.title}
+              {card.title}
             </h3>
             <p className="line-clamp-1 text-[13px] leading-[1.25] text-white/72 drop-shadow-[0_1px_4px_rgba(0,0,0,0.38)]">
-              {item.summary}
+              {card.summary}
             </p>
           </div>
         </div>
@@ -212,14 +215,27 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
           </div>
 
           <div className="mb-3.5">
-            <div className="mb-1.5 flex items-center justify-between text-[12px] font-bold leading-none">
-              <span className="text-[#57efd2]">{item.optionA} {pctANum}%</span>
-              <span className="text-white/74">{item.optionB} {pctBNum}%</span>
+            <div className={`mb-1.5 grid gap-1 text-[11px] font-bold leading-none ${showDrawBet ? 'grid-cols-3' : 'grid-cols-2'}`}>
+              <span className="truncate text-[#57efd2]">{card.optionA} {pctANum}%</span>
+              {showDrawBet ? (
+                <span className="truncate text-center text-[#facc15]">{card.optionDraw} {pctCNum}%</span>
+              ) : null}
+              <span className="truncate text-right text-white/74">{card.optionB} {pctBNum}%</span>
             </div>
-            <div className="relative h-[4px] overflow-hidden rounded-full bg-white/10">
+            <div className="relative flex h-[4px] overflow-hidden rounded-full bg-white/10">
               <div
-                className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[#1dbfd0] via-[#27d8cf] to-[#38f0d1]"
+                className="h-full rounded-l-full bg-gradient-to-r from-[#1dbfd0] via-[#27d8cf] to-[#38f0d1]"
                 style={{ width: `${pctANum}%` }}
+              />
+              {showDrawBet ? (
+                <div
+                  className="h-full bg-gradient-to-r from-[#eab308] to-[#f59e0b]"
+                  style={{ width: `${pctCNum}%` }}
+                />
+              ) : null}
+              <div
+                className="h-full rounded-r-full bg-gradient-to-l from-[#ff4f75] to-[#ff3d63]"
+                style={{ width: `${showDrawBet ? pctBNum : 100 - pctANum}%` }}
               />
             </div>
           </div>
@@ -229,52 +245,62 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
             <div className="px-3 py-3">
               <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.12em] text-white/38">
                 <span>当前状态</span>
-                <span>{item.status.toUpperCase()}</span>
+                <span>{card.status.toUpperCase()}</span>
               </div>
               <div className="mt-2 flex items-start justify-between gap-3">
                 <div className={`text-[14px] font-black ${statusMeta.stateValueClassName}`}>{statusMeta.stateLabel}</div>
                 <div className="max-w-[58%] text-right text-[12px] md:text-[13px] font-semibold leading-5 text-white/84">
-                  {item.hasBet ? '你已参与本场预测' : '你还未参与本场预测'}
+                  {card.hasBet ? '你已参与本场预测' : '你还未参与本场预测'}
                 </div>
               </div>
-              {item.hasBet && item.betSettleResult && (
-                <div className={`mt-1 text-[12px] font-bold ${item.betSettleResult === 'WIN' ? 'text-emerald-300' : 'text-rose-300'}`}>
-                  {item.betSettleResult === 'WIN' ? '结算结果：已获胜' : '结算结果：未命中'}
+              {card.hasBet && card.betSettleResult && (
+                <div className={`mt-1 text-[12px] font-bold ${card.betSettleResult === 'WIN' ? 'text-emerald-300' : 'text-rose-300'}`}>
+                  {card.betSettleResult === 'WIN' ? '结算结果：已获胜' : '结算结果：未命中'}
                 </div>
               )}
-              {item.hasBet && item.status === 'settled' && !item.betSettleResult && (
+              {card.hasBet && card.status === 'settled' && !card.betSettleResult && (
                 <div className="mt-1 text-[12px] font-bold text-[#f1c27d]">结算结果已生成，等待你手动结算</div>
               )}
             </div>
           </div>
 
-          <div className="legacy-pred-card-actions grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+          <div className={`legacy-pred-card-actions grid grid-cols-1 gap-2.5 ${showDrawBet ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
             <button
               onClick={() => setBetModalOption('A')}
               disabled={!canOpenBet}
-              className="legacy-pred-card-btn legacy-pred-card-btn-a flex h-[40px] md:h-[34px] items-center justify-between sm:justify-center rounded-full border border-[#0fe2d2]/12 bg-[#102536] px-4 sm:px-3 text-left sm:text-center text-[15px] md:text-[16px] font-black leading-none tracking-[-0.03em] text-[#40ead0] transition-colors hover:bg-[#123045] disabled:cursor-not-allowed disabled:opacity-35"
+              className="legacy-pred-card-btn legacy-pred-card-btn-a flex h-[40px] md:h-[34px] items-center justify-between sm:justify-center rounded-full border border-[#0fe2d2]/12 bg-[#102536] px-4 sm:px-3 text-left sm:text-center text-[14px] md:text-[15px] font-black leading-none tracking-[-0.03em] text-[#40ead0] transition-colors hover:bg-[#123045] disabled:cursor-not-allowed disabled:opacity-35"
             >
-              <span>{item.optionA}</span>
-              <span className="ml-1.5 text-white/82">{`${item.oddsA.toFixed(1)}x`}</span>
+              <span className="truncate">{card.optionA}</span>
+              <span className="ml-1.5 shrink-0 text-white/82">{`${card.oddsA.toFixed(1)}x`}</span>
             </button>
+            {showDrawBet ? (
+              <button
+                onClick={() => setBetModalOption('C')}
+                disabled={!canOpenBet}
+                className="legacy-pred-card-btn legacy-pred-card-btn-c flex h-[40px] md:h-[34px] items-center justify-between sm:justify-center rounded-full border border-[#eab308]/18 bg-[#2a220f] px-4 sm:px-3 text-left sm:text-center text-[14px] md:text-[15px] font-black leading-none tracking-[-0.03em] text-[#facc15] transition-colors hover:bg-[#3a2d12] disabled:cursor-not-allowed disabled:opacity-35"
+              >
+                <span className="truncate">{card.optionDraw}</span>
+                <span className="ml-1.5 shrink-0 text-white/72">{`${card.oddsDraw.toFixed(1)}x`}</span>
+              </button>
+            ) : null}
             <button
               onClick={() => setBetModalOption('B')}
               disabled={!canOpenBet}
-              className="legacy-pred-card-btn legacy-pred-card-btn-b flex h-[40px] md:h-[34px] items-center justify-between sm:justify-center rounded-full border border-white/8 bg-white/6 px-4 sm:px-3 text-left sm:text-center text-[15px] md:text-[16px] font-black leading-none tracking-[-0.03em] text-white/82 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35"
+              className="legacy-pred-card-btn legacy-pred-card-btn-b flex h-[40px] md:h-[34px] items-center justify-between sm:justify-center rounded-full border border-white/8 bg-white/6 px-4 sm:px-3 text-left sm:text-center text-[14px] md:text-[15px] font-black leading-none tracking-[-0.03em] text-white/82 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35"
             >
-              <span>{item.optionB}</span>
-              <span className="ml-1.5 text-white/56">{`${item.oddsB.toFixed(1)}x`}</span>
+              <span className="truncate">{card.optionB}</span>
+              <span className="ml-1.5 shrink-0 text-white/56">{`${card.oddsB.toFixed(1)}x`}</span>
             </button>
           </div>
 
           <div
             className={
-              item.status === 'open'
+              card.status === 'open'
                 ? 'legacy-pred-card-foot mt-2.5 flex justify-end items-center gap-2.5'
                 : 'legacy-pred-card-foot mt-2.5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2.5'
             }
           >
-            {item.status !== 'open' ? (
+            {card.status !== 'open' ? (
               <button
                 type="button"
                 onClick={() => void handlePrimaryAction()}
@@ -286,7 +312,7 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
             ) : null}
             {onEnterBattle && (
               <button
-                onClick={() => onEnterBattle(item)}
+                onClick={() => onEnterBattle(card)}
                 className="legacy-pred-card-enter flex h-[28px] md:h-[24px] items-center justify-center gap-1 rounded-full px-2 text-[11px] font-medium whitespace-nowrap text-white/44 transition-colors hover:text-white/66"
               >
                 <MessageSquare size={11} className="text-white/38" />
@@ -299,7 +325,7 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
 
       <PredictionBetModal
         open={canOpenBet && Boolean(betModalOption)}
-        item={item}
+        item={card}
         option={betModalOption}
         onClose={() => setBetModalOption(null)}
         onSuccess={onBetSuccess}

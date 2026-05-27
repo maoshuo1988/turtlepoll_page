@@ -44,13 +44,20 @@ export type PredictContext = {
   listImage?: string;
   sideABgImage?: string;
   sideBBgImage?: string;
+  sideCBgImage?: string;
   sideABgColor?: string;
   sideBBgColor?: string;
+  sideCBgColor?: string;
   participantCount?: number;
   proText?: string;
   conText?: string;
+  drawText?: string;
+  neutralText?: string;
+  tieText?: string;
   proVoteCount?: number;
   conVoteCount?: number;
+  drawVoteCount?: number;
+  neutralVoteCount?: number;
   heat?: number;
   detail?: string;
   tags?: string;
@@ -63,6 +70,7 @@ export type FootballMarket = {
   sourceModelId?: number;
   title?: string;
   marketType?: string;
+  optionCount?: number;
   status?: "OPEN" | "CLOSED" | "SETTLED" | string;
   closeTime?: number;
   externalKey?: string;
@@ -70,8 +78,10 @@ export type FootballMarket = {
   updateTime?: number;
   baseA?: number;
   baseB?: number;
+  baseC?: number;
   poolA?: number;
   poolB?: number;
+  poolC?: number;
 };
 export type FootballMarketAggregate = {
   market: FootballMarket;

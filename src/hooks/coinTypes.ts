@@ -7,9 +7,19 @@ export type AdminCoinMintPayload = {
   remark?: string;
 };
 
+export type PlaceBetApiOption = "A" | "B" | "DRAW";
+
+/** UI 侧用 C 表示平局，提交接口时需映射为 DRAW */
+export type PlaceBetUiOption = "A" | "B" | "C";
+
+export function toPlaceBetApiOption(option: PlaceBetUiOption | PlaceBetApiOption): PlaceBetApiOption {
+  if (option === "C") return "DRAW";
+  return option;
+}
+
 export type PlaceBetPayload = {
   marketId: number;
-  option: "A" | "B";
+  option: PlaceBetUiOption | PlaceBetApiOption;
   amount: number;
 };
 
@@ -39,7 +49,7 @@ export type PredictBet = {
   id: number;
   userId: number;
   marketId: number;
-  option: "A" | "B";
+  option: PlaceBetApiOption | "C";
   amount: number;
   odds: number;
   effA?: number;

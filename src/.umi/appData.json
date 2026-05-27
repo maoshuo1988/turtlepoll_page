@@ -109,7 +109,7 @@
             1
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -123,7 +123,6 @@
       "time": {
         "hooks": {
           "modifyRoutes": [
-            0,
             0,
             0,
             0,
@@ -147,38 +146,27 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            19,
+            16,
             7,
-            5,
-            5,
-            5,
-            9,
-            9,
-            5,
-            5,
-            5,
-            10,
-            5,
-            5,
+            23,
             7,
-            9,
-            85,
-            87,
-            19,
-            100,
-            8,
+            83,
+            20,
             5,
-            24,
-            21,
+            5,
             4,
-            3,
-            8,
-            5,
-            10,
-            7
+            7,
+            14,
+            4,
+            21,
+            22,
+            31,
+            16,
+            57,
+            18
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -195,17 +183,16 @@
             9
           ],
           "onGenerateFiles": [
-            1,
-            6,
-            117,
-            21,
-            23,
-            7,
+            0,
             13,
-            9
+            11,
+            47,
+            8,
+            12,
+            25
           ]
         },
-        "register": 11
+        "register": 10
       },
       "enableBy": "register"
     },
@@ -224,7 +211,6 @@
             0,
             0,
             0,
-            1,
             0,
             0
           ]
@@ -243,23 +229,14 @@
       "time": {
         "hooks": {
           "onCheckConfig": [
-            1,
             0,
+            3,
             0
           ],
           "onCheck": [
-            1
+            0
           ],
           "onPrepareBuildSuccess": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -273,27 +250,35 @@
           ],
           "onCheckCode": [
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -322,7 +307,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -339,7 +324,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -367,7 +352,7 @@
         "hooks": {
           "modifyConfig": [
             0,
-            3,
+            0,
             0
           ]
         },
@@ -1270,7 +1255,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 38
+        "register": 39
       },
       "enableBy": "register"
     },
@@ -1283,7 +1268,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 15
       },
       "enableBy": "config"
     },
@@ -1296,7 +1281,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 11
       },
       "enableBy": "config"
     },
@@ -1319,35 +1304,6 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -1365,17 +1321,15 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
+            1,
             0,
+            0,
+            3,
             1,
-            9,
-            6,
             1,
-            1,
-            2,
-            0
+            1
           ],
           "addRuntimePlugin": [
-            0,
             0,
             0,
             0,
@@ -1398,7 +1352,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1418,7 +1372,7 @@
             1
           ]
         },
-        "register": 17
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1462,12 +1416,9 @@
             0,
             0,
             0,
-            0,
             0
           ],
           "addEntryImports": [
-            0,
-            0,
             0,
             0,
             0,
@@ -1511,23 +1462,20 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            0,
-            8,
-            1
+            1,
+            6,
+            7
           ],
           "onGenerateFiles": [
-            41,
-            16,
-            110,
-            52,
-            49,
+            36,
+            26,
+            26,
+            72,
+            47,
             17,
-            18,
-            11
+            17
           ],
           "addPolyfillImports": [
-            0,
-            0,
             0,
             0,
             0,
@@ -1570,8 +1518,6 @@
             0,
             0,
             0,
-            0,
-            0,
             0
           ]
         },
@@ -1589,8 +1535,7 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            72,
-            0,
+            75,
             0,
             0,
             0,
@@ -1625,7 +1570,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1642,8 +1587,7 @@
             0,
             0,
             0,
-            0,
-            0,
+            1,
             0,
             1,
             0
@@ -1652,7 +1596,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1667,24 +1611,22 @@
         "hooks": {
           "onGenerateFiles": [
             6,
-            2,
-            12,
             1,
-            45,
-            2,
             22,
             1,
-            31,
-            7,
-            10,
-            1,
-            6,
-            1,
-            7,
-            1
+            15,
+            0,
+            16,
+            2,
+            11,
+            2,
+            12,
+            2,
+            18,
+            2
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1697,7 +1639,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1737,13 +1679,12 @@
         "hooks": {
           "onGenerateFiles": [
             186,
+            17,
+            8,
+            8,
+            8,
             12,
-            24,
-            11,
-            32,
-            6,
-            9,
-            4
+            13
           ]
         },
         "register": 1
@@ -1763,7 +1704,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1828,17 +1769,16 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            0,
+            1,
+            1,
+            1,
+            1,
             1,
             2,
-            0,
-            3,
-            0,
-            1,
             0
           ]
         },
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1863,7 +1803,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1876,7 +1816,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1970,35 +1910,6 @@
           "addHTMLHeadScripts": [
             0,
             0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            1,
-            0,
-            0,
-            1,
             0,
             0
           ]
@@ -2029,7 +1940,7 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            287
+            314
           ]
         },
         "register": 0
@@ -2045,7 +1956,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2058,7 +1969,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 15
       },
       "enableBy": "register"
     },
@@ -2072,10 +1983,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            5
+            6
           ]
         },
-        "register": 16
+        "register": 17
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -2087,7 +1998,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2113,7 +2024,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2139,7 +2050,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2152,7 +2063,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2178,7 +2089,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2204,7 +2115,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2243,7 +2154,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2282,7 +2193,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2308,7 +2219,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2321,7 +2232,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 10
       },
       "enableBy": "register"
     },
@@ -2334,7 +2245,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2347,7 +2258,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2360,7 +2271,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     }
@@ -2653,7 +2564,7 @@
       "parentId": "2",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  resolvePredictionCardImageFields,\n  usePredictionCardItems,\n  type PredictionCardItem,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  normalizePredictionCardItem,\n  resolveDrawText,\n  resolveDrawVoteCount,\n  resolvePredictionCardImageFields,\n  usePredictionCardItems,\n  type PredictionCardItem,\n  type PredictionBetOption,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return normalizePredictionCardItem({\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n      C: resolveDrawVoteCount(topic.context),\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    optionDraw: resolveDrawText(topic.context),\n    oddsA: 1.8,\n    oddsB: 1.8,\n    oddsDraw: 1.8,\n    status: 'open',\n  });\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: PredictionBetOption, _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },
@@ -2664,7 +2575,7 @@
       "parentId": "2",
       "id": "4",
       "absPath": "/event-battle",
-      "__content": "/**\n * 文件说明：event-battle 页面路由入口，负责根据 market 参数装配真实撕裂带页面。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { EventBattlePage } from './components/EventBattlePage';\nimport type { PredictionCardItem } from '@/pages/home/components/predictionCards';\n\ntype EventBattleLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n  returnTo?: string;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return {\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    image: topic.context.imageUrl?.trim() || topic.context.listImage?.trim() || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',\n    listImage: topic.context.listImage?.trim() || undefined,\n    sideABgImage: topic.context.sideABgImage?.trim() || undefined,\n    sideBBgImage: topic.context.sideBBgImage?.trim() || undefined,\n    sideABgColor: topic.context.sideABgColor?.trim() || undefined,\n    sideBBgColor: topic.context.sideBBgColor?.trim() || undefined,\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    oddsA: 1.8,\n    oddsB: 1.8,\n    status: 'open',\n  };\n}\n\nexport default function EventBattleRoutePage() {\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const routeState = location.state as EventBattleLocationState | null;\n  const sidebarTopic = routeState?.sidebarTopic;\n  const routeStateBattleNews = routeState?.openBattleNews ?? null;\n  const returnTo = routeState?.returnTo;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const selectedPrediction = useMemo(() => {\n    if (routeStateBattleNews) return routeStateBattleNews;\n    if (!selectedMarket || selectedMarketId === null) return null;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allFallbackItems,\n    routeStateBattleNews,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  useEffect(() => {\n    const raw = location.state as EventBattleLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: {\n        ...(raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {}),\n        ...(raw.returnTo ? { returnTo: raw.returnTo } : {}),\n      },\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  useEffect(() => {\n    if (!selectedPrediction) return;\n    setSelectedBattleNews(selectedPrediction);\n  }, [selectedPrediction]);\n\n  const handleBack = useCallback(() => {\n    if (returnTo) {\n      navigate(returnTo);\n      return;\n    }\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    const nextUrl = nextSearch.toString() ? `/?${nextSearch.toString()}` : '/';\n    navigate(nextUrl);\n  }, [navigate, returnTo, selectedTag]);\n\n  return (\n    <EventBattlePage\n      battleNews={selectedPrediction ?? selectedBattleNews}\n      userSide={null}\n      isLoading={false}\n      onBack={handleBack}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：event-battle 页面路由入口，负责根据 market 参数装配真实撕裂带页面。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { EventBattlePage } from './components/EventBattlePage';\nimport {\n  normalizePredictionCardItem,\n  resolveDrawText,\n  resolveDrawVoteCount,\n  resolvePredictionCardImageFields,\n  type PredictionCardItem,\n} from '@/pages/home/components/predictionCards';\n\ntype EventBattleLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n  returnTo?: string;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return normalizePredictionCardItem({\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n      C: resolveDrawVoteCount(topic.context),\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    optionDraw: resolveDrawText(topic.context),\n    oddsA: 1.8,\n    oddsB: 1.8,\n    oddsDraw: 1.8,\n    status: 'open',\n  });\n}\n\nexport default function EventBattleRoutePage() {\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const routeState = location.state as EventBattleLocationState | null;\n  const sidebarTopic = routeState?.sidebarTopic;\n  const routeStateBattleNews = routeState?.openBattleNews ?? null;\n  const returnTo = routeState?.returnTo;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const selectedPrediction = useMemo(() => {\n    if (routeStateBattleNews) return routeStateBattleNews;\n    if (!selectedMarket || selectedMarketId === null) return null;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allFallbackItems,\n    routeStateBattleNews,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  useEffect(() => {\n    const raw = location.state as EventBattleLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: {\n        ...(raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {}),\n        ...(raw.returnTo ? { returnTo: raw.returnTo } : {}),\n      },\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  useEffect(() => {\n    if (!selectedPrediction) return;\n    setSelectedBattleNews(selectedPrediction);\n  }, [selectedPrediction]);\n\n  const handleBack = useCallback(() => {\n    if (returnTo) {\n      navigate(returnTo);\n      return;\n    }\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    const nextUrl = nextSearch.toString() ? `/?${nextSearch.toString()}` : '/';\n    navigate(nextUrl);\n  }, [navigate, returnTo, selectedTag]);\n\n  return (\n    <EventBattlePage\n      battleNews={selectedPrediction ?? selectedBattleNews}\n      userSide={null}\n      isLoading={false}\n      onBack={handleBack}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/event-battle/index.tsx"
     },
@@ -4274,8 +4185,13 @@
             ],
             "format": "esm"
           },
+          "src/hooks/coinTypes.ts": {
+            "bytes": 1561,
+            "imports": [],
+            "format": "esm"
+          },
           "src/hooks/useCoinRequests.ts": {
-            "bytes": 4546,
+            "bytes": 4618,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -4301,6 +4217,11 @@
                 "path": "react-query",
                 "kind": "import-statement",
                 "external": true
+              },
+              {
+                "path": "src/hooks/coinTypes.ts",
+                "kind": "import-statement",
+                "original": "./coinTypes"
               }
             ],
             "format": "esm"
@@ -5259,7 +5180,7 @@
             "format": "esm"
           },
           "src/pages/home/components/predictionCards.ts": {
-            "bytes": 4735,
+            "bytes": 7302,
             "imports": [
               {
                 "path": "react",
@@ -5275,7 +5196,7 @@
             "format": "esm"
           },
           "src/pages/home/components/PredictionBetModal.tsx": {
-            "bytes": 9439,
+            "bytes": 9524,
             "imports": [
               {
                 "path": "react",
@@ -5296,6 +5217,11 @@
                 "path": "src/hooks/useCoinRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/useCoinRequests"
+              },
+              {
+                "path": "src/pages/home/components/predictionCards.ts",
+                "kind": "import-statement",
+                "original": "./predictionCards"
               }
             ],
             "format": "esm"
@@ -5312,7 +5238,7 @@
             "format": "esm"
           },
           "src/pages/home/components/HeroPrediction.tsx": {
-            "bytes": 7220,
+            "bytes": 9557,
             "imports": [
               {
                 "path": "react",
@@ -5348,7 +5274,7 @@
             "format": "esm"
           },
           "src/pages/home/components/NewsFeed.tsx": {
-            "bytes": 14917,
+            "bytes": 16816,
             "imports": [
               {
                 "path": "react",
@@ -5389,7 +5315,7 @@
             "format": "esm"
           },
           "src/pages/home/components/PredictionsView.tsx": {
-            "bytes": 1165,
+            "bytes": 1196,
             "imports": [
               {
                 "path": "react",
@@ -5410,7 +5336,7 @@
             "format": "esm"
           },
           "src/pages/home/components/HomePageView.tsx": {
-            "bytes": 1108,
+            "bytes": 1139,
             "imports": [
               {
                 "path": "src/pages/home/components/PredictionsView.tsx",
@@ -5421,7 +5347,7 @@
             "format": "esm"
           },
           "src/pages/home/index.tsx": {
-            "bytes": 4910,
+            "bytes": 5164,
             "imports": [
               {
                 "path": "react",
@@ -5565,7 +5491,7 @@
             "format": "esm"
           },
           "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-            "bytes": 68821,
+            "bytes": 71466,
             "imports": [
               {
                 "path": "react",
@@ -5601,6 +5527,11 @@
                 "path": "src/hooks/useTopicRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/useTopicRequests"
+              },
+              {
+                "path": "src/pages/home/components/predictionCards.ts",
+                "kind": "import-statement",
+                "original": "@/pages/home/components/predictionCards"
               },
               {
                 "path": "src/pages/event-battle/components/eventBattleThemes.ts",
@@ -5643,7 +5574,7 @@
             "format": "esm"
           },
           "src/pages/event-battle/index.tsx": {
-            "bytes": 4467,
+            "bytes": 4293,
             "imports": [
               {
                 "path": "react",
@@ -5664,6 +5595,11 @@
                 "path": "src/pages/event-battle/components/EventBattlePage.tsx",
                 "kind": "import-statement",
                 "original": "./components/EventBattlePage"
+              },
+              {
+                "path": "src/pages/home/components/predictionCards.ts",
+                "kind": "import-statement",
+                "original": "@/pages/home/components/predictionCards"
               }
             ],
             "format": "esm"
@@ -5680,7 +5616,7 @@
             "format": "esm"
           },
           "src/pages/world-cup/components/WorldCupPageContent/index.tsx": {
-            "bytes": 71683,
+            "bytes": 71935,
             "imports": [
               {
                 "path": "./index.module.scss",
@@ -5706,6 +5642,11 @@
                 "path": "src/pages/home/components/PredictionBetModal.tsx",
                 "kind": "import-statement",
                 "original": "@/pages/home/components/PredictionBetModal"
+              },
+              {
+                "path": "src/pages/home/components/predictionCards.ts",
+                "kind": "import-statement",
+                "original": "@/pages/home/components/predictionCards"
               },
               {
                 "path": "src/hooks/usePredictionRequests.ts",
@@ -9242,8 +9183,11 @@
               "src/utils/requestUtils.ts": {
                 "bytesInOutput": 1002
               },
+              "src/hooks/coinTypes.ts": {
+                "bytesInOutput": 163
+              },
               "src/hooks/useCoinRequests.ts": {
-                "bytesInOutput": 2834
+                "bytesInOutput": 2877
               },
               "src/hooks/useAiRequests.ts": {
                 "bytesInOutput": 5441
@@ -9369,19 +9313,19 @@
                 "bytesInOutput": 2607
               },
               "src/pages/home/components/predictionCards.ts": {
-                "bytesInOutput": 3437
+                "bytesInOutput": 5437
               },
               "src/pages/home/components/PredictionBetModal.tsx": {
-                "bytesInOutput": 9994
+                "bytesInOutput": 9988
               },
               "src/pages/home/components/PredictionCardCover.tsx": {
                 "bytesInOutput": 1860
               },
               "src/pages/home/components/HeroPrediction.tsx": {
-                "bytesInOutput": 7762
+                "bytesInOutput": 9992
               },
               "src/pages/home/components/NewsFeed.tsx": {
-                "bytesInOutput": 15982
+                "bytesInOutput": 17970
               },
               "src/pages/home/components/PredictionsView.tsx": {
                 "bytesInOutput": 684
@@ -9390,7 +9334,7 @@
                 "bytesInOutput": 615
               },
               "src/pages/home/index.tsx": {
-                "bytesInOutput": 4203
+                "bytesInOutput": 4345
               },
               "src/api/commentApi.ts": {
                 "bytesInOutput": 285
@@ -9414,7 +9358,7 @@
                 "bytesInOutput": 8286
               },
               "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-                "bytesInOutput": 74476
+                "bytesInOutput": 77075
               },
               "src/pages/event-battle/components/EventBattleLiveRoom.tsx": {
                 "bytesInOutput": 149
@@ -9423,13 +9367,13 @@
                 "bytesInOutput": 2342
               },
               "src/pages/event-battle/index.tsx": {
-                "bytesInOutput": 4099
+                "bytesInOutput": 3856
               },
               "src/pages/world-cup/components/WorldCupPitchBackdrop/index.tsx": {
                 "bytesInOutput": 8937
               },
               "src/pages/world-cup/components/WorldCupPageContent/index.tsx": {
-                "bytesInOutput": 71046
+                "bytesInOutput": 71189
               },
               "src/pages/world-cup/components/WorldCupPage.tsx": {
                 "bytesInOutput": 128
@@ -9633,7 +9577,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 960031
+            "bytes": 969117
           }
         }
       }
@@ -14250,6 +14194,7 @@
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/battleTypes.ts": [],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/coinTypes.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useAiRequests.ts": [
         {
           "end": 142,
@@ -15062,6 +15007,20 @@
             }
           ],
           "start": 515,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 715,
+          "importKind": "value",
+          "source": "./coinTypes",
+          "specifiers": [
+            {
+              "imported": "toPlaceBetApiOption",
+              "local": "toPlaceBetApiOption",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 665,
           "type": "ImportDeclaration"
         }
       ],
@@ -17991,7 +17950,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 494,
+          "end": 513,
           "importKind": "value",
           "source": "@/hooks/useCoinRequests",
           "specifiers": [
@@ -17999,13 +17958,18 @@
               "imported": "useRequestCoinMe",
               "local": "useRequestCoinMe",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRequestCoinBet",
+              "local": "useRequestCoinBet",
+              "type": "ImportSpecifier"
             }
           ],
           "start": 435,
           "type": "ImportDeclaration"
         },
         {
-          "end": 648,
+          "end": 667,
           "importKind": "value",
           "source": "@/hooks/useCommentRequests",
           "specifiers": [
@@ -18030,11 +17994,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 495,
+          "start": 514,
           "type": "ImportDeclaration"
         },
         {
-          "end": 830,
+          "end": 849,
           "importKind": "value",
           "source": "@/hooks/usePkRequests",
           "specifiers": [
@@ -18069,11 +18033,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 649,
+          "start": 668,
           "type": "ImportDeclaration"
         },
         {
-          "end": 876,
+          "end": 895,
           "importKind": "type",
           "source": "@/hooks/pkTypes",
           "specifiers": [
@@ -18083,11 +18047,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 831,
+          "start": 850,
           "type": "ImportDeclaration"
         },
         {
-          "end": 965,
+          "end": 984,
           "importKind": "value",
           "source": "@/hooks/useTopicRequests",
           "specifiers": [
@@ -18102,11 +18066,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 877,
+          "start": 896,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1030,
+          "end": 1049,
           "importKind": "type",
           "source": "@/components/common/pet/petTypes",
           "specifiers": [
@@ -18116,25 +18080,35 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 966,
+          "start": 985,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1113,
-          "importKind": "type",
+          "end": 1187,
+          "importKind": "value",
           "source": "@/pages/home/components/predictionCards",
           "specifiers": [
+            {
+              "imported": "normalizePredictionCardItem",
+              "local": "normalizePredictionCardItem",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictionBetOption",
+              "local": "PredictionBetOption",
+              "type": "ImportSpecifier"
+            },
             {
               "imported": "PredictionCardItem",
               "local": "PredictionCardItem",
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1031,
+          "start": 1050,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1176,
+          "end": 1250,
           "importKind": "value",
           "source": "./eventBattleThemes",
           "specifiers": [
@@ -18144,15 +18118,15 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1114,
+          "start": 1188,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1212,
+          "end": 1286,
           "importKind": "value",
           "source": "./EventBattleLiveRoom.css",
           "specifiers": [],
-          "start": 1177,
+          "start": 1251,
           "type": "ImportDeclaration"
         }
       ],
@@ -18293,10 +18267,30 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 539,
-          "importKind": "type",
+          "end": 652,
+          "importKind": "value",
           "source": "@/pages/home/components/predictionCards",
           "specifiers": [
+            {
+              "imported": "normalizePredictionCardItem",
+              "local": "normalizePredictionCardItem",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveDrawText",
+              "local": "resolveDrawText",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveDrawVoteCount",
+              "local": "resolveDrawVoteCount",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolvePredictionCardImageFields",
+              "local": "resolvePredictionCardImageFields",
+              "type": "ImportSpecifier"
+            },
             {
               "imported": "PredictionCardItem",
               "local": "PredictionCardItem",
@@ -19250,13 +19244,23 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 360,
+          "end": 424,
           "importKind": "value",
           "source": "./predictionCards",
           "specifiers": [
             {
+              "imported": "normalizePredictionCardItem",
+              "local": "normalizePredictionCardItem",
+              "type": "ImportSpecifier"
+            },
+            {
               "imported": "usePredictionCardItems",
               "local": "usePredictionCardItems",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictionBetOption",
+              "local": "PredictionBetOption",
               "type": "ImportSpecifier"
             },
             {
@@ -19269,7 +19273,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 419,
+          "end": 483,
           "importKind": "value",
           "source": "./PredictionBetModal",
           "specifiers": [
@@ -19279,11 +19283,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 361,
+          "start": 425,
           "type": "ImportDeclaration"
         },
         {
-          "end": 480,
+          "end": 544,
           "importKind": "value",
           "source": "./PredictionCardCover",
           "specifiers": [
@@ -19293,7 +19297,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 420,
+          "start": 484,
           "type": "ImportDeclaration"
         }
       ],
@@ -19327,10 +19331,15 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 272,
+          "end": 293,
           "importKind": "type",
           "source": "./predictionCards",
           "specifiers": [
+            {
+              "imported": "PredictionBetOption",
+              "local": "PredictionBetOption",
+              "type": "ImportSpecifier"
+            },
             {
               "imported": "PredictionCardItem",
               "local": "PredictionCardItem",
@@ -19428,13 +19437,23 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 389,
+          "end": 444,
           "importKind": "value",
           "source": "./predictionCards",
           "specifiers": [
             {
+              "imported": "normalizePredictionCardItem",
+              "local": "normalizePredictionCardItem",
+              "type": "ImportSpecifier"
+            },
+            {
               "imported": "usePredictionCardItems",
               "local": "usePredictionCardItems",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictionBetOption",
+              "local": "PredictionBetOption",
               "type": "ImportSpecifier"
             },
             {
@@ -19447,7 +19466,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 448,
+          "end": 503,
           "importKind": "value",
           "source": "./PredictionBetModal",
           "specifiers": [
@@ -19457,11 +19476,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 390,
+          "start": 445,
           "type": "ImportDeclaration"
         },
         {
-          "end": 509,
+          "end": 564,
           "importKind": "value",
           "source": "./PredictionCardCover",
           "specifiers": [
@@ -19471,11 +19490,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 449,
+          "start": 504,
           "type": "ImportDeclaration"
         },
         {
-          "end": 573,
+          "end": 628,
           "importKind": "value",
           "source": "@/hooks/useCoinRequests",
           "specifiers": [
@@ -19485,7 +19504,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 510,
+          "start": 565,
           "type": "ImportDeclaration"
         }
       ],
@@ -19586,7 +19605,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 435,
+          "end": 456,
           "importKind": "type",
           "source": "./predictionCards",
           "specifiers": [
@@ -19594,9 +19613,33 @@
               "imported": "PredictionCardItem",
               "local": "PredictionCardItem",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictionBetOption",
+              "local": "PredictionBetOption",
+              "type": "ImportSpecifier"
             }
           ],
           "start": 375,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 543,
+          "importKind": "value",
+          "source": "./predictionCards",
+          "specifiers": [
+            {
+              "imported": "getPredictionOptionLabel",
+              "local": "getPredictionOptionLabel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "getPredictionOptionOdds",
+              "local": "getPredictionOptionOdds",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 457,
           "type": "ImportDeclaration"
         }
       ],
@@ -19664,10 +19707,15 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 263,
+          "end": 284,
           "importKind": "type",
           "source": "./predictionCards",
           "specifiers": [
+            {
+              "imported": "PredictionBetOption",
+              "local": "PredictionBetOption",
+              "type": "ImportSpecifier"
+            },
             {
               "imported": "PredictionCardItem",
               "local": "PredictionCardItem",
@@ -19678,7 +19726,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 320,
+          "end": 341,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -19688,7 +19736,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 264,
+          "start": 285,
           "type": "ImportDeclaration"
         }
       ],
@@ -19856,13 +19904,28 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 729,
+          "end": 831,
           "importKind": "value",
           "source": "./components/predictionCards",
           "specifiers": [
             {
               "imported": "mapMarketToPredictionCard",
               "local": "mapMarketToPredictionCard",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "normalizePredictionCardItem",
+              "local": "normalizePredictionCardItem",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveDrawText",
+              "local": "resolveDrawText",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveDrawVoteCount",
+              "local": "resolveDrawVoteCount",
               "type": "ImportSpecifier"
             },
             {
@@ -19878,6 +19941,11 @@
             {
               "imported": "PredictionCardItem",
               "local": "PredictionCardItem",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictionBetOption",
+              "local": "PredictionBetOption",
               "type": "ImportSpecifier"
             }
           ],
@@ -22306,10 +22374,15 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 711,
+          "end": 732,
           "importKind": "type",
           "source": "@/pages/home/components/predictionCards",
           "specifiers": [
+            {
+              "imported": "PredictionBetOption",
+              "local": "PredictionBetOption",
+              "type": "ImportSpecifier"
+            },
             {
               "imported": "PredictionCardItem",
               "local": "PredictionCardItem",
@@ -22320,7 +22393,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 768,
+          "end": 816,
+          "importKind": "value",
+          "source": "@/pages/home/components/predictionCards",
+          "specifiers": [
+            {
+              "imported": "calcPredictionMarketOdds",
+              "local": "calcPredictionMarketOdds",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 733,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 873,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -22330,11 +22417,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 712,
+          "start": 817,
           "type": "ImportDeclaration"
         },
         {
-          "end": 848,
+          "end": 953,
           "importKind": "value",
           "source": "@/hooks/usePredictionRequests",
           "specifiers": [
@@ -22344,11 +22431,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 769,
+          "start": 874,
           "type": "ImportDeclaration"
         },
         {
-          "end": 920,
+          "end": 1025,
           "importKind": "type",
           "source": "@/hooks/predictionTypes",
           "specifiers": [
@@ -22358,11 +22445,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 849,
+          "start": 954,
           "type": "ImportDeclaration"
         },
         {
-          "end": 978,
+          "end": 1083,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -22372,11 +22459,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 921,
+          "start": 1026,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1076,
+          "end": 1181,
           "importKind": "value",
           "source": "../WorldCupPitchBackdrop",
           "specifiers": [
@@ -22391,7 +22478,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 979,
+          "start": 1084,
           "type": "ImportDeclaration"
         }
       ],

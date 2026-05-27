@@ -17,6 +17,7 @@ import type {
   PlaceBetResult,
   UserCoin,
 } from "./coinTypes";
+import { toPlaceBetApiOption } from "./coinTypes";
 
 // 我的金币账户缓存 key
 export const COIN_ME_QUERY_KEY = ["requestCoinMe"] as const;
@@ -53,7 +54,7 @@ export function useRequestCoinBet() {
     mutationFn: async (payload: PlaceBetPayload) => {
       const data = new URLSearchParams();
       data.append("marketId", String(payload.marketId));
-      data.append("option", payload.option);
+      data.append("option", toPlaceBetApiOption(payload.option));
       data.append("amount", String(payload.amount));
 
       const res = await axiosCustom({

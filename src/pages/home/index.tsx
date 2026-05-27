@@ -10,9 +10,13 @@ import { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 import { HomePageView } from './components/HomePageView';
 import {
   mapMarketToPredictionCard,
+  normalizePredictionCardItem,
+  resolveDrawText,
+  resolveDrawVoteCount,
   resolvePredictionCardImageFields,
   usePredictionCardItems,
   type PredictionCardItem,
+  type PredictionBetOption,
 } from './components/predictionCards';
 
 /** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */
@@ -25,7 +29,7 @@ type HomeLocationState = {
 function mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {
   if (!topic?.context?.marketId) return null;
 
-  return {
+  return normalizePredictionCardItem({
     id: `market-${topic.context.marketId}`,
     marketId: topic.context.marketId,
     title: topic.context.eventName || topic.title,
@@ -34,13 +38,16 @@ function mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCar
     votes: {
       A: topic.context.proVoteCount ?? 0,
       B: topic.context.conVoteCount ?? 0,
+      C: resolveDrawVoteCount(topic.context),
     },
     optionA: topic.context.proText || '支持',
     optionB: topic.context.conText || '反对',
+    optionDraw: resolveDrawText(topic.context),
     oddsA: 1.8,
     oddsB: 1.8,
+    oddsDraw: 1.8,
     status: 'open',
-  };
+  });
 }
 
 export default function HomePage() {
@@ -105,7 +112,7 @@ export default function HomePage() {
     sidebarTopicItem,
   ]);
 
-  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: 'A' | 'B', _result: PlaceBetResult) => {
+  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: PredictionBetOption, _result: PlaceBetResult) => {
   }, []);
 
   const handleEnterBattle = useCallback((item: PredictionCardItem) => {

@@ -590,6 +590,10 @@
     gap: 8px;
   }
 
+  .eb-bet-row.eb-bet-row-three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .eb-gift-flight {
     display: none;
   }

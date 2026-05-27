@@ -18,7 +18,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
-import { useRequestCoinMe } from '@/hooks/useCoinRequests';
+import { useRequestCoinMe, useRequestCoinBet } from '@/hooks/useCoinRequests';
 import {
   type CommentResponse,
   useRequestCommentComments,
@@ -36,11 +36,12 @@ import {
 import type { PKBet } from '@/hooks/pkTypes';
 import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
 import type { PetSkin } from '@/components/common/pet/petTypes';
-import type { PredictionCardItem } from '@/pages/home/components/predictionCards';
+import { normalizePredictionCardItem, type PredictionBetOption, type PredictionCardItem } from '@/pages/home/components/predictionCards';
 import { resolveEventBattleTheme } from './eventBattleThemes';
 import './EventBattleLiveRoom.css';
 
 type CommentSide = 'A' | 'B';
+type BetOption = PredictionBetOption;
 type ParticleStyle = React.CSSProperties & Record<`--${string}`, string>;
 type ThemeStyle = React.CSSProperties & Record<`--${string}`, string>;
 
@@ -48,7 +49,7 @@ interface EventBattleProps {
   news: PredictionCardItem;
   onBack: () => void;
   userSide: 'A' | 'B' | null;
-  onBet?: (newsId: string, option: 'A' | 'B', odds: number, amount?: number) => void;
+  onBet?: (newsId: string, option: BetOption, odds: number, amount?: number) => void;
   bettingMarketId?: number | null;
   equippedSkin?: PetSkin | null;
   onRequireAuth?: () => void;
@@ -515,16 +516,18 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
 };
 
 export const EventBattle: React.FC<EventBattleProps> = ({
-  news,
+  news: rawNews,
   onBack,
   userSide,
   onBet,
   bettingMarketId,
   onRequireAuth,
 }) => {
+  const news = useMemo(() => normalizePredictionCardItem(rawNews), [rawNews]);
   const battleEntityId = useMemo(() => news.marketId ?? news.id, [news.id, news.marketId]);
   const currentUserQuery = useRequestUserCurrent();
   const coinMeQuery = useRequestCoinMe();
+  const coinBetMutation = useRequestCoinBet();
   const createCommentMutation = useRequestCreateComment();
   const likeMutation = useRequestLikeEntity();
   const unlikeMutation = useRequestUnlikeEntity();
@@ -537,7 +540,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const [replyingTo, setReplyingTo] = useState<{ commentId: string; authorName: string; side: CommentSide } | null>(null);
   const [replyDraft, setReplyDraft] = useState('');
   const [latestReplyEvent, setLatestReplyEvent] = useState<LatestReplyEvent | null>(null);
-  const [betIntent, setBetIntent] = useState<CommentSide>(userSide ?? 'A');
+  const [betIntent, setBetIntent] = useState<BetOption>(userSide ?? 'A');
   const [betAmount, setBetAmount] = useState('100');
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [likePendingIds, setLikePendingIds] = useState<Set<string>>(new Set());
@@ -546,8 +549,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const [mobileActiveSide, setMobileActiveSide] = useState<CommentSide>(userSide ?? 'A');
   const [mobileRankMode, setMobileRankMode] = useState<'all' | 'side'>('all');
   const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
-  const [betBurst, setBetBurst] = useState<{ side: CommentSide; token: number } | null>(null);
-  const [betDialogSide, setBetDialogSide] = useState<CommentSide | null>(null);
+  const [betBurst, setBetBurst] = useState<{ side: BetOption; token: number } | null>(null);
+  const [betDialogSide, setBetDialogSide] = useState<BetOption | null>(null);
   const [optimisticPkBet, setOptimisticPkBet] = useState<PKBet | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
   const currentUserName = currentUserQuery.data?.nickname || currentUserQuery.data?.username || '你';
@@ -597,9 +600,11 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const shouldUsePkBet = hasPkTopic && hasValue(pkPhase) && !pkDetailQuery.isError && !pkHeatQuery.isError;
   const optionA = pkTopic?.sideAName || news.optionA;
   const optionB = pkTopic?.sideBName || news.optionB;
+  const optionDraw = news.optionDraw || '平局';
   const battleTitle = pkTopic?.title || news.title;
   const oddsA = pkDetail?.oddsA ?? news.oddsA;
   const oddsB = pkDetail?.oddsB ?? news.oddsB;
+  const oddsDraw = news.oddsDraw ?? Number(((Number(oddsA) + Number(oddsB)) / 2).toFixed(1));
   const pkCountdownSeconds = pkHeat?.countdownSeconds ?? pkDetail?.countdownSeconds;
   const pkHeatA = Number(pkHeat?.heatA ?? pkRound?.heatA);
   const pkHeatB = Number(pkHeat?.heatB ?? pkRound?.heatB);
@@ -633,17 +638,30 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     [rightEnergyDuration, rightPct],
   );
   const effectiveBetAmount = Number.isFinite(numericBetAmount) && numericBetAmount > 0 ? numericBetAmount : 0;
-  const isBetting = (typeof news.marketId === 'number' && bettingMarketId === news.marketId) || pkBetMutation.isLoading;
+  const isBetting = (typeof news.marketId === 'number' && bettingMarketId === news.marketId) || pkBetMutation.isLoading || coinBetMutation.isLoading;
+  const canPlaceCoinBet = isPredictionMarket && news.status === 'open' && !news.hasBet;
   const canPlaceBet = shouldUsePkBet
     ? pkPhase === 'betting' && !hasPkBet
-    : typeof onBet === 'function' && news.status === 'open';
+    : canPlaceCoinBet || (typeof onBet === 'function' && news.status === 'open');
+  const showDrawBet = (isPredictionMarket || !shouldUsePkBet) && news.supportsDrawBet !== false;
   const pkBetAmount = Number(pkMyBet?.amount ?? 0);
-  const activeBetOdds = betIntent === 'A' ? oddsA : oddsB;
+  const resolveBetOdds = useCallback((side: BetOption) => {
+    if (side === 'A') return oddsA;
+    if (side === 'B') return oddsB;
+    return oddsDraw;
+  }, [oddsA, oddsB, oddsDraw]);
+  const activeBetOdds = resolveBetOdds(betIntent);
   const estimatedPayout = Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
     ? Math.floor(effectiveBetAmount * activeBetOdds)
     : 0;
-  const dialogBetOdds = betDialogSide === 'A' ? oddsA : oddsB;
-  const dialogBetName = betDialogSide === 'A' ? optionA : optionB;
+  const dialogBetOdds = betDialogSide ? resolveBetOdds(betDialogSide) : 0;
+  const dialogBetName = betDialogSide
+    ? betDialogSide === 'A'
+      ? optionA
+      : betDialogSide === 'B'
+        ? optionB
+        : optionDraw
+    : '';
   const dialogEstimatedPayout = Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
     ? Math.floor(effectiveBetAmount * dialogBetOdds)
     : 0;
@@ -668,10 +686,12 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     title: battleTitle,
     optionA,
     optionB,
+    optionDraw,
     oddsA,
     oddsB,
-    votes: { A: leftVotes, B: rightVotes },
-  }), [battleTitle, leftVotes, news, oddsA, oddsB, optionA, optionB, pkTopic, rightVotes]);
+    oddsDraw,
+    votes: { A: leftVotes, B: rightVotes, C: news.votes?.C ?? 0 },
+  }), [battleTitle, leftVotes, news, oddsA, oddsB, oddsDraw, optionA, optionB, optionDraw, pkTopic, rightVotes]);
   const liveTopicEyebrow = useMemo(() => {
     const t = battleTitle.trim();
     if (!t) return '正在直播';
@@ -985,16 +1005,17 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     updateCommentList,
   ]);
 
-  const handleBet = useCallback(async (sideOverride?: CommentSide) => {
-    if (!hasPkTopic && !onBet) return;
+  const handleBet = useCallback(async (sideOverride?: BetOption) => {
+    if (!hasPkTopic && !onBet && !canPlaceCoinBet) return;
     if (!canComment) {
       ensureAuth();
       return;
     }
     const targetSide = sideOverride ?? betIntent;
-    const targetOdds = targetSide === 'A' ? oddsA : oddsB;
+    const targetOdds = resolveBetOdds(targetSide);
     if (!Number.isFinite(effectiveBetAmount) || effectiveBetAmount <= 0 || effectiveBetAmount > balance) return;
     if (shouldUsePkBet && pkTopicId) {
+      if (targetSide === 'C') return;
       try {
         const result = await pkBetMutation.mutateAsync({
           topicId: pkTopicId,
@@ -1004,9 +1025,21 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         });
         if (result.bet) {
           setOptimisticPkBet(result.bet);
-          setBetIntent((result.bet.side as CommentSide | undefined) ?? targetSide);
+          setBetIntent((result.bet.side as BetOption | undefined) ?? targetSide);
           if (result.bet.amount) setBetAmount(String(result.bet.amount));
         }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : '';
+        if (message.includes('NotLogin')) ensureAuth();
+        return;
+      }
+    } else if (canPlaceCoinBet && news.marketId) {
+      try {
+        await coinBetMutation.mutateAsync({
+          marketId: news.marketId,
+          option: targetSide,
+          amount: effectiveBetAmount,
+        });
       } catch (error) {
         const message = error instanceof Error ? error.message : '';
         if (message.includes('NotLogin')) ensureAuth();
@@ -1018,27 +1051,31 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     setBetBurst({ side: targetSide, token: Date.now() });
     setBetDialogSide(null);
     setMobilePanelOpen(false);
-    appendFeed(targetSide, `${currentUserName} 为${targetSide === 'A' ? optionA : optionB}阵营追加了 ${formatVotes(effectiveBetAmount)} 龟币`);
+    const targetLabel = targetSide === 'A' ? optionA : targetSide === 'B' ? optionB : optionDraw;
+    appendFeed(targetSide === 'C' ? 'A' : targetSide, `${currentUserName} 为${targetLabel}追加了 ${formatVotes(effectiveBetAmount)} 龟币`);
   }, [
     appendFeed,
     balance,
     betIntent,
     canComment,
+    canPlaceCoinBet,
+    coinBetMutation,
     currentUserName,
     effectiveBetAmount,
     ensureAuth,
     news.id,
-    oddsA,
-    oddsB,
+    news.marketId,
     onBet,
     optionA,
     optionB,
+    optionDraw,
     pkBetMutation,
     pkTopicId,
+    resolveBetOdds,
     shouldUsePkBet,
   ]);
 
-  const openBetDialog = useCallback((side: CommentSide) => {
+  const openBetDialog = useCallback((side: BetOption) => {
     if (!canComment) {
       ensureAuth();
       return;
@@ -1334,7 +1371,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             </div>
           </div>
 
-          <div className="eb-bet-row">
+          <div className={`eb-bet-row ${showDrawBet ? 'eb-bet-row-three' : ''}`}>
             <button
               type="button"
               className="eb-support eb-support-blue"
@@ -1345,13 +1382,26 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             >
               <span>支持{displayNews.optionA}</span>
               <em>投币助威</em>
-              <b>⚽️</b>
             </button>
-            <div className={`eb-gift-flight ${betBurst ? `eb-gift-${betBurst.side === 'A' ? 'blue' : 'red'}` : ''}`} key={betBurst?.token ?? 'idle'}>
-              <span>{currentUserName} 投入 {formatVotes(numericBetAmount || 100)} 龟币</span>
-              <strong>热度 +50,000</strong>
-              <i>💰</i><i>💰</i><i>💰</i><i>💰</i><i>💰</i><i>💰</i>
-            </div>
+            {showDrawBet ? (
+              <button
+                type="button"
+                className="eb-support eb-support-neutral"
+                onClick={() => {
+                  openBetDialog('C');
+                }}
+                disabled={!canPlaceBet || isBetting}
+              >
+                <span>支持{displayNews.optionDraw}</span>
+                <em>投币助威</em>
+              </button>
+            ) : (
+              <div className={`eb-gift-flight ${betBurst ? `eb-gift-${betBurst.side === 'A' ? 'blue' : 'red'}` : ''}`} key={betBurst?.token ?? 'idle'}>
+                <span>{currentUserName} 投入 {formatVotes(numericBetAmount || 100)} 龟币</span>
+                <strong>热度 +50,000</strong>
+                <i>💰</i><i>💰</i><i>💰</i><i>💰</i><i>💰</i><i>💰</i>
+              </div>
+            )}
             <button
               type="button"
               className="eb-support eb-support-red"
@@ -1362,7 +1412,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             >
               <span>支持{displayNews.optionB}</span>
               <em>投币助威</em>
-              <b>⚽️</b>
             </button>
           </div>
         </section>
@@ -1561,7 +1610,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       {betDialogSide ? (
         <div className="eb-bet-dialog-mask" role="presentation" onMouseDown={() => setBetDialogSide(null)}>
           <div
-            className={`eb-bet-dialog ${betDialogSide === 'A' ? 'dialog-blue' : 'dialog-red'}`}
+            className={`eb-bet-dialog ${betDialogSide === 'A' ? 'dialog-blue' : betDialogSide === 'B' ? 'dialog-red' : 'dialog-neutral'}`}
             role="dialog"
             aria-modal="true"
             aria-label="确认下注"
@@ -1647,8 +1696,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({
 
         <section className="eb-side-card eb-bet-side-card">
           <div className="eb-side-title"><Zap size={18} /> 下注助威 <span>{betStatusText}</span></div>
-          <div className={`eb-bet-panel ${betIntent === 'A' ? 'bet-blue' : 'bet-red'}`}>
-            <div className="eb-bet-switch">
+          <div className={`eb-bet-panel ${betIntent === 'A' ? 'bet-blue' : betIntent === 'B' ? 'bet-red' : 'bet-draw'}`}>
+            <div className={`eb-bet-switch ${showDrawBet ? 'eb-bet-switch-three' : ''}`}>
               <button
                 type="button"
                 className={betIntent === 'A' ? 'active' : ''}
@@ -1657,6 +1706,16 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 <span>{displayNews.optionA}</span>
                 <strong>{displayNews.oddsA.toFixed(2)}倍</strong>
               </button>
+              {showDrawBet ? (
+                <button
+                  type="button"
+                  className={betIntent === 'C' ? 'active' : ''}
+                  onClick={() => setBetIntent('C')}
+                >
+                  <span>{displayNews.optionDraw}</span>
+                  <strong>{displayNews.oddsDraw.toFixed(2)}倍</strong>
+                </button>
+              ) : null}
               <button
                 type="button"
                 className={betIntent === 'B' ? 'active' : ''}
@@ -1669,7 +1728,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             <div className="eb-bet-live">
               <div>
                 <span>当前支持</span>
-                <strong>{betIntent === 'A' ? displayNews.optionA : displayNews.optionB}</strong>
+                <strong>{betIntent === 'A' ? displayNews.optionA : betIntent === 'B' ? displayNews.optionB : displayNews.optionDraw}</strong>
               </div>
               <div>
                 <span>账户余额</span>
@@ -1709,7 +1768,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
               onClick={() => openBetDialog(betIntent)}
               disabled={!canPlaceBet || isBetting || !Number.isFinite(effectiveBetAmount) || effectiveBetAmount <= 0 || effectiveBetAmount > balance}
             >
-              {isBetting ? '下注中...' : `支持${betIntent === 'A' ? displayNews.optionA : displayNews.optionB}`}
+              {isBetting ? '下注中...' : `支持${betIntent === 'A' ? displayNews.optionA : betIntent === 'B' ? displayNews.optionB : displayNews.optionDraw}`}
             </button>
             {betBurst ? (
               <div className={`eb-side-coin-burst ${betBurst.side === 'A' ? 'burst-blue' : 'burst-red'}`} key={`side-${betBurst.token}`}>

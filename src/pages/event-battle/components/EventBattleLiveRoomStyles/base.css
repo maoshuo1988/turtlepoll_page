@@ -1400,8 +1400,18 @@
   border-color: rgba(24, 215, 255, 0.26);
 }
 
-.eb-bet-dialog.dialog-red {
-  border-color: rgba(255, 49, 69, 0.28);
+.eb-bet-row-three,
+.eb-bet-row.eb-bet-row-three {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.eb-support-neutral {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.88), rgba(180, 83, 9, 0.82));
+}
+
+.eb-bet-dialog.dialog-neutral {
+  border-color: rgba(234, 179, 8, 0.28);
 }
 
 .eb-side-title {

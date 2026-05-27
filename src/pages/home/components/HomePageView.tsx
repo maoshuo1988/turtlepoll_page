@@ -1,13 +1,13 @@
 /** 文件说明：首页展示组件，负责在预测列表和单场对战视图之间切换。 */
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { PredictionsView } from './PredictionsView';
-import type { PredictionCardItem } from './predictionCards';
+import type { PredictionBetOption, PredictionCardItem } from './predictionCards';
 
 interface HomePageViewProps {
   selectedTag: string | null;
   selectedPrediction: PredictionCardItem | null;
   onRequireAuth: () => void;
-  onPredictionBetSuccess: (item: PredictionCardItem, option: 'A' | 'B', result: PlaceBetResult) => void;
+  onPredictionBetSuccess: (item: PredictionCardItem, option: PredictionBetOption, result: PlaceBetResult) => void;
   onEnterBattle: (item: PredictionCardItem) => void;
 }
 
