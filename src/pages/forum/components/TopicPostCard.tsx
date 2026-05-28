@@ -23,7 +23,7 @@ import 'dayjs/locale/zh-cn';
 import type { TopicResponse } from '@/hooks/topicTypes';
 import { getForumTagClass } from './forumTags';
 import { SERVER_ASSET_ORIGIN } from '@/config';
-import { resolveGeneratedUserAvatarUrl } from '@/utils/userAvatar';
+import { createUserAvatarUrl } from '@/utils/userAvatar';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { type CommentResponse, useRequestCommentComments, useRequestCommentReplies, useRequestCreateComment } from '@/hooks/useCommentRequests';
 import type { PredictionCardItem } from './predictionCards';
@@ -39,6 +39,7 @@ export type TopicPostCardData = Partial<TopicResponse> & {
   id: string;
   tag?: TopicPostTag;
   likes?: number;
+  disLikeCount?: number;
   favoriteCount?: number;
   content?: string;
   time?: string;
@@ -484,7 +485,7 @@ const ReplyThread: React.FC<ReplyThreadProps> = ({ comment, canComment }) => {
         <div className="!mt-3 space-y-2">
           {replies.map((reply) => {
             const replyName = getUserDisplayName(reply);
-            const avatarUrl = resolveAssetUrl(reply.user?.avatar || reply.user?.smallAvatar);
+            const avatarUrl = createUserAvatarUrl(reply.user?.id, 32);
             return (
               <div key={String(reply.id)} className="rounded-2xl border border-white/8 bg-black/20 !p-3">
                 <div className="flex gap-2.5">
@@ -614,14 +615,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const avatarText = post.author?.avatar || nickname.slice(0, 1).toUpperCase();
   const remoteAvatarRaw = post.user?.avatar || post.user?.smallAvatar || post.author?.avatarUrl;
   const remoteAvatarUrl = looksLikeRemoteAvatar(remoteAvatarRaw) ? resolveAssetUrl(remoteAvatarRaw) : '';
-  const generatedAvatarUrl = resolveGeneratedUserAvatarUrl(
-    {
-      id: post.user?.id,
-      username: post.user?.username,
-      nickname: post.user?.nickname,
-    },
-    handleSeed,
-  );
+  const generatedAvatarUrl = createUserAvatarUrl(post.user?.id);
   const displayAvatarUrl = remoteAvatarFailed
     ? generatedAvatarUrl
     : remoteAvatarUrl || generatedAvatarUrl;
@@ -637,7 +631,7 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const tag = resolveTag(post);
   const displayTime = formatTopicTime(post.createTime, post.time);
   const displayLikes = post.likeCount ?? post.likes ?? 0;
-  const displayDislikes = post.dislikeCount ?? 0;
+  const displayDislikes = post.disLikeCount ?? post.dislikeCount ?? 0;
   const displayFavorites = post.favoriteCount ?? (post as { favorite_count?: number }).favorite_count ?? 0;
   const commentCount = Math.max(typeof post.commentCount === 'number' ? post.commentCount : 0, comments.length);
   const canComment = Boolean(currentUserQuery.data?.id);

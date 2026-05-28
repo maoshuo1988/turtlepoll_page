@@ -357,6 +357,33 @@ async function invalidatePetQueries(queryClient: ReturnType<typeof useQueryClien
   ]);
 }
 
+function normalizePetEquipInfo(raw: unknown): PetEquipInfo {
+  if (!isRecord(raw)) {
+    return { petId: '' };
+  }
+
+  const nestedPet = isRecord(raw.pet) ? raw.pet : undefined;
+  const avatarRaw = pickNonEmptyString(raw.icon, raw.image, nestedPet?.icon, nestedPet?.image);
+  const avatarUrl = avatarRaw ? resolveApiAssetUrl(avatarRaw) : undefined;
+  const petId = pickNonEmptyString(raw.petId, nestedPet?.petId, nestedPet?.id);
+  const petKey = pickNonEmptyString(raw.petKey, nestedPet?.petKey, nestedPet?.petCode);
+  const petName = pickNonEmptyString(raw.petName, nestedPet?.name);
+  const rarityRaw = pickNonEmptyString(raw.rarityKey, raw.rarity, nestedPet?.rarityKey, nestedPet?.rarity);
+  const levelRaw = raw.level ?? nestedPet?.level;
+
+  return {
+    petId: petId || '',
+    petKey: petKey || undefined,
+    petName: petName || undefined,
+    rarity: rarityRaw ? normalizePetRarityGrade(rarityRaw) : undefined,
+    level: typeof levelRaw === 'number' && Number.isFinite(levelRaw) ? levelRaw : undefined,
+    equippedAt: typeof raw.equippedAt === 'number' ? raw.equippedAt : undefined,
+    equipDayName: typeof raw.equipDayName === 'number' ? raw.equipDayName : undefined,
+    icon: avatarUrl,
+    image: avatarUrl,
+  };
+}
+
 export function useRequestPetEquip() {
   const token = getAuthToken();
 
@@ -368,10 +395,78 @@ export function useRequestPetEquip() {
         cmd: API_Pet_Equip,
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess<PetEquipInfo>(res);
+      return normalizePetEquipInfo(assertSuccess(res));
     },
     enabled: Boolean(token),
   });
+}
+
+function normalizeOwnedPetItem(raw: unknown, equippedPetId?: string): OwnedPetItem {
+  if (!isRecord(raw)) {
+    return { petId: '' };
+  }
+
+  const nestedPet = isRecord(raw.pet) ? raw.pet : undefined;
+  const avatarRaw = pickNonEmptyString(raw.icon, raw.image, nestedPet?.icon, nestedPet?.image);
+  const avatarUrl = avatarRaw ? resolveApiAssetUrl(avatarRaw) : undefined;
+  const petId = pickNonEmptyString(raw.petId, nestedPet?.petId, nestedPet?.id, raw.id);
+  const petKey = pickNonEmptyString(raw.petKey, nestedPet?.petKey, nestedPet?.petCode, raw.petCode);
+  const petName = pickNonEmptyString(raw.petName, nestedPet?.name, nestedPet?.petName);
+  const rarityRaw = pickNonEmptyString(raw.rarityKey, raw.rarity, nestedPet?.rarityKey, nestedPet?.rarity);
+  const levelRaw = raw.level ?? nestedPet?.level;
+  const xpRaw = raw.xp ?? nestedPet?.xp;
+  const rawEquipped = raw.isEquipped ?? raw.equipped ?? raw.is_equipped;
+  const isEquipped =
+    typeof rawEquipped === 'boolean'
+      ? rawEquipped
+      : equippedPetId && petId
+        ? String(petId) === equippedPetId
+        : undefined;
+
+  return {
+    petId: petId || '',
+    petKey: petKey || undefined,
+    petName: petName || undefined,
+    rarity: rarityRaw ? normalizePetRarityGrade(rarityRaw) : undefined,
+    level: typeof levelRaw === 'number' && Number.isFinite(levelRaw) ? levelRaw : undefined,
+    xp: typeof xpRaw === 'number' && Number.isFinite(xpRaw) ? xpRaw : undefined,
+    isEquipped,
+    obtainedAt: typeof raw.obtainedAt === 'number' ? raw.obtainedAt : undefined,
+    ...(avatarUrl ? { icon: avatarUrl, image: avatarUrl } : {}),
+  };
+}
+
+function normalizePetOwnedResponse(raw: unknown): PetOwnedResponse {
+  if (!isRecord(raw)) {
+    return { list: [] };
+  }
+
+  const equippedPetId = pickNonEmptyString(raw.equippedPetId, raw.equipped_pet_id);
+  const listRows = Array.isArray(raw.list)
+    ? raw.list
+    : Array.isArray(raw.items)
+      ? raw.items
+      : Array.isArray(raw.records)
+        ? raw.records
+        : [];
+
+  const list = listRows
+    .map((item) => normalizeOwnedPetItem(item, equippedPetId || undefined))
+    .filter((item) => item.petId);
+
+  if (equippedPetId && !list.some((item) => item.isEquipped)) {
+    for (const item of list) {
+      if (String(item.petId) === equippedPetId) {
+        item.isEquipped = true;
+        break;
+      }
+    }
+  }
+
+  return {
+    equippedPetId: equippedPetId || undefined,
+    list,
+  };
 }
 
 export function useRequestPetOwned() {
@@ -385,7 +480,7 @@ export function useRequestPetOwned() {
         cmd: API_Pet_Owned,
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess<PetOwnedResponse>(res);
+      return normalizePetOwnedResponse(assertSuccess(res));
     },
     enabled: Boolean(token),
   });
@@ -476,7 +571,11 @@ export function useRequestPetEquipUpdate() {
           "Content-Type": "application/json",
         },
       });
-      return assertSuccess<PetEquipMutationResponse>(res);
+      const result = assertSuccess<PetEquipMutationResponse>(res);
+      return {
+        ...result,
+        pet: normalizePetEquipInfo(result.pet),
+      };
     },
     onSuccess: async (result, payload) => {
       queryClient.setQueryData<PetEquipInfo | undefined>(PET_EQUIP_QUERY_KEY, result.pet);

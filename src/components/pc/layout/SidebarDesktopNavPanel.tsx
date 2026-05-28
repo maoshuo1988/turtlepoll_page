@@ -9,7 +9,7 @@ interface SidebarDesktopNavPanelProps {
   onNavClick: (item: (typeof NAV_ITEMS)[number]) => void;
 }
 
-// 桌面侧边栏导航面板：只负责主导航入口，排行榜作为普通页面入口展示。
+// 桌面侧边栏导航面板：只负责主导航入口。
 export const SidebarDesktopNavPanel: React.FC<SidebarDesktopNavPanelProps> = ({
   activeView,
   onNavClick,

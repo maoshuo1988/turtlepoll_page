@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from '@umijs/renderer-react';
 import { AppPageLayout, type SidebarHotTag, type SidebarHotTopic, type ViewType } from './AppPageLayout';
 import { AuthModal } from '@/components/common/auth/AuthModal';
 import { GuideTourModal } from '@/components/common/layout/GuideTourModal';
-import { getPetMoodLabel } from '@/components/common/pet/petDisplay';
+import { getPetDisplayAvatar, getPetMoodLabel } from '@/components/common/pet/petDisplay';
 import { getPetIdleDialogues } from '@/components/common/pet/petDialogue';
 import { mapMarketToPredictionCard, type PredictionCardItem } from '@/components/common/predictions/predictionCards';
 import { useAppSession } from '@/hooks/useAppSession';
@@ -251,18 +251,28 @@ export function StandalonePageShell({
 
   const sidebarPet = useMemo(() => {
     const equippedOwnedPet = findEquippedOwnedPet(petOwnedQuery.data);
+    const petKey = petEquipQuery.data?.petKey ?? equippedOwnedPet?.petKey;
+    const petName = petEquipQuery.data?.petName ?? equippedOwnedPet?.petName ?? '';
 
     return {
-      name: petEquipQuery.data?.petName ?? '',
+      name: petName,
       status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',
       level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,
       stamina: sidebarPetStamina,
       maxStamina: petStaminaQuery.data?.cap ?? 0,
-      avatar: '',
+      avatar: getPetDisplayAvatar(petKey, petName),
+      petKey,
+      icon: petEquipQuery.data?.icon,
+      image: petEquipQuery.data?.image,
+      rarityKey: petEquipQuery.data?.rarity ?? equippedOwnedPet?.rarity,
     };
   }, [
+    petEquipQuery.data?.icon,
+    petEquipQuery.data?.image,
     petEquipQuery.data?.level,
+    petEquipQuery.data?.petKey,
     petEquipQuery.data?.petName,
+    petEquipQuery.data?.rarity,
     petOwnedQuery.data,
     petStatusQuery.data?.moodState,
     petStaminaQuery.data?.cap,
@@ -430,7 +440,7 @@ export function StandalonePageShell({
       }}
       onOpenHelp={handleOpenGuideTour}
       onOpenRank={() => {
-        handleRequireAuthNavigation('/rank');
+        navigate('/rank');
       }}
       onOpenSettings={() => {
         if (!requireAuthOrOpen(() => onAuthModalOpenChange(true))) return;

@@ -2,7 +2,6 @@
  * 文件说明：Static Game Host，游戏中心和静态游戏宿主相关组件。
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Coins, ExternalLink } from 'lucide-react';
 import type { OwnedPetItem, PetEquipInfo } from '@/hooks/petTypes';
 
 type StaticGameBadgeTone = 'emerald' | 'sky' | 'amber' | 'rose' | 'violet';
@@ -159,17 +158,14 @@ const BADGE_TONE_CLASS: Record<StaticGameBadgeTone, string> = {
 
 export const StaticGameHost: React.FC<StaticGameHostProps> = ({
   title,
-  subtitle,
   description,
   badges = [],
   stats = [],
   tips = [],
   immersive = false,
   htmlPath,
-  standalonePath,
   stripSelectors = [],
   onFrameLoad,
-  onBack,
   balance,
   ownedPets,
   equippedPet,

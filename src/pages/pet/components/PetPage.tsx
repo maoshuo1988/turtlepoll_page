@@ -12,7 +12,8 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { PetChat } from '@/components/common/pet/PetChat';
-import { CommonSpine } from '@/components/common/spine/CommonSpine';
+import { PetAssetPreview } from '@/components/common/pet/PetAssetPreview';
+import { pickPetAvatarUrl } from '@/components/common/pet/petPreviewAsset';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type {
   PetInfo,
@@ -153,7 +154,7 @@ const StatusTab: React.FC<{
           </div> */}
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-2">
+        {/* <div className="mt-3 grid grid-cols-2 gap-2">
           <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-rdark-border dark:bg-rdark-input/40">
             <div className="text-[10px] text-slate-400 dark:text-rdark-text2">当前龟种</div>
             <div className="mt-1 text-[12px] font-bold text-slate-700 dark:text-rdark-text">
@@ -163,7 +164,7 @@ const StatusTab: React.FC<{
               {normalizePetRarityGrade(equippedPet?.rarity)} · Lv.{equippedPet?.level ?? pet.level}
             </div>
           </div>
-          {/* <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-rdark-border dark:bg-rdark-input/40">
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-rdark-border dark:bg-rdark-input/40">
             <div className="text-[10px] text-slate-400 dark:text-rdark-text2">成长与火花</div>
             <div className="mt-1 text-[12px] font-bold text-slate-700 dark:text-rdark-text">
               Spark {petStatus?.spark ?? 0}
@@ -171,8 +172,8 @@ const StatusTab: React.FC<{
             <div className="mt-1 text-[10px] text-slate-500 dark:text-rdark-text2">
               累计 XP {typeof equippedPetXp === 'number' ? equippedPetXp.toLocaleString() : '-'}
             </div>
-          </div> */}
-        </div>
+          </div>
+        </div> */}
       </div>
 
       {/* <div className={`${card} p-4`}>
@@ -360,8 +361,8 @@ const SpeciesTab: React.FC<{
 
   return (
     <div className="space-y-4">
-      <div className={`${card} p-4`}>
-        {/* <div className="mb-3 flex items-center justify-between gap-3">
+      {/* <div className={`${card} p-4`}>
+        <div className="mb-3 flex items-center justify-between gap-3">
           <div>
             <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2">当前龟种</div>
             <div className="mt-1 text-[12px] text-slate-500 dark:text-rdark-text2">这里直接消费装备接口，切换后会自动刷新当前宠物状态。</div>
@@ -369,12 +370,12 @@ const SpeciesTab: React.FC<{
           <div className="rounded-full bg-sky-50 px-3 py-1 text-[10px] font-bold text-sky-700 dark:bg-sky-950/20 dark:text-sky-300">
             GET /api/pet/equip
           </div>
-        </div> */}
+        </div>
 
         <div className="flex items-center gap-4 rounded-lg dark:border-cyan-900/30 dark:from-cyan-950/20 dark:to-sky-950/20">
-          {/* <div className="grid h-16 w-16 place-items-center rounded-xl border border-cyan-100 bg-white text-3xl shadow-sm dark:border-cyan-900/30 dark:bg-rdark-card">
+          <div className="grid h-16 w-16 place-items-center rounded-xl border border-cyan-100 bg-white text-3xl shadow-sm dark:border-cyan-900/30 dark:bg-rdark-card">
             {getPetDisplayAvatar(currentEquippedPet?.petKey, currentEquippedPet?.petName)}
-          </div> */}
+          </div>
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex items-center gap-2">
               <span className="truncate text-[13px] font-bold text-slate-700 dark:text-rdark-text">
@@ -390,7 +391,7 @@ const SpeciesTab: React.FC<{
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {petActionMessage ? (
         <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-[12px] text-zinc-200">
@@ -425,16 +426,23 @@ const SpeciesTab: React.FC<{
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-slate-100 text-2xl dark:bg-rdark-input">
-                      {getPetDisplayAvatar(ownedPet.petKey, ownedPet.petName)}
+                    <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl bg-slate-100 dark:bg-rdark-input">
+                      <PetAssetPreview
+                        avatarUrl={pickPetAvatarUrl(ownedPet.icon, ownedPet.image)}
+                        petKey={ownedPet.petKey}
+                        petName={ownedPet.petName}
+                        size={48}
+                        className="mx-auto"
+                        imageClassName="h-full w-full object-contain"
+                      />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-[12px] font-bold text-slate-700 dark:text-rdark-text">
                         {ownedPet.petName ?? ownedPet.petKey ?? `宠物 ${ownedPet.petId}`}
                       </div>
-                      <div className="mt-1 text-[9px] text-slate-500 dark:text-rdark-text2">
+                      {/* <div className="mt-1 text-[9px] text-slate-500 dark:text-rdark-text2">
                         Lv.{ownedPet.level ?? 1} · XP {ownedPet.xp ?? 0}
-                      </div>
+                      </div> */}
                       <div className="mt-1 flex items-center gap-1.5">
                         {ownedPet.rarity ? <RarityBadge rarity={ownedPet.rarity} /> : null}
                         <span className={`text-[8px] font-bold ${isEquipped ? 'text-emerald-500' : 'text-cyan-500'}`}>
@@ -484,7 +492,7 @@ const AbilitiesTab: React.FC<{
   return (
     <div className="space-y-4">
       <div className={`${card} overflow-hidden`}>
-        <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-sky-50 p-4 dark:from-emerald-950/24 dark:via-teal-950/16 dark:to-sky-950/20">
+        {/* <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-sky-50 p-4 dark:from-emerald-950/24 dark:via-teal-950/16 dark:to-sky-950/20">
           <div className="flex items-start gap-4">
             <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl border border-emerald-100 bg-white text-4xl shadow-sm dark:border-emerald-900/30 dark:bg-rdark-card">
               {avatar}
@@ -504,7 +512,7 @@ const AbilitiesTab: React.FC<{
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="p-4">
           <div className="mb-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2">
@@ -571,9 +579,7 @@ export const PetPage: React.FC<PetPageProps> = ({
     pet.stamina,
     pet.status,
   ]);
-  const heroAvatar =
-    getPetDisplayAvatar(equippedPet?.petKey ?? equippedOwnedPet?.petKey, equippedPet?.petName ?? equippedOwnedPet?.petName) ||
-    displayPet.avatar;
+  const equippedAvatarUrl = pickPetAvatarUrl(equippedPet?.icon, equippedPet?.image);
   const isNightScene = usePetSceneIsNight();
   const isMobileViewport = useIsMobileViewport();
   const sceneBgSrc = isMobileViewport
@@ -647,11 +653,13 @@ export const PetPage: React.FC<PetPageProps> = ({
                 </AnimatePresence>
 
                 {/* Pet emoji — larger */}
-                <CommonSpine
-                  width={180}
-                  height={180}
-                  fallback={heroAvatar}
+                <PetAssetPreview
+                  avatarUrl={equippedAvatarUrl}
+                  petKey={equippedPet?.petKey ?? equippedOwnedPet?.petKey}
+                  petName={equippedPet?.petName ?? equippedOwnedPet?.petName ?? displayPet.name}
+                  size={180}
                   className="drop-shadow-[0_14px_24px_rgba(15,23,42,0.24)]"
+                  imageClassName="object-contain drop-shadow-[0_14px_24px_rgba(15,23,42,0.24)]"
                 />
 
                 {/* Name + level */}

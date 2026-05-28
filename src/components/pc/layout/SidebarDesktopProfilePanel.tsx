@@ -81,7 +81,15 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
         winRate={0}
         totalPredictions={0}
         activePredictions={0}
-        pet={{ name: pet.name, level: pet.level, avatar: pet.avatar }}
+        pet={{
+          name: pet.name,
+          rarityKey: pet.rarityKey,
+          level: pet.level,
+          avatar: pet.avatar,
+          petKey: pet.petKey,
+          icon: pet.icon,
+          image: pet.image,
+        }}
         currentDialogue={currentDialogue}
         dialogueKey={dialogueKey}
         onViewPet={onOpenPetSpace}

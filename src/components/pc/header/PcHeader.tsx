@@ -3,7 +3,9 @@
  */
 import React from 'react';
 import { CircleHelp, Gamepad2, LogIn, LogOut, Settings, Trophy, UserRound } from 'lucide-react';
-import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
+import { getAuthToken } from '@/utils/authStorage';
+import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
+import { createUserAvatarUrl } from '@/utils/userAvatar';
 
 export interface PcHeaderProps {
   darkMode: boolean;
@@ -28,7 +30,9 @@ export const PcHeader: React.FC<PcHeaderProps> = ({
   onOpenSettings,
 }) => {
   const isAuthenticated = Boolean(getAuthToken());
-  const userInfo = getStoredUserInfo() as { avatar?: string; nickname?: string };
+  const userCurrentQuery = useRequestUserCurrent();
+  const user = userCurrentQuery.data;
+  const headerAvatarUrl = createUserAvatarUrl(user?.id, 40);
 
   const menuSurface =
     'rounded-xl border border-white/10 bg-[#121316]/98 py-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)] backdrop-blur-md dark:border-rdark-border dark:bg-rdark-card/98';
@@ -73,17 +77,17 @@ export const PcHeader: React.FC<PcHeaderProps> = ({
           <div className="group relative">
             <button
               type="button"
-              title={typeof userInfo?.avatar === 'string' ? userInfo.avatar : undefined}
+              title={typeof user?.avatar === 'string' ? user.avatar : undefined}
               onClick={() => {
                 if (!isAuthenticated) onOpenAuth();
               }}
               className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-white/8 bg-[#111215] text-[16px] shadow-[0_10px_24px_rgba(0,0,0,0.2)] transition-colors hover:border-white/14 dark:border-rdark-border dark:bg-rdark-card dark:hover:border-rdark-text2"
             >
-              {userInfo?.avatar && userInfo.avatar.length > 0 ? (
-                <img src={userInfo.avatar} alt="" className="h-full w-full object-cover" />
+              {isAuthenticated && headerAvatarUrl ? (
+                <img src={headerAvatarUrl} alt="" className="h-full w-full object-cover" />
               ) : isAuthenticated ? (
                 <span className="grid h-full w-full place-items-center bg-gradient-to-br from-[#202227] via-[#15161a] to-[#0d0d10] font-black text-white">
-                  {userInfo?.nickname ? userInfo.nickname.slice(0, 1).toUpperCase() : 'g'}
+                  {user?.nickname ? user.nickname.slice(0, 1).toUpperCase() : 'g'}
                 </span>
               ) : (
                 <>

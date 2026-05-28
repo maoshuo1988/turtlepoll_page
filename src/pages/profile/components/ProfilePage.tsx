@@ -34,7 +34,7 @@ type ProfileTab = 'overview' | 'posts' | 'comments' | 'saved' | 'history' | 'hid
 interface ProfilePageProps {
   userName: string;
   userHandle: string;
-  avatar: string;
+  avatarUrl: string;
   pet: PetInfo;
   skins: PetSkin[];
   balance: number;
@@ -78,10 +78,30 @@ const ProfileTabButton: React.FC<{
   </button>
 );
 
+function ProfileUserAvatar({
+  avatarUrl,
+  fallback,
+  className,
+}: {
+  avatarUrl: string;
+  fallback: string;
+  className: string;
+}) {
+  if (avatarUrl) {
+    return <img src={avatarUrl} alt={fallback} className={`object-cover ${className}`} />;
+  }
+
+  return (
+    <span className={`grid place-items-center font-black text-white ${className}`}>
+      {fallback.slice(0, 1).toUpperCase() || '?'}
+    </span>
+  );
+}
+
 export const ProfilePage: React.FC<ProfilePageProps> = ({
   userName,
   userHandle,
-  avatar,
+  avatarUrl,
   pet,
   skins,
   balance,
@@ -262,7 +282,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         ))}
       </div>
 
-      {!isAuthenticated ? renderLoginRequired('登录后查看你的个人中心', '帖子、评论和收藏会在登录后同步展示。') : profileTopics.length === 0 ? (
+      {/* {!isAuthenticated ? renderLoginRequired('登录后查看你的个人中心', '帖子、评论和收藏会在登录后同步展示。') : profileTopics.length === 0 ? (
         <div className="!mt-4 border-t border-white/10">
           <EmptyDataPage
             title="你还没有任何帖子"
@@ -284,7 +304,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             </article>
           ))}
         </div>
-      )}
+      )} */}
     </>
   );
 
@@ -548,9 +568,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
           <div className="mt-3 flex min-w-0 items-start gap-3">
             <div className="relative shrink-0">
-              <div className="grid h-[72px] w-[72px] place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-[26px] font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
-                {avatar}
-              </div>
+              <ProfileUserAvatar
+                avatarUrl={avatarUrl}
+                fallback={userName}
+                className="h-[72px] w-[72px] rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-[26px] shadow-[0_10px_26px_rgba(0,0,0,0.28)]"
+              />
               <div className="absolute bottom-0 right-0 grid h-7 w-7 place-items-center rounded-full border-4 border-[#101214] bg-[#252a2f] text-[#dde4ea]">
                 <ImageIcon size={14} />
               </div>
@@ -631,12 +653,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             >
               <div className="flex min-w-0 items-center gap-3">
                 <div className="grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-white/10 bg-[#15161a] text-white">
-                  {storedUser?.avatar?.length ? (
-                    <img src={storedUser.avatar} alt={storedUser.avatar} className="h-full w-full object-cover" />
-                  ) : isAuthenticated ? (
-                    <span className="text-[14px] font-black">
-                      {storedUser?.nickname ? storedUser.nickname.slice(0, 1).toUpperCase() : 'G'}
-                    </span>
+                  {isAuthenticated ? (
+                    <ProfileUserAvatar
+                      avatarUrl={avatarUrl}
+                      fallback={storedUser?.nickname || userName}
+                      className="h-full w-full rounded-full"
+                    />
                   ) : (
                     <LogIn size={16} className="text-zinc-300" />
                   )}
@@ -705,9 +727,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
           <div className="flex min-w-0 flex-1 items-start gap-4">
             <div className="relative shrink-0">
-              <div className="grid h-18 w-18 place-items-center rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-xl font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
-                {avatar}
-              </div>
+              <ProfileUserAvatar
+                avatarUrl={avatarUrl}
+                fallback={userName}
+                className="h-18 w-18 rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-xl shadow-[0_10px_26px_rgba(0,0,0,0.28)]"
+              />
               <div className="absolute bottom-0 right-0 grid h-8 w-8 place-items-center rounded-full border-4 border-[#101214] bg-[#252a2f] text-[#dde4ea]">
                 <ImageIcon size={14} />
               </div>

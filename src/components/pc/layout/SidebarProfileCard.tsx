@@ -8,10 +8,21 @@ import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/components/common/pet/petTypes';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { useRequestCoinMe } from '@/hooks/useCoinRequests';
+import { createUserAvatarUrl } from '@/utils/userAvatar';
 import { PetProfilePanel } from './PetProfilePanel';
 import { ShopShortcutCard } from './ShopShortcutCard';
 
 const DEFAULT_USER_AVATAR = '/image/default-header.png';
+
+function SidebarUserAvatar({ userId, alt, className }: { userId?: string | number; alt: string; className: string }) {
+  const avatarUrl = createUserAvatarUrl(userId, 64);
+
+  if (avatarUrl) {
+    return <img src={avatarUrl} alt={alt} className={`object-cover ${className}`} />;
+  }
+
+  return <img src={DEFAULT_USER_AVATAR} alt={alt} className={`object-cover ${className}`} />;
+}
 
 function petBadgeIconFromAvatar(avatar: string): string {
   const t = avatar.trim();
@@ -53,9 +64,6 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   const user = userCurrent.data;
   const displayName = user?.nickname || user?.username || user?.email || '未登录用户';
   const displaySubtitle = user?.levelTitle?.trim() || (user ? '暂无等级称号' : '登录后同步你的等级称号');
-  const avatarValue = typeof user?.avatar === 'string' && user.avatar.trim() ? user.avatar.trim() : '';
-  const isAvatarImage = /^https?:\/\//.test(avatarValue) || avatarValue.startsWith('/');
-  const avatarSrc = isAvatarImage ? avatarValue : DEFAULT_USER_AVATAR;
 
   const staminaDen = Math.max(pet.maxStamina || 1, 1);
   const staminaPercent = Math.round(Math.min(100, Math.max(0, (pet.stamina / staminaDen) * 100)));
@@ -83,12 +91,12 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
             onClick={onOpenProfile}
             className="flex w-full items-center gap-3 rounded-2xl border border-transparent bg-transparent p-0 text-left transition-all hover:border-white/8 hover:bg-white/[0.03]"
           >
-            <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] text-xl font-bold text-white shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
-              {avatarValue && !isAvatarImage ? (
-                <span>{avatarValue}</span>
-              ) : (
-                <img src={avatarSrc} alt={displayName} className="h-full w-full object-cover" />
-              )}
+            <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-full border border-white/10 bg-gradient-to-br from-[#1c1d22] to-[#0f1013] shadow-[0_10px_26px_rgba(0,0,0,0.28)]">
+              <SidebarUserAvatar
+                userId={user?.id}
+                alt={displayName}
+                className="h-full w-full rounded-full"
+              />
             </div>
             <div className="min-w-0 flex-1">
               <div className="truncate text-[15px] font-bold text-white dark:text-rdark-text">{displayName}</div>
@@ -102,7 +110,15 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
             winRate={0}
             totalPredictions={0}
             activePredictions={0}
-            pet={{ name: pet.name, level: pet.level, avatar: pet.avatar }}
+            pet={{
+              name: pet.name,
+              rarityKey: pet.rarityKey,
+              level: pet.level,
+              avatar: pet.avatar,
+              petKey: pet.petKey,
+              icon: pet.icon,
+              image: pet.image,
+            }}
             currentDialogue={currentDialogue}
             dialogueKey={dialogueKey}
             onViewPet={onOpenPetSpace}

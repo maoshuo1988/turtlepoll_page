@@ -77,3 +77,28 @@ export type UserCoin = {
   createTime?: number;
   updateTime?: number;
 };
+
+export type CoinLeaderboardItem = {
+  rank: number;
+  /** coin 域 userId，用于榜单匹配 */
+  userId: number;
+  /** 用户体系 ID，与 /api/user/current、帖子 user.id 一致，头像 seed 只用这个 */
+  id: string;
+  nickname: string;
+  avatar: string;
+  balance: number;
+  winRate: number;
+  currentWinStreak: number;
+};
+
+export type CoinLeaderboardResult = {
+  items: CoinLeaderboardItem[];
+  myRank: number | null;
+  myBalance: number;
+  myWinRate: number;
+  myCurrentWinStreak: number;
+};
+
+export type CoinLeaderboardParams = {
+  limit?: number;
+};

@@ -9,7 +9,10 @@ import type { ShopItem } from './shopTypes';
 import { useRequestAiStaminaApple } from '@/hooks/useAiRequests';
 import { useRequestPetEggHatch, useRequestPetGachaConfig, useRequestPetOwned, useRequestPetDefs } from '@/hooks/usePetRequests';
 import type { PetEggHatchResponse, PetStaminaResponse } from '@/hooks/petTypes';
+import type { OwnedPetItem } from '@/hooks/petTypes';
 import { PetPoolPreviewTile } from './PetPoolPreviewTile';
+import { PetAssetPreview } from '@/components/common/pet/PetAssetPreview';
+import { resolvePetPreviewAsset } from '@/components/common/pet/petPreviewAsset';
 import { getPetDisplayAvatar } from './petDisplay';
 import { getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
@@ -248,11 +251,12 @@ export const Shop: React.FC<ShopProps> = ({
     () =>
       FALLBACK_PET_POOL_PREVIEW_NAMES.map((petName, index) => ({
         key: `fallback-${petName}`,
-        imageSrc: `/assets/pets/${petName}.png`,
+        petKey: petName,
         label: petName.replace(/v1$/, ''),
         rarityGrade: normalizePetRarityGrade(
           ['传说', '史诗', '稀有', '稀有', '普通', '普通'][index % 6],
         ),
+        preview: resolvePetPreviewAsset({ petKey: petName, petName }),
       })),
     [],
   );
@@ -261,19 +265,39 @@ export const Shop: React.FC<ShopProps> = ({
     const apiList = petDefsQuery.data?.list;
     if (!apiList?.length) return fallbackPetPoolPreviewRows;
 
-    return apiList.map((item, index) => {
-      const slug = (item.petKey || item.displayName).trim();
-      const imageSrc = item.avatarUrl?.trim()
-        ? item.avatarUrl
-        : `/assets/pets/${slug}.png`;
-      return {
-        key: `def-${item.id}-${index}`,
-        imageSrc,
-        label: item.displayName.replace(/v1$/, ''),
-        rarityGrade: normalizePetRarityGrade(item.rarity),
-      };
-    });
+    return apiList.map((item, index) => ({
+      key: `def-${item.id}-${index}`,
+      petKey: item.petKey,
+      label: item.displayName.replace(/v1$/, ''),
+      rarityGrade: normalizePetRarityGrade(item.rarity),
+      preview: resolvePetPreviewAsset({
+        avatarUrl: item.avatarUrl,
+        petKey: item.petKey,
+        petName: item.displayName,
+      }),
+    }));
   }, [petDefsQuery.data?.list, fallbackPetPoolPreviewRows]);
+
+  const petDefByKey = useMemo(() => {
+    const map = new Map<string, { avatarUrl?: string; petKey: string; displayName: string }>();
+    for (const def of petDefsQuery.data?.list ?? []) {
+      map.set(def.petKey, def);
+      map.set(def.displayName, def);
+    }
+    return map;
+  }, [petDefsQuery.data?.list]);
+
+  const resolveOwnedPetSource = useCallback(
+    (petItem: OwnedPetItem) => {
+      const def = petDefByKey.get(petItem.petKey ?? '') ?? petDefByKey.get(petItem.petName ?? '');
+      return {
+        avatarUrl: def?.avatarUrl,
+        petKey: petItem.petKey ?? def?.petKey,
+        petName: petItem.petName ?? def?.displayName,
+      };
+    },
+    [petDefByKey],
+  );
   // const recordRows = [
   //   { name: heroName, ago: '刚刚', rarity: '传说' },
   //   { name: featuredPets[1]?.petName ?? '星眸少女', ago: '5分钟前', rarity: '史诗' },
@@ -459,8 +483,8 @@ export const Shop: React.FC<ShopProps> = ({
                   variant="strip"
                   rarityGrade={item.rarityGrade}
                   label={item.label}
-                  imageSrc={item.imageSrc}
-                  imageAlt={item.label}
+                  petKey={item.petKey}
+                  preview={item.preview}
                 />
               ))}
             </div>
@@ -502,7 +526,13 @@ export const Shop: React.FC<ShopProps> = ({
                       已装备
                     </div>
                   ) : null}
-                  <div className="text-4xl sm:text-5xl">{getPetDisplayAvatar(petItem.petKey, petItem.petName)}</div>
+                  <div className="mx-auto flex justify-center">
+                    <PetAssetPreview
+                      {...resolveOwnedPetSource(petItem)}
+                      size={48}
+                      className="mx-auto"
+                    />
+                  </div>
                   <div className="mt-3 truncate text-[12px] font-bold text-slate-800 dark:text-white sm:text-[13px]">
                     {petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}
                   </div>
@@ -659,8 +689,8 @@ export const Shop: React.FC<ShopProps> = ({
                     variant="strip"
                     rarityGrade={item.rarityGrade}
                     label={item.label}
-                    imageSrc={item.imageSrc}
-                    imageAlt={item.label}
+                    petKey={item.petKey}
+                    preview={item.preview}
                   />
                 ))}
               </div>
@@ -717,8 +747,8 @@ export const Shop: React.FC<ShopProps> = ({
                       variant="dialog"
                       rarityGrade={item.rarityGrade}
                       label={item.label}
-                      imageSrc={item.imageSrc}
-                      imageAlt={item.label}
+                      petKey={item.petKey}
+                      preview={item.preview}
                     />
                   ))}
                 </div>
@@ -1036,12 +1066,14 @@ export const Shop: React.FC<ShopProps> = ({
                   已装备
                 </div>
               ) : null}
-              <img
-                src={petItem.petName ? `/assets/pets/${petItem.petName}.png` : '/assets/pets/基础小龟.png'}
-                alt={petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}
-                draggable={false}
-                className="h-20 w-20 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
-              />
+              <div className="mx-auto flex justify-center">
+                <PetAssetPreview
+                  {...resolveOwnedPetSource(petItem)}
+                  size={80}
+                  className="mx-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
+                  imageClassName="object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
+                />
+              </div>
               <span
                 className={`text-[13px] font-semibold !px-2 !py-0.5 rounded-full ${getPetRarityBadgeClass(petItem.rarity)}`}
               >

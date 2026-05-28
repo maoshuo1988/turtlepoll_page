@@ -2,25 +2,28 @@
  * 文件说明：奖池预览单个宠物卡片，稀有度配色与商城列表一致。
  */
 import type { PetRarityGrade } from '@/components/common/pet/petRarity';
+import type { PetPreviewAsset } from '@/components/common/pet/petPreviewAsset';
+import { PetAssetPreview } from '@/components/common/pet/PetAssetPreview';
 import { getPetPoolPreviewBadgeTextClass, getPetPoolPreviewFrameClass } from './shopPetPreviewStyles';
 
 export interface PetPoolPreviewTileProps {
   rarityGrade: PetRarityGrade;
   label: string;
-  imageSrc: string;
-  imageAlt: string;
+  preview: PetPreviewAsset | null;
+  petKey?: string;
   variant: 'strip' | 'dialog';
 }
 
 export function PetPoolPreviewTile({
   rarityGrade,
   label,
-  imageSrc,
-  imageAlt,
+  preview,
+  petKey,
   variant,
 }: PetPoolPreviewTileProps) {
   const frame = getPetPoolPreviewFrameClass(rarityGrade);
   const badgeTone = getPetPoolPreviewBadgeTextClass(rarityGrade);
+  const previewSize = variant === 'strip' ? 48 : 56;
 
   return (
     <div
@@ -31,16 +34,17 @@ export function PetPoolPreviewTile({
       }
     >
       <div className={`rounded-[10px] px-1 py-0.5 text-[10px] font-black ${badgeTone}`}>{rarityGrade}</div>
-      <img
-        src={imageSrc}
-        alt={imageAlt}
-        draggable={false}
-        className={
-          variant === 'strip'
-            ? 'mx-auto mt-2 h-[clamp(40px,5vw,48px)] w-[clamp(40px,5vw,48px)] object-contain'
-            : 'mx-auto mt-2 h-14 w-14 object-contain'
-        }
-      />
+      <div className="mx-auto mt-2 flex justify-center">
+        <PetAssetPreview
+          asset={preview}
+          petKey={petKey}
+          petName={label}
+          alt={label}
+          size={previewSize}
+          className="mx-auto"
+          imageClassName="mx-auto object-contain"
+        />
+      </div>
       <div
         className={
           variant === 'strip'

@@ -2,7 +2,9 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, Coins, Flame } from 'lucide-react';
-import { CommonSpine } from '@/components/common/spine/CommonSpine';
+import { getPetRarityBadgeClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
+import { PetAssetPreview } from '@/components/common/pet/PetAssetPreview';
+import { pickPetAvatarUrl } from '@/components/common/pet/petPreviewAsset';
 import { usePetSceneIsNight } from '@/utils/petSceneBackground';
 
 const PET_SCENE_BG_SUN = '/image/gui-bg1-sun.png';
@@ -11,9 +13,13 @@ const PET_SCENE_BG_MOON = '/image/gui-bg1-moon.png';
 /** 面板内展示的上阵宠物字段（与全局 PetInfo 的展示子集对齐）。 */
 export interface SidebarPetProfilePet {
   name: string;
+  rarityKey?: string | number;
   level: number;
   /** emoji 或可直接渲染的短字符串 */
   avatar: string;
+  petKey?: string;
+  icon?: string;
+  image?: string;
 }
 
 export interface PetProfilePanelProps {
@@ -54,20 +60,22 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
     <div className="overflow-hidden rounded-2xl border border-emerald-400/22 bg-gradient-to-b from-[#0c1318] via-[#0e1a18] to-[#0a1614] shadow-[0_14px_34px_rgba(0,0,0,0.36)] dark:border-emerald-500/25">
       <div className="flex items-center justify-between gap-2 border-b border-white/6 bg-gradient-to-r from-sky-500/18 via-cyan-500/10 to-emerald-500/8 px-3 py-2 backdrop-blur dark:border-white/8">
         <div className="flex min-w-0 items-center gap-1.5">
-          <CommonSpine
+          {/* <CommonSpine
             width={16}
             height={16}
             fallback={pet.avatar}
             padding={1}
             offsetY={0}
             className="pointer-events-none shrink-0"
-          />
+          /> */}
           <span className="truncate text-[13px] font-bold text-sky-100 [text-shadow:0_0_8px_rgba(125,211,252,0.4)] dark:text-sky-50">
             {petBadgeName}
           </span>
-          {/* <span className="rounded-full bg-emerald-500/85 px-1.5 py-[1px] text-[9px] font-black text-white shadow-sm dark:bg-emerald-600/90">
-            Lv.{pet.level}
-          </span> */}
+          {pet.rarityKey != null && String(pet.rarityKey).trim() !== '' ? (
+            <span className={`shrink-0 inline-flex rounded-full px-1.5 py-[1px] text-[9px] font-black ${getPetRarityBadgeClass(pet.rarityKey)}`}>
+              {normalizePetRarityGrade(pet.rarityKey)}
+            </span>
+          ) : null}
         </div>
         <button
           type="button"
@@ -100,13 +108,13 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
               <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-emerald-400/28 bg-[#0a1614]/85 dark:border-emerald-500/35 dark:bg-rdark-card/90" />
             </motion.div>
           </AnimatePresence>
-          <CommonSpine
-            width={120}
-            height={120}
-            fallback={pet.avatar}
-            padding={6}
-            offsetY={2}
+          <PetAssetPreview
+            avatarUrl={pickPetAvatarUrl(pet.icon, pet.image)}
+            petKey={pet.petKey}
+            petName={pet.name}
+            size={120}
             className="pointer-events-none select-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.45)]"
+            imageClassName="object-contain pointer-events-none select-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.45)]"
           />
         </div>
 

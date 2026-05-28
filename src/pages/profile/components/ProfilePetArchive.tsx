@@ -3,9 +3,11 @@
  */
 import React, { useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { PetAssetPreview } from '@/components/common/pet/PetAssetPreview';
+import { pickPetAvatarUrl } from '@/components/common/pet/petPreviewAsset';
 import type { PetInfo } from '@/components/common/pet/petTypes';
 import type { OwnedPetItem } from '@/hooks/petTypes';
-import { getPetDisplayAvatar } from './petDisplay';
+import { getPetRarityBadgeClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
 
 interface ProfilePetArchiveProps {
   pet: PetInfo;
@@ -16,40 +18,16 @@ interface ProfilePetArchiveProps {
 type ArchivePet = {
   id: string;
   name: string;
-  avatar: string;
-  rarity: string;
+  petKey?: string;
+  icon?: string;
+  image?: string;
+  rarity?: string | number;
   level: number;
   xp?: number;
   isEquipped: boolean;
 };
 
-const rarityClassMap: Record<string, string> = {
-  SSR: 'border-amber-300/28 bg-amber-300/12 text-amber-200',
-  SR: 'border-fuchsia-300/24 bg-fuchsia-300/12 text-fuchsia-200',
-  R: 'border-sky-300/24 bg-sky-300/12 text-sky-200',
-  N: 'border-white/12 bg-white/[0.05] text-[#aeb8bf]',
-};
-
 const panelClass = 'rounded-[22px] border border-white/8 bg-white/[0.03] !p-2';
-
-function normalizeRarity(rarity?: unknown) {
-  if (!rarity) return 'N';
-  if (typeof rarity === 'string' || typeof rarity === 'number') {
-    return String(rarity).toUpperCase();
-  }
-  if (typeof rarity === 'object') {
-    const value = rarity as { label?: unknown; name?: unknown; value?: unknown; code?: unknown };
-    const displayValue = value.label ?? value.name ?? value.value ?? value.code;
-    if (typeof displayValue === 'string' || typeof displayValue === 'number') {
-      return String(displayValue).toUpperCase();
-    }
-  }
-  return 'N';
-}
-
-function getRarityClass(rarity: string) {
-  return rarityClassMap[rarity] ?? 'border-emerald-300/22 bg-emerald-300/10 text-emerald-200';
-}
 
 export const ProfilePetArchive: React.FC<ProfilePetArchiveProps> = ({
   pet,
@@ -66,8 +44,10 @@ export const ProfilePetArchive: React.FC<ProfilePetArchiveProps> = ({
         return {
           id: String(item.petId),
           name,
-          avatar: getPetDisplayAvatar(item.petKey, item.petName),
-          rarity: normalizeRarity(item.rarity),
+          petKey: item.petKey,
+          icon: item.icon,
+          image: item.image,
+          rarity: item.rarity,
           level: item.level ?? 1,
           xp: item.xp,
           isEquipped: Boolean(item.isEquipped),
@@ -78,12 +58,14 @@ export const ProfilePetArchive: React.FC<ProfilePetArchiveProps> = ({
     return [{
       id: 'current-pet',
       name: pet.name,
-      avatar: pet.avatar,
-      rarity: 'N',
+      petKey: pet.petKey,
+      icon: pet.icon,
+      image: pet.image,
+      rarity: undefined,
       level: pet.level,
       isEquipped: true,
     }];
-  }, [ownedPets, pet.avatar, pet.level, pet.name]);
+  }, [ownedPets, pet.icon, pet.image, pet.level, pet.name, pet.petKey]);
 
   const safeActiveIndex = Math.min(activeIndex, archivePets.length - 1);
   const activePet = archivePets[safeActiveIndex];
@@ -136,8 +118,15 @@ export const ProfilePetArchive: React.FC<ProfilePetArchiveProps> = ({
           </button>
 
           <div className="min-w-0 flex-1 text-center">
-            <div className="mx-auto grid h-24 w-24 place-items-center rounded-[28px] border border-white/10 bg-white/[0.04] text-[52px] shadow-[inset_0_0_24px_rgba(255,255,255,0.03)]">
-              {activePet.avatar}
+            <div className="mx-auto grid h-24 w-24 place-items-center overflow-hidden ">
+              <PetAssetPreview
+                avatarUrl={pickPetAvatarUrl(activePet.icon, activePet.image)}
+                petKey={activePet.petKey}
+                petName={activePet.name}
+                size={96}
+                className="mx-auto"
+                imageClassName="h-full w-full object-contain"
+              />
             </div>
             <div className="!mt-4 flex min-w-0 items-center justify-center gap-2">
               <h3 className="truncate text-[20px] font-black tracking-[-0.02em] text-white">{activePet.name}</h3>
@@ -148,17 +137,17 @@ export const ProfilePetArchive: React.FC<ProfilePetArchiveProps> = ({
               ) : null}
             </div>
             <div className="!mt-3 flex flex-wrap items-center justify-center gap-2">
-              <span className={`rounded-full border !px-2.5 !py-1 text-[11px] font-black ${getRarityClass(activePet.rarity)}`}>
-                {activePet.rarity}
+              <span className={`inline-flex rounded-full !px-2.5 !py-1 text-[11px] font-black ${getPetRarityBadgeClass(activePet.rarity)}`}>
+                {normalizePetRarityGrade(activePet.rarity)}
               </span>
-              <span className="rounded-full border border-white/8 bg-white/[0.04] !px-2.5 !py-1 text-[11px] font-black text-[#c9d3db]">
+              {/* <span className="rounded-full border border-white/8 bg-white/[0.04] !px-2.5 !py-1 text-[11px] font-black text-[#c9d3db]">
                 Lv.{activePet.level}
               </span>
               {typeof activePet.xp === 'number' ? (
                 <span className="rounded-full border border-white/8 bg-white/[0.04] !px-2.5 !py-1 text-[11px] font-black text-[#9aa8b2]">
                   XP {activePet.xp}
                 </span>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
 
