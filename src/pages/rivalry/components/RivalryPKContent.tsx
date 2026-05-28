@@ -8,11 +8,13 @@ import {
   BarChart3,
   ChevronDown,
   Clock,
+  Crown,
   Flame,
   History,
   Lock,
   MessageCircleMore,
   Shield,
+  Swords,
   Trophy,
   Users,
   Zap,
@@ -141,8 +143,8 @@ function getPresetRivalryTheme(item: RivalryNewsItem): RivalryVisualTheme {
 
   if (item.id === 'pk-hero' || text.includes('梅西') || text.includes('c罗')) {
     return createTheme(
-      { label: item.optionA, emoji: '🐐', primary: '#f04a1f', accent: '#ffc15d', end: '#3b1008' },
-      { label: item.optionB, emoji: '👑', primary: '#0789ff', accent: '#62efff', end: '#061b3d' },
+      { label: item.optionA, emoji: '🐐', primary: '#14b8a6', accent: '#67e8f9', end: '#0f2f35' },
+      { label: item.optionB, emoji: '👑', primary: '#ef4444', accent: '#fda4af', end: '#3b0f19' },
     );
   }
   if (text.includes('中国') || text.includes('美国')) {
@@ -470,179 +472,6 @@ function RivalryHeatMeter({
   );
 }
 
-const heroParticles = Array.from({ length: 24 }, (_, index) => ({
-  id: index,
-  side: index % 2 === 0 ? 'A' : 'B',
-  x: 5 + ((index * 37) % 90),
-  y: 8 + ((index * 23) % 78),
-  size: 2 + (index % 4),
-  delay: (index % 8) * 0.28,
-  duration: 2.8 + (index % 5) * 0.34,
-}));
-
-function HeroSidePanel({
-  side,
-  label,
-  pct,
-  count,
-  odds,
-  accent,
-  primary,
-  voted,
-  disabled,
-  isBetting,
-  onClick,
-}: {
-  side: 'A' | 'B';
-  label: string;
-  pct: number;
-  count: number;
-  odds: number;
-  accent: string;
-  primary: string;
-  voted?: 'A' | 'B';
-  disabled: boolean;
-  isBetting?: boolean;
-  onClick: () => void;
-}) {
-  const isA = side === 'A';
-  const isVoted = voted === side;
-
-  return (
-    <div
-      className={`relative overflow-hidden rounded-[24px] border px-5 py-5 backdrop-blur-xl max-lg:rounded-[20px] ${
-        isA
-          ? 'border-[#ff7a2f]/30 bg-[linear-gradient(135deg,rgba(64,16,7,0.86),rgba(10,8,10,0.52))] text-left shadow-[0_0_42px_rgba(255,80,28,0.14)]'
-          : 'border-[#29d8ff]/30 bg-[linear-gradient(225deg,rgba(5,42,72,0.88),rgba(8,10,16,0.56))] text-right shadow-[0_0_42px_rgba(22,178,255,0.16)]'
-      }`}
-    >
-      <div
-        className="pointer-events-none absolute inset-0 opacity-70"
-        style={{
-          background: isA
-            ? 'radial-gradient(circle at 0% 16%, rgba(255,104,33,0.35), transparent 40%)'
-            : 'radial-gradient(circle at 100% 16%, rgba(52,220,255,0.36), transparent 42%)',
-        }}
-      />
-      <div className="relative">
-        <div className={`mb-6 flex items-center gap-2 ${isA ? '' : 'justify-end'}`}>
-          <Zap size={20} style={{ color: accent, filter: `drop-shadow(0 0 10px ${accent})` }} />
-          <span className="max-w-[180px] truncate text-[22px] font-black italic tracking-[-0.04em] text-white" title={label}>
-            {label}更强
-          </span>
-        </div>
-        <div className="mb-1 text-[13px] font-semibold text-white/72">支持率</div>
-        <div className="mb-1 text-[56px] font-black leading-none tracking-[-0.08em] max-lg:text-[42px]" style={{ color: accent, textShadow: `0 0 24px ${primary}` }}>
-          {pct}
-          <span className="ml-1 text-[26px] tracking-[-0.04em] max-lg:text-[20px]">%</span>
-        </div>
-        <div className="mb-7 text-[17px] font-bold tabular-nums text-white/86 max-lg:text-[14px]">
-          {count.toLocaleString()} 人支持
-        </div>
-        <div className={`mb-6 flex flex-col gap-2 ${isA ? 'items-start' : 'items-end'}`}>
-          {[`${odds.toFixed(2)} x 赔率`, `第${side}阵营`, isVoted ? '已站队' : '可下注'].map((text) => (
-            <span
-              key={text}
-              className="max-w-full truncate rounded-full border border-white/10 bg-black/24 px-3 py-1 text-[12px] font-bold text-white/62"
-              title={text}
-            >
-              {text}
-            </span>
-          ))}
-        </div>
-        <button
-          type="button"
-          onClick={onClick}
-          disabled={disabled}
-          className={`inline-flex h-12 min-w-[160px] items-center justify-center rounded-[16px] border px-5 text-[15px] font-black text-white transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 ${
-            isA ? 'shadow-[0_0_24px_rgba(255,94,26,0.28)]' : 'shadow-[0_0_24px_rgba(30,190,255,0.26)]'
-          }`}
-          style={{
-            borderColor: `${accent}66`,
-            background: isVoted
-              ? `linear-gradient(180deg, ${primary}cc, ${primary}88)`
-              : `linear-gradient(180deg, ${primary}aa, rgba(9,13,20,0.5))`,
-          }}
-        >
-          {isBetting ? '下注中...' : `支持${label} >`}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function HeroVersusRail({
-  pctA,
-  pctB,
-  theme,
-}: {
-  pctA: number;
-  pctB: number;
-  theme: RivalryVisualTheme;
-}) {
-  return (
-    <div className="relative mx-auto w-full max-w-[1280px] px-2">
-      <div className="relative h-[56px] overflow-hidden rounded-full border border-white/20 bg-black/58 p-[5px] shadow-[0_16px_48px_rgba(0,0,0,0.42),0_0_36px_rgba(255,137,47,0.18),0_0_36px_rgba(30,199,255,0.18)] max-lg:h-[42px]">
-        <div className="relative h-full overflow-hidden rounded-full bg-[#06111e]">
-          <motion.div
-            className="absolute inset-y-0 left-0 overflow-hidden rounded-l-full"
-            style={{
-              background: `linear-gradient(90deg, #ff2e17 0%, ${theme.sideA.primary} 48%, ${theme.sideA.accent} 100%)`,
-              boxShadow: `inset 0 0 20px rgba(255,255,255,0.22), 0 0 26px ${theme.sideA.primary}`,
-            }}
-            initial={false}
-            animate={{ width: `${pctA}%` }}
-            transition={{ type: 'spring', stiffness: 130, damping: 22 }}
-          >
-            <motion.div
-              className="absolute inset-0 opacity-35"
-              style={{ background: 'linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.55) 18%, transparent 36%)' }}
-              animate={{ x: ['-70%', '150%'] }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: 'linear' }}
-            />
-          </motion.div>
-          <motion.div
-            className="absolute inset-y-0 right-0 overflow-hidden rounded-r-full"
-            style={{
-              background: `linear-gradient(270deg, #0036c7 0%, ${theme.sideB.primary} 42%, ${theme.sideB.accent} 100%)`,
-              boxShadow: `inset 0 0 20px rgba(255,255,255,0.2), 0 0 28px ${theme.sideB.primary}`,
-            }}
-            initial={false}
-            animate={{ width: `${pctB}%` }}
-            transition={{ type: 'spring', stiffness: 130, damping: 22 }}
-          >
-            <motion.div
-              className="absolute inset-0 opacity-34"
-              style={{ background: 'linear-gradient(250deg, transparent 0%, rgba(255,255,255,0.58) 18%, transparent 38%)' }}
-              animate={{ x: ['70%', '-150%'] }}
-              transition={{ duration: 2.8, repeat: Infinity, ease: 'linear' }}
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.08)_0,rgba(255,255,255,0.08)_1px,transparent_1px,transparent_18px)] opacity-25" />
-          <motion.div
-            className="absolute top-1/2 z-20 h-[78px] w-[18px] -translate-x-1/2 -translate-y-1/2 rotate-[18deg] rounded-full bg-white shadow-[0_0_20px_rgba(255,255,255,0.9),0_0_42px_rgba(255,162,58,0.8),0_0_44px_rgba(67,225,255,0.78)] max-lg:h-[58px] max-lg:w-[12px]"
-            style={{ left: `${pctA}%` }}
-            animate={{ opacity: [0.76, 1, 0.84], scaleY: [0.9, 1.08, 0.96] }}
-            transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute top-1/2 z-30 h-[112px] w-px -translate-x-1/2 -translate-y-1/2 rotate-[28deg] bg-[#fff4b8] shadow-[0_0_18px_rgba(255,238,164,0.95)]"
-            style={{ left: `${pctA}%` }}
-            animate={{ opacity: [0.2, 1, 0.35] }}
-            transition={{ duration: 0.68, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <div className="absolute inset-y-0 left-5 z-30 flex items-center text-[22px] font-black tabular-nums text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)] max-lg:left-4 max-lg:text-[16px]">
-            {pctA}%
-          </div>
-          <div className="absolute inset-y-0 right-5 z-30 flex items-center text-[22px] font-black tabular-nums text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)] max-lg:right-4 max-lg:text-[16px]">
-            {pctB}%
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function SeasonBar({ winsA, winsB, nameA, nameB }: { winsA: number; winsB: number; nameA: string; nameB: string }) {
   const total = winsA + winsB || 1;
   return (
@@ -686,7 +515,6 @@ function HeroPK({
 }) {
   const item = pk.newsItem;
   const betTotal = asNumber(pk.betCountA) + asNumber(pk.betCountB);
-  const { pctA, pctB } = heatSharePct(pk.currentHeatA, pk.currentHeatB);
   const heatTotal = pk.currentHeatA + pk.currentHeatB;
   const heatLabel =
     heatTotal >= 100 || Number.isInteger(heatTotal)
@@ -694,227 +522,184 @@ function HeroPK({
       : heatTotal.toFixed(1);
   const leading = pk.currentHeatA > pk.currentHeatB ? 'A' : pk.currentHeatB > pk.currentHeatA ? 'B' : null;
   const theme = getRivalryVisualTheme(item);
-  const joinBattle = () => {
-    if (onEnterBattle) {
-      onEnterBattle(item);
-      return;
-    }
-    onOpenBet(item, leading === 'B' ? 'B' : 'A');
-  };
-  const supportDisabled = isBetting || !!voted || pk.phase !== 'betting';
-  const dataRows = [
-    ['进攻数', Math.max(1, Math.round(pk.currentHeatA * 1.8)), Math.max(1, Math.round(pk.currentHeatB * 1.8))],
-    ['助攻数', Math.max(1, Math.round(asNumber(pk.betCountA) || pk.currentHeatA * 0.72)), Math.max(1, Math.round(asNumber(pk.betCountB) || pk.currentHeatB * 0.72))],
-    ['冠军数', pk.season.winsA, pk.season.winsB],
-  ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 22, scale: 0.985 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.52, ease: 'easeOut' }}
-      className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[30px] border border-white/10 bg-[#04070d] text-white shadow-[0_22px_70px_rgba(0,0,0,0.48),inset_0_1px_0_rgba(255,255,255,0.08)] max-lg:rounded-[22px]"
-    >
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[24px] border border-slate-700/60 bg-[#0a111f] shadow-[0_18px_44px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.06)]">
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(255,242,189,0.16),transparent_28%),linear-gradient(90deg,rgba(72,12,4,0.98)_0%,rgba(33,10,8,0.78)_32%,rgba(5,8,15,0.82)_50%,rgba(4,28,62,0.88)_68%,rgba(3,11,28,0.98)_100%)]" />
-        <div className="absolute inset-y-0 left-0 w-[58%] bg-[radial-gradient(circle_at_25%_48%,rgba(255,88,24,0.58),transparent_34%),linear-gradient(90deg,rgba(255,42,16,0.24),transparent_72%)]" />
-        <div className="absolute inset-y-0 right-0 w-[58%] bg-[radial-gradient(circle_at_72%_48%,rgba(21,180,255,0.56),transparent_36%),linear-gradient(270deg,rgba(13,151,255,0.26),transparent_72%)]" />
-        <img
-          src={theme.sideA.portrait}
-          alt=""
-          className="absolute bottom-0 left-[8%] h-[86%] w-[34%] object-cover object-center opacity-80 mix-blend-screen [mask-image:linear-gradient(90deg,transparent_0%,black_14%,black_78%,transparent_100%)] max-lg:hidden"
-        />
-        <img
-          src={theme.sideB.portrait}
-          alt=""
-          className="absolute bottom-0 right-[8%] h-[86%] w-[34%] object-cover object-center opacity-80 mix-blend-screen [mask-image:linear-gradient(270deg,transparent_0%,black_14%,black_78%,transparent_100%)] max-lg:hidden"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.08)_58%,rgba(0,0,0,0.54)_100%)]" />
-        <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.035)_0,rgba(255,255,255,0.035)_1px,transparent_1px,transparent_96px)] opacity-35" />
+        <img src={item.image} alt="" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#091121]/82 via-[#0b1426]/62 to-[#0f1a2a]/44" />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {heroParticles.map((particle) => (
-          <motion.span
-            key={particle.id}
-            className="absolute rounded-full"
-            style={{
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-              width: particle.size,
-              height: particle.size,
-              background: particle.side === 'A' ? '#ffb14d' : '#54e8ff',
-              boxShadow: particle.side === 'A' ? '0 0 12px rgba(255,118,34,0.9)' : '0 0 12px rgba(59,220,255,0.9)',
-            }}
-            animate={{
-              y: [0, particle.side === 'A' ? -28 : 28, 0],
-              x: [0, particle.side === 'A' ? 16 : -16, 0],
-              opacity: [0, 0.9, 0],
-              scale: [0.7, 1.45, 0.55],
-            }}
-            transition={{ duration: particle.duration, delay: particle.delay, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        ))}
-      </div>
+      <div className="relative p-5 md:p-7">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <span className="flex items-center gap-1 rounded-full border border-[#ffb45f]/18 bg-[#ffb45f]/8 px-3 py-1 text-xs font-bold text-[#eab268]"><Flame size={14} className="text-[#ff9f43]" />开撕台</span>
+          <PhaseTag phase={pk.phase} />
+          <span className="rounded-full bg-white/15 px-2.5 py-1 text-xs text-white/80 backdrop-blur-sm">
+            第{pk.currentRound}局 · 赛季{pk.season.season}
+          </span>
+          <span className="flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-xs text-white/80 backdrop-blur-sm" title={betTotal > 0 ? `本局累计热度 ${heatLabel}` : '阵营热度之和'}>
+            <Users size={12} />
+            {betTotal > 0 ? `${betTotal.toLocaleString()} 人次下注` : `热度合计 ${heatLabel}`}
+          </span>
+          {pk.lastRoundWinner && leading ? (
+            <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${pk.lastRoundWinner === leading ? 'bg-[#123a3d]/82 text-[#9affec]' : 'bg-[#4a1824]/82 text-[#ffb9c6]'}`}>
+              {pk.lastRoundWinner === 'A' ? item.optionA : item.optionB}
+              {pk.lastRoundWinner === leading ? ' 守擂中' : ' 被翻盘'}
+            </span>
+          ) : null}
+        </div>
 
-      <div className="relative grid min-h-[640px] grid-cols-[270px_minmax(0,1fr)_270px] gap-4 px-8 py-8 max-xl:grid-cols-[230px_minmax(0,1fr)_230px] max-lg:min-h-0 max-lg:grid-cols-1 max-lg:px-4 max-lg:py-4">
-        <div className="flex items-center max-lg:order-2">
-          <HeroSidePanel
-            side="A"
-            label={item.optionA}
-            pct={pctA}
-            count={Math.round(asNumber(pk.betCountA) || pk.currentHeatA)}
-            odds={item.oddsA}
-            accent={theme.sideA.accent}
-            primary={theme.sideA.primary}
-            voted={voted}
-            disabled={supportDisabled}
-            isBetting={isBetting}
+        <h1 className="mb-1 text-xl font-extrabold leading-tight text-white md:text-2xl">{item.title}</h1>
+        <p className="mb-4 max-w-xl text-sm text-white/50">{item.summary}</p>
+
+        <div className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3 lg:hidden">
+          <div className="min-w-0 rounded-[18px] border border-white/10 bg-black/26 p-3 backdrop-blur-sm">
+            <div className="relative mx-auto mb-2 h-[92px] w-full max-w-[150px] overflow-hidden rounded-[18px] border border-white/12 bg-black/30">
+              <img src={theme.sideA.portrait} alt={item.optionA} className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/48 via-transparent to-white/6" />
+            </div>
+            <div className="truncate text-center text-[12px] font-black text-white">{item.optionA}</div>
+            <div className="mt-1 text-center text-[18px] font-black tabular-nums leading-none" style={{ color: theme.sideA.accent }}>
+              {formatPkHeatValue(pk.currentHeatA)}
+            </div>
+          </div>
+          <div className="grid h-11 w-11 place-items-center rounded-full border border-white/14 bg-white/[0.08] text-[12px] font-black tracking-[0.18em] text-white/70 shadow-[0_0_20px_rgba(255,255,255,0.08)]">
+            VS
+          </div>
+          <div className="min-w-0 rounded-[18px] border border-white/10 bg-black/26 p-3 backdrop-blur-sm">
+            <div className="relative mx-auto mb-2 h-[92px] w-full max-w-[150px] overflow-hidden rounded-[18px] border border-white/12 bg-black/30">
+              <img src={theme.sideB.portrait} alt={item.optionB} className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/48 via-transparent to-white/6" />
+            </div>
+            <div className="truncate text-center text-[12px] font-black text-white">{item.optionB}</div>
+            <div className="mt-1 text-center text-[18px] font-black tabular-nums leading-none" style={{ color: theme.sideB.accent }}>
+              {formatPkHeatValue(pk.currentHeatB)}
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-4 rounded-2xl border border-white/[0.1] bg-black/25 px-4 py-3 backdrop-blur-sm">
+          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="flex min-w-0 flex-1 items-start gap-2.5 sm:items-center">
+              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/12 bg-black/30">
+                <img src={theme.sideA.portrait} alt="" className="h-full w-full object-cover" />
+              </span>
+              <div className="min-w-0">
+                <div className="truncate text-[13px] font-bold text-white">{item.optionA}</div>
+                <div className="mt-0.5 text-xl font-black tabular-nums leading-none" style={{ color: theme.sideA.accent }}>
+                  {formatPkHeatValue(pk.currentHeatA)}
+                  <span className="ml-1 text-[11px] font-semibold text-white/45">热度</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex shrink-0 items-center justify-center px-2 sm:flex-col sm:pb-8">
+              <span className="rounded-full border border-white/14 bg-white/[0.08] px-3 py-1 text-[11px] font-black tracking-[0.25em] text-white/55">VS</span>
+            </div>
+            <div className="flex min-w-0 flex-1 items-start gap-2.5 text-right sm:items-center sm:flex-row-reverse">
+              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/12 bg-black/30">
+                <img src={theme.sideB.portrait} alt="" className="h-full w-full object-cover" />
+              </span>
+              <div className="min-w-0 flex-1 sm:flex-initial">
+                <div className="truncate text-[13px] font-bold text-white">{item.optionB}</div>
+                <div className="mt-0.5 text-xl font-black tabular-nums leading-none sm:text-right" style={{ color: theme.sideB.accent }}>
+                  {formatPkHeatValue(pk.currentHeatB)}
+                  <span className="ml-1 text-[11px] font-semibold text-white/45">热度</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <RivalryHeatMeter heatA={pk.currentHeatA} heatB={pk.currentHeatB} theme={theme} variant="hero" />
+        </div>
+
+        <div className="mb-4 flex flex-wrap items-center gap-4">
+          {pk.phase === 'betting' ? (
+            <>
+              <Countdown target={pk.lockTime} label="下注截止" color="text-amber-300" />
+              <Countdown target={pk.roundEndTime} label="本局结束" color="text-white/50" />
+            </>
+          ) : null}
+          {pk.phase === 'locked' ? <Countdown target={pk.roundEndTime} label="本局结束" color="text-amber-300" /> : null}
+          {pk.phase === 'cooldown' && pk.nextRoundTime ? <Countdown target={pk.nextRoundTime} label="下一局开始" color="text-[#40ead0]" /> : null}
+        </div>
+
+        {/* 顶部 Hero：赛季战绩块（日期 + N胜 + 细条 + 局点）先隐藏，可从历史战绩查看 */}
+        {/* <div className="mb-4 rounded-[20px] border border-white/16 bg-[#071127]/28 p-3 shadow-[0_12px_34px_rgba(3,10,24,0.35)] backdrop-blur-md">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs font-semibold text-white/70">赛季{pk.season.season} 战绩</span>
+            <span className="text-[10px] text-white/40">{pk.season.startDate} ~ {pk.season.endDate}</span>
+          </div>
+          <SeasonBar winsA={pk.season.winsA} winsB={pk.season.winsB} nameA={item.optionA} nameB={item.optionB} />
+          <div className="mt-2 flex gap-1">
+            <RoundDots rounds={pk.roundHistory} nameA={item.optionA} />
+          </div>
+        </div> */}
+
+        <div className="mb-3 flex gap-3">
+          <button
             onClick={() => onOpenBet(item, 'A')}
-          />
-        </div>
-
-        <div className="flex min-w-0 flex-col items-center justify-center pt-4 text-center max-lg:order-1 max-lg:pt-2">
-          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#ff9f4a]/35 bg-[#b91c1c]/70 px-5 py-2 text-[18px] font-black italic text-[#fff7d6] shadow-[0_0_20px_rgba(255,78,41,0.32)] max-lg:px-3 max-lg:py-1.5 max-lg:text-[13px]">
-              <Flame size={18} />
-              全网热议 TOP1
-            </span>
-            <PhaseTag phase={pk.phase} />
-          </div>
-
-          <h1
-            className="mb-3 max-w-[760px] text-[78px] font-black leading-[0.92] tracking-[-0.08em] text-[#fff3dc] max-xl:text-[58px] max-lg:text-[38px]"
-            style={{ textShadow: '0 4px 0 rgba(117,39,9,0.55), 0 0 28px rgba(255,119,45,0.36), 0 0 36px rgba(76,220,255,0.18)' }}
+            disabled={isBetting || !!voted || pk.phase !== 'betting'}
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border-0 py-3 text-sm font-bold ${
+              voted === 'A'
+                ? 'text-[#dcfff8] shadow-[0_0_20px_rgba(45,207,178,0.22)]'
+                : isBetting || pk.phase !== 'betting'
+                  ? 'cursor-not-allowed bg-white/5 text-white/30'
+                  : 'text-[#dcfff8] shadow-[0_0_20px_rgba(45,207,178,0.16)]'
+            }`}
+            style={
+              voted === 'A'
+                ? { border: `1px solid ${theme.sideA.accent}93`, background: `${theme.sideA.primary}40`, color: '#ecfeff' }
+                : isBetting || pk.phase !== 'betting'
+                  ? undefined
+                  : { border: `1px solid ${theme.sideA.accent}66`, background: `${theme.sideA.primary}33`, color: '#ecfeff' }
+            }
           >
-            {item.title}
-          </h1>
-
-          <p className="mb-5 max-w-[620px] text-[22px] font-black italic tracking-[-0.04em] text-[#f8d3a3] drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] max-lg:text-[15px]">
-            {item.summary || `${item.optionA} vs ${item.optionB}，谁才是本局最强阵营？`}
-          </p>
-
-          <div className="mb-5 inline-flex flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/42 px-6 py-3 text-[17px] font-black text-white/88 shadow-[0_0_28px_rgba(0,0,0,0.42)] backdrop-blur-md max-lg:gap-2 max-lg:px-3 max-lg:py-2 max-lg:text-[12px]">
-            <span className="inline-flex items-center gap-2">
-              <Flame size={18} className="text-[#ffb15a]" />
-              {heatLabel} 人正在参与
-            </span>
-            <span className="h-5 w-px bg-white/16 max-lg:hidden" />
-            <span className="inline-flex items-center gap-2">
-              <Users size={18} className="text-[#6cecff]" />
-              {betTotal > 0 ? `${betTotal.toLocaleString()} 次下注` : `第${pk.currentRound}局`}
-            </span>
-          </div>
-
-          <button
-            type="button"
-            onClick={joinBattle}
-            className="group relative mb-4 h-[70px] min-w-[410px] overflow-hidden rounded-[20px] border border-[#ffd283]/60 bg-[linear-gradient(180deg,#ff5343_0%,#e41e24_52%,#9b1218_100%)] px-12 text-[32px] font-black tracking-[-0.05em] text-white shadow-[0_0_24px_rgba(255,79,48,0.62),inset_0_1px_0_rgba(255,255,255,0.45)] transition-all hover:-translate-y-0.5 max-lg:h-12 max-lg:min-w-0 max-lg:w-full max-lg:px-5 max-lg:text-[20px]"
-          >
-            <motion.span
-              className="absolute inset-y-0 left-[-40%] w-1/2 skew-x-[-18deg] bg-white/24"
-              animate={{ x: ['0%', '300%'] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <span className="relative">立即加入对立</span>
+            <Crown size={16} />
+            {isBetting ? '下注中...' : item.optionA}
           </button>
-
-          <div className="mb-6 flex flex-wrap items-center justify-center gap-4 text-[17px] font-black text-white/70 max-lg:gap-2 max-lg:text-[12px]">
-            {pk.phase === 'betting' ? <Countdown target={pk.lockTime} label="活动倒计时" color="text-[#f8d3a3]" /> : null}
-            {pk.phase === 'locked' ? <Countdown target={pk.roundEndTime} label="本局结束" color="text-[#f8d3a3]" /> : null}
-            {pk.phase === 'cooldown' && pk.nextRoundTime ? <Countdown target={pk.nextRoundTime} label="下一局开始" color="text-[#62efff]" /> : null}
-            <span>赛季 {pk.season.season}</span>
+          <div className="flex items-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
+              <Swords size={18} className="text-white/80" />
+            </div>
           </div>
-
-          <HeroVersusRail pctA={pctA} pctB={pctB} theme={theme} />
-        </div>
-
-        <div className="flex items-center max-lg:order-3">
-          <HeroSidePanel
-            side="B"
-            label={item.optionB}
-            pct={pctB}
-            count={Math.round(asNumber(pk.betCountB) || pk.currentHeatB)}
-            odds={item.oddsB}
-            accent={theme.sideB.accent}
-            primary={theme.sideB.primary}
-            voted={voted}
-            disabled={supportDisabled}
-            isBetting={isBetting}
+          <button
             onClick={() => onOpenBet(item, 'B')}
-          />
+            disabled={isBetting || !!voted || pk.phase !== 'betting'}
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border-0 py-3 text-sm font-bold ${
+              voted === 'B'
+                ? 'text-[#ffd7de] shadow-[0_14px_28px_rgba(255,79,117,0.16)]'
+                : isBetting || pk.phase !== 'betting'
+                  ? 'cursor-not-allowed bg-white/5 text-white/30'
+                  : 'text-[#ffd7de] shadow-[0_14px_28px_rgba(255,79,117,0.12)]'
+            }`}
+            style={
+              voted === 'B'
+                ? { border: `1px solid ${theme.sideB.accent}73`, background: `${theme.sideB.primary}40`, color: '#fff1f2' }
+                : isBetting || pk.phase !== 'betting'
+                  ? undefined
+                  : { border: `1px solid ${theme.sideB.accent}55`, background: `${theme.sideB.primary}30`, color: '#fff1f2' }
+            }
+          >
+            <Crown size={16} />
+            {isBetting ? '下注中...' : item.optionB}
+          </button>
         </div>
 
-        <div className="col-span-3 grid grid-cols-[1fr_1.45fr_1.45fr_2.15fr] gap-3 pt-2 max-lg:order-4 max-lg:col-span-1 max-lg:grid-cols-1">
-          <div className="rounded-[22px] border border-[#ff7a2f]/22 bg-[linear-gradient(135deg,rgba(75,22,9,0.78),rgba(10,12,18,0.78))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-            <div className="mb-4 flex items-center gap-2 text-[15px] font-black text-[#ffd28c]">
-              <Flame size={18} />
-              实时战况
-            </div>
-            <div className="mb-2 text-[30px] font-black tabular-nums text-[#ffd067]">{formatPkHeatValue(heatTotal)}</div>
-            <div className="text-[13px] font-semibold text-white/52">今日新增对立</div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-[11px] text-white/40">
+            <Trophy size={12} />
+            <span>每局 3 天 · 热度高者胜 · 赛季持续累计</span>
           </div>
-
-          <button
-            type="button"
-            onClick={() => onHistory(pk.id)}
-            className="rounded-[22px] border border-[#ff7a2f]/16 bg-[linear-gradient(135deg,rgba(46,18,9,0.82),rgba(9,12,18,0.82))] p-4 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:border-[#ffb35a]/34"
-          >
-            <div className="mb-4 flex items-center justify-between text-[15px] font-black text-[#ffd28c]">
-              <span className="inline-flex items-center gap-2"><Zap size={18} />最新热评</span>
-              <History size={16} className="text-white/32" />
-            </div>
-            <div className="mb-3 line-clamp-1 text-[17px] font-black text-white">{leading === 'B' ? item.optionB : item.optionA} 的气势正在压制全场！</div>
-            <div className="text-[13px] font-bold text-[#ffd28c]">{betTotal > 0 ? `${betTotal.toLocaleString()} 赞同` : '等待首个观点'}</div>
-          </button>
-
-          <div className="rounded-[22px] border border-[#f7c45b]/16 bg-[linear-gradient(135deg,rgba(25,21,13,0.86),rgba(8,12,18,0.82))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-            <div className="mb-4 flex items-center gap-2 text-[15px] font-black text-[#ffe08a]">
-              <Trophy size={18} />
-              核心数据对比
-            </div>
-            <div className="space-y-2.5">
-              {dataRows.map(([label, valueA, valueB]) => {
-                const total = Number(valueA) + Number(valueB) || 1;
-                const widthA = Math.round((Number(valueA) / total) * 100);
-                return (
-                  <div key={label} className="grid grid-cols-[52px_40px_1fr_40px] items-center gap-2 text-[13px] font-black">
-                    <span className="text-white/56">{label}</span>
-                    <span className="text-right tabular-nums text-[#ff8054]">{valueA}</span>
-                    <div className="flex h-2 overflow-hidden rounded-full bg-white/10">
-                      <span className="h-full bg-[linear-gradient(90deg,#f44b2c,#ffd05e)]" style={{ width: `${widthA}%` }} />
-                      <span className="h-full flex-1 bg-[linear-gradient(90deg,#38d7ff,#1777ff)]" />
-                    </div>
-                    <span className="tabular-nums text-[#55dfff]">{valueB}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="rounded-[22px] border border-[#2abfff]/16 bg-[linear-gradient(135deg,rgba(6,31,56,0.84),rgba(8,12,18,0.82))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-            <div className="mb-5 flex items-center gap-2 text-[15px] font-black text-[#a9efff]">
-              <MessageCircleMore size={18} />
-              热门观点
-            </div>
-            <div className="grid grid-cols-2 gap-5 max-sm:grid-cols-1">
-              <div>
-                <div className="mb-2 flex items-center gap-2 text-[13px] font-black text-white/72">
-                  <span className="grid h-7 w-7 place-items-center rounded-full bg-[#ff7942]/18 text-[#ffd28c]">A</span>
-                  球迷老张
-                </div>
-                <p className="line-clamp-2 text-[14px] font-semibold text-white/86">{item.optionA} 的支持者今天火力全开！</p>
-                <div className="mt-2 text-[12px] font-bold text-white/42">♡ {pctA.toFixed(0)}% 势能</div>
-              </div>
-              <div>
-                <div className="mb-2 flex items-center gap-2 text-[13px] font-black text-white/72">
-                  <span className="grid h-7 w-7 place-items-center rounded-full bg-[#2ccfff]/18 text-[#a9efff]">B</span>
-                  足球小将
-                </div>
-                <p className="line-clamp-2 text-[14px] font-semibold text-white/86">{item.optionB} 的反击同样强势！</p>
-                <div className="mt-2 text-[12px] font-bold text-white/42">♡ {pctB.toFixed(0)}% 势能</div>
-              </div>
-            </div>
+          <div className="flex gap-2">
+            <button onClick={() => onHistory(pk.id)} className="flex cursor-pointer items-center gap-1 rounded-lg border-0 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/80 transition-all hover:bg-white/20">
+              <History size={12} />
+              历史战绩
+            </button>
+            {onEnterBattle ? (
+              <button onClick={() => onEnterBattle(item)} className="flex cursor-pointer items-center gap-1.5 rounded-full border border-[#4f6489]/45 bg-[#10273d]/30 px-3 py-1.5 text-xs font-bold text-[#ffd7de] transition-colors hover:bg-[#163252]">
+                <MessageCircleMore size={12} className="text-[#5df3d7]" />
+                进入撕裂带
+              </button>
+            ) : null}
           </div>
         </div>
       </div>
@@ -1248,16 +1033,16 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
 
   return (
     <section className="mx-0 grid w-full max-w-none gap-6 max-lg:gap-3">
-      {/* <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3">
         <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-[#27d8cf] to-[#ff4f75]" />
         <h2 className="text-base font-bold text-slate-100">开撕台</h2>
         <span className="text-xs text-white/48">
           身份对立 · 回合制 · 热度决胜
           {topicsQuery.isLoading ? ' · 接口加载中' : apiPKs.length > 0 ? ' · 已接入接口' : ' · 暂无数据'}
         </span>
-      </div> */}
+      </div>
 
-      {/* <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[#0d1118] shadow-[0_14px_30px_rgba(0,0,0,0.24),inset_0_1px_0_rgba(255,255,255,0.05)]">
+      <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[#0d1118] shadow-[0_14px_30px_rgba(0,0,0,0.24),inset_0_1px_0_rgba(255,255,255,0.05)]">
         {heroPK?.newsItem.image ? (
           <img src={heroPK.newsItem.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-[0.14]" />
         ) : null}
@@ -1284,7 +1069,7 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
             </button>
           ) : null}
         </div>
-      </div> */}
+      </div>
 
       {heroPK ? (
         <HeroPK

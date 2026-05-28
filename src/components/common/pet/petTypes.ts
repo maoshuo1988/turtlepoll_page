@@ -10,6 +10,7 @@ export interface PetInfo {
   stamina: number;
   maxStamina: number;
   petKey?: string;
+  petId?: number | string;
   /** equip 接口 icon，json 为骨骼动画资源 */
   icon?: string;
   /** equip 接口 image，与 icon 同源时可二选一 */

@@ -11,6 +11,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { PetChat } from '@/components/common/pet/PetChat';
+import { hasDisplayPetRarity, hasEquippedPetInfo } from '@/components/common/pet/petEquip';
 import { PetAssetPreview } from '@/components/common/pet/PetAssetPreview';
 import { pickPetAvatarUrl } from '@/components/common/pet/petPreviewAsset';
 import type { AiPushMessage } from '@/hooks/aiTypes';
@@ -507,20 +508,20 @@ const AbilitiesTab: React.FC<{
           </div>
           <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-900/30 dark:bg-emerald-950/14">
             <div className="text-[13px] font-bold leading-6 text-slate-700 dark:text-rdark-text">
-              {currentAbility.ability}
+              {currentAbility.description}
             </div>
           </div>
         </div>
       </div>
 
-      <div className={`${card} p-4`}>
+      {/* <div className={`${card} p-4`}>
         <div className="mb-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-rdark-text2">
           <Shield size={11} /> 生效说明
         </div>
         <div className="text-[11px] leading-5 text-slate-500 dark:text-rdark-text2">
           当前页面按正在装备的龟种展示能力。切换龟种后，能力会随装备接口返回的 petKey / petName 自动更新。
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -567,6 +568,7 @@ export const PetPage: React.FC<PetPageProps> = ({
     pet.status,
   ]);
   const equippedAvatarUrl = pickPetAvatarUrl(equippedPet?.icon, equippedPet?.image);
+  const showEquippedPetHero = hasEquippedPetInfo(equippedPet);
   const isNightScene = usePetSceneIsNight();
   const isMobileViewport = useIsMobileViewport();
   const sceneBgSrc = isMobileViewport
@@ -623,31 +625,33 @@ export const PetPage: React.FC<PetPageProps> = ({
 
               {/* Pet character — centered */}
               <div className="absolute bottom-[12px] left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
-                {/* Dialogue bubble */}
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={dialogueKey}
-                    initial={{ opacity: 0, y: 5, scale: 0.9 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -5, scale: 0.9 }}
-                    className="relative mb-3 max-w-[260px] px-5 py-2.5 rounded-xl bg-white/90 dark:bg-rdark-card/90 shadow-lg border border-white/60 dark:border-rdark-border text-center backdrop-blur-sm"
-                  >
-                    <span className="text-[12px] text-slate-600 dark:text-rdark-text leading-snug block">
-                      {currentDialogue}
-                    </span>
-                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/90 dark:bg-rdark-card/90 rotate-45 border-r border-b border-white/60 dark:border-rdark-border" />
-                  </motion.div>
-                </AnimatePresence>
+                {showEquippedPetHero ? (
+                  <>
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={dialogueKey}
+                        initial={{ opacity: 0, y: 5, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.9 }}
+                        className="relative mb-3 max-w-[260px] px-5 py-2.5 rounded-xl bg-white/90 dark:bg-rdark-card/90 shadow-lg border border-white/60 dark:border-rdark-border text-center backdrop-blur-sm"
+                      >
+                        <span className="text-[12px] text-slate-600 dark:text-rdark-text leading-snug block">
+                          {currentDialogue}
+                        </span>
+                        <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/90 dark:bg-rdark-card/90 rotate-45 border-r border-b border-white/60 dark:border-rdark-border" />
+                      </motion.div>
+                    </AnimatePresence>
 
-                {/* Pet emoji — larger */}
-                <PetAssetPreview
-                  avatarUrl={equippedAvatarUrl}
-                  petKey={equippedPet?.petKey ?? equippedOwnedPet?.petKey}
-                  petName={equippedPet?.petName ?? equippedOwnedPet?.petName ?? displayPet.name}
-                  size={180}
-                  className="drop-shadow-[0_14px_24px_rgba(15,23,42,0.24)]"
-                  imageClassName="object-contain drop-shadow-[0_14px_24px_rgba(15,23,42,0.24)]"
-                />
+                    <PetAssetPreview
+                      avatarUrl={equippedAvatarUrl}
+                      petKey={equippedPet?.petKey}
+                      petName={equippedPet?.petName ?? displayPet.name}
+                      size={180}
+                      className="drop-shadow-[0_14px_24px_rgba(15,23,42,0.24)]"
+                      imageClassName="object-contain drop-shadow-[0_14px_24px_rgba(15,23,42,0.24)]"
+                    />
+                  </>
+                ) : null}
 
                 {/* Name + level */}
                 {/* <div className="flex items-center gap-1.5 mt-1">
@@ -690,8 +694,11 @@ export const PetPage: React.FC<PetPageProps> = ({
 
               {/* Pet info — top-left glass panel */}
               
-              <div className="absolute top-3 left-16 z-10">
-                 <RarityBadge rarity={equippedPet?.rarity} size="lg" />
+              {showEquippedPetHero && hasDisplayPetRarity(equippedPet?.rarity) ? (
+                <div className="absolute top-3 left-16 z-10">
+                  <RarityBadge rarity={equippedPet?.rarity} size="lg" />
+                </div>
+              ) : null}
                 {/* <div className="bg-white/70 dark:bg-rdark-card/70 backdrop-blur-sm rounded-lg px-3 py-2 shadow-sm border border-white/40 dark:border-rdark-border/50 flex items-center gap-3">
                   <div>
                     <div className="text-[8px] text-slate-400 dark:text-rdark-text2 leading-none mb-0.5">稀有度</div>
@@ -708,7 +715,6 @@ export const PetPage: React.FC<PetPageProps> = ({
                     <span className="text-[10px] font-bold text-purple-600 dark:text-purple-400">Spark {petStatus?.spark ?? 0}</span>
                   </div>
                 </div> */}
-              </div>
 
               {/* Chat button — bottom center */}
               {/* <button

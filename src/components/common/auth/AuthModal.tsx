@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowLeft, ChevronRight, Eye, EyeOff, LockKeyhole, LogOut, Mail, X } from 'lucide-react';
 import { AuthDailySettleCard } from './AuthDailySettleCard';
-import { ImageCaptchaModal } from './ImageCaptchaModal';
 import { useRequestSignIn, useRequestSignUp } from '@/hooks/useAuthRequests';
 import type { AuthUser, DailySettleSummary } from '@/hooks/authTypes';
 import { getAuthToken, getStoredDailySettle, getStoredUserInfo, saveAuthToken, saveDailySettle, saveUserInfo } from '@/utils/authStorage';
@@ -26,17 +25,9 @@ type LoginFormState = {
 };
 
 type RegisterFormState = {
-  email: string;
   username: string;
-  nickname: string;
   password: string;
   rePassword: string;
-};
-
-type CaptchaPayload = {
-  captchaId: string;
-  captchaCode: string;
-  captchaProtocol: number;
 };
 
 const initialLoginForm: LoginFormState = {
@@ -46,9 +37,7 @@ const initialLoginForm: LoginFormState = {
 };
 
 const initialRegisterForm: RegisterFormState = {
-  email: '',
   username: '',
-  nickname: '',
   password: '',
   rePassword: '',
 };
@@ -181,7 +170,6 @@ function LoginPanel({
               value={loginForm.username}
               onChange={(value) => setLoginForm((prev) => ({ ...prev, username: value }))}
               placeholder="请输入用户名"
-              type="email"
             />
             <PrimaryInput
               icon={<LockKeyhole className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" strokeWidth={2.1} />}
@@ -272,34 +260,15 @@ function RegisterPanel({
       </div>
 
       <div className="!space-y-3 !px-1 lg:!space-y-[18px] lg:!px-[4px]">
-        <PrimaryInput
-          icon={<Mail className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" strokeWidth={2.1} />}
-          value={registerForm.email}
-          onChange={(value) => setRegisterForm((prev) => ({ ...prev, email: value }))}
-          placeholder="请输入邮箱"
-          type="email"
-        />
-
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:!gap-[18px]">
-          <LabeledField label="用户名">
-            <PrimaryInput
-              icon={null}
-              value={registerForm.username}
-              onChange={(value) => setRegisterForm((prev) => ({ ...prev, username: value }))}
-              placeholder="请输入用户名"
-              className="!px-4 lg:px-[28px]"
-            />
-          </LabeledField>
-          <LabeledField label="昵称">
-            <PrimaryInput
-              icon={null}
-              value={registerForm.nickname}
-              onChange={(value) => setRegisterForm((prev) => ({ ...prev, nickname: value }))}
-              placeholder="请输入昵称"
-              className="!px-4 lg:px-[28px]"
-            />
-          </LabeledField>
-        </div>
+        <LabeledField label="用户名">
+          <PrimaryInput
+            icon={<Mail className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" strokeWidth={2.1} />}
+            value={registerForm.username}
+            onChange={(value) => setRegisterForm((prev) => ({ ...prev, username: value }))}
+            placeholder="请输入用户名"
+            className="!px-4 lg:px-[28px]"
+          />
+        </LabeledField>
 
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-[18px]">
           <LabeledField label="密码">
@@ -328,7 +297,7 @@ function RegisterPanel({
           </LabeledField>
         </div>
 
-        <div className="!px-2 text-[15px] tracking-[-0.02em] text-zinc-500 lg:!px-[14px] lg:text-[18px]">点击提交后会进入数字验证码验证</div>
+        <div className="!px-2 text-[15px] tracking-[-0.02em] text-zinc-500 lg:!px-[14px] lg:text-[18px]">注册会直接提交，不再进行图片验证码校验</div>
         <ErrorText text={error} />
       </div>
 
@@ -418,7 +387,6 @@ export function AuthModal({
   const [registerForm, setRegisterForm] = useState(initialRegisterForm);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [captchaMode, setCaptchaMode] = useState<AuthTab | null>(null);
 
   //注册请求
   const signUpMutation = useRequestSignUp();
@@ -440,9 +408,7 @@ export function AuthModal({
     }
 
     if (
-      !registerForm.email.trim() ||
       !registerForm.username.trim() ||
-      !registerForm.nickname.trim() ||
       !registerForm.password ||
       !registerForm.rePassword
     ) {
@@ -462,7 +428,6 @@ export function AuthModal({
     if (!open) {
       resetFeedback();
       setSubmitting(false);
-      setCaptchaMode(null);
       return;
     }
 
@@ -476,8 +441,7 @@ export function AuthModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
 
-  async function submitWithCaptcha(captcha: CaptchaPayload) {
-    setCaptchaMode(null);
+  async function submitAuth() {
     setSubmitting(true);
     resetFeedback();
 
@@ -488,7 +452,7 @@ export function AuthModal({
           username: loginForm.username.trim(),
           password: loginForm.password,
           redirect: '',
-          ...captcha,
+          captchaProtocol: 4,
         });
         if (signInResult?.token) {
           saveAuthToken(signInResult.token);
@@ -504,13 +468,11 @@ export function AuthModal({
 
 
       const signUpResult = await signUpMutation.mutateAsync({
-        email: registerForm.email.trim(),
         username: registerForm.username.trim(),
-        nickname: registerForm.nickname.trim(),
         password: registerForm.password,
         rePassword: registerForm.rePassword,
         redirect: '',
-        ...captcha,
+        captchaProtocol: 4,
       });
 
       if (signUpResult?.token) {
@@ -541,57 +503,47 @@ export function AuthModal({
   const dailySettle = getStoredDailySettle()
 
   return createPortal(
-    <>
-      <Shell onClose={onClose} maxWidth={isAuthenticated ? 'max-w-[560px]' : tab === 'login' ? 'max-w-[560px]' : 'max-w-[640px]'}>
-        {isAuthenticated && userinfo ? (
-          <UserPanel userinfo={userinfo} dailySettle={dailySettle} onClose={onClose} onSignOut={onSignOut} />
-        ) : tab === 'login' ? (
-          <LoginPanel
-            loginForm={loginForm}
-            setLoginForm={setLoginForm}
-            error={error}
-            submitting={isMutating}
-            onSubmit={() => {
-              resetFeedback();
-              if (!validateActiveForm()) {
-                return;
-              }
-              setCaptchaMode('login');
-            }}
-            onSwitchToRegister={() => {
-              setTab('register');
-              resetFeedback();
-            }}
-          />
-        ) : (
-          <RegisterPanel
-            registerForm={registerForm}
-            setRegisterForm={setRegisterForm}
-            error={error}
-            submitting={isMutating}
-            onBackToLogin={() => {
-              setTab('login');
-              resetFeedback();
-            }}
-            onSubmit={() => {
-              resetFeedback();
-              if (!validateActiveForm()) {
-                return;
-              }
-              setCaptchaMode('register');
-            }}
-          />
-        )}
-      </Shell>
-
-      <ImageCaptchaModal
-        open={captchaMode !== null}
-        onClose={() => setCaptchaMode(null)}
-        onSuccess={(payload) => {
-          void submitWithCaptcha(payload);
-        }}
-      />
-    </>,
+    <Shell onClose={onClose} maxWidth={isAuthenticated ? 'max-w-[560px]' : tab === 'login' ? 'max-w-[560px]' : 'max-w-[640px]'}>
+      {isAuthenticated && userinfo ? (
+        <UserPanel userinfo={userinfo} dailySettle={dailySettle} onClose={onClose} onSignOut={onSignOut} />
+      ) : tab === 'login' ? (
+        <LoginPanel
+          loginForm={loginForm}
+          setLoginForm={setLoginForm}
+          error={error}
+          submitting={isMutating}
+          onSubmit={() => {
+            resetFeedback();
+            if (!validateActiveForm()) {
+              return;
+            }
+            void submitAuth();
+          }}
+          onSwitchToRegister={() => {
+            setTab('register');
+            resetFeedback();
+          }}
+        />
+      ) : (
+        <RegisterPanel
+          registerForm={registerForm}
+          setRegisterForm={setRegisterForm}
+          error={error}
+          submitting={isMutating}
+          onBackToLogin={() => {
+            setTab('login');
+            resetFeedback();
+          }}
+          onSubmit={() => {
+            resetFeedback();
+            if (!validateActiveForm()) {
+              return;
+            }
+            void submitAuth();
+          }}
+        />
+      )}
+    </Shell>,
     document.body,
   );
 }

@@ -2,6 +2,7 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, Coins, Flame } from 'lucide-react';
+import { hasDisplayPetRarity, hasEquippedPetInfo } from '@/components/common/pet/petEquip';
 import { getPetRarityBadgeClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
 import { PetAssetPreview } from '@/components/common/pet/PetAssetPreview';
 import { pickPetAvatarUrl } from '@/components/common/pet/petPreviewAsset';
@@ -18,6 +19,7 @@ export interface SidebarPetProfilePet {
   /** emoji 或可直接渲染的短字符串 */
   avatar: string;
   petKey?: string;
+  petId?: number | string;
   icon?: string;
   image?: string;
 }
@@ -55,6 +57,7 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
   petBadgeIcon: _petBadgeIcon = '❄️',
 }) => {
   const isNightScene = usePetSceneIsNight();
+  const showEquippedPet = hasEquippedPetInfo(pet);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-emerald-400/22 bg-gradient-to-b from-[#0c1318] via-[#0e1a18] to-[#0a1614] shadow-[0_14px_34px_rgba(0,0,0,0.36)] dark:border-emerald-500/25">
@@ -71,7 +74,7 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
           <span className="truncate text-[13px] font-bold text-sky-100 [text-shadow:0_0_8px_rgba(125,211,252,0.4)] dark:text-sky-50">
             {petBadgeName}
           </span>
-          {pet.rarityKey != null && String(pet.rarityKey).trim() !== '' ? (
+          {hasDisplayPetRarity(pet.rarityKey) ? (
             <span className={`shrink-0 inline-flex rounded-full px-1.5 py-[1px] text-[9px] font-black ${getPetRarityBadgeClass(pet.rarityKey)}`}>
               {normalizePetRarityGrade(pet.rarityKey)}
             </span>
@@ -95,28 +98,30 @@ export const PetProfilePanel: React.FC<PetProfilePanelProps> = ({
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
 
-        <div className="absolute bottom-[4px] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={dialogueKey}
-              initial={{ opacity: 0, y: 5, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -5, scale: 0.9 }}
-              className="relative mb-1.5 max-w-[180px] rounded-xl border border-emerald-400/28 bg-[#0a1614]/85 px-2.5 py-1.5 text-center shadow-[0_6px_18px_rgba(0,0,0,0.5)] backdrop-blur-md dark:border-emerald-500/35 dark:bg-rdark-card/90"
-            >
-              <span className="block truncate text-[10px] leading-snug text-emerald-100/90 dark:text-emerald-50/95">{currentDialogue}</span>
-              <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-emerald-400/28 bg-[#0a1614]/85 dark:border-emerald-500/35 dark:bg-rdark-card/90" />
-            </motion.div>
-          </AnimatePresence>
-          <PetAssetPreview
-            avatarUrl={pickPetAvatarUrl(pet.icon, pet.image)}
-            petKey={pet.petKey}
-            petName={pet.name}
-            size={120}
-            className="pointer-events-none select-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.45)]"
-            imageClassName="object-contain pointer-events-none select-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.45)]"
-          />
-        </div>
+        {showEquippedPet ? (
+          <div className="absolute bottom-[4px] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={dialogueKey}
+                initial={{ opacity: 0, y: 5, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -5, scale: 0.9 }}
+                className="relative mb-1.5 max-w-[180px] rounded-xl border border-emerald-400/28 bg-[#0a1614]/85 px-2.5 py-1.5 text-center shadow-[0_6px_18px_rgba(0,0,0,0.5)] backdrop-blur-md dark:border-emerald-500/35 dark:bg-rdark-card/90"
+              >
+                <span className="block truncate text-[10px] leading-snug text-emerald-100/90 dark:text-emerald-50/95">{currentDialogue}</span>
+                <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-emerald-400/28 bg-[#0a1614]/85 dark:border-emerald-500/35 dark:bg-rdark-card/90" />
+              </motion.div>
+            </AnimatePresence>
+            <PetAssetPreview
+              avatarUrl={pickPetAvatarUrl(pet.icon, pet.image)}
+              petKey={pet.petKey}
+              petName={pet.name}
+              size={120}
+              className="pointer-events-none select-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.45)]"
+              imageClassName="object-contain pointer-events-none select-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.45)]"
+            />
+          </div>
+        ) : null}
 
 
         {/* <div className="absolute left-2 top-2 z-10 flex flex-col gap-1.5">

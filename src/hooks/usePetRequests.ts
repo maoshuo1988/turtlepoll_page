@@ -3,6 +3,7 @@
  */
 import { axiosCustom } from "@/api/httpClient";
 import { SERVER_ASSET_ORIGIN } from "@/config";
+import { pickValidPetId, pickValidPetRarity } from '@/components/common/pet/petEquip';
 import { normalizePetRarityGrade, PetRarityGrade } from "@/components/common/pet/petRarity";
 import {
   API_Admin_Pet_Defs,
@@ -21,6 +22,7 @@ import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import type {
   OwnedPetItem,
+  PetAbilityDescription,
   PetEggHatchResponse,
   PetEquipInfo,
   PetEquipMutationResponse,
@@ -365,11 +367,13 @@ function normalizePetEquipInfo(raw: unknown): PetEquipInfo {
   const nestedPet = isRecord(raw.pet) ? raw.pet : undefined;
   const avatarRaw = pickNonEmptyString(raw.icon, raw.image, nestedPet?.icon, nestedPet?.image);
   const avatarUrl = avatarRaw ? resolveApiAssetUrl(avatarRaw) : undefined;
-  const petId = pickNonEmptyString(raw.petId, nestedPet?.petId, nestedPet?.id);
+  const petId = pickValidPetId(raw.petId, nestedPet?.petId, nestedPet?.id);
   const petKey = pickNonEmptyString(raw.petKey, nestedPet?.petKey, nestedPet?.petCode);
   const petName = pickNonEmptyString(raw.petName, nestedPet?.name);
-  const rarityRaw = pickNonEmptyString(raw.rarityKey, raw.rarity, nestedPet?.rarityKey, nestedPet?.rarity);
+  const rarityRaw = pickValidPetRarity(raw.rarityKey, raw.rarity, nestedPet?.rarityKey, nestedPet?.rarity);
   const levelRaw = raw.level ?? nestedPet?.level;
+  const abilityDescriptions = normalizePetAbilityDescriptions(raw.abilityDescriptions) ?? normalizePetAbilityDescriptions(nestedPet?.abilityDescriptions);
+  const abilities = normalizePetAbilities(raw.abilities) ?? normalizePetAbilities(nestedPet?.abilities);
 
   return {
     petId: petId || '',
@@ -379,9 +383,35 @@ function normalizePetEquipInfo(raw: unknown): PetEquipInfo {
     level: typeof levelRaw === 'number' && Number.isFinite(levelRaw) ? levelRaw : undefined,
     equippedAt: typeof raw.equippedAt === 'number' ? raw.equippedAt : undefined,
     equipDayName: typeof raw.equipDayName === 'number' ? raw.equipDayName : undefined,
+    ...(abilities ? { abilities } : {}),
+    ...(abilityDescriptions ? { abilityDescriptions } : {}),
     icon: avatarUrl,
     image: avatarUrl,
   };
+}
+
+function normalizePetAbilityDescriptions(raw: unknown): PetAbilityDescription[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+
+  const rows = raw
+    .filter(isRecord)
+    .flatMap((item) => {
+      const description = pickNonEmptyString(item.description);
+      if (!description) return [];
+
+      return [{
+        description,
+        ...(typeof item.enabled === 'boolean' ? { enabled: item.enabled } : {}),
+        ...(pickNonEmptyString(item.featureKey, item.feature_key) ? { featureKey: pickNonEmptyString(item.featureKey, item.feature_key) } : {}),
+        ...(pickNonEmptyString(item.name) ? { name: pickNonEmptyString(item.name) } : {}),
+      }];
+    });
+
+  return rows.length ? rows : undefined;
+}
+
+function normalizePetAbilities(raw: unknown): Record<string, unknown> | undefined {
+  return isRecord(raw) ? raw : undefined;
 }
 
 export function useRequestPetEquip() {
@@ -572,9 +602,10 @@ export function useRequestPetEquipUpdate() {
         },
       });
       const result = assertSuccess<PetEquipMutationResponse>(res);
+      const normalizedPet = normalizePetEquipInfo(result);
       return {
         ...result,
-        pet: normalizePetEquipInfo(result.pet),
+        pet: normalizedPet.petId ? normalizedPet : normalizePetEquipInfo(result.pet),
       };
     },
     onSuccess: async (result, payload) => {

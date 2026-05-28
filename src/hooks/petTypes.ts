@@ -18,10 +18,19 @@ export type PetEquipInfo = {
   level?: number;
   equippedAt?: number;
   equipDayName?: number;
+  abilities?: Record<string, unknown>;
+  abilityDescriptions?: PetAbilityDescription[];
   /** equip 接口 icon，json 为骨骼动画资源 */
   icon?: string;
   /** equip 接口 image，与 icon 同源时可二选一 */
   image?: string;
+};
+
+export type PetAbilityDescription = {
+  description: string;
+  enabled?: boolean;
+  featureKey?: string;
+  name?: string;
 };
 
 export type OwnedPetItem = {
@@ -93,6 +102,8 @@ export type PetEquipMutationResponse = {
   ok: boolean;
   pet: PetEquipInfo;
   nextEffectiveAt?: number | string;
+  abilities?: Record<string, unknown>;
+  abilityDescriptions?: PetAbilityDescription[];
 };
 
 export type PetStaminaConsumePayload = {
