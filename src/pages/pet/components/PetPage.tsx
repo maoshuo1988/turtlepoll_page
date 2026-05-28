@@ -8,7 +8,6 @@ import {
   Heart,
   Zap,
   Shield,
-  Check,
   MessageCircle,
 } from 'lucide-react';
 import { PetChat } from '@/components/common/pet/PetChat';
@@ -21,7 +20,6 @@ import type {
 } from '@/components/common/pet/petTypes';
 import type { OwnedPetItem, PetEquipInfo, PetStaminaResponse, PetStatusResponse } from '@/hooks/petTypes';
 import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
-import { getPetDisplayAvatar } from './petDisplay';
 import { getTurtleAbility } from './petAbilities';
 import {
   formatBeijingDateTime,
@@ -107,8 +105,6 @@ const StatusTab: React.FC<{
   ownedPetsCount?: number;
   onOpenSpeciesManager?: () => void;
 }> = ({
-  pet,
-  equippedPet,
   petStatus,
 }) => {
   const aiMessages = (petStatus?.ai ?? []).map(getPetStatusAiText).filter(Boolean).slice(0, 3);
@@ -319,26 +315,12 @@ const SpeciesTab: React.FC<{
   equippingPetId?: number | string | null;
   onEquipPet?: (petId: number | string) => Promise<unknown>;
 }> = ({
-  pet,
   ownedPets,
-  equippedPet,
   equippingPetId,
   onEquipPet,
 }) => {
   const [petActionMessage, setPetActionMessage] = useState<string | null>(null);
   const petList = ownedPets ?? [];
-  const currentEquippedPet =
-    petList.find((item) => item.isEquipped) ??
-    (equippedPet
-      ? {
-          petId: equippedPet.petId,
-          petKey: equippedPet.petKey,
-          petName: equippedPet.petName,
-          rarity: equippedPet.rarity,
-          level: equippedPet.level,
-          isEquipped: true,
-        }
-      : null);
 
   const handleEquipPetClick = async (petId: number | string) => {
     if (!onEquipPet) return;
@@ -487,7 +469,6 @@ const AbilitiesTab: React.FC<{
   equippedPet?: PetEquipInfo | null;
 }> = ({ pet, equippedPet }) => {
   const currentAbility = getTurtleAbility(equippedPet, pet.name);
-  const avatar = getPetDisplayAvatar(equippedPet?.petKey, currentAbility.displayName) || pet.avatar;
 
   return (
     <div className="space-y-4">

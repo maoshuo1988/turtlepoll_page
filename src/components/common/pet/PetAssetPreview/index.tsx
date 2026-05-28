@@ -1,7 +1,7 @@
 /**
  * 文件说明：龟种预览统一展示，json 资源走 Spine，其余走静态图。
  */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DynamicSpine } from '@/components/common/spine/DynamicSpine';
 import {
   resolvePetPreviewAsset,
