@@ -116,6 +116,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
               level: pet.level,
               avatar: pet.avatar,
               petKey: pet.petKey,
+              petId: pet.petId,
               icon: pet.icon,
               image: pet.image,
             }}

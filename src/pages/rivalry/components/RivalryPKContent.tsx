@@ -552,6 +552,32 @@ function HeroPK({
         <h1 className="mb-1 text-xl font-extrabold leading-tight text-white md:text-2xl">{item.title}</h1>
         <p className="mb-4 max-w-xl text-sm text-white/50">{item.summary}</p>
 
+        <div className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3 lg:hidden">
+          <div className="min-w-0 rounded-[18px] border border-white/10 bg-black/26 p-3 backdrop-blur-sm">
+            <div className="relative mx-auto mb-2 h-[92px] w-full max-w-[150px] overflow-hidden rounded-[18px] border border-white/12 bg-black/30">
+              <img src={theme.sideA.portrait} alt={item.optionA} className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/48 via-transparent to-white/6" />
+            </div>
+            <div className="truncate text-center text-[12px] font-black text-white">{item.optionA}</div>
+            <div className="mt-1 text-center text-[18px] font-black tabular-nums leading-none" style={{ color: theme.sideA.accent }}>
+              {formatPkHeatValue(pk.currentHeatA)}
+            </div>
+          </div>
+          <div className="grid h-11 w-11 place-items-center rounded-full border border-white/14 bg-white/[0.08] text-[12px] font-black tracking-[0.18em] text-white/70 shadow-[0_0_20px_rgba(255,255,255,0.08)]">
+            VS
+          </div>
+          <div className="min-w-0 rounded-[18px] border border-white/10 bg-black/26 p-3 backdrop-blur-sm">
+            <div className="relative mx-auto mb-2 h-[92px] w-full max-w-[150px] overflow-hidden rounded-[18px] border border-white/12 bg-black/30">
+              <img src={theme.sideB.portrait} alt={item.optionB} className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/48 via-transparent to-white/6" />
+            </div>
+            <div className="truncate text-center text-[12px] font-black text-white">{item.optionB}</div>
+            <div className="mt-1 text-center text-[18px] font-black tabular-nums leading-none" style={{ color: theme.sideB.accent }}>
+              {formatPkHeatValue(pk.currentHeatB)}
+            </div>
+          </div>
+        </div>
+
         <div className="mb-4 rounded-2xl border border-white/[0.1] bg-black/25 px-4 py-3 backdrop-blur-sm">
           <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex min-w-0 flex-1 items-start gap-2.5 sm:items-center">

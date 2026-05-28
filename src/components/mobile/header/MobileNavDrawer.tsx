@@ -4,6 +4,7 @@
 import React, { useEffect } from 'react';
 import { Gift, LogIn, LogOut, Settings, Turtle, UserRound } from 'lucide-react';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
+import { createUserAvatarUrl } from '@/utils/userAvatar';
 import { MOBILE_HEADER_INNER_HEIGHT_PX } from './mobileHeaderMetrics';
 
 export interface MobileNavDrawerProps {
@@ -31,10 +32,12 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
 }) => {
   const isAuthenticated = Boolean(getAuthToken());
   const storedUser = getStoredUserInfo() as {
-    avatar?: string;
+    id?: string | number;
     nickname?: string;
     username?: string;
   };
+  const avatarUrl = createUserAvatarUrl(storedUser?.id, 56);
+  const fallbackInitial = (storedUser?.nickname || storedUser?.username || 'U').trim().slice(0, 1).toUpperCase();
 
   useEffect(() => {
     if (!open) return;
@@ -120,10 +123,14 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
                       : 'border-slate-200 bg-slate-100'
                   }`}
                 >
-                  {storedUser?.avatar && storedUser.avatar.startsWith('http') ? (
-                    <img src={storedUser.avatar} alt="" className="h-full w-full object-cover" />
+                  {isAuthenticated && avatarUrl ? (
+                    <img src={avatarUrl} alt={storedUser?.nickname || storedUser?.username || '用户头像'} className="h-full w-full object-cover" />
+                  ) : isAuthenticated ? (
+                    <span aria-hidden className="text-xl font-black">
+                      {fallbackInitial || 'U'}
+                    </span>
                   ) : (
-                    <span aria-hidden>🐢</span>
+                    <UserRound size={24} strokeWidth={2} aria-hidden />
                   )}
                 </div>
                 <div className="min-w-0 flex-1 pt-0.5">
