@@ -81,7 +81,7 @@ export type PetStatusResponse = {
 
 export type PetEquipPayload =
   | {
-      petId: number | string;
+      petId: number;
       petKey?: never;
     }
   | {

@@ -151,7 +151,7 @@ export function ImageCaptchaModal({ open, onClose, onSuccess }: ImageCaptchaModa
                   <input
                     ref={inputRef}
                     type="text"
-                    inputMode="numeric"
+                    inputMode="text"
                     autoComplete="one-time-code"
                     value={captchaCode}
                     onChange={(event) => {

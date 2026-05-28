@@ -67,8 +67,8 @@ interface PetPageProps {
   ownedPets?: OwnedPetItem[];
   petStatus?: PetStatusResponse | null;
   petStaminaInfo?: PetStaminaResponse | null;
-  onEquipPet?: (petId: number | string) => Promise<unknown>;
-  equippingPetId?: number | string | null;
+  onEquipPet?: (petId: number) => Promise<unknown>;
+  equippingPetId?: number | null;
   onStaminaChange?: (newStamina: number) => void;
   /** 与 PC 侧栏一致的 AI 推送，传入 PetChat */
   aiPushMessages?: AiPushMessage[];
@@ -312,8 +312,8 @@ const SpeciesTab: React.FC<{
   pet: PetInfo;
   ownedPets?: OwnedPetItem[];
   equippedPet?: PetEquipInfo | null;
-  equippingPetId?: number | string | null;
-  onEquipPet?: (petId: number | string) => Promise<unknown>;
+  equippingPetId?: number | null;
+  onEquipPet?: (petId: number) => Promise<unknown>;
 }> = ({
   ownedPets,
   equippingPetId,
@@ -325,8 +325,14 @@ const SpeciesTab: React.FC<{
   const handleEquipPetClick = async (petId: number | string) => {
     if (!onEquipPet) return;
 
+    const numericPetId = typeof petId === 'number' ? petId : Number(petId);
+    if (!Number.isFinite(numericPetId)) {
+      setPetActionMessage('无效的宠物 ID');
+      return;
+    }
+
     try {
-      const result = await onEquipPet(petId);
+      const result = await onEquipPet(numericPetId);
       const nextEffectiveAt =
         typeof result === 'object' && result && 'nextEffectiveAt' in result
           ? (result as { nextEffectiveAt?: number | string }).nextEffectiveAt
@@ -395,7 +401,7 @@ const SpeciesTab: React.FC<{
         {petList.length > 0 ? (
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
             {petList.map((ownedPet) => {
-              const isPending = equippingPetId === ownedPet.petId;
+              const isPending = equippingPetId != null && equippingPetId === Number(ownedPet.petId);
               const isEquipped = Boolean(ownedPet.isEquipped);
 
               return (

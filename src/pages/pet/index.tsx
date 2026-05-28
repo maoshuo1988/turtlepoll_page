@@ -60,7 +60,7 @@ export default function PetPage() {
     setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));
   }, []);
 
-  const handleEquipPet = useCallback(async (petId: number | string) => {
+  const handleEquipPet = useCallback(async (petId: number) => {
     const result = await petEquipMutation.mutateAsync({ petId });
     void Promise.all([
       petEquipQuery.refetch(),
@@ -89,7 +89,7 @@ export default function PetPage() {
       onEquipPet={handleEquipPet}
       equippingPetId={
         petEquipMutation.isLoading
-          ? (petEquipMutation.variables?.petId ?? petEquipMutation.variables?.petKey ?? null)
+          ? (petEquipMutation.variables?.petId ?? null)
           : null
       }
       onStaminaChange={setPetStamina}
