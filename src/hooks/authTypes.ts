@@ -68,8 +68,8 @@ export type ImageCaptchaChallenge = {
 };
 
 export type CaptchaVerification = {
-  captchaId: string;
-  captchaCode: string;
+  captchaId?: string;
+  captchaCode?: string;
   captchaProtocol: number;
 };
 
@@ -87,9 +87,7 @@ export type SignInResponse = {
 };
 
 export type SignUpPayload = {
-  email: string;
   username: string;
-  nickname: string;
   password: string;
   rePassword: string;
   redirect?: string;
