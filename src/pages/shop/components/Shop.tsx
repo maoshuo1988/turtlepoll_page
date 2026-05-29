@@ -103,6 +103,7 @@ export const Shop: React.FC<ShopProps> = ({
   const previewScrollMobileRef = useRef<HTMLDivElement | null>(null);
   const previewDragRef = useRef({ active: false, startX: 0, scrollLeft: 0 });
   const ownedPetsScrollRef = useRef<HTMLDivElement | null>(null);
+  const ownedPetsScrollMobileRef = useRef<HTMLDivElement | null>(null);
   const ownedPetsDragRef = useRef({ active: false, startX: 0, scrollLeft: 0 });
   const [buyFlash, setBuyFlash] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -582,14 +583,11 @@ export const Shop: React.FC<ShopProps> = ({
               <TextEmptyState text="暂无已拥有龟种" />
             </div>
           ) : (
-            <div
-              ref={ownedPetsScrollRef}
-              onMouseDown={handleOwnedPetsMouseDown}
-              onMouseMove={handleOwnedPetsMouseMove}
-              onMouseUp={stopOwnedPetsDrag}
-              onMouseLeave={stopOwnedPetsDrag}
-              className="flex gap-2 overflow-x-auto px-3 py-4 snap-x snap-mandatory select-none scroll-smooth overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing sm:gap-3 sm:px-4 sm:py-5"
-            >
+            <div className="px-3 py-3 sm:px-4 sm:py-4">
+              <div
+                ref={ownedPetsScrollMobileRef}
+                className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:thin] overscroll-x-contain [-webkit-overflow-scrolling:touch]"
+              >
               {ownedPetList.map((petItem) => (
                 <div
                   key={String(petItem.petId)}
@@ -618,6 +616,7 @@ export const Shop: React.FC<ShopProps> = ({
                   </div>
                 </div>
               ))}
+              </div>
             </div>
           )}
         </section>
@@ -845,7 +844,7 @@ export const Shop: React.FC<ShopProps> = ({
           onMouseMove={handleOwnedPetsMouseMove}
           onMouseUp={stopOwnedPetsDrag}
           onMouseLeave={stopOwnedPetsDrag}
-          className="-mx-1 flex gap-3 overflow-x-auto px-3 py-3 snap-x snap-mandatory select-none scroll-smooth overscroll-x-contain [touch-action:pan-x] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
+          className="flex min-w-0 gap-3 overflow-x-auto pb-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
         >
           {ownedPetList.length > 0 ? ownedPetList.map((petItem) => (
             <div
