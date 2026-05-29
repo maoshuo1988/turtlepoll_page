@@ -22,7 +22,20 @@ export interface DynamicSpineProps {
   animation?: string;
   fallback?: React.ReactNode;
   padding?: number;
+  offsetX?: number;
   offsetY?: number;
+  /** 垂直对齐，默认居中 */
+  verticalAlign?: 'center' | 'top' | 'bottom';
+  /** contain 完整显示；cover 铺满容器（可能裁切） */
+  fit?: 'contain' | 'cover';
+  /** 是否循环播放，默认 true */
+  loop?: boolean;
+  /** 动画包围盒采样步长（秒），越小越精确，默认 0.05 */
+  boundsSampleStep?: number;
+  /** @deprecated 请改用 boundsSampleStep */
+  boundsClipMargin?: number;
+  /** 布局采样时间（秒），用于特效动画取最大包围盒，如龟蛋 idle 光晕 */
+  layoutSampleTime?: number;
 }
 
 const registeredAtlasAliases = new Set<string>();
@@ -79,13 +92,35 @@ function resolveAnimationName(spine: Spine, preferred?: string): string | null {
 function layoutSpine(
   spine: Spine,
   app: Application,
-  options: { width: number; height: number; padding: number; offsetY: number },
+  options: {
+    width: number;
+    height: number;
+    padding: number;
+    offsetX: number;
+    offsetY: number;
+    verticalAlign: 'center' | 'top' | 'bottom';
+    fit: 'contain' | 'cover';
+    animation?: string;
+    loop: boolean;
+    boundsSampleStep: number;
+    layoutSampleTime: number;
+  },
 ) {
-  const boundsAnimation = resolveAnimationName(spine, 'idle') ?? 'idle';
+  const animationName = resolveAnimationName(spine, options.animation) ?? 'idle';
 
   spine.skeleton.setSkin('default');
-  spine.boundsProvider = new SkinsAndAnimationBoundsProvider(boundsAnimation, ['default'], 0.05);
   spine.skeleton.setupPose();
+  spine.boundsProvider = new SkinsAndAnimationBoundsProvider(
+    animationName,
+    ['default'],
+    options.boundsSampleStep,
+  );
+
+  spine.state.setAnimation(0, animationName, options.loop);
+  if (options.layoutSampleTime > 0) {
+    spine.state.update(options.layoutSampleTime);
+  }
+  spine.state.apply(spine.skeleton);
   spine.skeleton.updateWorldTransform(Physics.update);
   spine.update(0);
 
@@ -96,18 +131,31 @@ function layoutSpine(
 
   const targetWidth = Math.max(options.width - options.padding * 2, 1);
   const targetHeight = Math.max(options.height - options.padding * 2, 1);
-  const scale = Math.min(targetWidth / bounds.width, targetHeight / bounds.height);
+  const scaleX = targetWidth / bounds.width;
+  const scaleY = targetHeight / bounds.height;
+  const scale = options.fit === 'cover' ? Math.max(scaleX, scaleY) : Math.min(scaleX, scaleY);
+
+  const scaledWidth = bounds.width * scale;
+  const scaledHeight = bounds.height * scale;
+
+  let x = (app.screen.width - scaledWidth) / 2 - bounds.x * scale;
+  let y =
+    options.verticalAlign === 'top'
+      ? options.padding - bounds.y * scale
+      : options.verticalAlign === 'bottom'
+        ? app.screen.height - scaledHeight - options.padding - bounds.y * scale
+        : (app.screen.height - scaledHeight) / 2 - bounds.y * scale;
 
   spine.scale.set(scale);
-  spine.x = (app.screen.width - bounds.width * scale) / 2 - bounds.x * scale;
-  spine.y =
-    (app.screen.height - bounds.height * scale) / 2 - bounds.y * scale + options.offsetY;
-}
+  spine.x = x + options.offsetX;
+  spine.y = y + options.offsetY;
 
-function playAnimation(spine: Spine, animation?: string) {
-  const animationName = resolveAnimationName(spine, animation);
-  if (!animationName) return;
-  spine.state.setAnimation(0, animationName, true);
+  if (options.layoutSampleTime > 0) {
+    spine.state.setAnimation(0, animationName, options.loop);
+    spine.state.apply(spine.skeleton);
+    spine.skeleton.updateWorldTransform(Physics.update);
+    spine.update(0);
+  }
 }
 
 export const DynamicSpine: React.FC<DynamicSpineProps> = ({
@@ -119,8 +167,16 @@ export const DynamicSpine: React.FC<DynamicSpineProps> = ({
   animation = 'idle',
   fallback = null,
   padding = 12,
+  offsetX = 0,
   offsetY = 4,
+  verticalAlign = 'center',
+  fit = 'contain',
+  loop = true,
+  boundsSampleStep = 0.05,
+  boundsClipMargin,
+  layoutSampleTime = 0,
 }) => {
+  const resolvedBoundsSampleStep = boundsClipMargin ?? boundsSampleStep;
   const hostRef = useRef<HTMLDivElement | null>(null);
   const appRef = useRef<Application | null>(null);
   const [hasError, setHasError] = useState(false);
@@ -172,8 +228,19 @@ export const DynamicSpine: React.FC<DynamicSpineProps> = ({
         });
 
         app.stage.addChild(spine);
-        layoutSpine(spine, app, { width, height, padding, offsetY });
-        playAnimation(spine, animation);
+        layoutSpine(spine, app, {
+          width,
+          height,
+          padding,
+          offsetX,
+          offsetY,
+          verticalAlign,
+          fit,
+          animation,
+          loop,
+          boundsSampleStep: resolvedBoundsSampleStep,
+          layoutSampleTime,
+        });
 
         if (mounted) {
           setHasError(false);
@@ -200,7 +267,7 @@ export const DynamicSpine: React.FC<DynamicSpineProps> = ({
       appRef.current?.destroy(true, { children: true });
       appRef.current = null;
     };
-  }, [animation, atlasUrl, height, offsetY, padding, skeletonUrl, width]);
+  }, [animation, atlasUrl, boundsClipMargin, boundsSampleStep, fit, height, layoutSampleTime, loop, offsetX, offsetY, padding, skeletonUrl, verticalAlign, width]);
 
   if (hasError && fallback) {
     return (
