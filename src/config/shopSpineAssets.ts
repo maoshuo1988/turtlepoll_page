@@ -59,6 +59,11 @@ export type ShopSpineAssetKey = keyof typeof SHOP_SPINE_ASSETS;
 /** 极光舞台整体平移（px）：x 向右，y 向上为负。 */
 export const SHOP_AURORA_STAGE_OFFSET_X = -70;
 export const SHOP_AURORA_STAGE_OFFSET_Y = -20;
+export const SHOP_AURORA_STAGE_OFFSET_MOBILE_X = -36;
+export const SHOP_AURORA_STAGE_OFFSET_MOBILE_Y = 8;
+
+/** 手机端抽奖主舞台高度。 */
+export const SHOP_GACHA_HERO_MOBILE_MIN_HEIGHT = 'min(520px, 72dvh)';
 
 /** 黑市龟蛋 open 动画时长（秒），用于同步孵化 reveal。 */
 export const SHOP_EGG_OPEN_DURATION_SEC = 5.5;
@@ -74,9 +79,9 @@ export function getShopWizardStageSize(stageWidth: number) {
 /** 抽奖区龟蛋舞台：紧贴孵化按钮正上方，底部对齐。 */
 export const SHOP_GACHA_EGG_STAGE_LAYOUT = {
   mobile: {
-    wrapper: 'relative z-[6] mx-auto h-[min(200px,46vw)] w-[min(220px,50vw)] shrink-0 overflow-visible',
+    wrapper: 'relative z-[6] mx-auto h-[min(180px,42vw)] w-[min(200px,46vw)] shrink-0 overflow-visible',
     spine:
-      'absolute bottom-0 left-1/2 z-[8] h-[min(200px,46vw)] w-[min(220px,50vw)] -translate-x-1/2 overflow-visible',
+      'absolute bottom-0 left-1/2 z-[8] h-[min(180px,42vw)] w-[min(200px,46vw)] -translate-x-1/2 overflow-visible',
     revealOverlay:
       'pointer-events-none absolute inset-0 z-[9] flex -translate-y-5 items-center justify-center',
     revealPreviewSize: 128,
@@ -161,5 +166,21 @@ export const SHOP_GACHA_STAGE_LAYERS: Record<'egg' | 'wizard' | 'wizard2', ShopG
     layoutSampleTime: 0,
     animationLoop: true,
     className: 'absolute bottom-0 left-[6%] z-[4] sm:left-[7%] lg:left-[8%]',
+  },
+};
+
+/** 手机端双法师整体上移（px）。 */
+export const SHOP_WIZARD_MOBILE_LIFT_PX = 28;
+
+export const SHOP_GACHA_STAGE_WIZARDS_MOBILE: Pick<typeof SHOP_GACHA_STAGE_LAYERS, 'wizard' | 'wizard2'> = {
+  wizard: {
+    ...SHOP_GACHA_STAGE_LAYERS.wizard,
+    offsetY: -SHOP_WIZARD_MOBILE_LIFT_PX,
+    className: 'absolute bottom-6 right-0 z-[4]',
+  },
+  wizard2: {
+    ...SHOP_GACHA_STAGE_LAYERS.wizard2,
+    offsetY: -SHOP_WIZARD_MOBILE_LIFT_PX,
+    className: 'absolute bottom-6 left-[6%] z-[4]',
   },
 };

@@ -11,8 +11,3 @@ export const API_Coin_Me = "/api/coin/me";
 export const API_Coin_Bet = "/api/coin/bet";
 //账户余额排行榜
 export const API_Coin_Leaderboard = "/api/coin/leaderboard";
-
-/// MARK: 管理后台 - 金币
-/// 基础路径: /api/admin/coin
-//管理员铸币
-export const API_Admin_Coin_Mint = "/api/admin/coin/mint";

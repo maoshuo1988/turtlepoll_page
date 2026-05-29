@@ -1,16 +1,24 @@
 /** 文件说明：黑市抽奖主视觉层：极光 + 双龟法师（尺寸随舞台容器宽度变化）。 */
 import { useEffect, useRef, useState } from 'react';
-import { getShopWizardStageSize, SHOP_GACHA_STAGE_LAYERS } from '@/config/shopSpineAssets';
+import {
+  getShopWizardStageSize,
+  SHOP_GACHA_STAGE_LAYERS,
+  SHOP_GACHA_STAGE_WIZARDS_MOBILE,
+} from '@/config/shopSpineAssets';
 import { ShopAuroraSpine } from './ShopAuroraSpine';
 import { ShopSpineLayer } from './ShopSpineLayer';
+
+type ShopGachaStageVariant = 'desktop' | 'mobile';
 
 interface ShopGachaStageLayersProps {
   /** 龟蛋动画由 ShopGachaEggStage 在按钮上方单独展示，背景层不再渲染蛋。 */
   showEgg?: boolean;
+  variant?: ShopGachaStageVariant;
 }
 
-export function ShopGachaStageLayers({ showEgg = false }: ShopGachaStageLayersProps) {
-  const { wizard, wizard2 } = SHOP_GACHA_STAGE_LAYERS;
+export function ShopGachaStageLayers({ showEgg = false, variant = 'desktop' }: ShopGachaStageLayersProps) {
+  const wizardLayers = variant === 'mobile' ? SHOP_GACHA_STAGE_WIZARDS_MOBILE : SHOP_GACHA_STAGE_LAYERS;
+  const { wizard, wizard2 } = wizardLayers;
   const stageRef = useRef<HTMLDivElement>(null);
   const [wizardStageSize, setWizardStageSize] = useState(200);
   void showEgg;
