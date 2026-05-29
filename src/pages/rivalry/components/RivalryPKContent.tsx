@@ -8,13 +8,11 @@ import {
   BarChart3,
   ChevronDown,
   Clock,
-  Crown,
   Flame,
   History,
   Lock,
   MessageCircleMore,
   Shield,
-  Swords,
   Trophy,
   Users,
   Zap,
@@ -472,6 +470,277 @@ function RivalryHeatMeter({
   );
 }
 
+const heroParticles = Array.from({ length: 34 }, (_, index) => ({
+  id: index,
+  side: index % 2 === 0 ? 'A' : 'B',
+  x: 4 + ((index * 31) % 92),
+  y: 7 + ((index * 19) % 82),
+  size: 2 + (index % 5),
+  delay: (index % 9) * 0.22,
+  duration: 2.4 + (index % 6) * 0.38,
+}));
+
+function HeroCountdown({ target, label, color = 'text-[#f8d6a0]' }: { target: number; label: string; color?: string }) {
+  const [left, setLeft] = useState(0);
+
+  useEffect(() => {
+    const updateLeft = () => setLeft(Math.max(0, target - Date.now()));
+    updateLeft();
+    const timer = setInterval(updateLeft, 1000);
+    return () => clearInterval(timer);
+  }, [target]);
+
+  const days = Math.floor(left / 86400000);
+  const h = Math.floor((left % 86400000) / 3600000);
+  const m = Math.floor((left % 3600000) / 60000);
+  const s = Math.floor((left % 60000) / 1000);
+
+  return (
+    <div className="inline-flex items-center justify-center gap-2 rounded-full bg-black/26 px-4 py-2 font-mono text-[13px] font-black text-white/72 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] max-lg:px-3 max-lg:text-[11px]">
+      <span className="font-sans text-white/42">{label}</span>
+      <span className={color}>
+        {pad(days)}天 {pad(h)}:{pad(m)}:{pad(s)}
+      </span>
+    </div>
+  );
+}
+
+function HeroSidePanel({
+  side,
+  label,
+  pct,
+  supportText,
+  odds,
+  theme,
+  voted,
+  disabled,
+  isBetting,
+  onClick,
+}: {
+  side: 'A' | 'B';
+  label: string;
+  pct: number;
+  supportText: string;
+  odds: number;
+  theme: RivalryVisualTheme['sideA'];
+  voted?: 'A' | 'B';
+  disabled: boolean;
+  isBetting?: boolean;
+  onClick: () => void;
+}) {
+  const isA = side === 'A';
+  const active = voted === side;
+  const railItems = [`${odds.toFixed(2)} × 赔率`, `${label}阵营`, active ? '已站队' : '等待站队'];
+
+  return (
+    <div
+      className={`relative min-h-[390px] overflow-hidden rounded-[26px] bg-transparent px-5 py-6 max-lg:min-h-0 max-lg:px-4 max-lg:py-4 ${
+        isA
+          ? 'text-left shadow-[0_0_48px_rgba(255,70,16,0.2),inset_26px_0_42px_rgba(255,90,22,0.16)]'
+          : 'text-right shadow-[0_0_48px_rgba(24,187,255,0.2),inset_-26px_0_42px_rgba(40,199,255,0.14)]'
+      }`}
+    >
+      <div
+        className={`pointer-events-none absolute inset-0 z-10 rounded-[26px] backdrop-blur-[1.5px] ${
+          isA
+            ? 'bg-[linear-gradient(90deg,rgba(28,8,4,0.18)_0%,rgba(10,10,15,0.1)_54%,rgba(5,7,13,0.015)_100%)]'
+            : 'bg-[linear-gradient(270deg,rgba(3,23,42,0.18)_0%,rgba(8,12,20,0.1)_54%,rgba(5,7,13,0.015)_100%)]'
+        }`}
+      />
+      <motion.span
+        className="pointer-events-none absolute top-0 z-20 h-[2px] rounded-full"
+        style={{
+          left: isA ? 0 : '18%',
+          right: isA ? '18%' : 0,
+          background: isA
+            ? `linear-gradient(90deg, ${theme.accent}, ${theme.primary} 48%, transparent)`
+            : `linear-gradient(90deg, transparent, ${theme.primary} 52%, ${theme.accent})`,
+          boxShadow: `0 0 18px ${theme.accent}, 0 0 42px ${theme.primary}`,
+        }}
+        animate={{ opacity: [0.66, 1, 0.72], scaleX: [0.96, 1.02, 0.98] }}
+        transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.span
+        className="pointer-events-none absolute bottom-0 z-20 h-[2px] rounded-full"
+        style={{
+          left: isA ? 0 : '18%',
+          right: isA ? '18%' : 0,
+          background: isA
+            ? `linear-gradient(90deg, ${theme.accent}, ${theme.primary} 48%, transparent)`
+            : `linear-gradient(90deg, transparent, ${theme.primary} 52%, ${theme.accent})`,
+          boxShadow: `0 0 18px ${theme.accent}, 0 0 42px ${theme.primary}`,
+        }}
+        animate={{ opacity: [0.5, 0.95, 0.6], scaleX: [1, 0.96, 1.02] }}
+        transition={{ duration: 2.15, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.span
+        className={`pointer-events-none absolute top-4 bottom-4 z-20 w-[2px] rounded-full ${isA ? 'left-0' : 'right-0'}`}
+        style={{
+          background: `linear-gradient(180deg, transparent, ${theme.accent} 18%, ${theme.primary} 52%, ${theme.accent} 82%, transparent)`,
+          boxShadow: `0 0 18px ${theme.accent}, 0 0 34px ${theme.primary}`,
+        }}
+        animate={{ opacity: [0.54, 1, 0.68], scaleY: [0.9, 1.04, 0.94] }}
+        transition={{ duration: 1.55, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.span
+        className={`pointer-events-none absolute top-0 z-[21] h-[2px] w-24 rounded-full bg-white/80 blur-[1px] ${isA ? 'left-0' : 'right-0'}`}
+        animate={{ x: isA ? ['-70%', '250%'] : ['70%', '-250%'], opacity: [0, 1, 0] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.span
+        className={`pointer-events-none absolute bottom-0 z-[21] h-[2px] w-20 rounded-full bg-white/70 blur-[1px] ${isA ? 'left-0' : 'right-0'}`}
+        animate={{ x: isA ? ['-40%', '220%'] : ['40%', '-220%'], opacity: [0, 0.86, 0] }}
+        transition={{ duration: 2.75, repeat: Infinity, ease: 'easeInOut', delay: 0.45 }}
+      />
+      <div className="pointer-events-none absolute inset-x-5 top-[72px] z-20 h-px bg-white/8" />
+      <div className="relative z-30">
+        <div className={`mb-8 flex items-center gap-2 max-lg:mb-4 ${isA ? '' : 'justify-end'}`}>
+          <Zap size={24} style={{ color: theme.accent, filter: `drop-shadow(0 0 12px ${theme.accent})` }} />
+          <span className="max-w-full truncate text-[25px] font-black italic tracking-[-0.05em] text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.16)] max-xl:text-[21px] max-lg:text-[17px]">
+            {label}更强
+          </span>
+        </div>
+
+        <div className="mb-2 text-[14px] font-bold text-white/68 max-lg:text-[12px]">支持率</div>
+        <div
+          className="mb-1 text-[64px] font-black leading-none tracking-[-0.09em] max-xl:text-[52px] max-lg:text-[38px]"
+          style={{ color: theme.accent, textShadow: `0 0 28px ${theme.primary}` }}
+        >
+          {pct}
+          <span className="ml-1 text-[28px] tracking-[-0.04em] max-lg:text-[18px]">%</span>
+        </div>
+        <div className="mb-8 text-[18px] font-black tabular-nums text-white/88 max-lg:mb-4 max-lg:text-[13px]">
+          {supportText}
+        </div>
+
+        <div className={`mb-8 flex flex-col gap-2 max-lg:mb-4 ${isA ? 'items-start' : 'items-end'}`}>
+          {railItems.map((text) => (
+            <span
+              key={text}
+              className="max-w-full truncate rounded-full border border-white/10 bg-black/22 px-4 py-1.5 text-[12px] font-black text-white/58 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] max-lg:px-3 max-lg:text-[10px]"
+              title={text}
+            >
+              {text}
+            </span>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={onClick}
+          disabled={disabled}
+          className={`inline-flex h-[52px] min-w-[176px] items-center justify-center rounded-[17px] border px-6 text-[16px] font-black text-white transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 max-lg:h-11 max-lg:min-w-0 max-lg:w-full max-lg:px-3 max-lg:text-[13px] ${
+            isA ? 'shadow-[0_0_30px_rgba(255,77,22,0.34)]' : 'shadow-[0_0_30px_rgba(28,190,255,0.32)]'
+          }`}
+          style={{
+            borderColor: `${theme.accent}66`,
+            background: active
+              ? `linear-gradient(180deg, ${theme.primary}dd, ${theme.primary}8a)`
+              : `linear-gradient(180deg, ${theme.primary}b8, rgba(8,13,22,0.56))`,
+          }}
+        >
+          {isBetting ? '下注中...' : `支持${label} >`}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function HeroBattleRail({ pctA, pctB }: { pctA: number; pctB: number }) {
+  return (
+    <div className="relative mx-auto w-full max-w-[1110px] px-1">
+      <div className="relative h-[58px] overflow-hidden rounded-full border border-white/20 bg-black/68 p-[5px] shadow-[0_18px_46px_rgba(0,0,0,0.48),0_0_34px_rgba(255,91,28,0.24),0_0_34px_rgba(23,184,255,0.2)] max-lg:h-[42px]">
+        <div className="relative h-full overflow-hidden rounded-full bg-[#06111b]">
+          <motion.div
+            className="absolute inset-y-0 left-0 overflow-hidden rounded-l-full"
+            initial={false}
+            animate={{ width: `${pctA}%` }}
+            transition={{ type: 'spring', stiffness: 130, damping: 22 }}
+            style={{
+              background: 'linear-gradient(90deg,#ff2c13 0%,#ff6a20 48%,#ffd65b 100%)',
+              boxShadow: 'inset 0 0 22px rgba(255,255,255,0.22),0 0 28px rgba(255,82,24,0.62)',
+            }}
+          >
+            <motion.div
+              className="absolute inset-0 opacity-35"
+              style={{ background: 'linear-gradient(110deg,transparent 0%,rgba(255,255,255,0.65) 18%,transparent 36%)' }}
+              animate={{ x: ['-70%', '160%'] }}
+              transition={{ duration: 2.35, repeat: Infinity, ease: 'linear' }}
+            />
+          </motion.div>
+          <motion.div
+            className="absolute inset-y-0 right-0 overflow-hidden rounded-r-full"
+            initial={false}
+            animate={{ width: `${pctB}%` }}
+            transition={{ type: 'spring', stiffness: 130, damping: 22 }}
+            style={{
+              background: 'linear-gradient(270deg,#073dcd 0%,#13b8ff 48%,#67f4ff 100%)',
+              boxShadow: 'inset 0 0 22px rgba(255,255,255,0.2),0 0 28px rgba(36,196,255,0.56)',
+            }}
+          >
+            <motion.div
+              className="absolute inset-0 opacity-32"
+              style={{ background: 'linear-gradient(250deg,transparent 0%,rgba(255,255,255,0.62) 18%,transparent 38%)' }}
+              animate={{ x: ['70%', '-160%'] }}
+              transition={{ duration: 2.55, repeat: Infinity, ease: 'linear' }}
+            />
+          </motion.div>
+          <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.09)_0,rgba(255,255,255,0.09)_1px,transparent_1px,transparent_20px)] opacity-20" />
+          <motion.div
+            className="absolute top-1/2 z-20 h-[88px] w-[17px] -translate-x-1/2 -translate-y-1/2 rotate-[18deg] rounded-full bg-white shadow-[0_0_18px_rgba(255,255,255,0.96),0_0_44px_rgba(255,173,49,0.9),0_0_46px_rgba(58,224,255,0.82)] max-lg:h-[62px] max-lg:w-[12px]"
+            style={{ left: `${pctA}%` }}
+            animate={{ opacity: [0.72, 1, 0.82], scaleY: [0.88, 1.12, 0.94] }}
+            transition={{ duration: 1.08, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute top-1/2 z-30 h-[128px] w-px -translate-x-1/2 -translate-y-1/2 rotate-[30deg] bg-[#fff6bd] shadow-[0_0_18px_rgba(255,242,175,0.95)]"
+            style={{ left: `${pctA}%` }}
+            animate={{ opacity: [0.22, 1, 0.36] }}
+            transition={{ duration: 0.62, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <div className="absolute inset-y-0 left-6 z-30 flex items-center text-[24px] font-black tabular-nums text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.62)] max-lg:left-4 max-lg:text-[16px]">
+            {pctA}%
+          </div>
+          <div className="absolute inset-y-0 right-6 z-30 flex items-center text-[24px] font-black tabular-nums text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.62)] max-lg:right-4 max-lg:text-[16px]">
+            {pctB}%
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HeroBottomCard({
+  tone,
+  icon,
+  title,
+  children,
+  className = '',
+}: {
+  tone: 'orange' | 'gold' | 'cyan';
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const toneClass = {
+    orange: 'border-[#ff7633]/18 bg-[linear-gradient(135deg,rgba(62,22,9,0.86),rgba(8,11,16,0.82))] text-[#ffd18a]',
+    gold: 'border-[#f5c65a]/18 bg-[linear-gradient(135deg,rgba(35,28,13,0.88),rgba(8,11,16,0.82))] text-[#ffe08a]',
+    cyan: 'border-[#31cfff]/18 bg-[linear-gradient(135deg,rgba(5,32,57,0.88),rgba(8,11,16,0.82))] text-[#a9efff]',
+  }[tone];
+
+  return (
+    <div className={`relative flex h-full min-h-[184px] flex-col overflow-hidden rounded-[22px] border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_40px_rgba(0,0,0,0.24)] ${toneClass} ${className}`}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_0%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent_48%)]" />
+      <div className="relative mb-4 flex items-center gap-2 text-[15px] font-black">
+        {icon}
+        {title}
+      </div>
+      <div className="relative flex flex-1 flex-col">{children}</div>
+    </div>
+  );
+}
+
 function SeasonBar({ winsA, winsB, nameA, nameB }: { winsA: number; winsB: number; nameA: string; nameB: string }) {
   const total = winsA + winsB || 1;
   return (
@@ -515,6 +784,7 @@ function HeroPK({
 }) {
   const item = pk.newsItem;
   const betTotal = asNumber(pk.betCountA) + asNumber(pk.betCountB);
+  const { pctA, pctB } = heatSharePct(pk.currentHeatA, pk.currentHeatB);
   const heatTotal = pk.currentHeatA + pk.currentHeatB;
   const heatLabel =
     heatTotal >= 100 || Number.isInteger(heatTotal)
@@ -522,185 +792,306 @@ function HeroPK({
       : heatTotal.toFixed(1);
   const leading = pk.currentHeatA > pk.currentHeatB ? 'A' : pk.currentHeatB > pk.currentHeatA ? 'B' : null;
   const theme = getRivalryVisualTheme(item);
+  const heroTheme = {
+    sideA: { ...theme.sideA, primary: '#f04a1f', accent: '#ffc15d' },
+    sideB: { ...theme.sideB, primary: '#0789ff', accent: '#62efff' },
+  };
+  const supportA = Math.round(asNumber(pk.betCountA) || pk.currentHeatA);
+  const supportB = Math.round(asNumber(pk.betCountB) || pk.currentHeatB);
+  const participantCount = Math.round(betTotal || heatTotal);
+  const supportTextA = betTotal > 0 ? `${supportA.toLocaleString()} 人支持` : `${formatPkHeatValue(pk.currentHeatA)} 热度`;
+  const supportTextB = betTotal > 0 ? `${supportB.toLocaleString()} 人支持` : `${formatPkHeatValue(pk.currentHeatB)} 热度`;
+  const leadingLabel = leading === 'B' ? item.optionB : item.optionA;
+  const liveMetricLabel = betTotal > 0 ? `${participantCount.toLocaleString()} 人正在参与` : `${heatLabel} 热度正在对抗`;
+  const statMetricTitle = betTotal > 0 ? '当前参与人次' : '当前热度合计';
+  const latestHotText = item.summary || `${leadingLabel} 的支持者正在升温！`;
+  const latestHotCount = betTotal > 0 ? `${betTotal.toLocaleString()} 次下注` : `${heatLabel} 热度`;
+  const leaderStatusText = leading ? `${leadingLabel} 暂时领先` : '双方暂时持平';
+  const leaderPct = leading === 'B' ? pctB : pctA;
+  const phaseText =
+    pk.phase === 'betting'
+      ? '下注进行中'
+      : pk.phase === 'locked'
+        ? '本局已锁定'
+        : '等待下一局';
+  const lastWinnerText = pk.lastRoundWinner
+    ? `${pk.lastRoundWinner === 'A' ? item.optionA : item.optionB} 上局胜出`
+    : '暂无上局结果';
+  const sideAOpinion = `${item.optionA} 当前支持率 ${pctA}%，热度 ${formatPkHeatValue(pk.currentHeatA)}。`;
+  const sideBOpinion = `${item.optionB} 当前支持率 ${pctB}%，热度 ${formatPkHeatValue(pk.currentHeatB)}。`;
+  const supportDisabled = isBetting || !!voted || pk.phase !== 'betting';
+  const countdownTarget =
+    pk.phase === 'betting'
+      ? pk.lockTime
+      : pk.phase === 'locked'
+        ? pk.roundEndTime
+        : pk.nextRoundTime ?? pk.roundEndTime;
+  const countdownLabel =
+    pk.phase === 'betting'
+      ? '活动倒计时'
+      : pk.phase === 'locked'
+        ? '锁局倒计时'
+        : '下一局开始';
+  const dataRows = [
+    ['热度', pk.currentHeatA, pk.currentHeatB],
+    ['下注', asNumber(pk.betCountA), asNumber(pk.betCountB)],
+    ['胜场', pk.season.winsA, pk.season.winsB],
+  ];
+  const handleJoinBattle = () => {
+    if (onEnterBattle) {
+      onEnterBattle(item);
+      return;
+    }
+    onOpenBet(item, leading === 'B' ? 'B' : 'A');
+  };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[24px] border border-slate-700/60 bg-[#0a111f] shadow-[0_18px_44px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.06)]">
+    <motion.div
+      initial={{ opacity: 0, y: 22, scale: 0.985 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[30px] border border-white/10 bg-[#04070d] text-white shadow-[0_24px_78px_rgba(0,0,0,0.52),inset_0_1px_0_rgba(255,255,255,0.08)] max-lg:rounded-[22px]"
+    >
       <div className="absolute inset-0">
-        <img src={item.image} alt="" className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#091121]/82 via-[#0b1426]/62 to-[#0f1a2a]/44" />
+        <img src={item.image} alt="" className="h-full w-full object-cover opacity-28 mix-blend-screen" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(255,242,189,0.16),transparent_28%),linear-gradient(90deg,rgba(78,13,4,0.98)_0%,rgba(37,10,8,0.82)_32%,rgba(5,8,15,0.86)_50%,rgba(4,32,70,0.9)_68%,rgba(3,11,28,0.98)_100%)]" />
+        <div className="absolute inset-y-0 left-0 w-[58%] bg-[radial-gradient(circle_at_24%_45%,rgba(255,85,20,0.58),transparent_34%),linear-gradient(90deg,rgba(255,42,16,0.24),transparent_76%)]" />
+        <div className="absolute inset-y-0 right-0 w-[58%] bg-[radial-gradient(circle_at_76%_45%,rgba(21,180,255,0.56),transparent_36%),linear-gradient(270deg,rgba(13,151,255,0.26),transparent_76%)]" />
+        <img
+          src={theme.sideA.portrait}
+          alt=""
+          className="pointer-events-none absolute left-0 top-0 h-full w-[45%] object-cover object-left-top saturate-125 [mask-image:linear-gradient(90deg,black_0%,black_46%,rgba(0,0,0,0.72)_64%,transparent_100%)] max-lg:hidden"
+        />
+        <img
+          src={theme.sideB.portrait}
+          alt=""
+          className="pointer-events-none absolute right-0 top-0 h-full w-[45%] object-cover object-right-top saturate-125 [mask-image:linear-gradient(270deg,black_0%,black_46%,rgba(0,0,0,0.72)_64%,transparent_100%)] max-lg:hidden"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.05)_56%,rgba(0,0,0,0.58)_100%)]" />
+        <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.035)_0,rgba(255,255,255,0.035)_1px,transparent_1px,transparent_96px)] opacity-35" />
       </div>
 
-      <div className="relative p-5 md:p-7">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="flex items-center gap-1 rounded-full border border-[#ffb45f]/18 bg-[#ffb45f]/8 px-3 py-1 text-xs font-bold text-[#eab268]"><Flame size={14} className="text-[#ff9f43]" />开撕台</span>
-          <PhaseTag phase={pk.phase} />
-          <span className="rounded-full bg-white/15 px-2.5 py-1 text-xs text-white/80 backdrop-blur-sm">
-            第{pk.currentRound}局 · 赛季{pk.season.season}
-          </span>
-          <span className="flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-xs text-white/80 backdrop-blur-sm" title={betTotal > 0 ? `本局累计热度 ${heatLabel}` : '阵营热度之和'}>
-            <Users size={12} />
-            {betTotal > 0 ? `${betTotal.toLocaleString()} 人次下注` : `热度合计 ${heatLabel}`}
-          </span>
-          {pk.lastRoundWinner && leading ? (
-            <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${pk.lastRoundWinner === leading ? 'bg-[#123a3d]/82 text-[#9affec]' : 'bg-[#4a1824]/82 text-[#ffb9c6]'}`}>
-              {pk.lastRoundWinner === 'A' ? item.optionA : item.optionB}
-              {pk.lastRoundWinner === leading ? ' 守擂中' : ' 被翻盘'}
-            </span>
-          ) : null}
-        </div>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {heroParticles.map((particle) => (
+          <motion.span
+            key={particle.id}
+            className="absolute rounded-full"
+            style={{
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
+              width: particle.size,
+              height: particle.size,
+              background: particle.side === 'A' ? '#ffbd52' : '#50e8ff',
+              boxShadow: particle.side === 'A' ? '0 0 14px rgba(255,114,34,0.92)' : '0 0 14px rgba(59,220,255,0.92)',
+            }}
+            animate={{
+              y: [0, particle.side === 'A' ? -32 : 32, 0],
+              x: [0, particle.side === 'A' ? 18 : -18, 0],
+              opacity: [0, 0.9, 0],
+              scale: [0.65, 1.55, 0.55],
+            }}
+            transition={{ duration: particle.duration, delay: particle.delay, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        ))}
+      </div>
 
-        <h1 className="mb-1 text-xl font-extrabold leading-tight text-white md:text-2xl">{item.title}</h1>
-        <p className="mb-4 max-w-xl text-sm text-white/50">{item.summary}</p>
-
-        <div className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3 lg:hidden">
-          <div className="min-w-0 rounded-[18px] border border-white/10 bg-black/26 p-3 backdrop-blur-sm">
-            <div className="relative mx-auto mb-2 h-[92px] w-full max-w-[150px] overflow-hidden rounded-[18px] border border-white/12 bg-black/30">
-              <img src={theme.sideA.portrait} alt={item.optionA} className="h-full w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/48 via-transparent to-white/6" />
-            </div>
-            <div className="truncate text-center text-[12px] font-black text-white">{item.optionA}</div>
-            <div className="mt-1 text-center text-[18px] font-black tabular-nums leading-none" style={{ color: theme.sideA.accent }}>
-              {formatPkHeatValue(pk.currentHeatA)}
-            </div>
-          </div>
-          <div className="grid h-11 w-11 place-items-center rounded-full border border-white/14 bg-white/[0.08] text-[12px] font-black tracking-[0.18em] text-white/70 shadow-[0_0_20px_rgba(255,255,255,0.08)]">
-            VS
-          </div>
-          <div className="min-w-0 rounded-[18px] border border-white/10 bg-black/26 p-3 backdrop-blur-sm">
-            <div className="relative mx-auto mb-2 h-[92px] w-full max-w-[150px] overflow-hidden rounded-[18px] border border-white/12 bg-black/30">
-              <img src={theme.sideB.portrait} alt={item.optionB} className="h-full w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/48 via-transparent to-white/6" />
-            </div>
-            <div className="truncate text-center text-[12px] font-black text-white">{item.optionB}</div>
-            <div className="mt-1 text-center text-[18px] font-black tabular-nums leading-none" style={{ color: theme.sideB.accent }}>
-              {formatPkHeatValue(pk.currentHeatB)}
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-4 rounded-2xl border border-white/[0.1] bg-black/25 px-4 py-3 backdrop-blur-sm">
-          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div className="flex min-w-0 flex-1 items-start gap-2.5 sm:items-center">
-              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/12 bg-black/30">
-                <img src={theme.sideA.portrait} alt="" className="h-full w-full object-cover" />
-              </span>
-              <div className="min-w-0">
-                <div className="truncate text-[13px] font-bold text-white">{item.optionA}</div>
-                <div className="mt-0.5 text-xl font-black tabular-nums leading-none" style={{ color: theme.sideA.accent }}>
-                  {formatPkHeatValue(pk.currentHeatA)}
-                  <span className="ml-1 text-[11px] font-semibold text-white/45">热度</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex shrink-0 items-center justify-center px-2 sm:flex-col sm:pb-8">
-              <span className="rounded-full border border-white/14 bg-white/[0.08] px-3 py-1 text-[11px] font-black tracking-[0.25em] text-white/55">VS</span>
-            </div>
-            <div className="flex min-w-0 flex-1 items-start gap-2.5 text-right sm:items-center sm:flex-row-reverse">
-              <span className="grid h-9 w-9 shrink-0 overflow-hidden rounded-xl border border-white/12 bg-black/30">
-                <img src={theme.sideB.portrait} alt="" className="h-full w-full object-cover" />
-              </span>
-              <div className="min-w-0 flex-1 sm:flex-initial">
-                <div className="truncate text-[13px] font-bold text-white">{item.optionB}</div>
-                <div className="mt-0.5 text-xl font-black tabular-nums leading-none sm:text-right" style={{ color: theme.sideB.accent }}>
-                  {formatPkHeatValue(pk.currentHeatB)}
-                  <span className="ml-1 text-[11px] font-semibold text-white/45">热度</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <RivalryHeatMeter heatA={pk.currentHeatA} heatB={pk.currentHeatB} theme={theme} variant="hero" />
-        </div>
-
-        <div className="mb-4 flex flex-wrap items-center gap-4">
-          {pk.phase === 'betting' ? (
-            <>
-              <Countdown target={pk.lockTime} label="下注截止" color="text-amber-300" />
-              <Countdown target={pk.roundEndTime} label="本局结束" color="text-white/50" />
-            </>
-          ) : null}
-          {pk.phase === 'locked' ? <Countdown target={pk.roundEndTime} label="本局结束" color="text-amber-300" /> : null}
-          {pk.phase === 'cooldown' && pk.nextRoundTime ? <Countdown target={pk.nextRoundTime} label="下一局开始" color="text-[#40ead0]" /> : null}
-        </div>
-
-        {/* 顶部 Hero：赛季战绩块（日期 + N胜 + 细条 + 局点）先隐藏，可从历史战绩查看 */}
-        {/* <div className="mb-4 rounded-[20px] border border-white/16 bg-[#071127]/28 p-3 shadow-[0_12px_34px_rgba(3,10,24,0.35)] backdrop-blur-md">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs font-semibold text-white/70">赛季{pk.season.season} 战绩</span>
-            <span className="text-[10px] text-white/40">{pk.season.startDate} ~ {pk.season.endDate}</span>
-          </div>
-          <SeasonBar winsA={pk.season.winsA} winsB={pk.season.winsB} nameA={item.optionA} nameB={item.optionB} />
-          <div className="mt-2 flex gap-1">
-            <RoundDots rounds={pk.roundHistory} nameA={item.optionA} />
-          </div>
-        </div> */}
-
-        <div className="mb-3 flex gap-3">
-          <button
+      <div className="relative grid min-h-[680px] grid-cols-[282px_minmax(0,1fr)_282px] gap-5 px-8 py-8 max-xl:grid-cols-[238px_minmax(0,1fr)_238px] max-lg:min-h-0 max-lg:grid-cols-1 max-lg:px-4 max-lg:py-4">
+        <div className="flex items-center max-lg:order-2">
+          <HeroSidePanel
+            side="A"
+            label={item.optionA}
+            pct={pctA}
+            supportText={supportTextA}
+            odds={item.oddsA}
+            theme={heroTheme.sideA}
+            voted={voted}
+            disabled={supportDisabled}
+            isBetting={isBetting}
             onClick={() => onOpenBet(item, 'A')}
-            disabled={isBetting || !!voted || pk.phase !== 'betting'}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border-0 py-3 text-sm font-bold ${
-              voted === 'A'
-                ? 'text-[#dcfff8] shadow-[0_0_20px_rgba(45,207,178,0.22)]'
-                : isBetting || pk.phase !== 'betting'
-                  ? 'cursor-not-allowed bg-white/5 text-white/30'
-                  : 'text-[#dcfff8] shadow-[0_0_20px_rgba(45,207,178,0.16)]'
-            }`}
-            style={
-              voted === 'A'
-                ? { border: `1px solid ${theme.sideA.accent}93`, background: `${theme.sideA.primary}40`, color: '#ecfeff' }
-                : isBetting || pk.phase !== 'betting'
-                  ? undefined
-                  : { border: `1px solid ${theme.sideA.accent}66`, background: `${theme.sideA.primary}33`, color: '#ecfeff' }
-            }
-          >
-            <Crown size={16} />
-            {isBetting ? '下注中...' : item.optionA}
-          </button>
-          <div className="flex items-center">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
-              <Swords size={18} className="text-white/80" />
-            </div>
-          </div>
-          <button
-            onClick={() => onOpenBet(item, 'B')}
-            disabled={isBetting || !!voted || pk.phase !== 'betting'}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border-0 py-3 text-sm font-bold ${
-              voted === 'B'
-                ? 'text-[#ffd7de] shadow-[0_14px_28px_rgba(255,79,117,0.16)]'
-                : isBetting || pk.phase !== 'betting'
-                  ? 'cursor-not-allowed bg-white/5 text-white/30'
-                  : 'text-[#ffd7de] shadow-[0_14px_28px_rgba(255,79,117,0.12)]'
-            }`}
-            style={
-              voted === 'B'
-                ? { border: `1px solid ${theme.sideB.accent}73`, background: `${theme.sideB.primary}40`, color: '#fff1f2' }
-                : isBetting || pk.phase !== 'betting'
-                  ? undefined
-                  : { border: `1px solid ${theme.sideB.accent}55`, background: `${theme.sideB.primary}30`, color: '#fff1f2' }
-            }
-          >
-            <Crown size={16} />
-            {isBetting ? '下注中...' : item.optionB}
-          </button>
+          />
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[11px] text-white/40">
-            <Trophy size={12} />
-            <span>每局 3 天 · 热度高者胜 · 赛季持续累计</span>
+        <div className="flex min-w-0 flex-col items-center justify-center pt-2 text-center max-lg:order-1">
+          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#ffb15a]/40 bg-[#b91c1c]/78 px-6 py-2 text-[20px] font-black italic text-[#fff7d6] shadow-[0_0_22px_rgba(255,78,41,0.34)] max-lg:px-3 max-lg:py-1.5 max-lg:text-[13px]">
+              <Flame size={20} />
+              全网热议 TOP1
+            </span>
+            <PhaseTag phase={pk.phase} />
           </div>
-          <div className="flex gap-2">
-            <button onClick={() => onHistory(pk.id)} className="flex cursor-pointer items-center gap-1 rounded-lg border-0 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/80 transition-all hover:bg-white/20">
-              <History size={12} />
-              历史战绩
-            </button>
-            {onEnterBattle ? (
-              <button onClick={() => onEnterBattle(item)} className="flex cursor-pointer items-center gap-1.5 rounded-full border border-[#4f6489]/45 bg-[#10273d]/30 px-3 py-1.5 text-xs font-bold text-[#ffd7de] transition-colors hover:bg-[#163252]">
-                <MessageCircleMore size={12} className="text-[#5df3d7]" />
-                进入撕裂带
-              </button>
-            ) : null}
+
+          <h1
+            className="mb-3 max-w-[760px] text-[82px] font-black leading-[0.92] tracking-[-0.09em] text-[#fff3dd] max-xl:text-[60px] max-lg:text-[38px]"
+            style={{ textShadow: '0 4px 0 rgba(116,38,8,0.58), 0 0 30px rgba(255,119,45,0.4), 0 0 38px rgba(76,220,255,0.18)' }}
+          >
+            {item.title}
+          </h1>
+
+          <p className="mb-5 max-w-[660px] text-[23px] font-black italic tracking-[-0.045em] text-[#f8d3a3] drop-shadow-[0_2px_10px_rgba(0,0,0,0.68)] max-lg:text-[15px]">
+            {item.summary || `${item.optionA} vs ${item.optionB}，谁才是最强阵营？`}
+          </p>
+
+          <div className="mb-5 inline-flex flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/44 px-6 py-3 text-[17px] font-black text-white/88 shadow-[0_0_30px_rgba(0,0,0,0.42)] backdrop-blur-md max-lg:gap-2 max-lg:px-3 max-lg:py-2 max-lg:text-[12px]">
+            <span className="inline-flex items-center gap-2">
+              <Flame size={18} className="text-[#ffb15a]" />
+              {liveMetricLabel}
+            </span>
+            <span className="h-5 w-px bg-white/16 max-lg:hidden" />
+            <span className="inline-flex items-center gap-2 text-[#ffd28a]">
+              <Users size={18} className="text-[#6cecff]" />
+              {betTotal > 0 ? `${betTotal.toLocaleString()} 次下注` : `${heatLabel} 热度`}
+            </span>
           </div>
+
+          <button
+            type="button"
+            onClick={handleJoinBattle}
+            className="group relative mb-4 h-[72px] min-w-[430px] overflow-hidden rounded-[20px] border border-[#ffd283]/64 bg-[linear-gradient(180deg,#ff5948_0%,#e92228_52%,#9d1218_100%)] px-12 text-[34px] font-black tracking-[-0.055em] text-white shadow-[0_0_26px_rgba(255,79,48,0.66),inset_0_1px_0_rgba(255,255,255,0.46)] transition-all hover:-translate-y-0.5 max-lg:h-12 max-lg:min-w-0 max-lg:w-full max-lg:px-5 max-lg:text-[20px]"
+          >
+            <motion.span
+              className="absolute inset-y-0 left-[-42%] w-1/2 skew-x-[-18deg] bg-white/26"
+              animate={{ x: ['0%', '310%'] }}
+              transition={{ duration: 2.35, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <span className="relative">立即加入对立</span>
+          </button>
+
+          <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[15px] font-black text-white/70 max-lg:gap-2 max-lg:text-[11px]">
+            <HeroCountdown target={countdownTarget} label={countdownLabel} />
+            <span className="rounded-full bg-black/24 px-3 py-2">第{pk.currentRound}局 · 赛季{pk.season.season}</span>
+          </div>
+
+          <HeroBattleRail pctA={pctA} pctB={pctB} />
+        </div>
+
+        <div className="flex items-center max-lg:order-3">
+          <HeroSidePanel
+            side="B"
+            label={item.optionB}
+            pct={pctB}
+            supportText={supportTextB}
+            odds={item.oddsB}
+            theme={heroTheme.sideB}
+            voted={voted}
+            disabled={supportDisabled}
+            isBetting={isBetting}
+            onClick={() => onOpenBet(item, 'B')}
+          />
+        </div>
+
+        <div className="col-span-3 grid auto-rows-fr grid-cols-[1fr_1.55fr_1.55fr_2.3fr] items-stretch gap-3 pt-2 max-lg:order-4 max-lg:col-span-1 max-lg:grid-cols-1">
+          <HeroBottomCard tone="orange" icon={<Flame size={18} />} title="实时战况">
+            <div className="flex flex-1 flex-col justify-between gap-4">
+              <div>
+                <div className="flex items-end gap-2">
+                  <span className="text-[33px] font-black leading-none tabular-nums text-[#ffd067]">{formatPkHeatValue(heatTotal)}</span>
+                  <span className="pb-1 text-[11px] font-black text-white/38">总量</span>
+                </div>
+                <div className="mt-2 text-[13px] font-semibold text-white/52">{statMetricTitle}</div>
+              </div>
+              <div className="space-y-2 text-[11px] font-bold">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="max-w-[55%] truncate text-[#ffb16e]">{item.optionA}</span>
+                  <span className="tabular-nums text-white/76">{formatPkHeatValue(pk.currentHeatA)}</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                  <span className="block h-full rounded-full bg-[linear-gradient(90deg,#f44b2c,#ffd05e)]" style={{ width: `${pctA}%` }} />
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="max-w-[55%] truncate text-[#70e8ff]">{item.optionB}</span>
+                  <span className="tabular-nums text-white/76">{formatPkHeatValue(pk.currentHeatB)}</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                  <span className="ml-auto block h-full rounded-full bg-[linear-gradient(90deg,#38d7ff,#1777ff)]" style={{ width: `${pctB}%` }} />
+                </div>
+              </div>
+            </div>
+          </HeroBottomCard>
+
+          <button type="button" onClick={() => onHistory(pk.id)} className="h-full w-full text-left">
+            <HeroBottomCard tone="orange" icon={<Zap size={18} />} title="最新热评" className="cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ffb35c]/36 hover:shadow-[0_18px_44px_rgba(255,91,28,0.16)]">
+              <div className="flex flex-1 flex-col justify-between gap-4">
+                <div>
+                  <div className="mb-3 line-clamp-2 text-[17px] font-black leading-snug text-white">{latestHotText}</div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full border border-[#ffb35c]/24 bg-[#ff7a2f]/12 px-3 py-1 text-[11px] font-black text-[#ffd28c]">{leaderStatusText}</span>
+                    <span className="rounded-full border border-white/10 bg-black/22 px-3 py-1 text-[11px] font-black text-white/54">{latestHotCount}</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between border-t border-white/8 pt-3 text-[12px] font-black">
+                  <span className="text-white/44">领先势能 {leaderPct}%</span>
+                  <span className="inline-flex items-center gap-1 text-[#ffd28c]">
+                    查看历史
+                    <History size={13} />
+                  </span>
+                </div>
+              </div>
+            </HeroBottomCard>
+          </button>
+
+          <HeroBottomCard tone="gold" icon={<Trophy size={18} />} title="核心数据对比">
+            <div className="flex flex-1 flex-col justify-between gap-3">
+              <div className="flex items-center justify-between rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-[11px] font-black text-white/50">
+                <span className="max-w-[42%] truncate text-[#ff9a66]">{item.optionA}</span>
+                <span>{phaseText}</span>
+                <span className="max-w-[42%] truncate text-right text-[#60e8ff]">{item.optionB}</span>
+              </div>
+              {dataRows.map(([label, valueA, valueB]) => {
+                const total = Number(valueA) + Number(valueB);
+                const widthA = total > 0 ? Math.round((Number(valueA) / total) * 100) : 50;
+                const widthB = 100 - widthA;
+                return (
+                  <div key={label} className="grid grid-cols-[48px_48px_1fr_48px] items-center gap-2 text-[13px] font-black">
+                    <span className="text-white/56">{label}</span>
+                    <span className="text-right tabular-nums text-[#ff8054]">{formatPkHeatValue(Number(valueA))}</span>
+                    <div className="flex h-2.5 overflow-hidden rounded-full bg-white/10 shadow-[inset_0_0_10px_rgba(0,0,0,0.4)]">
+                      <span className="h-full bg-[linear-gradient(90deg,#f44b2c,#ffd05e)]" style={{ width: `${widthA}%` }} />
+                      <span className="h-full bg-[linear-gradient(90deg,#38d7ff,#1777ff)]" style={{ width: `${widthB}%` }} />
+                    </div>
+                    <span className="tabular-nums text-[#55dfff]">{formatPkHeatValue(Number(valueB))}</span>
+                  </div>
+                );
+              })}
+              <div className="border-t border-white/8 pt-2 text-[11px] font-bold text-white/42">{lastWinnerText}</div>
+            </div>
+          </HeroBottomCard>
+
+          <HeroBottomCard tone="cyan" icon={<MessageCircleMore size={18} />} title="热门观点">
+            <div className="grid flex-1 grid-cols-2 gap-3 max-sm:grid-cols-1">
+              <div className="flex min-w-0 flex-col justify-between rounded-[18px] border border-[#ff8b4a]/14 bg-[#ff6a2a]/8 p-3">
+                <div className="mb-2 flex items-center gap-2 text-[13px] font-black text-white/72">
+                  <span className="grid h-7 w-7 place-items-center rounded-full bg-[#ff7942]/18 text-[#ffd28c]">A</span>
+                  <span className="min-w-0 truncate">{item.optionA}阵营</span>
+                </div>
+                <p className="line-clamp-2 text-[14px] font-semibold text-white/86">{sideAOpinion}</p>
+                <div className="mt-3">
+                  <div className="mb-1 flex justify-between text-[11px] font-black text-white/42">
+                    <span>势能</span>
+                    <span className="text-[#ffd28c]">{pctA}%</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                    <span className="block h-full rounded-full bg-[linear-gradient(90deg,#f44b2c,#ffd05e)]" style={{ width: `${pctA}%` }} />
+                  </div>
+                </div>
+              </div>
+              <div className="flex min-w-0 flex-col justify-between rounded-[18px] border border-[#35d6ff]/14 bg-[#1ba8ff]/8 p-3">
+                <div className="mb-2 flex items-center gap-2 text-[13px] font-black text-white/72">
+                  <span className="grid h-7 w-7 place-items-center rounded-full bg-[#2ccfff]/18 text-[#a9efff]">B</span>
+                  <span className="min-w-0 truncate">{item.optionB}阵营</span>
+                </div>
+                <p className="line-clamp-2 text-[14px] font-semibold text-white/86">{sideBOpinion}</p>
+                <div className="mt-3">
+                  <div className="mb-1 flex justify-between text-[11px] font-black text-white/42">
+                    <span>势能</span>
+                    <span className="text-[#a9efff]">{pctB}%</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                    <span className="block h-full rounded-full bg-[linear-gradient(90deg,#38d7ff,#1777ff)]" style={{ width: `${pctB}%` }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </HeroBottomCard>
         </div>
       </div>
     </motion.div>
@@ -1033,44 +1424,6 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
 
   return (
     <section className="mx-0 grid w-full max-w-none gap-6 max-lg:gap-3">
-      <div className="flex items-center gap-3">
-        <span className="h-6 w-1.5 rounded-full bg-gradient-to-b from-[#27d8cf] to-[#ff4f75]" />
-        <h2 className="text-base font-bold text-slate-100">开撕台</h2>
-        <span className="text-xs text-white/48">
-          身份对立 · 回合制 · 热度决胜
-          {topicsQuery.isLoading ? ' · 接口加载中' : apiPKs.length > 0 ? ' · 已接入接口' : ' · 暂无数据'}
-        </span>
-      </div>
-
-      <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[#0d1118] shadow-[0_14px_30px_rgba(0,0,0,0.24),inset_0_1px_0_rgba(255,255,255,0.05)]">
-        {heroPK?.newsItem.image ? (
-          <img src={heroPK.newsItem.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-[0.14]" />
-        ) : null}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#091121]/92 via-[#0b1426]/86 to-[#0f1a2a]/72" />
-        <div className="relative flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#48ddc2]/28 bg-[#10273d]/70">
-            <Swords size={20} className="text-white" />
-          </div>
-          <div>
-            <h3 className="mb-1 text-sm font-bold text-[#40ead0]">开撕台回合制玩法</h3>
-            <p className="text-xs leading-relaxed text-white/68">
-              每个对立话题会持续存在，按局循环。前 2 天可下注，第 3 天锁局，按双方热度判定胜负，并持续累计赛季战绩。
-            </p>
-          </div>
-          </div>
-          {heroPK && onEnterBattle ? (
-            <button
-              onClick={() => onEnterBattle(heroPK.newsItem)}
-              className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-full border border-[#4f6489]/45 bg-[#10273d]/34 px-4 text-xs font-bold text-[#ffd7de] transition-colors hover:bg-[#163252]"
-            >
-              <MessageCircleMore size={14} className="text-[#5df3d7]" />
-              进入撕裂带
-            </button>
-          ) : null}
-        </div>
-      </div>
-
       {heroPK ? (
         <HeroPK
           pk={heroPK}

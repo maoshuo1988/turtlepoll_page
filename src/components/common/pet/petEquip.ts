@@ -60,6 +60,6 @@ export function hasEquippedPetInfo(info?: PetEquipInfo | PetEquipDisplaySource |
   if (isPresentPetId(info.petId)) return true;
   if (pickPetAvatarUrl(info.icon, info.image)) return true;
   if (info.petKey?.trim()) return true;
-  const displayName = info.petName?.trim() || info.name?.trim();
+  const displayName = info.petName?.trim() || ('name' in info ? info.name?.trim() : '');
   return Boolean(displayName);
 }
