@@ -6,8 +6,8 @@ import { SERVER_ASSET_ORIGIN } from "@/config";
 import { pickValidPetId, pickValidPetRarity } from '@/components/common/pet/petEquip';
 import { normalizePetRarityGrade, PetRarityGrade } from "@/components/common/pet/petRarity";
 import {
-  API_Admin_Pet_Defs,
-  API_Admin_Pet_Gacha_Config,
+  API_Pet_Defs,
+  API_Pet_Gacha_Config,
   API_Pet_Egg_Hatch,
   API_Pet_Equip,
   API_Pet_Owned,
@@ -670,7 +670,7 @@ export function useRequestPetGachaConfig() {
     queryFn: async () => {
       const res = await axiosCustom({
         method: "get",
-        cmd: API_Admin_Pet_Gacha_Config,
+        cmd: API_Pet_Gacha_Config,
         headers: getAuthorizationHeaders(),
       });
       return normalizePetGachaConfig(assertSuccess<unknown>(res));
@@ -687,7 +687,7 @@ export function useRequestPetDefs(params: { page?: number; size?: number } = {})
     queryFn: async () => {
       const res = await axiosCustom({
         method: "get",
-        cmd: API_Admin_Pet_Defs,
+        cmd: API_Pet_Defs,
         params: { page, size },
         headers: getAuthorizationHeaders(),
       });
