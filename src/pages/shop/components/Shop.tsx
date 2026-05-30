@@ -20,6 +20,7 @@ import { TextEmptyState } from '@/components/common/state/PageState';
 import { ShopGachaEggStage } from './ShopGachaEggStage';
 import { ShopGachaHeroMobile } from './ShopGachaHeroMobile';
 import { ShopGachaStageLayers } from './ShopGachaStageLayers';
+import { getPetEggHatchMissMessage, getPetEggHatchWinMessage, isPetEggHatchWin } from './shopHatchReveal';
 import {
   SHOP_AURORA_STAGE_OFFSET_X,
   SHOP_AURORA_STAGE_OFFSET_Y,
@@ -104,6 +105,7 @@ export const Shop: React.FC<ShopProps> = ({
   const [buyFlash, setBuyFlash] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
+  const [actionMiss, setActionMiss] = useState<string | null>(null);
   const [isPreviewDialogOpen, setIsPreviewDialogOpen] = useState(false);
   const [appleBuyOpen, setAppleBuyOpen] = useState(false);
   const [appleBuyCount, setAppleBuyCount] = useState(1);
@@ -121,7 +123,19 @@ export const Shop: React.FC<ShopProps> = ({
     timerRef.current = [];
   }, []);
 
-  /* ── Gacha logic：点击 → 开蛋 → 发光 → 接口成功后再展示龟图 ── */
+  const playWinHatchAnimation = useCallback(() => {
+    timerRef.current.push(
+      setTimeout(() => {
+        openDoneRef.current = true;
+        setPhase((current) => {
+          if (current !== 'opening') return current;
+          return hatchReadyRef.current ? 'reveal' : 'glowing';
+        });
+      }, SHOP_EGG_REVEAL_DELAY_MS),
+    );
+  }, []);
+
+  /* ── Gacha：先请求接口；未中奖仅提示；中奖才播开蛋动画 ── */
   const doGacha = useCallback(() => {
     if (phase !== 'idle' || hatchMutation.isLoading) return;
     if (!requireAuth()) return;
@@ -129,28 +143,30 @@ export const Shop: React.FC<ShopProps> = ({
     clearTimers();
     setActionError(null);
     setActionSuccess(null);
+    setActionMiss(null);
     setHatchResult(null);
     openDoneRef.current = false;
     hatchReadyRef.current = false;
 
-    setPhase('opening');
-
     void hatchMutation
       .mutateAsync()
       .then((result) => {
+        if (!isPetEggHatchWin(result)) {
+          setActionMiss(getPetEggHatchMissMessage(result));
+          return;
+        }
+
         setHatchResult(result);
         hatchReadyRef.current = true;
-        setActionSuccess(
-          result.isDuplicate
-            ? `开蛋完成，实际扣费 ${result.cost}，重复返还 ${result.refund}，当前余额 ${typeof result.balanceAfter === 'number' ? result.balanceAfter.toLocaleString() : '已更新'}。`
-            : `开蛋完成，获得 ${result.pet.name ?? result.pet.petKey ?? '新龟种'}，实际扣费 ${result.cost}。`,
-        );
+        setActionSuccess(getPetEggHatchWinMessage(result));
+        setPhase('opening');
         setPhase((current) => {
           if (current === 'glowing' || (current === 'opening' && openDoneRef.current)) {
             return 'reveal';
           }
           return current;
         });
+        playWinHatchAnimation();
       })
       .catch((error) => {
         clearTimers();
@@ -163,17 +179,7 @@ export const Shop: React.FC<ShopProps> = ({
           onRequireAuth?.();
         }
       });
-
-    timerRef.current.push(
-      setTimeout(() => {
-        openDoneRef.current = true;
-        setPhase((current) => {
-          if (current !== 'opening') return current;
-          return hatchReadyRef.current ? 'reveal' : 'glowing';
-        });
-      }, SHOP_EGG_REVEAL_DELAY_MS),
-    );
-  }, [clearTimers, hatchMutation, onRequireAuth, phase, requireAuth]);
+  }, [clearTimers, hatchMutation, onRequireAuth, phase, playWinHatchAnimation, requireAuth]);
 
   const resetGacha = useCallback(() => {
     clearTimers();
@@ -183,6 +189,7 @@ export const Shop: React.FC<ShopProps> = ({
     setHatchResult(null);
     setActionError(null);
     setActionSuccess(null);
+    setActionMiss(null);
   }, [clearTimers]);
 
   /* ── Buy apple ── */
@@ -320,6 +327,7 @@ export const Shop: React.FC<ShopProps> = ({
           isHatchLoading={hatchMutation.isLoading}
           actionError={actionError}
           actionSuccess={actionSuccess}
+          actionMiss={actionMiss}
           onBack={onBack}
           onGacha={doGacha}
           onResetGacha={resetGacha}
@@ -491,6 +499,15 @@ export const Shop: React.FC<ShopProps> = ({
                   <div className="mt-3 flex flex-wrap items-center gap-2 text-sm font-semibold text-white/84">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 text-amber-200"><Coins size={14} /> {balance.toLocaleString()}</span>
                   </div>
+                  {actionError ? (
+                    <p className="mt-3 max-w-xl text-[13px] leading-relaxed text-rose-300">{actionError}</p>
+                  ) : null}
+                  {actionMiss ? (
+                    <p className="mt-3 max-w-xl text-[13px] leading-relaxed text-amber-200">{actionMiss}</p>
+                  ) : null}
+                  {actionSuccess ? (
+                    <p className="mt-3 max-w-xl text-[13px] leading-relaxed text-emerald-300">{actionSuccess}</p>
+                  ) : null}
                 </div>
                 <button onClick={onBack} className="relative z-20 flex shrink-0 items-center gap-1 rounded-full border border-white/14 bg-black/28 px-3 py-1.5 text-xs font-bold text-white/86 shadow-[0_8px_18px_rgba(0,0,0,0.22)] backdrop-blur transition hover:bg-white/10 hover:text-white">
                   <ArrowLeft size={16} className="sm:w-[18px] sm:h-[18px]" /> 返回

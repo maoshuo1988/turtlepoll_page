@@ -134,6 +134,8 @@ export type PetEggHatchRewardPet = {
 };
 
 export type PetEggHatchResponse = {
+  /** 是否抽中宠物（由 hatch 接口字段 + pet 信息归一化得出）。 */
+  won: boolean;
   cost: number;
   refund: number;
   isDuplicate: boolean;
@@ -141,6 +143,10 @@ export type PetEggHatchResponse = {
   balanceBefore?: number;
   balanceAfter?: number;
 };
+
+export function isPetEggHatchWin(result: Pick<PetEggHatchResponse, 'won'>): boolean {
+  return result.won;
+}
 
 export type PetGachaProbabilityRow = {
   rarity: string | number;

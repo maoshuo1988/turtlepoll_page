@@ -1,8 +1,23 @@
 /** 文件说明：孵化结果与奖池宠物定义对齐，解析展示用预览资源。 */
 import { resolvePetPreviewAsset, type PetPreviewAsset } from '@/components/common/pet/petPreviewAsset';
 import { normalizePetRarityGrade, type PetRarityGrade } from '@/components/common/pet/petRarity';
-import type { PetEggHatchResponse } from '@/hooks/petTypes';
+import { isPetEggHatchWin, type PetEggHatchResponse } from '@/hooks/petTypes';
 import type { PetDefNormalized } from '@/hooks/petTypes';
+
+export function getPetEggHatchMissMessage(result: PetEggHatchResponse) {
+  const costText = result.cost > 0 ? `，已消耗 ${result.cost.toLocaleString()} 龟币` : '';
+  return `很遗憾，这次没有抽到宠物${costText}。再试一次吧！`;
+}
+
+export function getPetEggHatchWinMessage(result: PetEggHatchResponse) {
+  if (result.isDuplicate) {
+    return `开蛋完成，重复龟种已返还 ${result.refund.toLocaleString()} 龟币，实际扣费 ${result.cost.toLocaleString()}。`;
+  }
+  const petName = result.pet.name ?? result.pet.petKey ?? '新龟种';
+  return `恭喜抽中 ${petName}！实际扣费 ${result.cost.toLocaleString()} 龟币。`;
+}
+
+export { isPetEggHatchWin };
 
 export type HatchResultPetPreview = {
   preview: PetPreviewAsset | null;

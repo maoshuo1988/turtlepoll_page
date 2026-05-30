@@ -3,7 +3,7 @@
  */
 import { axiosCustom } from "@/api/httpClient";
 import { SERVER_ASSET_ORIGIN } from "@/config";
-import { pickValidPetId, pickValidPetRarity } from '@/components/common/pet/petEquip';
+import { isPresentPetId, pickValidPetId, pickValidPetRarity } from '@/components/common/pet/petEquip';
 import { normalizePetRarityGrade, PetRarityGrade } from "@/components/common/pet/petRarity";
 import {
   API_Pet_Defs,
@@ -73,6 +73,15 @@ function pickNonEmptyString(...vals: unknown[]): string {
     if (typeof v === "number" && Number.isFinite(v)) return String(v);
   }
   return "";
+}
+
+function readTriStateBoolean(...vals: unknown[]): boolean | undefined {
+  for (const v of vals) {
+    if (typeof v === "boolean") return v;
+    if (v === 1 || v === "1" || v === "true" || v === "TRUE") return true;
+    if (v === 0 || v === "0" || v === "false" || v === "FALSE") return false;
+  }
+  return undefined;
 }
 
 function pickFiniteNumber(...vals: unknown[]): number | undefined {
@@ -242,7 +251,6 @@ function normalizePetEggHatchResponse(raw: unknown): PetEggHatchResponse {
     source.petDef,
     source.pet_def,
     source.reward,
-    source,
   ].filter(isRecord);
   const petValues = (key: string) => petRecords.map((item) => item[key]);
   const localizedName = pickNonEmptyString(...petRecords.map((item) => pickLocalizedPetName(item.name)));
@@ -265,7 +273,7 @@ function normalizePetEggHatchResponse(raw: unknown): PetEggHatchResponse {
     ...petValues('title'),
     petKey,
   );
-  const petId = pickNonEmptyString(...petValues('petId'), ...petValues('pet_id'), ...petValues('id'), petKey, name);
+  const petId = pickValidPetId(...petValues('petId'), ...petValues('pet_id'), ...petValues('id'));
   const avatarUrl = pickPetRewardAvatarUrl(...petRecords);
   const rarity = pickNonEmptyString(
     ...petValues('rarity'),
@@ -277,18 +285,49 @@ function normalizePetEggHatchResponse(raw: unknown): PetEggHatchResponse {
   ) || undefined;
   const balanceBefore = pickFiniteNumber(source.balanceBefore, source.balance_before);
   const balanceAfter = pickFiniteNumber(source.balanceAfter, source.balance_after);
+  const rewardType = pickNonEmptyString(source.rewardType, source.reward_type, source.prizeType, source.prize_type).toLowerCase();
+  const missByRewardType = ['none', 'empty', 'miss', 'lose', 'lost', 'fail', 'failed'].includes(rewardType);
+  const explicitWon = readTriStateBoolean(
+    source.won,
+    source.hit,
+    source.isWin,
+    source.is_win,
+    source.hasReward,
+    source.has_reward,
+    source.rewarded,
+  );
+  const explicitMiss = readTriStateBoolean(
+    source.miss,
+    source.isMiss,
+    source.is_miss,
+    source.empty,
+    source.noReward,
+    source.no_reward,
+  );
+  const hasPetReward = isPresentPetId(petId) && Boolean(petKey || name || avatarUrl);
+  const won =
+    explicitMiss === true || missByRewardType
+      ? false
+      : explicitWon === true
+        ? true
+        : explicitWon === false
+          ? false
+          : hasPetReward;
 
   return {
+    won,
     cost: pickFiniteNumber(source.cost, source.actualCost, source.actual_cost) ?? 0,
     refund: pickFiniteNumber(source.refund, source.refundAmount, source.refund_amount) ?? 0,
     isDuplicate: Boolean(source.isDuplicate ?? source.is_duplicate),
-    pet: {
-      petId,
-      ...(petKey ? { petKey } : {}),
-      ...(rarity ? { rarity } : {}),
-      ...(name ? { name } : {}),
-      ...(avatarUrl ? { avatarUrl } : {}),
-    },
+    pet: won
+      ? {
+          petId,
+          ...(petKey ? { petKey } : {}),
+          ...(rarity ? { rarity } : {}),
+          ...(name ? { name } : {}),
+          ...(avatarUrl ? { avatarUrl } : {}),
+        }
+      : { petId: '' },
     ...(balanceBefore !== undefined ? { balanceBefore } : {}),
     ...(balanceAfter !== undefined ? { balanceAfter } : {}),
   };

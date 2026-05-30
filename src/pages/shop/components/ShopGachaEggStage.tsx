@@ -1,6 +1,6 @@
 /** 文件说明：抽奖区龟蛋开蛋/发光与 reveal 宠物图，仅在点击孵化后展示。 */
 import { SHOP_GACHA_EGG_STAGE_LAYOUT } from '@/config/shopSpineAssets';
-import type { PetDefNormalized, PetEggHatchResponse } from '@/hooks/petTypes';
+import { isPetEggHatchWin, type PetDefNormalized, type PetEggHatchResponse } from '@/hooks/petTypes';
 import { ShopEggSpine } from './ShopEggSpine';
 import { ShopHatchRevealPet } from './ShopHatchRevealPet';
 
@@ -30,7 +30,7 @@ export function ShopGachaEggStage({
 
   const layout = SHOP_GACHA_EGG_STAGE_LAYOUT[variant];
   const displayMode = resolveEggDisplayMode(hatchPhase);
-  const showPet = hatchPhase === 'reveal' && hatchResult;
+  const showPet = hatchPhase === 'reveal' && hatchResult && isPetEggHatchWin(hatchResult);
 
   return (
     <div className={layout.wrapper}>

@@ -23,6 +23,7 @@ interface ShopGachaHeroMobileProps {
   isHatchLoading: boolean;
   actionError: string | null;
   actionSuccess: string | null;
+  actionMiss: string | null;
   onBack: () => void;
   onGacha: () => void;
   onResetGacha: () => void;
@@ -38,6 +39,7 @@ export function ShopGachaHeroMobile({
   isHatchLoading,
   actionError,
   actionSuccess,
+  actionMiss,
   onBack,
   onGacha,
   onResetGacha,
@@ -134,6 +136,7 @@ export function ShopGachaHeroMobile({
         </div>
 
         {actionError ? <p className="mt-2 text-[12px] leading-relaxed text-rose-300">{actionError}</p> : null}
+        {actionMiss ? <p className="mt-2 text-[12px] leading-relaxed text-amber-200">{actionMiss}</p> : null}
         {actionSuccess ? <p className="mt-2 text-[12px] leading-relaxed text-emerald-300">{actionSuccess}</p> : null}
       </div>
     </section>
