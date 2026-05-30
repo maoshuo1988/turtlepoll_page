@@ -48,8 +48,8 @@ type BattleQueryOptions = {
   enabled?: boolean;
 };
 
-function battleListRequiresAuth(params: BattleListParams) {
-  return Boolean(params.role);
+function battleListRequiresAuth(_params: BattleListParams) {
+  return true;
 }
 
 export async function fetchBattleDetail(battleId?: number) {
@@ -114,6 +114,8 @@ export function useRequestBattleList(params: BattleListParams = {}, options: Bat
 
 // 赌局统计
 export function useRequestBattleStats(options: BattleQueryOptions = {}) {
+  const token = getAuthToken();
+
   return useQuery<BattleStatsResponse>({
     queryKey: battleQueryKeys.stats(),
     queryFn: async () => {
@@ -124,7 +126,7 @@ export function useRequestBattleStats(options: BattleQueryOptions = {}) {
       });
       return assertSuccess(res);
     },
-    enabled: options.enabled ?? true,
+    enabled: (options.enabled ?? true) && Boolean(token),
     refetchOnWindowFocus: false,
   });
 }

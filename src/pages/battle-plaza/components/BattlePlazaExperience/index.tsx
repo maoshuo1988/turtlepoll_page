@@ -661,8 +661,8 @@ export const BattlePlazaPage: React.FC = () => {
   const isAuthenticated = Boolean(authToken);
   const requireAuth = useRequireAuth();
   const queryClient = useQueryClient();
-  const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 });
-  const battleStatsQuery = useRequestBattleStats();
+  const plazaQuery = useRequestBattleList({ page: 1, pageSize: 50 }, { enabled: isAuthenticated });
+  const battleStatsQuery = useRequestBattleStats({ enabled: isAuthenticated });
   const myBankerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'banker' }, { enabled: isAuthenticated });
   const myChallengerQuery = useRequestBattleList({ page: 1, pageSize: 50, role: 'challenger' }, { enabled: isAuthenticated });
   const createBattleMutation = useRequestBattleCreate();
@@ -1210,7 +1210,7 @@ export const BattlePlazaPage: React.FC = () => {
               <div className={css("dc-header")}>
                 <div className={css("dc-ava")}>🔐</div>
                 <div className={css("dc-placeholder")} style={{ cursor: 'pointer', color: '#f8d27a' }}>
-                  当前未登录。可浏览赌局广场，创建、挑战、评论等操作需先登录。
+                  当前未登录。登录后可浏览赌局广场，并进行创建、挑战、评论等操作。
                 </div>
               </div>
             </div>
@@ -1476,7 +1476,16 @@ export const BattlePlazaPage: React.FC = () => {
 
           {activeTab === 'plaza' && (
             <>
-              {plazaQuery.isLoading ? (
+              {!isAuthenticated ? (
+                <div className={css("empty-state")}>
+                  <div className={css("empty-ico")}>🔐</div>
+                  <div className={css("empty-title")}>请先登录</div>
+                  <div className={css("empty-sub")}>登录后可查看赌局广场与最新对战列表。</div>
+                  <button type="button" className={css("dc-btn")} style={{ marginTop: 16 }} onClick={() => requireAuth()}>
+                    去登录
+                  </button>
+                </div>
+              ) : plazaQuery.isLoading ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⏳</div>
                   <div className={css("empty-title")}>开战广场加载中</div>
