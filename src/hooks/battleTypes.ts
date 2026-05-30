@@ -5,6 +5,66 @@ export type BattleStatus = "open" | "sealed" | "pending" | "disputed" | "settled
 
 export type BattleResult = "banker_wins" | "banker_loses" | "void";
 
+const BATTLE_RESULT_BANKER_WINS = new Set([
+  "banker_wins",
+  "banker_win",
+  "BANKER_WINS",
+  "BANKER_WIN",
+  "banker",
+  "BANKER",
+]);
+
+const BATTLE_RESULT_BANKER_LOSES = new Set([
+  "banker_loses",
+  "banker_lose",
+  "BANKER_LOSES",
+  "BANKER_LOSE",
+  "challenger_wins",
+  "challenger_win",
+  "CHALLENGER_WINS",
+  "CHALLENGER_WIN",
+  "challenger",
+  "CHALLENGER",
+]);
+
+const BATTLE_RESULT_VOID = new Set(["void", "VOID", "cancelled", "CANCELLED"]);
+
+/** 兼容后端不同 result 枚举/别名，统一成前端展示用的 BattleResult。 */
+export function normalizeBattleResult(raw: unknown): BattleResult | undefined {
+  if (raw === null || raw === undefined || raw === "") return undefined;
+
+  const text = String(raw).trim();
+  if (!text) return undefined;
+
+  if (BATTLE_RESULT_BANKER_WINS.has(text)) return "banker_wins";
+  if (BATTLE_RESULT_BANKER_LOSES.has(text)) return "banker_loses";
+  if (BATTLE_RESULT_VOID.has(text)) return "void";
+
+  const lower = text.toLowerCase();
+  if (BATTLE_RESULT_BANKER_WINS.has(lower)) return "banker_wins";
+  if (BATTLE_RESULT_BANKER_LOSES.has(lower)) return "banker_loses";
+  if (BATTLE_RESULT_VOID.has(lower)) return "void";
+
+  if (text.includes("庄家") && text.includes("胜")) return "banker_wins";
+  if (text.includes("挑战") && text.includes("胜")) return "banker_loses";
+  if (text.includes("作废")) return "void";
+
+  return undefined;
+}
+
+export function getBattleResultLabel(result: BattleResult) {
+  switch (result) {
+    case "banker_wins":
+      return "庄家获胜";
+    case "banker_loses":
+      return "挑战者获胜";
+    case "void":
+      return "本局作废";
+    default:
+      return "待宣布";
+  }
+}
+
 export type BattleResultBy =
   | "banker"
   | "timeout"

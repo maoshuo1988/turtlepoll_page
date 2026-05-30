@@ -26,5 +26,3 @@ export const API_Battle_Challenger_Dispute = "/api/battle/challenger_dispute";
 // 提取奖励：battle settled 后，一次性提取我的结算金额。
 export const API_Battle_Withdraw = "/api/battle/withdraw";
 
-// 管理端裁决接口目前前台页面没直接使用，但类型层和 hook 已预留。
-export const API_Admin_Battle_Resolve = "/api/admin/battle/resolve";

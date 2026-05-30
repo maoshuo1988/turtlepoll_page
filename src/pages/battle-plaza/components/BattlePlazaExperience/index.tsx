@@ -5,7 +5,18 @@ import styles from './index.module.scss';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useQueries, useQueryClient } from 'react-query';
 import { battleQueryKeys, fetchBattleDetail, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleStats, useRequestBattleWithdraw } from '@/hooks/useBattleRequests';
-import { createBattleRequestId, getBattleActionPermissions, getBattleErrorMessage, type Battle, type BattleDetailResponse, type BattleListItem, type BattleMyAction } from '@/hooks/battleTypes';
+import {
+  createBattleRequestId,
+  getBattleActionPermissions,
+  getBattleErrorMessage,
+  getBattleResultLabel,
+  normalizeBattleResult,
+  type Battle,
+  type BattleDetailResponse,
+  type BattleListItem,
+  type BattleMyAction,
+  type BattleResult,
+} from '@/hooks/battleTypes';
 import { useAppSession } from '@/hooks/useAppSession';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 import { fetchCommentComments, type CommentResponse, useRequestCreateComment } from '@/hooks/useCommentRequests';
@@ -76,6 +87,8 @@ interface DuelItem {
   likes: number;
   settleText: string;
   resultText?: string;
+  settledResult?: BattleResult;
+  declaredResult?: BattleResult;
   disputeText?: string;
   inviteCode?: string;
   challengerList?: DuelChallenger[];
@@ -100,6 +113,34 @@ type JoinModalState = {
   max: number;
   visibility: 'public' | 'private';
 };
+
+function getDuelSettledResultTag(result: BattleResult) {
+  switch (result) {
+    case 'banker_wins':
+      return {
+        label: '🏆 庄家获胜',
+        background: 'rgba(0,214,143,.1)',
+        color: 'var(--green)',
+        border: '1px solid rgba(0,214,143,.2)',
+      };
+    case 'banker_loses':
+      return {
+        label: '😞 挑战者获胜',
+        background: 'rgba(255,60,60,.1)',
+        color: 'var(--red)',
+        border: '1px solid rgba(255,60,60,.2)',
+      };
+    case 'void':
+      return {
+        label: '⚖️ 本局作废',
+        background: 'rgba(245,158,11,.1)',
+        color: 'var(--amber)',
+        border: '1px solid rgba(245,158,11,.2)',
+      };
+    default:
+      return null;
+  }
+}
 
 type AddStakeModalState = {
   duelId: number;
@@ -245,16 +286,21 @@ function mapBattleToDuel(
       break;
   }
 
-  const resultText =
+  const normalizedBattleResult = normalizeBattleResult(battle.result);
+  const normalizedSettlementResult = normalizeBattleResult(detail?.settlement?.settlement?.result);
+  const effectiveResult =
     battle.status === 'settled'
-      ? battle.result === 'banker_wins'
-        ? '结果已生效：庄家获胜'
-        : battle.result === 'banker_loses'
-          ? '结果已生效：挑战者获胜'
-          : '结果已生效：本局作废'
-      : settlementItem?.payoutAmount
-        ? `你可提取 ${formatCoins(settlementItem.payoutAmount)}🪙`
-        : undefined;
+      ? normalizedSettlementResult ?? normalizedBattleResult
+      : normalizedBattleResult;
+
+  const resultText =
+    battle.status === 'settled' && effectiveResult
+      ? `结果已生效：${getBattleResultLabel(effectiveResult)}`
+      : battle.status === 'pending' && effectiveResult
+        ? `已宣判：${getBattleResultLabel(effectiveResult)}`
+        : settlementItem?.payoutAmount
+          ? `你可提取 ${formatCoins(settlementItem.payoutAmount)}🪙`
+          : undefined;
 
   const myChallengeInfo =
     !permissions.isBanker
@@ -310,6 +356,8 @@ function mapBattleToDuel(
               ? `🔒 已封盘 · 结算时间 ${formatTimestampLabel(battle.settleTime)}`
               : `⏱ 结算时间 ${formatTimestampLabel(battle.settleTime)}`,
     resultText,
+    settledResult: battle.status === 'settled' ? effectiveResult : undefined,
+    declaredResult: battle.status === 'pending' ? effectiveResult : undefined,
     disputeText:
       battle.status === 'disputed'
         ? '本局存在挑战者异议，当前等待管理员裁决。'
@@ -431,20 +479,22 @@ function DuelCard({
               >
                 庄家{duel.visibility === 'private' ? ' · 私人' : ''}
               </span>
-              {duel.resultText && (
-                <span
-                  className={css("duel-result-tag")}
-                  style={{
-                    background: duel.resultText.includes('庄家输')
-                      ? 'rgba(255,60,60,.1)'
-                      : 'rgba(0,214,143,.1)',
-                    color: duel.resultText.includes('庄家输') ? 'var(--red)' : 'var(--green)',
-                    border: `1px solid ${duel.resultText.includes('庄家输') ? 'rgba(255,60,60,.2)' : 'rgba(0,214,143,.2)'}`,
-                  }}
-                >
-                  {duel.resultText.includes('庄家输') ? '😞 庄家输' : '🏆 庄家赢'}
-                </span>
-              )}
+              {(duel.settledResult ?? duel.declaredResult) && (() => {
+                const resultTag = getDuelSettledResultTag(duel.settledResult ?? duel.declaredResult!);
+                if (!resultTag) return null;
+                return (
+                  <span
+                    className={css('duel-result-tag')}
+                    style={{
+                      background: resultTag.background,
+                      color: resultTag.color,
+                      border: resultTag.border,
+                    }}
+                  >
+                    {resultTag.label}
+                  </span>
+                );
+              })()}
             </div>
             <div className={css("duel-banker-meta")}>{duel.resultText ?? `${duel.visibility === 'private' ? '私人' : '公开'}赌局 · ${status.label.replace(/[^\u4e00-\u9fa5]/g, '')}`}</div>
           </div>
@@ -1023,8 +1073,16 @@ export const BattlePlazaPage: React.FC = () => {
   const handleDeclareResult = async (duel: DuelItem, result: 'banker_wins' | 'banker_loses') => {
     if (!requireAuth()) return;
     try {
-      await declareBattleMutation.mutateAsync({ battleId: duel.battleId, result });
-      pushFeedback('success', '宣判结果已提交。');
+      const battle = await declareBattleMutation.mutateAsync({ battleId: duel.battleId, result });
+      const declared = normalizeBattleResult(battle.result);
+      const declaredLabel = declared ? getBattleResultLabel(declared) : '未知';
+      const expectedLabel = getBattleResultLabel(result);
+      pushFeedback(
+        'success',
+        declared === result
+          ? `宣判已提交：${declaredLabel}`
+          : `宣判已提交，但服务端记录为「${declaredLabel}」（你提交的是「${expectedLabel}」）`,
+      );
     } catch (error) {
       setMappedError(error);
     }
@@ -1172,14 +1230,12 @@ export const BattlePlazaPage: React.FC = () => {
             ? '已封盘'
             : '进行中'
     : '';
-  const detailResultLabel =
-    detailBattle?.result === 'banker_wins'
-      ? '庄家获胜'
-      : detailBattle?.result === 'banker_loses'
-        ? '挑战者获胜'
-        : detailBattle?.result === 'void'
-          ? '本局作废'
-          : '待宣布';
+  const detailNormalizedResult = detailBattle?.result
+    ? normalizeBattleResult(detailBattle.result)
+    : undefined;
+  const detailResultLabel = detailNormalizedResult
+    ? getBattleResultLabel(detailNormalizedResult)
+    : '待宣布';
 
   return (
     <>
