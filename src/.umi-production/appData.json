@@ -29,7 +29,7 @@
       "framer-motion": "^12.35.0",
       "lottie-react": "^2.4.1",
       "lucide-react": "^0.575.0",
-      "motion": "^12.35.0",
+      "motion": "^12.40.0",
       "pixi.js": "^8.18.1",
       "react": "^19.2.0",
       "react-countup": "^6.5.3",
@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 7
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -95,7 +95,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -112,7 +112,7 @@
             1
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -129,7 +129,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -156,10 +156,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            11
+            6
           ]
         },
-        "register": 12
+        "register": 10
       },
       "enableBy": "register"
     },
@@ -172,7 +172,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1108,7 +1108,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1121,7 +1121,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1134,7 +1134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 44
+        "register": 40
       },
       "enableBy": "register"
     },
@@ -1147,7 +1147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 16
       },
       "enableBy": "config"
     },
@@ -1160,7 +1160,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 7
+        "register": 6
       },
       "enableBy": "config"
     },
@@ -1174,7 +1174,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            0
+            1
           ]
         },
         "register": 0
@@ -1216,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 19
+        "register": 21
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1266,7 +1266,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1334,7 +1334,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1386,7 +1386,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1411,7 +1411,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1424,7 +1424,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1437,7 +1437,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1463,7 +1463,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1525,7 +1525,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1538,7 +1538,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1592,7 +1592,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1604,7 +1604,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1654,7 +1654,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1667,7 +1667,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 17
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1692,7 +1692,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1939,7 +1939,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2456,7 +2456,7 @@
       "id": "coinApi",
       "file": "coinApi.ts",
       "absPath": "/coinApi",
-      "__content": "/**\n * 文件说明：coin Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 金币 / 预测下注\n/// 基础路径: /api/coin\n//\nexport const API_Coin_Settle = \"/api/coin/settle\";\n//我的金币账户\nexport const API_Coin_Me = \"/api/coin/me\";\n//预测下注\nexport const API_Coin_Bet = \"/api/coin/bet\";\n//账户余额排行榜\nexport const API_Coin_Leaderboard = \"/api/coin/leaderboard\";\n\n/// MARK: 管理后台 - 金币\n/// 基础路径: /api/admin/coin\n//管理员铸币\nexport const API_Admin_Coin_Mint = \"/api/admin/coin/mint\";"
+      "__content": "/**\n * 文件说明：coin Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 金币 / 预测下注\n/// 基础路径: /api/coin\n//\nexport const API_Coin_Settle = \"/api/coin/settle\";\n//我的金币账户\nexport const API_Coin_Me = \"/api/coin/me\";\n//预测下注\nexport const API_Coin_Bet = \"/api/coin/bet\";\n//账户余额排行榜\nexport const API_Coin_Leaderboard = \"/api/coin/leaderboard\";"
     },
     "userApi": {
       "path": "userApi",
@@ -2470,7 +2470,7 @@
       "id": "petApi",
       "file": "petApi.ts",
       "absPath": "/petApi",
-      "__content": "/**\n * 文件说明：pet Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 用户侧宠物（user_pet）\n/// 基础路径: /api/pet\n\n// 当前装备龟种\nexport const API_Pet_Equip = \"/api/pet/equip\";\n// 用户龟种资产\nexport const API_Pet_Owned = \"/api/pet/owned\";\n// 体力查询\nexport const API_Pet_Stamina = \"/api/pet/stamina\";\n// 体力消耗\nexport const API_Pet_Stamina_Consume = \"/api/pet/stamina/consume\";\n// 体力恢复 / 喂食\nexport const API_Pet_Stamina_Feed = \"/api/pet/stamina/feed\";\n// 开蛋\nexport const API_Pet_Egg_Hatch = \"/api/pet/egg/hatch\";\n// 状态页聚合\nexport const API_Pet_Status = \"/api/pet/status\";\n// 抽奖配置\nexport const API_Admin_Pet_Gacha_Config = \"/api/admin/pet/gacha/config\";\n// 宠物定义列表（奖池预览等）\nexport const API_Admin_Pet_Defs = \"/api/admin/pet/defs\";\n"
+      "__content": "/**\n * 文件说明：pet Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 用户侧宠物（user_pet）\n/// 基础路径: /api/pet\n\n// 当前装备龟种\nexport const API_Pet_Equip = \"/api/pet/equip\";\n// 用户龟种资产\nexport const API_Pet_Owned = \"/api/pet/owned\";\n// 体力查询\nexport const API_Pet_Stamina = \"/api/pet/stamina\";\n// 体力消耗\nexport const API_Pet_Stamina_Consume = \"/api/pet/stamina/consume\";\n// 体力恢复 / 喂食\nexport const API_Pet_Stamina_Feed = \"/api/pet/stamina/feed\";\n// 开蛋\nexport const API_Pet_Egg_Hatch = \"/api/pet/egg/hatch\";\n// 状态页聚合\nexport const API_Pet_Status = \"/api/pet/status\";\n// 抽奖配置\nexport const API_Pet_Gacha_Config = \"/api/pet/gacha/config\";\n// 宠物定义列表（奖池预览等）\nexport const API_Pet_Defs = \"/api/pet/defs\";\n"
     },
     "tagApi": {
       "path": "tagApi",

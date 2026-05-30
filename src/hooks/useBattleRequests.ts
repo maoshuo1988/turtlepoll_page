@@ -19,7 +19,6 @@ import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { COIN_ME_QUERY_KEY } from "./useCoinRequests";
 import type {
-  AdminResolveBattlePayload,
   BankerAddStakePayload,
   Battle,
   BattleChallengeActionPayload,
@@ -315,4 +314,3 @@ export function useRequestBattleWithdraw() {
     },
   });
 }
-

@@ -10,7 +10,6 @@ import { getAuthToken } from "@/utils/authStorage";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import {  useMutation, useQuery, useQueryClient } from "react-query";
 import type {
-  AdminCoinMintPayload,
   CoinLeaderboardItem,
   CoinLeaderboardParams,
   CoinLeaderboardResult,

@@ -224,6 +224,8 @@
             0,
             0,
             0,
+            0,
+            0,
             0
           ]
         },
@@ -558,7 +560,11 @@
             36,
             55,
             91,
-            32
+            32,
+            53,
+            37,
+            21,
+            17
           ]
         },
         "register": 0
@@ -676,7 +682,9 @@
             24,
             17,
             13,
-            21
+            21,
+            27,
+            144
           ]
         },
         "register": 9
@@ -791,6 +799,8 @@
             0,
             0,
             1,
+            0,
+            1,
             0
           ]
         },
@@ -890,6 +900,7 @@
             0,
             0,
             1,
+            0,
             0,
             0,
             0,
@@ -1181,6 +1192,9 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2321,9 +2335,13 @@
             2,
             1,
             0,
-            2
+            2,
+            0,
+            4
           ],
           "addRuntimePlugin": [
+            0,
+            0,
             0,
             0,
             0,
@@ -2594,7 +2612,9 @@
             0,
             0,
             0,
-            0
+            0,
+            0,
+            5
           ],
           "addEntryImports": [
             0,
@@ -2794,6 +2814,10 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -2925,7 +2949,9 @@
             45,
             34,
             38,
-            69
+            69,
+            69,
+            335
           ],
           "addPolyfillImports": [
             0,
@@ -3125,6 +3151,10 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -3141,6 +3171,10 @@
       "time": {
         "hooks": {
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -3453,6 +3487,8 @@
             0,
             0,
             0,
+            0,
+            0,
             0
           ]
         },
@@ -3594,7 +3630,9 @@
             0,
             0,
             0,
-            0
+            0,
+            1,
+            10
           ],
           "addBeforeMiddlewares": [
             0
@@ -3811,7 +3849,11 @@
             17,
             1,
             30,
-            0
+            0,
+            122,
+            1,
+            182,
+            1
           ]
         },
         "register": 2
@@ -3964,7 +4006,9 @@
             19,
             12,
             23,
-            21
+            21,
+            34,
+            100
           ]
         },
         "register": 1
@@ -4147,7 +4191,9 @@
             1,
             1,
             0,
-            0
+            0,
+            5,
+            3
           ]
         },
         "register": 0
@@ -5206,9 +5252,11 @@
     "done": true,
     "progresses": [
       {
-        "percent": 1,
-        "status": "",
-        "details": []
+        "percent": 0.46834862385321097,
+        "status": "building",
+        "details": [
+          "1/2 entries 730/800 dependencies 337/328 modules"
+        ]
       }
     ]
   },
@@ -8179,29 +8227,8 @@
             ],
             "format": "esm"
           },
-          "src/pages/rivalry/components/HeroBattleRail/index.tsx": {
-            "bytes": 12270,
-            "imports": [
-              {
-                "path": "react",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "framer-motion",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "./index.module.scss",
-                "kind": "import-statement",
-                "external": true
-              }
-            ],
-            "format": "esm"
-          },
           "src/pages/rivalry/components/RivalryPKContent.tsx": {
-            "bytes": 61652,
+            "bytes": 52108,
             "imports": [
               {
                 "path": "react",
@@ -8222,11 +8249,6 @@
                 "path": "src/pages/rivalry/components/RivalryBetModal.tsx",
                 "kind": "import-statement",
                 "original": "./RivalryBetModal"
-              },
-              {
-                "path": "src/pages/rivalry/components/HeroBattleRail/index.tsx",
-                "kind": "import-statement",
-                "original": "./HeroBattleRail"
               },
               {
                 "path": "src/hooks/usePkRequests.ts",
@@ -10483,21 +10505,6 @@
                 "external": true
               },
               {
-                "path": "./index.module.scss",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "react",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "framer-motion",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
                 "path": "lucide-react",
                 "kind": "import-statement",
                 "external": true
@@ -12264,11 +12271,8 @@
               "src/pages/rivalry/components/RivalryBetModal.tsx": {
                 "bytesInOutput": 9530
               },
-              "src/pages/rivalry/components/HeroBattleRail/index.tsx": {
-                "bytesInOutput": 11631
-              },
               "src/pages/rivalry/components/RivalryPKContent.tsx": {
-                "bytesInOutput": 64998
+                "bytesInOutput": 54507
               },
               "src/pages/rivalry/components/RivalryPK.tsx": {
                 "bytesInOutput": 117
@@ -12289,7 +12293,7 @@
                 "bytesInOutput": 25842
               },
               "src/pages/forum/components/TopicPostCard.tsx": {
-                "bytesInOutput": 47331
+                "bytesInOutput": 47328
               },
               "src/api/userApi.ts": {
                 "bytesInOutput": 653
@@ -12403,7 +12407,7 @@
                 "bytesInOutput": 6775
               },
               "src/pages/shop/components/Shop.tsx": {
-                "bytesInOutput": 42825
+                "bytesInOutput": 42816
               },
               "src/pages/shop/components/ShopPageView.tsx": {
                 "bytesInOutput": 355
@@ -12445,7 +12449,7 @@
                 "bytesInOutput": 3316
               },
               "src/pages/active-predictions/components/ActivePredictionsPage/index.tsx": {
-                "bytesInOutput": 7425
+                "bytesInOutput": 7423
               },
               "src/pages/active-predictions/components/ActivePredictionsPageView.tsx": {
                 "bytesInOutput": 537
@@ -12493,7 +12497,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1024114
+            "bytes": 1001920
           }
         }
       }
@@ -24666,69 +24670,6 @@
           "type": "ImportDeclaration"
         }
       ],
-      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rivalry/components/HeroBattleRail/index.tsx": [
-        {
-          "end": 165,
-          "importKind": "value",
-          "source": "react",
-          "specifiers": [
-            {
-              "imported": "useEffect",
-              "local": "useEffect",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useId",
-              "local": "useId",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useMemo",
-              "local": "useMemo",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useRef",
-              "local": "useRef",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useState",
-              "local": "useState",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 97,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 205,
-          "importKind": "value",
-          "source": "framer-motion",
-          "specifiers": [
-            {
-              "imported": "motion",
-              "local": "motion",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 166,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 247,
-          "importKind": "value",
-          "source": "./index.module.scss",
-          "specifiers": [
-            {
-              "local": "styles",
-              "type": "ImportDefaultSpecifier"
-            }
-          ],
-          "start": 206,
-          "type": "ImportDeclaration"
-        }
-      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rivalry/components/RivalryBetModal.tsx": [
         {
           "end": 131,
@@ -24881,7 +24822,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 352,
+          "end": 371,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
@@ -24903,6 +24844,11 @@
             {
               "imported": "Clock",
               "local": "Clock",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Crown",
+              "local": "Crown",
               "type": "ImportSpecifier"
             },
             {
@@ -24931,6 +24877,11 @@
               "type": "ImportSpecifier"
             },
             {
+              "imported": "Swords",
+              "local": "Swords",
+              "type": "ImportSpecifier"
+            },
+            {
               "imported": "Trophy",
               "local": "Trophy",
               "type": "ImportSpecifier"
@@ -24950,7 +24901,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 445,
+          "end": 464,
           "importKind": "type",
           "source": "./rivalryTypes",
           "specifiers": [
@@ -24975,11 +24926,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 353,
+          "start": 372,
           "type": "ImportDeclaration"
         },
         {
-          "end": 498,
+          "end": 517,
           "importKind": "value",
           "source": "./RivalryBetModal",
           "specifiers": [
@@ -24989,25 +24940,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 446,
+          "start": 465,
           "type": "ImportDeclaration"
         },
         {
-          "end": 549,
-          "importKind": "value",
-          "source": "./HeroBattleRail",
-          "specifiers": [
-            {
-              "imported": "HeroBattleRail",
-              "local": "HeroBattleRail",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 499,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 651,
+          "end": 619,
           "importKind": "value",
           "source": "@/hooks/usePkRequests",
           "specifiers": [
@@ -25027,11 +24964,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 550,
+          "start": 518,
           "type": "ImportDeclaration"
         },
         {
-          "end": 754,
+          "end": 722,
           "importKind": "type",
           "source": "@/hooks/pkTypes",
           "specifiers": [
@@ -25051,7 +24988,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 652,
+          "start": 620,
           "type": "ImportDeclaration"
         }
       ],
