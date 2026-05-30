@@ -3,7 +3,6 @@
  */
 import { axiosCustom } from "@/api/httpClient";
 import {
-  API_Admin_Battle_Resolve,
   API_Battle_Banker_Add_Stake,
   API_Battle_By,
   API_Battle_Challenger_Confirm,
@@ -315,29 +314,3 @@ export function useRequestBattleWithdraw() {
   });
 }
 
-/// MARK: 管理后台 - 开战广场
-/// 基础路径: /api/admin/battle
-
-// 管理员裁决
-export function useRequestAdminBattleResolve() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationKey: ["requestAdminBattleResolve"],
-    mutationFn: async (payload: AdminResolveBattlePayload) => {
-      const res = await axiosCustom({
-        method: "post",
-        cmd: API_Admin_Battle_Resolve,
-        data: payload,
-        headers: {
-          ...getAuthorizationHeaders(),
-          "Content-Type": "application/json",
-        },
-      });
-      return assertSuccess(res) as Battle;
-    },
-    onSuccess: async (battle) => {
-      await invalidateBattleQueries(queryClient, battle.id);
-    },
-  });
-}

@@ -19,6 +19,6 @@ export const API_Pet_Egg_Hatch = "/api/pet/egg/hatch";
 // 状态页聚合
 export const API_Pet_Status = "/api/pet/status";
 // 抽奖配置
-export const API_Admin_Pet_Gacha_Config = "/api/admin/pet/gacha/config";
+export const API_Pet_Gacha_Config = "/api/pet/gacha/config";
 // 宠物定义列表（奖池预览等）
-export const API_Admin_Pet_Defs = "/api/admin/pet/defs";
+export const API_Pet_Defs = "/api/pet/defs";

@@ -129,6 +129,8 @@ export type PetEggHatchRewardPet = {
   petKey?: string;
   rarity?: string;
   name?: string;
+  /** 孵化结果返回的资源地址，json 为骨骼动画资源，其余为静态图。 */
+  avatarUrl?: string;
 };
 
 export type PetEggHatchResponse = {

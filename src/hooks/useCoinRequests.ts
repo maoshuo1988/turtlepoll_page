@@ -5,7 +5,7 @@
 /// 基础路径: /api/coin
 
 import { axiosCustom } from "@/api/httpClient";
-import { API_Admin_Coin_Mint, API_Coin_Bet, API_Coin_Leaderboard, API_Coin_Me, API_Coin_Settle } from "@/api/coinApi";
+import { API_Coin_Bet, API_Coin_Leaderboard, API_Coin_Me, API_Coin_Settle } from "@/api/coinApi";
 import { getAuthToken } from "@/utils/authStorage";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import {  useMutation, useQuery, useQueryClient } from "react-query";
@@ -174,40 +174,6 @@ export function useRequestCoinSettle() {
         queryClient.invalidateQueries(["requestFootballMarketsByTag"]),
         queryClient.invalidateQueries(["requestFootballPredictContextHot"]),
       ]);
-    },
-  });
-}
-
-/// MARK: 管理后台 - 金币
-/// 基础路径: /api/admin/coin
-
-//管理员铸币
-export function useRequestAdminCoinMint() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationKey: ["requestAdminCoinMint"],
-    mutationFn: async (payload: AdminCoinMintPayload) => {
-      const data = new URLSearchParams();
-      data.append("userId", String(payload.userId));
-      data.append("amount", String(payload.amount));
-      if (payload.remark) {
-        data.append("remark", payload.remark);
-      }
-
-      const res = await axiosCustom({
-        method: "post",
-        cmd: API_Admin_Coin_Mint,
-        data,
-        headers: {
-          ...getAuthorizationHeaders(),
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        },
-      });
-      return assertSuccess(res) as UserCoin;
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(COIN_ME_QUERY_KEY);
     },
   });
 }

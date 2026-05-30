@@ -6,8 +6,8 @@ import { SERVER_ASSET_ORIGIN } from "@/config";
 import { pickValidPetId, pickValidPetRarity } from '@/components/common/pet/petEquip';
 import { normalizePetRarityGrade, PetRarityGrade } from "@/components/common/pet/petRarity";
 import {
-  API_Admin_Pet_Defs,
-  API_Admin_Pet_Gacha_Config,
+  API_Pet_Defs,
+  API_Pet_Gacha_Config,
   API_Pet_Egg_Hatch,
   API_Pet_Equip,
   API_Pet_Owned,
@@ -75,6 +75,17 @@ function pickNonEmptyString(...vals: unknown[]): string {
   return "";
 }
 
+function pickFiniteNumber(...vals: unknown[]): number | undefined {
+  for (const v of vals) {
+    if (typeof v === "number" && Number.isFinite(v)) return v;
+    if (typeof v === "string" && v.trim()) {
+      const parsed = Number(v);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+  }
+  return undefined;
+}
+
 function pickLocalizedPetName(nameField: unknown): string {
   if (typeof nameField === "string" && nameField.trim()) return nameField.trim();
   if (!isRecord(nameField)) return "";
@@ -111,6 +122,48 @@ function pickPetDefAvatarUrl(row: Record<string, unknown>): string | undefined {
 
   const rel = pickNonEmptyString(display.thumbnail, display.icon, display.cover);
   return rel ? resolveApiAssetUrl(rel) : undefined;
+}
+
+function pickPetRewardAvatarUrl(...rows: Record<string, unknown>[]): string | undefined {
+  for (const row of rows) {
+    const direct = pickNonEmptyString(
+      row.avatarUrl,
+      row.avatar_url,
+      row.avatar,
+      row.icon,
+      row.image,
+      row.thumbnail,
+      row.cover,
+      row.skeletonUrl,
+      row.skeleton_url,
+      row.assetUrl,
+      row.asset_url,
+    );
+    if (direct) {
+      return resolveApiAssetUrl(direct);
+    }
+
+    const display = row.display;
+    if (!isRecord(display)) continue;
+
+    const rel = pickNonEmptyString(
+      display.avatarUrl,
+      display.avatar_url,
+      display.thumbnail,
+      display.icon,
+      display.image,
+      display.cover,
+      display.skeletonUrl,
+      display.skeleton_url,
+      display.assetUrl,
+      display.asset_url,
+    );
+    if (rel) {
+      return resolveApiAssetUrl(rel);
+    }
+  }
+
+  return undefined;
 }
 
 function normalizePetDefRows(rows: unknown[]): PetDefNormalized[] {
@@ -177,6 +230,67 @@ function normalizePetDefsResponse(raw: unknown): PetDefsListNormalized {
   return {
     list,
     total: typeof total === "number" ? total : list.length,
+  };
+}
+
+function normalizePetEggHatchResponse(raw: unknown): PetEggHatchResponse {
+  const source = isRecord(raw) ? raw : {};
+  const petRecords = [
+    source.pet,
+    source.rewardPet,
+    source.reward_pet,
+    source.petDef,
+    source.pet_def,
+    source.reward,
+    source,
+  ].filter(isRecord);
+  const petValues = (key: string) => petRecords.map((item) => item[key]);
+  const localizedName = pickNonEmptyString(...petRecords.map((item) => pickLocalizedPetName(item.name)));
+  const petKey = pickNonEmptyString(
+    ...petValues('petKey'),
+    ...petValues('pet_key'),
+    ...petValues('pet_id'),
+    ...petValues('petId'),
+    ...petValues('key'),
+    ...petValues('code'),
+    ...petValues('slug'),
+  );
+  const name = pickNonEmptyString(
+    ...petValues('petName'),
+    ...petValues('pet_name'),
+    localizedName,
+    ...petValues('name_plain'),
+    ...petValues('displayName'),
+    ...petValues('display_name'),
+    ...petValues('title'),
+    petKey,
+  );
+  const petId = pickNonEmptyString(...petValues('petId'), ...petValues('pet_id'), ...petValues('id'), petKey, name);
+  const avatarUrl = pickPetRewardAvatarUrl(...petRecords);
+  const rarity = pickNonEmptyString(
+    ...petValues('rarity'),
+    ...petValues('rarityGrade'),
+    ...petValues('rarity_grade'),
+    ...petValues('grade'),
+    ...petValues('rarityLevel'),
+    ...petValues('rarity_level'),
+  ) || undefined;
+  const balanceBefore = pickFiniteNumber(source.balanceBefore, source.balance_before);
+  const balanceAfter = pickFiniteNumber(source.balanceAfter, source.balance_after);
+
+  return {
+    cost: pickFiniteNumber(source.cost, source.actualCost, source.actual_cost) ?? 0,
+    refund: pickFiniteNumber(source.refund, source.refundAmount, source.refund_amount) ?? 0,
+    isDuplicate: Boolean(source.isDuplicate ?? source.is_duplicate),
+    pet: {
+      petId,
+      ...(petKey ? { petKey } : {}),
+      ...(rarity ? { rarity } : {}),
+      ...(name ? { name } : {}),
+      ...(avatarUrl ? { avatarUrl } : {}),
+    },
+    ...(balanceBefore !== undefined ? { balanceBefore } : {}),
+    ...(balanceAfter !== undefined ? { balanceAfter } : {}),
   };
 }
 
@@ -556,7 +670,7 @@ export function useRequestPetGachaConfig() {
     queryFn: async () => {
       const res = await axiosCustom({
         method: "get",
-        cmd: API_Admin_Pet_Gacha_Config,
+        cmd: API_Pet_Gacha_Config,
         headers: getAuthorizationHeaders(),
       });
       return normalizePetGachaConfig(assertSuccess<unknown>(res));
@@ -573,7 +687,7 @@ export function useRequestPetDefs(params: { page?: number; size?: number } = {})
     queryFn: async () => {
       const res = await axiosCustom({
         method: "get",
-        cmd: API_Admin_Pet_Defs,
+        cmd: API_Pet_Defs,
         params: { page, size },
         headers: getAuthorizationHeaders(),
       });
@@ -707,7 +821,7 @@ export function useRequestPetEggHatch() {
           ...getAuthorizationHeaders(),
         },
       });
-      return assertSuccess<PetEggHatchResponse>(res);
+      return normalizePetEggHatchResponse(assertSuccess<unknown>(res));
     },
     onSuccess: async () => {
       await invalidatePetQueries(queryClient);
