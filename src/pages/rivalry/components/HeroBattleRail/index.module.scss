@@ -2,11 +2,23 @@
 
 .railWrap {
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   width: 100%;
   max-width: 1110px;
   margin: 0 auto;
   padding: 28px 4px 32px;
   overflow: visible;
+  --clash-center-y: 35%;
+  --rail-shell-height: 54px;
+  --rail-shell-pad: 3px;
+}
+
+.clipDefs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 .railGlow {
@@ -29,8 +41,8 @@
 
 .railGlowCenter {
   position: absolute;
-  top: 50%;
-  z-index: 2;
+  top: var(--clash-center-y, 35%);
+  z-index: 70;
   width: 120px;
   height: 72px;
   border-radius: 50%;
@@ -46,23 +58,23 @@
 
 .railShell {
   position: relative;
-  height: 54px;
-  padding: 3px;
+  grid-area: 1 / 1;
+  z-index: 1;
+  height: var(--rail-shell-height);
+  padding: var(--rail-shell-pad);
   overflow: visible;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.55) 100%);
-  box-shadow:
-    0 14px 36px rgba(0, 0, 0, 0.52),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  border: none;
+  background: transparent;
+  box-shadow: none;
 }
 
 .railTrack {
   position: relative;
   height: 100%;
-  overflow: visible;
+  overflow: hidden;
   border-radius: 999px;
-  background: #040a12;
+  background: transparent;
 }
 
 .side {
@@ -74,8 +86,9 @@
 
 .sideA {
   left: 0;
+  z-index: 1;
+  margin-right: -1px;
   border-radius: 999px 0 0 999px;
-  clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
   background: linear-gradient(
     90deg,
     #6e0f06 0%,
@@ -94,8 +107,9 @@
 
 .sideB {
   right: 0;
+  z-index: 1;
+  margin-left: -1px;
   border-radius: 0 999px 999px 0;
-  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%);
   background: linear-gradient(
     270deg,
     #030818 0%,
@@ -186,64 +200,33 @@
   background: radial-gradient(ellipse 80% 120% at 18% 50%, rgba(255, 240, 180, 0.28) 0%, transparent 68%);
 }
 
-.sideAEdgeGlow {
-  position: absolute;
-  top: -18%;
-  right: -4px;
-  z-index: 6;
-  width: 44px;
-  height: 136%;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 100% 72% at 100% 50%,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(255, 210, 100, 0.62) 28%,
-    rgba(255, 120, 32, 0.22) 52%,
-    transparent 76%
-  );
-  filter: blur(1.5px);
-  animation: edge-glow-pulse 1.05s ease-in-out infinite;
-}
-
 .sideBInnerGlow {
   background: radial-gradient(ellipse 80% 120% at 82% 50%, rgba(180, 240, 255, 0.26) 0%, transparent 68%);
 }
 
-.sideBEdgeGlow {
-  position: absolute;
-  top: -18%;
-  left: -4px;
-  z-index: 6;
-  width: 44px;
-  height: 136%;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 100% 72% at 0% 50%,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(180, 240, 255, 0.58) 28%,
-    rgba(40, 180, 255, 0.2) 52%,
-    transparent 76%
-  );
-  filter: blur(1.5px);
-  animation: edge-glow-pulse 1.05s ease-in-out infinite;
-}
-
 .clashLayer {
-  position: absolute;
-  inset: 3px;
-  z-index: 50;
+  position: relative;
+  grid-area: 1 / 1;
+  z-index: 80;
+  height: var(--rail-shell-height);
+  padding: var(--rail-shell-pad);
+  box-sizing: border-box;
   overflow: visible;
   pointer-events: none;
 }
 
 .clash {
   position: absolute;
-  top: 50%;
-  z-index: 50;
+  top: var(--clash-center-y, 35%);
+  z-index: 80;
   width: 0;
   height: 0;
   pointer-events: none;
   transform: translate(-50%, -50%);
+}
+
+.clash .centerSpark {
+  top: 0;
 }
 
 .clashBloomFire {
@@ -481,12 +464,49 @@
   animation-delay: 0.5s;
 }
 
-.particle {
+.particleLayer {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset: 0;
+  z-index: 12;
+  overflow: hidden;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.convergeParticleFire,
+.convergeParticleIce {
+  position: absolute;
+  top: var(--clash-center-y, 35%);
   border-radius: 50%;
   pointer-events: none;
+  opacity: 1;
+  will-change: left, transform;
+}
+
+.convergeParticleFire {
+  box-shadow:
+    0 0 4px rgba(255, 120, 40, 0.95),
+    0 0 8px rgba(255, 180, 80, 0.75);
+}
+
+.convergeParticleIce {
+  box-shadow:
+    0 0 4px rgba(40, 200, 255, 0.95),
+    0 0 8px rgba(120, 230, 255, 0.75);
+}
+
+.centerSpark {
+  position: absolute;
+  top: var(--clash-center-y, 35%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: #fff;
+  opacity: 1;
+  box-shadow:
+    0 0 5px #fff,
+    0 0 10px #fff,
+    0 0 16px rgba(255, 255, 255, 0.95);
+  will-change: transform;
 }
 
 .pct {
@@ -514,8 +534,16 @@
 }
 
 @media (max-width: 1023px) {
+  .railWrap {
+    --rail-shell-height: 42px;
+  }
+
   .railShell {
-    height: 42px;
+    height: var(--rail-shell-height);
+  }
+
+  .clashLayer {
+    height: var(--rail-shell-height);
   }
 
   .railGlowCenter {
@@ -524,17 +552,11 @@
   }
 
   .sideA {
-    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    margin-right: -1px;
   }
 
   .sideB {
-    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
-  }
-
-  .sideAEdgeGlow,
-  .sideBEdgeGlow {
-    width: 32px;
-    height: 130%;
+    margin-left: -1px;
   }
 
   .clashBloomFire,
