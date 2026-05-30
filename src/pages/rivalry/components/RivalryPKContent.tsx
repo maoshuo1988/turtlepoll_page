@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import type { PKPhase, PKRoundResult, PKTopicState, RivalryNewsItem } from './rivalryTypes';
 import { RivalryBetModal } from './RivalryBetModal';
+import { HeroBattleRail } from './HeroBattleRail';
 import { useRequestPKHistory, useRequestPKSeasons, useRequestPKTopics } from '@/hooks/usePkRequests';
 import type { PKRound as ApiPKRound, PKSeason as ApiPKSeason, PKTopicSummary } from '@/hooks/pkTypes';
 
@@ -338,7 +339,7 @@ function mapTopicSummaryToPK(summary: PKTopicSummary, index: number): RivalryPKS
       id: String(topic.id),
       marketId: Number(topic.id),
       title,
-      summary: summary.streakStatus || '接口话题已接入，历史战绩会从开撕台接口实时读取。',
+      summary: summary.streakStatus || '',
       image: cover,
       listImage: topic.listImage?.trim() || cover,
       sideABgImage: topic.sideABgImage?.trim(),
@@ -646,70 +647,6 @@ function HeroSidePanel({
   );
 }
 
-function HeroBattleRail({ pctA, pctB }: { pctA: number; pctB: number }) {
-  return (
-    <div className="relative mx-auto w-full max-w-[1110px] px-1">
-      <div className="relative h-[58px] overflow-hidden rounded-full border border-white/20 bg-black/68 p-[5px] shadow-[0_18px_46px_rgba(0,0,0,0.48),0_0_34px_rgba(255,91,28,0.24),0_0_34px_rgba(23,184,255,0.2)] max-lg:h-[42px]">
-        <div className="relative h-full overflow-hidden rounded-full bg-[#06111b]">
-          <motion.div
-            className="absolute inset-y-0 left-0 overflow-hidden rounded-l-full"
-            initial={false}
-            animate={{ width: `${pctA}%` }}
-            transition={{ type: 'spring', stiffness: 130, damping: 22 }}
-            style={{
-              background: 'linear-gradient(90deg,#ff2c13 0%,#ff6a20 48%,#ffd65b 100%)',
-              boxShadow: 'inset 0 0 22px rgba(255,255,255,0.22),0 0 28px rgba(255,82,24,0.62)',
-            }}
-          >
-            <motion.div
-              className="absolute inset-0 opacity-35"
-              style={{ background: 'linear-gradient(110deg,transparent 0%,rgba(255,255,255,0.65) 18%,transparent 36%)' }}
-              animate={{ x: ['-70%', '160%'] }}
-              transition={{ duration: 2.35, repeat: Infinity, ease: 'linear' }}
-            />
-          </motion.div>
-          <motion.div
-            className="absolute inset-y-0 right-0 overflow-hidden rounded-r-full"
-            initial={false}
-            animate={{ width: `${pctB}%` }}
-            transition={{ type: 'spring', stiffness: 130, damping: 22 }}
-            style={{
-              background: 'linear-gradient(270deg,#073dcd 0%,#13b8ff 48%,#67f4ff 100%)',
-              boxShadow: 'inset 0 0 22px rgba(255,255,255,0.2),0 0 28px rgba(36,196,255,0.56)',
-            }}
-          >
-            <motion.div
-              className="absolute inset-0 opacity-32"
-              style={{ background: 'linear-gradient(250deg,transparent 0%,rgba(255,255,255,0.62) 18%,transparent 38%)' }}
-              animate={{ x: ['70%', '-160%'] }}
-              transition={{ duration: 2.55, repeat: Infinity, ease: 'linear' }}
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.09)_0,rgba(255,255,255,0.09)_1px,transparent_1px,transparent_20px)] opacity-20" />
-          <motion.div
-            className="absolute top-1/2 z-20 h-[88px] w-[17px] -translate-x-1/2 -translate-y-1/2 rotate-[18deg] rounded-full bg-white shadow-[0_0_18px_rgba(255,255,255,0.96),0_0_44px_rgba(255,173,49,0.9),0_0_46px_rgba(58,224,255,0.82)] max-lg:h-[62px] max-lg:w-[12px]"
-            style={{ left: `${pctA}%` }}
-            animate={{ opacity: [0.72, 1, 0.82], scaleY: [0.88, 1.12, 0.94] }}
-            transition={{ duration: 1.08, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute top-1/2 z-30 h-[128px] w-px -translate-x-1/2 -translate-y-1/2 rotate-[30deg] bg-[#fff6bd] shadow-[0_0_18px_rgba(255,242,175,0.95)]"
-            style={{ left: `${pctA}%` }}
-            animate={{ opacity: [0.22, 1, 0.36] }}
-            transition={{ duration: 0.62, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <div className="absolute inset-y-0 left-6 z-30 flex items-center text-[24px] font-black tabular-nums text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.62)] max-lg:left-4 max-lg:text-[16px]">
-            {pctA}%
-          </div>
-          <div className="absolute inset-y-0 right-6 z-30 flex items-center text-[24px] font-black tabular-nums text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.62)] max-lg:right-4 max-lg:text-[16px]">
-            {pctB}%
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function HeroBottomCard({
   tone,
   icon,
@@ -803,20 +740,13 @@ function HeroPK({
   const supportTextB = betTotal > 0 ? `${supportB.toLocaleString()} 人支持` : `${formatPkHeatValue(pk.currentHeatB)} 热度`;
   const leadingLabel = leading === 'B' ? item.optionB : item.optionA;
   const liveMetricLabel = betTotal > 0 ? `${participantCount.toLocaleString()} 人正在参与` : `${heatLabel} 热度正在对抗`;
-  const statMetricTitle = betTotal > 0 ? '当前参与人次' : '当前热度合计';
   const latestHotText = item.summary || `${leadingLabel} 的支持者正在升温！`;
-  const latestHotCount = betTotal > 0 ? `${betTotal.toLocaleString()} 次下注` : `${heatLabel} 热度`;
-  const leaderStatusText = leading ? `${leadingLabel} 暂时领先` : '双方暂时持平';
-  const leaderPct = leading === 'B' ? pctB : pctA;
   const phaseText =
     pk.phase === 'betting'
       ? '下注进行中'
       : pk.phase === 'locked'
         ? '本局已锁定'
         : '等待下一局';
-  const lastWinnerText = pk.lastRoundWinner
-    ? `${pk.lastRoundWinner === 'A' ? item.optionA : item.optionB} 上局胜出`
-    : '暂无上局结果';
   const sideAOpinion = `${item.optionA} 当前支持率 ${pctA}%，热度 ${formatPkHeatValue(pk.currentHeatA)}。`;
   const sideBOpinion = `${item.optionB} 当前支持率 ${pctB}%，热度 ${formatPkHeatValue(pk.currentHeatB)}。`;
   const supportDisabled = isBetting || !!voted || pk.phase !== 'betting';
@@ -946,14 +876,17 @@ function HeroPK({
           <button
             type="button"
             onClick={handleJoinBattle}
-            className="group relative mb-4 h-[72px] min-w-[430px] overflow-hidden rounded-[20px] border border-[#ffd283]/64 bg-[linear-gradient(180deg,#ff5948_0%,#e92228_52%,#9d1218_100%)] px-12 text-[34px] font-black tracking-[-0.055em] text-white shadow-[0_0_26px_rgba(255,79,48,0.66),inset_0_1px_0_rgba(255,255,255,0.46)] transition-all hover:-translate-y-0.5 max-lg:h-12 max-lg:min-w-0 max-lg:w-full max-lg:px-5 max-lg:text-[20px]"
+            className="group relative mb-4 inline-flex border-0 bg-transparent p-0 drop-shadow-[0_10px_28px_rgba(255,72,24,0.42)] transition-transform hover:-translate-y-0.5 max-lg:mb-3"
           >
-            <motion.span
-              className="absolute inset-y-0 left-[-42%] w-1/2 skew-x-[-18deg] bg-white/26"
-              animate={{ x: ['0%', '310%'] }}
-              transition={{ duration: 2.35, repeat: Infinity, ease: 'easeInOut' }}
+            <img
+              src="/image/btn-bg.png"
+              alt=""
+              aria-hidden
+              className="block h-auto w-[280px] max-lg:w-[min(100%,240px)]"
             />
-            <span className="relative">立即加入对立</span>
+            <span className="absolute inset-0 flex items-center justify-center text-[24px] font-black tracking-[-0.04em] text-white drop-shadow-[0_2px_6px_rgba(120,20,0,0.55)] max-lg:text-[16px]">
+              立即加入对立
+            </span>
           </button>
 
           <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[15px] font-black text-white/70 max-lg:gap-2 max-lg:text-[11px]">
@@ -987,23 +920,6 @@ function HeroPK({
                   <span className="text-[33px] font-black leading-none tabular-nums text-[#ffd067]">{formatPkHeatValue(heatTotal)}</span>
                   <span className="pb-1 text-[11px] font-black text-white/38">总量</span>
                 </div>
-                <div className="mt-2 text-[13px] font-semibold text-white/52">{statMetricTitle}</div>
-              </div>
-              <div className="space-y-2 text-[11px] font-bold">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="max-w-[55%] truncate text-[#ffb16e]">{item.optionA}</span>
-                  <span className="tabular-nums text-white/76">{formatPkHeatValue(pk.currentHeatA)}</span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                  <span className="block h-full rounded-full bg-[linear-gradient(90deg,#f44b2c,#ffd05e)]" style={{ width: `${pctA}%` }} />
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <span className="max-w-[55%] truncate text-[#70e8ff]">{item.optionB}</span>
-                  <span className="tabular-nums text-white/76">{formatPkHeatValue(pk.currentHeatB)}</span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                  <span className="ml-auto block h-full rounded-full bg-[linear-gradient(90deg,#38d7ff,#1777ff)]" style={{ width: `${pctB}%` }} />
-                </div>
               </div>
             </div>
           </HeroBottomCard>
@@ -1013,17 +929,6 @@ function HeroPK({
               <div className="flex flex-1 flex-col justify-between gap-4">
                 <div>
                   <div className="mb-3 line-clamp-2 text-[17px] font-black leading-snug text-white">{latestHotText}</div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full border border-[#ffb35c]/24 bg-[#ff7a2f]/12 px-3 py-1 text-[11px] font-black text-[#ffd28c]">{leaderStatusText}</span>
-                    <span className="rounded-full border border-white/10 bg-black/22 px-3 py-1 text-[11px] font-black text-white/54">{latestHotCount}</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between border-t border-white/8 pt-3 text-[12px] font-black">
-                  <span className="text-white/44">领先势能 {leaderPct}%</span>
-                  <span className="inline-flex items-center gap-1 text-[#ffd28c]">
-                    查看历史
-                    <History size={13} />
-                  </span>
                 </div>
               </div>
             </HeroBottomCard>
@@ -1052,7 +957,6 @@ function HeroPK({
                   </div>
                 );
               })}
-              <div className="border-t border-white/8 pt-2 text-[11px] font-bold text-white/42">{lastWinnerText}</div>
             </div>
           </HeroBottomCard>
 
@@ -1064,15 +968,6 @@ function HeroPK({
                   <span className="min-w-0 truncate">{item.optionA}阵营</span>
                 </div>
                 <p className="line-clamp-2 text-[14px] font-semibold text-white/86">{sideAOpinion}</p>
-                <div className="mt-3">
-                  <div className="mb-1 flex justify-between text-[11px] font-black text-white/42">
-                    <span>势能</span>
-                    <span className="text-[#ffd28c]">{pctA}%</span>
-                  </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                    <span className="block h-full rounded-full bg-[linear-gradient(90deg,#f44b2c,#ffd05e)]" style={{ width: `${pctA}%` }} />
-                  </div>
-                </div>
               </div>
               <div className="flex min-w-0 flex-col justify-between rounded-[18px] border border-[#35d6ff]/14 bg-[#1ba8ff]/8 p-3">
                 <div className="mb-2 flex items-center gap-2 text-[13px] font-black text-white/72">
@@ -1080,15 +975,6 @@ function HeroPK({
                   <span className="min-w-0 truncate">{item.optionB}阵营</span>
                 </div>
                 <p className="line-clamp-2 text-[14px] font-semibold text-white/86">{sideBOpinion}</p>
-                <div className="mt-3">
-                  <div className="mb-1 flex justify-between text-[11px] font-black text-white/42">
-                    <span>势能</span>
-                    <span className="text-[#a9efff]">{pctB}%</span>
-                  </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                    <span className="block h-full rounded-full bg-[linear-gradient(90deg,#38d7ff,#1777ff)]" style={{ width: `${pctB}%` }} />
-                  </div>
-                </div>
               </div>
             </div>
           </HeroBottomCard>

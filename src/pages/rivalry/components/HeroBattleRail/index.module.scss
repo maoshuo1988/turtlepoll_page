@@ -1,0 +1,822 @@
+/** 开撕台对抗条：火/冰双轨 + 中心碰撞光效 */
+
+.railWrap {
+  position: relative;
+  width: 100%;
+  max-width: 1110px;
+  margin: 0 auto;
+  padding: 28px 4px 32px;
+  overflow: visible;
+}
+
+.railGlow {
+  position: absolute;
+  inset: 6px 8px 10px;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(18px);
+  opacity: 0.68;
+  animation: rail-glow-breathe 2.8s ease-in-out infinite;
+}
+
+.railGlowFire {
+  background: radial-gradient(ellipse 58% 120% at 22% 50%, rgba(255, 92, 24, 0.78) 0%, transparent 72%);
+}
+
+.railGlowIce {
+  background: radial-gradient(ellipse 58% 120% at 78% 50%, rgba(36, 196, 255, 0.72) 0%, transparent 72%);
+}
+
+.railGlowCenter {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 120px;
+  height: 72px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(ellipse 55% 100% at 28% 50%, rgba(255, 110, 28, 0.55) 0%, transparent 72%),
+    radial-gradient(ellipse 55% 100% at 72% 50%, rgba(36, 196, 255, 0.5) 0%, transparent 72%),
+    radial-gradient(circle at 50% 50%, rgba(255, 248, 210, 0.42) 0%, transparent 58%);
+  filter: blur(8px);
+  animation: center-glow-pulse 1.15s ease-in-out infinite;
+}
+
+.railShell {
+  position: relative;
+  height: 54px;
+  padding: 3px;
+  overflow: visible;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.55) 100%);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.railTrack {
+  position: relative;
+  height: 100%;
+  overflow: visible;
+  border-radius: 999px;
+  background: #040a12;
+}
+
+.side {
+  position: absolute;
+  inset-block: 0;
+  overflow: visible;
+  will-change: width;
+}
+
+.sideA {
+  left: 0;
+  border-radius: 999px 0 0 999px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+  background: linear-gradient(
+    90deg,
+    #6e0f06 0%,
+    #b81808 14%,
+    #e02808 32%,
+    #f04812 52%,
+    #f87820 72%,
+    #fcc038 92%,
+    #ffe070 100%
+  );
+  box-shadow:
+    inset 0 2px 8px rgba(255, 220, 140, 0.35),
+    inset 0 -3px 10px rgba(120, 10, 0, 0.45),
+    0 0 22px rgba(255, 72, 16, 0.55);
+}
+
+.sideB {
+  right: 0;
+  border-radius: 0 999px 999px 0;
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%);
+  background: linear-gradient(
+    270deg,
+    #030818 0%,
+    #0a2878 18%,
+    #1560c8 42%,
+    #28a8f0 68%,
+    #58e8ff 88%,
+    #a8f8ff 100%
+  );
+  box-shadow:
+    inset 0 2px 8px rgba(180, 240, 255, 0.32),
+    inset 0 -3px 10px rgba(0, 30, 90, 0.5),
+    0 0 22px rgba(36, 196, 255, 0.52);
+}
+
+.sideTexture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.sideATexture {
+  background:
+    repeating-linear-gradient(
+      108deg,
+      transparent 0,
+      transparent 6px,
+      rgba(255, 200, 80, 0.22) 6px,
+      rgba(255, 200, 80, 0.22) 8px
+    ),
+    repeating-linear-gradient(
+      -18deg,
+      transparent 0,
+      transparent 14px,
+      rgba(255, 80, 20, 0.18) 14px,
+      rgba(255, 80, 20, 0.18) 16px
+    );
+  background-size: 120% 120%, 160% 160%;
+  animation: fire-flow 3.2s linear infinite;
+}
+
+.sideBTexture {
+  background:
+    repeating-linear-gradient(
+      72deg,
+      transparent 0,
+      transparent 5px,
+      rgba(160, 240, 255, 0.2) 5px,
+      rgba(160, 240, 255, 0.2) 7px
+    ),
+    repeating-linear-gradient(
+      -62deg,
+      transparent 0,
+      transparent 11px,
+      rgba(40, 120, 255, 0.16) 11px,
+      rgba(40, 120, 255, 0.16) 13px
+    );
+  background-size: 130% 130%, 150% 150%;
+  animation: ice-flow 2.8s linear infinite;
+}
+
+.sideShimmer {
+  position: absolute;
+  inset: 0;
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.sideAShimmer {
+  background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.55) 22%, transparent 44%);
+  animation: shimmer-a 2.4s linear infinite;
+}
+
+.sideBShimmer {
+  background: linear-gradient(255deg, transparent 0%, rgba(255, 255, 255, 0.48) 22%, transparent 44%);
+  animation: shimmer-b 2.65s linear infinite;
+}
+
+.sideInnerGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.sideAInnerGlow {
+  background: radial-gradient(ellipse 80% 120% at 18% 50%, rgba(255, 240, 180, 0.28) 0%, transparent 68%);
+}
+
+.sideAEdgeGlow {
+  position: absolute;
+  top: -18%;
+  right: -4px;
+  z-index: 6;
+  width: 44px;
+  height: 136%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 72% at 100% 50%,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 210, 100, 0.62) 28%,
+    rgba(255, 120, 32, 0.22) 52%,
+    transparent 76%
+  );
+  filter: blur(1.5px);
+  animation: edge-glow-pulse 1.05s ease-in-out infinite;
+}
+
+.sideBInnerGlow {
+  background: radial-gradient(ellipse 80% 120% at 82% 50%, rgba(180, 240, 255, 0.26) 0%, transparent 68%);
+}
+
+.sideBEdgeGlow {
+  position: absolute;
+  top: -18%;
+  left: -4px;
+  z-index: 6;
+  width: 44px;
+  height: 136%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 72% at 0% 50%,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(180, 240, 255, 0.58) 28%,
+    rgba(40, 180, 255, 0.2) 52%,
+    transparent 76%
+  );
+  filter: blur(1.5px);
+  animation: edge-glow-pulse 1.05s ease-in-out infinite;
+}
+
+.clashLayer {
+  position: absolute;
+  inset: 3px;
+  z-index: 50;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.clash {
+  position: absolute;
+  top: 50%;
+  z-index: 50;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.clashBloomFire {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 88px;
+  height: 68px;
+  transform: translate(-72%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 100% 100% at 100% 50%,
+    rgba(255, 130, 40, 0.88) 0%,
+    rgba(255, 80, 20, 0.45) 38%,
+    transparent 72%
+  );
+  filter: blur(5px);
+  animation: clash-bloom-side 1.1s ease-in-out infinite;
+}
+
+.clashBloomIce {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 88px;
+  height: 68px;
+  transform: translate(-28%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 100% 100% at 0% 50%,
+    rgba(40, 200, 255, 0.85) 0%,
+    rgba(20, 120, 255, 0.42) 38%,
+    transparent 72%
+  );
+  filter: blur(5px);
+  animation: clash-bloom-side-ice 1.1s ease-in-out infinite;
+  animation-delay: 0.08s;
+}
+
+.clashBloomMid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 52px;
+  height: 52px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 240, 180, 0.72) 32%,
+    rgba(255, 180, 60, 0.18) 52%,
+    transparent 72%
+  );
+  filter: blur(2px);
+  animation: clash-bloom-mid 0.92s ease-in-out infinite;
+}
+
+.clashHalo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 76px;
+  height: 76px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(255, 106, 32, 0.38),
+    transparent 55deg,
+    rgba(19, 184, 255, 0.34),
+    transparent 110deg,
+    rgba(255, 214, 91, 0.28),
+    transparent 165deg,
+    rgba(255, 106, 32, 0.24),
+    transparent 220deg,
+    rgba(19, 184, 255, 0.24),
+    transparent 275deg
+  );
+  filter: blur(4px);
+  opacity: 0.85;
+  animation: clash-halo-spin 3.6s linear infinite;
+}
+
+.clashStreakH {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 112px;
+  height: 3px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 150, 48, 0.65) 16%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(80, 210, 255, 0.65) 84%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.75), 0 0 20px rgba(255, 200, 80, 0.55);
+  animation: clash-streak-pulse 0.72s ease-in-out infinite;
+}
+
+.clashBeam {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 68px;
+  transform: translate(-50%, -50%) rotate(12deg);
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.92) 28%,
+    #fffef2 50%,
+    rgba(255, 255, 255, 0.92) 72%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  box-shadow:
+    0 0 6px rgba(255, 255, 255, 0.9),
+    0 0 14px rgba(255, 230, 120, 0.75),
+    -6px 0 16px rgba(255, 120, 40, 0.55),
+    6px 0 16px rgba(60, 210, 255, 0.55);
+  animation: clash-beam-pulse 0.78s ease-in-out infinite;
+}
+
+.clashBeamHot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 56px;
+  transform: translate(-50%, -50%) rotate(12deg);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow:
+    0 0 8px #fff,
+    0 0 16px rgba(255, 248, 200, 0.95);
+  animation: clash-beam-hot 0.6s ease-in-out infinite;
+}
+
+.clashCore {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 62px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%) rotate(12deg);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.35) 0%,
+    #fff 42%,
+    #fffef5 58%,
+    rgba(255, 255, 255, 0.35) 100%
+  );
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.95),
+    0 0 18px rgba(255, 200, 80, 0.85),
+    0 0 18px rgba(58, 220, 255, 0.75);
+  animation: clash-core-pulse 0.78s ease-in-out infinite;
+}
+
+.clashFlare {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 230, 120, 0.55) 28%,
+    rgba(80, 210, 255, 0.22) 48%,
+    transparent 72%
+  );
+  filter: blur(2px);
+  opacity: 0.82;
+  animation: clash-flare-pulse 0.95s ease-in-out infinite;
+}
+
+.clashRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 58px;
+  height: 58px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.42);
+  animation: clash-ring-expand 1.75s ease-out infinite;
+}
+
+.clashRingDelay {
+  animation-delay: 0.88s;
+}
+
+.smoke {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 999px;
+  filter: blur(7px);
+  pointer-events: none;
+}
+
+.smokeFire {
+  width: 48px;
+  height: 16px;
+  transform: translate(-115%, -125%);
+  background: radial-gradient(ellipse, rgba(255, 90, 24, 0.62) 0%, transparent 72%);
+  animation: smoke-fire 2.1s ease-in-out infinite;
+}
+
+.smokeIce {
+  width: 48px;
+  height: 16px;
+  transform: translate(15%, -118%);
+  background: radial-gradient(ellipse, rgba(36, 196, 255, 0.58) 0%, transparent 72%);
+  animation: smoke-ice 2.3s ease-in-out infinite;
+}
+
+.smokeFireBottom {
+  transform: translate(-108%, 35%);
+  animation-delay: 0.35s;
+}
+
+.smokeIceBottom {
+  transform: translate(8%, 42%);
+  animation-delay: 0.5s;
+}
+
+.particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.pct {
+  position: absolute;
+  inset-block: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.45),
+    0 2px 10px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+}
+
+.pctA {
+  left: 22px;
+}
+
+.pctB {
+  right: 22px;
+}
+
+@media (max-width: 1023px) {
+  .railShell {
+    height: 42px;
+  }
+
+  .railGlowCenter {
+    width: 96px;
+    height: 56px;
+  }
+
+  .sideA {
+    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  }
+
+  .sideB {
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .sideAEdgeGlow,
+  .sideBEdgeGlow {
+    width: 32px;
+    height: 130%;
+  }
+
+  .clashBloomFire,
+  .clashBloomIce {
+    width: 68px;
+    height: 52px;
+  }
+
+  .clashBloomMid {
+    width: 40px;
+    height: 40px;
+  }
+
+  .clashBeam {
+    width: 14px;
+    height: 52px;
+  }
+
+  .clashBeamHot {
+    height: 44px;
+  }
+
+  .clashCore {
+    width: 10px;
+    height: 48px;
+  }
+
+  .clashStreakH {
+    width: 88px;
+  }
+
+  .clashHalo,
+  .clashFlare {
+    width: 56px;
+    height: 56px;
+  }
+
+  .clashRing {
+    width: 46px;
+    height: 46px;
+  }
+
+  .pct {
+    font-size: 15px;
+  }
+
+  .pctA {
+    left: 14px;
+  }
+
+  .pctB {
+    right: 14px;
+  }
+}
+
+@keyframes rail-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.58;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 0.82;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes center-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+    filter: blur(8px);
+    scale: 0.94;
+  }
+
+  50% {
+    opacity: 0.95;
+    filter: blur(10px);
+    scale: 1.06;
+  }
+}
+
+@keyframes fire-flow {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+
+  100% {
+    background-position: 120% 40%, -80% 60%;
+  }
+}
+
+@keyframes ice-flow {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+
+  100% {
+    background-position: -110% 30%, 90% -40%;
+  }
+}
+
+@keyframes shimmer-a {
+  0% {
+    transform: translateX(-85%);
+  }
+
+  100% {
+    transform: translateX(185%);
+  }
+}
+
+@keyframes shimmer-b {
+  0% {
+    transform: translateX(85%);
+  }
+
+  100% {
+    transform: translateX(-185%);
+  }
+}
+
+@keyframes edge-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.78;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes clash-bloom-side {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: translate(-72%, -50%) scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-72%, -50%) scale(1.05);
+  }
+}
+
+@keyframes clash-bloom-side-ice {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: translate(-28%, -50%) scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-28%, -50%) scale(1.05);
+  }
+}
+
+@keyframes clash-bloom-mid {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes clash-beam-pulse {
+  0%,
+  100% {
+    opacity: 0.88;
+    transform: translate(-50%, -50%) rotate(12deg) scaleY(0.94);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(12deg) scaleY(1.05);
+  }
+}
+
+@keyframes clash-beam-hot {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: translate(-50%, -50%) rotate(12deg) scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(12deg) scale(1.06);
+  }
+}
+
+@keyframes clash-streak-pulse {
+  0%,
+  100% {
+    opacity: 0.58;
+    transform: translate(-50%, -50%) scaleX(0.88);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scaleX(1.06);
+  }
+}
+
+@keyframes clash-core-pulse {
+  0%,
+  100% {
+    opacity: 0.88;
+    transform: translate(-50%, -50%) rotate(12deg) scaleY(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(12deg) scaleY(1.05);
+  }
+}
+
+@keyframes clash-flare-pulse {
+  0%,
+  100% {
+    opacity: 0.68;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+
+  50% {
+    opacity: 0.92;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes clash-ring-expand {
+  0% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(0.42);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.55);
+  }
+}
+
+@keyframes clash-halo-spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes smoke-fire {
+  0%,
+  100% {
+    opacity: 0.38;
+    transform: translate(-115%, -125%) scale(0.92);
+  }
+
+  50% {
+    opacity: 0.72;
+    transform: translate(-128%, -138%) scale(1.06);
+  }
+}
+
+@keyframes smoke-ice {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translate(15%, -118%) scale(0.9);
+  }
+
+  50% {
+    opacity: 0.68;
+    transform: translate(28%, -132%) scale(1.05);
+  }
+}
