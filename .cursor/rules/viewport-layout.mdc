@@ -1,0 +1,52 @@
+---
+description: 页面布局必须使用项目视口适配体系（1920/375 双稿、768/1024 断点）
+globs: src/pages/**/*.{tsx,scss},src/layouts/**/*.{tsx,scss},src/components/**/*.{tsx,scss}
+alwaysApply: false
+---
+
+# 视口适配布局规则
+
+新增或修改页面/区块布局时，**禁止**只靠零散 `px` 或大量 Tailwind 断点堆叠；必须使用本项目视口适配能力，保证 PC 与手机缩放一致、可维护。
+
+## 双断点（不要混用）
+
+| 断点 | 常量 | 用途 |
+|------|------|------|
+| **768px** | `VP_MOBILE_MAX_PX`、`useMedia768()` | 内容缩放、移动稿 `vwm`、换图/换 DOM |
+| **1024px** | `VP_LAYOUT_DESKTOP_MIN_PX`、`lg:` | 侧栏、PC 顶栏、主布局分叉 |
+
+## 必须用到的基础设施
+
+- **常量/工具**：`@/utils/viewport`（`vpDesktopClampPx`、`vpMobileClampPx`、`VP_*`）
+- **SCSS**：`src/styles/viewport.scss` → `vp-desktop()`、`vp-mobile()`、`@include vp-mobile` / `vp-layout-desktop`
+- **全局变量**：`src/styles/viewport-global.css`（已在 `index.css` 引入，勿再 `@import` 其它 `.scss` 进 `index.css`）
+- **布局壳**：`AppPageLayout` 的 `index.module.scss` 已用视口 padding/gap，新页面不要重复造主壳间距
+- **JS 分叉**：`@/hooks/useMedia768` — 仅用于资源、结构、游戏模式；间距/字号优先 CSS
+- **显隐**：`ViewportDesktopOnly` / `ViewportMobileOnly`（`@/components/common/layout/ViewportBreakpoint`）
+
+## 写法优先级
+
+1. **模块布局常量** — 舞台、Hero、Spine 等集中放在 `src/config/*` 或页面 `model.ts`（参考 `shopSpineAssets.ts`），TSX 只引用 className/数值，不写死一长串尺寸。
+2. **流体尺寸** — 高度/宽度用 `clamp(..., dvh, ...)` 或 `vpDesktopClampPx` / `vpMobileClampPx`，避免纯 `vw(1920)` 在超宽屏无限放大。
+3. **SCSS Module** — 复杂定位、动画层在 `index.module.scss` 中 `@import '../../../styles/viewport.scss'`（带 `.scss` 后缀）。
+4. **Tailwind** — 结构栅格、`lg:` 布局分叉；不要用 `max-lg:` 替代 768 内容缩放逻辑。
+5. **底对齐放大** — 视觉元素变大时：容器 `bottom` 锚定不变，用 `offsetY` / `items-end` 调内部，避免「框在底下、图悬在上面」。
+
+## 禁止
+
+- 在 `src/index.css` 里 `@import` 含 Sass 的 `.scss`（会导致 Tailwind/PostCSS 构建失败）。
+- 为「全站适配」给每个 `PageView` 包一层新容器；页面保持原有 `section` 结构，适配放在**布局壳 + 模块 config + SCSS**。
+- 只改手机时动 PC 共用样式；手机专属用 `components/mobile/`、`lg:hidden` / `hidden lg:block` 或 `useMedia768`。
+
+## 示例（复制用）
+
+- 文档：`docs/viewport-layout-example.md`
+- 代码：`src/components/common/layout/ViewportLayoutExample/`（未挂路由）
+- 实战：`src/config/shopSpineAssets.ts` + `ShopGachaHeroMobile.tsx`
+
+## 自检清单（改完必过）
+
+- [ ] 768 与 1024 用途是否分清？
+- [ ] 尺寸是否来自 `viewport` 工具/SCSS 函数或模块常量？
+- [ ] 多层叠层（蛋/光效/角色）是否明确 `z-index`，开蛋后侧边元素是否仍可见？
+- [ ] 手机端是否看过真机或窄视口，无横向滚动、触摸区足够？

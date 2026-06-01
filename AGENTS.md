@@ -111,6 +111,19 @@
 - PC 端优先信息扫描、对比和重复操作；手机端优先单列、触摸目标、无横向滚动。
 - 弹框在 PC 端优先居中，手机端可使用底部 sheet，并处理 safe area。
 
+## 视口适配规则（布局必用）
+
+页面、弹框、全屏舞台等**凡涉及尺寸与定位**，必须走项目视口适配体系（参考 Tian-Website 1920/375 双稿思路，与本项目 Tailwind + 布局壳融合）。细则见 `.cursor/rules/viewport-layout.mdc`。
+
+- **768px（内容）**：`@/utils/viewport`、`src/styles/viewport.scss` 的 `vp-desktop()` / `vp-mobile()`；需换图/换结构时用 `useMedia768()`。
+- **1024px（布局）**：侧栏与 PC 壳用 `lg:` / `VP_LAYOUT_DESKTOP_MIN_PX`，不与 768 混为一谈。
+- **尺寸写法**：优先 `clamp`、`dvh`、`vpDesktopClampPx` / `vpMobileClampPx`；舞台/Spine/抽奖等尺寸集中在 `src/config/*` 或页面 `model.ts`（如 `shopSpineAssets.ts`），禁止在 TSX 里堆一长串魔法数字。
+- **样式入口**：`index.css` 只引入 `viewport-global.css`；Sass 写在各组件 `index.module.scss` 并 `@import` `viewport.scss`（须带 `.scss` 后缀）。**禁止**在 `index.css` 里 `@import` 其它 `.scss`。
+- **页面结构**：不强制给每个 `PageView` 包统一容器；适配由 `AppPageLayout`、模块常量与 SCSS 完成，页面保持现有 `section` + `view-xxx` 即可。
+- **叠层**：多角色/特效/按钮同时存在时（如黑市开蛋），须约定 `z-index`（蛋舞台低于两侧法师等），避免放大后遮挡。
+- **改手机不动 PC**：手机专属样式/组件分支实现；共用组件改尺寸时先确认 PC 视觉效果不变。
+- **示例**：`docs/viewport-layout-example.md`；可参考组件 `src/components/common/layout/ViewportLayoutExample/`（未接入路由）。
+
 ## 宠物和能力规则
 
 - 龟种能力展示以当前装备龟为准。
