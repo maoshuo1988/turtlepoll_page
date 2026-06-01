@@ -140,6 +140,8 @@ export type PetEggHatchResponse = {
   refund: number;
   isDuplicate: boolean;
   pet: PetEggHatchRewardPet;
+  /** 接口返回的提示文案（未中奖时优先展示）。 */
+  message?: string;
   balanceBefore?: number;
   balanceAfter?: number;
 };

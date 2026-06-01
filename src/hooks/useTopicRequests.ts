@@ -22,6 +22,7 @@ import {
 } from "@/api/topicApi";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
 import type { CreateTopicPayload, CursorResult, EditTopicPayload, SimpleTopic, TagTopicsParams, TopicEditDetail, TopicHideContentParams, TopicHideContentResponse, TopicListParams, TopicNodeInfoParams, TopicNodeNav, TopicNodeResponse, TopicResponse, UserInfo, UserTopicsParams } from "./topicTypes";
+import { normalizeTopicCursorResult, normalizeTopicList, normalizeTopicResponse } from "./topicTypes";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { API_Like_Like, API_Like_Unlike } from "@/api/authApi";
 
@@ -97,7 +98,7 @@ export function useRequestTopicDetail(topicId?: string) {
         cmd: `${API_Topic}/${topicId}`,
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeTopicResponse(assertSuccess(res));
     },
     enabled: Boolean(topicId),
   });
@@ -130,7 +131,7 @@ export function useRequestTopicTopics(params: TopicListParams) {
         params,
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeTopicCursorResult(assertSuccess(res));
     },
   });
 }
@@ -145,7 +146,7 @@ export function useInfiniteRequestTopicTopics(nodeId: number) {
         params: { nodeId, cursor: pageParam },
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeTopicCursorResult(assertSuccess(res));
     },
     getNextPageParam: (lastPage) => (lastPage?.hasMore ? lastPage.cursor : undefined),
     enabled: typeof nodeId === "number",
@@ -163,7 +164,7 @@ export function useRequestTopicRecent() {
         cmd: API_Topic_Recent,
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeTopicList(assertSuccess(res));
     },
   });
 }
@@ -195,7 +196,7 @@ export function useInfiniteRequestTopicUserTopics(params: UserTopicsParams) {
         params: { userId: params.userId, cursor: pageParam },
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeTopicCursorResult(assertSuccess(res));
     },
     getNextPageParam: (lastPage) => (lastPage?.hasMore ? lastPage.cursor : undefined),
     enabled:  params?.userId !== "" ,
@@ -213,7 +214,7 @@ export function useInfiniteRequestTopicTagTopics(params: TagTopicsParams) {
         params: { tagId: params.tagId, cursor: pageParam },
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeTopicCursorResult(assertSuccess(res));
     },
     getNextPageParam: (lastPage) => (lastPage?.hasMore ? lastPage.cursor : undefined),
     enabled: typeof params?.tagId === "number",

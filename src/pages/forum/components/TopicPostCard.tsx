@@ -15,6 +15,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
   EyeClosed,
 } from 'lucide-react';
 import dayjs from 'dayjs';
@@ -40,6 +41,9 @@ export type TopicPostCardData = Partial<TopicResponse> & {
   tag?: TopicPostTag;
   likes?: number;
   disLikeCount?: number;
+  disLiked?: boolean;
+  dislikeCount?: number;
+  disliked?: boolean;
   favoriteCount?: number;
   content?: string;
   time?: string;
@@ -556,11 +560,15 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   const [remoteAvatarFailed, setRemoteAvatarFailed] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [textExpanded, setTextExpanded] = useState(false);
-  const [liked, setLiked] = useState(Boolean(post.liked));
-  const [disliked, setDisliked] = useState(Boolean(post.disliked));
-  const [bookmarked, setBookmarked] = useState(Boolean(post.favorited));
+  const serverLiked = Boolean(post.liked);
+  const serverDisliked = Boolean(post.disLiked ?? post.disliked);
+  const serverFavorited = Boolean(post.favorited);
+  const [liked, setLiked] = useState(serverLiked);
+  const [disliked, setDisliked] = useState(serverDisliked);
+  const [bookmarked, setBookmarked] = useState(serverFavorited);
   const [cursor, setCursor] = useState<number | string>(0);
   const [comments, setComments] = useState<CommentResponse[]>([]);
+  const [commentCountBump, setCommentCountBump] = useState(0);
   const [commentComposerOpen, setCommentComposerOpen] = useState(false);
   const currentUserQuery = useRequestUserCurrent();
   const createCommentMutation = useRequestCreateComment();
@@ -572,12 +580,20 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   });
 
   useEffect(() => {
-    setBookmarked(Boolean(post.favorited));
-  }, [post.favorited, post.id]);
+    setLiked(serverLiked);
+  }, [serverLiked, post.id]);
 
   useEffect(() => {
-    setDisliked(Boolean(post.disliked));
-  }, [post.disliked, post.id]);
+    setBookmarked(serverFavorited);
+  }, [serverFavorited, post.id]);
+
+  useEffect(() => {
+    setDisliked(serverDisliked);
+  }, [serverDisliked, post.id]);
+
+  useEffect(() => {
+    setCommentCountBump(0);
+  }, [post.id, post.commentCount]);
 
   const handleHideTopic = async () => {
     if (isHidingTopic || !onHideTopic) return;
@@ -630,10 +646,13 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
     [];
   const tag = resolveTag(post);
   const displayTime = formatTopicTime(post.createTime, post.time);
-  const displayLikes = post.likeCount ?? post.likes ?? 0;
-  const displayDislikes = post.disLikeCount ?? post.dislikeCount ?? 0;
-  const displayFavorites = post.favoriteCount ?? (post as { favorite_count?: number }).favorite_count ?? 0;
-  const commentCount = Math.max(typeof post.commentCount === 'number' ? post.commentCount : 0, comments.length);
+  const displayLikes = Math.max(0, Number(post.likeCount ?? post.likes ?? 0));
+  const displayDislikes = Math.max(0, Number(post.disLikeCount ?? post.dislikeCount ?? 0));
+  const displayFavorites = Math.max(
+    0,
+    Number(post.favoriteCount ?? (post as { favorite_count?: number }).favorite_count ?? 0),
+  );
+  const displayCommentCount = Math.max(0, Number(post.commentCount ?? 0) + commentCountBump);
   const canComment = Boolean(currentUserQuery.data?.id);
   const isOwnPost = Boolean(
     currentUserQuery.data?.id &&
@@ -699,6 +718,8 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
       content: contentValue,
     });
 
+    setCommentCountBump((prev) => prev + 1);
+
     if (cursor === 0) {
       await commentsQuery.refetch();
       return;
@@ -707,15 +728,37 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
     setComments([]);
   };
 
-  const likeBase = displayLikes - (post.liked ? 1 : 0);
+  const likeBase = displayLikes - (serverLiked ? 1 : 0);
   const likeCount = likeBase + (liked ? 1 : 0);
-  const dislikeBase = displayDislikes - (post.disliked ? 1 : 0);
+  const dislikeBase = displayDislikes - (serverDisliked ? 1 : 0);
   const dislikeCount = dislikeBase + (disliked ? 1 : 0);
-  const favoriteBase = displayFavorites - (post.favorited ? 1 : 0);
+  const favoriteBase = displayFavorites - (serverFavorited ? 1 : 0);
   const favoriteCount = favoriteBase + (bookmarked ? 1 : 0);
   const canExpandText = content.length > 52;
+  const collapseComments = () => {
+    setExpanded(false);
+    setCommentComposerOpen(false);
+  };
+
   const renderCommentsPanel = (className: string) => (
     <div className={className}>
+      <div className="mb-3 flex items-center justify-between gap-2 border-b border-white/8 pb-2.5 md:mb-4">
+        <span className="text-[13px] font-bold text-zinc-200 md:text-[14px]">
+          {formatCount(displayCommentCount)} 条评论
+        </span>
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            collapseComments();
+          }}
+          className="inline-flex shrink-0 items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] font-semibold text-zinc-300 transition hover:border-emerald-400/30 hover:bg-emerald-500/10 hover:text-emerald-200"
+        >
+          <ChevronUp size={14} aria-hidden />
+          收起评论
+        </button>
+      </div>
+
       <div className="md:hidden">
         <button
           type="button"
@@ -939,11 +982,15 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
           <div className="legacy-forum-post-actions mt-3 grid max-w-full grid-cols-6 gap-1 md:!mt-4 md:flex md:max-w-[450px]">
             <ActionBtn
               icon={<MessageCircle size={17} className="group-hover:text-blue-500 transition-colors" />}
-              count={formatCount(commentCount)}
+              count={formatCount(displayCommentCount)}
               hoverColor="bg-blue-50 dark:bg-blue-900/20"
+              active={expanded}
+              activeColor="text-blue-500"
               onClick={(e) => {
                 e.stopPropagation();
-                setExpanded((v) => !v);
+                if (!expanded) {
+                  setExpanded(true);
+                }
               }}
             />
             {/* <ActionBtn

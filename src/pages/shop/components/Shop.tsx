@@ -1,7 +1,7 @@
 /**
  * 文件说明：Shop，商城黑市页面组件。
  */
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Coins, Heart } from 'lucide-react';
 import type { PetInfo } from '@/components/common/pet/petTypes';
@@ -123,6 +123,8 @@ export const Shop: React.FC<ShopProps> = ({
     timerRef.current = [];
   }, []);
 
+  useEffect(() => () => clearTimers(), [clearTimers]);
+
   const playWinHatchAnimation = useCallback(() => {
     timerRef.current.push(
       setTimeout(() => {
@@ -152,6 +154,10 @@ export const Shop: React.FC<ShopProps> = ({
       .mutateAsync()
       .then((result) => {
         if (!isPetEggHatchWin(result)) {
+          setPhase('idle');
+          setHatchResult(null);
+          openDoneRef.current = false;
+          hatchReadyRef.current = false;
           setActionMiss(getPetEggHatchMissMessage(result));
           return;
         }

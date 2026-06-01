@@ -4,7 +4,16 @@ import { normalizePetRarityGrade, type PetRarityGrade } from '@/components/commo
 import { isPetEggHatchWin, type PetEggHatchResponse } from '@/hooks/petTypes';
 import type { PetDefNormalized } from '@/hooks/petTypes';
 
+function isHatchSuccessLikeMessage(message: string) {
+  return /恭喜|成功|获得|抽中/.test(message);
+}
+
 export function getPetEggHatchMissMessage(result: PetEggHatchResponse) {
+  const apiMessage = result.message?.trim();
+  if (apiMessage && !isHatchSuccessLikeMessage(apiMessage)) {
+    return apiMessage;
+  }
+
   const costText = result.cost > 0 ? `，已消耗 ${result.cost.toLocaleString()} 龟币` : '';
   return `很遗憾，这次没有抽到宠物${costText}。再试一次吧！`;
 }

@@ -286,15 +286,26 @@ function normalizePetEggHatchResponse(raw: unknown): PetEggHatchResponse {
   const balanceBefore = pickFiniteNumber(source.balanceBefore, source.balance_before);
   const balanceAfter = pickFiniteNumber(source.balanceAfter, source.balance_after);
   const rewardType = pickNonEmptyString(source.rewardType, source.reward_type, source.prizeType, source.prize_type).toLowerCase();
-  const missByRewardType = ['none', 'empty', 'miss', 'lose', 'lost', 'fail', 'failed'].includes(rewardType);
+  const missByRewardType = ['none', 'empty', 'miss', 'lose', 'lost', 'fail', 'failed', 'thank', 'thanks'].includes(
+    rewardType,
+  );
   const explicitWon = readTriStateBoolean(
     source.won,
+    source.win,
     source.hit,
     source.isWin,
     source.is_win,
     source.hasReward,
     source.has_reward,
     source.rewarded,
+    source.drawSuccess,
+    source.draw_success,
+    source.gotPet,
+    source.got_pet,
+    source.hasPet,
+    source.has_pet,
+    source.obtainPet,
+    source.obtain_pet,
   );
   const explicitMiss = readTriStateBoolean(
     source.miss,
@@ -303,16 +314,22 @@ function normalizePetEggHatchResponse(raw: unknown): PetEggHatchResponse {
     source.empty,
     source.noReward,
     source.no_reward,
+    source.drawFail,
+    source.draw_fail,
   );
+  const drawResultCode = pickFiniteNumber(source.result, source.drawResult, source.draw_result, source.prizeResult, source.prize_result);
+  const missByDrawResult = drawResultCode === 0;
+  const winByDrawResult = drawResultCode === 1;
   const hasPetReward = isPresentPetId(petId) && Boolean(petKey || name || avatarUrl);
   const won =
-    explicitMiss === true || missByRewardType
+    explicitMiss === true || missByRewardType || missByDrawResult
       ? false
-      : explicitWon === true
+      : explicitWon === true || winByDrawResult
         ? true
         : explicitWon === false
           ? false
           : hasPetReward;
+  const apiMessage = pickNonEmptyString(source.message, source.msg, source.tip, source.notice);
 
   return {
     won,
@@ -328,6 +345,7 @@ function normalizePetEggHatchResponse(raw: unknown): PetEggHatchResponse {
           ...(avatarUrl ? { avatarUrl } : {}),
         }
       : { petId: '' },
+    ...(apiMessage ? { message: apiMessage } : {}),
     ...(balanceBefore !== undefined ? { balanceBefore } : {}),
     ...(balanceAfter !== undefined ? { balanceAfter } : {}),
   };

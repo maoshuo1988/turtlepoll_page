@@ -3,6 +3,7 @@
  */
 import { Suspense } from 'react';
 import { Outlet } from '@umijs/renderer-react';
+import { OperationToastHost } from '@/components/common/feedback/OperationToast';
 
 /**
  * Umi 根 layout。
@@ -14,6 +15,7 @@ export default function Layout() {
   return (
     <Suspense fallback={<div />}>
       <Outlet />
+      <OperationToastHost />
     </Suspense>
   );
 }

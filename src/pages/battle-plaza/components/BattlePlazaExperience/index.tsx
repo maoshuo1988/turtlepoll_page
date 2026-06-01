@@ -2,9 +2,10 @@
  * 文件说明：Battle Plaza Experience，地下钱庄/战斗广场核心业务实现。
  */
 import styles from './index.module.scss';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useQueries, useQueryClient } from 'react-query';
 import { battleQueryKeys, fetchBattleDetail, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleStats, useRequestBattleWithdraw } from '@/hooks/useBattleRequests';
+import { showOperationErrorToast } from '@/utils/operationToast';
 import {
   createBattleRequestId,
   getBattleActionPermissions,
@@ -23,6 +24,7 @@ import { fetchCommentComments, type CommentResponse, useRequestCreateComment } f
 import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
 import { TextEmptyState } from '@/components/common/state/PageState';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { Coins } from 'lucide-react';
 
 function css(...classNames: Array<string | false | null | undefined>) {
   return classNames
@@ -155,6 +157,8 @@ const PLAZA_SORTS: PlazaSort[] = [
 ];
 
 const WAGER_OPTIONS = [100, 500, 1000, 2000, 5000, 10000];
+const DEFAULT_COMPOSE_WAGER = 1000;
+const DEFAULT_JOIN_AMOUNT = 100;
 
 const CATEGORY_META: Record<DuelCategory, { label: string; className: string }> = {
   wc: { label: '⚽ 世界杯', className: 'bcat-wc' },
@@ -177,6 +181,31 @@ const STATUS_META: Record<DuelStatus, { label: string; className: string }> = {
 
 function formatCoins(value: number) {
   return value.toLocaleString('zh-CN');
+}
+
+/** 与左侧栏宠物面板一致的龟币图标（lucide Coins + emerald） */
+function TurtleCoinIcon({ size = 14, className }: { size?: number; className?: string }) {
+  return (
+    <Coins
+      size={size}
+      aria-hidden
+      className={`inline-block shrink-0 text-emerald-400 dark:text-emerald-500 ${className ?? ''}`.trim()}
+    />
+  );
+}
+
+function CoinAmount({ amount, iconSize = 14, className }: { amount: number; iconSize?: number; className?: string }) {
+  return (
+    <span className={`inline-flex items-center gap-0.5 align-middle ${className ?? ''}`.trim()}>
+      <span>{formatCoins(amount)}</span>
+      <TurtleCoinIcon size={iconSize} />
+    </span>
+  );
+}
+
+/** 纯文本场景（Toast、说明文案） */
+function formatCoinLabel(amount: number) {
+  return `${formatCoins(amount)}龟币`;
 }
 
 function clampAmount(value: number, min: number, max: number) {
@@ -299,7 +328,7 @@ function mapBattleToDuel(
       : battle.status === 'pending' && effectiveResult
         ? `已宣判：${getBattleResultLabel(effectiveResult)}`
         : settlementItem?.payoutAmount
-          ? `你可提取 ${formatCoins(settlementItem.payoutAmount)}🪙`
+          ? `你可提取 ${formatCoinLabel(settlementItem.payoutAmount)}`
           : undefined;
 
   const myChallengeInfo =
@@ -315,8 +344,8 @@ function mapBattleToDuel(
           : battle.status === 'settled'
             ? settlementItem
               ? settlementItem.withdrawn
-                ? `你的结算奖励已提取，到账 ${formatCoins(settlementItem.payoutAmount)}🪙。`
-                : `你有 ${formatCoins(settlementItem.payoutAmount)}🪙 可提取。`
+                ? `你的结算奖励已提取，到账 ${formatCoinLabel(settlementItem.payoutAmount)}。`
+                : `你有 ${formatCoinLabel(settlementItem.payoutAmount)} 可提取。`
               : '本局已结算。'
             : battle.status === 'disputed'
               ? '你已参与本局，当前进入争议仲裁阶段。'
@@ -498,8 +527,9 @@ function DuelCard({
             </div>
             <div className={css("duel-banker-meta")}>{duel.resultText ?? `${duel.visibility === 'private' ? '私人' : '公开'}赌局 · ${status.label.replace(/[^\u4e00-\u9fa5]/g, '')}`}</div>
           </div>
-          <div className={css("duel-banker-stake")}>
-            {formatCoins(duel.wager)}🪙<small>庄家押注</small>
+          <div className={`${css('duel-banker-stake')} flex flex-col items-end gap-0.5`}>
+            <CoinAmount amount={duel.wager} iconSize={15} />
+            <small>庄家押注</small>
           </div>
         </div>
 
@@ -561,8 +591,10 @@ function DuelCard({
         <div className={css("duel-capacity")}>
           <div className={css("duel-cap-header")}>
             <div className={css("duel-cap-label")}>挑战者容量</div>
-            <div className={css("duel-cap-nums")}>
-              {formatCoins(duel.currentPool)} / {formatCoins(duel.wager)} 🪙
+            <div className={`${css('duel-cap-nums')} inline-flex flex-wrap items-center gap-0.5`}>
+              <CoinAmount amount={duel.currentPool} />
+              <span>/</span>
+              <CoinAmount amount={duel.wager} />
               {capacityPct >= 100 ? ' (满额)' : ''}
             </div>
           </div>
@@ -572,12 +604,18 @@ function DuelCard({
           </div> */}
           <div className={css("duel-cap-detail")}>
             <span>已加入 {duel.challengerCount} 人</span>
-            <span>
-              {duel.visibility === 'private'
-                ? `剩余容量 ${formatCoins(Math.max(0, duel.wager - duel.currentPool))}🪙 · 无入场费`
-                : capacityPct >= 100
-                  ? '已满额封盘'
-                  : `剩余容量 ${formatCoins(Math.max(0, duel.wager - duel.currentPool))}🪙`}
+            <span className="inline-flex flex-wrap items-center gap-1">
+              {duel.visibility === 'private' ? (
+                <>
+                  剩余容量 <CoinAmount amount={Math.max(0, duel.wager - duel.currentPool)} iconSize={12} /> · 无入场费
+                </>
+              ) : capacityPct >= 100 ? (
+                '已满额封盘'
+              ) : (
+                <>
+                  剩余容量 <CoinAmount amount={Math.max(0, duel.wager - duel.currentPool)} iconSize={12} />
+                </>
+              )}
             </span>
           </div>
         </div>
@@ -594,7 +632,9 @@ function DuelCard({
                   {challenger.name}
                   {challenger.highlight ? <span className={css("duel-highlight")}>{challenger.highlight}</span> : null}
                 </div>
-                <div className={css("duel-ch-amt")}>{formatCoins(challenger.amount)}🪙</div>
+                <div className={css("duel-ch-amt")}>
+                  <CoinAmount amount={challenger.amount} iconSize={12} />
+                </div>
                 <div className={css("duel-ch-fee")}>{challenger.feeText}</div>
               </div>
             ))}
@@ -733,11 +773,11 @@ export const BattlePlazaPage: React.FC = () => {
   const [topic, setTopic] = useState('');
   const [bankerOpinion, setBankerOpinion] = useState('');
   const [challengerOpinion, setChallengerOpinion] = useState('');
-  const [wager, setWager] = useState(1000);
+  const [wager, setWager] = useState(DEFAULT_COMPOSE_WAGER);
   const [visibility, setVisibility] = useState<'public' | 'private'>('public');
   const [settleTime, setSettleTime] = useState('');
   const [inviteInput, setInviteInput] = useState('');
-  const [joinAmount, setJoinAmount] = useState(500);
+  const [joinAmount, setJoinAmount] = useState(DEFAULT_JOIN_AMOUNT);
   const [joinModal, setJoinModal] = useState<JoinModalState | null>(null);
   const [addStakeAmount, setAddStakeAmount] = useState(500);
   const [addStakeModal, setAddStakeModal] = useState<AddStakeModalState | null>(null);
@@ -746,7 +786,6 @@ export const BattlePlazaPage: React.FC = () => {
   const [commentDraftMap, setCommentDraftMap] = useState<Record<string, string>>({});
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [feedback, setFeedback] = useState<{ tone: 'success' | 'error' | 'info'; text: string } | null>(null);
-  const lastPopupMessageRef = useRef<string>('');
   const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, { enabled: detailBattleId !== null });
 
   const myRoleBattleItems = useMemo(() => {
@@ -922,21 +961,16 @@ export const BattlePlazaPage: React.FC = () => {
     normalizedAddStakeAmount <= userBalance;
 
   const pushFeedback = (tone: 'success' | 'error' | 'info', text: string) => {
-    setFeedback({ tone, text });
-    if (tone === 'error' && typeof window !== 'undefined' && lastPopupMessageRef.current !== text) {
-      lastPopupMessageRef.current = text;
-      window.alert(text);
-      window.setTimeout(() => {
-        if (lastPopupMessageRef.current === text) {
-          lastPopupMessageRef.current = '';
-        }
-      }, 0);
+    if (tone === 'error') {
+      showOperationErrorToast(text);
+      return;
     }
+    setFeedback({ tone, text });
   };
 
   const setMappedError = (error: unknown) => {
     const message = error instanceof Error ? error.message : '';
-    pushFeedback('error', getBattleErrorMessage(message));
+    showOperationErrorToast(getBattleErrorMessage(message));
   };
 
   useEffect(() => {
@@ -958,6 +992,17 @@ export const BattlePlazaPage: React.FC = () => {
   const handleOpenCompose = () => {
     if (!requireAuth()) return;
     setComposeOpen(true);
+  };
+
+  /** 做庄表单 + 底部私人邀请码：确认开局后清空 */
+  const resetComposeInputs = () => {
+    setTopic('');
+    setBankerOpinion('');
+    setChallengerOpinion('');
+    setWager(DEFAULT_COMPOSE_WAGER);
+    setVisibility('public');
+    setSettleTime('');
+    setInviteInput('');
   };
 
   const handleTabChange = (tab: PlazaTab) => {
@@ -998,22 +1043,21 @@ export const BattlePlazaPage: React.FC = () => {
       return;
     }
 
+    const createPayload = {
+      title: topic.trim(),
+      bankerSide: bankerOpinion.trim(),
+      challengerSide: challengerOpinion.trim(),
+      stakeAmount: wager,
+      isPublic: visibility === 'public',
+      inviteCode: visibility === 'private' ? inviteInput.trim() : '',
+      settleTime: settleTimestamp,
+      requestId: createBattleRequestId('battle-create'),
+    };
+
+    resetComposeInputs();
+
     try {
-      await createBattleMutation.mutateAsync({
-        title: topic.trim(),
-        bankerSide: bankerOpinion.trim(),
-        challengerSide: challengerOpinion.trim(),
-        stakeAmount: wager,
-        isPublic: visibility === 'public',
-        inviteCode: visibility === 'private' ? inviteInput.trim() : '',
-        settleTime: settleTimestamp,
-        requestId: createBattleRequestId('battle-create'),
-      });
-      setTopic('');
-      setBankerOpinion('');
-      setChallengerOpinion('');
-      setSettleTime('');
-      setVisibility('public');
+      await createBattleMutation.mutateAsync(createPayload);
       setComposeOpen(false);
       pushFeedback('success', '赌局已创建，广场列表已刷新。');
     } catch (error) {
@@ -1033,7 +1077,7 @@ export const BattlePlazaPage: React.FC = () => {
       return;
     }
     if (normalizedJoinAmount > joinModal.max) {
-      pushFeedback('error', `挑战金额超过剩余额度，当前最多 ${formatCoins(joinModal.max)}🪙。`);
+      pushFeedback('error', `挑战金额超过剩余额度，当前最多 ${formatCoinLabel(joinModal.max)}。`);
       return;
     }
     try {
@@ -1183,6 +1227,7 @@ export const BattlePlazaPage: React.FC = () => {
           onToggleLike={() => void handleToggleBattleLike(duel)}
           onJoin={() => {
             if (!requireAuth()) return;
+            setJoinAmount(DEFAULT_JOIN_AMOUNT);
             setJoinModal({
               duelId: duel.battleId,
               title: duel.topic,
@@ -1395,7 +1440,10 @@ export const BattlePlazaPage: React.FC = () => {
                   <div className={css("dc-footer")}>
                     <div className={css("dc-fee-hint")}>
                       {visibility === 'public' ? '公开赌局：挑战者支付 5% 入场费给庄家' : '私人赌局：挑战者无入场费'}
-                      {` · 当前余额 ${formatCoins(userBalance)}🪙`}
+                      <span className="inline-flex flex-wrap items-center gap-1">
+                        {' · 当前余额 '}
+                        <CoinAmount amount={userBalance} iconSize={13} />
+                      </span>
                     </div>
                     <button type="button" className={css("dc-cancel")} onClick={() => setComposeOpen(false)}>取消</button>
                     <button
@@ -1405,7 +1453,13 @@ export const BattlePlazaPage: React.FC = () => {
                       disabled={!canSubmitCreate}
                       style={!canSubmitCreate ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
                     >
-                      {createBattleMutation.isLoading ? '提交中...' : `确认开局 · 冻结 ${formatCoins(wager)}🪙`}
+                      {createBattleMutation.isLoading ? (
+                        '提交中...'
+                      ) : (
+                        <span className="inline-flex flex-wrap items-center justify-center gap-1">
+                          确认开局 · 冻结 <CoinAmount amount={wager} iconSize={14} />
+                        </span>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -1695,7 +1749,9 @@ export const BattlePlazaPage: React.FC = () => {
                     </div>
                     <div className={css("dm-info-item")}>
                       <div className={css("dm-info-label")}>我的奖金</div>
-                      <div className={css("dm-info-value gold")}>{detailMyItem ? `${formatCoins(detailMyItem.payoutAmount)} 🪙` : '暂无'}</div>
+                      <div className={css("dm-info-value gold")}>
+                        {detailMyItem ? <CoinAmount amount={detailMyItem.payoutAmount} iconSize={15} /> : '暂无'}
+                      </div>
                     </div>
                     <div className={css("dm-info-item")}>
                       <div className={css("dm-info-label")}>提取状态</div>
@@ -1723,7 +1779,9 @@ export const BattlePlazaPage: React.FC = () => {
               <div className={css("dm-info-grid")}>
                 <div className={css("dm-info-item")}>
                   <div className={css("dm-info-label")}>剩余可挑战</div>
-                  <div className={css("dm-info-value gold")}>{formatCoins(joinModalMax)} 🪙</div>
+                  <div className={css("dm-info-value gold")}>
+                    <CoinAmount amount={joinModalMax} iconSize={15} />
+                  </div>
                 </div>
                 <div className={css("dm-info-item")}>
                   <div className={css("dm-info-label")}>模式</div>
@@ -1741,7 +1799,10 @@ export const BattlePlazaPage: React.FC = () => {
               </div>
               <div className={css("dm-fee-note")}>
                 {joinModal.visibility === 'public' ? '公开赌局会收取 5% 入场费，剩余 95% 进入冻结池。' : '私人赌局不收取入场费，全部金额进入冻结池。'}
-                {` 当前将提交 ${formatCoins(normalizedJoinAmount)}🪙。`}
+                <span className="inline-flex flex-wrap items-center gap-1">
+                  {' 当前将提交 '}
+                  <CoinAmount amount={normalizedJoinAmount} iconSize={13} />。
+                </span>
               </div>
               <button
                 className={css("dm-cta")}
@@ -1749,7 +1810,13 @@ export const BattlePlazaPage: React.FC = () => {
                 disabled={!canSubmitJoin}
                 style={!canSubmitJoin ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
               >
-                {joinBattleMutation.isLoading ? '提交中...' : `⚔️ 确认挑战 ${formatCoins(normalizedJoinAmount)} 龟币`}
+                {joinBattleMutation.isLoading ? (
+                  '提交中...'
+                ) : (
+                  <span className="inline-flex flex-wrap items-center justify-center gap-1">
+                    ⚔️ 确认挑战 <CoinAmount amount={normalizedJoinAmount} iconSize={14} />
+                  </span>
+                )}
               </button>
             </div>
           </div>
@@ -1764,7 +1831,9 @@ export const BattlePlazaPage: React.FC = () => {
               <div className={css("dm-info-grid")}>
                 <div className={css("dm-info-item")}>
                   <div className={css("dm-info-label")}>当前余额</div>
-                  <div className={css("dm-info-value gold")}>{formatCoins(userBalance)} 🪙</div>
+                  <div className={css("dm-info-value gold")}>
+                    <CoinAmount amount={userBalance} iconSize={15} />
+                  </div>
                 </div>
                 <div className={css("dm-info-item")}>
                   <div className={css("dm-info-label")}>说明</div>
@@ -1782,7 +1851,10 @@ export const BattlePlazaPage: React.FC = () => {
               </div>
               <div className={css("dm-fee-note")}>
                 追加押注只允许庄家在 `open` 阶段操作，成功后 battle 容量会同步扩大。
-                {` 当前将追加 ${formatCoins(normalizedAddStakeAmount)}🪙。`}
+                <span className="inline-flex flex-wrap items-center gap-1">
+                  {' 当前将追加 '}
+                  <CoinAmount amount={normalizedAddStakeAmount} iconSize={13} />。
+                </span>
               </div>
               <button
                 className={css("dm-cta")}
@@ -1790,7 +1862,13 @@ export const BattlePlazaPage: React.FC = () => {
                 disabled={!canSubmitAddStake}
                 style={!canSubmitAddStake ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
               >
-                {addStakeMutation.isLoading ? '提交中...' : `➕ 确认加注 ${formatCoins(normalizedAddStakeAmount)} 龟币`}
+                {addStakeMutation.isLoading ? (
+                  '提交中...'
+                ) : (
+                  <span className="inline-flex flex-wrap items-center justify-center gap-1">
+                    ➕ 确认加注 <CoinAmount amount={normalizedAddStakeAmount} iconSize={14} />
+                  </span>
+                )}
               </button>
             </div>
           </div>
