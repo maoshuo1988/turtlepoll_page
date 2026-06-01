@@ -21,14 +21,34 @@ import {
   API_Topic_User_Topics,
 } from "@/api/topicApi";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
-import type { CreateTopicPayload, CursorResult, EditTopicPayload, SimpleTopic, TagTopicsParams, TopicEditDetail, TopicHideContentParams, TopicHideContentResponse, TopicListParams, TopicNodeInfoParams, TopicNodeNav, TopicNodeResponse, TopicResponse, UserInfo, UserTopicsParams } from "./topicTypes";
+import type {
+  CreateTopicPayload,
+  CursorResult,
+  EditTopicPayload,
+  ProfileTopicListParams,
+  SimpleTopic,
+  TagTopicsParams,
+  TopicEditDetail,
+  TopicHideContentParams,
+  TopicHideContentResponse,
+  TopicListParams,
+  TopicNodeInfoParams,
+  TopicNodeNav,
+  TopicNodeResponse,
+  TopicResponse,
+  UserInfo,
+  UserTopicsParams,
+} from "./topicTypes";
 import { normalizeTopicCursorResult, normalizeTopicList, normalizeTopicResponse } from "./topicTypes";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { API_Like_Like, API_Like_Unlike } from "@/api/authApi";
 
+export const PROFILE_TOPIC_TOPICS_QUERY_KEY = 'requestProfileTopicTopics';
+
 const invalidateTopicQueries = async (queryClient: ReturnType<typeof useQueryClient>) => {
   await Promise.all([
     queryClient.invalidateQueries(["requestTopicTopics"]),
+    queryClient.invalidateQueries([PROFILE_TOPIC_TOPICS_QUERY_KEY]),
     queryClient.invalidateQueries(["requestTopicRecent"]),
     queryClient.invalidateQueries(["requestTopicUserTopics"]),
     queryClient.invalidateQueries(["requestTopicTagTopics"]),
@@ -151,6 +171,30 @@ export function useInfiniteRequestTopicTopics(nodeId: number) {
     getNextPageParam: (lastPage) => (lastPage?.hasMore ? lastPage.cursor : undefined),
     enabled: typeof nodeId === "number",
     refetchOnMount: "always",
+  });
+}
+
+/** 个人中心：按 business_type 拉取当前用户帖子/收藏/隐藏/点赞/点踩列表（nodeId=0 + cursor）。 */
+export function useInfiniteRequestProfileTopicTopics(params: ProfileTopicListParams) {
+  const { businessType, enabled = true } = params;
+
+  return useInfiniteQuery<CursorResult<TopicResponse>>({
+    queryKey: [PROFILE_TOPIC_TOPICS_QUERY_KEY, businessType],
+    queryFn: async ({ pageParam = 0 }) => {
+      const res = await axiosCustom({
+        method: 'get',
+        cmd: API_Topic_Topics,
+        params: {
+          nodeId: 0,
+          cursor: pageParam,
+          business_type: businessType,
+        },
+        headers: getAuthorizationHeaders(),
+      });
+      return normalizeTopicCursorResult(assertSuccess(res));
+    },
+    getNextPageParam: (lastPage) => (lastPage?.hasMore ? lastPage.cursor : undefined),
+    enabled,
   });
 }
 

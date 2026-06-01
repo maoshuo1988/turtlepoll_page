@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  Eye,
   EyeClosed,
 } from 'lucide-react';
 import dayjs from 'dayjs';
@@ -70,6 +71,8 @@ interface TopicPostCardProps {
   onToggleFavorite?: (postId: string, nextFavorited: boolean) => void | Promise<void>;
   onHideTopic?: (postId: string) => void | Promise<void>;
   isHidingTopic?: boolean;
+  onUnhideTopic?: (postId: string) => void | Promise<void>;
+  isUnhidingTopic?: boolean;
 }
 
 const mergeComments = (prev: CommentResponse[], next: CommentResponse[]) => {
@@ -556,6 +559,8 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
   onToggleFavorite,
   onHideTopic,
   isHidingTopic = false,
+  onUnhideTopic,
+  isUnhidingTopic = false,
 }) => {
   const [remoteAvatarFailed, setRemoteAvatarFailed] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -599,6 +604,15 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
     if (isHidingTopic || !onHideTopic) return;
     try {
       await onHideTopic(post.id);
+    } catch {
+      // 失败提示由页面层处理
+    }
+  };
+
+  const handleUnhideTopic = async () => {
+    if (isUnhidingTopic || !onUnhideTopic) return;
+    try {
+      await onUnhideTopic(post.id);
     } catch {
       // 失败提示由页面层处理
     }
@@ -1080,7 +1094,22 @@ export const TopicPostCard: React.FC<TopicPostCardProps> = ({
               </span>
             </button>
             ) : null}
-            {isOwnPost ? (
+            {onUnhideTopic ? (
+              <button
+                type="button"
+                title="取消隐藏"
+                disabled={isUnhidingTopic}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void handleUnhideTopic();
+                }}
+                className="group flex items-center justify-center rounded-full border-0 bg-transparent py-1 text-slate-500 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 dark:text-rdark-text2 md:block md:rounded-none md:py-0"
+              >
+                <div className="rounded-full p-2 transition-colors group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/20">
+                  <Eye size={17} className="transition-colors group-hover:text-emerald-500" />
+                </div>
+              </button>
+            ) : isOwnPost ? (
               <button
                 type="button"
                 title="隐藏帖子"

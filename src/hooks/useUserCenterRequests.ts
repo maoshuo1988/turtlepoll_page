@@ -13,6 +13,7 @@ import {
   API_User_Topic_Unhide,
 } from '@/api/userApi';
 import { USER_CENTER_DISLIKES_QUERY_KEY } from './useDislikeRequests';
+import { PROFILE_TOPIC_TOPICS_QUERY_KEY } from './useTopicRequests';
 import { assertSuccess, getAuthorizationHeaders } from '@/utils/requestUtils';
 import type {
   UserCenterCommentResponse,
@@ -197,6 +198,9 @@ const invalidateUserCenterQueries = async (queryClient: ReturnType<typeof useQue
   await Promise.all([
     queryClient.invalidateQueries([USER_CENTER_TOPICS_QUERY_KEY]),
     queryClient.invalidateQueries([USER_CENTER_HIDDEN_TOPICS_QUERY_KEY]),
+    queryClient.invalidateQueries([PROFILE_TOPIC_TOPICS_QUERY_KEY]),
+    queryClient.invalidateQueries([USER_CENTER_FAVORITES_QUERY_KEY]),
+    queryClient.invalidateQueries([USER_CENTER_DISLIKES_QUERY_KEY]),
   ]);
 };
 

@@ -5,22 +5,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from '@umijs/renderer-react';
 import { ArrowLeft, ChevronRight, Image as ImageIcon, LogIn, MessageSquarePlus, Plus, Settings2 } from 'lucide-react';
 import type { OwnedPetItem } from '@/hooks/petTypes';
+import { useInfiniteRequestUserCenterComments } from '@/hooks/useUserCenterRequests';
+import type { UserCenterCommentResponse } from '@/hooks/userCenterTypes';
 import {
-  useInfiniteRequestUserCenterComments,
-  useInfiniteRequestUserCenterFavorites,
-  useInfiniteRequestUserCenterHiddenTopics,
-  useInfiniteRequestUserCenterDislikes,
-  useInfiniteRequestUserCenterTopics,
-  useMutateUserTopicHide,
-  useMutateUserTopicUnhide,
-} from '@/hooks/useUserCenterRequests';
-import type {
-  UserCenterCommentResponse,
-  UserCenterFavoriteResponse,
-  UserCenterHideTopicResponse,
-  UserCenterDislikeResponse,
-  UserCenterTopicResponse,
-} from '@/hooks/userCenterTypes';
+  TOPIC_BUSINESS_TYPE,
+  type CursorResult,
+  type TopicResponse,
+} from '@/hooks/topicTypes';
+import { useInfiniteRequestProfileTopicTopics } from '@/hooks/useTopicRequests';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
 import {
   type PetInfo,
@@ -28,6 +20,7 @@ import {
 } from '@/components/common/pet/petTypes';
 import { EmptyDataPage, LoginRequiredPage } from '@/components/common/state/PageState';
 import { ProfilePetArchive } from './ProfilePetArchive';
+import { ProfileTopicFeed } from './ProfileTopicFeed';
 
 type ProfileTab = 'overview' | 'posts' | 'comments' | 'saved' | 'history' | 'hidden' | 'upvoted' | 'downvoted';
 
@@ -42,6 +35,18 @@ interface ProfilePageProps {
   onOpenForum: () => void;
   onOpenAuth: () => void;
   ownedPets?: OwnedPetItem[];
+}
+
+function flattenProfileTopics(pages?: CursorResult<TopicResponse>[]) {
+  return (pages ?? []).flatMap((page) => page.results ?? []);
+}
+
+function resolveProfileTopicTotal(
+  query: { data?: { pages?: CursorResult<TopicResponse>[] } },
+  topics: TopicResponse[],
+) {
+  const firstTotal = query.data?.pages?.[0]?.total;
+  return typeof firstTotal === 'number' && firstTotal >= 0 ? firstTotal : topics.length;
 }
 
 const PROFILE_TABS: { key: ProfileTab; label: string }[] = [
@@ -114,37 +119,62 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const location = useLocation();
   const isAuthenticated = Boolean(getAuthToken());
   const storedUser = getStoredUserInfo();
-  const userTopicsQuery = useInfiniteRequestUserCenterTopics({ enabled: isAuthenticated, limit: 20 });
-  const userCommentsQuery = useInfiniteRequestUserCenterComments({ enabled: isAuthenticated, limit: 20 });
-  const userFavoritesQuery = useInfiniteRequestUserCenterFavorites({ enabled: isAuthenticated, limit: 20 });
-  const userHiddenTopicsQuery = useInfiniteRequestUserCenterHiddenTopics({ enabled: isAuthenticated, limit: 20 });
-  const userDislikesQuery = useInfiniteRequestUserCenterDislikes({ enabled: isAuthenticated, limit: 20 });
-  const hideTopicMutation = useMutateUserTopicHide();
-  const unhideTopicMutation = useMutateUserTopicUnhide();
+  const shouldLoadOwnPosts = isAuthenticated && (activeTab === 'overview' || activeTab === 'posts');
+  const shouldLoadFavorites = isAuthenticated && (activeTab === 'overview' || activeTab === 'saved');
+  const shouldLoadHidden = isAuthenticated && activeTab === 'hidden';
+  const shouldLoadLiked = isAuthenticated && activeTab === 'upvoted';
+  const shouldLoadDisliked = isAuthenticated && activeTab === 'downvoted';
+  const shouldLoadComments = isAuthenticated && activeTab === 'comments';
 
-  const profileTopics = useMemo<UserCenterTopicResponse[]>(
-    () => (userTopicsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
-    [userTopicsQuery.data],
+  const ownPostsQuery = useInfiniteRequestProfileTopicTopics({
+    businessType: TOPIC_BUSINESS_TYPE.ownPosts,
+    enabled: shouldLoadOwnPosts,
+  });
+  const favoriteTopicsQuery = useInfiniteRequestProfileTopicTopics({
+    businessType: TOPIC_BUSINESS_TYPE.favorites,
+    enabled: shouldLoadFavorites,
+  });
+  const hiddenTopicsQuery = useInfiniteRequestProfileTopicTopics({
+    businessType: TOPIC_BUSINESS_TYPE.hidden,
+    enabled: shouldLoadHidden,
+  });
+  const likedTopicsQuery = useInfiniteRequestProfileTopicTopics({
+    businessType: TOPIC_BUSINESS_TYPE.liked,
+    enabled: shouldLoadLiked,
+  });
+  const dislikedTopicsQuery = useInfiniteRequestProfileTopicTopics({
+    businessType: TOPIC_BUSINESS_TYPE.disliked,
+    enabled: shouldLoadDisliked,
+  });
+  const userCommentsQuery = useInfiniteRequestUserCenterComments({ enabled: shouldLoadComments, limit: 20 });
+
+  const profileTopics = useMemo(
+    () => flattenProfileTopics(ownPostsQuery.data?.pages),
+    [ownPostsQuery.data],
   );
   const profileComments = useMemo<UserCenterCommentResponse[]>(
     () => (userCommentsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
     [userCommentsQuery.data],
   );
-  const profileFavorites = useMemo<UserCenterFavoriteResponse[]>(
-    () => (userFavoritesQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
-    [userFavoritesQuery.data],
+  const profileFavorites = useMemo(
+    () => flattenProfileTopics(favoriteTopicsQuery.data?.pages),
+    [favoriteTopicsQuery.data],
   );
-  const profileHiddenTopics = useMemo<UserCenterHideTopicResponse[]>(
-    () => (userHiddenTopicsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
-    [userHiddenTopicsQuery.data],
+  const profileHiddenTopics = useMemo(
+    () => flattenProfileTopics(hiddenTopicsQuery.data?.pages),
+    [hiddenTopicsQuery.data],
   );
-  const profileDislikes = useMemo<UserCenterDislikeResponse[]>(
-    () => (userDislikesQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
-    [userDislikesQuery.data],
+  const profileLikedTopics = useMemo(
+    () => flattenProfileTopics(likedTopicsQuery.data?.pages),
+    [likedTopicsQuery.data],
   );
-  const profileTopicsTotal = userTopicsQuery.data?.pages?.[0]?.page.total ?? 0;
+  const profileDislikes = useMemo(
+    () => flattenProfileTopics(dislikedTopicsQuery.data?.pages),
+    [dislikedTopicsQuery.data],
+  );
+  const profileTopicsTotal = resolveProfileTopicTotal(ownPostsQuery, profileTopics);
   const profileCommentsTotal = userCommentsQuery.data?.pages?.[0]?.page.total ?? 0;
-  const profileFavoritesTotal = userFavoritesQuery.data?.pages?.[0]?.page.total ?? 0;
+  const profileFavoritesTotal = resolveProfileTopicTotal(favoriteTopicsQuery, profileFavorites);
   const overviewStats = useMemo(
     () => [
       { label: '帖子', value: profileTopicsTotal },
@@ -180,36 +210,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       hour: '2-digit',
       minute: '2-digit',
     });
-  };
-
-  const actionPendingTopicId = String(
-    hideTopicMutation.variables?.topicId ?? unhideTopicMutation.variables?.topicId ?? '',
-  );
-
-  const handleHideTopic = async (topicId: number | string) => {
-    if (!isAuthenticated) {
-      onOpenAuth();
-      return;
-    }
-
-    try {
-      await hideTopicMutation.mutateAsync({ topicId });
-    } catch (error) {
-      window.alert(error instanceof Error ? error.message : '隐藏帖子失败');
-    }
-  };
-
-  const handleUnhideTopic = async (topicId: number | string) => {
-    if (!isAuthenticated) {
-      onOpenAuth();
-      return;
-    }
-
-    try {
-      await unhideTopicMutation.mutateAsync({ topicId });
-    } catch (error) {
-      window.alert(error instanceof Error ? error.message : '取消隐藏失败');
-    }
   };
 
   const renderLoginRequired = (title: string, description: string) => (
@@ -323,48 +323,22 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         </button>
       </div>
 
-      {!isAuthenticated ? renderLoginRequired('登录后查看你发布的帖子', '这里只展示当前登录账号自己发布的帖子。') : userTopicsQuery.isLoading && profileTopics.length === 0 ? (
-        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
-          正在加载帖子...
-        </div>
-      ) : userTopicsQuery.isError && profileTopics.length === 0 ? (
-        renderPageError(userTopicsQuery.error instanceof Error ? userTopicsQuery.error.message : '帖子加载失败')
-      ) : profileTopics.length === 0 ? (
-        <div className="!mt-4 border-t border-white/10">
-          <EmptyDataPage
-            title="你还没有任何帖子"
-            description="在社区中发帖后，帖子会显示在这里。"
-            actionLabel="去发帖"
-            onAction={onOpenForum}
-          />
-        </div>
+      {!isAuthenticated ? (
+        renderLoginRequired('登录后查看你发布的帖子', '这里只展示当前登录账号自己发布的帖子。')
       ) : (
-        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
-          {profileTopics.map((post) => (
-            <article key={String(post.id)} className={`${feedCard} p-4 md:p-5`}>
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
-                  <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">我的帖子</span>
-                  <span>{formatTimestamp(post.createTime)}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[12px] text-[#7e8790]">作者 ID {post.userId || '-'}</span>
-                  <button
-                    type="button"
-                    onClick={() => void handleHideTopic(post.id)}
-                    disabled={hideTopicMutation.isLoading || unhideTopicMutation.isLoading}
-                    className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {hideTopicMutation.isLoading && actionPendingTopicId === String(post.id) ? '隐藏中...' : '隐藏'}
-                  </button>
-                </div>
-              </div>
-              {post.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{post.title}</div>}
-              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.content || '暂无正文内容'}</p>
-            </article>
-          ))}
-          {renderLoadMore(userTopicsQuery)}
-        </div>
+        <ProfileTopicFeed
+          className="mt-4 md:mt-6"
+          topics={profileTopics}
+          query={ownPostsQuery}
+          enableHideOwnPost
+          onRequireAuth={onOpenAuth}
+          empty={{
+            title: '你还没有任何帖子',
+            description: '在社区中发帖后，帖子会显示在这里。',
+            actionLabel: '去发帖',
+            onAction: onOpenForum,
+          }}
+        />
       )}
     </>
   );
@@ -406,114 +380,91 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderSaved = () => (
     <>
-      {!isAuthenticated ? renderLoginRequired('登录后查看你收藏的帖子', '这里只展示当前登录账号收藏过的主题帖。') : userFavoritesQuery.isLoading && profileFavorites.length === 0 ? (
-        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
-          正在加载收藏...
-        </div>
-      ) : userFavoritesQuery.isError && profileFavorites.length === 0 ? (
-        renderPageError(userFavoritesQuery.error instanceof Error ? userFavoritesQuery.error.message : '收藏加载失败')
-      ) : profileFavorites.length === 0 ? (
-        <div className="!mt-4 border-t border-white/10">
-          <EmptyDataPage
-            title="你还没有收藏任何帖子"
-            description="收藏感兴趣的帖子后，会在这里集中查看。"
-            actionLabel="去社区看看"
-            onAction={onOpenForum}
-          />
-        </div>
+      {!isAuthenticated ? (
+        renderLoginRequired('登录后查看你收藏的帖子', '这里只展示当前登录账号收藏过的主题帖。')
       ) : (
-        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
-          {profileFavorites.map((favorite) => (
-            <article key={String(favorite.id)} className={`${feedCard} p-4 md:p-5`}>
-              <div className="flex items-center justify-between gap-3 text-[12px] text-[#7e8790]">
-                <span>{formatTimestamp(favorite.createTime)}</span>
-                <span>帖子 ID {favorite.entityId || '-'}</span>
-              </div>
-              {favorite.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{favorite.title}</div>}
-              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{favorite.content || '暂无正文内容'}</p>
-            </article>
-          ))}
-          {renderLoadMore(userFavoritesQuery)}
-        </div>
+        <ProfileTopicFeed
+          className="mt-4 md:mt-6"
+          topics={profileFavorites}
+          query={favoriteTopicsQuery}
+          loadingLabel="正在加载收藏..."
+          errorLabel="收藏加载失败"
+          onRequireAuth={onOpenAuth}
+          empty={{
+            title: '你还没有收藏任何帖子',
+            description: '收藏感兴趣的帖子后，会在这里集中查看。',
+            actionLabel: '去社区看看',
+            onAction: onOpenForum,
+          }}
+        />
       )}
     </>
   );
 
   const renderHidden = () => (
     <>
-      {!isAuthenticated ? renderLoginRequired('登录后查看你隐藏的帖子', '这里只展示当前登录账号自己隐藏的帖子。') : userHiddenTopicsQuery.isLoading && profileHiddenTopics.length === 0 ? (
-        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
-          正在加载隐藏帖子...
-        </div>
-      ) : userHiddenTopicsQuery.isError && profileHiddenTopics.length === 0 ? (
-        renderPageError(userHiddenTopicsQuery.error instanceof Error ? userHiddenTopicsQuery.error.message : '隐藏帖子加载失败')
-      ) : profileHiddenTopics.length === 0 ? (
-        <div className="!mt-4 border-t border-white/10">
-          <EmptyDataPage
-            title="你还没有隐藏任何帖子"
-            description="隐藏后的帖子会统一展示在这里，方便你随时恢复。"
-          />
-        </div>
+      {!isAuthenticated ? (
+        renderLoginRequired('登录后查看你隐藏的帖子', '这里只展示当前登录账号自己隐藏的帖子。')
       ) : (
-        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
-          {profileHiddenTopics.map((post) => (
-            <article key={String(post.id)} className={`${feedCard} p-4 md:p-5`}>
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-[12px] text-[#7e8790]">
-                  <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">已隐藏</span>
-                  <span>{formatTimestamp(post.createTime)}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => void handleUnhideTopic(post.id)}
-                  disabled={hideTopicMutation.isLoading || unhideTopicMutation.isLoading}
-                  className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-[12px] font-semibold text-emerald-200 transition-colors hover:bg-emerald-500/16 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {unhideTopicMutation.isLoading && actionPendingTopicId === String(post.id) ? '恢复中...' : '取消隐藏'}
-                </button>
-              </div>
-              {post.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{post.title}</div>}
-              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{post.content || '暂无正文内容'}</p>
-            </article>
-          ))}
-          {renderLoadMore(userHiddenTopicsQuery)}
-        </div>
+        <ProfileTopicFeed
+          className="mt-4 md:mt-6"
+          topics={profileHiddenTopics}
+          query={hiddenTopicsQuery}
+          loadingLabel="正在加载隐藏帖子..."
+          errorLabel="隐藏帖子加载失败"
+          enableUnhide
+          onRequireAuth={onOpenAuth}
+          empty={{
+            title: '你还没有隐藏任何帖子',
+            description: '隐藏后的帖子会统一展示在这里，方便你随时恢复。',
+          }}
+        />
+      )}
+    </>
+  );
+
+  const renderUpvoted = () => (
+    <>
+      {!isAuthenticated ? (
+        renderLoginRequired('登录后查看你点赞过的帖子', '这里只展示当前登录账号点赞过的别人的帖子。')
+      ) : (
+        <ProfileTopicFeed
+          className="mt-4 md:mt-6"
+          topics={profileLikedTopics}
+          query={likedTopicsQuery}
+          loadingLabel="正在加载点赞记录..."
+          errorLabel="点赞记录加载失败"
+          onRequireAuth={onOpenAuth}
+          empty={{
+            title: '你还没有点赞任何帖子',
+            description: '在线报点赞过的帖子会集中展示在这里。',
+            actionLabel: '去社区看看',
+            onAction: onOpenForum,
+          }}
+        />
       )}
     </>
   );
 
   const renderDownvoted = () => (
     <>
-      {!isAuthenticated ? renderLoginRequired('登录后查看你点踩过的帖子', '这里只展示当前登录账号点踩过的别人的帖子。') : userDislikesQuery.isLoading && profileDislikes.length === 0 ? (
-        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
-          正在加载点踩记录...
-        </div>
-      ) : userDislikesQuery.isError && profileDislikes.length === 0 ? (
-        renderPageError(userDislikesQuery.error instanceof Error ? userDislikesQuery.error.message : '点踩记录加载失败')
-      ) : profileDislikes.length === 0 ? (
-        <div className="!mt-4 border-t border-white/10">
-          <EmptyDataPage
-            title="你还没有点踩任何帖子"
-            description="在线报点踩过的帖子会集中展示在这里。"
-            actionLabel="去社区看看"
-            onAction={onOpenForum}
-          />
-        </div>
+      {!isAuthenticated ? (
+        renderLoginRequired('登录后查看你点踩过的帖子', '这里只展示当前登录账号点踩过的别人的帖子。')
       ) : (
-        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
-          {profileDislikes.map((dislike) => (
-            <article key={String(dislike.id)} className={`${feedCard} p-4 md:p-5`}>
-              <div className="flex items-center justify-between gap-3 text-[12px] text-[#7e8790]">
-                <span className="rounded-full bg-white/8 px-2 py-1 text-[11px] text-white/80">已点踩</span>
-                <span>{formatTimestamp(dislike.createTime)}</span>
-                <span>帖子 ID {dislike.entityId || '-'}</span>
-              </div>
-              {dislike.title && <div className="mt-3 text-[15px] font-semibold text-white md:text-[16px]">{dislike.title}</div>}
-              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{dislike.content || '暂无正文内容'}</p>
-            </article>
-          ))}
-          {renderLoadMore(userDislikesQuery)}
-        </div>
+        <ProfileTopicFeed
+          className="mt-4 md:mt-6"
+          topics={profileDislikes}
+          query={dislikedTopicsQuery}
+          loadingLabel="正在加载点踩记录..."
+          errorLabel="点踩记录加载失败"
+          onRequireAuth={onOpenAuth}
+          empty={{
+            title: '你还没有点踩任何帖子',
+            description: '在线报点踩过的帖子会集中展示在这里。',
+            actionLabel: '去社区看看',
+            onAction: onOpenForum,
+          }}
+        />
       )}
     </>
   );
@@ -542,7 +493,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       case 'hidden':
         return renderHidden();
       case 'upvoted':
-        return renderStaticEmpty('你还没有点赞任何内容', '你点过赞的帖子和评论，之后会出现在这里。');
+        return renderUpvoted();
       case 'downvoted':
         return renderDownvoted();
       default:

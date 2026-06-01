@@ -22,7 +22,25 @@ export type CursorResult<T> = {
   results: T[];
   cursor: number | string;
   hasMore: boolean;
+  /** 列表总数（部分接口在 cursor 分页下仍返回 total） */
+  total?: number;
 };
+
+/** 个人中心 /api/topic/topics 的 business_type */
+export type TopicBusinessType = 1 | 2 | 3 | 4 | 5;
+
+export const TOPIC_BUSINESS_TYPE = {
+  /** 当前用户自己的帖子 */
+  ownPosts: 1,
+  /** 当前用户收藏的帖子 */
+  favorites: 2,
+  /** 当前用户隐藏的帖子 */
+  hidden: 3,
+  /** 当前用户点赞过的别人的帖子 */
+  liked: 4,
+  /** 当前用户点踩过的别人的帖子 */
+  disliked: 5,
+} as const satisfies Record<string, TopicBusinessType>;
 
 
 export type EditTopicPayload = {
@@ -65,6 +83,12 @@ export type TopicHideContentResponse = {
 export type TopicListParams = {
   cursor?: number | string;
   nodeId?: number;
+  business_type?: TopicBusinessType;
+};
+
+export type ProfileTopicListParams = {
+  businessType: TopicBusinessType;
+  enabled?: boolean;
 };
 
 export type TopicNodeInfoParams = {
@@ -187,11 +211,13 @@ export function normalizeTopicCursorResult(raw: unknown): CursorResult<TopicResp
 
   const cursor = row.cursor;
   const hasMore = Boolean(row.hasMore ?? row.has_more);
+  const total = pickTopicNumber(row, 'total', 'count', 'totalCount', 'total_count');
 
   return {
     results,
     cursor: typeof cursor === 'number' || typeof cursor === 'string' ? cursor : 0,
     hasMore,
+    ...(total !== undefined ? { total } : {}),
   };
 }
 

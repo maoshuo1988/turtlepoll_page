@@ -316,6 +316,24 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1005,6 +1023,60 @@
             19,
             10,
             11,
+            6,
+            8,
+            9,
+            10,
+            12,
+            8,
+            6,
+            6,
+            7,
+            7,
+            13,
+            7,
+            4,
+            5,
+            7,
+            7,
+            6,
+            6,
+            5,
+            6,
+            4,
+            7,
+            5,
+            7,
+            7,
+            11,
+            10,
+            9,
+            5,
+            6,
+            7,
+            8,
+            8,
+            5,
+            7,
+            8,
+            5,
+            6,
+            17,
+            6,
+            5,
+            7,
+            4,
+            9,
+            7,
+            6,
+            8,
+            9,
+            9,
+            8,
+            10,
+            6,
+            6,
+            6,
             6
           ]
         },
@@ -1215,6 +1287,24 @@
             9,
             11,
             10,
+            9,
+            12,
+            16,
+            9,
+            15,
+            14,
+            14,
+            12,
+            91,
+            8,
+            8,
+            16,
+            58,
+            12,
+            17,
+            6,
+            15,
+            16,
             9
           ]
         },
@@ -1396,6 +1486,24 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1804,6 +1912,41 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "onCheckCode": [
@@ -2137,6 +2280,42 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -3451,6 +3630,23 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -3658,7 +3854,25 @@
             1,
             1,
             1,
-            0
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
           ],
           "addRuntimePlugin": [
             0,
@@ -3825,6 +4039,24 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -4074,6 +4306,24 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -4499,6 +4749,42 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -4722,7 +5008,25 @@
             15,
             32,
             24,
-            10
+            10,
+            10,
+            13,
+            10,
+            11,
+            7,
+            11,
+            6,
+            28,
+            13,
+            8,
+            10,
+            22,
+            17,
+            7,
+            6,
+            106,
+            11,
+            8
           ],
           "addPolyfillImports": [
             0,
@@ -5098,6 +5402,42 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -5503,6 +5843,42 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -5684,6 +6060,24 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -5942,6 +6336,24 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
             0,
             0
           ],
@@ -6344,6 +6756,42 @@
             10,
             2,
             6,
+            0,
+            7,
+            2,
+            7,
+            0,
+            6,
+            0,
+            6,
+            1,
+            5,
+            1,
+            7,
+            1,
+            9,
+            1,
+            69,
+            10,
+            11,
+            1,
+            8,
+            0,
+            8,
+            1,
+            27,
+            0,
+            8,
+            1,
+            6,
+            1,
+            5,
+            1,
+            21,
+            1,
+            6,
+            0,
+            5,
             0
           ]
         },
@@ -6589,7 +7037,25 @@
             6,
             5,
             66,
-            7
+            7,
+            5,
+            5,
+            5,
+            5,
+            6,
+            5,
+            5,
+            31,
+            9,
+            5,
+            5,
+            10,
+            5,
+            7,
+            3,
+            14,
+            11,
+            5
           ]
         },
         "register": 1
@@ -6863,6 +7329,24 @@
             0,
             1,
             1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            8,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            3,
             1,
             1
           ]
@@ -7207,6 +7691,23 @@
             0,
             0,
             5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            5,
+            0,
+            0,
             0,
             0,
             0,
@@ -11014,12 +11515,12 @@
             "format": "esm"
           },
           "src/hooks/topicTypes.ts": {
-            "bytes": 5896,
+            "bytes": 6739,
             "imports": [],
             "format": "esm"
           },
           "src/hooks/useTopicRequests.ts": {
-            "bytes": 13199,
+            "bytes": 14269,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -11471,7 +11972,7 @@
             "format": "esm"
           },
           "src/pages/forum/components/TopicPostCard.tsx": {
-            "bytes": 48557,
+            "bytes": 49752,
             "imports": [
               {
                 "path": "react",
@@ -11568,7 +12069,7 @@
             "format": "esm"
           },
           "src/hooks/useUserCenterRequests.ts": {
-            "bytes": 8857,
+            "bytes": 9134,
             "imports": [
               {
                 "path": "react-query",
@@ -11589,6 +12090,11 @@
                 "path": "src/hooks/useDislikeRequests.ts",
                 "kind": "import-statement",
                 "original": "./useDislikeRequests"
+              },
+              {
+                "path": "src/hooks/useTopicRequests.ts",
+                "kind": "import-statement",
+                "original": "./useTopicRequests"
               },
               {
                 "path": "src/utils/requestUtils.ts",
@@ -12606,8 +13112,54 @@
             ],
             "format": "esm"
           },
+          "src/pages/profile/components/ProfileTopicFeed.tsx": {
+            "bytes": 8569,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/pages/forum/components/TopicPostCard.tsx",
+                "kind": "import-statement",
+                "original": "@/pages/forum/components/TopicPostCard"
+              },
+              {
+                "path": "src/components/common/state/PageState.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/state/PageState"
+              },
+              {
+                "path": "src/hooks/useTopicRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useTopicRequests"
+              },
+              {
+                "path": "src/hooks/useUserCenterRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useUserCenterRequests"
+              },
+              {
+                "path": "src/hooks/useDislikeRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useDislikeRequests"
+              },
+              {
+                "path": "src/hooks/useRequireAuth.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useRequireAuth"
+              },
+              {
+                "path": "src/utils/operationToast.ts",
+                "kind": "import-statement",
+                "original": "@/utils/operationToast"
+              }
+            ],
+            "format": "esm"
+          },
           "src/pages/profile/components/ProfilePage.tsx": {
-            "bytes": 36293,
+            "bytes": 31132,
             "imports": [
               {
                 "path": "react",
@@ -12630,6 +13182,16 @@
                 "original": "@/hooks/useUserCenterRequests"
               },
               {
+                "path": "src/hooks/topicTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/topicTypes"
+              },
+              {
+                "path": "src/hooks/useTopicRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useTopicRequests"
+              },
+              {
                 "path": "src/utils/authStorage.ts",
                 "kind": "import-statement",
                 "original": "@/utils/authStorage"
@@ -12648,6 +13210,11 @@
                 "path": "src/pages/profile/components/ProfilePetArchive.tsx",
                 "kind": "import-statement",
                 "original": "./ProfilePetArchive"
+              },
+              {
+                "path": "src/pages/profile/components/ProfileTopicFeed.tsx",
+                "kind": "import-statement",
+                "original": "./ProfileTopicFeed"
               }
             ],
             "format": "esm"
@@ -14010,6 +14577,11 @@
               },
               {
                 "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -15502,10 +16074,10 @@
                 "bytesInOutput": 331
               },
               "src/hooks/topicTypes.ts": {
-                "bytesInOutput": 2518
+                "bytesInOutput": 3024
               },
               "src/hooks/useTopicRequests.ts": {
-                "bytesInOutput": 3716
+                "bytesInOutput": 4562
               },
               "src/pages/event-battle/components/eventBattleThemes.ts": {
                 "bytesInOutput": 8286
@@ -15568,10 +16140,10 @@
                 "bytesInOutput": 25847
               },
               "src/pages/forum/components/TopicPostCard.tsx": {
-                "bytesInOutput": 49038
+                "bytesInOutput": 50189
               },
               "src/api/userApi.ts": {
-                "bytesInOutput": 653
+                "bytesInOutput": 300
               },
               "src/api/dislikeApi.ts": {
                 "bytesInOutput": 208
@@ -15580,7 +16152,7 @@
                 "bytesInOutput": 1662
               },
               "src/hooks/useUserCenterRequests.ts": {
-                "bytesInOutput": 6469
+                "bytesInOutput": 4406
               },
               "src/api/tagApi.ts": {
                 "bytesInOutput": 114
@@ -15622,7 +16194,7 @@
                 "bytesInOutput": 594
               },
               "src/utils/operationToast.ts": {
-                "bytesInOutput": 719
+                "bytesInOutput": 1671
               },
               "src/hooks/battleTypes.ts": {
                 "bytesInOutput": 6656
@@ -15717,8 +16289,11 @@
               "src/pages/profile/components/ProfilePetArchive.tsx": {
                 "bytesInOutput": 6829
               },
+              "src/pages/profile/components/ProfileTopicFeed.tsx": {
+                "bytesInOutput": 7494
+              },
               "src/pages/profile/components/ProfilePage.tsx": {
-                "bytesInOutput": 36231
+                "bytesInOutput": 30839
               },
               "src/pages/profile/components/ProfilePageView.tsx": {
                 "bytesInOutput": 346
@@ -15781,7 +16356,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1059138
+            "bytes": 1062333
           }
         }
       }
@@ -22958,7 +23533,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 912,
+          "end": 969,
           "importKind": "type",
           "source": "./topicTypes",
           "specifiers": [
@@ -22975,6 +23550,11 @@
             {
               "imported": "EditTopicPayload",
               "local": "EditTopicPayload",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "ProfileTopicListParams",
+              "local": "ProfileTopicListParams",
               "type": "ImportSpecifier"
             },
             {
@@ -23042,7 +23622,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 1015,
+          "end": 1072,
           "importKind": "value",
           "source": "./topicTypes",
           "specifiers": [
@@ -23062,11 +23642,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 913,
+          "start": 970,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1094,
+          "end": 1151,
           "importKind": "value",
           "source": "@/utils/requestUtils",
           "specifiers": [
@@ -23081,11 +23661,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1016,
+          "start": 1073,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1158,
+          "end": 1215,
           "importKind": "value",
           "source": "@/api/authApi",
           "specifiers": [
@@ -23100,7 +23680,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1095,
+          "start": 1152,
           "type": "ImportDeclaration"
         }
       ],
@@ -23202,7 +23782,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 613,
+          "end": 603,
+          "importKind": "value",
+          "source": "./useTopicRequests",
+          "specifiers": [
+            {
+              "imported": "PROFILE_TOPIC_TOPICS_QUERY_KEY",
+              "local": "PROFILE_TOPIC_TOPICS_QUERY_KEY",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 535,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 682,
           "importKind": "value",
           "source": "@/utils/requestUtils",
           "specifiers": [
@@ -23217,11 +23811,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 535,
+          "start": 604,
           "type": "ImportDeclaration"
         },
         {
-          "end": 895,
+          "end": 964,
           "importKind": "type",
           "source": "./userCenterTypes",
           "specifiers": [
@@ -23271,7 +23865,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 614,
+          "start": 683,
           "type": "ImportDeclaration"
         }
       ],
@@ -25693,7 +26287,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 394,
+          "end": 401,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
@@ -25758,6 +26352,11 @@
               "type": "ImportSpecifier"
             },
             {
+              "imported": "Eye",
+              "local": "Eye",
+              "type": "ImportSpecifier"
+            },
+            {
               "imported": "EyeClosed",
               "local": "EyeClosed",
               "type": "ImportSpecifier"
@@ -25767,7 +26366,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 421,
+          "end": 428,
           "importKind": "value",
           "source": "dayjs",
           "specifiers": [
@@ -25776,11 +26375,11 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 395,
+          "start": 402,
           "type": "ImportDeclaration"
         },
         {
-          "end": 475,
+          "end": 482,
           "importKind": "value",
           "source": "dayjs/plugin/relativeTime",
           "specifiers": [
@@ -25789,19 +26388,19 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 422,
+          "start": 429,
           "type": "ImportDeclaration"
         },
         {
-          "end": 504,
+          "end": 511,
           "importKind": "value",
           "source": "dayjs/locale/zh-cn",
           "specifiers": [],
-          "start": 476,
+          "start": 483,
           "type": "ImportDeclaration"
         },
         {
-          "end": 561,
+          "end": 568,
           "importKind": "type",
           "source": "@/hooks/topicTypes",
           "specifiers": [
@@ -25811,11 +26410,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 505,
+          "start": 512,
           "type": "ImportDeclaration"
         },
         {
-          "end": 609,
+          "end": 616,
           "importKind": "value",
           "source": "./forumTags",
           "specifiers": [
@@ -25825,11 +26424,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 562,
+          "start": 569,
           "type": "ImportDeclaration"
         },
         {
-          "end": 657,
+          "end": 664,
           "importKind": "value",
           "source": "@/config",
           "specifiers": [
@@ -25839,11 +26438,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 610,
+          "start": 617,
           "type": "ImportDeclaration"
         },
         {
-          "end": 715,
+          "end": 722,
           "importKind": "value",
           "source": "@/utils/userAvatar",
           "specifiers": [
@@ -25853,11 +26452,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 658,
+          "start": 665,
           "type": "ImportDeclaration"
         },
         {
-          "end": 780,
+          "end": 787,
           "importKind": "value",
           "source": "@/hooks/useAuthRequests",
           "specifiers": [
@@ -25867,11 +26466,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 716,
+          "start": 723,
           "type": "ImportDeclaration"
         },
         {
-          "end": 925,
+          "end": 932,
           "importKind": "value",
           "source": "@/hooks/useCommentRequests",
           "specifiers": [
@@ -25896,11 +26495,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 781,
+          "start": 788,
           "type": "ImportDeclaration"
         },
         {
-          "end": 986,
+          "end": 993,
           "importKind": "type",
           "source": "./predictionCards",
           "specifiers": [
@@ -25910,7 +26509,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 926,
+          "start": 933,
           "type": "ImportDeclaration"
         }
       ],
@@ -27913,7 +28512,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 662,
+          "end": 442,
           "importKind": "value",
           "source": "@/hooks/useUserCenterRequests",
           "specifiers": [
@@ -27921,43 +28520,13 @@
               "imported": "useInfiniteRequestUserCenterComments",
               "local": "useInfiniteRequestUserCenterComments",
               "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useInfiniteRequestUserCenterFavorites",
-              "local": "useInfiniteRequestUserCenterFavorites",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useInfiniteRequestUserCenterHiddenTopics",
-              "local": "useInfiniteRequestUserCenterHiddenTopics",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useInfiniteRequestUserCenterDislikes",
-              "local": "useInfiniteRequestUserCenterDislikes",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useInfiniteRequestUserCenterTopics",
-              "local": "useInfiniteRequestUserCenterTopics",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useMutateUserTopicHide",
-              "local": "useMutateUserTopicHide",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useMutateUserTopicUnhide",
-              "local": "useMutateUserTopicUnhide",
-              "type": "ImportSpecifier"
             }
           ],
           "start": 357,
           "type": "ImportDeclaration"
         },
         {
-          "end": 856,
+          "end": 516,
           "importKind": "type",
           "source": "@/hooks/userCenterTypes",
           "specifiers": [
@@ -27965,33 +28534,51 @@
               "imported": "UserCenterCommentResponse",
               "local": "UserCenterCommentResponse",
               "type": "ImportSpecifier"
-            },
-            {
-              "imported": "UserCenterFavoriteResponse",
-              "local": "UserCenterFavoriteResponse",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "UserCenterHideTopicResponse",
-              "local": "UserCenterHideTopicResponse",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "UserCenterDislikeResponse",
-              "local": "UserCenterDislikeResponse",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "UserCenterTopicResponse",
-              "local": "UserCenterTopicResponse",
-              "type": "ImportSpecifier"
             }
           ],
-          "start": 663,
+          "start": 443,
           "type": "ImportDeclaration"
         },
         {
-          "end": 927,
+          "end": 620,
+          "importKind": "value",
+          "source": "@/hooks/topicTypes",
+          "specifiers": [
+            {
+              "imported": "TOPIC_BUSINESS_TYPE",
+              "local": "TOPIC_BUSINESS_TYPE",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "CursorResult",
+              "local": "CursorResult",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "TopicResponse",
+              "local": "TopicResponse",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 517,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 701,
+          "importKind": "value",
+          "source": "@/hooks/useTopicRequests",
+          "specifiers": [
+            {
+              "imported": "useInfiniteRequestProfileTopicTopics",
+              "local": "useInfiniteRequestProfileTopicTopics",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 621,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 772,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -28006,11 +28593,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 857,
+          "start": 702,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1011,
+          "end": 856,
           "importKind": "value",
           "source": "@/components/common/pet/petTypes",
           "specifiers": [
@@ -28025,11 +28612,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 928,
+          "start": 773,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1099,
+          "end": 944,
           "importKind": "value",
           "source": "@/components/common/state/PageState",
           "specifiers": [
@@ -28044,11 +28631,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1012,
+          "start": 857,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1156,
+          "end": 1001,
           "importKind": "value",
           "source": "./ProfilePetArchive",
           "specifiers": [
@@ -28058,7 +28645,21 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1100,
+          "start": 945,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1056,
+          "importKind": "value",
+          "source": "./ProfileTopicFeed",
+          "specifiers": [
+            {
+              "imported": "ProfileTopicFeed",
+              "local": "ProfileTopicFeed",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1002,
           "type": "ImportDeclaration"
         }
       ],
@@ -28218,6 +28819,192 @@
             }
           ],
           "start": 517,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/profile/components/ProfileTopicFeed.tsx": [
+        {
+          "end": 135,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useState",
+              "local": "useState",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 93,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 194,
+          "importKind": "type",
+          "source": "react-query",
+          "specifiers": [
+            {
+              "imported": "UseInfiniteQueryResult",
+              "local": "UseInfiniteQueryResult",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 136,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 266,
+          "importKind": "value",
+          "source": "@/pages/forum/components/TopicPostCard",
+          "specifiers": [
+            {
+              "imported": "TopicPostCard",
+              "local": "TopicPostCard",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 195,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 350,
+          "importKind": "type",
+          "source": "@/pages/forum/components/predictionCards",
+          "specifiers": [
+            {
+              "imported": "PredictionCardItem",
+              "local": "PredictionCardItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 267,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 419,
+          "importKind": "value",
+          "source": "@/components/common/state/PageState",
+          "specifiers": [
+            {
+              "imported": "EmptyDataPage",
+              "local": "EmptyDataPage",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 351,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 490,
+          "importKind": "type",
+          "source": "@/hooks/topicTypes",
+          "specifiers": [
+            {
+              "imported": "CursorResult",
+              "local": "CursorResult",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "TopicResponse",
+              "local": "TopicResponse",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 420,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 611,
+          "importKind": "value",
+          "source": "@/hooks/useTopicRequests",
+          "specifiers": [
+            {
+              "imported": "useRequestFavoriteTopic",
+              "local": "useRequestFavoriteTopic",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRequestLikeEntity",
+              "local": "useRequestLikeEntity",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRequestUnlikeEntity",
+              "local": "useRequestUnlikeEntity",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 491,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 709,
+          "importKind": "value",
+          "source": "@/hooks/useUserCenterRequests",
+          "specifiers": [
+            {
+              "imported": "useMutateUserTopicHide",
+              "local": "useMutateUserTopicHide",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMutateUserTopicUnhide",
+              "local": "useMutateUserTopicUnhide",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 612,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 802,
+          "importKind": "value",
+          "source": "@/hooks/useDislikeRequests",
+          "specifiers": [
+            {
+              "imported": "useMutateDislikeTopic",
+              "local": "useMutateDislikeTopic",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMutateUndislikeTopic",
+              "local": "useMutateUndislikeTopic",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 710,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 859,
+          "importKind": "value",
+          "source": "@/hooks/useRequireAuth",
+          "specifiers": [
+            {
+              "imported": "useRequireAuth",
+              "local": "useRequireAuth",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 803,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 931,
+          "importKind": "value",
+          "source": "@/utils/operationToast",
+          "specifiers": [
+            {
+              "imported": "showOperationErrorFromUnknown",
+              "local": "showOperationErrorFromUnknown",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 860,
           "type": "ImportDeclaration"
         }
       ],
