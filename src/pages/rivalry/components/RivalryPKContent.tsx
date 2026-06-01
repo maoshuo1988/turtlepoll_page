@@ -20,6 +20,13 @@ import {
 import type { PKPhase, PKRoundResult, PKTopicState, RivalryNewsItem } from './rivalryTypes';
 import { RivalryBetModal } from './RivalryBetModal';
 import { HeroBattleRail } from './HeroBattleRail';
+import {
+  HERO_PK_GRID_MIN_HEIGHT,
+  HERO_PK_MOBILE_GRID_MIN_HEIGHT,
+  HERO_PK_MOBILE_STAGE_MAX_HEIGHT,
+  HERO_PK_MOBILE_STAGE_MAX_WIDTH,
+} from './heroPkLayout';
+import { resolveHeroPkBackground, resolveRivalryMediaUrl } from './rivalryMedia';
 import { useRequestPKHistory, useRequestPKSeasons, useRequestPKTopics } from '@/hooks/usePkRequests';
 import type { PKRound as ApiPKRound, PKSeason as ApiPKSeason, PKTopicSummary } from '@/hooks/pkTypes';
 
@@ -329,7 +336,17 @@ function mapTopicSummaryToPK(summary: PKTopicSummary, index: number): RivalryPKS
   const sideB = topic.sideBName || '反方';
   const heatA = asNumber(round?.heatA);
   const heatB = asNumber(round?.heatB);
-  const cover = topic.cover?.trim() || topic.listImage?.trim() || fallbackImages[index % fallbackImages.length];
+  const topicExtra = topic as typeof topic & Record<string, unknown>;
+  const coverUrl = [topic.cover, topicExtra.coverUrl, topicExtra.cover_image]
+    .find((value): value is string => typeof value === 'string' && value.trim().length > 0)
+    ?.trim();
+  const listUrl = [topic.listImage, topicExtra?.list_image]
+    .find((value): value is string => typeof value === 'string' && value.trim().length > 0)
+    ?.trim();
+  const displayImage =
+    resolveRivalryMediaUrl(coverUrl) ||
+    resolveRivalryMediaUrl(listUrl) ||
+    fallbackImages[index % fallbackImages.length];
 
   return {
     id: String(topic.id),
@@ -340,8 +357,9 @@ function mapTopicSummaryToPK(summary: PKTopicSummary, index: number): RivalryPKS
       marketId: Number(topic.id),
       title,
       summary: summary.streakStatus || '',
-      image: cover,
-      listImage: topic.listImage?.trim() || cover,
+      image: displayImage,
+      coverImage: coverUrl || undefined,
+      listImage: listUrl || coverUrl || undefined,
       sideABgImage: topic.sideABgImage?.trim(),
       sideBBgImage: topic.sideBBgImage?.trim(),
       sideABgColor: topic.sideABgColor?.trim(),
@@ -535,10 +553,10 @@ function HeroSidePanel({
 
   return (
     <div
-      className={`relative min-h-[390px] overflow-hidden rounded-[26px] bg-transparent px-5 py-6 max-lg:min-h-0 max-lg:px-4 max-lg:py-4 ${
+      className={`relative w-full min-h-[390px] overflow-hidden rounded-[26px] bg-transparent px-5 py-6 max-lg:min-h-0 max-lg:rounded-[18px] max-lg:px-3 max-lg:py-3 ${
         isA
           ? 'text-left shadow-[0_0_48px_rgba(255,70,16,0.2),inset_26px_0_42px_rgba(255,90,22,0.16)]'
-          : 'text-right shadow-[0_0_48px_rgba(24,187,255,0.2),inset_-26px_0_42px_rgba(40,199,255,0.14)]'
+          : 'ml-auto max-w-full text-right shadow-[0_0_48px_rgba(24,187,255,0.2),inset_-26px_0_42px_rgba(40,199,255,0.14)]'
       }`}
     >
       <div
@@ -549,7 +567,7 @@ function HeroSidePanel({
         }`}
       />
       <motion.span
-        className="pointer-events-none absolute top-0 z-20 h-[2px] rounded-full"
+        className="pointer-events-none absolute top-0 z-20 h-[2px] rounded-full max-lg:hidden"
         style={{
           left: isA ? 0 : '18%',
           right: isA ? '18%' : 0,
@@ -562,7 +580,7 @@ function HeroSidePanel({
         transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.span
-        className="pointer-events-none absolute bottom-0 z-20 h-[2px] rounded-full"
+        className="pointer-events-none absolute bottom-0 z-20 h-[2px] rounded-full max-lg:hidden"
         style={{
           left: isA ? 0 : '18%',
           right: isA ? '18%' : 0,
@@ -575,7 +593,7 @@ function HeroSidePanel({
         transition={{ duration: 2.15, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.span
-        className={`pointer-events-none absolute top-4 bottom-4 z-20 w-[2px] rounded-full ${isA ? 'left-0' : 'right-0'}`}
+        className={`pointer-events-none absolute top-4 bottom-4 z-20 w-[2px] rounded-full max-lg:hidden ${isA ? 'left-0' : 'right-0'}`}
         style={{
           background: `linear-gradient(180deg, transparent, ${theme.accent} 18%, ${theme.primary} 52%, ${theme.accent} 82%, transparent)`,
           boxShadow: `0 0 18px ${theme.accent}, 0 0 34px ${theme.primary}`,
@@ -584,41 +602,55 @@ function HeroSidePanel({
         transition={{ duration: 1.55, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.span
-        className={`pointer-events-none absolute top-0 z-[21] h-[2px] w-24 rounded-full bg-white/80 blur-[1px] ${isA ? 'left-0' : 'right-0'}`}
+        className={`pointer-events-none absolute top-0 z-[21] h-[2px] w-24 rounded-full bg-white/80 blur-[1px] max-lg:hidden ${isA ? 'left-0' : 'right-0'}`}
         animate={{ x: isA ? ['-70%', '250%'] : ['70%', '-250%'], opacity: [0, 1, 0] }}
         transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.span
-        className={`pointer-events-none absolute bottom-0 z-[21] h-[2px] w-20 rounded-full bg-white/70 blur-[1px] ${isA ? 'left-0' : 'right-0'}`}
+        className={`pointer-events-none absolute bottom-0 z-[21] h-[2px] w-20 rounded-full bg-white/70 blur-[1px] max-lg:hidden ${isA ? 'left-0' : 'right-0'}`}
         animate={{ x: isA ? ['-40%', '220%'] : ['40%', '-220%'], opacity: [0, 0.86, 0] }}
         transition={{ duration: 2.75, repeat: Infinity, ease: 'easeInOut', delay: 0.45 }}
       />
-      <div className="pointer-events-none absolute inset-x-5 top-[72px] z-20 h-px bg-white/8" />
-      <div className="relative z-30">
-        <div className={`mb-8 flex items-center gap-2 max-lg:mb-4 ${isA ? '' : 'justify-end'}`}>
-          <Zap size={24} style={{ color: theme.accent, filter: `drop-shadow(0 0 12px ${theme.accent})` }} />
-          <span className="max-w-full truncate text-[25px] font-black italic tracking-[-0.05em] text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.16)] max-xl:text-[21px] max-lg:text-[17px]">
-            {label}更强
-          </span>
+      <div className="pointer-events-none absolute inset-x-5 top-[72px] z-20 h-px bg-white/8 max-lg:hidden" />
+      <div className={`relative z-30 flex w-full flex-col ${isA ? 'items-start' : 'items-end'}`}>
+        <div
+          className={`mb-8 flex w-full items-center gap-2 ${isA ? '' : 'justify-end'} max-lg:mb-2 max-lg:gap-1.5 ${isA ? 'max-lg:flex-row max-lg:justify-between' : 'max-lg:flex-row max-lg:justify-end'}`}
+        >
+          <div className={`flex min-w-0 items-center gap-2 ${isA ? '' : 'flex-row-reverse max-lg:flex-row'}`}>
+            <Zap size={24} className="max-lg:h-4 max-lg:w-4" style={{ color: theme.accent, filter: `drop-shadow(0 0 12px ${theme.accent})` }} />
+            <span className="max-w-full truncate text-[25px] font-black italic tracking-[-0.05em] text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.16)] max-xl:text-[21px] max-lg:text-[13px] max-lg:not-italic">
+              <span className="max-lg:hidden">{label}更强</span>
+              <span className="hidden max-lg:inline">{label}</span>
+            </span>
+          </div>
+          <div
+            className="hidden shrink-0 font-black leading-none tracking-[-0.06em] max-lg:block max-lg:text-[28px]"
+            style={{ color: theme.accent, textShadow: `0 0 16px ${theme.primary}` }}
+          >
+            {pct}
+            <span className="ml-0.5 text-[14px]">%</span>
+          </div>
         </div>
 
-        <div className="mb-2 text-[14px] font-bold text-white/68 max-lg:text-[12px]">支持率</div>
+        <div className="mb-2 text-[14px] font-bold text-white/68 max-lg:hidden">支持率</div>
         <div
-          className="mb-1 text-[64px] font-black leading-none tracking-[-0.09em] max-xl:text-[52px] max-lg:text-[38px]"
+          className="mb-1 text-[64px] font-black leading-none tracking-[-0.09em] max-xl:text-[52px] max-lg:hidden"
           style={{ color: theme.accent, textShadow: `0 0 28px ${theme.primary}` }}
         >
           {pct}
-          <span className="ml-1 text-[28px] tracking-[-0.04em] max-lg:text-[18px]">%</span>
+          <span className="ml-1 text-[28px] tracking-[-0.04em]">%</span>
         </div>
-        <div className="mb-8 text-[18px] font-black tabular-nums text-white/88 max-lg:mb-4 max-lg:text-[13px]">
+        <div
+          className={`mb-8 w-full text-[18px] font-black tabular-nums text-white/88 max-lg:mb-2 max-lg:text-[11px] max-lg:leading-tight ${isA ? '' : 'text-right'}`}
+        >
           {supportText}
         </div>
 
-        <div className={`mb-8 flex flex-col gap-2 max-lg:mb-4 ${isA ? 'items-start' : 'items-end'}`}>
+        <div className={`mb-8 flex flex-col gap-2 max-lg:hidden ${isA ? 'items-start' : 'items-end'}`}>
           {railItems.map((text) => (
             <span
               key={text}
-              className="max-w-full truncate rounded-full border border-white/10 bg-black/22 px-4 py-1.5 text-[12px] font-black text-white/58 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] max-lg:px-3 max-lg:text-[10px]"
+              className="max-w-full truncate rounded-full border border-white/10 bg-black/22 px-4 py-1.5 text-[12px] font-black text-white/58 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
               title={text}
             >
               {text}
@@ -626,12 +658,18 @@ function HeroSidePanel({
           ))}
         </div>
 
+        <p className={`mb-2 hidden text-[10px] font-bold text-white/50 max-lg:block ${isA ? 'text-left' : 'text-right'}`}>
+          {odds.toFixed(2)} × 赔率 · {active ? '已站队' : '等待站队'}
+        </p>
+
         <button
           type="button"
           onClick={onClick}
           disabled={disabled}
-          className={`inline-flex h-[52px] min-w-[176px] items-center justify-center rounded-[17px] border px-6 text-[16px] font-black text-white transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 max-lg:h-11 max-lg:min-w-0 max-lg:w-full max-lg:px-3 max-lg:text-[13px] ${
-            isA ? 'shadow-[0_0_30px_rgba(255,77,22,0.34)]' : 'shadow-[0_0_30px_rgba(28,190,255,0.32)]'
+          className={`inline-flex h-[52px] min-w-[176px] items-center justify-center rounded-[17px] border px-6 text-[16px] font-black text-white transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 max-lg:h-9 max-lg:min-w-[7.5rem] max-lg:rounded-[14px] max-lg:px-2 max-lg:text-[12px] ${
+            isA
+              ? 'max-lg:w-full max-lg:min-w-0 shadow-[0_0_30px_rgba(255,77,22,0.34)]'
+              : 'max-lg:w-auto max-lg:max-w-full shadow-[0_0_30px_rgba(28,190,255,0.32)]'
           }`}
           style={{
             borderColor: `${theme.accent}66`,
@@ -667,9 +705,11 @@ function HeroBottomCard({
   }[tone];
 
   return (
-    <div className={`relative flex h-full min-h-[184px] flex-col overflow-hidden rounded-[22px] border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_40px_rgba(0,0,0,0.24)] ${toneClass} ${className}`}>
+    <div
+      className={`relative flex h-full min-h-[184px] flex-col overflow-hidden rounded-[22px] border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_40px_rgba(0,0,0,0.24)] max-lg:min-h-0 max-lg:p-3 ${toneClass} ${className}`}
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_0%,rgba(255,255,255,0.12),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent_48%)]" />
-      <div className="relative mb-4 flex items-center gap-2 text-[15px] font-black">
+      <div className="relative mb-4 flex items-center gap-2 text-[15px] font-black max-lg:mb-2 max-lg:text-[13px]">
         {icon}
         {title}
       </div>
@@ -729,6 +769,8 @@ function HeroPK({
       : heatTotal.toFixed(1);
   const leading = pk.currentHeatA > pk.currentHeatB ? 'A' : pk.currentHeatB > pk.currentHeatA ? 'B' : null;
   const theme = getRivalryVisualTheme(item);
+  const heroBackground = resolveHeroPkBackground(item, theme.sideA.portrait, theme.sideB.portrait);
+  const useCoverBackground = heroBackground.mode === 'cover';
   const heroTheme = {
     sideA: { ...theme.sideA, primary: '#f04a1f', accent: '#ffc15d' },
     sideB: { ...theme.sideB, primary: '#0789ff', accent: '#62efff' },
@@ -780,28 +822,53 @@ function HeroPK({
       initial={{ opacity: 0, y: 22, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[30px] border border-white/10 bg-[#04070d] text-white shadow-[0_24px_78px_rgba(0,0,0,0.52),inset_0_1px_0_rgba(255,255,255,0.08)] max-lg:rounded-[22px]"
+      className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[30px] border border-white/10 bg-[#04070d] text-white shadow-[0_24px_78px_rgba(0,0,0,0.52),inset_0_1px_0_rgba(255,255,255,0.08)] max-lg:rounded-[20px]"
     >
       <div className="absolute inset-0">
-        <img src={item.image} alt="" className="h-full w-full object-cover opacity-28 mix-blend-screen" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(255,242,189,0.16),transparent_28%),linear-gradient(90deg,rgba(78,13,4,0.98)_0%,rgba(37,10,8,0.82)_32%,rgba(5,8,15,0.86)_50%,rgba(4,32,70,0.9)_68%,rgba(3,11,28,0.98)_100%)]" />
-        <div className="absolute inset-y-0 left-0 w-[58%] bg-[radial-gradient(circle_at_24%_45%,rgba(255,85,20,0.58),transparent_34%),linear-gradient(90deg,rgba(255,42,16,0.24),transparent_76%)]" />
-        <div className="absolute inset-y-0 right-0 w-[58%] bg-[radial-gradient(circle_at_76%_45%,rgba(21,180,255,0.56),transparent_36%),linear-gradient(270deg,rgba(13,151,255,0.26),transparent_76%)]" />
-        <img
-          src={theme.sideA.portrait}
-          alt=""
-          className="pointer-events-none absolute left-0 top-0 h-full w-[45%] object-cover object-left-top saturate-125 [mask-image:linear-gradient(90deg,black_0%,black_46%,rgba(0,0,0,0.72)_64%,transparent_100%)] max-lg:hidden"
+        {heroBackground.mode === 'cover' ? (
+          <>
+            <img
+              src={heroBackground.coverSrc}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/30" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-[#04070d]" />
+            <img
+              src={heroBackground.sideASrc}
+              alt=""
+              className="pointer-events-none absolute left-0 top-0 h-full w-[48%] object-cover object-left-top saturate-125 opacity-90 [mask-image:linear-gradient(90deg,black_0%,black_42%,rgba(0,0,0,0.65)_62%,transparent_100%)] max-lg:w-[50%] max-lg:opacity-85"
+            />
+            <img
+              src={heroBackground.sideBSrc}
+              alt=""
+              className="pointer-events-none absolute right-0 top-0 h-full w-[48%] object-cover object-right-top saturate-125 opacity-90 [mask-image:linear-gradient(270deg,black_0%,black_42%,rgba(0,0,0,0.65)_62%,transparent_100%)] max-lg:w-[50%] max-lg:opacity-85"
+            />
+          </>
+        )}
+        <div
+          className={`absolute inset-0 ${
+            useCoverBackground
+              ? 'bg-[radial-gradient(circle_at_50%_8%,rgba(255,242,189,0.12),transparent_32%),linear-gradient(90deg,rgba(78,13,4,0.55)_0%,rgba(37,10,8,0.45)_32%,rgba(5,8,15,0.42)_50%,rgba(4,32,70,0.48)_68%,rgba(3,11,28,0.62)_100%)]'
+              : 'bg-[radial-gradient(circle_at_50%_8%,rgba(255,242,189,0.16),transparent_28%),linear-gradient(90deg,rgba(78,13,4,0.98)_0%,rgba(37,10,8,0.82)_32%,rgba(5,8,15,0.86)_50%,rgba(4,32,70,0.9)_68%,rgba(3,11,28,0.98)_100%)]'
+          }`}
         />
-        <img
-          src={theme.sideB.portrait}
-          alt=""
-          className="pointer-events-none absolute right-0 top-0 h-full w-[45%] object-cover object-right-top saturate-125 [mask-image:linear-gradient(270deg,black_0%,black_46%,rgba(0,0,0,0.72)_64%,transparent_100%)] max-lg:hidden"
+        <div
+          className={`absolute inset-y-0 left-0 w-[58%] bg-[radial-gradient(circle_at_24%_45%,rgba(255,85,20,0.58),transparent_34%),linear-gradient(90deg,rgba(255,42,16,0.24),transparent_76%)] ${useCoverBackground ? 'opacity-45' : 'opacity-95'}`}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.05)_56%,rgba(0,0,0,0.58)_100%)]" />
+        <div
+          className={`absolute inset-y-0 right-0 w-[58%] bg-[radial-gradient(circle_at_76%_45%,rgba(21,180,255,0.56),transparent_36%),linear-gradient(270deg,rgba(13,151,255,0.26),transparent_76%)] ${useCoverBackground ? 'opacity-45' : 'opacity-95'}`}
+        />
+        <div
+          className={`absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.06)_0%,rgba(0,0,0,0.04)_56%,rgba(0,0,0,0.5)_100%)] ${useCoverBackground ? 'opacity-90' : ''}`}
+        />
         <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.035)_0,rgba(255,255,255,0.035)_1px,transparent_1px,transparent_96px)] opacity-35" />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden max-lg:hidden">
         {heroParticles.map((particle) => (
           <motion.span
             key={particle.id}
@@ -825,8 +892,14 @@ function HeroPK({
         ))}
       </div>
 
-      <div className="relative grid min-h-[680px] grid-cols-[282px_minmax(0,1fr)_282px] gap-5 px-8 py-8 max-xl:grid-cols-[238px_minmax(0,1fr)_238px] max-lg:min-h-0 max-lg:grid-cols-1 max-lg:px-4 max-lg:py-4">
-        <div className="flex items-center max-lg:order-2">
+      <div
+        className="relative grid min-h-[var(--hero-pk-grid-min-h)] auto-rows-min grid-cols-[282px_minmax(0,1fr)_282px] gap-5 px-8 py-8 max-xl:grid-cols-[238px_minmax(0,1fr)_238px] max-lg:min-h-[var(--hero-pk-grid-min-h-mobile)] max-lg:grid-cols-2 max-lg:gap-2 max-lg:px-3 max-lg:py-3"
+        style={{
+          ['--hero-pk-grid-min-h' as string]: HERO_PK_GRID_MIN_HEIGHT,
+          ['--hero-pk-grid-min-h-mobile' as string]: HERO_PK_MOBILE_GRID_MIN_HEIGHT,
+        }}
+      >
+        <div className="col-start-1 row-start-1 flex w-full items-center justify-start max-lg:col-start-1 max-lg:row-start-2">
           <HeroSidePanel
             side="A"
             label={item.optionA}
@@ -841,63 +914,71 @@ function HeroPK({
           />
         </div>
 
-        <div className="flex min-w-0 flex-col items-center justify-center pt-2 text-center max-lg:order-1">
-          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#ffb15a]/40 bg-[#b91c1c]/78 px-6 py-2 text-[20px] font-black italic text-[#fff7d6] shadow-[0_0_22px_rgba(255,78,41,0.34)] max-lg:px-3 max-lg:py-1.5 max-lg:text-[13px]">
-              <Flame size={20} />
+        <div
+          className="col-start-2 row-start-1 flex min-w-0 w-full flex-col items-center justify-center pt-2 text-center max-lg:col-span-2 max-lg:col-start-1 max-lg:row-start-1 max-lg:mx-auto max-lg:max-h-[var(--hero-pk-mobile-stage-max-h)] max-lg:max-w-[min(100%,var(--hero-pk-mobile-stage-max))] max-lg:overflow-y-auto max-lg:overscroll-contain max-lg:pt-0 max-lg:pb-0 max-lg:[scrollbar-width:none] max-lg:[&::-webkit-scrollbar]:hidden"
+          style={{
+            ['--hero-pk-mobile-stage-max' as string]: HERO_PK_MOBILE_STAGE_MAX_WIDTH,
+            ['--hero-pk-mobile-stage-max-h' as string]: HERO_PK_MOBILE_STAGE_MAX_HEIGHT,
+          }}
+        >
+          <div className="mb-4 flex flex-wrap items-center justify-center gap-2 max-lg:mb-1.5 max-lg:gap-1">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#ffb15a]/40 bg-[#b91c1c]/78 px-6 py-2 text-[20px] font-black italic text-[#fff7d6] shadow-[0_0_22px_rgba(255,78,41,0.34)] max-lg:px-2.5 max-lg:py-1 max-lg:text-[11px]">
+              <Flame size={20} className="max-lg:h-3.5 max-lg:w-3.5" />
               全网热议 TOP1
             </span>
             <PhaseTag phase={pk.phase} />
           </div>
 
           <h1
-            className="mb-3 max-w-[760px] text-[82px] font-black leading-[0.92] tracking-[-0.09em] text-[#fff3dd] max-xl:text-[60px] max-lg:text-[38px]"
+            className="mb-3 max-w-[760px] line-clamp-2 text-[82px] font-black leading-[0.92] tracking-[-0.09em] text-[#fff3dd] max-xl:text-[60px] max-lg:mb-1.5 max-lg:text-[26px] max-lg:leading-[1.02]"
             style={{ textShadow: '0 4px 0 rgba(116,38,8,0.58), 0 0 30px rgba(255,119,45,0.4), 0 0 38px rgba(76,220,255,0.18)' }}
           >
             {item.title}
           </h1>
 
-          <p className="mb-5 max-w-[660px] text-[23px] font-black italic tracking-[-0.045em] text-[#f8d3a3] drop-shadow-[0_2px_10px_rgba(0,0,0,0.68)] max-lg:text-[15px]">
+          <p className="mb-5 max-w-[660px] text-[23px] font-black italic tracking-[-0.045em] text-[#f8d3a3] drop-shadow-[0_2px_10px_rgba(0,0,0,0.68)] max-lg:mb-2 max-lg:line-clamp-1 max-lg:text-[12px] max-lg:leading-snug max-lg:not-italic">
             {item.summary || `${item.optionA} vs ${item.optionB}，谁才是最强阵营？`}
           </p>
 
-          <div className="mb-5 inline-flex flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/44 px-6 py-3 text-[17px] font-black text-white/88 shadow-[0_0_30px_rgba(0,0,0,0.42)] backdrop-blur-md max-lg:gap-2 max-lg:px-3 max-lg:py-2 max-lg:text-[12px]">
-            <span className="inline-flex items-center gap-2">
-              <Flame size={18} className="text-[#ffb15a]" />
-              {liveMetricLabel}
+          <div className="mb-5 inline-flex max-w-full flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/44 px-6 py-3 text-[17px] font-black text-white/88 shadow-[0_0_30px_rgba(0,0,0,0.42)] backdrop-blur-md max-lg:mb-2 max-lg:gap-1.5 max-lg:px-2.5 max-lg:py-1.5 max-lg:text-[11px]">
+            <span className="inline-flex items-center gap-1.5">
+              <Flame size={18} className="text-[#ffb15a] max-lg:h-3 max-lg:w-3" />
+              <span className="max-lg:truncate">{liveMetricLabel}</span>
             </span>
             <span className="h-5 w-px bg-white/16 max-lg:hidden" />
-            <span className="inline-flex items-center gap-2 text-[#ffd28a]">
-              <Users size={18} className="text-[#6cecff]" />
-              {betTotal > 0 ? `${betTotal.toLocaleString()} 次下注` : `${heatLabel} 热度`}
+            <span className="hidden items-center gap-2 text-[#ffd28a] max-lg:inline-flex">
+              <Users size={18} className="text-[#6cecff] max-lg:h-3 max-lg:w-3" />
+              {betTotal > 0 ? `${betTotal.toLocaleString()} 次` : `${heatLabel}`}
             </span>
           </div>
 
           <button
             type="button"
             onClick={handleJoinBattle}
-            className="group relative mb-4 inline-flex border-0 bg-transparent p-0 drop-shadow-[0_10px_28px_rgba(255,72,24,0.42)] transition-transform hover:-translate-y-0.5 max-lg:mb-3"
+            className="group relative mb-4 inline-flex border-0 bg-transparent p-0 drop-shadow-[0_10px_28px_rgba(255,72,24,0.42)] transition-transform hover:-translate-y-0.5 max-lg:mb-2"
           >
             <img
               src="/image/btn-bg.png"
               alt=""
               aria-hidden
-              className="block h-auto w-[280px] max-lg:w-[min(100%,240px)]"
+              className="block h-auto w-[280px] max-lg:w-[min(100%,200px)]"
             />
-            <span className="absolute inset-0 flex items-center justify-center text-[24px] font-black tracking-[-0.04em] text-white drop-shadow-[0_2px_6px_rgba(120,20,0,0.55)] max-lg:text-[16px]">
+            <span className="absolute inset-0 flex items-center justify-center text-[24px] font-black tracking-[-0.04em] text-white drop-shadow-[0_2px_6px_rgba(120,20,0,0.55)] max-lg:text-[14px]">
               立即加入对立
             </span>
           </button>
 
-          <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[15px] font-black text-white/70 max-lg:gap-2 max-lg:text-[11px]">
+          <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[15px] font-black text-white/70 max-lg:mb-2 max-lg:gap-1.5 max-lg:text-[10px]">
             <HeroCountdown target={countdownTarget} label={countdownLabel} />
-            <span className="rounded-full bg-black/24 px-3 py-2">第{pk.currentRound}局 · 赛季{pk.season.season}</span>
+            <span className="rounded-full bg-black/24 px-3 py-2 max-lg:px-2 max-lg:py-0.5 max-lg:text-[10px]">第{pk.currentRound}局</span>
           </div>
 
-          <HeroBattleRail pctA={pctA} pctB={pctB} />
+          <div className="w-full max-lg:-mx-0.5 max-lg:scale-[0.94] max-lg:origin-center">
+            <HeroBattleRail pctA={pctA} pctB={pctB} />
+          </div>
         </div>
 
-        <div className="flex items-center max-lg:order-3">
+        <div className="col-start-3 row-start-1 flex w-full items-center justify-end max-lg:col-start-2 max-lg:row-start-2">
           <HeroSidePanel
             side="B"
             label={item.optionB}
@@ -912,12 +993,12 @@ function HeroPK({
           />
         </div>
 
-        <div className="col-span-3 grid auto-rows-fr grid-cols-[1fr_1.55fr_1.55fr_2.3fr] items-stretch gap-3 pt-2 max-lg:order-4 max-lg:col-span-1 max-lg:grid-cols-1">
+        {/* <div className="col-span-3 col-start-1 row-start-2 grid auto-rows-fr grid-cols-[1fr_1.55fr_1.55fr_2.3fr] items-stretch gap-3 pt-2 max-lg:col-span-2 max-lg:col-start-1 max-lg:row-start-3 max-lg:flex max-lg:gap-2 max-lg:overflow-x-auto max-lg:overscroll-x-contain max-lg:pt-0 max-lg:[scrollbar-width:none] max-lg:snap-x max-lg:snap-mandatory max-lg:[&>*]:w-[min(82vw,300px)] max-lg:[&>*]:shrink-0 max-lg:[&>*]:snap-center max-lg:[&::-webkit-scrollbar]:hidden">
           <HeroBottomCard tone="orange" icon={<Flame size={18} />} title="实时战况">
-            <div className="flex flex-1 flex-col justify-between gap-4">
+            <div className="flex flex-1 flex-col justify-between gap-4 max-lg:gap-2">
               <div>
                 <div className="flex items-end gap-2">
-                  <span className="text-[33px] font-black leading-none tabular-nums text-[#ffd067]">{formatPkHeatValue(heatTotal)}</span>
+                  <span className="text-[33px] font-black leading-none tabular-nums text-[#ffd067] max-lg:text-[24px]">{formatPkHeatValue(heatTotal)}</span>
                   <span className="pb-1 text-[11px] font-black text-white/38">总量</span>
                 </div>
               </div>
@@ -926,9 +1007,9 @@ function HeroPK({
 
           <button type="button" onClick={() => onHistory(pk.id)} className="h-full w-full text-left">
             <HeroBottomCard tone="orange" icon={<Zap size={18} />} title="最新热评" className="cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ffb35c]/36 hover:shadow-[0_18px_44px_rgba(255,91,28,0.16)]">
-              <div className="flex flex-1 flex-col justify-between gap-4">
+              <div className="flex flex-1 flex-col justify-between gap-4 max-lg:gap-2">
                 <div>
-                  <div className="mb-3 line-clamp-2 text-[17px] font-black leading-snug text-white">{latestHotText}</div>
+                  <div className="mb-3 line-clamp-2 text-[17px] font-black leading-snug text-white max-lg:mb-1 max-lg:text-[14px]">{latestHotText}</div>
                 </div>
               </div>
             </HeroBottomCard>
@@ -961,7 +1042,7 @@ function HeroPK({
           </HeroBottomCard>
 
           <HeroBottomCard tone="cyan" icon={<MessageCircleMore size={18} />} title="热门观点">
-            <div className="grid flex-1 grid-cols-2 gap-3 max-sm:grid-cols-1">
+            <div className="grid flex-1 grid-cols-2 gap-3 max-lg:gap-2">
               <div className="flex min-w-0 flex-col justify-between rounded-[18px] border border-[#ff8b4a]/14 bg-[#ff6a2a]/8 p-3">
                 <div className="mb-2 flex items-center gap-2 text-[13px] font-black text-white/72">
                   <span className="grid h-7 w-7 place-items-center rounded-full bg-[#ff7942]/18 text-[#ffd28c]">A</span>
@@ -978,7 +1059,7 @@ function HeroPK({
               </div>
             </div>
           </HeroBottomCard>
-        </div>
+        </div> */}
       </div>
     </motion.div>
   );

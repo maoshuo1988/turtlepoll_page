@@ -535,7 +535,8 @@
 
 @media (max-width: 1023px) {
   .railWrap {
-    --rail-shell-height: 42px;
+    --rail-shell-height: 38px;
+    padding: 8px 0 10px;
   }
 
   .railShell {
@@ -609,6 +610,30 @@
 
   .pctB {
     right: 14px;
+  }
+}
+
+@media (max-width: 639px) {
+  .railWrap {
+    --rail-shell-height: 32px;
+    padding: 4px 0 8px;
+  }
+
+  .railGlowCenter {
+    width: 72px;
+    height: 44px;
+  }
+
+  .pct {
+    font-size: 13px;
+  }
+
+  .pctA {
+    left: 10px;
+  }
+
+  .pctB {
+    right: 10px;
   }
 }
 

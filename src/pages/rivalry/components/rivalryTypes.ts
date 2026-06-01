@@ -7,6 +7,8 @@ export type RivalryNewsItem = {
   title: string;
   summary: string;
   image: string;
+  /** 话题封面（仅 topic.cover 有值时存在，Hero 区优先使用） */
+  coverImage?: string;
   listImage?: string;
   sideABgImage?: string;
   sideBBgImage?: string;
