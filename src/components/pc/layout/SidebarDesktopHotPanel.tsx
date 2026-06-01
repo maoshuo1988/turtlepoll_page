@@ -3,6 +3,7 @@
  */
 import React, { useState } from 'react';
 import { ChevronDown, Flame, Hash } from 'lucide-react';
+import { isSamePredictTagSlug } from '@/hooks/predictTagTypes';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 
 interface SidebarDesktopHotPanelProps {
@@ -85,16 +86,20 @@ export const SidebarDesktopHotPanel: React.FC<SidebarDesktopHotPanelProps> = ({
         <div className="flex flex-wrap gap-1.5">
           {hotTags.map((tag) => (
             <button
-              key={tag.tag}
+              key={`${tag.id}-${tag.slug}`}
               type="button"
               onClick={() => onTagClick(tag)}
+              title={tag.marketCount > 0 ? `${tag.label} · ${tag.marketCount} 场` : tag.label}
               className={`max-w-full truncate rounded-full border px-2.5 py-1 text-left text-[11px] font-medium transition-all ${
-                selectedTag === tag.tag
+                isSamePredictTagSlug(selectedTag, tag.slug)
                   ? 'border-emerald-400/50 bg-emerald-500/15 font-semibold text-emerald-600 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-400'
                   : 'border-white/10 bg-white/[0.03] text-zinc-400 hover:border-white/15 hover:bg-white/[0.06] hover:text-zinc-200 dark:border-rdark-border dark:bg-transparent dark:text-rdark-text2 dark:hover:bg-rdark-hover dark:hover:text-rdark-text'
               }`}
             >
-              {tag.tag}
+              {tag.label}
+              {tag.marketCount > 0 ? (
+                <span className="ml-1 tabular-nums text-[10px] opacity-70">{tag.marketCount}</span>
+              ) : null}
             </button>
           ))}
         </div>

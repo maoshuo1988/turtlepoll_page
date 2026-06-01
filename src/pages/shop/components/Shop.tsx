@@ -15,6 +15,7 @@ import { PetAssetPreview } from '@/components/common/pet/PetAssetPreview';
 import { resolvePetPreviewAsset } from '@/components/common/pet/petPreviewAsset';
 import { getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { HORIZONTAL_DRAG_SCROLL_TRACK_CLASS, useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
 import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
 import { TextEmptyState } from '@/components/common/state/PageState';
 import { ShopGachaEggStage } from './ShopGachaEggStage';
@@ -97,12 +98,10 @@ export const Shop: React.FC<ShopProps> = ({
   const openDoneRef = useRef(false);
   const hatchReadyRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const previewScrollRef = useRef<HTMLDivElement | null>(null);
   const previewScrollMobileRef = useRef<HTMLDivElement | null>(null);
-  const previewDragRef = useRef({ active: false, startX: 0, scrollLeft: 0 });
-  const ownedPetsScrollRef = useRef<HTMLDivElement | null>(null);
   const ownedPetsScrollMobileRef = useRef<HTMLDivElement | null>(null);
-  const ownedPetsDragRef = useRef({ active: false, startX: 0, scrollLeft: 0 });
+  const previewDragScroll = useHorizontalDragScroll();
+  const ownedPetsDragScroll = useHorizontalDragScroll();
   const [buyFlash, setBuyFlash] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
@@ -228,32 +227,6 @@ export const Shop: React.FC<ShopProps> = ({
     if (!firstStaminaItem) return;
     void buyApple(firstStaminaItem, Math.max(1, Math.floor(appleBuyCount)));
   }, [appleBuyCount, buyApple, firstStaminaItem]);
-
-  const handlePreviewMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.button !== 0 || !previewScrollRef.current) return;
-    previewDragRef.current = { active: true, startX: event.clientX, scrollLeft: previewScrollRef.current.scrollLeft };
-  }, []);
-  const handlePreviewMouseMove = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    if (!previewDragRef.current.active || !previewScrollRef.current) return;
-    event.preventDefault();
-    previewScrollRef.current.scrollLeft = previewDragRef.current.scrollLeft - (event.clientX - previewDragRef.current.startX);
-  }, []);
-  const stopPreviewDrag = useCallback(() => {
-    previewDragRef.current.active = false;
-  }, []);
-
-  const handleOwnedPetsMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.button !== 0 || !ownedPetsScrollRef.current) return;
-    ownedPetsDragRef.current = { active: true, startX: event.clientX, scrollLeft: ownedPetsScrollRef.current.scrollLeft };
-  }, []);
-  const handleOwnedPetsMouseMove = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    if (!ownedPetsDragRef.current.active || !ownedPetsScrollRef.current) return;
-    event.preventDefault();
-    ownedPetsScrollRef.current.scrollLeft = ownedPetsDragRef.current.scrollLeft - (event.clientX - ownedPetsDragRef.current.startX);
-  }, []);
-  const stopOwnedPetsDrag = useCallback(() => {
-    ownedPetsDragRef.current.active = false;
-  }, []);
 
   const ownedPetList = ownedPetsQuery.data?.list ?? [];
   // const featuredPets = ownedPetList.slice(0, 5);
@@ -531,7 +504,11 @@ export const Shop: React.FC<ShopProps> = ({
                 <div className="text-[15px] font-black text-white">奖池预览</div>
                 <button onClick={() => setIsPreviewDialogOpen(true)} className="text-[12px] font-bold text-white/72 transition hover:text-white">全部预览 &gt;</button>
               </div>
-              <div ref={previewScrollRef} onMouseDown={handlePreviewMouseDown} onMouseMove={handlePreviewMouseMove} onMouseUp={stopPreviewDrag} onMouseLeave={stopPreviewDrag} className="mt-3 flex min-w-0 gap-3 overflow-x-auto pb-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing">
+              <div
+                ref={previewDragScroll.scrollRef}
+                onMouseDown={previewDragScroll.onMouseDown}
+                className={`mt-3 ${HORIZONTAL_DRAG_SCROLL_TRACK_CLASS}`}
+              >
                 {petPoolPreviewRows.length > 0 ? petPoolPreviewRows.slice(0, 12).map((item) => (
                   <PetPoolPreviewTile
                     key={item.key}
@@ -672,12 +649,9 @@ export const Shop: React.FC<ShopProps> = ({
           已拥有龟种 ({ownedPetList.length})
         </h3>
         <div
-          ref={ownedPetsScrollRef}
-          onMouseDown={handleOwnedPetsMouseDown}
-          onMouseMove={handleOwnedPetsMouseMove}
-          onMouseUp={stopOwnedPetsDrag}
-          onMouseLeave={stopOwnedPetsDrag}
-          className="flex min-w-0 gap-3 overflow-x-auto pb-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing"
+          ref={ownedPetsDragScroll.scrollRef}
+          onMouseDown={ownedPetsDragScroll.onMouseDown}
+          className={HORIZONTAL_DRAG_SCROLL_TRACK_CLASS}
         >
           {ownedPetList.length > 0 ? ownedPetList.map((petItem) => (
             <div

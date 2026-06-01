@@ -2,8 +2,11 @@
  * 文件说明：sidebar Hot Topics，共享布局辅助组件和侧栏数据。
  */
 import { useMemo } from 'react';
-import type { PredictContext, PredictTagHotItem } from '@/hooks/predictionTypes';
-import { useRequestFootballPredictContextHot, useRequestFootballPredictTagsHot } from '@/hooks/usePredictionRequests';
+import type { PredictContext } from '@/hooks/predictionTypes';
+import type { PredictTagItem } from '@/hooks/predictTagTypes';
+import { getPredictTagLabel } from '@/hooks/predictTagTypes';
+import { useRequestFootballPredictContextHot } from '@/hooks/usePredictionRequests';
+import { useRequestPredictTagList } from '@/hooks/usePredictTagRequests';
 import type { PredictionCardItem } from '../predictions/predictionCards';
 
 export type SidebarHotTopic = {
@@ -14,16 +17,11 @@ export type SidebarHotTopic = {
   relatedNewsId?: string;
   context: PredictContext;
 };
-export type SidebarHotTag = {
-  tag: string;
-  heat: number;
-};
 
-function formatHotTag(tag: string): string {
-  const value = tag.trim();
-  if (!value) return value;
-  return value.startsWith('#') ? value : `#${value}`;
-}
+/** 侧栏/分类共用：slug 用于筛选，label 用于展示 */
+export type SidebarHotTag = PredictTagItem & {
+  label: string;
+};
 
 function mapHotContextToTopic(context: PredictContext, newsByMarketId: Map<number, PredictionCardItem>, rank: number): SidebarHotTopic {
   const relatedNews = newsByMarketId.get(context.marketId);
@@ -51,19 +49,32 @@ export function useSidebarHotTopics(newsByMarketId: Map<number, PredictionCardIt
   }, [footballHotContexts.data, newsByMarketId]);
 }
 
-export function useSidebarHotTags() {
-  const footballHotTags = useRequestFootballPredictTagsHot({ limit: 10 });
+const PREDICT_TAG_LIST_PARAMS = {
+  page: 1,
+  pageSize: 100,
+  includeCounts: true as const,
+  sort: 'marketCount',
+};
 
-  return useMemo<SidebarHotTag[]>(() => {
-    const list = footballHotTags.data?.list ?? [];
-    if (!Array.isArray(list) || list.length === 0) {
-      return [];
-    }
-    return list
-      .filter((item): item is PredictTagHotItem => Boolean(item?.tag?.trim()))
-      .map((item) => ({
-        ...item,
-        tag: formatHotTag(item.tag),
-      }));
-  }, [footballHotTags.data]);
+/** 分类列表：GET /api/predict-tag/list（侧栏与暗盘顶栏共用） */
+export function usePredictTagCategories() {
+  const predictTagListQuery = useRequestPredictTagList(PREDICT_TAG_LIST_PARAMS);
+
+  const categories = useMemo<SidebarHotTag[]>(() => {
+    const list = predictTagListQuery.data?.list ?? [];
+    return list.map((item) => ({
+      ...item,
+      label: getPredictTagLabel(item),
+    }));
+  }, [predictTagListQuery.data?.list]);
+
+  return {
+    categories,
+    isLoading: predictTagListQuery.isLoading,
+    isError: predictTagListQuery.isError,
+  };
+}
+
+export function useSidebarHotTags(): SidebarHotTag[] {
+  return usePredictTagCategories().categories;
 }

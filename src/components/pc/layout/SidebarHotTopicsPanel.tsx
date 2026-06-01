@@ -1,8 +1,9 @@
 /**
  * 文件说明：Sidebar Hot Topics Panel，PC 左侧栏相关展示组件。
  */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { PredictionCardItem } from '@/components/common/predictions/predictionCards';
+import { isSamePredictTagSlug } from '@/hooks/predictTagTypes';
 import { useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 
 interface SidebarHotTopicsPanelProps {
@@ -26,6 +27,12 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
   const hotTopics = useSidebarHotTopics(newsByMarketId);
   const hotTags = useSidebarHotTags();
   const rankedTopics = useMemo(() => [...(hotTopics ?? [])].sort((a, b) => b.heat - a.heat), [hotTopics]);
+
+  useEffect(() => {
+    if (selectedTag) {
+      setTab('mine');
+    }
+  }, [selectedTag]);
 
   const heatBadge = (rank: number) => {
     if (rank <= 2) return { label: '热', cls: 'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-400/30' };
@@ -65,7 +72,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
                 : 'text-zinc-500 hover:text-zinc-200 dark:text-rdark-text2 dark:hover:text-rdark-text'
             }`}
           >
-            话题
+            分类
           </button>
         </div>
       </div>
@@ -97,7 +104,7 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
               : 'text-zinc-500 hover:text-zinc-300 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
-           热门话题
+           热门分类
         </button>
       </div>
 
@@ -132,15 +139,19 @@ export const SidebarHotTopicsPanel: React.FC<SidebarHotTopicsPanelProps> = ({
           <div className="grid gap-2">
             {hotTags.map((t) => (
               <button
-                key={t.tag}
+                key={`${t.id}-${t.slug}`}
+                type="button"
                 onClick={() => onViewChange('predictions', undefined, t)}
-                className={`w-full rounded-xl border  text-left text-[13px] font-medium truncate transition-all
-                  ${selectedTag === t.tag
+                className={`flex w-full items-center justify-between gap-2 rounded-xl border px-3 py-2 text-left text-[13px] font-medium transition-all
+                  ${isSamePredictTagSlug(selectedTag, t.slug)
                     ? 'border-slate-300 bg-slate-100 text-slate-900 dark:border-rdark-border dark:bg-rdark-input dark:text-rdark-text'
                     : 'border-white/8 text-zinc-300 hover:border-white/12 hover:bg-[#15161a] hover:text-white dark:border-slate-600/70 dark:text-slate-300 dark:hover:border-rdark-border dark:hover:bg-rdark-input/70 dark:hover:text-slate-100'}
                 `}
               >
-                {t.tag}
+                <span className="min-w-0 truncate">{t.label}</span>
+                {t.marketCount > 0 ? (
+                  <span className="shrink-0 tabular-nums text-[11px] opacity-70">{t.marketCount}</span>
+                ) : null}
               </button>
             ))}
           </div>

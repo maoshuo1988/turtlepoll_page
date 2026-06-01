@@ -6,6 +6,7 @@ import type { PredictionBetOption, PredictionCardItem } from './predictionCards'
 interface HomePageViewProps {
   selectedTag: string | null;
   selectedPrediction: PredictionCardItem | null;
+  onTagChange: (slug: string | null) => void;
   onRequireAuth: () => void;
   onPredictionBetSuccess: (item: PredictionCardItem, option: PredictionBetOption, result: PlaceBetResult) => void;
   onEnterBattle: (item: PredictionCardItem) => void;
@@ -14,6 +15,7 @@ interface HomePageViewProps {
 export function HomePageView({
   selectedTag,
   selectedPrediction,
+  onTagChange,
   onRequireAuth,
   onPredictionBetSuccess,
   onEnterBattle,
@@ -23,6 +25,7 @@ export function HomePageView({
       <PredictionsView
         selectedTag={selectedTag}
         selectedPrediction={selectedPrediction}
+        onTagChange={onTagChange}
         onBetSuccess={onPredictionBetSuccess}
         onRequireAuth={onRequireAuth}
         onEnterBattle={onEnterBattle}

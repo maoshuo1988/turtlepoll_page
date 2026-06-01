@@ -25,6 +25,12 @@ import {
   useRequestPetStamina,
   useRequestPetStatus,
 } from '@/hooks/usePetRequests';
+import { usePredictTagCategories } from '@/components/common/layout/sidebarHotTopics';
+import {
+  normalizeTagQuery,
+  resolvePredictTagSlug,
+  resolvePredictTagSlugFromContextTags,
+} from '@/hooks/predictTagTypes';
 import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
 import { useRequestSignout } from '@/hooks/useAuthRequests';
 import {
@@ -37,6 +43,7 @@ import {
 } from '@/hooks/useAiRequests';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import { AUTH_REQUIRED_EVENT, clearAuthRequiredFlag, clearInfo, getAuthToken, hasAuthRequiredFlag, requireAuthOrOpen } from '@/utils/authStorage';
+import { scrollAppContentToTop } from '@/utils/scrollAppContent';
 
 const THEME_KEY = 'theme';
 
@@ -112,6 +119,11 @@ export function StandalonePageShell({
 }: StandalonePageShellProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const selectedTag = useMemo(
+    () => normalizeTagQuery(new URLSearchParams(location.search).get('tag')),
+    [location.search],
+  );
+  const { categories: predictTagCategories } = usePredictTagCategories();
   const queryClient = useQueryClient();
   const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
   const [aiPetDialogue, setAiPetDialogue] = useState<string | null>(null);
@@ -325,22 +337,38 @@ export function StandalonePageShell({
       if (topic?.context?.marketId) {
         const params = new URLSearchParams();
         params.set('market', String(topic.context.marketId));
-        if (topic.tag) {
-          params.set('tag', topic.tag.replace(/^#/, ''));
+        const resolvedTag =
+          resolvePredictTagSlugFromContextTags(topic.context.tags, predictTagCategories) ??
+          resolvePredictTagSlug(topic.tag, predictTagCategories);
+        if (resolvedTag) {
+          params.set('tag', resolvedTag);
         }
+        scrollAppContentToTop();
         navigateInApp(`/?${params.toString()}`, { sidebarTopic: topic });
         return;
       }
-      if (tag?.tag) {
-        const params = new URLSearchParams();
-        params.set('tag', tag.tag.replace(/^#/, ''));
-        navigateInApp(`/?${params.toString()}`);
+      if (tag === null) {
+        scrollAppContentToTop();
+        navigateInApp('/');
         return;
       }
+      if (tag?.slug) {
+        const slug = resolvePredictTagSlug(tag.slug, predictTagCategories);
+        if (slug) {
+          const params = new URLSearchParams();
+          params.set('tag', slug);
+          scrollAppContentToTop();
+          navigateInApp(`/?${params.toString()}`);
+          return;
+        }
+      }
+      scrollAppContentToTop();
+      navigateInApp('/');
+      return;
     }
 
     navigateInApp(ROUTE_PATHS[view] ?? '/');
-  }, [navigate]);
+  }, [navigate, predictTagCategories]);
 
   const handleOpenGuideTour = useCallback(() => {
     setGuideTourOpen(true);
@@ -362,6 +390,7 @@ export function StandalonePageShell({
         aiPushMessages,
         idleDialogues: sidebarIdleDialogues,
         activeView,
+        selectedTag,
         onOpenAuth: () => onAuthModalOpenChange(true),
         onViewChange: handleSidebarViewChange,
       }

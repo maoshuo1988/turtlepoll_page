@@ -13,6 +13,7 @@ import {
 } from './predictionCards';
 import { PredictionBetModal } from './PredictionBetModal';
 import { PredictionCardCover } from './PredictionCardCover';
+import { usePredictTagCategoryLabel } from './usePredictTagCategoryLabel';
 
 interface HeroPredictionProps {
   news?: PredictionCardItem | null;
@@ -35,6 +36,7 @@ function calcVotePercents(votes: PredictionCardItem['votes']) {
 
 export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news: newsOverride, selectedTag, onBetSuccess, onRequireAuth, onEnterBattle }) => {
   const { heroItem } = usePredictionCardItems(selectedTag);
+  const categoryLabel = usePredictTagCategoryLabel(selectedTag);
   const rawNews = newsOverride ?? heroItem;
   const [betModalOption, setBetModalOption] = useState<PredictionBetOption | null>(null);
 
@@ -63,7 +65,9 @@ export const HeroPrediction: React.FC<HeroPredictionProps> = ({ news: newsOverri
       <div className="relative z-10 flex h-full flex-col !px-4 sm:!px-4 lg:!px-6 !py-4 sm:!py-4">
         <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#ffb45f]/18 bg-[#ffb45f]/8 px-2.5 py-1 text-[30px] sm:text-[34px] lg:text-[38px] font-black leading-none text-[#eab268]">
           <Flame size={15} className="text-[#ff9f43] sm:w-[18px] sm:h-[18px] lg:w-5 lg:h-5" />
-          <span className="text-[15px] sm:text-[20px] lg:text-[24px] tracking-[-0.03em]">{selectedTag ? `${selectedTag} 热门预测` : '热门预测'}</span>
+          <span className="text-[15px] sm:text-[20px] lg:text-[24px] tracking-[-0.03em]">
+            {categoryLabel ? `${categoryLabel} 热门预测` : '热门预测'}
+          </span>
         </div>
 
         <h2 className="!mt-3.5 max-w-[760px] text-[21px] sm:text-[30px] lg:text-[36px] font-black leading-[1.12] lg:leading-[1.06] tracking-[-0.03em] text-white">

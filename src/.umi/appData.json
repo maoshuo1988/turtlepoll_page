@@ -267,7 +267,37 @@
             0,
             0,
             0,
-            0
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
           ]
         },
         "register": 0
@@ -746,7 +776,131 @@
             9,
             10,
             4,
-            14
+            14,
+            10,
+            20,
+            27,
+            17,
+            18,
+            16,
+            10,
+            15,
+            29,
+            8,
+            10,
+            6,
+            8,
+            9,
+            11,
+            9,
+            8,
+            13,
+            7,
+            7,
+            5,
+            7,
+            7,
+            10,
+            5,
+            5,
+            15,
+            8,
+            6,
+            12,
+            32,
+            5,
+            11,
+            7,
+            8,
+            6,
+            5,
+            9,
+            11,
+            10,
+            7,
+            10,
+            8,
+            16,
+            15,
+            18,
+            8,
+            8,
+            8,
+            4,
+            6,
+            7,
+            6,
+            9,
+            19,
+            6,
+            6,
+            7,
+            9,
+            19,
+            8,
+            6,
+            56,
+            6,
+            12,
+            19,
+            15,
+            9,
+            7,
+            6,
+            7,
+            6,
+            4,
+            8,
+            12,
+            9,
+            6,
+            10,
+            6,
+            37,
+            12,
+            5,
+            4,
+            4,
+            5,
+            6,
+            24,
+            17,
+            10,
+            14,
+            10,
+            7,
+            8,
+            11,
+            10,
+            19,
+            8,
+            7,
+            13,
+            6,
+            6,
+            7,
+            11,
+            7,
+            6,
+            8,
+            13,
+            16,
+            7,
+            9,
+            12,
+            17,
+            11,
+            9,
+            11,
+            7,
+            6,
+            7,
+            22,
+            20,
+            8,
+            9,
+            8,
+            8
           ]
         },
         "register": 1
@@ -907,7 +1061,37 @@
             11,
             20,
             10,
-            12
+            12,
+            8,
+            16,
+            16,
+            8,
+            13,
+            13,
+            19,
+            17,
+            14,
+            9,
+            12,
+            16,
+            15,
+            18,
+            14,
+            19,
+            16,
+            19,
+            6,
+            12,
+            34,
+            15,
+            23,
+            16,
+            8,
+            15,
+            16,
+            9,
+            19,
+            15
           ]
         },
         "register": 10
@@ -1058,6 +1242,36 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
             0,
             0,
             0,
@@ -1317,6 +1531,75 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1599,6 +1882,85 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2748,6 +3110,49 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -2906,6 +3311,36 @@
             0,
             0,
             0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            2,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
             0
           ],
           "addRuntimePlugin": [
@@ -3043,6 +3478,36 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
             0,
             0,
             0,
@@ -3251,6 +3716,36 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -3551,6 +4046,66 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -3725,7 +4280,37 @@
             12,
             10,
             11,
-            17
+            17,
+            18,
+            20,
+            13,
+            12,
+            10,
+            9,
+            22,
+            116,
+            11,
+            8,
+            12,
+            19,
+            15,
+            25,
+            10,
+            34,
+            14,
+            18,
+            12,
+            13,
+            22,
+            18,
+            32,
+            9,
+            16,
+            11,
+            11,
+            9,
+            11,
+            24
           ],
           "addPolyfillImports": [
             0,
@@ -3960,6 +4545,66 @@
             0,
             1,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -4310,6 +4955,66 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -4461,6 +5166,36 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
             0,
             0,
             0,
@@ -4648,6 +5383,36 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
             0,
             0,
             0,
@@ -4955,6 +5720,66 @@
             7,
             1,
             8,
+            1,
+            7,
+            1,
+            16,
+            1,
+            9,
+            2,
+            6,
+            1,
+            8,
+            0,
+            5,
+            0,
+            23,
+            0,
+            20,
+            1,
+            5,
+            1,
+            11,
+            3,
+            7,
+            0,
+            8,
+            0,
+            7,
+            1,
+            9,
+            1,
+            6,
+            1,
+            15,
+            1,
+            7,
+            0,
+            10,
+            0,
+            14,
+            1,
+            6,
+            2,
+            10,
+            2,
+            9,
+            2,
+            22,
+            1,
+            7,
+            1,
+            8,
+            0,
+            8,
+            1,
+            6,
+            1,
+            8,
+            0,
+            7,
+            0,
+            8,
             1
           ]
         },
@@ -5151,7 +5976,37 @@
             4,
             5,
             5,
-            4
+            4,
+            6,
+            6,
+            6,
+            4,
+            4,
+            3,
+            4,
+            13,
+            6,
+            13,
+            4,
+            4,
+            7,
+            6,
+            5,
+            9,
+            5,
+            5,
+            4,
+            5,
+            8,
+            24,
+            8,
+            4,
+            12,
+            6,
+            6,
+            5,
+            6,
+            5
           ]
         },
         "register": 1
@@ -5376,6 +6231,36 @@
             1,
             1,
             0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
             1,
             0
           ]
@@ -5639,6 +6524,49 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -6298,7 +7226,7 @@
       "parentId": "2",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport {\n  mapMarketToPredictionCard,\n  normalizePredictionCardItem,\n  resolveDrawText,\n  resolveDrawVoteCount,\n  resolvePredictionCardImageFields,\n  usePredictionCardItems,\n  type PredictionCardItem,\n  type PredictionBetOption,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return normalizePredictionCardItem({\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n      C: resolveDrawVoteCount(topic.context),\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    optionDraw: resolveDrawText(topic.context),\n    oddsA: 1.8,\n    oddsB: 1.8,\n    oddsDraw: 1.8,\n    status: 'open',\n  });\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: PredictionBetOption, _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useRef } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { normalizeTagQuery } from '@/hooks/predictTagTypes';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';\nimport { HomePageView } from './components/HomePageView';\nimport { scrollAppContentToTop } from '@/utils/scrollAppContent';\nimport {\n  mapMarketToPredictionCard,\n  normalizePredictionCardItem,\n  resolveDrawText,\n  resolveDrawVoteCount,\n  resolvePredictionCardImageFields,\n  usePredictionCardItems,\n  type PredictionCardItem,\n  type PredictionBetOption,\n} from './components/predictionCards';\n\n/** deep link ?market= ：世界杯等走 football 标签，与首页默认列表可能不是同一批 */\nconst FOOTBALL_TAG_DEEP_LINK_LIMIT = 100;\n\ntype HomeLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return normalizePredictionCardItem({\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n      C: resolveDrawVoteCount(topic.context),\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    optionDraw: resolveDrawText(topic.context),\n    oddsA: 1.8,\n    oddsB: 1.8,\n    oddsDraw: 1.8,\n    status: 'open',\n  });\n}\n\nexport default function HomePage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = normalizeTagQuery(searchParams.get('tag'));\n  const selectedMarket = searchParams.get('market');\n  const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n  const { allItems } = usePredictionCardItems(selectedTag);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const needsFootballDeepLink =\n    Boolean(selectedMarket && selectedMarketId !== null) &&\n    !allItems.some(\n      (item) =>\n        item.marketId === selectedMarketId ||\n        item.id === selectedMarket ||\n        item.id === `market-${selectedMarket}`,\n    );\n\n  const footballDeepLinkQuery = useRequestFootballMarketsByTag({\n    tag: 'football',\n    page: 1,\n    limit: FOOTBALL_TAG_DEEP_LINK_LIMIT,\n    enabled: needsFootballDeepLink,\n    requireAuth: false,\n  });\n\n  const selectedPrediction = useMemo(() => {\n    if (!selectedMarket || selectedMarketId === null) return null;\n    const match = (items: PredictionCardItem[]) =>\n      items.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      );\n    const fromMain = match(allItems);\n    if (fromMain) return fromMain;\n    const footballItems = (footballDeepLinkQuery.data?.list ?? []).map(mapMarketToPredictionCard);\n    const fromFootball = match(footballItems);\n    if (fromFootball) return fromFootball;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allItems,\n    allFallbackItems,\n    footballDeepLinkQuery.data,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  const prevTagRef = useRef<string | null>(selectedTag);\n\n  useEffect(() => {\n    if (prevTagRef.current === selectedTag) return;\n    prevTagRef.current = selectedTag;\n    scrollAppContentToTop();\n  }, [selectedTag]);\n\n  const handleTagChange = useCallback(\n    (slug: string | null) => {\n      const nextSlug = normalizeTagQuery(slug);\n      const currentSlug = normalizeTagQuery(selectedTag);\n      if (nextSlug === currentSlug) return;\n\n      const nextSearch = new URLSearchParams(location.search);\n      if (nextSlug) nextSearch.set('tag', nextSlug);\n      else nextSearch.delete('tag');\n      nextSearch.delete('market');\n      const search = nextSearch.toString();\n      scrollAppContentToTop();\n      navigate(\n        {\n          pathname: location.pathname,\n          search: search ? `?${search}` : '',\n        },\n        { replace: true },\n      );\n    },\n    [location.pathname, location.search, navigate, selectedTag],\n  );\n\n  const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: PredictionBetOption, _result: PlaceBetResult) => {\n  }, []);\n\n  const handleEnterBattle = useCallback((item: PredictionCardItem) => {\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    if (item.marketId !== undefined && item.marketId !== null) {\n      nextSearch.set('market', String(item.marketId));\n    } else {\n      nextSearch.set('market', item.id);\n    }\n    navigate(`/event-battle?${nextSearch.toString()}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate, selectedTag]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <HomePageView\n        selectedTag={selectedTag}\n        selectedPrediction={selectedPrediction}\n        onTagChange={handleTagChange}\n        onPredictionBetSuccess={handlePredictionBetSuccess}\n        onRequireAuth={onOpenAuth}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },
@@ -8175,8 +9103,13 @@
             ],
             "format": "esm"
           },
+          "src/hooks/predictTagTypes.ts": {
+            "bytes": 5643,
+            "imports": [],
+            "format": "esm"
+          },
           "src/components/pc/layout/SidebarDesktopHotPanel.tsx": {
-            "bytes": 4646,
+            "bytes": 5008,
             "imports": [
               {
                 "path": "react",
@@ -8187,6 +9120,11 @@
                 "path": "lucide-react",
                 "kind": "import-statement",
                 "external": true
+              },
+              {
+                "path": "src/hooks/predictTagTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/predictTagTypes"
               }
             ],
             "format": "esm"
@@ -8430,8 +9368,49 @@
             ],
             "format": "esm"
           },
+          "src/api/predictTagApi.ts": {
+            "bytes": 121,
+            "imports": [],
+            "format": "esm"
+          },
+          "src/hooks/usePredictTagRequests.ts": {
+            "bytes": 1617,
+            "imports": [
+              {
+                "path": "react-query",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/api/predictTagApi.ts",
+                "kind": "import-statement",
+                "original": "@/api/predictTagApi"
+              },
+              {
+                "path": "src/api/httpClient.ts",
+                "kind": "import-statement",
+                "original": "@/api/httpClient"
+              },
+              {
+                "path": "src/utils/authStorage.ts",
+                "kind": "import-statement",
+                "original": "@/utils/authStorage"
+              },
+              {
+                "path": "src/utils/requestUtils.ts",
+                "kind": "import-statement",
+                "original": "@/utils/requestUtils"
+              },
+              {
+                "path": "src/hooks/predictTagTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/predictTagTypes"
+              }
+            ],
+            "format": "esm"
+          },
           "src/components/common/layout/sidebarHotTopics.ts": {
-            "bytes": 2216,
+            "bytes": 2578,
             "imports": [
               {
                 "path": "react",
@@ -8439,20 +9418,35 @@
                 "external": true
               },
               {
+                "path": "src/hooks/predictTagTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/predictTagTypes"
+              },
+              {
                 "path": "src/hooks/usePredictionRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/usePredictionRequests"
+              },
+              {
+                "path": "src/hooks/usePredictTagRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/usePredictTagRequests"
               }
             ],
             "format": "esm"
           },
           "src/components/pc/layout/SidebarHotTopicsPanel.tsx": {
-            "bytes": 7275,
+            "bytes": 7760,
             "imports": [
               {
                 "path": "react",
                 "kind": "import-statement",
                 "external": true
+              },
+              {
+                "path": "src/hooks/predictTagTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/predictTagTypes"
               },
               {
                 "path": "src/components/common/layout/sidebarHotTopics.ts",
@@ -8562,7 +9556,7 @@
             "format": "esm"
           },
           "src/components/pc/layout/Sidebar/index.tsx": {
-            "bytes": 5994,
+            "bytes": 6096,
             "imports": [
               {
                 "path": "react",
@@ -8593,6 +9587,11 @@
                 "path": "src/components/pc/layout/SidebarMainPanels.tsx",
                 "kind": "import-statement",
                 "original": "../SidebarMainPanels"
+              },
+              {
+                "path": "src/hooks/predictTagTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/predictTagTypes"
               },
               {
                 "path": "src/components/common/layout/sidebarHotTopics.ts",
@@ -8851,8 +9850,13 @@
             ],
             "format": "esm"
           },
+          "src/utils/scrollAppContent.ts": {
+            "bytes": 325,
+            "imports": [],
+            "format": "esm"
+          },
           "src/layouts/components/StandalonePageShell.tsx": {
-            "bytes": 16490,
+            "bytes": 17542,
             "imports": [
               {
                 "path": "react",
@@ -8920,6 +9924,16 @@
                 "original": "@/hooks/usePetRequests"
               },
               {
+                "path": "src/components/common/layout/sidebarHotTopics.ts",
+                "kind": "import-statement",
+                "original": "@/components/common/layout/sidebarHotTopics"
+              },
+              {
+                "path": "src/hooks/predictTagTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/predictTagTypes"
+              },
+              {
                 "path": "src/hooks/usePredictionRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/usePredictionRequests"
@@ -8938,6 +9952,11 @@
                 "path": "src/utils/authStorage.ts",
                 "kind": "import-statement",
                 "original": "@/utils/authStorage"
+              },
+              {
+                "path": "src/utils/scrollAppContent.ts",
+                "kind": "import-statement",
+                "original": "@/utils/scrollAppContent"
               }
             ],
             "format": "esm"
@@ -9042,8 +10061,29 @@
             ],
             "format": "esm"
           },
+          "src/pages/home/components/usePredictTagCategoryLabel.ts": {
+            "bytes": 654,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/components/common/layout/sidebarHotTopics.ts",
+                "kind": "import-statement",
+                "original": "@/components/common/layout/sidebarHotTopics"
+              },
+              {
+                "path": "src/hooks/predictTagTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/predictTagTypes"
+              }
+            ],
+            "format": "esm"
+          },
           "src/pages/home/components/HeroPrediction.tsx": {
-            "bytes": 9557,
+            "bytes": 9725,
             "imports": [
               {
                 "path": "react",
@@ -9074,12 +10114,17 @@
                 "path": "src/pages/home/components/PredictionCardCover.tsx",
                 "kind": "import-statement",
                 "original": "./PredictionCardCover"
+              },
+              {
+                "path": "src/pages/home/components/usePredictTagCategoryLabel.ts",
+                "kind": "import-statement",
+                "original": "./usePredictTagCategoryLabel"
               }
             ],
             "format": "esm"
           },
           "src/pages/home/components/NewsFeed.tsx": {
-            "bytes": 16816,
+            "bytes": 16960,
             "imports": [
               {
                 "path": "react",
@@ -9115,12 +10160,69 @@
                 "path": "src/hooks/useCoinRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/useCoinRequests"
+              },
+              {
+                "path": "src/pages/home/components/usePredictTagCategoryLabel.ts",
+                "kind": "import-statement",
+                "original": "./usePredictTagCategoryLabel"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/hooks/useHorizontalDragScroll.ts": {
+            "bytes": 1976,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
+          "src/utils/scrollHorizontalCenter.ts": {
+            "bytes": 757,
+            "imports": [],
+            "format": "esm"
+          },
+          "src/pages/home/components/PredictTagCategoryBar.tsx": {
+            "bytes": 6238,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/hooks/useHorizontalDragScroll.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useHorizontalDragScroll"
+              },
+              {
+                "path": "src/components/common/layout/sidebarHotTopics.ts",
+                "kind": "import-statement",
+                "original": "@/components/common/layout/sidebarHotTopics"
+              },
+              {
+                "path": "src/hooks/predictTagTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/predictTagTypes"
+              },
+              {
+                "path": "src/utils/scrollHorizontalCenter.ts",
+                "kind": "import-statement",
+                "original": "@/utils/scrollHorizontalCenter"
               }
             ],
             "format": "esm"
           },
           "src/pages/home/components/PredictionsView.tsx": {
-            "bytes": 1196,
+            "bytes": 1774,
             "imports": [
               {
                 "path": "react",
@@ -9136,12 +10238,17 @@
                 "path": "src/pages/home/components/NewsFeed.tsx",
                 "kind": "import-statement",
                 "original": "./NewsFeed"
+              },
+              {
+                "path": "src/pages/home/components/PredictTagCategoryBar.tsx",
+                "kind": "import-statement",
+                "original": "./PredictTagCategoryBar"
               }
             ],
             "format": "esm"
           },
           "src/pages/home/components/HomePageView.tsx": {
-            "bytes": 1139,
+            "bytes": 1234,
             "imports": [
               {
                 "path": "src/pages/home/components/PredictionsView.tsx",
@@ -9152,7 +10259,7 @@
             "format": "esm"
           },
           "src/pages/home/index.tsx": {
-            "bytes": 5164,
+            "bytes": 6306,
             "imports": [
               {
                 "path": "react",
@@ -9163,6 +10270,11 @@
                 "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
+              },
+              {
+                "path": "src/hooks/predictTagTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/predictTagTypes"
               },
               {
                 "path": "src/layouts/context/index.ts",
@@ -9178,6 +10290,11 @@
                 "path": "src/pages/home/components/HomePageView.tsx",
                 "kind": "import-statement",
                 "original": "./components/HomePageView"
+              },
+              {
+                "path": "src/utils/scrollAppContent.ts",
+                "kind": "import-statement",
+                "original": "@/utils/scrollAppContent"
               },
               {
                 "path": "src/pages/home/components/predictionCards.ts",
@@ -10510,7 +11627,7 @@
             "format": "esm"
           },
           "src/pages/shop/components/Shop.tsx": {
-            "bytes": 43669,
+            "bytes": 41806,
             "imports": [
               {
                 "path": "react",
@@ -10561,6 +11678,11 @@
                 "path": "src/hooks/useRequireAuth.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/useRequireAuth"
+              },
+              {
+                "path": "src/hooks/useHorizontalDragScroll.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useHorizontalDragScroll"
               },
               {
                 "path": "src/components/common/pet/petRarity.ts",
@@ -11584,6 +12706,11 @@
                 "external": true
               },
               {
+                "path": "react-query",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "react",
                 "kind": "import-statement",
                 "external": true
@@ -11734,6 +12861,11 @@
                 "external": true
               },
               {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "framer-motion",
                 "kind": "import-statement",
                 "external": true
@@ -11750,6 +12882,21 @@
               },
               {
                 "path": "framer-motion",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -13473,8 +14620,11 @@
               "src/components/common/pet/PetChat.tsx": {
                 "bytesInOutput": 14217
               },
+              "src/hooks/predictTagTypes.ts": {
+                "bytesInOutput": 3910
+              },
               "src/components/pc/layout/SidebarDesktopHotPanel.tsx": {
-                "bytesInOutput": 4710
+                "bytesInOutput": 5034
               },
               "src/components/common/pet/petDisplay.ts": {
                 "bytesInOutput": 2515
@@ -13507,16 +14657,22 @@
                 "bytesInOutput": 5338
               },
               "src/api/predictionApi.ts": {
-                "bytesInOutput": 458
+                "bytesInOutput": 357
               },
               "src/hooks/usePredictionRequests.ts": {
-                "bytesInOutput": 2791
+                "bytesInOutput": 2298
+              },
+              "src/api/predictTagApi.ts": {
+                "bytesInOutput": 152
+              },
+              "src/hooks/usePredictTagRequests.ts": {
+                "bytesInOutput": 1374
               },
               "src/components/common/layout/sidebarHotTopics.ts": {
-                "bytesInOutput": 1575
+                "bytesInOutput": 1773
               },
               "src/components/pc/layout/SidebarHotTopicsPanel.tsx": {
-                "bytesInOutput": 6961
+                "bytesInOutput": 7471
               },
               "src/components/pc/layout/SidebarNavMenu/index.tsx": {
                 "bytesInOutput": 3038
@@ -13531,10 +14687,10 @@
                 "bytesInOutput": 2194
               },
               "src/components/pc/layout/Sidebar/index.tsx": {
-                "bytesInOutput": 5193
+                "bytesInOutput": 5189
               },
               "src/layouts/components/AppPageLayout/index.tsx": {
-                "bytesInOutput": 5450
+                "bytesInOutput": 5452
               },
               "src/utils/petHelpers.ts": {
                 "bytesInOutput": 2425
@@ -13569,8 +14725,11 @@
               "src/hooks/usePetRequests.ts": {
                 "bytesInOutput": 21839
               },
+              "src/utils/scrollAppContent.ts": {
+                "bytesInOutput": 295
+              },
               "src/layouts/components/StandalonePageShell.tsx": {
-                "bytesInOutput": 13566
+                "bytesInOutput": 14398
               },
               "src/layouts/components/index.ts": {
                 "bytesInOutput": 136
@@ -13587,20 +14746,32 @@
               "src/pages/home/components/PredictionCardCover.tsx": {
                 "bytesInOutput": 1860
               },
+              "src/pages/home/components/usePredictTagCategoryLabel.ts": {
+                "bytesInOutput": 576
+              },
               "src/pages/home/components/HeroPrediction.tsx": {
-                "bytesInOutput": 9992
+                "bytesInOutput": 10104
               },
               "src/pages/home/components/NewsFeed.tsx": {
-                "bytesInOutput": 17970
+                "bytesInOutput": 18082
+              },
+              "src/hooks/useHorizontalDragScroll.ts": {
+                "bytesInOutput": 1834
+              },
+              "src/utils/scrollHorizontalCenter.ts": {
+                "bytesInOutput": 690
+              },
+              "src/pages/home/components/PredictTagCategoryBar.tsx": {
+                "bytesInOutput": 6332
               },
               "src/pages/home/components/PredictionsView.tsx": {
-                "bytesInOutput": 684
+                "bytesInOutput": 1316
               },
               "src/pages/home/components/HomePageView.tsx": {
-                "bytesInOutput": 615
+                "bytesInOutput": 649
               },
               "src/pages/home/index.tsx": {
-                "bytesInOutput": 4345
+                "bytesInOutput": 5408
               },
               "src/api/commentApi.ts": {
                 "bytesInOutput": 285
@@ -13618,13 +14789,13 @@
                 "bytesInOutput": 331
               },
               "src/hooks/useTopicRequests.ts": {
-                "bytesInOutput": 3663
+                "bytesInOutput": 3665
               },
               "src/pages/event-battle/components/eventBattleThemes.ts": {
                 "bytesInOutput": 8286
               },
               "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-                "bytesInOutput": 77075
+                "bytesInOutput": 77094
               },
               "src/pages/event-battle/components/EventBattleLiveRoom.tsx": {
                 "bytesInOutput": 149
@@ -13639,7 +14810,7 @@
                 "bytesInOutput": 8937
               },
               "src/pages/world-cup/components/WorldCupPageContent/index.tsx": {
-                "bytesInOutput": 71189
+                "bytesInOutput": 71191
               },
               "src/pages/world-cup/components/WorldCupPage.tsx": {
                 "bytesInOutput": 128
@@ -13651,7 +14822,7 @@
                 "bytesInOutput": 9530
               },
               "src/pages/rivalry/components/HeroBattleRail/index.tsx": {
-                "bytesInOutput": 11631
+                "bytesInOutput": 11633
               },
               "src/pages/rivalry/components/heroPkLayout.ts": {
                 "bytesInOutput": 451
@@ -13669,7 +14840,7 @@
                 "bytesInOutput": 700
               },
               "src/pages/rivalry/index.tsx": {
-                "bytesInOutput": 2543
+                "bytesInOutput": 2546
               },
               "src/pages/forum/components/forumTags.ts": {
                 "bytesInOutput": 540
@@ -13678,7 +14849,7 @@
                 "bytesInOutput": 2733
               },
               "src/pages/forum/components/ForumCompose.tsx": {
-                "bytesInOutput": 25842
+                "bytesInOutput": 25847
               },
               "src/pages/forum/components/TopicPostCard.tsx": {
                 "bytesInOutput": 47331
@@ -13798,7 +14969,7 @@
                 "bytesInOutput": 7106
               },
               "src/pages/shop/components/Shop.tsx": {
-                "bytesInOutput": 43234
+                "bytesInOutput": 41379
               },
               "src/pages/shop/components/ShopPageView.tsx": {
                 "bytesInOutput": 355
@@ -13888,7 +15059,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1032294
+            "bytes": 1049188
           }
         }
       }
@@ -16306,6 +17477,7 @@
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/petApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/pkApi.ts": [],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/predictTagApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/predictionApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/tagApi.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/api/topicApi.ts": [],
@@ -16761,7 +17933,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 205,
+          "end": 186,
           "importKind": "type",
           "source": "@/hooks/predictionTypes",
           "specifiers": [
@@ -16769,18 +17941,41 @@
               "imported": "PredictContext",
               "local": "PredictContext",
               "type": "ImportSpecifier"
-            },
-            {
-              "imported": "PredictTagHotItem",
-              "local": "PredictTagHotItem",
-              "type": "ImportSpecifier"
             }
           ],
           "start": 124,
           "type": "ImportDeclaration"
         },
         {
-          "end": 324,
+          "end": 249,
+          "importKind": "type",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "PredictTagItem",
+              "local": "PredictTagItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 187,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 311,
+          "importKind": "value",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "getPredictTagLabel",
+              "local": "getPredictTagLabel",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 250,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 396,
           "importKind": "value",
           "source": "@/hooks/usePredictionRequests",
           "specifiers": [
@@ -16788,18 +17983,27 @@
               "imported": "useRequestFootballPredictContextHot",
               "local": "useRequestFootballPredictContextHot",
               "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useRequestFootballPredictTagsHot",
-              "local": "useRequestFootballPredictTagsHot",
-              "type": "ImportSpecifier"
             }
           ],
-          "start": 206,
+          "start": 312,
           "type": "ImportDeclaration"
         },
         {
-          "end": 398,
+          "end": 470,
+          "importKind": "value",
+          "source": "@/hooks/usePredictTagRequests",
+          "specifiers": [
+            {
+              "imported": "useRequestPredictTagList",
+              "local": "useRequestPredictTagList",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 397,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 544,
           "importKind": "type",
           "source": "../predictions/predictionCards",
           "specifiers": [
@@ -16809,7 +18013,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 325,
+          "start": 471,
           "type": "ImportDeclaration"
         }
       ],
@@ -18073,7 +19277,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 740,
+          "end": 660,
+          "importKind": "value",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "isSamePredictTagSlug",
+              "local": "isSamePredictTagSlug",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 597,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 804,
           "importKind": "value",
           "source": "@/components/common/layout/sidebarHotTopics",
           "specifiers": [
@@ -18098,11 +19316,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 597,
+          "start": 661,
           "type": "ImportDeclaration"
         },
         {
-          "end": 831,
+          "end": 895,
           "importKind": "type",
           "source": "@/components/common/predictions/predictionCards",
           "specifiers": [
@@ -18112,11 +19330,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 741,
+          "start": 805,
           "type": "ImportDeclaration"
         },
         {
-          "end": 873,
+          "end": 937,
           "importKind": "value",
           "source": "./index.module.scss",
           "specifiers": [
@@ -18125,11 +19343,11 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 832,
+          "start": 896,
           "type": "ImportDeclaration"
         },
         {
-          "end": 5994,
+          "end": 6096,
           "exportKind": "type",
           "source": "../SidebarMainPanels",
           "specifiers": [
@@ -18139,7 +19357,7 @@
               "type": "ExportSpecifier"
             }
           ],
-          "start": 5941,
+          "start": 6043,
           "type": "ExportNamedDeclaration"
         }
       ],
@@ -18187,7 +19405,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 285,
+          "end": 250,
+          "importKind": "value",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "isSamePredictTagSlug",
+              "local": "isSamePredictTagSlug",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 187,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 349,
           "importKind": "type",
           "source": "@/components/common/layout/sidebarHotTopics",
           "specifiers": [
@@ -18202,7 +19434,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 187,
+          "start": 251,
           "type": "ImportDeclaration"
         }
       ],
@@ -18355,13 +19587,18 @@
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/pc/layout/SidebarHotTopicsPanel.tsx": [
         {
-          "end": 137,
+          "end": 148,
           "importKind": "value",
           "source": "react",
           "specifiers": [
             {
               "local": "React",
               "type": "ImportDefaultSpecifier"
+            },
+            {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
             },
             {
               "imported": "useMemo",
@@ -18378,7 +19615,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 228,
+          "end": 239,
           "importKind": "type",
           "source": "@/components/common/predictions/predictionCards",
           "specifiers": [
@@ -18388,11 +19625,25 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 138,
+          "start": 149,
           "type": "ImportDeclaration"
         },
         {
-          "end": 372,
+          "end": 303,
+          "importKind": "value",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "isSamePredictTagSlug",
+              "local": "isSamePredictTagSlug",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 240,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 447,
           "importKind": "value",
           "source": "@/components/common/layout/sidebarHotTopics",
           "specifiers": [
@@ -18417,7 +19668,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 229,
+          "start": 304,
           "type": "ImportDeclaration"
         }
       ],
@@ -18813,6 +20064,7 @@
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/battleTypes.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/coinTypes.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/petTypes.ts": [],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/predictTagTypes.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useAiRequests.ts": [
         {
           "end": 142,
@@ -19831,6 +21083,27 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useHorizontalDragScroll.ts": [
+        {
+          "end": 143,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "useCallback",
+              "local": "useCallback",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRef",
+              "local": "useRef",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 99,
+          "type": "ImportDeclaration"
+        }
+      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/usePetRequests.ts": [
         {
           "end": 154,
@@ -20340,6 +21613,107 @@
             }
           ],
           "start": 641,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/usePredictTagRequests.ts": [
+        {
+          "end": 100,
+          "importKind": "value",
+          "source": "react-query",
+          "specifiers": [
+            {
+              "imported": "useQuery",
+              "local": "useQuery",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 61,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 160,
+          "importKind": "value",
+          "source": "@/api/predictTagApi",
+          "specifiers": [
+            {
+              "imported": "API_Predict_Tag_List",
+              "local": "API_Predict_Tag_List",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 101,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 208,
+          "importKind": "value",
+          "source": "@/api/httpClient",
+          "specifiers": [
+            {
+              "imported": "axiosCustom",
+              "local": "axiosCustom",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 161,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 260,
+          "importKind": "value",
+          "source": "@/utils/authStorage",
+          "specifiers": [
+            {
+              "imported": "getAuthToken",
+              "local": "getAuthToken",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 209,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 339,
+          "importKind": "value",
+          "source": "@/utils/requestUtils",
+          "specifiers": [
+            {
+              "imported": "assertSuccess",
+              "local": "assertSuccess",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "getAuthorizationHeaders",
+              "local": "getAuthorizationHeaders",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 261,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 467,
+          "importKind": "value",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "normalizePredictTagList",
+              "local": "normalizePredictTagList",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictTagListParams",
+              "local": "PredictTagListParams",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictTagListResult",
+              "local": "PredictTagListResult",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 340,
           "type": "ImportDeclaration"
         }
       ],
@@ -21524,7 +22898,45 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 1379,
+          "end": 1391,
+          "importKind": "value",
+          "source": "@/components/common/layout/sidebarHotTopics",
+          "specifiers": [
+            {
+              "imported": "usePredictTagCategories",
+              "local": "usePredictTagCategories",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1305,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1520,
+          "importKind": "value",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "normalizeTagQuery",
+              "local": "normalizeTagQuery",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolvePredictTagSlug",
+              "local": "resolvePredictTagSlug",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolvePredictTagSlugFromContextTags",
+              "local": "resolvePredictTagSlugFromContextTags",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1392,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1595,
           "importKind": "value",
           "source": "@/hooks/usePredictionRequests",
           "specifiers": [
@@ -21534,11 +22946,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1305,
+          "start": 1521,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1440,
+          "end": 1656,
           "importKind": "value",
           "source": "@/hooks/useAuthRequests",
           "specifiers": [
@@ -21548,11 +22960,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1380,
+          "start": 1596,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1632,
+          "end": 1848,
           "importKind": "value",
           "source": "@/hooks/useAiRequests",
           "specifiers": [
@@ -21587,11 +22999,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1441,
+          "start": 1657,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1686,
+          "end": 1902,
           "importKind": "type",
           "source": "@/hooks/aiTypes",
           "specifiers": [
@@ -21601,11 +23013,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1633,
+          "start": 1849,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1833,
+          "end": 2049,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -21640,7 +23052,21 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1687,
+          "start": 1903,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 2115,
+          "importKind": "value",
+          "source": "@/utils/scrollAppContent",
+          "specifiers": [
+            {
+              "imported": "scrollAppContentToTop",
+              "local": "scrollAppContentToTop",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 2050,
           "type": "ImportDeclaration"
         }
       ],
@@ -23966,6 +25392,20 @@
           ],
           "start": 484,
           "type": "ImportDeclaration"
+        },
+        {
+          "end": 619,
+          "importKind": "value",
+          "source": "./usePredictTagCategoryLabel",
+          "specifiers": [
+            {
+              "imported": "usePredictTagCategoryLabel",
+              "local": "usePredictTagCategoryLabel",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 545,
+          "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/components/HomePageView.tsx": [
@@ -24173,6 +25613,146 @@
           ],
           "start": 565,
           "type": "ImportDeclaration"
+        },
+        {
+          "end": 703,
+          "importKind": "value",
+          "source": "./usePredictTagCategoryLabel",
+          "specifiers": [
+            {
+              "imported": "usePredictTagCategoryLabel",
+              "local": "usePredictTagCategoryLabel",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 629,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/components/PredictTagCategoryBar.tsx": [
+        {
+          "end": 156,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "forwardRef",
+              "local": "forwardRef",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useCallback",
+              "local": "useCallback",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRef",
+              "local": "useRef",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 89,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 220,
+          "importKind": "value",
+          "source": "lucide-react",
+          "specifiers": [
+            {
+              "imported": "ChevronLeft",
+              "local": "ChevronLeft",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "ChevronRight",
+              "local": "ChevronRight",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Tags",
+              "local": "Tags",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 157,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 331,
+          "importKind": "value",
+          "source": "@/hooks/useHorizontalDragScroll",
+          "specifiers": [
+            {
+              "imported": "HORIZONTAL_DRAG_SCROLL_TRACK_CLASS",
+              "local": "HORIZONTAL_DRAG_SCROLL_TRACK_CLASS",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useHorizontalDragScroll",
+              "local": "useHorizontalDragScroll",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 221,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 418,
+          "importKind": "value",
+          "source": "@/components/common/layout/sidebarHotTopics",
+          "specifiers": [
+            {
+              "imported": "usePredictTagCategories",
+              "local": "usePredictTagCategories",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 332,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 522,
+          "importKind": "value",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "isSamePredictTagSlug",
+              "local": "isSamePredictTagSlug",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "normalizeTagQuery",
+              "local": "normalizeTagQuery",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictTagItem",
+              "local": "PredictTagItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 419,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 602,
+          "importKind": "value",
+          "source": "@/utils/scrollHorizontalCenter",
+          "specifiers": [
+            {
+              "imported": "scrollChildToHorizontalCenter",
+              "local": "scrollChildToHorizontalCenter",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 523,
+          "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/components/PredictionBetModal.tsx": [
@@ -24374,7 +25954,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 284,
+          "end": 267,
+          "importKind": "value",
+          "source": "./PredictTagCategoryBar",
+          "specifiers": [
+            {
+              "imported": "PredictTagCategoryBar",
+              "local": "PredictTagCategoryBar",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 203,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 349,
           "importKind": "type",
           "source": "./predictionCards",
           "specifiers": [
@@ -24389,11 +25983,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 203,
+          "start": 268,
           "type": "ImportDeclaration"
         },
         {
-          "end": 341,
+          "end": 406,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -24403,7 +25997,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 285,
+          "start": 350,
           "type": "ImportDeclaration"
         }
       ],
@@ -24461,9 +26055,58 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/components/usePredictTagCategoryLabel.ts": [
+        {
+          "end": 107,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 75,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 194,
+          "importKind": "value",
+          "source": "@/components/common/layout/sidebarHotTopics",
+          "specifiers": [
+            {
+              "imported": "usePredictTagCategories",
+              "local": "usePredictTagCategories",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 108,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 277,
+          "importKind": "value",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "isSamePredictTagSlug",
+              "local": "isSamePredictTagSlug",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "normalizeTagQuery",
+              "local": "normalizeTagQuery",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 195,
+          "type": "ImportDeclaration"
+        }
+      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx": [
         {
-          "end": 160,
+          "end": 179,
           "importKind": "value",
           "source": "react",
           "specifiers": [
@@ -24473,8 +26116,18 @@
               "type": "ImportSpecifier"
             },
             {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
+            },
+            {
               "imported": "useMemo",
               "local": "useMemo",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRef",
+              "local": "useRef",
               "type": "ImportSpecifier"
             }
           ],
@@ -24482,7 +26135,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 226,
+          "end": 245,
           "importKind": "value",
           "source": "@umijs/renderer-react",
           "specifiers": [
@@ -24497,11 +26150,25 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 161,
+          "start": 180,
           "type": "ImportDeclaration"
         },
         {
-          "end": 284,
+          "end": 306,
+          "importKind": "value",
+          "source": "@/hooks/predictTagTypes",
+          "specifiers": [
+            {
+              "imported": "normalizeTagQuery",
+              "local": "normalizeTagQuery",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 246,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 364,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -24511,11 +26178,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 227,
+          "start": 307,
           "type": "ImportDeclaration"
         },
         {
-          "end": 341,
+          "end": 421,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -24525,11 +26192,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 285,
+          "start": 365,
           "type": "ImportDeclaration"
         },
         {
-          "end": 425,
+          "end": 505,
           "importKind": "type",
           "source": "@/components/common/layout/sidebarHotTopics",
           "specifiers": [
@@ -24539,11 +26206,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 342,
+          "start": 422,
           "type": "ImportDeclaration"
         },
         {
-          "end": 505,
+          "end": 585,
           "importKind": "value",
           "source": "@/hooks/usePredictionRequests",
           "specifiers": [
@@ -24553,11 +26220,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 426,
+          "start": 506,
           "type": "ImportDeclaration"
         },
         {
-          "end": 563,
+          "end": 643,
           "importKind": "value",
           "source": "./components/HomePageView",
           "specifiers": [
@@ -24567,11 +26234,25 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 506,
+          "start": 586,
           "type": "ImportDeclaration"
         },
         {
-          "end": 831,
+          "end": 709,
+          "importKind": "value",
+          "source": "@/utils/scrollAppContent",
+          "specifiers": [
+            {
+              "imported": "scrollAppContentToTop",
+              "local": "scrollAppContentToTop",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 644,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 977,
           "importKind": "value",
           "source": "./components/predictionCards",
           "specifiers": [
@@ -24616,7 +26297,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 564,
+          "start": 710,
           "type": "ImportDeclaration"
         }
       ],
@@ -27000,7 +28681,26 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 1155,
+          "end": 1142,
+          "importKind": "value",
+          "source": "@/hooks/useHorizontalDragScroll",
+          "specifiers": [
+            {
+              "imported": "HORIZONTAL_DRAG_SCROLL_TRACK_CLASS",
+              "local": "HORIZONTAL_DRAG_SCROLL_TRACK_CLASS",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useHorizontalDragScroll",
+              "local": "useHorizontalDragScroll",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1032,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1266,
           "importKind": "value",
           "source": "@/components/common/pet/petRarity",
           "specifiers": [
@@ -27020,11 +28720,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1032,
+          "start": 1143,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1225,
+          "end": 1336,
           "importKind": "value",
           "source": "@/components/common/state/PageState",
           "specifiers": [
@@ -27034,11 +28734,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1156,
+          "start": 1267,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1282,
+          "end": 1393,
           "importKind": "value",
           "source": "./ShopGachaEggStage",
           "specifiers": [
@@ -27048,11 +28748,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1226,
+          "start": 1337,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1343,
+          "end": 1454,
           "importKind": "value",
           "source": "./ShopGachaHeroMobile",
           "specifiers": [
@@ -27062,11 +28762,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1283,
+          "start": 1394,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1406,
+          "end": 1517,
           "importKind": "value",
           "source": "./ShopGachaStageLayers",
           "specifiers": [
@@ -27076,11 +28776,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1344,
+          "start": 1455,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1513,
+          "end": 1624,
           "importKind": "value",
           "source": "./shopHatchReveal",
           "specifiers": [
@@ -27100,11 +28800,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1407,
+          "start": 1518,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1676,
+          "end": 1787,
           "importKind": "value",
           "source": "@/config/shopSpineAssets",
           "specifiers": [
@@ -27129,7 +28829,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1514,
+          "start": 1625,
           "type": "ImportDeclaration"
         }
       ],
@@ -28533,6 +30233,8 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/utils/scrollAppContent.ts": [],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/utils/scrollHorizontalCenter.ts": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/utils/userAvatar.ts": [
         {
           "end": 237,

@@ -1,13 +1,15 @@
 /**
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from '@umijs/renderer-react';
+import { normalizeTagQuery } from '@/hooks/predictTagTypes';
 import { useHomeLayoutContext } from '@/layouts/context';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 import { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 import { HomePageView } from './components/HomePageView';
+import { scrollAppContentToTop } from '@/utils/scrollAppContent';
 import {
   mapMarketToPredictionCard,
   normalizePredictionCardItem,
@@ -55,7 +57,7 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { onOpenAuth } = useHomeLayoutContext();
   const searchParams = new URLSearchParams(location.search);
-  const selectedTag = searchParams.get('tag');
+  const selectedTag = normalizeTagQuery(searchParams.get('tag'));
   const selectedMarket = searchParams.get('market');
   const sidebarTopic = (location.state as HomeLocationState | null)?.sidebarTopic;
   const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);
@@ -112,6 +114,37 @@ export default function HomePage() {
     sidebarTopicItem,
   ]);
 
+  const prevTagRef = useRef<string | null>(selectedTag);
+
+  useEffect(() => {
+    if (prevTagRef.current === selectedTag) return;
+    prevTagRef.current = selectedTag;
+    scrollAppContentToTop();
+  }, [selectedTag]);
+
+  const handleTagChange = useCallback(
+    (slug: string | null) => {
+      const nextSlug = normalizeTagQuery(slug);
+      const currentSlug = normalizeTagQuery(selectedTag);
+      if (nextSlug === currentSlug) return;
+
+      const nextSearch = new URLSearchParams(location.search);
+      if (nextSlug) nextSearch.set('tag', nextSlug);
+      else nextSearch.delete('tag');
+      nextSearch.delete('market');
+      const search = nextSearch.toString();
+      scrollAppContentToTop();
+      navigate(
+        {
+          pathname: location.pathname,
+          search: search ? `?${search}` : '',
+        },
+        { replace: true },
+      );
+    },
+    [location.pathname, location.search, navigate, selectedTag],
+  );
+
   const handlePredictionBetSuccess = useCallback((_item: PredictionCardItem, _option: PredictionBetOption, _result: PlaceBetResult) => {
   }, []);
 
@@ -136,6 +169,7 @@ export default function HomePage() {
       <HomePageView
         selectedTag={selectedTag}
         selectedPrediction={selectedPrediction}
+        onTagChange={handleTagChange}
         onPredictionBetSuccess={handlePredictionBetSuccess}
         onRequireAuth={onOpenAuth}
         onEnterBattle={handleEnterBattle}

@@ -9,6 +9,7 @@ import { SidebarDesktopHotPanel } from '../SidebarDesktopHotPanel';
 import { SidebarDesktopNavPanel } from '../SidebarDesktopNavPanel';
 import { SidebarDesktopProfilePanel } from '../SidebarDesktopProfilePanel';
 import { NAV_ITEMS, SidebarMainPanels, type ViewType } from '../SidebarMainPanels';
+import { isSamePredictTagSlug } from '@/hooks/predictTagTypes';
 import { useSidebarHotTags, useSidebarHotTopics, type SidebarHotTag, type SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
 import type { PredictionCardItem } from '@/components/common/predictions/predictionCards';
 import styles from './index.module.scss';
@@ -21,6 +22,8 @@ interface SidebarProps {
   aiPushMessages?: AiPushMessage[];
   idleDialogues: string[];
   activeView: ViewType;
+  /** 与暗盘 URL ?tag= 同步的分类选中态 */
+  selectedTag: string | null;
   onViewChange: (view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag | null) => void;
 }
 
@@ -33,11 +36,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   aiPushMessages = [],
   idleDialogues,
   activeView,
+  selectedTag,
   onViewChange,
 }) => {
   const [currentDialogue, setCurrentDialogue] = useState(idleDialogues[0]);
   const [dialogueKey, setDialogueKey] = useState(0);
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
   const hotTopics = useSidebarHotTopics(newsByMarketId);
   const hotTags = useSidebarHotTags();
@@ -57,14 +60,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   }, [petDialogue, idleDialogues]);
 
   const handleTagClick = (tag: SidebarHotTag) => {
-    const nextTag = selectedTag === tag.tag ? null : tag;
-    setSelectedTag(nextTag?.tag ?? null);
+    const nextTag = isSamePredictTagSlug(selectedTag, tag.slug) ? null : tag;
     onViewChange('predictions', undefined, nextTag);
   };
 
   const handlePanelViewChange = (view: ViewType, topic?: SidebarHotTopic, tag?: SidebarHotTag) => {
     if (topic) {
-      setSelectedTag(null);
       onViewChange(view, topic, null);
       return;
     }
@@ -79,10 +80,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const handleNavClick = (item: (typeof NAV_ITEMS)[number]) => {
     if (!item.enabled) return;
-    if (item.key === 'predictions') {
-      setSelectedTag(null);
+    if (item.view) {
+      if (item.key === 'predictions') {
+        onViewChange('predictions', undefined, null);
+        return;
+      }
+      onViewChange(item.view);
     }
-    if (item.view) onViewChange(item.view);
   };
 
   const fmtHeat = (n: number) =>
