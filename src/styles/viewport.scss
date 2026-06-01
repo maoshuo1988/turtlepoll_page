@@ -1,0 +1,35 @@
+/**
+ * 视口适配（参考 Tian-Website）：1920 桌面稿 / 375 移动稿，768px 为内容缩放断点。
+ */
+
+$vp-desktop-base: 1920;
+$vp-mobile-base: 375;
+$vp-content-max-px: 1280;
+$vp-mobile-max: 768px;
+$vp-layout-desktop-min: 1024px;
+
+@function vp-desktop($px) {
+  @return calc($px / $vp-desktop-base * 100vw);
+}
+
+@function vp-mobile($px) {
+  @return calc($px / $vp-mobile-base * 100vw);
+}
+
+@mixin vp-mobile {
+  @media (max-width: $vp-mobile-max) {
+    @content;
+  }
+}
+
+@mixin vp-layout-desktop {
+  @media (min-width: $vp-layout-desktop-min) {
+    @content;
+  }
+}
+
+@mixin vp-layout-mobile {
+  @media (max-width: ($vp-layout-desktop-min - 1px)) {
+    @content;
+  }
+}

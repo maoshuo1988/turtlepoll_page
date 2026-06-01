@@ -34,13 +34,14 @@ export function ShopGachaEggStage({
 
   return (
     <div className={layout.wrapper}>
-      <ShopEggSpine displayMode={displayMode} className={layout.spine} />
+      <ShopEggSpine displayMode={displayMode} className={layout.spine} stageVariant={variant} />
       {showPet ? (
         <div className={layout.revealOverlay}>
           <ShopHatchRevealPet
             hatchResult={hatchResult}
             petDefs={petDefs}
             previewSize={layout.revealPreviewSize}
+            className="justify-end"
           />
         </div>
       ) : null}

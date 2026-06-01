@@ -1,0 +1,14 @@
+/*
+ * 视口 CSS 变量（全局）：与 viewport.scss 设计稿基准一致，供 Tailwind / 内联样式引用。
+ */
+:root {
+  --vp-desktop-base: 1920;
+  --vp-mobile-base: 375;
+  --vp-mobile-max: 768px;
+  --vp-layout-desktop-min: 1024px;
+  --vp-content-max: 80rem;
+  --vp-page-gap: clamp(0.75rem, 0.833vw, 1rem);
+  --vp-page-gap-mobile: clamp(0.625rem, 3.2vw, 0.875rem);
+  --vp-rail-padding-x: clamp(0.5rem, 5.33vw, 1.25rem);
+  --vp-scale-desktop: clamp(0.75, calc(100vw / 1920), 1.12);
+}

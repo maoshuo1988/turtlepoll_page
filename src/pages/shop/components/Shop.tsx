@@ -25,6 +25,7 @@ import {
   SHOP_AURORA_STAGE_OFFSET_X,
   SHOP_AURORA_STAGE_OFFSET_Y,
   SHOP_EGG_REVEAL_DELAY_MS,
+  SHOP_GACHA_EGG_STAGE_ANCHOR,
 } from '@/config/shopSpineAssets';
 
 const card =
@@ -453,7 +454,7 @@ export const Shop: React.FC<ShopProps> = ({
             </div>
             <div className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(8,14,30,0.18),rgba(5,10,20,0.2))]" />
             {phase !== 'idle' ? (
-              <div className="pointer-events-none absolute bottom-0 left-1/2 z-[8] -translate-x-[calc(50%+12px)] overflow-visible">
+              <div className={SHOP_GACHA_EGG_STAGE_ANCHOR.desktop.className}>
                 <ShopGachaEggStage
                   hatchPhase={phase}
                   hatchResult={hatchResult}

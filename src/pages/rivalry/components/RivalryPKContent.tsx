@@ -809,6 +809,16 @@ function HeroPK({
     ['下注', asNumber(pk.betCountA), asNumber(pk.betCountB)],
     ['胜场', pk.season.winsA, pk.season.winsB],
   ];
+  /** 底部卡片区暂注释，保留变量与组件供恢复 */
+  void [
+    HeroBottomCard,
+    onHistory,
+    latestHotText,
+    phaseText,
+    sideAOpinion,
+    sideBOpinion,
+    dataRows,
+  ];
   const handleJoinBattle = () => {
     if (onEnterBattle) {
       onEnterBattle(item);

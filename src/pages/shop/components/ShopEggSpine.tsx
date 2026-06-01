@@ -10,20 +10,25 @@ import {
 import {
   SHOP_EGG_SPINE_AABB,
   SHOP_EGG_SPINE_ASSETS,
+  SHOP_EGG_SPINE_STAGE_OFFSET,
+  SHOP_GACHA_EGG_STAGE_LAYOUT,
   SHOP_GACHA_STAGE_LAYERS,
 } from '@/config/shopSpineAssets';
 
 type ShopEggAnimationMode = 'idle' | 'open';
 type ShopEggDisplayMode = 'hidden' | 'egg' | 'glow';
 
+type ShopEggStageVariant = keyof typeof SHOP_GACHA_EGG_STAGE_LAYOUT;
+
 interface ShopEggSpineProps {
   displayMode?: ShopEggDisplayMode;
   className?: string;
+  stageVariant?: ShopEggStageVariant;
 }
 
 const EGG_LAYOUT = SHOP_GACHA_STAGE_LAYERS.egg;
 const EGG_SPINE_ASSET_LIST = [SHOP_EGG_SPINE_ASSETS.dan, SHOP_EGG_SPINE_ASSETS.guang] as const;
-const EGG_CANVAS_BLEED_RATIO = 0.75;
+const EGG_CANVAS_BLEED_RATIO = 0.88;
 const EGG_SPINE_ANIMATION_BY_MODE: Record<ShopEggAnimationMode, string> = {
   idle: 'idle',
   open: 'open',
@@ -63,6 +68,7 @@ function layoutEggSpine(
   spine: Spine,
   canvasWidth: number,
   canvasHeight: number,
+  stageOffset: { offsetX: number; offsetY: number },
   originX = 0,
   originY = 0,
 ) {
@@ -82,8 +88,8 @@ function layoutEggSpine(
         : (canvasHeight - scaledHeight) / 2 - bounds.y * scale;
 
   spine.scale.set(scale);
-  spine.x = originX + (canvasWidth - scaledWidth) / 2 - bounds.x * scale + EGG_LAYOUT.offsetX;
-  spine.y = originY + offsetY + EGG_LAYOUT.offsetY;
+  spine.x = originX + (canvasWidth - scaledWidth) / 2 - bounds.x * scale + stageOffset.offsetX;
+  spine.y = originY + offsetY + stageOffset.offsetY;
 }
 
 type EggSpinePair = {
@@ -158,7 +164,9 @@ function playEggAnimation(spines: EggSpinePair, displayMode: ShopEggDisplayMode)
 export function ShopEggSpine({
   displayMode = 'hidden',
   className = '',
+  stageVariant = 'desktop',
 }: ShopEggSpineProps) {
+  const stageOffset = SHOP_EGG_SPINE_STAGE_OFFSET[stageVariant];
   const hostRef = useRef<HTMLDivElement>(null);
   const canvasHostRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<Application | null>(null);
@@ -248,8 +256,8 @@ export function ShopEggSpine({
 
         app.stage.addChild(guang);
         app.stage.addChild(dan);
-        layoutEggSpine(guang, size.width, size.height, bleedX, bleedY);
-        layoutEggSpine(dan, size.width, size.height, bleedX, bleedY);
+        layoutEggSpine(guang, size.width, size.height, stageOffset, bleedX, bleedY);
+        layoutEggSpine(dan, size.width, size.height, stageOffset, bleedX, bleedY);
         tickSpine = (ticker) => {
           const deltaSec = ticker.deltaMS / 1000;
           spines?.guang.update(deltaSec);
@@ -297,7 +305,7 @@ export function ShopEggSpine({
       appRef.current?.destroy(true, { children: true });
       appRef.current = null;
     };
-  }, [size.height, size.width]);
+  }, [size.height, size.width, stageVariant]);
 
   useEffect(() => {
     const spines = spinePairRef.current;
@@ -317,9 +325,9 @@ export function ShopEggSpine({
     if (!spines || !isReady) return;
     const bleedX = Math.round(size.width * EGG_CANVAS_BLEED_RATIO);
     const bleedY = Math.round(size.height * EGG_CANVAS_BLEED_RATIO);
-    layoutEggSpine(spines.guang, size.width, size.height, bleedX, bleedY);
-    layoutEggSpine(spines.dan, size.width, size.height, bleedX, bleedY);
-  }, [isReady, size.height, size.width]);
+    layoutEggSpine(spines.guang, size.width, size.height, stageOffset, bleedX, bleedY);
+    layoutEggSpine(spines.dan, size.width, size.height, stageOffset, bleedX, bleedY);
+  }, [isReady, size.height, size.width, stageVariant]);
 
   return (
     <div ref={hostRef} className={`pointer-events-none ${className}`.trim()}>

@@ -51,7 +51,7 @@ export const SHOP_EGG_SPINE_AABB = {
   width: 337,
   height: 384,
   /** open 特效会超出 setup 盒，适当放大布局盒避免裁切 */
-  expand: 2.35,
+  expand: 2.55,
 } as const;
 
 export type ShopSpineAssetKey = keyof typeof SHOP_SPINE_ASSETS;
@@ -79,20 +79,47 @@ export function getShopWizardStageSize(stageWidth: number) {
 /** 抽奖区龟蛋舞台：紧贴孵化按钮正上方，底部对齐。 */
 export const SHOP_GACHA_EGG_STAGE_LAYOUT = {
   mobile: {
-    wrapper: 'relative z-[6] mx-auto h-[min(180px,42vw)] w-[min(200px,46vw)] shrink-0 overflow-visible',
+    wrapper: 'relative z-[6] mx-auto h-[min(240px,54vw)] w-[min(260px,58vw)] shrink-0 overflow-visible',
     spine:
-      'absolute bottom-0 left-1/2 z-[8] h-[min(180px,42vw)] w-[min(200px,46vw)] -translate-x-1/2 overflow-visible',
+      'absolute bottom-0 left-1/2 z-[8] h-[min(240px,54vw)] w-[min(260px,58vw)] -translate-x-1/2 overflow-visible',
     revealOverlay:
-      'pointer-events-none absolute inset-0 z-[9] flex -translate-y-5 items-center justify-center',
-    revealPreviewSize: 128,
+      'pointer-events-none absolute inset-x-0 bottom-0 z-[9] flex -translate-y-5 items-end justify-center',
+    revealPreviewSize: 156,
   },
   desktop: {
-    wrapper: 'relative z-[10] mx-auto h-[280px] w-[300px] shrink-0 overflow-visible',
+    wrapper: 'relative z-[10] mx-auto h-[360px] w-[400px] shrink-0 overflow-visible',
     spine:
-      'absolute bottom-0 left-1/2 z-[8] h-[280px] w-[300px] -translate-x-1/2 overflow-visible',
+      'absolute bottom-0 left-1/2 z-[8] h-[360px] w-[400px] -translate-x-1/2 overflow-visible',
     revealOverlay:
-      'pointer-events-none absolute inset-0 z-[9] flex -translate-y-8 items-center justify-center',
-    revealPreviewSize: 168,
+      'pointer-events-none absolute inset-x-0 bottom-0 z-[9] flex -translate-y-20 items-end justify-center',
+    revealPreviewSize: 200,
+  },
+} as const;
+
+/** 开蛋 Spine 在舞台内的微调（底对齐后向下压，避免放大后蛋身悬空）。 */
+export const SHOP_EGG_SPINE_STAGE_OFFSET: Record<
+  keyof typeof SHOP_GACHA_EGG_STAGE_LAYOUT,
+  { offsetX: number; offsetY: number }
+> = {
+  mobile: { offsetX: -6, offsetY: 98 },
+  desktop: { offsetX: -6, offsetY: 118 },
+};
+
+/** 手机端分层：开蛋时法师层需高于蛋/光效（z-[10]），蛋舞台 z-[7]。 */
+export const SHOP_GACHA_MOBILE_LAYER_Z = {
+  stageIdle: 'z-[5]',
+  stageHatch: 'z-[10]',
+  eggHatch: 'z-[7]',
+} as const;
+
+/** 开蛋舞台相对孵化按钮的定位（容器底边贴按钮上沿，内容在容器内再底对齐）。 */
+export const SHOP_GACHA_EGG_STAGE_ANCHOR = {
+  mobile: {
+    className:
+      'pointer-events-none absolute bottom-[58px] left-1/2 z-[7] -translate-x-[calc(50%+10px)] overflow-visible',
+  },
+  desktop: {
+    className: 'pointer-events-none absolute bottom-0 left-1/2 z-[8] -translate-x-[calc(50%+12px)] overflow-visible',
   },
 } as const;
 
@@ -176,11 +203,11 @@ export const SHOP_GACHA_STAGE_WIZARDS_MOBILE: Pick<typeof SHOP_GACHA_STAGE_LAYER
   wizard: {
     ...SHOP_GACHA_STAGE_LAYERS.wizard,
     offsetY: -SHOP_WIZARD_MOBILE_LIFT_PX,
-    className: 'absolute bottom-6 right-0 z-[4]',
+    className: 'absolute bottom-6 right-0 z-[11]',
   },
   wizard2: {
     ...SHOP_GACHA_STAGE_LAYERS.wizard2,
     offsetY: -SHOP_WIZARD_MOBILE_LIFT_PX,
-    className: 'absolute bottom-6 left-[6%] z-[4]',
+    className: 'absolute bottom-6 left-[4%] z-[11] sm:left-[5%]',
   },
 };

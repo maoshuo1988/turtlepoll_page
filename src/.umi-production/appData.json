@@ -65,7 +65,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 7
       },
       "enableBy": "register"
     },
@@ -95,7 +95,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -112,7 +112,7 @@
             1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -129,7 +129,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -142,7 +142,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -156,10 +156,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            6
+            11
           ]
         },
-        "register": 10
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -239,7 +239,7 @@
             0
           ]
         },
-        "register": 4
+        "register": 5
       },
       "enableBy": "register"
     },
@@ -1134,7 +1134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 40
+        "register": 47
       },
       "enableBy": "register"
     },
@@ -1147,7 +1147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 21
       },
       "enableBy": "config"
     },
@@ -1160,7 +1160,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 9
       },
       "enableBy": "config"
     },
@@ -1174,7 +1174,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            1
+            0
           ]
         },
         "register": 0
@@ -1190,7 +1190,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1203,7 +1203,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1216,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 21
+        "register": 19
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1228,7 +1228,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1280,10 +1280,10 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            0
+            1
           ]
         },
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1347,7 +1347,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1360,7 +1360,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -1373,7 +1373,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1386,7 +1386,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1411,7 +1411,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1424,7 +1424,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1437,7 +1437,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1450,7 +1450,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1463,7 +1463,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1475,7 +1475,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 12
       },
       "enableBy": "config"
     },
@@ -1488,7 +1488,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1525,7 +1525,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1538,7 +1538,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 14
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1628,7 +1628,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1641,7 +1641,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1654,7 +1654,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1667,7 +1667,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 24
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 20
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1705,7 +1705,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1731,7 +1731,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1783,7 +1783,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1796,7 +1796,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1835,7 +1835,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1861,7 +1861,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1900,7 +1900,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1913,7 +1913,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1926,7 +1926,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 13
       },
       "enableBy": "register"
     },
@@ -1965,7 +1965,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     }
@@ -2435,7 +2435,7 @@
       "id": "battleApi",
       "file": "battleApi.ts",
       "absPath": "/battleApi",
-      "__content": "/**\n * 文件说明：battle Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 开战广场 / Battle Square\n/// 基础路径: /api/battle\n\n// 用户侧 battle 接口常量统一放在这里，页面和 hooks 都只引用这一层。\n// 赌局列表：支持分页、按状态筛选、只看我参与的 battle。\nexport const API_Battle_List = \"/api/battle/list\";\n// 赌局统计：顶部广场统计卡片。\nexport const API_Battle_Stats = \"/api/battle/stats\";\n// 赌局详情：返回 battle 基础信息、我的动作状态、我的结算明细。\nexport const API_Battle_By = \"/api/battle/by\";\n// 创建赌局：庄家发起一场新的开战广场 battle。\nexport const API_Battle_Create = \"/api/battle/create\";\n// 加入/追加下注：挑战者加入 battle，公开场会收 5% 入场费。\nexport const API_Battle_Join = \"/api/battle/join\";\n// 庄家加注：仅庄家可追加自己的押注额度。\nexport const API_Battle_Banker_Add_Stake = \"/api/battle/banker_add_stake\";\n// 庄家宣布结果：在 pending 阶段提交 banker_wins / banker_loses。\nexport const API_Battle_Declare = \"/api/battle/declare\";\n// 挑战者确认：对庄家的宣判结果表示同意。\nexport const API_Battle_Challenger_Confirm = \"/api/battle/challenger_confirm\";\n// 挑战者异议：对庄家的宣判结果提出 dispute，进入管理员仲裁。\nexport const API_Battle_Challenger_Dispute = \"/api/battle/challenger_dispute\";\n// 提取奖励：battle settled 后，一次性提取我的结算金额。\nexport const API_Battle_Withdraw = \"/api/battle/withdraw\";\n\n// 管理端裁决接口目前前台页面没直接使用，但类型层和 hook 已预留。\nexport const API_Admin_Battle_Resolve = \"/api/admin/battle/resolve\";\n"
+      "__content": "/**\n * 文件说明：battle Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 开战广场 / Battle Square\n/// 基础路径: /api/battle\n\n// 用户侧 battle 接口常量统一放在这里，页面和 hooks 都只引用这一层。\n// 赌局列表：支持分页、按状态筛选、只看我参与的 battle。\nexport const API_Battle_List = \"/api/battle/list\";\n// 赌局统计：顶部广场统计卡片。\nexport const API_Battle_Stats = \"/api/battle/stats\";\n// 赌局详情：返回 battle 基础信息、我的动作状态、我的结算明细。\nexport const API_Battle_By = \"/api/battle/by\";\n// 创建赌局：庄家发起一场新的开战广场 battle。\nexport const API_Battle_Create = \"/api/battle/create\";\n// 加入/追加下注：挑战者加入 battle，公开场会收 5% 入场费。\nexport const API_Battle_Join = \"/api/battle/join\";\n// 庄家加注：仅庄家可追加自己的押注额度。\nexport const API_Battle_Banker_Add_Stake = \"/api/battle/banker_add_stake\";\n// 庄家宣布结果：在 pending 阶段提交 banker_wins / banker_loses。\nexport const API_Battle_Declare = \"/api/battle/declare\";\n// 挑战者确认：对庄家的宣判结果表示同意。\nexport const API_Battle_Challenger_Confirm = \"/api/battle/challenger_confirm\";\n// 挑战者异议：对庄家的宣判结果提出 dispute，进入管理员仲裁。\nexport const API_Battle_Challenger_Dispute = \"/api/battle/challenger_dispute\";\n// 提取奖励：battle settled 后，一次性提取我的结算金额。\nexport const API_Battle_Withdraw = \"/api/battle/withdraw\";\n\n"
     },
     "topicApi": {
       "path": "topicApi",

@@ -1,0 +1,17 @@
+@import './viewport.scss';
+
+.webOnly {
+  display: block;
+
+  @include vp-mobile {
+    display: none;
+  }
+}
+
+.mobileOnly {
+  display: none;
+
+  @include vp-mobile {
+    display: block;
+  }
+}

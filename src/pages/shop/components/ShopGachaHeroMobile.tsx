@@ -6,7 +6,9 @@ import type { PetDefNormalized, PetEggHatchResponse } from '@/hooks/petTypes';
 import {
   SHOP_AURORA_STAGE_OFFSET_MOBILE_X,
   SHOP_AURORA_STAGE_OFFSET_MOBILE_Y,
+  SHOP_GACHA_EGG_STAGE_ANCHOR,
   SHOP_GACHA_HERO_MOBILE_MIN_HEIGHT,
+  SHOP_GACHA_MOBILE_LAYER_Z,
 } from '@/config/shopSpineAssets';
 import { ShopGachaEggStage, type ShopEggHatchPhase } from './ShopGachaEggStage';
 import { ShopGachaStageLayers } from './ShopGachaStageLayers';
@@ -46,23 +48,27 @@ export function ShopGachaHeroMobile({
 }: ShopGachaHeroMobileProps) {
   return (
     <section
-      className="relative overflow-hidden rounded-[18px] border border-white/10 bg-[#071527] shadow-[0_16px_44px_rgba(0,0,0,0.45)] ring-1 ring-white/[0.04]"
+      className="relative overflow-x-hidden overflow-y-visible rounded-[18px] border border-white/10 bg-[#071527] shadow-[0_16px_44px_rgba(0,0,0,0.45)] ring-1 ring-white/[0.04]"
       style={{ minHeight: SHOP_GACHA_HERO_MOBILE_MIN_HEIGHT }}
     >
-      <img src={SHOP_BG} alt="" className="absolute inset-0 h-full w-full object-cover object-center" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[18px]">
+        <img src={SHOP_BG} alt="" className="absolute inset-0 h-full w-full object-cover object-center" />
+        <div className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(6,12,26,0.2),rgba(4,8,18,0.55))]" />
+        <div className="pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(ellipse_120%_70%_at_50%_18%,transparent_0%,rgba(0,0,0,0.35)_100%)]" />
+      </div>
       <div
-        className="pointer-events-none absolute inset-0 z-[5] h-full w-full overflow-visible"
+        className={`pointer-events-none absolute inset-0 h-full w-full overflow-visible ${
+          hatchPhase !== 'idle' ? SHOP_GACHA_MOBILE_LAYER_Z.stageHatch : SHOP_GACHA_MOBILE_LAYER_Z.stageIdle
+        }`}
         style={{
           transform: `translate(${SHOP_AURORA_STAGE_OFFSET_MOBILE_X}px, ${SHOP_AURORA_STAGE_OFFSET_MOBILE_Y}px)`,
         }}
       >
         <ShopGachaStageLayers variant="mobile" />
       </div>
-      <div className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(6,12,26,0.2),rgba(4,8,18,0.55))]" />
-      <div className="pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(ellipse_120%_70%_at_50%_18%,transparent_0%,rgba(0,0,0,0.35)_100%)]" />
 
       {hatchPhase !== 'idle' ? (
-        <div className="pointer-events-none absolute bottom-[58px] left-1/2 z-[8] -translate-x-[calc(50%+10px)] overflow-visible">
+        <div className={SHOP_GACHA_EGG_STAGE_ANCHOR.mobile.className}>
           <ShopGachaEggStage
             hatchPhase={hatchPhase}
             hatchResult={hatchResult}
