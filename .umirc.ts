@@ -22,6 +22,7 @@ export default defineConfig({
   // },
   routes: [
     { path: '/jump', component: 'jump', name: '跳一跳' },
+    { path: '/turtle-arena', component: 'turtle-arena', name: '龟战 Arena' },
     {
       path: '/',
       name: '首页',

@@ -9,10 +9,11 @@ import { normalizePredictionCardItem, usePredictionCardItems, type PredictionBet
 import { PredictionBetModal } from './PredictionBetModal';
 import { PredictionCardCover } from './PredictionCardCover';
 import { useRequestCoinSettle } from '@/hooks/useCoinRequests';
-import { usePredictTagCategoryLabel } from './usePredictTagCategoryLabel';
+import { PredictTagCategoryBar } from './PredictTagCategoryBar';
 
 interface NewsFeedProps {
   selectedTag: string | null;
+  onTagChange: (slug: string | null) => void;
   onBetSuccess?: (item: PredictionCardItem, option: PredictionBetOption, result: PlaceBetResult) => void;
   onRequireAuth?: () => void;
   onEnterBattle?: (item: PredictionCardItem) => void;
@@ -336,14 +337,20 @@ const NewsCard: React.FC<{ item: PredictionCardItem; index: number; onBetSuccess
   );
 };
 
-export const NewsFeed: React.FC<NewsFeedProps> = ({ selectedTag, onBetSuccess, onRequireAuth, onEnterBattle }) => {
+export const NewsFeed: React.FC<NewsFeedProps> = ({
+  selectedTag,
+  onTagChange,
+  onBetSuccess,
+  onRequireAuth,
+  onEnterBattle,
+}) => {
   const { feedItems: displayItems } = usePredictionCardItems(selectedTag);
-  const categoryLabel = usePredictTagCategoryLabel(selectedTag);
   return (
-    <div className="legacy-news-feed legacy-pred-feed">
-      <h2 className="legacy-pred-feed-title !mb-4 flex items-center gap-2 px-1.5 md:px-1 text-base font-bold text-slate-700 dark:text-rdark-text">
+    <div className="legacy-news-feed legacy-pred-feed min-w-0 w-full">
+      <PredictTagCategoryBar compact selectedTag={selectedTag} onTagChange={onTagChange} />
+      <h2 className="legacy-pred-feed-title !mb-4 !mt-3 flex items-center gap-2 px-1.5 md:px-1 text-base font-bold text-slate-700 dark:text-rdark-text">
         <span className="legacy-pred-feed-title-bar h-5 w-1 rounded-full bg-gradient-to-b from-blue-500 to-cyan-400" />
-        {categoryLabel ? `${categoryLabel} 相关预测` : '最新爆料'}
+        最新爆料
       </h2>
       <div className="legacy-pred-feed-grid grid grid-cols-1 gap-3 md:gap-4 md:grid-cols-2 xl:grid-cols-3">
         {displayItems.map((item, i) => (

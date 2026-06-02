@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="menu-bg-active">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#0a0e18" />
+  <!-- PWA / iOS 添加到主屏幕 (standalone 全屏横屏, 去掉 Safari 地址栏 → 视口稳定, UI 不偏) -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="斗龟场" />
+  <title>龟龟对战</title>
+  <script>
+    // v0.9.5.A74: 若 URL 没尾随斜杠, 强制加 — 否则相对路径解析到 ROOT 全 404
+    if (location.pathname && !location.pathname.endsWith('/') && !location.pathname.endsWith('.html')) {
+      location.replace(location.pathname + '/' + location.search + location.hash);
+    }
+  </script>
+  <style>
+    /* m6x11 像素字体 (英文/数字) */
+    @font-face {
+      font-family: 'm6x11';
+      src: url('fonts/m6x11.ttf') format('truetype');
+      font-display: swap;
+    }
+    /* 像素中文字体 — 待放入 public/fonts/pixel-zh.ttf (推荐开源 Fusion Pixel / Zpix);
+       文件不存在时 font-display:swap 自动回退到后面的 m6x11/YaHei, 不报错。
+       全局 font-family 已统一前置 'pixel-zh', 文件就位即全站生效。 */
+    @font-face {
+      font-family: 'pixel-zh';
+      src: url('fonts/pixel-zh.ttf') format('truetype');
+      font-display: swap;
+    }
+    /* 杀掉所有浏览器默认行为 — Steam 独立游戏感的基础 */
+    *, *::before, *::after { box-sizing: border-box; }
+    html {
+      width: 100%; height: 100%;
+      background: #0a0e18;
+    }
+    body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      background: transparent;            /* 关键: body 透明, 才不会盖住 html::before */
+      overflow: hidden;
+      user-select: none; -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overscroll-behavior: none;
+      font-family: 'pixel-zh', 'Microsoft YaHei', system-ui, sans-serif;
+      /* F1: 一套完整主题光标 (深海青) — 默认箭头 (见下方 :root 变量统一管理) */
+      cursor: var(--cur-default);
+    }
+    /* ════ F1 主题光标集 — 像素手套 (SVG rect 网格, crispEdges 像素感) ════
+       --glove: 经典点击像素手套 (白手套+青袖口, 24×32@2px格, 指尖为热点 8,1)。
+       默认态 + 可点态都用手套 (满屏像素手套感); 抓取(青握柄)/禁用(红圈斜杠) 保留区分。
+       属性选择器命中内联 cursor:pointer/grab/not-allowed (含 Phaser 给 canvas 设的)。 */
+    :root {
+      --glove: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='32' shape-rendering='crispEdges'%3E%3Cg fill='%23222'%3E%3Crect x='6' y='0' width='4' height='2'/%3E%3Crect x='4' y='2' width='2' height='2'/%3E%3Crect x='10' y='2' width='2' height='2'/%3E%3Crect x='4' y='4' width='2' height='2'/%3E%3Crect x='10' y='4' width='2' height='2'/%3E%3Crect x='4' y='6' width='2' height='2'/%3E%3Crect x='10' y='6' width='2' height='2'/%3E%3Crect x='4' y='8' width='2' height='2'/%3E%3Crect x='10' y='8' width='6' height='2'/%3E%3Crect x='4' y='10' width='2' height='2'/%3E%3Crect x='16' y='10' width='4' height='2'/%3E%3Crect x='4' y='12' width='2' height='2'/%3E%3Crect x='20' y='12' width='2' height='2'/%3E%3Crect x='2' y='14' width='4' height='2'/%3E%3Crect x='20' y='14' width='2' height='2'/%3E%3Crect x='0' y='16' width='2' height='2'/%3E%3Crect x='6' y='16' width='2' height='2'/%3E%3Crect x='20' y='16' width='2' height='2'/%3E%3Crect x='0' y='18' width='2' height='2'/%3E%3Crect x='6' y='18' width='2' height='2'/%3E%3Crect x='20' y='18' width='2' height='2'/%3E%3Crect x='0' y='20' width='2' height='2'/%3E%3Crect x='20' y='20' width='2' height='2'/%3E%3Crect x='2' y='22' width='2' height='2'/%3E%3Crect x='20' y='22' width='2' height='2'/%3E%3Crect x='2' y='24' width='2' height='2'/%3E%3Crect x='18' y='24' width='2' height='2'/%3E%3Crect x='4' y='26' width='2' height='2'/%3E%3Crect x='16' y='26' width='2' height='2'/%3E%3Crect x='4' y='28' width='2' height='2'/%3E%3Crect x='16' y='28' width='2' height='2'/%3E%3Crect x='6' y='30' width='10' height='2'/%3E%3C/g%3E%3Cg fill='%23eee'%3E%3Crect x='6' y='2' width='4' height='2'/%3E%3Crect x='6' y='4' width='4' height='2'/%3E%3Crect x='6' y='6' width='4' height='2'/%3E%3Crect x='6' y='8' width='4' height='2'/%3E%3Crect x='6' y='10' width='10' height='2'/%3E%3Crect x='6' y='12' width='14' height='2'/%3E%3Crect x='6' y='14' width='14' height='2'/%3E%3Crect x='2' y='16' width='4' height='2'/%3E%3Crect x='8' y='16' width='12' height='2'/%3E%3Crect x='2' y='18' width='4' height='2'/%3E%3Crect x='8' y='18' width='12' height='2'/%3E%3Crect x='2' y='20' width='18' height='2'/%3E%3Crect x='4' y='22' width='16' height='2'/%3E%3Crect x='4' y='24' width='14' height='2'/%3E%3C/g%3E%3Cg fill='%237ee0ff'%3E%3Crect x='6' y='26' width='10' height='2'/%3E%3Crect x='6' y='28' width='10' height='2'/%3E%3C/g%3E%3C/svg%3E");
+      --cur-default: var(--glove) 8 1, auto;
+      --cur-pointer: var(--glove) 8 1, pointer;
+      --cur-grab: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='14' cy='14' r='9' fill='rgba(124,224,255,0.14)' stroke='%237ee0ff' stroke-width='2'/%3E%3Crect x='10.5' y='9' width='2' height='10' rx='1' fill='%237ee0ff'/%3E%3Crect x='15.5' y='9' width='2' height='10' rx='1' fill='%237ee0ff'/%3E%3C/svg%3E") 14 14, grab;
+      --cur-disabled: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='14' cy='14' r='9' fill='none' stroke='%23ff7a7a' stroke-width='2'/%3E%3Cline x1='8' y1='8' x2='20' y2='20' stroke='%23ff7a7a' stroke-width='2'/%3E%3C/svg%3E") 14 14, not-allowed;
+    }
+    a, button, summary, [role="button"], input[type="button"], input[type="submit"], label[for],
+    [style*="cursor:pointer"], [style*="cursor: pointer"] { cursor: var(--cur-pointer) !important; }
+    [style*="cursor:grab"], [style*="cursor: grab"] { cursor: var(--cur-grab) !important; }
+    [style*="cursor:grabbing"], [style*="cursor: grabbing"] { cursor: var(--cur-grab) !important; }
+    :disabled, [disabled], [style*="cursor:not-allowed"], [style*="cursor: not-allowed"] { cursor: var(--cur-disabled) !important; }
+    /* v0.9.5.A12 修按钮/工具栏被遮: pseudo 元素 z-index 负数才在 body content 后面
+       照 JS base.css L114/L121 同款 (-2 / -1) */
+    html.menu-bg-active::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-color: #1a3a2a;
+      background-image: url('menu/menu-bg-tile.png');
+      background-repeat: repeat;
+      background-size: 512px 512px;
+      animation: menuBgDrift 25s linear infinite;
+      z-index: -2;
+      pointer-events: none;
+    }
+    html.menu-bg-active::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg, rgba(8,12,20,.15) 0%, rgba(8,12,20,.25) 60%, rgba(8,12,20,.40) 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    @keyframes menuBgDrift {
+      0%   { background-position: 0 0; }
+      100% { background-position: 512px 512px; }
+    }
+    /* 主菜单标题序列帧动画 (用户 Aseprite 导出: 5 帧 421×237, 各 200ms)。
+       DOM + CSS steps → 设备分辨率锐利 (不走画布上采样)。尺寸用设计空间像素, 由 Phaser DOM 容器整体缩放。
+       background-size 1800px = 360(显示宽)×5帧; 关键帧 -1800px 必须 = background-size 宽 (改宽两处同改)。 */
+    .menu-title-anim {
+      width: 360px; height: 203px;            /* 帧 421×237 等比缩到 360×203 */
+      background-image: url('menu/menu-title-anim.png');
+      background-repeat: no-repeat;
+      background-size: 1800px 203px;
+      animation: menuTitlePlay 1s steps(5) infinite;   /* 5 帧 × 200ms = 1s */
+      pointer-events: none;
+    }
+    @keyframes menuTitlePlay { to { background-position-x: -1800px; } }
+    /* v0.9.5.A13: val-* 配色 (照 JS battle.css L677-697) — Codex / battle tooltip DOM 富文本 native 渲染用 */
+    .val-normal      { color:#ff6b6b; font-weight:700; }
+    .val-magic       { color:#4dabf7; font-weight:700; }
+    .val-true        { color:#ffffff; font-weight:700; text-shadow:0 0 4px rgba(255,255,255,.5); }
+    .val-pierce      { color:#ffffff; font-weight:700; text-shadow:0 0 4px rgba(255,255,255,.5); }
+    .val-shield      { color:rgba(255,255,255,.9); font-weight:700; }
+    .val-heal        { color:#06d6a0; font-weight:700; }
+    .val-buff        { color:#7dffb3; font-weight:700; }
+    .val-atk         { color:#ff9f43; font-weight:700; }
+    .val-extra       { color:#ffcc00; font-weight:700; text-shadow:0 0 3px rgba(255,204,0,.4); }
+    .val-def         { color:#ffd93d; font-weight:700; }
+    .val-mr          { color:#4dabf7; font-weight:700; }
+    .val-lifesteal   { color:#e85d75; font-weight:700; }
+    .val-burn        { color:#ff6600; font-weight:700; }
+    .val-heal-reduce { color:#6b8e23; font-weight:700; }
+    .val-stun        { color:#ffee00; font-weight:700; }
+    .val-dot         { color:#9b59b6; font-weight:700; }
+    .val-shield-break{ color:#ff4757; font-weight:700; }
+    .val-poison      { color:#6b8e23; font-weight:700; }
+    .val-reflect     { color:#e67e22; font-weight:700; }
+    .val-crit        { color:#ff4757; font-weight:700; }
+    .val-crit-dmg    { color:#ff6348; font-weight:700; }
+    /* E3/29: 飘字 DOM overlay 样式 (1:1 JS battle.css L357-410) — 替代 Phaser canvas Text
+       重粗 900 + 8 向 text-shadow 描边 + pixel-rendering = 跟 JS 视觉一致厚重感
+       canvas Text strokeThickness:4 比这薄, JS 看起来更大就是因为这套 chunky style */
+    .floating-num {
+      position: absolute;
+      left: 0; top: 0;
+      font-family: 'm6x11', Impact, 'Arial Black', 'Helvetica Neue', system-ui, sans-serif;
+      font-weight: 900;
+      font-size: 28px;
+      letter-spacing: 1px;
+      pointer-events: none;
+      white-space: nowrap;
+      text-shadow:
+        -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000,
+        -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000,
+        0 3px 4px rgba(0,0,0,.6);
+      image-rendering: pixelated;
+      will-change: transform, opacity;
+      -webkit-font-smoothing: none;
+      transform-origin: center center;
+    }
+    .floating-num.direct-dmg   { color:#ff4444; font-size:22px; }
+    .floating-num.phys-dmg     { color:#ff4444; font-size:22px; }
+    .floating-num.magic-dmg    { color:#4dabf7; font-size:22px; }
+    .floating-num.true-dmg     { color:#ffffff; font-size:22px; }
+    .floating-num.pierce-dmg   { color:#ffffff; font-size:20px; }
+    .floating-num.shield-dmg   { color:#aaaaaa; font-size:16px; }
+    .floating-num.heal-num     { color:#06d6a0; font-size:24px; }
+    .floating-num.heal         { color:#06d6a0; font-size:24px; }
+    .floating-num.shield-num   { color:#ffffff; font-size:22px; }
+    .floating-num.shield-gain  { color:#ffffff; font-size:22px; }
+    .floating-num.crit-dmg     { color:#ff4444; font-size:26px; }
+    .floating-num.crit-magic   { color:#4dabf7; font-size:26px; }
+    .floating-num.crit-true    { color:#ffffff; font-size:26px; }
+    .floating-num.crit-pierce  { color:#ffffff; font-size:24px; }
+    .floating-num.crit         { color:#ff4444; font-size:26px; }
+    .floating-num.crit-label   { color:#ffd700; font-size:14px; }
+    .floating-num.dot-dmg      { color:#ff6600; font-size:18px; }
+    .floating-num.counter-dmg  { color:#ffd93d; font-size:20px; }
+    .floating-num.death-explode{ color:#ff2222; font-size:24px; }
+    .floating-num.passive-num  { color:#7dffb3; font-size:16px; }
+    .floating-num.debuff-label { color:#ff9f43; font-size:14px; }
+    .floating-num.bubble-num   { color:#4cc9f0; font-size:18px; }
+    .floating-num.bubble-burst { color:#ff9f43; font-size:22px; }
+    .floating-num.dodge-num    { color:#a0e8ff; font-size:16px; }
+    .floating-num.miss         { color:#a0e8ff; font-size:16px; }
+    /* E3/31: 暴击 ::before 加 crit-dmg-icon (JS battle.css L394-398 1:1) */
+    .floating-num.crit-dmg::before,
+    .floating-num.crit-magic::before,
+    .floating-num.crit-true::before,
+    .floating-num.crit-pierce::before,
+    .floating-num.crit::before {
+      content: '';
+      display: inline-block;
+      width: 20px; height: 20px;
+      background: url('stats/crit-dmg-icon.png') center/contain no-repeat;
+      vertical-align: middle;
+      margin-right: 1px;
+    }
+    img { -webkit-user-drag: none; user-drag: none; }
+
+    /* E3/46: TeamSelect DOM overlay — JS games/turtle-battle/css/base.css 1:1 复制
+       (#screenSelect + .formation-grid + .fg-slot + .pet-card + .mode-guide + .pg-pill 等)
+       E3/47: transparent bg + 自身可滚动 — 让 menu-bg-active tile bg 透过 */
+    #poc-team-select-root {
+      position: fixed; inset: 0; z-index: 200;
+      overflow-y: auto;
+      background: transparent;
+      font-family: 'pixel-zh', 'Microsoft YaHei', system-ui, sans-serif;
+      color: #eee;
+      padding: 20px 16px;
+      box-sizing: border-box;
+    }
+    #poc-team-select-root::-webkit-scrollbar { width: 8px }
+    #poc-team-select-root::-webkit-scrollbar-thumb { background: rgba(255,216,107,.3); border-radius: 4px }
+    #poc-team-select-root .screen-title {
+      text-align: center; font-size: 24px; color: #ffd86b; font-weight: 700;
+      margin: 0 0 14px; font-family: 'm6x11', system-ui, sans-serif;
+    }
+    #poc-team-select-root .mode-guide {
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06);
+      border-radius: 10px; padding: 10px 16px; margin: 0 auto 14px;
+      max-width: 600px; font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6;
+    }
+    #poc-team-select-root .guide-header { font-size: 15px; font-weight: 700; color: #eee; margin-bottom: 4px }
+    #poc-team-select-root .guide-tips { margin: 0; padding-left: 20px }
+    #poc-team-select-root .guide-tips li { margin-bottom: 2px }
+    #poc-team-select-root .select-top {
+      display: flex; align-items: center; justify-content: center;
+      gap: 20px; margin-bottom: 12px; flex-wrap: wrap; padding: 12px 16px;
+    }
+    #poc-team-select-root .formation-grid {
+      display: flex; flex-direction: column; gap: 6px; align-items: center;
+      padding: 10px 14px 12px; border-radius: 14px;
+      background: rgba(74,40,16,.35); border: 2px solid rgba(255,216,107,.25);
+    }
+    #poc-team-select-root .formation-grid.is-full {
+      border-color: #ffd86b;
+      box-shadow: 0 0 14px rgba(255,216,107,.4), inset 0 0 18px rgba(255,216,107,.08);
+    }
+    #poc-team-select-root .fg-row { display: flex; align-items: center; gap: 6px }
+    #poc-team-select-root .fg-label {
+      width: 38px; font-size: 12px; color: #ffd86b; font-weight: 700;
+      text-align: right; padding-right: 6px;
+    }
+    #poc-team-select-root .fg-slot {
+      width: 80px; height: 80px;
+      border: 2px dashed rgba(255,216,107,.35); border-radius: 10px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; transition: .15s; background: rgba(255,216,107,.05);
+      position: relative;
+    }
+    #poc-team-select-root .fg-slot:hover { border-color: #ffd86b; background: rgba(255,216,107,.1) }
+    #poc-team-select-root .fg-slot.filled {
+      border-style: solid; border-color: #ffd86b; background: rgba(255,216,107,.12);
+      box-shadow: 0 0 8px rgba(255,216,107,.3);
+    }
+    #poc-team-select-root .fg-slot.fg-active {
+      border-color: #fff3a0; box-shadow: 0 0 12px rgba(255,243,160,.6);
+    }
+    /* JS scene.css:424 .fg-selected — tap-to-swap 第一次点选中后金色边 */
+    #poc-team-select-root .fg-slot.fg-selected {
+      border-color: #ffcc00; border-style: solid;
+      background: rgba(255,204,0,.18);
+      box-shadow: 0 0 12px rgba(255,204,0,.55);
+      transform: scale(1.04);
+    }
+    #poc-team-select-root .fg-slot.drag-over {
+      border-color: #fff3a0; background: rgba(255,243,160,.18);
+      transform: scale(1.06); box-shadow: 0 0 14px rgba(255,243,160,.6);
+    }
+    #poc-team-select-root .fg-slot.fg-summon-slot {
+      border-color: #ffc850; background: rgba(255,200,80,.1);
+    }
+    #poc-team-select-root .fg-empty { color: rgba(255,216,107,.5); font-size: 13px }
+    #poc-team-select-root .fg-turtle {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      width: 100%; height: 100%; justify-content: center;
+    }
+    #poc-team-select-root .fg-turtle img { width: 48px; height: 48px; image-rendering: pixelated }
+    #poc-team-select-root .fg-name { font-size: 10px; font-weight: 700 }
+    #poc-team-select-root .fg-summon-icon { font-size: 28px; font-weight: bold }
+
+    #poc-team-select-root .select-actions { display: flex; gap: 12px; align-items: center; flex-direction: column }
+    #poc-team-select-root .select-btn {
+      padding: 8px 16px; border: 1px solid rgba(255,255,255,.15);
+      background: rgba(40,30,20,.8); color: #eee; font-size: 13px; font-family: inherit;
+      cursor: pointer; border-radius: 6px; transition: .15s;
+    }
+    #poc-team-select-root .select-btn:hover { border-color: #ffd86b; background: rgba(74,40,16,.6) }
+    #poc-team-select-root .select-cta {
+      padding: 10px 24px; font-size: 18px; font-family: 'm6x11', system-ui, sans-serif;
+      font-weight: 700; letter-spacing: 1.5px;
+      background: linear-gradient(180deg, #b08040 0%, #6b3d10 100%);
+      color: #2a1605; border: 2px solid #6b3d10; border-radius: 8px;
+      cursor: not-allowed; opacity: .55; transition: .2s;
+      box-shadow: 0 3px 6px rgba(0,0,0,.4);
+    }
+    #poc-team-select-root .select-cta:not(:disabled) {
+      background: linear-gradient(180deg, #ffd86b 0%, #c47800 100%);
+      cursor: pointer; opacity: 1;
+      animation: pocSelectCtaPulse 1.4s ease-in-out infinite;
+    }
+    @keyframes pocSelectCtaPulse {
+      0%,100% { box-shadow: 0 3px 6px rgba(0,0,0,.4) }
+      50% { box-shadow: 0 3px 12px rgba(255,216,107,.6) }
+    }
+    #poc-team-select-root .synergy-preview {
+      background: rgba(0,0,0,.5); border: 1px solid rgba(255,216,107,.3);
+      border-radius: 8px; padding: 8px 12px; max-width: 360px;
+    }
+    #poc-team-select-root .synergy-preview-title {
+      font-size: 12px; color: #ffd86b; font-weight: 700; margin-bottom: 6px; letter-spacing: 2px;
+    }
+    #poc-team-select-root .synergy-preview-item {
+      display: flex; gap: 8px; align-items: baseline; margin-bottom: 3px; font-size: 11px;
+    }
+    #poc-team-select-root .synergy-preview-item.t3 .synergy-preview-tag { color: #ffd93d; font-weight: 700 }
+    #poc-team-select-root .synergy-preview-item.t2 .synergy-preview-tag { color: #aaa; font-weight: 700 }
+    #poc-team-select-root .synergy-preview-desc { color: #bcd }
+    #poc-team-select-root .synergy-preview-empty { font-size: 11px; color: #888; font-style: italic }
+
+    #poc-team-select-root .pg-filter-bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 10px; padding: 8px 16px 6px; max-width: 1100px; margin: 0 auto;
+    }
+    #poc-team-select-root .pg-filter-pills { display: flex; flex-wrap: wrap; gap: 6px }
+    #poc-team-select-root .pg-pill {
+      padding: 5px 12px; border-radius: 999px;
+      border: 1px solid rgba(255,216,107,.25);
+      background: rgba(255,216,107,.06); color: rgba(255,255,255,.7);
+      font-size: 12px; font-family: inherit; font-weight: 700; letter-spacing: 1px;
+      cursor: pointer; transition: all .15s;
+    }
+    #poc-team-select-root .pg-pill:hover { border-color: rgba(255,216,107,.55); color: #ffd86b }
+    #poc-team-select-root .pg-pill.active {
+      background: linear-gradient(180deg, #ffd86b 0%, #c47800 100%);
+      color: #2a1605; border-color: #6b3d10;
+      box-shadow: 0 2px 6px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.4);
+    }
+    #poc-team-select-root .pg-sort {
+      background: rgba(255,216,107,.08); border: 1px solid rgba(255,216,107,.25);
+      color: #eee; font-family: inherit; font-size: 12px;
+      padding: 4px 8px; border-radius: 6px; cursor: pointer;
+    }
+    /* P11 (v2): 完全移除 max-width cap — JS base.css:186 #screenSelect{max-width:none}
+       grid 跟随 #screenSelect 满宽 (padding:20px 16px 由 root 决定), JS desktop @media:
+       grid-template-columns repeat(auto-fill, minmax(200px, 1fr)) gap:18px padding:14px
+       上一版 max-width:1400 是自创 cap, 用户报 "还是往中间挤" — 去掉. */
+    #poc-team-select-root .pet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px; padding: 14px;
+      background: rgba(15,20,30,.45);
+      border: 1px solid rgba(255,217,102,.3);
+      border-radius: 12px;
+    }
+    /* JS base.css:730 + 1018 desktop override 1:1 */
+    #poc-team-select-root .pet-card {
+      background: rgba(74,40,16,.4); border: 2px solid rgba(255,216,107,.2);
+      border-radius: 12px; padding: 20px 14px; text-align: center;
+      cursor: pointer; transition: .2s; position: relative;
+    }
+    #poc-team-select-root .pet-card:hover {
+      border-color: #ffd86b; transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255,216,107,.18);
+    }
+    #poc-team-select-root .pet-card.selected {
+      border-color: #ffd86b; background: rgba(255,216,107,.1);
+      box-shadow: 0 0 16px rgba(255,216,107,.45);
+    }
+    #poc-team-select-root .pet-card.dragging { opacity: .5; transform: scale(.95) }
+    #poc-team-select-root .pet-rarity-badge {
+      position: absolute; top: 6px; left: 6px;
+      padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 800;
+      letter-spacing: 1px; color: #1a1a2e;
+      box-shadow: 0 1px 3px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.4);
+      z-index: 5; pointer-events: none;
+    }
+    /* JS base.css:764 + 1022 desktop override 1:1 — min-height 144 + 1:1 aspect (没改长宽比) */
+    #poc-team-select-root .pet-avatar {
+      display: flex; justify-content: center; align-items: center;
+      min-height: 144px; margin-bottom: 8px; position: relative;
+    }
+    /* P16: JS 不写 .pet-avatar img — 让 buildPetImgHTML 内联 width/height 控制尺寸
+       之前强制 144×144 会把窄帧 sprite 拉伸成方块 (头像框长宽比改了 + 截一点 的根因).
+       只保留 pixelated + contain 防像素糊 */
+    #poc-team-select-root .pet-avatar > img {
+      image-rendering: pixelated;
+      object-fit: contain;
+      max-width: 100%; max-height: 144px;
+    }
+    /* E3/47: spritesheet idle 动画 (JS buildPetImgHTML 1:1) */
+    /* JS battle.css:287 1:1 — overflow:hidden 关键! 否则 spritesheet 整张露出
+       看着像多只龟叠. display:inline-block 让 wrap 跟 frame 同宽. */
+    #poc-team-select-root .sprite-wrap {
+      display: inline-block; overflow: hidden;
+      position: relative; image-rendering: pixelated;
+    }
+    #poc-team-select-root .sprite-inner {
+      background-repeat: no-repeat; image-rendering: pixelated;
+      animation-play-state: paused;
+    }
+    #poc-team-select-root .pet-card:hover .sprite-inner,
+    #poc-team-select-root .pet-card.selected .sprite-inner { animation-play-state: running }
+    /* JS base.css:765 + 1023 desktop override 1:1 — 56×56 圆框, 内 img 44×44 */
+    #poc-team-select-root .pet-passive-icon {
+      position: absolute; top: -10px; right: -10px;
+      width: 56px; height: 56px; cursor: pointer;
+      background: #0a0e18; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 6px rgba(0,0,0,.5); z-index: 10;
+    }
+    #poc-team-select-root .pet-passive-icon img { width: 44px; height: 44px }
+    #poc-team-select-root .pet-name { font-size: 18px; font-weight: 600 }
+    #poc-team-select-root .pet-lv { font-size: 14px; color: #ffd86b; margin-top: 3px; font-weight: 700 }
+    /* Phase D: 选龟屏入场 choreography (JS base.css:214-235 1:1)
+       JS 是 .screen.active 选择器, 我们走 #poc-team-select-root 同款时序
+       (.42s title → .32s guide@.2s → .45s select-top@.32s → .35s filter@.5s → .45s grid@.62s) */
+    #poc-team-select-root .screen-title  { animation: poc-sel-title-drop .42s cubic-bezier(.34,1.56,.64,1) backwards .05s; }
+    #poc-team-select-root .mode-guide    { animation: poc-sel-fade-down  .32s ease-out backwards .2s; }
+    #poc-team-select-root .select-top    { animation: poc-sel-slide-in-l .45s cubic-bezier(.34,1.56,.64,1) backwards .32s; }
+    #poc-team-select-root .pg-filter-bar { animation: poc-sel-fade-down  .35s ease-out backwards .5s; }
+    #poc-team-select-root .pet-grid      { animation: poc-sel-pet-grid-in .45s ease-out backwards .62s; }
+    #poc-team-select-root.leaving {
+      animation: poc-sel-leave .28s ease-in forwards;
+    }
+    @keyframes poc-sel-title-drop {
+      0%   { opacity:0; transform: translateY(-60px) scale(.92); }
+      60%  { opacity:1; transform: translateY(8px)   scale(1.04); }
+      100% { transform: translateY(0) scale(1); }
+    }
+    @keyframes poc-sel-fade-down {
+      from{ opacity:0; transform: translateY(-12px); }
+      to  { opacity:1; transform: translateY(0); }
+    }
+    @keyframes poc-sel-slide-in-l {
+      from{ opacity:0; transform: translateX(-60px); }
+      to  { opacity:1; transform: translateX(0); }
+    }
+    @keyframes poc-sel-pet-grid-in {
+      from{ opacity:0; transform: translateY(20px) scale(.98); }
+      to  { opacity:1; transform: translateY(0) scale(1); }
+    }
+    @keyframes poc-sel-leave {
+      from{ opacity:1; transform: translateY(0); }
+      to  { opacity:0; transform: translateY(-12px); }
+    }
+    @media (prefers-reduced-motion: reduce){
+      #poc-team-select-root .screen-title,
+      #poc-team-select-root .mode-guide,
+      #poc-team-select-root .select-top,
+      #poc-team-select-root .pg-filter-bar,
+      #poc-team-select-root .pet-grid,
+      #poc-team-select-root.leaving { animation: none !important; }
+    }
+    /* End E3/46 TeamSelect DOM overlay CSS */
+
+    /* ── Phase B: PDP (Pet Detail Page) — 自排版 暗主题, 不用 JS 羊皮纸 ─────────
+       JS 原: battle.css L1900-2300 pdp-* 用 menu/pdp-page.png 9-slice 羊皮纸,
+       浅色背景跟 Phaser TeamSelect 黑底冲突. 这里走 dark gradient + 金边自排.
+       功能元素与 JS main.js:1109-1360 showSkillPickModal 1:1:
+         · 大 sprite (180×180) + Lv + rarity + name 横幅
+         · 4 属性 grid (HP/ATK/DEF/MR, 含 getLevelBonus)
+         · 6 行 (passive + 5 skills): icon + name + tag + equip btn (✓/+/🔒)
+         · click row → desc 区显 brief, click desc → toggle detail
+         · 取消 / 确认 (selected/3)
+    */
+    #poc-pdp-overlay {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0, 6, 14, .88); backdrop-filter: blur(6px);
+      display: none; align-items: flex-start; justify-content: center;
+      padding: 24px 16px; overflow-y: auto;
+      font-family: 'pixel-zh', 'Microsoft YaHei', system-ui, sans-serif; color: #e6edf3;
+    }
+    #poc-pdp-overlay.show { display: flex }
+    #poc-pdp-overlay .poc-pdp-box {
+      width: 100%; max-width: 600px; margin: auto;
+      background: linear-gradient(160deg, #1a2740 0%, #0e1828 100%);
+      border: 2px solid #ffd86b;
+      border-radius: 14px;
+      box-shadow: 0 12px 48px rgba(0,0,0,.7), 0 0 20px rgba(255,216,107,.25);
+      padding: 16px;
+    }
+    #poc-pdp-overlay .poc-pdp-top {
+      display: flex; gap: 14px; margin-bottom: 12px; align-items: stretch;
+    }
+    /* 左列: 大 sprite frame + name banner */
+    #poc-pdp-overlay .poc-pdp-left {
+      flex: 0 0 200px; display: flex; flex-direction: column; gap: 8px;
+    }
+    #poc-pdp-overlay .poc-pdp-char-frame {
+      width: 200px; height: 200px;
+      background: rgba(0,0,0,.35);
+      border: 2px solid rgba(255,216,107,.5);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    #poc-pdp-overlay .poc-pdp-char-frame .sprite-inner {
+      animation-play-state: running !important;
+    }
+    #poc-pdp-overlay .poc-pdp-name-banner {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 8px 10px;
+      background: rgba(0,0,0,.4);
+      border: 1px solid rgba(255,216,107,.3);
+      border-radius: 8px;
+    }
+    #poc-pdp-overlay .poc-pdp-banner-text {
+      font-size: 17px; font-weight: 700; letter-spacing: 1px;
+      flex: 1; text-align: center; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    #poc-pdp-overlay .poc-pdp-rarity-badge {
+      padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 800;
+      letter-spacing: 1px; color: #1a1a2e;
+      text-shadow: 0 1px 0 rgba(255,255,255,.3);
+      box-shadow: 0 1px 3px rgba(0,0,0,.5);
+    }
+    #poc-pdp-overlay .poc-pdp-lv {
+      font-size: 12px; color: #ffd86b; font-weight: 700;
+    }
+    /* 右列: stats grid + 6 rows */
+    #poc-pdp-overlay .poc-pdp-right {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    #poc-pdp-overlay .poc-pdp-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4px 8px;
+      padding: 8px 10px;
+      background: rgba(0,0,0,.3);
+      border: 1px solid rgba(88,166,255,.25);
+      border-radius: 8px;
+    }
+    #poc-pdp-overlay .poc-pdp-stat-cell {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; white-space: nowrap;
+    }
+    #poc-pdp-overlay .poc-pdp-stat-icon { width: 16px; height: 16px; flex-shrink: 0 }
+    #poc-pdp-overlay .poc-pdp-stat-label { color: #9aa6b8; font-weight: 600; font-size: 12px }
+    #poc-pdp-overlay .poc-pdp-stat-value { font-weight: 800; margin-left: auto }
+    #poc-pdp-overlay .poc-pdp-stat-cell[data-stat="hp"] .poc-pdp-stat-value { color: #06d6a0 }
+    #poc-pdp-overlay .poc-pdp-stat-cell[data-stat="atk"] .poc-pdp-stat-value { color: #ff8c42 }
+    #poc-pdp-overlay .poc-pdp-stat-cell[data-stat="def"] .poc-pdp-stat-value { color: #ffd86b }
+    #poc-pdp-overlay .poc-pdp-stat-cell[data-stat="mr"] .poc-pdp-stat-value { color: #c084fc }
+    #poc-pdp-overlay .poc-pdp-rows {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    #poc-pdp-overlay .poc-pdp-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 6px;
+      cursor: pointer; user-select: none;
+      transition: border-color .15s, background .15s, transform .15s;
+    }
+    #poc-pdp-overlay .poc-pdp-row:hover { border-color: rgba(255,216,107,.5); background: rgba(255,216,107,.05) }
+    #poc-pdp-overlay .poc-pdp-row.is-active {
+      border-color: #ffd86b;
+      background: linear-gradient(90deg, rgba(255,216,107,.15) 0%, rgba(255,216,107,.04) 100%);
+      box-shadow: 0 0 10px rgba(255,216,107,.4), inset 0 0 8px rgba(255,216,107,.05);
+      transform: translateX(2px);
+    }
+    #poc-pdp-overlay .poc-pdp-row.is-locked { opacity: .5; cursor: not-allowed }
+    #poc-pdp-overlay .poc-pdp-row.is-selected { border-color: #06d6a0 }
+    #poc-pdp-overlay .poc-pdp-row-icon {
+      flex: 0 0 32px; width: 32px; height: 32px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.05); border-radius: 4px;
+    }
+    #poc-pdp-overlay .poc-pdp-row-icon img { width: 24px; height: 24px; image-rendering: pixelated }
+    #poc-pdp-overlay .poc-pdp-row-icon .poc-pdp-emoji { font-size: 20px; line-height: 1 }
+    #poc-pdp-overlay .poc-pdp-row-name {
+      font-size: 14px; font-weight: 600; color: #e6edf3;
+      flex: 1; min-width: 0; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    #poc-pdp-overlay .poc-pdp-row-tag {
+      font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    #poc-pdp-overlay .poc-pdp-tag-fixed { background: rgba(255,216,107,.2); color: #ffd86b; border: 1px solid rgba(255,216,107,.45) }
+    #poc-pdp-overlay .poc-pdp-tag-passive { background: rgba(120,160,255,.15); color: #88aaff; border: 1px solid rgba(120,160,255,.4) }
+    #poc-pdp-overlay .poc-pdp-tag-lock { background: rgba(220,120,120,.18); color: #ff8888; border: 1px solid rgba(220,120,120,.4) }
+    #poc-pdp-overlay .poc-pdp-equip-btn {
+      flex: 0 0 26px; width: 26px; height: 26px;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; cursor: pointer;
+      transition: filter .15s, background .15s, border-color .15s;
+      border: 2px solid; line-height: 1;
+    }
+    #poc-pdp-overlay .poc-pdp-equip-add {
+      background: rgba(255,216,107,.08); border-color: rgba(255,216,107,.5); color: #ffd86b;
+    }
+    #poc-pdp-overlay .poc-pdp-equip-add:hover { background: rgba(255,216,107,.25); border-style: solid }
+    #poc-pdp-overlay .poc-pdp-equip-on {
+      background: linear-gradient(180deg, #ffe082 0%, #c47800 100%);
+      border-color: #6b3d10; color: #2a1605;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 1px 3px rgba(0,0,0,.5);
+    }
+    #poc-pdp-overlay .poc-pdp-equip-on:hover { filter: brightness(1.1) }
+    #poc-pdp-overlay .poc-pdp-equip-fixed {
+      background: rgba(255,216,107,.18); border-color: rgba(255,216,107,.4);
+      color: #ffd86b; cursor: default;
+    }
+    #poc-pdp-overlay .poc-pdp-equip-locked {
+      background: rgba(80,80,80,.2); border-color: rgba(120,60,60,.5);
+      color: #888; cursor: not-allowed; font-size: 12px;
+    }
+    #poc-pdp-overlay .poc-pdp-equip-full {
+      background: rgba(100,100,100,.1); border-color: rgba(120,120,120,.25);
+      color: rgba(200,200,200,.4); cursor: not-allowed; border-style: dashed;
+    }
+    /* desc 区: brief / detail toggle */
+    #poc-pdp-overlay .poc-pdp-desc {
+      margin: 10px 0 12px;
+      padding: 12px 14px;
+      background: rgba(0,0,0,.4);
+      border: 1px solid rgba(88,166,255,.25);
+      border-radius: 8px;
+      min-height: 72px; max-height: 200px; overflow-y: auto;
+      font-size: 13px; line-height: 1.6; color: #cbd3df;
+    }
+    #poc-pdp-overlay .poc-pdp-desc.has-content { cursor: pointer }
+    #poc-pdp-overlay .poc-pdp-desc-head {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+      font-size: 14px; color: #ffd86b;
+    }
+    #poc-pdp-overlay .poc-pdp-skill-cd {
+      font-size: 10px; color: #88aaff;
+      background: rgba(120,160,255,.12); padding: 1px 6px; border-radius: 4px;
+    }
+    #poc-pdp-overlay .poc-pdp-desc-toggle {
+      margin-left: auto; font-family: inherit; font-size: 11px;
+      background: rgba(255,216,107,.1); border: 1px solid rgba(255,216,107,.35);
+      color: #ffd86b; padding: 2px 10px; border-radius: 10px; cursor: pointer;
+      font-weight: 700;
+    }
+    #poc-pdp-overlay .poc-pdp-desc-toggle:hover { background: rgba(255,216,107,.25) }
+    #poc-pdp-overlay .poc-pdp-desc-body { font-size: 13px }
+    #poc-pdp-overlay .poc-pdp-desc-hint {
+      color: #6b7488; font-style: italic; font-size: 12px;
+    }
+    #poc-pdp-overlay .poc-pdp-skill-paired {
+      margin-top: 6px; padding: 4px 8px;
+      background: rgba(120,160,255,.08); border-radius: 4px; font-size: 12px;
+    }
+    #poc-pdp-overlay .poc-pdp-paired-label { color: #88aaff; font-weight: 700; font-size: 10px }
+    /* val-* keyword color spans, 跟 JS renderSkillTemplate 输出对齐 */
+    #poc-pdp-overlay .val-normal { color: #ff5555; font-weight: 700 }
+    #poc-pdp-overlay .val-magic  { color: #4dabf7; font-weight: 700 }
+    #poc-pdp-overlay .val-true   { color: #fff; font-weight: 700 }
+    #poc-pdp-overlay .val-def    { color: #ffd86b; font-weight: 700 }
+    #poc-pdp-overlay .val-heal   { color: #06d6a0; font-weight: 700 }
+    #poc-pdp-overlay .val-shield { color: #c0c8d6; font-weight: 700 }
+    #poc-pdp-overlay .val-buff   { color: #58d3ff; font-weight: 700 }
+    #poc-pdp-overlay .val-pierce { color: #c084fc; font-weight: 700 }
+    #poc-pdp-overlay .val-crit       { color: #ffaa44; font-weight: 700 }
+    #poc-pdp-overlay .val-crit-dmg   { color: #ff7733; font-weight: 700 }
+    #poc-pdp-overlay .val-burn       { color: #ff6600; font-weight: 700 }
+    #poc-pdp-overlay .val-dot        { color: #c77dff; font-weight: 700 }
+    #poc-pdp-overlay .val-lifesteal  { color: #06d6a0; font-weight: 700 }
+    #poc-pdp-overlay .val-stun       { color: #ffcc00; font-weight: 700 }
+    #poc-pdp-overlay .val-heal-reduce { color: #ff88aa; font-weight: 700 }
+    #poc-pdp-overlay .val-reflect    { color: #ff4488; font-weight: 700 }
+    #poc-pdp-overlay .val-extra      { color: #ffd86b; font-weight: 700 }
+    /* footer */
+    #poc-pdp-overlay .poc-pdp-footer {
+      display: flex; gap: 12px; justify-content: center; align-items: center;
+    }
+    #poc-pdp-overlay .poc-pdp-btn {
+      flex: 1; min-height: 40px;
+      padding: 8px 16px;
+      font-family: inherit; font-size: 14px; font-weight: 700;
+      letter-spacing: 1px; cursor: pointer;
+      border-radius: 8px; border: 2px solid;
+      transition: filter .15s;
+    }
+    #poc-pdp-overlay .poc-pdp-btn-cancel {
+      background: rgba(160,110,40,.25); border-color: #6b3d10;
+      color: #ffe082; max-width: 110px;
+    }
+    #poc-pdp-overlay .poc-pdp-btn-cancel:hover { filter: brightness(1.15) }
+    #poc-pdp-overlay .poc-pdp-btn-confirm {
+      background: linear-gradient(180deg, #ffd86b 0%, #c47800 100%);
+      border-color: #6b3d10; color: #2a1605;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px rgba(0,0,0,.4);
+    }
+    #poc-pdp-overlay .poc-pdp-btn-confirm:disabled {
+      background: rgba(80,80,80,.3); border-color: rgba(120,120,120,.3);
+      color: #666; cursor: not-allowed; box-shadow: none;
+    }
+    #poc-pdp-overlay .poc-pdp-btn-confirm:not(:disabled):hover { filter: brightness(1.08) }
+    /* End Phase B PDP CSS */
+    /* P93 删 letterbox — 1:1 JS: canvas 铺满 viewport, 站位用 mapCoverPos (16:9 cover math)
+       PoC 之前 P70 强制 16:9 letterbox → 周围一圈绿留白, 非 JS 行为.
+       JS battle-scene 用 flexbox flex:1 撑满空间, 站位绑到 16:9 visible area (cover crop). */
+    #game {
+      /* iOS 横屏: 屏幕宽而矮, 游戏(FIT)铺满高度 → 上下边缘 UI(返回等)落在刘海/状态栏/Home 指示条
+         的系统保留区里点不到。用 safe-area-inset 把 #game 收进安全区, 边缘 UI 就都点得到 (代价是
+         安全区那点黑边, 用户已接受)。fixed + 四边 inset 定位, 不再用 100%/100vh。 */
+      position: fixed;
+      top: env(safe-area-inset-top, 0px);
+      bottom: env(safe-area-inset-bottom, 0px);
+      left: env(safe-area-inset-left, 0px);
+      right: env(safe-area-inset-right, 0px);
+      display: block;
+      margin: 0;
+    }
+    /* P28: canvas downscale 用 pixelated (JS image-rendering:pixelated 同款)
+       龟图原本是 NEAREST setFilter 的, 但 canvas CSS auto 让浏览器 LINEAR 下采样 → 糊
+       pixelated: 浏览器下采样保留锐利像素边缘, 1:1 还原 JS 像素美术风 */
+    #game canvas {
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+    /* P62 FIX: 背景长宽比 — E3/32 的 "100% 100% 拉伸" 错读了 JS 注释
+       JS battle.css:26 #screenBattle{background-size:100% 100%}: 该容器自带 16:9 约束
+         (.battle-scene aspect-ratio:16/9), 所以 100% 100% 不变形
+       PoC body 填满任意 viewport, 100% 100% 在非 16:9 显示器上压扁拉伸 bg → 用户报"背景压扁"
+       JS battle.css:2464 .battle-scene 真正用 `background-size: cover` (保持长宽比) — 跟它
+       cover: 保持 bg 原始比例铺满 viewport, 极端比例时四边可能裁切, 但绝不压扁 */
+    /* P196 修拼接缝: 锐利 bg 只在 canvas 内 (Phaser, 随相机缩放); letterbox 区改用 ::before 的
+       "模糊放大 bg" 填充 → 不再出现 canvas 锐利 bg 与 letterbox cover-bg 裁切不一致的拼接缝.
+       canvas 边缘 (锐) → letterbox (模糊) 是柔和的焦点过渡, 非内容错位的硬缝. */
+    /* P198/P199 修左右黑边: body/html 不能有不透明底色 (否则遮挡 z-index:-1 的模糊层).
+       P199 关键: 模糊层必须挂在 **body::before** 而非 html(根)::before — Chromium 对
+       "根元素 ::before + filter + 负 z-index" 有裁剪 bug: filter 会把 background-image
+       裁掉只剩 background-color, letterbox 因此整片显示 #0c1018×brightness 的近黑色
+       (实测左右 letterbox 388px 全是均匀 (7,9,14), 即兜底色 ×.5, 图根本没画).
+       改挂 body::before (非根) 后 filter 正常, 模糊 bg 图真正铺满整个 viewport letterbox. */
+    html.battle-active, html.battle-active body {
+      background-image: none;
+      background-color: transparent;
+    }
+    /* 非全屏左右信箱区: 干净的深海径向渐变 + 暗角 (替代旧的模糊 bg 图, 用户报"模糊框不好看") */
+    html.battle-active body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 90% at center, rgba(0,0,0,0) 38%, rgba(6,10,18,.55) 78%, rgba(4,7,12,.9) 100%),
+        linear-gradient(180deg, #122033 0%, #0b1422 55%, #070b13 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    /* 信箱与画面交界处一道金色细线, 把战场"框"起来 (游戏感) */
+    html.battle-active body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      box-shadow: inset 0 0 0 2px rgba(255,216,107,.06), inset 0 0 120px rgba(0,0,0,.5);
+    }
+    /* 加载页 (Phaser boot 前显示) — 深海主题: 上浮气泡 + 呼吸 logo + 进度条 */
+    #splash {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      background: radial-gradient(ellipse 90% 70% at 50% 36%, #16324f 0%, #0a1422 58%, #050a12 100%);
+      overflow: hidden;
+      transition: opacity .5s ease;
+      font-family: 'm6x11', 'pixel-zh', 'Microsoft YaHei', system-ui, sans-serif;
+    }
+    #splash.hide { opacity: 0; pointer-events: none; }
+    /* 上浮气泡两层 */
+    #splash::before, #splash::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -40px; height: 130%;
+      background-image:
+        radial-gradient(circle, rgba(150,215,255,.20) 3px, transparent 4px),
+        radial-gradient(circle, rgba(150,215,255,.12) 2px, transparent 3px);
+      background-size: 96px 96px, 54px 54px;
+      animation: splashBubbles 7s linear infinite; pointer-events: none;
+    }
+    #splash::after { background-size: 140px 140px, 76px 76px; opacity: .55; animation-duration: 12s; }
+    @keyframes splashBubbles { from { transform: translateY(0); } to { transform: translateY(-96px); } }
+    #splash .logo {
+      font-size: 64px; font-weight: 900; color: #ffe9a8; letter-spacing: 5px;
+      text-shadow: 0 0 26px rgba(255,216,107,.55), 0 3px 0 #8a5a12, 0 5px 14px rgba(0,0,0,.6);
+      margin-bottom: 36px; position: relative; z-index: 1;
+      animation: splashLogo 2.4s ease-in-out infinite;
+    }
+    @keyframes splashLogo { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-9px) scale(1.03); } }
+    #splash .bar {
+      width: 264px; height: 14px; border-radius: 8px; position: relative; z-index: 1;
+      background: rgba(8,14,24,.8); border: 2px solid rgba(150,215,255,.42);
+      box-shadow: inset 0 1px 4px rgba(0,0,0,.6); overflow: hidden;
+    }
+    #splash .bar .fill {
+      height: 100%; width: 0; border-radius: 6px;
+      background: linear-gradient(90deg, #4cc9f0, #7ee0ff);
+      box-shadow: 0 0 10px rgba(124,224,255,.7);
+      transition: width .2s ease;   /* 由 BootScene 真实加载进度驱动 */
+    }
+    #splash .sub { color: #9fd0e8; font-size: 13px; letter-spacing: 3px; margin-top: 16px; position: relative; z-index: 1; }
+    /* (旧 #fsBtn 全屏键已删 — 与 GlobalToolbar 的全屏键重复, 见 v0.9.9 #7) */
+    /* ── 竖屏遮罩: 请横屏游玩 ─────────────────────── */
+    #portraitGuard {
+      position: fixed; inset: 0; z-index: 90;
+      display: none;
+      flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(circle at center, #1a2740, #0a0e18);
+      color: #ffd93d; text-align: center; padding: 20px;
+    }
+    #portraitGuard .icon { font-size: 80px; animation: rotateHint 1.6s ease-in-out infinite; }
+    #portraitGuard .tip { font-size: 22px; margin-top: 30px; letter-spacing: 4px; }
+    #portraitGuard .sub { font-size: 14px; color: #aaa; margin-top: 12px; letter-spacing: 2px; }
+    @keyframes rotateHint {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(-90deg); }
+    }
+    /* 仅在 touch 设备的竖屏激活 */
+    @media (orientation: portrait) and (pointer: coarse) {
+      #portraitGuard { display: flex; }
+    }
+    /* ── iOS Safari: 引导添加到主屏幕 (standalone 全屏, 视口稳定/UI不偏) ── */
+    #iosInstall {
+      position: fixed; inset: 0; z-index: 120; display: none;
+      flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(circle at center, #16324f, #0a0e18);
+      color: #fff; text-align: center; padding: 28px;
+      font-family: 'm6x11', 'pixel-zh', 'Microsoft YaHei', system-ui, sans-serif;
+    }
+    #iosInstall.show { display: flex; }
+    #iosInstall img.appicon { width: 96px; height: 96px; border-radius: 22px; box-shadow: 0 6px 20px rgba(0,0,0,.5); margin-bottom: 20px; }
+    #iosInstall .h { font-size: 24px; font-weight: 900; color: #ffd93d; letter-spacing: 2px; }
+    #iosInstall .steps { font-size: 16px; line-height: 2; margin-top: 22px; color: #d7e6f5; max-width: 340px; }
+    #iosInstall .steps b { color: #7ee0ff; }
+    #iosInstall .share { display: inline-block; width: 22px; height: 22px; vertical-align: -4px;
+      border: 2px solid #7ee0ff; border-radius: 5px; position: relative; }
+    #iosInstall .share::before { content: '↑'; position: absolute; inset: -8px 0 0; font-size: 18px; color: #7ee0ff; }
+    #iosInstall .esc { margin-top: 34px; font-size: 13px; color: #6b8299; text-decoration: underline; cursor: pointer; }
+    /* 禁右键 (网页感杀手) */
+  </style>
+  <script type="module" crossorigin src="./assets/index-azp1lI1F.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/phaser-CaWnzXme.js">
+</head>
+<body oncontextmenu="return false">
+  <div id="splash">
+    <div class="logo">龟龟对战</div>
+    <div class="bar"><div class="fill"></div></div>
+    <div class="sub">加载中…</div>
+  </div>
+  <div id="game"></div>
+  <div id="portraitGuard">
+    <div class="icon">📱</div>
+    <div class="tip">请横屏游玩</div>
+    <div class="sub">ROTATE YOUR DEVICE</div>
+  </div>
+  <div id="iosInstall">
+    <img class="appicon" src="apple-touch-icon.png" alt="斗龟场" />
+    <div class="h">添加到主屏幕全屏游玩</div>
+    <div class="steps">
+      Safari 浏览器内有地址栏会挤压画面、按钮也可能错位。<br>
+      ① 点底部 <span class="share"></span> <b>分享</b> 按钮<br>
+      ② 选 <b>「添加到主屏幕」</b><br>
+      ③ 从桌面图标 <b>斗龟场</b> 打开即全屏
+    </div>
+    <div class="esc" id="iosInstallEsc">仍想在浏览器里凑合玩 →</div>
+  </div>
+  <script>
+    // iOS Safari 且未"添加到主屏幕"(非 standalone) → 引导安装。其它平台/已安装则不显示。
+    (function () {
+      try {
+        var ua = navigator.userAgent || '';
+        var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+          (navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1); // iPadOS 13+
+        var standalone = (window.navigator.standalone === true) ||
+          (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+        if (isIOS && !standalone) {
+          var el = document.getElementById('iosInstall');
+          if (el) {
+            el.classList.add('show');
+            var esc = document.getElementById('iosInstallEsc');
+            if (esc) esc.addEventListener('click', function () { el.classList.remove('show'); });
+          }
+        }
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
+</body>
+</html>

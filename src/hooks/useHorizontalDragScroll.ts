@@ -2,7 +2,7 @@
 import { useCallback, useRef } from 'react';
 
 export const HORIZONTAL_DRAG_SCROLL_TRACK_CLASS =
-  'flex min-w-0 gap-3 overflow-x-auto pb-1 select-none [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing';
+  'flex min-w-0 flex-nowrap gap-3 overflow-x-auto overscroll-x-contain pb-1 select-none touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing';
 
 type DragState = {
   active: boolean;

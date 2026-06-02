@@ -1,0 +1,111 @@
+/**
+ * 文件说明：龟战 Arena 全页面共用的 HUD 风格动画与装饰工具类。
+ * 关键效果：扫光（arena-scan-line）/ 脉冲（arena-pulse）/ 网格底（arena-grid-bg）/
+ * 霓虹字（arena-text-glow）/ 棱角化（arena-clip-chamfer 系列）/ 浮光呼吸（arena-breathe）。
+ */
+
+@keyframes arena-shimmer {
+  0% { background-position: -180% 0; }
+  100% { background-position: 280% 0; }
+}
+
+@keyframes arena-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes arena-breathe {
+  0%, 100% { box-shadow: 0 0 12px rgba(56, 240, 209, 0.18); }
+  50% { box-shadow: 0 0 24px rgba(56, 240, 209, 0.42); }
+}
+
+@keyframes arena-drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(8px, -6px, 0); }
+}
+
+@keyframes arena-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/** 扫光横条：直接铺满父级，作为非交互的装饰层 */
+.arena-scan-line {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(56, 240, 209, 0.20) 50%,
+    transparent 62%,
+    transparent 100%
+  );
+  background-size: 220% 100%;
+  background-position: -100% 0;
+  animation: arena-shimmer 6.5s linear infinite;
+  mix-blend-mode: screen;
+}
+
+/** 呼吸脉冲（用在状态点上） */
+.arena-pulse {
+  animation: arena-pulse 1.9s ease-in-out infinite;
+}
+
+/** 闪烁状态点（用在 LIVE 灯上） */
+.arena-blink {
+  animation: arena-blink 1.4s ease-in-out infinite;
+}
+
+/** 持续轻度发光呼吸（用在卡片边框上） */
+.arena-breathe {
+  animation: arena-breathe 3.4s ease-in-out infinite;
+}
+
+/** 浮光漂移（背景大色块缓慢移动） */
+.arena-drift {
+  animation: arena-drift 16s ease-in-out infinite;
+}
+
+/** 网格底纹：覆在背景上做工程蓝图感 */
+.arena-grid-bg {
+  background-image:
+    linear-gradient(rgba(56, 240, 209, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 240, 209, 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: -1px -1px;
+}
+
+/** 六边形点状底纹（更密的星点感） */
+.arena-dots-bg {
+  background-image: radial-gradient(rgba(56, 240, 209, 0.10) 1px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+
+/** 霓虹翠绿文字阴影 */
+.arena-text-glow {
+  text-shadow:
+    0 0 10px rgba(56, 240, 209, 0.55),
+    0 0 22px rgba(16, 185, 129, 0.32);
+}
+
+/** 8px 双切角（左上 + 右下，仿全息 UI） */
+.arena-clip-chamfer {
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+/** 12px 全切角（四角倒角） */
+.arena-clip-chamfer-all {
+  clip-path: polygon(
+    12px 0, calc(100% - 12px) 0,
+    100% 12px, 100% calc(100% - 12px),
+    calc(100% - 12px) 100%, 12px 100%,
+    0 calc(100% - 12px), 0 12px
+  );
+}
+
+/** 顶部裁箭头（左侧斜角，状态条用） */
+.arena-clip-arrow-l {
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%);
+}

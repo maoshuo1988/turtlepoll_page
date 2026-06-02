@@ -2,7 +2,8 @@
  * 文件说明：pc Header 组件，负责对应端的顶部导航展示。
  */
 import React from 'react';
-import { CircleHelp, Gamepad2, LogIn, LogOut, Settings, Trophy, UserRound } from 'lucide-react';
+import { useNavigate } from '@umijs/renderer-react';
+import { CircleHelp, Gamepad2, LogIn, LogOut, Settings, Shield, Trophy, UserRound } from 'lucide-react';
 import { getAuthToken } from '@/utils/authStorage';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { createUserAvatarUrl } from '@/utils/userAvatar';
@@ -29,6 +30,7 @@ export const PcHeader: React.FC<PcHeaderProps> = ({
   onOpenRank,
   onOpenSettings,
 }) => {
+  const navigate = useNavigate();
   const isAuthenticated = Boolean(getAuthToken());
   const userCurrentQuery = useRequestUserCurrent();
   const user = userCurrentQuery.data;
@@ -56,6 +58,18 @@ export const PcHeader: React.FC<PcHeaderProps> = ({
         </div>
 
         <div className="ml-auto flex items-center gap-2">
+          <button
+            type="button"
+            className="relative inline-flex h-9 shrink-0 items-center gap-2 rounded-full border border-emerald-400/35 bg-gradient-to-r from-emerald-500/22 via-emerald-500/15 to-emerald-500/22 px-3.5 text-[13px] font-bold text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.22)] transition-colors hover:border-emerald-300/55 hover:bg-emerald-500/30"
+            onClick={() => navigate('/turtle-arena')}
+            aria-label="龟战 Arena"
+          >
+            <Shield size={16} className="shrink-0 text-emerald-300" strokeWidth={2.2} aria-hidden />
+            <span>龟战 ARENA</span>
+            <span className="absolute -right-1 -top-1 rounded-full bg-rose-500 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-[0_0_8px_rgba(244,63,94,0.55)]">
+              NEW
+            </span>
+          </button>
           {onOpenGames ? (
             <button type="button" className={pillShortcut} onClick={onOpenGames} aria-label="游戏">
               <Gamepad2 size={18} className="shrink-0 text-violet-400" strokeWidth={2} aria-hidden />

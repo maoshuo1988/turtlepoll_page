@@ -4,7 +4,7 @@
 import React from 'react';
 import { HeroPrediction } from './HeroPrediction';
 import { NewsFeed } from './NewsFeed';
-import { PredictTagCategoryBar } from './PredictTagCategoryBar';
+// import { PredictTagCategoryBar } from './PredictTagCategoryBar';
 import type { PredictionBetOption, PredictionCardItem } from './predictionCards';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 
@@ -27,9 +27,10 @@ export const PredictionsView: React.FC<PredictionsViewProps> = ({
 }) => {
   return (
     <section className="flex w-full min-w-0 flex-col pb-1 md:pb-0">
-      <div className="sticky top-0 z-30 -mt-[10px] shrink-0 bg-[#f8fafc] pb-3 pt-[10px] shadow-[0_10px_24px_-16px_rgba(0,0,0,0.85)] dark:bg-[#080808] max-lg:pb-2.5">
+      {/* 顶部分类栏暂下线，分类列表改放在「最新爆料」上方 */}
+      {/* <div className="sticky top-0 z-30 -mt-[10px] shrink-0 bg-[#f8fafc] pb-3 pt-[10px] shadow-[0_10px_24px_-16px_rgba(0,0,0,0.85)] dark:bg-[#080808] max-lg:pb-2.5">
         <PredictTagCategoryBar selectedTag={selectedTag} onTagChange={onTagChange} />
-      </div>
+      </div> */}
       <div className="grid w-full gap-3 md:gap-4">
         <HeroPrediction
           news={selectedPrediction}
@@ -40,6 +41,7 @@ export const PredictionsView: React.FC<PredictionsViewProps> = ({
         />
         <NewsFeed
           selectedTag={selectedTag}
+          onTagChange={onTagChange}
           onBetSuccess={onBetSuccess}
           onRequireAuth={onRequireAuth}
           onEnterBattle={onEnterBattle}

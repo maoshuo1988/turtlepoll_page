@@ -9,6 +9,8 @@ import { scrollChildToHorizontalCenter } from '@/utils/scrollHorizontalCenter';
 interface PredictTagCategoryBarProps {
   selectedTag: string | null;
   onTagChange: (slug: string | null) => void;
+  /** 紧凑模式：仅展示可拖动标签列表，无标题与说明文案 */
+  compact?: boolean;
 }
 
 interface CategoryChipProps {
@@ -34,7 +36,7 @@ const CategoryChip = forwardRef<HTMLDivElement, CategoryChipProps>(function Cate
           onClick();
         }
       }}
-      className={`inline-flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 text-[13px] font-bold transition-colors sm:px-5 sm:py-3 sm:text-[14px] ${
+      className={`inline-flex shrink-0 touch-pan-x items-center gap-2 rounded-xl border px-4 py-2.5 text-[13px] font-bold transition-colors sm:px-5 sm:py-3 sm:text-[14px] ${
         active
           ? 'border-emerald-400/60 bg-emerald-500/20 text-emerald-100 shadow-[0_0_20px_-6px_rgba(52,211,153,0.55)] ring-2 ring-emerald-400/35'
           : 'border-white/12 bg-white/[0.06] text-zinc-300 hover:border-emerald-500/25 hover:bg-white/[0.09] hover:text-zinc-100'
@@ -54,7 +56,7 @@ const CategoryChip = forwardRef<HTMLDivElement, CategoryChipProps>(function Cate
   );
 });
 
-export function PredictTagCategoryBar({ selectedTag, onTagChange }: PredictTagCategoryBarProps) {
+export function PredictTagCategoryBar({ selectedTag, onTagChange, compact = false }: PredictTagCategoryBarProps) {
   const { scrollRef, onMouseDown, shouldSuppressClick } = useHorizontalDragScroll();
   const chipRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const allChipRef = useRef<HTMLDivElement | null>(null);
@@ -99,37 +101,43 @@ export function PredictTagCategoryBar({ selectedTag, onTagChange }: PredictTagCa
     [activeSlug, onTagChange, shouldSuppressClick],
   );
 
-  return (
-    <div
-      className="relative min-w-0 overflow-hidden rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-950/40 via-zinc-950/95 to-zinc-950/95 p-3 shadow-[0_8px_32px_-12px_rgba(16,185,129,0.35)] sm:p-4"
-      role="region"
-      aria-label="暗盘分类筛选"
-    >
-      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/[0.06]" />
-      <div className="relative mb-3 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/15 text-emerald-300">
-            <Tags className="h-4 w-4" aria-hidden />
-          </span>
-          <div className="min-w-0">
-            <p className="text-[15px] font-extrabold tracking-tight text-zinc-100 sm:text-[16px]">话题分类</p>
-            <p className="text-[11px] text-zinc-500 sm:text-[12px]">左右拖动 · 点击筛选盘口</p>
-          </div>
-        </div>
-        {isLoading ? (
-          <span className="text-[11px] font-medium text-zinc-500">加载中…</span>
-        ) : isError ? (
-          <span className="text-[11px] font-medium text-rose-300">分类加载失败</span>
-        ) : (
-          <span className="hidden items-center gap-0.5 text-[11px] text-zinc-500 sm:inline-flex">
-            <ChevronLeft className="h-3.5 w-3.5" aria-hidden />
-            拖动
-            <ChevronRight className="h-3.5 w-3.5" aria-hidden />
-          </span>
-        )}
-      </div>
+  const wrapperClass = compact
+    ? 'relative w-full min-w-0'
+    : 'relative min-w-0 overflow-hidden rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-950/40 via-zinc-950/95 to-zinc-950/95 p-3 shadow-[0_8px_32px_-12px_rgba(16,185,129,0.35)] sm:p-4';
 
-      <div className="relative min-w-0">
+  return (
+    <div className={wrapperClass} role="region" aria-label="暗盘分类筛选">
+      {!compact ? (
+        <>
+          <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/[0.06]" />
+          <div className="relative mb-3 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/15 text-emerald-300">
+                <Tags className="h-4 w-4" aria-hidden />
+              </span>
+              <div className="min-w-0">
+                <p className="text-[15px] font-extrabold tracking-tight text-zinc-100 sm:text-[16px]">话题分类</p>
+                <p className="text-[11px] text-zinc-500 sm:text-[12px]">左右拖动 · 点击筛选盘口</p>
+              </div>
+            </div>
+            {isLoading ? (
+              <span className="text-[11px] font-medium text-zinc-500">加载中…</span>
+            ) : isError ? (
+              <span className="text-[11px] font-medium text-rose-300">分类加载失败</span>
+            ) : (
+              <span className="hidden items-center gap-0.5 text-[11px] text-zinc-500 sm:inline-flex">
+                <ChevronLeft className="h-3.5 w-3.5" aria-hidden />
+                拖动
+                <ChevronRight className="h-3.5 w-3.5" aria-hidden />
+              </span>
+            )}
+          </div>
+        </>
+      ) : isError ? (
+        <p className="mb-2 px-0.5 text-[11px] font-medium text-rose-300">分类加载失败</p>
+      ) : null}
+
+      <div className="relative min-w-0 w-full">
         <div
           ref={scrollRef}
           onMouseDown={onMouseDown}
