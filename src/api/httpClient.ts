@@ -24,6 +24,7 @@ export function axiosCustom({
         withCredentials: true,
       });
       const resData = res.data;
+      const responseCode = resData.errorCode ?? resData.code;
       console.log({
         cmd: cmd,
         method: method,
@@ -31,12 +32,12 @@ export function axiosCustom({
       });
 
       resolve({
-        code: resData.errorCode,
+        code: responseCode,
         cmd: cmd,
         method: method,
         msg: resData.message,
         data: resData?.data ?? {},
-        success:resData?.success ?? false
+        success: resData?.success ?? responseCode === successCode,
       });
     } catch (e: any) {
       const status = e.response?.status;

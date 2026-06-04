@@ -8,19 +8,17 @@ import {
   ChevronRight,
   Coins,
   Crosshair,
+  ExternalLink,
   Flame,
   Goal,
   Hash,
   MessageCircleMore,
-  Mic2,
   Newspaper,
   Radio,
-  Send,
   Sparkles,
   Swords,
   ThumbsUp,
   Trophy,
-  Users,
   Zap,
 } from 'lucide-react';
 import { PredictionBetModal } from '@/pages/home/components/PredictionBetModal';
@@ -29,6 +27,8 @@ import { calcPredictionMarketOdds } from '@/pages/home/components/predictionCard
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
+import { useRequestNewsListDirect } from '@/hooks/useNewsRequests';
+import type { NewsArticle } from '@/hooks/newsTypes';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { WorldCupCardPitchTexture, WorldCupPitchBackdropLayers } from '../WorldCupPitchBackdrop';
 
@@ -39,10 +39,6 @@ function css(...classNames: Array<string | false | null | undefined>) {
     .filter(Boolean)
     .map((className) => styles[className] ?? className)
     .join(' ');
-}
-
-function kf(name: string) {
-  return styles[name] ?? name;
 }
 
 type FixtureOdds = {
@@ -77,157 +73,19 @@ type FeaturedMarket = {
   predictionItem?: PredictionCardItem;
 };
 
-const fallbackFeaturedMarkets: FeaturedMarket[] = [
-  {
-    title: '谁会捧起大力神杯？',
-    tag: '冠军归属',
-    sideA: { label: '巴西', accent: '南美桑巴', pct: 42 },
-    sideB: { label: '法国', accent: '欧洲铁卫', pct: 35 },
-    heat: '18.6w',
-    pool: '128.4k',
-  },
-  {
-    title: '决赛会不会进入加时？',
-    tag: '决赛剧本',
-    sideA: { label: '90 分钟见胜负', accent: '常规时间', pct: 61 },
-    sideB: { label: '加时或点球', accent: '剧本拉满', pct: 39 },
-    heat: '9.8w',
-    pool: '64.8k',
-  },
-  {
-    title: '金靴属于谁的锋线？',
-    tag: '球员荣誉',
-    sideA: { label: '南美前锋', accent: '维尼修斯 / 内马尔', pct: 48 },
-    sideB: { label: '欧洲前锋', accent: '哈兰德 / 姆巴佩', pct: 52 },
-    heat: '12.4w',
-    pool: '88.1k',
-  },
-];
-
-const fallbackTodayFixtures: Fixture[] = [
-  {
-    id: 'arg-mar',
-    time: '今晚 22:00',
-    stage: '小组赛 · A 组',
-    home: '阿根廷',
-    homeFlag: '🇦🇷',
-    away: '摩洛哥',
-    awayFlag: '🇲🇦',
-    odds: { home: 1.62, draw: 3.8, away: 5.2 },
-    pool: '46.2k',
-    heat: 92,
-    signal: '临场热盘 · 资金涌入',
-    signalTone: 'gold',
-  },
-  {
-    id: 'eng-jpn',
-    time: '明天 02:00',
-    stage: '小组赛 · B 组',
-    home: '英格兰',
-    homeFlag: '🏴',
-    away: '日本',
-    awayFlag: '🇯🇵',
-    odds: { home: 1.85, draw: 3.5, away: 4.1 },
-    pool: '32.8k',
-    heat: 74,
-    signal: '进球数分歧 · 大小球热',
-    signalTone: 'sky',
-  },
-  {
-    id: 'ger-por',
-    time: '周日 23:00',
-    stage: '淘汰赛 · 1/8',
-    home: '德国',
-    homeFlag: '🇩🇪',
-    away: '葡萄牙',
-    awayFlag: '🇵🇹',
-    odds: { home: 2.4, draw: 3.1, away: 2.85 },
-    pool: '58.6k',
-    heat: 88,
-    signal: '胜负拉扯 · 押宝分散',
-    signalTone: 'rose',
-  },
-  {
-    id: 'bra-cro',
-    time: '周一 04:00',
-    stage: '淘汰赛 · 1/8',
-    home: '巴西',
-    homeFlag: '🇧🇷',
-    away: '克罗地亚',
-    awayFlag: '🇭🇷',
-    odds: { home: 1.55, draw: 3.9, away: 6.0 },
-    pool: '41.0k',
-    heat: 81,
-    signal: '南美桑巴起势',
-    signalTone: 'gold',
-  },
-  {
-    id: 'fra-pol',
-    time: '周一 23:00',
-    stage: '淘汰赛 · 1/8',
-    home: '法国',
-    homeFlag: '🇫🇷',
-    away: '波兰',
-    awayFlag: '🇵🇱',
-    odds: { home: 1.42, draw: 4.2, away: 7.5 },
-    pool: '37.3k',
-    heat: 69,
-    signal: '冷门窗口 · 波兰看客',
-    signalTone: 'sky',
-  },
-];
-
-/** 侧栏「开撕台」展示开关（暂时关闭，改为 true 可恢复）。 */
-const SHOW_WORLD_CUP_DEBATE_STAGE = false;
-
-const debates = [
-  {
-    title: '梅西还是 C 罗，才是这个时代真正的 GOAT？',
-    sideA: { label: '#7 梅西', pct: 54 },
-    sideB: { label: '#7 C 罗', pct: 46 },
-    heat: '23.4w',
-    quote: '“梅西捧起大力神杯那一刻，这场争论已经写下注脚。”',
-    spice: '🔥🔥🔥🔥',
-  },
-  {
-    title: '哈兰德能复制英超效率到世界杯吗？',
-    sideA: { label: '炸裂派', pct: 41 },
-    sideB: { label: '挪威无缘', pct: 59 },
-    heat: '11.8w',
-    quote: '“没有大赛舞台，再多进球也只是英超 KPI。”',
-    spice: '🔥🔥🔥',
-  },
-  {
-    title: '皇马与巴萨，谁才是西班牙国家队真正的支柱？',
-    sideA: { label: '皇马帮', pct: 58 },
-    sideB: { label: '巴萨帮', pct: 42 },
-    heat: '8.6w',
-    quote: '“看看大名单里皇马的人数就懂了。”',
-    spice: '🔥🔥',
-  },
-];
-
 type NewsCategory = 'breaking' | 'official' | 'insider' | 'rumor';
-
-type NewsComment = {
-  id: string;
-  user: string;
-  avatar: string;
-  text: string;
-  time: string;
-};
 
 type NewsItem = {
   id: string;
   source: string;
   sourceAvatar: string;
+  sourceUrl?: string;
   time: string;
   category: NewsCategory;
   categoryLabel: string;
   headline: string;
   body: string;
   likes: number;
-  comments: NewsComment[];
 };
 
 const newsCategoryStyle: Record<NewsCategory, string> = {
@@ -236,82 +94,6 @@ const newsCategoryStyle: Record<NewsCategory, string> = {
   insider: 'border-emerald-400/40 bg-emerald-400/10 text-emerald-300',
   rumor: 'border-amber-400/40 bg-amber-400/10 text-amber-300',
 };
-
-const newsItems: NewsItem[] = [
-  {
-    id: 'n-fifa-tickets',
-    source: 'FIFA 官方',
-    sourceAvatar: '🏆',
-    time: '5 分钟前',
-    category: 'breaking',
-    categoryLabel: '突发',
-    headline: '决赛门票第二轮抽签明晚开启',
-    body: '10 万张门票将在明日 20:00 通过官方平台开放抽签，注册用户均可参与。系统在峰值时段开启排队机制。',
-    likes: 528,
-    comments: [
-      { id: 'c1', user: '老李在球场', avatar: '🐢', text: '终于等到了！这次必须抽到 🙏', time: '2 分钟前' },
-      { id: 'c2', user: '阿根廷之眼', avatar: '🇦🇷', text: '希望别再卡服务器了，上次直接 502', time: '4 分钟前' },
-    ],
-  },
-  {
-    id: 'n-arg-lineup',
-    source: '阿根廷国家队',
-    sourceAvatar: '🇦🇷',
-    time: '23 分钟前',
-    category: 'official',
-    categoryLabel: '官方公告',
-    headline: '梅西今晚出战摩洛哥，担任队长',
-    body: '官方公告确认梅西完全康复，将作为队长率领阿根廷出战 22:00 的小组赛。位置：前腰。',
-    likes: 1283,
-    comments: [
-      { id: 'c1', user: '桑巴鼓手', avatar: '🥁', text: '老梅状态我看好', time: '15 分钟前' },
-    ],
-  },
-  {
-    id: 'n-c7-talk',
-    source: '球场记者老李',
-    sourceAvatar: '📡',
-    time: '1 小时前',
-    category: 'insider',
-    categoryLabel: '内部消息',
-    headline: 'C 罗与教练长谈 20 分钟争取首发',
-    body: '葡萄牙更衣室外目击 C 罗与主教练长谈 20 分钟，疑似争取首发位置。今晚淘汰赛主帅决定将公开。',
-    likes: 488,
-    comments: [
-      { id: 'c1', user: '葡萄牙球迷会', avatar: '⚽', text: '哥，再苟一波', time: '40 分钟前' },
-      { id: 'c2', user: '葡式蛋挞', avatar: '🍮', text: 'CR7 永远滴神', time: '50 分钟前' },
-    ],
-  },
-  {
-    id: 'n-bra-injury',
-    source: '南美深喉',
-    sourceAvatar: '🛰️',
-    time: '2 小时前',
-    category: 'rumor',
-    categoryLabel: '传闻',
-    headline: '巴西后防疑似有伤情未公开',
-    body: '消息源称巴西首发名单中的某位中卫存在轻微伤情，是否上场尚未确定。押南美桑巴看小心点。',
-    likes: 261,
-    comments: [
-      { id: 'c1', user: '黑马观察员', avatar: '🐎', text: '建议押克罗地亚冷门', time: '1 小时前' },
-    ],
-  },
-];
-
-const danmakuMessages = [
-  { user: '🐢老李', text: '梅西今晚必入！押阿根廷' },
-  { user: '⚽小张', text: 'C罗求首发，葡萄牙必赢' },
-  { user: '📡深喉', text: '英格兰大热必死 笑死' },
-  { user: '🍻掌柜', text: '葡萄牙 yyds 上线' },
-  { user: '🔥火球', text: '摩洛哥赔率28 起飞！' },
-  { user: '💸老王', text: '巴西稳了 满仓押' },
-  { user: '🚀阿杰', text: '德国今晚怕是要爆冷' },
-  { user: '🎯狙击手', text: '荷兰大小球分歧大' },
-  { user: '🍀彩民', text: '法国稳如老狗' },
-  { user: '👀线人', text: '阿根廷训练加练任意球' },
-  { user: '🥁桑巴', text: '维尼修斯今天发挥神了' },
-  { user: '🎩西装', text: '哈兰德进不了大赛真可惜' },
-];
 
 const mapHotspots: { name: string; x: number; y: number; top?: boolean }[] = [
   { name: '巴西', x: 108, y: 125, top: true },
@@ -338,28 +120,6 @@ const continentPaths = [
   'M312 95 L332 96 L332 105 L312 105 Z',
   'M320 122 L365 120 L360 145 L326 147 Z',
   'M358 50 L368 48 L365 65 L357 63 Z',
-];
-
-type Trend = 'up' | 'down' | 'flat';
-
-const championshipOdds: {
-  rank: number;
-  flag: string;
-  team: string;
-  odds: number;
-  trend: Trend;
-  delta: string;
-}[] = [
-  { rank: 1, flag: '🇧🇷', team: '巴西', odds: 4.2, trend: 'up', delta: '+0.3' },
-  { rank: 2, flag: '🇫🇷', team: '法国', odds: 5.0, trend: 'down', delta: '-0.2' },
-  { rank: 3, flag: '🇦🇷', team: '阿根廷', odds: 5.5, trend: 'up', delta: '+0.1' },
-  { rank: 4, flag: '🇪🇸', team: '西班牙', odds: 7.0, trend: 'flat', delta: '0' },
-  { rank: 5, flag: '🏴', team: '英格兰', odds: 8.0, trend: 'up', delta: '+0.5' },
-  { rank: 6, flag: '🇩🇪', team: '德国', odds: 10, trend: 'down', delta: '-1.0' },
-  { rank: 7, flag: '🇵🇹', team: '葡萄牙', odds: 12, trend: 'flat', delta: '0' },
-  { rank: 8, flag: '🇳🇱', team: '荷兰', odds: 14, trend: 'up', delta: '+1.0' },
-  { rank: 9, flag: '🇧🇪', team: '比利时', odds: 18, trend: 'down', delta: '-2.0' },
-  { rank: 10, flag: '🇲🇦', team: '摩洛哥', odds: 28, trend: 'up', delta: '+3.5' },
 ];
 
 const signalToneMap = {
@@ -508,8 +268,58 @@ function mapFootballMarketToFixture(item: FootballMarketAggregate, index: number
 /** 今日赛程 / 暗盘：首屏条数、每次「加载更多」Reveal 条数（与接口 limit 对齐） */
 const FIXTURE_VISIBLE_CHUNK = 20;
 
+/** 世界杯侧栏资讯分页条数 */
+const NEWS_PAGE_SIZE = 10;
+
 /** 赛程表主体最大高度，超出后在区域内滚动，避免页面无限拉长 */
 const FIXTURE_LIST_MAX_HEIGHT_CLASS = 'max-h-[min(480px,52vh)] md:max-h-[min(560px,58vh)]';
+
+function formatNewsTime(publishedAt?: number) {
+  const rawTime = Number(publishedAt ?? 0);
+  if (!Number.isFinite(rawTime) || rawTime <= 0) return '刚刚';
+
+  const timeMs = rawTime > 1_000_000_000_000 ? rawTime : rawTime * 1000;
+  const diffSeconds = Math.max(0, Math.floor((Date.now() - timeMs) / 1000));
+  if (diffSeconds < 60) return '刚刚';
+  if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} 分钟前`;
+  if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)} 小时前`;
+
+  const date = new Date(timeMs);
+  if (Number.isNaN(date.getTime())) return '刚刚';
+  return `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+}
+
+function resolveNewsCategory(item: NewsArticle): Pick<NewsItem, 'category' | 'categoryLabel'> {
+  const haystack = [item.title, item.summary, item.category, item.channel, ...(item.tags ?? [])].join(' ').toLowerCase();
+
+  if (haystack.includes('官方') || haystack.includes('fifa')) {
+    return { category: 'official', categoryLabel: '官方公告' };
+  }
+  if (haystack.includes('传闻') || haystack.includes('伤') || haystack.includes('疑似')) {
+    return { category: 'rumor', categoryLabel: '传闻' };
+  }
+  if (haystack.includes('记者') || haystack.includes('独家') || haystack.includes('内部')) {
+    return { category: 'insider', categoryLabel: '内部消息' };
+  }
+  return { category: 'breaking', categoryLabel: '突发' };
+}
+
+function mapNewsArticleToNewsItem(item: NewsArticle): NewsItem {
+  const category = resolveNewsCategory(item);
+  const sourceName = item.sourceName?.trim() || (item.source === 'hupu' ? '虎扑' : item.source?.trim()) || '体育资讯';
+
+  return {
+    id: `news-${item.id}`,
+    source: sourceName,
+    sourceAvatar: sourceName.includes('虎扑') ? '虎' : '⚽',
+    sourceUrl: item.sourceUrl?.trim() || undefined,
+    time: formatNewsTime(item.publishedAt),
+    ...category,
+    headline: item.title,
+    body: item.summary?.trim() || '打开原文查看完整报道。',
+    likes: Math.max(0, Math.round(Number(item.hotScore ?? 0))),
+  };
+}
 
 function CornerBrackets() {
   return (
@@ -524,12 +334,11 @@ function CornerBrackets() {
 
 export function WorldCupPage() {
   const location = useLocation();
-  const [expandedNewsId, setExpandedNewsId] = useState<string | null>(null);
-  const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
-  const [postedComments, setPostedComments] = useState<Record<string, NewsComment[]>>({});
   const [footballPage, setFootballPage] = useState(1);
   const [visibleFixtureCount, setVisibleFixtureCount] = useState(FIXTURE_VISIBLE_CHUNK);
   const [loadedFootballMarkets, setLoadedFootballMarkets] = useState<FootballMarketAggregate[]>([]);
+  const [newsPage, setNewsPage] = useState(1);
+  const [loadedNewsArticles, setLoadedNewsArticles] = useState<NewsArticle[]>([]);
   const [betModal, setBetModal] = useState<{ item: PredictionCardItem; option: PredictionBetOption } | null>(null);
   const [localBetSides, setLocalBetSides] = useState<Record<string, PredictionBetOption>>({});
   const { onOpenAuth } = useHomeLayoutContext();
@@ -540,7 +349,15 @@ export function WorldCupPage() {
     limit: FIXTURE_VISIBLE_CHUNK,
     requireAuth: false,
   });
+  const newsListQuery = useRequestNewsListDirect({
+    page: newsPage,
+    pageSize: NEWS_PAGE_SIZE,
+    category: 'football',
+    source: 'hupu',
+    sort: 'publishedAt_desc',
+  });
   const footballMarketsPage = footballMarketsQuery.data?.list ?? [];
+  const newsArticlePage = newsListQuery.data?.list ?? [];
 
   useEffect(() => {
     if (!footballMarketsPage.length) return;
@@ -565,17 +382,55 @@ export function WorldCupPage() {
     }
   }, [footballPage, footballMarketsPage.length]);
 
+  useEffect(() => {
+    if (!newsArticlePage.length) return;
+
+    setLoadedNewsArticles((prev) => {
+      const next = newsPage === 1 ? [] : [...prev];
+      newsArticlePage.forEach((item) => {
+        const existingIndex = next.findIndex((current) => current.id === item.id);
+        if (existingIndex >= 0) {
+          next[existingIndex] = item;
+          return;
+        }
+        next.push(item);
+      });
+      return next;
+    });
+  }, [newsArticlePage, newsPage]);
+
   const footballMarkets = loadedFootballMarkets.length > 0 ? loadedFootballMarkets : footballMarketsPage;
   const footballTotal = footballMarketsQuery.data?.total ?? footballMarkets.length;
   const hasMoreFootballMarkets = footballMarkets.length > 0 && footballMarkets.length < footballTotal;
+  const newsArticles = loadedNewsArticles.length > 0 ? loadedNewsArticles : newsArticlePage;
+  const newsTotal = newsListQuery.data?.count ?? newsArticles.length;
+  const hasMoreNews = newsArticles.length > 0 && newsArticles.length < newsTotal;
+  const worldCupNewsItems = useMemo(
+    () => newsArticles.map(mapNewsArticleToNewsItem),
+    [newsArticles],
+  );
   const featuredMarkets = useMemo(
-    () => (footballMarkets.length > 0 ? footballMarkets.slice(0, 3).map(mapFootballMarketToFeatured) : fallbackFeaturedMarkets),
+    () => footballMarkets.slice(0, 3).map(mapFootballMarketToFeatured),
     [footballMarkets],
   );
   const todayFixtures = useMemo(
-    () => (footballMarkets.length > 0 ? footballMarkets.map(mapFootballMarketToFixture) : fallbackTodayFixtures),
+    () => footballMarkets.map(mapFootballMarketToFixture),
     [footballMarkets],
   );
+  const marketTopRows = useMemo(() => footballMarkets.slice(0, 10).map((item, index) => {
+    const context = item.context ?? {};
+    const { poolA, poolB, votesA, votesB } = calcMarketOdds(item);
+    const predictionItem = mapFootballMarketToPredictionItem(item);
+
+    return {
+      rank: index + 1,
+      title: predictionItem.title,
+      sideLabel: `${predictionItem.optionA} / ${predictionItem.optionB}`,
+      tag: (context.tags || 'football').split(',').map((tag) => tag.trim()).filter(Boolean)[0] || 'football',
+      heat: formatCompact(asNumber(context.heat, votesA + votesB)),
+      pool: formatCompact(poolA + poolB),
+    };
+  }), [footballMarkets]);
   const visibleTodayFixtures = todayFixtures.slice(0, visibleFixtureCount);
   const canRevealLoadedFixtures = visibleFixtureCount < todayFixtures.length;
   const canViewMoreFixtures = canRevealLoadedFixtures || hasMoreFootballMarkets;
@@ -611,21 +466,9 @@ export function WorldCupPage() {
     setFootballPage((page) => page + 1);
   };
 
-  const submitComment = (newsId: string) => {
-    const text = (commentDrafts[newsId] ?? '').trim();
-    if (!text) return;
-    const newComment: NewsComment = {
-      id: `posted-${newsId}-${Date.now()}`,
-      user: '我',
-      avatar: '🐢',
-      text,
-      time: '刚刚',
-    };
-    setPostedComments((prev) => ({
-      ...prev,
-      [newsId]: [...(prev[newsId] ?? []), newComment],
-    }));
-    setCommentDrafts((prev) => ({ ...prev, [newsId]: '' }));
+  const handleLoadMoreNews = () => {
+    if (!hasMoreNews || newsListQuery.isLoading) return;
+    setNewsPage((page) => page + 1);
   };
 
   return (
@@ -660,39 +503,7 @@ export function WorldCupPage() {
         <WorldCupPitchBackdropLayers />
         <CornerBrackets />
 
-        {/* 大屏弹幕 */}
-        <div className={css("pointer-events-none absolute inset-x-0 top-0 z-20 h-[72px] overflow-hidden")}>          <div className={css("absolute inset-0 bg-gradient-to-b from-black/75 via-black/45 to-transparent")} />
-          <div className={css("absolute inset-x-0 top-0 flex flex-col gap-1.5 px-2 pt-2")}>
-            {[
-              danmakuMessages.slice(0, 4),
-              danmakuMessages.slice(4, 8),
-              danmakuMessages.slice(8, 12),
-            ].map((row, rowIdx) => (
-              <div
-                key={rowIdx}
-                className={css("flex w-max gap-6 whitespace-nowrap will-change-transform")}
-                style={{
-                  animation: `${kf('wc-danmaku-flow')} ${26 + rowIdx * 7}s linear infinite`,
-                }}
-              >
-                {[...row, ...row, ...row].map((d, i) => (
-                  <span
-                    key={`${rowIdx}-${i}`}
-                    className={css("inline-flex items-center gap-1.5 rounded-full border border-cyan-400/22 bg-black/55 px-3 py-0.5 text-[11px] backdrop-blur")}
-                  >
-                    <span className={css("font-black text-emerald-300")}>{d.user}</span>
-                    <span className={css("text-zinc-200")}>{d.text}</span>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-          {/* 左右淡出 */}
-          <div className={css("pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#06151b] to-transparent")} />
-          <div className={css("pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#06151b] to-transparent")} />
-        </div>
-
-        <div className={css("relative grid gap-6 px-5 pb-6 pt-20 md:px-8 md:pb-8 md:pt-24 xl:grid-cols-[1.05fr_0.95fr] xl:items-stretch")}>
+        <div className={css("relative grid gap-6 px-5 py-6 md:px-8 md:py-8 xl:grid-cols-[1.05fr_0.95fr] xl:items-stretch")}>
           <div className={css("min-w-0 xl:flex xl:flex-col")}>
             <div className={css("inline-flex w-fit items-center gap-2 rounded-sm border border-emerald-400/40 bg-emerald-400/10 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.22em] text-emerald-300")}>
               <span className={css("relative flex h-2 w-2")}>
@@ -818,7 +629,7 @@ export function WorldCupPage() {
             </div>
           </div>
 
-          {/* 夺冠赔率排行榜 TOP 10 */}
+          {/* 热门市场排行榜 TOP 10 */}
           <div className={css("relative overflow-hidden rounded-[14px] border border-emerald-400/30 bg-black/55 p-4 backdrop-blur-md")}>
             <WorldCupCardPitchTexture />
             <CornerBrackets />
@@ -826,7 +637,7 @@ export function WorldCupPage() {
               <div className={css("flex items-center gap-2")}>
                 <span className={css("inline-flex items-center gap-1.5 rounded-sm border border-emerald-400/40 bg-emerald-400/12 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-300")}>
                   <Trophy size={11} />
-                  CHAMPION TOP 10
+                  MARKET TOP 10
                 </span>
               </div>
               <span className={css("inline-flex items-center gap-1 rounded-sm border border-rose-400/35 bg-rose-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.18em] text-rose-300")}>
@@ -839,21 +650,21 @@ export function WorldCupPage() {
             </header>
             <div className={css("relative mt-2 flex items-end justify-between")}>
               <h3 className={css("font-sans text-[15px] font-black uppercase tracking-tight text-white")}>
-                夺冠赔率 / 实时榜
+                热门市场 / 实时榜
               </h3>
               <span className={css("text-[9.5px] font-black uppercase tracking-[0.18em] text-cyan-300/70")}>
-                // UPDATED 30s AGO
+                // API FEED
               </span>
             </div>
 
             <ul className={css("relative mt-3 overflow-hidden rounded-[8px] border border-cyan-400/15 bg-black/45 divide-y divide-cyan-400/10")}>
-              <li className={css("grid grid-cols-[28px_1fr_70px_60px] items-center gap-2 border-b border-emerald-400/20 bg-emerald-400/[0.04] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-emerald-300/70")}>
+              <li className={css("grid grid-cols-[28px_1fr_58px_58px] items-center gap-2 border-b border-emerald-400/20 bg-emerald-400/[0.04] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-emerald-300/70")}>
                 <span>#</span>
-                <span>TEAM</span>
-                <span className={css("text-right")}>ODDS</span>
-                <span className={css("text-right")}>24H</span>
+                <span>MARKET</span>
+                <span className={css("text-right")}>HEAT</span>
+                <span className={css("text-right")}>POOL</span>
               </li>
-              {championshipOdds.map((row) => {
+              {marketTopRows.map((row) => {
                 const rankTone =
                   row.rank === 1
                     ? 'text-emerald-300 [text-shadow:0_0_10px_rgba(52,255,139,0.6)]'
@@ -870,25 +681,20 @@ export function WorldCupPage() {
                       : row.rank === 3
                         ? 'bg-amber-400/[0.05] hover:bg-amber-400/[0.10]'
                         : 'hover:bg-white/[0.04]';
-                const trendCls =
-                  row.trend === 'up'
-                    ? 'text-emerald-300'
-                    : row.trend === 'down'
-                      ? 'text-rose-300'
-                      : 'text-zinc-500';
-                const trendIcon = row.trend === 'up' ? '▲' : row.trend === 'down' ? '▼' : '—';
                 return (
                   <li
                     key={row.rank}
-                    className={css(`grid grid-cols-[28px_1fr_70px_60px] items-center gap-2 px-3 py-1.5 transition-colors ${rowBg}`)}
+                    className={css(`grid grid-cols-[28px_1fr_58px_58px] items-center gap-2 px-3 py-2 transition-colors ${rowBg}`)}
                   >
                     <span className={css(`font-sans text-[14px] font-black tabular-nums ${rankTone}`)}>
                       {row.rank.toString().padStart(2, '0')}
                     </span>
-                    <span className={css("flex min-w-0 items-center gap-2")}>
-                      <span className={css("text-[18px] leading-none")}>{row.flag}</span>
-                      <span className={css("truncate font-sans text-[13px] font-black text-white")}>
-                        {row.team}
+                    <span className={css("min-w-0")}>
+                      <span className={css("block truncate font-sans text-[12px] font-black text-white")}>
+                        {row.title}
+                      </span>
+                      <span className={css("mt-0.5 block truncate text-[9px] font-black uppercase tracking-wider text-cyan-300/55")}>
+                        {row.tag} · {row.sideLabel}
                       </span>
                       {row.rank === 1 && (
                         <span className={css("rounded-sm border border-emerald-400/40 bg-emerald-400/15 px-1 py-px text-[8.5px] font-black tracking-wider text-emerald-300")}>
@@ -896,24 +702,26 @@ export function WorldCupPage() {
                         </span>
                       )}
                     </span>
-                    <span className={css("text-right font-sans text-[14px] font-black tabular-nums text-white")}>
-                      × {row.odds.toFixed(1)}
+                    <span className={css("text-right font-sans text-[12px] font-black tabular-nums text-white")}>
+                      {row.heat}
                     </span>
-                    <span
-                      className={css(`flex items-center justify-end gap-0.5 font-sans text-[10.5px] font-black tabular-nums ${trendCls}`)}
-                    >
-                      <span className={css("text-[9px] leading-none")}>{trendIcon}</span>
-                      {row.delta}
+                    <span className={css("text-right font-sans text-[12px] font-black tabular-nums text-emerald-300")}>
+                      {row.pool}
                     </span>
                   </li>
                 );
               })}
+              {!footballMarketsQuery.isLoading && marketTopRows.length === 0 ? (
+                <li className={css("px-3 py-8 text-center font-sans text-[12px] text-zinc-500")}>
+                  暂无市场数据
+                </li>
+              ) : null}
             </ul>
 
             <div className={css("relative mt-2 flex items-center justify-between text-[9.5px] font-black uppercase tracking-[0.18em] text-cyan-300/65")}>
               <span className={css("inline-flex items-center gap-1")}>
                 <Goal size={10} />
-                数据来自 36 个公开盘口聚合
+                数据来自世界杯市场接口
               </span>
               <button
                 type="button"
@@ -1066,6 +874,17 @@ export function WorldCupPage() {
                   ) : null}
                 </article>
               ))}
+              {!footballMarketsQuery.isLoading && featuredMarkets.length === 0 ? (
+                <div className={css("relative overflow-hidden rounded-[14px] border border-emerald-400/18 bg-black/45 px-5 py-8 text-center")}>
+                  <WorldCupCardPitchTexture />
+                  <div className={css("relative text-[11px] font-black uppercase tracking-[0.2em] text-emerald-300/70")}>
+                    NO MARKETS
+                  </div>
+                  <p className={css("relative mt-2 font-sans text-[12px] leading-5 text-zinc-500")}>
+                    暂无世界杯预测盘数据。
+                  </p>
+                </div>
+              ) : null}
             </div>
           </section>
 
@@ -1172,6 +991,11 @@ export function WorldCupPage() {
                     </div>
                   </li>
                 ))}
+                {!footballMarketsQuery.isLoading && visibleTodayFixtures.length === 0 ? (
+                  <li className={css("px-4 py-8 text-center font-sans text-[12px] leading-5 text-zinc-500")}>
+                    暂无世界杯赛程暗盘数据。
+                  </li>
+                ) : null}
               </ul>
               <div className={css("shrink-0 border-t border-cyan-400/15 bg-[rgba(4,11,15,0.85)] px-4 py-3 backdrop-blur-sm")}>
                 <button
@@ -1196,67 +1020,6 @@ export function WorldCupPage() {
 
         {/* 侧栏 */}
         <aside className={css("grid content-start gap-4")}>
-          {SHOW_WORLD_CUP_DEBATE_STAGE ? (
-          <section className={css("relative overflow-hidden rounded-[14px] border border-rose-400/25 bg-[linear-gradient(160deg,rgba(20,4,10,0.92),rgba(4,11,15,0.97)_60%)] shadow-[0_0_24px_rgba(255,46,99,0.10),0_18px_42px_rgba(0,0,0,0.38)]")}>
-            <CornerBrackets />
-            <header className={css("relative flex items-center justify-between border-b border-rose-400/20 px-5 py-4")}>
-              <div className={css("flex items-center gap-2")}>
-                <Mic2 size={18} className={css("text-rose-400")} />
-                <div>
-                  <div className={css("text-[10px] font-black uppercase tracking-[0.22em] text-rose-300/80")}>
-                    // DEBATE STAGE
-                  </div>
-                  <h2 className={css("font-sans text-[17px] font-black uppercase tracking-tight text-white")}>
-                    开撕台
-                  </h2>
-                </div>
-              </div>
-              <button className={css("rounded-sm border border-rose-400/35 bg-rose-400/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-rose-300 transition-all hover:bg-rose-400/20 hover:shadow-[0_0_12px_rgba(255,46,99,0.4)]")}>
-                + 发起开撕
-              </button>
-            </header>
-            <ul className={css("divide-y divide-rose-400/12")}>
-              {debates.map((debate) => (
-                <li key={debate.title} className={css("px-5 py-4")}>
-                  <div className={css("flex items-start justify-between gap-2")}>
-                    <h3 className={css("flex-1 font-sans text-[14px] font-black leading-snug text-white")}>
-                      {debate.title}
-                    </h3>
-                    <span className={css("shrink-0 text-[12px]")}>{debate.spice}</span>
-                  </div>
-                  <p className={css("mt-2 line-clamp-2 border-l-2 border-rose-400/50 pl-2 text-[11px] italic leading-5 text-zinc-400")}>
-                    {debate.quote}
-                  </p>
-                  <div className={css("mt-3 grid grid-cols-2 gap-1.5")}>
-                    <button className={css("rounded-sm border border-emerald-400/30 bg-emerald-400/8 px-2 py-1.5 text-left text-[11px] font-black text-emerald-200 transition-all hover:bg-emerald-400/16 hover:shadow-[0_0_10px_rgba(52,255,139,0.3)]")}>
-                      <div className={css("flex items-center justify-between")}>
-                        <span className={css("truncate uppercase tracking-wider")}>{debate.sideA.label}</span>
-                        <span className={css("font-sans tabular-nums text-emerald-300")}>{debate.sideA.pct}%</span>
-                      </div>
-                    </button>
-                    <button className={css("rounded-sm border border-rose-400/30 bg-rose-400/8 px-2 py-1.5 text-left text-[11px] font-black text-rose-200 transition-all hover:bg-rose-400/16 hover:shadow-[0_0_10px_rgba(255,46,99,0.3)]")}>
-                      <div className={css("flex items-center justify-between")}>
-                        <span className={css("truncate uppercase tracking-wider")}>{debate.sideB.label}</span>
-                        <span className={css("font-sans tabular-nums text-rose-300")}>{debate.sideB.pct}%</span>
-                      </div>
-                    </button>
-                  </div>
-                  <div className={css("mt-2 flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-zinc-500")}>
-                    <span className={css("inline-flex items-center gap-1")}>
-                      <Users size={11} />
-                      {debate.heat} 参战
-                    </span>
-                    <span className={css("inline-flex items-center gap-1 text-rose-300")}>
-                      加入开撕
-                      <ChevronRight size={11} />
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-          ) : null}
-
           {/* 最新消息 */}
           <section className={css("relative overflow-hidden rounded-[14px] border border-cyan-400/25 bg-[linear-gradient(165deg,rgba(4,18,24,0.92),rgba(4,11,15,0.98)_62%)] shadow-[0_0_24px_rgba(34,211,238,0.10),0_18px_42px_rgba(0,0,0,0.4)]")}>
             <CornerBrackets />
@@ -1280,11 +1043,28 @@ export function WorldCupPage() {
                 LIVE
               </span>
             </header>
+            {newsListQuery.isLoading && newsArticles.length === 0 ? (
+              <div className={css("border-b border-cyan-400/12 px-5 py-3 text-[11px] font-black uppercase tracking-wider text-cyan-300/75")}>
+                LOADING HUPU NEWS · 正在拉取虎扑足球资讯
+              </div>
+            ) : null}
+            {newsListQuery.isError && newsArticles.length === 0 ? (
+              <div className={css("border-b border-amber-400/15 px-5 py-3 text-[11px] font-black uppercase tracking-wider text-amber-300/80")}>
+                NEWS API OFFLINE · 资讯接口暂时不可用
+              </div>
+            ) : null}
+            {!newsListQuery.isLoading && !newsListQuery.isError && worldCupNewsItems.length === 0 ? (
+              <div className={css("px-5 py-8 text-center")}>
+                <div className={css("text-[11px] font-black uppercase tracking-[0.2em] text-cyan-300/70")}>
+                  NO NEWS
+                </div>
+                <p className={css("mt-2 font-sans text-[12px] leading-5 text-zinc-500")}>
+                  暂无世界杯资讯，稍后再刷新。
+                </p>
+              </div>
+            ) : null}
             <ul className={css("divide-y divide-cyan-400/12")}>
-              {newsItems.map((news) => {
-                const isExpanded = expandedNewsId === news.id;
-                const allComments = [...news.comments, ...(postedComments[news.id] ?? [])];
-                const draft = commentDrafts[news.id] ?? '';
+              {worldCupNewsItems.map((news) => {
                 return (
                   <li key={news.id} className={css("px-5 py-4")}>
                     <div className={css("flex items-start gap-3")}>
@@ -1306,107 +1086,61 @@ export function WorldCupPage() {
                           <Hash className={css("mr-0.5 inline")} size={9} />
                           {news.time}
                         </div>
-                        <h3 className={css("mt-2 font-sans text-[14px] font-black leading-snug text-white")}>
-                          {news.headline}
-                        </h3>
+                        {news.sourceUrl ? (
+                          <a
+                            href={news.sourceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={css("mt-2 flex items-start gap-1.5 font-sans text-[14px] font-black leading-snug text-white transition-colors hover:text-cyan-200")}
+                          >
+                            <span className={css("min-w-0 flex-1")}>{news.headline}</span>
+                            <ExternalLink size={12} className={css("mt-0.5 shrink-0 text-cyan-300/75")} />
+                          </a>
+                        ) : (
+                          <h3 className={css("mt-2 font-sans text-[14px] font-black leading-snug text-white")}>
+                            {news.headline}
+                          </h3>
+                        )}
                         <p className={css("mt-1.5 font-sans text-[12px] leading-5 text-zinc-300")}>
                           {news.body}
                         </p>
                         <div className={css("mt-2.5 flex items-center gap-3 text-[10px] font-black uppercase tracking-wider text-zinc-500")}>
-                          <button
-                            onClick={() => setExpandedNewsId(isExpanded ? null : news.id)}
-                            className={css(`inline-flex items-center gap-1 transition-colors ${isExpanded ? 'text-cyan-300' : 'hover:text-cyan-300'}`)}
-                          >
-                            <MessageCircleMore size={11} />
-                            {allComments.length}
-                          </button>
                           <span className={css("inline-flex items-center gap-1")}>
                             <ThumbsUp size={11} />
                             {news.likes}
                           </span>
-                          <button
-                            onClick={() => setExpandedNewsId(isExpanded ? null : news.id)}
-                            className={css(`ml-auto inline-flex items-center gap-1 transition-colors ${isExpanded ? 'text-cyan-300' : 'text-cyan-300/85 hover:text-cyan-300'}`)}
-                          >
-                            {isExpanded ? '收起' : '评论'}
-                            <ChevronRight
-                              size={11}
-                              className={css(`transition-transform ${isExpanded ? 'rotate-90' : ''}`)}
-                            />
-                          </button>
-                        </div>
-
-                        {isExpanded && (
-                          <div className={css("mt-3 rounded-[8px] border border-cyan-400/20 bg-black/45 p-3 shadow-[inset_0_0_18px_rgba(34,211,238,0.06)]")}>
-                            <div className={css("text-[9.5px] font-black uppercase tracking-[0.22em] text-cyan-300/65")}>
-                              // {allComments.length} COMMENTS
-                            </div>
-                            {allComments.length > 0 ? (
-                              <ul className={css("mt-2 space-y-2.5")}>
-                                {allComments.map((c) => (
-                                  <li key={c.id} className={css("flex items-start gap-2")}>
-                                    <span className={css("grid h-6 w-6 shrink-0 place-items-center rounded-sm border border-cyan-400/25 bg-black/55 text-[12px]")}>
-                                      {c.avatar}
-                                    </span>
-                                    <div className={css("min-w-0 flex-1")}>
-                                      <div className={css("flex items-baseline gap-2")}>
-                                        <span className={css("truncate font-sans text-[11.5px] font-black text-cyan-200")}>
-                                          {c.user}
-                                        </span>
-                                        <span className={css("shrink-0 text-[9px] font-black uppercase tracking-wider text-zinc-500")}>
-                                          {c.time}
-                                        </span>
-                                      </div>
-                                      <p className={css("mt-0.5 font-sans text-[11.5px] leading-[1.5] text-zinc-200")}>
-                                        {c.text}
-                                      </p>
-                                    </div>
-                                  </li>
-                                ))}
-                              </ul>
-                            ) : (
-                              <p className={css("mt-2 text-[11px] text-zinc-500")}>
-                                还没有人评论 · 留下第一条
-                              </p>
-                            )}
-                            <form
-                              onSubmit={(e) => {
-                                e.preventDefault();
-                                submitComment(news.id);
-                              }}
-                              className={css("mt-3 flex items-center gap-2")}
+                          {news.sourceUrl ? (
+                            <a
+                              href={news.sourceUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className={css("ml-auto inline-flex items-center gap-1 text-cyan-300/85 transition-colors hover:text-cyan-300")}
                             >
-                              <input
-                                value={draft}
-                                onChange={(e) =>
-                                  setCommentDrafts((prev) => ({
-                                    ...prev,
-                                    [news.id]: e.target.value,
-                                  }))
-                                }
-                                placeholder="// 写下你的评论"
-                                className={css("flex-1 rounded-sm border border-cyan-400/25 bg-black/55 px-2.5 py-1.5 font-sans text-[11.5px] text-white placeholder:text-zinc-500 outline-none transition-colors focus:border-cyan-400/60 focus:bg-black/70")}
-                              />
-                              <button
-                                type="submit"
-                                disabled={!draft.trim()}
-                                className={css("inline-flex items-center gap-1 rounded-sm border border-emerald-400/45 bg-emerald-400/15 px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wider text-emerald-300 transition-all hover:bg-emerald-400/25 hover:shadow-[0_0_10px_rgba(52,255,139,0.35)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:shadow-none")}
-                              >
-                                <Send size={11} />
-                                发送
-                              </button>
-                            </form>
-                          </div>
-                        )}
+                              原文
+                              <ChevronRight size={11} />
+                            </a>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                   </li>
                 );
               })}
             </ul>
-            <div className={css("border-t border-cyan-400/15 px-5 py-3 text-center text-[11px] font-black uppercase tracking-wider text-cyan-300/85 transition-colors hover:bg-cyan-400/[0.06]")}>
-              VIEW ALL · 查看全部消息 →
-            </div>
+            <button
+              type="button"
+              onClick={handleLoadMoreNews}
+              disabled={!hasMoreNews || newsListQuery.isLoading}
+              className={css("w-full border-t border-cyan-400/15 px-5 py-3 text-center text-[11px] font-black uppercase tracking-wider text-cyan-300/85 transition-colors hover:bg-cyan-400/[0.06] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:bg-transparent")}
+            >
+              {newsListQuery.isLoading
+                ? 'LOADING · 加载中'
+                : hasMoreNews
+                  ? 'VIEW MORE · 查看更多消息 →'
+                  : newsArticles.length > 0
+                    ? 'ALL LOADED · 已全部展示'
+                    : 'NO MORE · 暂无更多消息'}
+            </button>
           </section>
         </aside>
       </div>
