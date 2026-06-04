@@ -174,7 +174,7 @@ export function useInfiniteRequestTopicTopics(nodeId: number) {
   });
 }
 
-/** 个人中心：按 business_type 拉取当前用户帖子/收藏/隐藏/点赞/点踩列表（nodeId=0 + cursor）。 */
+/** 个人中心：按 business_type 拉取当前用户帖子/收藏/隐藏/点赞/点踩/评论列表（nodeId=0 + cursor）。 */
 export function useInfiniteRequestProfileTopicTopics(params: ProfileTopicListParams) {
   const { businessType, enabled = true } = params;
 

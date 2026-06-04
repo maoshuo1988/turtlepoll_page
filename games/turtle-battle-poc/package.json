@@ -1,0 +1,30 @@
+{
+  "name": "turtle-battle-poc-phaser",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync-public.mjs",
+    "gen-icons": "node scripts/gen-small-icons.mjs",
+    "compress-skills": "node scripts/compress-skill-icons.mjs",
+    "dev": "yarn sync && vite",
+    "build": "yarn sync && tsc --noEmit && vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src",
+    "preview": "vite preview",
+    "deploy:gitee": "node scripts/deploy-gitee.mjs"
+  },
+  "dependencies": {
+    "phaser": "^3.80.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.0",
+    "jimp": "^1.6.1",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^8.59.4",
+    "vite": "^5.4.0",
+    "vitest": "^4.1.7"
+  }
+}

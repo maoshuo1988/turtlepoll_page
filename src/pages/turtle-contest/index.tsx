@@ -1,5 +1,5 @@
 /**
- * 文件说明：turtle-contest 页面路由入口，负责挂载 Phaser 版龟龟争霸。
+ * 文件说明：turtle-contest 页面路由入口，负责挂载新的龟战 Arena 游戏。
  */
 import { useNavigate } from '@umijs/renderer-react';
 import { TurtleContestPageView } from './components/TurtleContestPageView';

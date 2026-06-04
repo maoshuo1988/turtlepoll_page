@@ -9,10 +9,10 @@
     "scripts": {
       "dev": "umi dev",
       "dev:test": "UMI_ENV=test umi dev",
-      "dev:phaser-battle": "cd games/turtle-contest-phaser && yarn dev",
-      "sync:phaser-battle": "cd games/turtle-contest-phaser && yarn sync",
-      "build:phaser-battle": "cd games/turtle-contest-phaser && yarn install && yarn build",
-      "build": "yarn build:phaser-battle && tsc -b && umi build",
+      "dev:turtle-battle": "cd games/turtle-battle-poc && yarn dev",
+      "sync:turtle-battle": "cd games/turtle-battle-poc && yarn sync",
+      "build:turtle-battle": "cd games/turtle-battle-poc && yarn install && yarn build",
+      "build": "yarn build:turtle-battle && tsc -b && umi build",
       "build:test": "UMI_ENV=test tsc -b && UMI_ENV=test umi build",
       "lint": "eslint .",
       "preview": "umi preview"
@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 8
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -112,7 +112,7 @@
             1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -156,7 +156,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            10
+            9
           ]
         },
         "register": 10
@@ -172,7 +172,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -192,7 +192,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -222,7 +222,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -239,7 +239,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -1108,7 +1108,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1134,7 +1134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 41
+        "register": 39
       },
       "enableBy": "register"
     },
@@ -1147,7 +1147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 13
+        "register": 15
       },
       "enableBy": "config"
     },
@@ -1216,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 14
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1266,7 +1266,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1280,10 +1280,10 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1308,7 +1308,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1347,7 +1347,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1525,7 +1525,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1538,7 +1538,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1567,7 +1567,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1604,7 +1604,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 13
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1628,7 +1628,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1641,7 +1641,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 9
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1731,7 +1731,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1744,7 +1744,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1757,7 +1757,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1770,7 +1770,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1809,7 +1809,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1835,7 +1835,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1939,7 +1939,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2332,7 +2332,7 @@
       "parentId": "3",
       "id": "9",
       "absPath": "/games",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { GamesPageView } from './components/GamesPageView';\n\nfunction openLabStandalone() {\n  window.location.href = '/games/turtle-jump/index.html';\n}\n\nfunction openBattleStandalone() {\n  window.location.href = '/games/turtle-battle/index.html';\n}\n\nexport default function GamesPage() {\n  const navigate = useNavigate();\n\n  return (\n    <div className=\"pt-[10px]\">\n      <GamesPageView\n        onOpenJump={() => navigate('/jump')}\n        onOpenLab={openLabStandalone}\n        onOpenBattle={openBattleStandalone}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { GamesPageView } from './components/GamesPageView';\n\nfunction openLabStandalone() {\n  window.location.href = '/games/turtle-jump/index.html';\n}\n\nfunction openBattleStandalone() {\n  window.location.href = '/games/turtle-arena-game/index.html';\n}\n\nexport default function GamesPage() {\n  const navigate = useNavigate();\n\n  return (\n    <div className=\"pt-[10px]\">\n      <GamesPageView\n        onOpenJump={() => navigate('/jump')}\n        onOpenLab={openLabStandalone}\n        onOpenBattle={openBattleStandalone}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/games/index.tsx"
     },
@@ -2343,7 +2343,7 @@
       "parentId": "3",
       "id": "10",
       "absPath": "/turtle-contest",
-      "__content": "/**\n * 文件说明：turtle-contest 页面路由入口，负责挂载 Phaser 版龟龟争霸。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { TurtleContestPageView } from './components/TurtleContestPageView';\n\nexport default function TurtleContestPage() {\n  const navigate = useNavigate();\n\n  return (\n    <TurtleContestPageView\n      isMobileMode={typeof window !== 'undefined' ? window.innerWidth < 1024 : false}\n      onBack={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：turtle-contest 页面路由入口，负责挂载新的龟战 Arena 游戏。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { TurtleContestPageView } from './components/TurtleContestPageView';\n\nexport default function TurtleContestPage() {\n  const navigate = useNavigate();\n\n  return (\n    <TurtleContestPageView\n      isMobileMode={typeof window !== 'undefined' ? window.innerWidth < 1024 : false}\n      onBack={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/turtle-contest/index.tsx"
     },

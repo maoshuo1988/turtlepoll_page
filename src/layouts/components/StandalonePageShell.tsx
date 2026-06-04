@@ -326,7 +326,7 @@ export function StandalonePageShell({
       return;
     }
     if (view === 'battle') {
-      window.location.href = '/games/turtle-battle/index.html';
+      window.location.href = '/games/turtle-arena-game/index.html';
       return;
     }
     if (view === 'turtleContest') {

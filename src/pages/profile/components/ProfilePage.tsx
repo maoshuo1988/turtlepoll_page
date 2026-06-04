@@ -5,8 +5,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from '@umijs/renderer-react';
 import { ArrowLeft, ChevronRight, Image as ImageIcon, LogIn, MessageSquarePlus, Plus, Settings2 } from 'lucide-react';
 import type { OwnedPetItem } from '@/hooks/petTypes';
-import { useInfiniteRequestUserCenterComments } from '@/hooks/useUserCenterRequests';
-import type { UserCenterCommentResponse } from '@/hooks/userCenterTypes';
 import {
   TOPIC_BUSINESS_TYPE,
   type CursorResult,
@@ -63,10 +61,6 @@ const PROFILE_TABS: { key: ProfileTab; label: string }[] = [
 /** xl 以下与 Profile 手机壳一致：外层不再叠一层大卡 */
 const cardClass =
   'rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,#111315_0%,#0b0c0e_100%)] shadow-[0_18px_50px_rgba(0,0,0,0.28)] xl:rounded-none xl:border-0 xl:bg-[#080808] xl:shadow-none max-xl:rounded-none max-xl:border-0 max-xl:bg-transparent max-xl:shadow-none';
-
-/** 列表项：窄屏圆角与边框略收（与 xl:hidden 布局同断点） */
-const feedCard =
-  'rounded-[20px] border border-white/8 bg-white/[0.03] max-xl:rounded-[16px] max-xl:border-white/[0.06]';
 
 const ProfileTabButton: React.FC<{
   active: boolean;
@@ -146,15 +140,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     businessType: TOPIC_BUSINESS_TYPE.disliked,
     enabled: shouldLoadDisliked,
   });
-  const userCommentsQuery = useInfiniteRequestUserCenterComments({ enabled: shouldLoadComments, limit: 20 });
+  const commentedTopicsQuery = useInfiniteRequestProfileTopicTopics({
+    businessType: TOPIC_BUSINESS_TYPE.commented,
+    enabled: shouldLoadComments,
+  });
 
   const profileTopics = useMemo(
     () => flattenProfileTopics(ownPostsQuery.data?.pages),
     [ownPostsQuery.data],
   );
-  const profileComments = useMemo<UserCenterCommentResponse[]>(
-    () => (userCommentsQuery.data?.pages ?? []).flatMap((page) => page.results ?? []),
-    [userCommentsQuery.data],
+  const profileComments = useMemo(
+    () => flattenProfileTopics(commentedTopicsQuery.data?.pages),
+    [commentedTopicsQuery.data],
   );
   const profileFavorites = useMemo(
     () => flattenProfileTopics(favoriteTopicsQuery.data?.pages),
@@ -173,7 +170,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     [dislikedTopicsQuery.data],
   );
   const profileTopicsTotal = resolveProfileTopicTotal(ownPostsQuery, profileTopics);
-  const profileCommentsTotal = userCommentsQuery.data?.pages?.[0]?.page.total ?? 0;
+  const profileCommentsTotal = resolveProfileTopicTotal(commentedTopicsQuery, profileComments);
   const profileFavoritesTotal = resolveProfileTopicTotal(favoriteTopicsQuery, profileFavorites);
   const overviewStats = useMemo(
     () => [
@@ -188,64 +185,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     [skins],
   );
 
-  const formatTimestamp = (value?: number | string) => {
-    if (typeof value === 'string' && value.trim()) {
-      const directDate = new Date(value.replace(' ', 'T'));
-      if (!Number.isNaN(directDate.getTime())) {
-        return directDate.toLocaleString('zh-CN', {
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-      }
-    }
-
-    const num = Number(value ?? 0);
-    if (!num) return '刚刚';
-    const timestamp = num < 1_000_000_000_000 ? num * 1000 : num;
-    return new Date(timestamp).toLocaleString('zh-CN', {
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   const renderLoginRequired = (title: string, description: string) => (
     <div className="border-t border-white/10">
       <LoginRequiredPage title={title} description={description} actionLabel="立即登录" onAction={onOpenAuth} />
     </div>
   );
-
-  const renderPageError = (message: string) => (
-    <div className="mt-5 rounded-[20px] border border-rose-400/20 bg-rose-500/8 p-5 text-[14px] text-rose-200 max-xl:rounded-[16px] md:mt-6 md:p-6">
-      {message}
-    </div>
-  );
-
-  const renderLoadMore = (
-    query: {
-      hasNextPage?: boolean;
-      isFetchingNextPage: boolean;
-      fetchNextPage: () => Promise<unknown>;
-    },
-  ) => {
-    if (!query.hasNextPage) return null;
-
-    return (
-      <button
-        type="button"
-        onClick={() => {
-          void query.fetchNextPage();
-        }}
-        disabled={query.isFetchingNextPage}
-        className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {query.isFetchingNextPage ? '加载中...' : '加载更多'}
-      </button>
-    );
-  };
 
   useEffect(() => {
     const raw = location.hash?.replace(/^#/, '') ?? '';
@@ -345,35 +289,23 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderComments = () => (
     <>
-      {!isAuthenticated ? renderLoginRequired('登录后查看你评论过的帖子', '这里只展示当前登录账号评论过的主题帖。') : userCommentsQuery.isLoading && profileComments.length === 0 ? (
-        <div className={`${feedCard} mt-5 p-5 text-[14px] text-[#8fa0b2] md:mt-6 md:p-6`}>
-          正在加载评论...
-        </div>
-      ) : userCommentsQuery.isError && profileComments.length === 0 ? (
-        renderPageError(userCommentsQuery.error instanceof Error ? userCommentsQuery.error.message : '评论加载失败')
-      ) : profileComments.length === 0 ? (
-        <div className="!mt-4 border-t border-white/10">
-          <EmptyDataPage
-            title="你还没有任何评论"
-            description="在社区中发表评论后，评论会显示在这里。"
-            actionLabel="去社区看看"
-            onAction={onOpenForum}
-          />
-        </div>
+      {!isAuthenticated ? (
+        renderLoginRequired('登录后查看你评论过的帖子', '这里只展示当前登录账号评论过的主题帖。')
       ) : (
-        <div className="mt-5 grid gap-3 md:mt-6 md:gap-4">
-          {profileComments.map((comment) => (
-            <article key={String(comment.id)} className={`${feedCard} p-4 md:p-5`}>
-              <div className="flex items-center justify-between gap-3 text-[12px] text-[#7e8790]">
-                <span>{formatTimestamp(comment.createTime)}</span>
-                <span>评论 ID {comment.id}</span>
-              </div>
-              <p className="mt-3 text-[14px] leading-6 text-[#d9dee3] md:text-[15px] md:leading-7">{comment.content || '暂无评论内容'}</p>
-              <p className="mt-3 line-clamp-2 text-[13px] leading-6 text-[#7e8790]">原帖：{comment.title || '未命名帖子'}</p>
-            </article>
-          ))}
-          {renderLoadMore(userCommentsQuery)}
-        </div>
+        <ProfileTopicFeed
+          className="mt-4 md:mt-6"
+          topics={profileComments}
+          query={commentedTopicsQuery}
+          loadingLabel="正在加载评论记录..."
+          errorLabel="评论记录加载失败"
+          onRequireAuth={onOpenAuth}
+          empty={{
+            title: '你还没有任何评论',
+            description: '在社区中发表评论后，对应帖子会显示在这里。',
+            actionLabel: '去社区看看',
+            onAction: onOpenForum,
+          }}
+        />
       )}
     </>
   );

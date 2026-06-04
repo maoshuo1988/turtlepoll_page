@@ -27,7 +27,7 @@ export type CursorResult<T> = {
 };
 
 /** 个人中心 /api/topic/topics 的 business_type */
-export type TopicBusinessType = 1 | 2 | 3 | 4 | 5;
+export type TopicBusinessType = 1 | 2 | 3 | 4 | 5 | 6;
 
 export const TOPIC_BUSINESS_TYPE = {
   /** 当前用户自己的帖子 */
@@ -40,6 +40,8 @@ export const TOPIC_BUSINESS_TYPE = {
   liked: 4,
   /** 当前用户点踩过的别人的帖子 */
   disliked: 5,
+  /** 当前用户评论过的帖子 */
+  commented: 6,
 } as const satisfies Record<string, TopicBusinessType>;
 
 
@@ -256,7 +258,6 @@ export type UserTopicsParams = {
   userId: number | string ;
   cursor?: number | string;
 };
-
 
 
 

@@ -1,5 +1,5 @@
-/** 文件说明：龟龟争霸（Phaser）页面展示组件，独立全屏挂载，与旧版游戏管理分离。 */
-import { TurtleContestGameHost } from '@/components/common/game/TurtleContestGameHost';
+/** 文件说明：龟龟争霸入口页面展示组件，挂载新的龟战 Arena 游戏。 */
+import { TurtleBattleGameHost } from '@/components/common/game/TurtleBattleGameHost';
 
 interface TurtleContestPageViewProps {
   isMobileMode: boolean;
@@ -18,7 +18,7 @@ export function TurtleContestPageView({ isMobileMode, onBack }: TurtleContestPag
       >
         关闭游戏
       </button>
-      <TurtleContestGameHost mobileMode={isMobileMode} onBack={onBack} />
+      <TurtleBattleGameHost mobileMode={isMobileMode} />
     </div>
   );
 }

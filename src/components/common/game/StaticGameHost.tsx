@@ -223,15 +223,15 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
 
   return (
     <div
-      className={`relative overflow-hidden bg-[#061018] text-white ${
+      className={`relative overflow-hidden ${immersive ? 'bg-black' : 'bg-[#061018]'} text-white ${
         mobileMode
           ? 'min-h-screen rounded-none'
           : immersive
-            ? 'h-full rounded-[28px] border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.35)]'
+            ? 'h-full rounded-none border-0'
             : 'rounded-[28px] border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.35)]'
       }`}
     >
-      {!mobileMode ? (
+      {!mobileMode && !immersive ? (
         <>
           <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_top,rgba(76,201,240,0.18),transparent_68%)]" />
           <div className="pointer-events-none absolute right-0 top-16 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(6,214,160,0.1),transparent_68%)] blur-2xl" />
@@ -284,7 +284,7 @@ export const StaticGameHost: React.FC<StaticGameHostProps> = ({
         ) : null}
       </div> */}
 
-      <div className={mobileMode ? 'px-0 py-0' : immersive ? 'flex h-[calc(100%-72px)] flex-col p-0' : 'p-3 sm:p-4'}>
+      <div className={mobileMode ? 'px-0 py-0' : immersive ? 'flex h-full flex-col p-0' : 'p-3 sm:p-4'}>
         {showProjectBrief ? (
           <section className={`mb-3 overflow-hidden rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(12,26,40,0.92),rgba(8,18,28,0.96))] ${
             mobileMode ? 'mx-3 mt-3 px-3 py-3' : 'px-4 py-4'

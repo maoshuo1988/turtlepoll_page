@@ -7,10 +7,10 @@
   "scripts": {
     "dev": "umi dev",
     "dev:test": "UMI_ENV=test umi dev",
-    "dev:phaser-battle": "cd games/turtle-contest-phaser && yarn dev",
-    "sync:phaser-battle": "cd games/turtle-contest-phaser && yarn sync",
-    "build:phaser-battle": "cd games/turtle-contest-phaser && yarn install && yarn build",
-    "build": "yarn build:phaser-battle && tsc -b && umi build",
+    "dev:turtle-battle": "cd games/turtle-battle-poc && yarn dev",
+    "sync:turtle-battle": "cd games/turtle-battle-poc && yarn sync",
+    "build:turtle-battle": "cd games/turtle-battle-poc && yarn install && yarn build",
+    "build": "yarn build:turtle-battle && tsc -b && umi build",
     "build:test": "UMI_ENV=test tsc -b && UMI_ENV=test umi build",
     "lint": "eslint .",
     "preview": "umi preview"

@@ -9,7 +9,7 @@ function openLabStandalone() {
 }
 
 function openBattleStandalone() {
-  window.location.href = '/games/turtle-battle/index.html';
+  window.location.href = '/games/turtle-arena-game/index.html';
 }
 
 export default function GamesPage() {
