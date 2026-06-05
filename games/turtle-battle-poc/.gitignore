@@ -4,7 +4,7 @@ dist.zip
 *.zip
 *.log
 .vite/
-# v0.9.1: public/ 由 scripts/sync-public.mjs 从源 assets 重建, 不入库 (Vercel build 自动跑 sync)
+# public/ 由 scripts/sync-public.mjs 从 assets/legacy 与主站 public/assets 重建, 不入库
 public/
 # 开发时生成的根目录调试截图 (battle-/teamselect-/v3x- 等), 非资产 — 资产在 public/
 /*.png

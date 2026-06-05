@@ -1,5 +1,5 @@
-// sync-public.mjs — 合并两个资产源到 poc-phaser/public/
-//   src1: ../games/turtle-battle/assets/  (旧版资产: bg/audio/avatars/passive/...)
+// sync-public.mjs — 合并多个资产源到 poc-phaser/public/
+//   src1: ../assets/legacy/               (旧版资产: bg/audio/avatars/passive/...)
 //   src2: ../../assets/pets/              (项目根: 24 龟中文名 sprite sheet)
 // 修改的话直接重跑 (幂等, mtime 一致就跳过).
 //
@@ -13,8 +13,8 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.resolve(__dirname, '../public');
-// 主站内构建时，资产源统一落在 public/ 下；缺失的补充资产保留在本项目 public/ 中。
-const SRC_TB = path.resolve(__dirname, '../public/_legacy-assets');
+// public/ 是本地生成目录，不入库；旧版游戏资产源统一保存在 assets/legacy/。
+const SRC_TB = path.resolve(__dirname, '../assets/legacy');
 const SRC_ROOT_PETS  = path.resolve(__dirname, '../../../public/assets/pets');
 const SRC_ROOT_TAGS  = path.resolve(__dirname, '../../../public/assets/tags');
 const SRC_ROOT_UI    = path.resolve(__dirname, '../../../public/assets/ui');
@@ -53,10 +53,10 @@ function copyDir(src, dst) {
   }
 }
 
-console.log('[sync-public] 1/2 turtle-battle/assets → poc-phaser/public/');
+console.log('[sync-public] 1/5 assets/legacy → poc-phaser/public/');
 copyDir(SRC_TB, PUBLIC);
 
-console.log('[sync-public] 2/3 项目根 /assets/pets/ → poc-phaser/public/pets/');
+console.log('[sync-public] 2/5 项目根 /assets/pets/ → poc-phaser/public/pets/');
 copyDir(SRC_ROOT_PETS, path.join(PUBLIC, 'pets'));
 
 // v0.9.5.A66: 给中文文件名 pet 加 ASCII 别名 (Vercel Unicode 文件名兼容)
@@ -81,7 +81,7 @@ for (const [cn, id] of Object.entries(CHINESE_TO_ID)) {
   }
 }
 
-console.log('[sync-public] 3/4 项目根 /assets/tags/ → poc-phaser/public/tags/');
+console.log('[sync-public] 3/5 项目根 /assets/tags/ → poc-phaser/public/tags/');
 copyDir(SRC_ROOT_TAGS, path.join(PUBLIC, 'tags'));
 
 // v0.9.9: 战斗 chrome 按钮 Steam 贴图 (返回/术语/日志/统计/音乐/全屏) — 项目根 /assets/ui/

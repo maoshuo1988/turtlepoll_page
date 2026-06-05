@@ -6,7 +6,7 @@ import { PetChat } from '@/components/common/pet/PetChat';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/components/common/pet/petTypes';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
-import { useRequestCoinMe } from '@/hooks/useCoinRequests';
+import { useRequestCoinLeaderboard } from '@/hooks/useCoinRequests';
 import { PetProfilePanel } from './PetProfilePanel';
 import { ShopShortcutCard } from './ShopShortcutCard';
 
@@ -45,8 +45,8 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
   onOpenActivePredictions,
 }) => {
   useRequestUserCurrent();
-  const coinMe = useRequestCoinMe();
-  const displayBalance = coinMe.data?.balance ?? 0;
+  const coinLeaderboard = useRequestCoinLeaderboard({ limit: 20 });
+  const leaderboardMe = coinLeaderboard.data;
 
   const staminaDen = Math.max(pet.maxStamina || 1, 1);
   const staminaPercent = Math.round(Math.min(100, Math.max(0, (pet.stamina / staminaDen) * 100)));
@@ -76,9 +76,9 @@ export const SidebarDesktopProfilePanel: React.FC<SidebarDesktopProfilePanelProp
       </button> */}
 
       <PetProfilePanel
-        balance={displayBalance}
-        winStreak={0}
-        winRate={0}
+        balance={leaderboardMe?.myBalance ?? 0}
+        winRate={leaderboardMe?.myWinRate ?? 0}
+        winStreak={leaderboardMe?.myCurrentWinStreak ?? 0}
         totalPredictions={0}
         activePredictions={0}
         pet={{
