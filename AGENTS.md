@@ -111,6 +111,44 @@
 - PC 端优先信息扫描、对比和重复操作；手机端优先单列、触摸目标、无横向滚动。
 - 弹框在 PC 端优先居中，手机端可使用底部 sheet，并处理 safe area。
 
+## PC 端规则
+
+- PC 端布局以 `lg` / `VP_LAYOUT_DESKTOP_MIN_PX` 为准，即 1024px 及以上进入 PC 壳；不要和 768 内容断点混用。
+- PC 顶栏统一使用 `src/components/pc/header/PcHeader.tsx`，左侧栏统一使用 `src/components/pc/layout/`，不要在页面里重复造顶栏、侧栏或全局壳。
+- 主页面仍由 `AppPageLayout` / `StandalonePageShell` 承接 header、sidebar、content 滚动区和基础间距；普通页面不要额外包一层全局容器。
+- 页面根节点优先保持 `section` + `view-<route>` + `w-full` + `min-h-full` + `gap-4 max-lg:gap-3` 的现有结构。
+- PC 主内容可以使用多列、表格、行式列表和信息密度更高的布局，但必须保持可扫描，不允许无限拉宽正文或把移动端单列直接撑满大屏。
+- PC 端结构优先用 `grid` / `flex` / `gap` 管理，常见分叉使用 `lg:grid-cols-*`、`xl:grid-cols-*`、`2xl:grid-cols-*`。
+- 列表、排行榜、记录类内容在 PC 端可以展示更多字段，操作区优先靠右，关键数字用 emerald / amber 少量强调。
+- PC 左侧栏导航只放主页面入口；辅助入口如新手引导、宠物聊天、快捷购买、个人动作放在顶栏、业务卡片或抽屉区域。
+- 新增一级页面必须同步维护 `.umirc.ts`、`src/layouts/home.tsx` 的路由视图映射、`SidebarMainPanels.tsx` 的 `NAV_ITEMS` 和 `ViewType`。
+- PC 弹框优先居中，宽度克制，常用 420 / 520 / 640；复杂列表弹框可以更宽，但必须限制最大高度并内部滚动。
+- PC hover 只能作为增强反馈，关键操作不能依赖 hover 才可见或可用。
+- PC 视觉必须延续项目现有近黑背景、低透明边框、轻阴影、emerald 主 CTA、少量 amber 奖励色，不引入突兀的大面积新色系。
+- PC 卡片圆角、边框、阴影沿用已有页面尺度；不要做卡片套卡片或每个小信息都做浮夸卡片。
+- PC 复杂视觉舞台、Spine、Hero、动画层的尺寸、偏移和 `z-index` 必须集中放在 `src/config/*` 或页面 `model.ts` / `types.ts`，不要在 TSX 里堆长串魔法数字。
+- PC 复杂样式写 CSS Module，并按规则 `@import` `viewport.scss`，使用 `vp-desktop()` 或 `vpDesktopClampPx()` 做视口适配。
+- 改 PC 时必须确认手机端没有被共用样式挤坏；涉及布局、弹框、导航、舞台时至少检查一版窄屏。
+
+## 手机端规则
+
+- 手机内容适配以 768px 为准，使用 `useMedia768()`、`vp-mobile()`、`vpMobileClampPx()`；1024px 的 `lg` 只用于布局壳和侧栏分叉。
+- 手机布局不能直接压缩 PC 结构；信息结构不一致时必须拆实现，例如 `<Xxx>Mobile.tsx`、`components/mobile/`、`lg:hidden` / `hidden lg:block`、`ViewportMobileOnly` / `ViewportDesktopOnly`。
+- 手机顶栏统一使用 `src/components/mobile/header/MobileHeader.tsx`，底栏统一使用 `src/components/mobile/footer/MobileFooter.tsx`，不要在页面里重复实现全局手机导航。
+- 手机主导航使用底部 Tab；抽屉只放补充入口，如宠物、黑市、个人主页、登录退出等。
+- 手机页面优先单列、触摸优先、无横向滚动；横向滑动只允许用于明确的卡片轨道，并要隐藏滚动条、保留触摸滚动体验。
+- 手机左右 padding 推荐 12 / 16，页面间距通常用 `gap-3`，不要照搬 PC 的大间距和多列密度。
+- 手机触摸目标至少接近 40px，关键操作按钮推荐 44 / 48px 高，并使用 `touch-manipulation` 或明确的 active 状态。
+- 手机长标题、用户名、市场标题、按钮文案必须换行、截断或重排，不能挤压按钮，也不能和相邻内容重叠。
+- 表格、排行榜、记录类内容在手机端必须改成卡片列表、摘要行或分段信息，不允许强塞完整 PC 表格。
+- 手机弹框优先底部 sheet 或窄屏友好的居中弹框，底部按钮必须处理 `env(safe-area-inset-bottom)`。
+- 手机 Header / Drawer / Footer 等 fixed 区域必须考虑 safe area，不能遮挡页面核心操作；底部 Tab 显示时内容区要预留底部 padding。
+- 手机复杂视觉页必须单独校准舞台高度、层级和按钮位置；Spine、游戏、抽奖类元素必须明确背景层、角色层、特效层、按钮层的 `z-index`。
+- 手机换图、换 DOM、游戏模式切换可以用 `useMedia768()`；单纯间距、字号、圆角优先放 CSS / SCSS，不要在 TSX 里堆响应式魔法数字。
+- 手机 CSS Module 使用 `vp-mobile()`；禁止在 `src/index.css` 里引入 `.scss`。
+- 只改手机布局时，以不改变 PC 端既有视觉和交互为前提；优先加手机专属分支或手机专属样式，不随意改 PC 共用样式。
+- 手机端自检必须覆盖：无横向滚动、无文字重叠、按钮可点、弹框不挡底部操作、亮暗色都可读。
+
 ## 视口适配规则（布局必用）
 
 页面、弹框、全屏舞台等**凡涉及尺寸与定位**，必须走项目视口适配体系（参考 Tian-Website 1920/375 双稿思路，与本项目 Tailwind + 布局壳融合）。细则见 `.cursor/rules/viewport-layout.mdc`。
