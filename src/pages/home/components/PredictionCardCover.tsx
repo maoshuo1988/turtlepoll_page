@@ -16,6 +16,8 @@ interface PredictionCardCoverProps {
   className?: string;
   imageClassName?: string;
   loading?: 'eager' | 'lazy';
+  sideImageClassName?: string;
+  sideLayoutClassName?: string;
 }
 
 function resolveCoverImage(item: PredictionCoverItem) {
@@ -27,6 +29,8 @@ export function PredictionCardCover({
   className = 'absolute inset-0',
   imageClassName = 'h-full w-full object-cover',
   loading = 'lazy',
+  sideImageClassName,
+  sideLayoutClassName = 'grid grid-cols-2',
 }: PredictionCardCoverProps) {
   const coverImage = resolveCoverImage(item);
   const sideAImage = item.sideABgImage?.trim();
@@ -39,18 +43,20 @@ export function PredictionCardCover({
   }
 
   if (sideAImage || sideBImage) {
+    const resolvedSideImageClassName = sideImageClassName ?? imageClassName;
+
     return (
-      <div className={`${className} grid grid-cols-2`}>
-        <div className="relative h-full overflow-hidden">
+      <div className={`${className} ${sideLayoutClassName}`}>
+        <div className="relative h-full overflow-hidden" style={{ backgroundColor: sideAColor }}>
           {sideAImage ? (
-            <img src={sideAImage} alt="" className={imageClassName} loading={loading} />
+            <img src={sideAImage} alt="" className={resolvedSideImageClassName} loading={loading} />
           ) : (
             <div className="h-full w-full" style={{ backgroundColor: sideAColor }} />
           )}
         </div>
-        <div className="relative h-full overflow-hidden border-l border-white/15">
+        <div className="relative h-full overflow-hidden border-l border-white/15" style={{ backgroundColor: sideBColor }}>
           {sideBImage ? (
-            <img src={sideBImage} alt="" className={imageClassName} loading={loading} />
+            <img src={sideBImage} alt="" className={resolvedSideImageClassName} loading={loading} />
           ) : (
             <div className="h-full w-full" style={{ backgroundColor: sideBColor }} />
           )}

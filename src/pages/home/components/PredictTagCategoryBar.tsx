@@ -36,7 +36,7 @@ const CategoryChip = forwardRef<HTMLDivElement, CategoryChipProps>(function Cate
           onClick();
         }
       }}
-      className={`inline-flex shrink-0 touch-pan-x items-center gap-2 rounded-xl border px-4 py-2.5 text-[13px] font-bold transition-colors sm:px-5 sm:py-3 sm:text-[14px] ${
+      className={`inline-flex shrink-0 touch-pan-x items-center gap-2 rounded-xl border px-4 py-2.5 text-[13px] font-bold transition-colors max-md:gap-1.5 max-md:rounded-lg max-md:px-3 max-md:py-2 max-md:text-[12px] sm:px-5 sm:py-3 sm:text-[14px] ${
         active
           ? 'border-emerald-400/60 bg-emerald-500/20 text-emerald-100 shadow-[0_0_20px_-6px_rgba(52,211,153,0.55)] ring-2 ring-emerald-400/35'
           : 'border-white/12 bg-white/[0.06] text-zinc-300 hover:border-emerald-500/25 hover:bg-white/[0.09] hover:text-zinc-100'
@@ -45,7 +45,7 @@ const CategoryChip = forwardRef<HTMLDivElement, CategoryChipProps>(function Cate
       <span className="max-w-[9rem] truncate sm:max-w-[12rem]">{label}</span>
       {typeof count === 'number' && count > 0 ? (
         <span
-          className={`min-w-[1.25rem] rounded-md px-1.5 py-0.5 text-center text-[11px] font-extrabold tabular-nums sm:text-[12px] ${
+          className={`min-w-[1.25rem] rounded-md px-1.5 py-0.5 text-center text-[11px] font-extrabold tabular-nums max-md:min-w-[1.1rem] max-md:px-1 max-md:text-[10px] sm:text-[12px] ${
             active ? 'bg-emerald-400/25 text-emerald-50' : 'bg-black/30 text-zinc-400'
           }`}
         >
@@ -141,7 +141,7 @@ export function PredictTagCategoryBar({ selectedTag, onTagChange, compact = fals
         <div
           ref={scrollRef}
           onMouseDown={onMouseDown}
-          className={`${HORIZONTAL_DRAG_SCROLL_TRACK_CLASS} gap-2.5 [scroll-padding-inline:2px]`}
+          className={`${HORIZONTAL_DRAG_SCROLL_TRACK_CLASS} gap-2.5 [scroll-padding-inline:2px] max-md:gap-2`}
         >
           <CategoryChip
             ref={allChipRef}

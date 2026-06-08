@@ -515,7 +515,7 @@ function HeroCountdown({ target, label, color = 'text-[#f8d6a0]' }: { target: nu
   const s = Math.floor((left % 60000) / 1000);
 
   return (
-    <div className="inline-flex items-center justify-center gap-2 rounded-full bg-black/26 px-4 py-2 font-mono text-[13px] font-black text-white/72 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] max-lg:px-3 max-lg:text-[11px]">
+    <div className="inline-flex items-center justify-center gap-2 rounded-full bg-black/26 px-4 py-2 font-mono text-[13px] font-black text-white/72 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] max-lg:gap-1 max-lg:px-2 max-lg:py-0.5 max-lg:text-[10px]">
       <span className="font-sans text-white/42">{label}</span>
       <span className={color}>
         {pad(days)}天 {pad(h)}:{pad(m)}:{pad(s)}
@@ -553,7 +553,7 @@ function HeroSidePanel({
 
   return (
     <div
-      className={`relative w-full min-h-[390px] overflow-hidden rounded-[26px] bg-transparent px-5 py-6 max-lg:min-h-0 max-lg:rounded-[18px] max-lg:px-3 max-lg:py-3 ${
+      className={`relative w-full min-h-[390px] overflow-hidden rounded-[26px] bg-transparent px-5 py-6 max-lg:min-h-0 max-lg:rounded-[18px] max-lg:px-3 max-lg:py-3 max-md:rounded-[14px] max-md:px-2 max-md:py-2 ${
         isA
           ? 'text-left shadow-[0_0_48px_rgba(255,70,16,0.2),inset_26px_0_42px_rgba(255,90,22,0.16)]'
           : 'ml-auto max-w-full text-right shadow-[0_0_48px_rgba(24,187,255,0.2),inset_-26px_0_42px_rgba(40,199,255,0.14)]'
@@ -614,21 +614,21 @@ function HeroSidePanel({
       <div className="pointer-events-none absolute inset-x-5 top-[72px] z-20 h-px bg-white/8 max-lg:hidden" />
       <div className={`relative z-30 flex w-full flex-col ${isA ? 'items-start' : 'items-end'}`}>
         <div
-          className={`mb-8 flex w-full items-center gap-2 ${isA ? '' : 'justify-end'} max-lg:mb-2 max-lg:gap-1.5 ${isA ? 'max-lg:flex-row max-lg:justify-between' : 'max-lg:flex-row max-lg:justify-end'}`}
+          className={`mb-8 flex w-full items-center gap-2 ${isA ? '' : 'justify-end'} max-lg:mb-2 max-lg:gap-1.5 max-md:mb-1 ${isA ? 'max-lg:flex-row max-lg:justify-between' : 'max-lg:flex-row max-lg:justify-end'}`}
         >
           <div className={`flex min-w-0 items-center gap-2 ${isA ? '' : 'flex-row-reverse max-lg:flex-row'}`}>
-            <Zap size={24} className="max-lg:h-4 max-lg:w-4" style={{ color: theme.accent, filter: `drop-shadow(0 0 12px ${theme.accent})` }} />
-            <span className="max-w-full truncate text-[25px] font-black italic tracking-[-0.05em] text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.16)] max-xl:text-[21px] max-lg:text-[13px] max-lg:not-italic">
+            <Zap size={24} className="max-lg:h-4 max-lg:w-4 max-md:h-3 max-md:w-3" style={{ color: theme.accent, filter: `drop-shadow(0 0 12px ${theme.accent})` }} />
+            <span className="max-w-full truncate text-[25px] font-black italic tracking-[-0.05em] text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.16)] max-xl:text-[21px] max-lg:text-[13px] max-lg:not-italic max-md:text-[11px]">
               <span className="max-lg:hidden">{label}更强</span>
               <span className="hidden max-lg:inline">{label}</span>
             </span>
           </div>
           <div
-            className="hidden shrink-0 font-black leading-none tracking-[-0.06em] max-lg:block max-lg:text-[28px]"
+            className="hidden shrink-0 font-black leading-none tracking-[-0.06em] max-lg:block max-lg:text-[28px] max-md:text-[22px]"
             style={{ color: theme.accent, textShadow: `0 0 16px ${theme.primary}` }}
           >
             {pct}
-            <span className="ml-0.5 text-[14px]">%</span>
+            <span className="ml-0.5 text-[14px] max-md:text-[11px]">%</span>
           </div>
         </div>
 
@@ -641,7 +641,7 @@ function HeroSidePanel({
           <span className="ml-1 text-[28px] tracking-[-0.04em]">%</span>
         </div>
         <div
-          className={`mb-8 w-full text-[18px] font-black tabular-nums text-white/88 max-lg:mb-2 max-lg:text-[11px] max-lg:leading-tight ${isA ? '' : 'text-right'}`}
+          className={`mb-8 w-full text-[18px] font-black tabular-nums text-white/88 max-lg:mb-2 max-lg:text-[11px] max-lg:leading-tight max-md:mb-1 max-md:text-[10px] ${isA ? '' : 'text-right'}`}
         >
           {supportText}
         </div>
@@ -658,7 +658,7 @@ function HeroSidePanel({
           ))}
         </div>
 
-        <p className={`mb-2 hidden text-[10px] font-bold text-white/50 max-lg:block ${isA ? 'text-left' : 'text-right'}`}>
+        <p className={`mb-2 hidden text-[10px] font-bold text-white/50 max-lg:block max-md:mb-1 max-md:text-[9px] ${isA ? 'text-left' : 'text-right'}`}>
           {odds.toFixed(2)} × 赔率 · {active ? '已站队' : '等待站队'}
         </p>
 
@@ -666,7 +666,7 @@ function HeroSidePanel({
           type="button"
           onClick={onClick}
           disabled={disabled}
-          className={`inline-flex h-[52px] min-w-[176px] items-center justify-center rounded-[17px] border px-6 text-[16px] font-black text-white transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 max-lg:h-9 max-lg:min-w-[7.5rem] max-lg:rounded-[14px] max-lg:px-2 max-lg:text-[12px] ${
+          className={`inline-flex h-[52px] min-w-[176px] items-center justify-center rounded-[17px] border px-6 text-[16px] font-black text-white transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 max-lg:h-9 max-lg:min-w-[7.5rem] max-lg:rounded-[14px] max-lg:px-2 max-lg:text-[12px] max-md:h-8 max-md:text-[11px] ${
             isA
               ? 'max-lg:w-full max-lg:min-w-0 shadow-[0_0_30px_rgba(255,77,22,0.34)]'
               : 'max-lg:w-auto max-lg:max-w-full shadow-[0_0_30px_rgba(28,190,255,0.32)]'
@@ -832,7 +832,7 @@ function HeroPK({
       initial={{ opacity: 0, y: 22, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[30px] border border-white/10 bg-[#04070d] text-white shadow-[0_24px_78px_rgba(0,0,0,0.52),inset_0_1px_0_rgba(255,255,255,0.08)] max-lg:rounded-[20px]"
+      className="legacy-hero-card legacy-pred-hero relative overflow-hidden rounded-[30px] border border-white/10 bg-[#04070d] text-white shadow-[0_24px_78px_rgba(0,0,0,0.52),inset_0_1px_0_rgba(255,255,255,0.08)] max-lg:rounded-[20px] max-md:rounded-[16px]"
     >
       <div className="absolute inset-0">
         {heroBackground.mode === 'cover' ? (
@@ -903,7 +903,7 @@ function HeroPK({
       </div>
 
       <div
-        className="relative grid min-h-[var(--hero-pk-grid-min-h)] auto-rows-min grid-cols-[282px_minmax(0,1fr)_282px] gap-5 px-8 py-8 max-xl:grid-cols-[238px_minmax(0,1fr)_238px] max-lg:min-h-[var(--hero-pk-grid-min-h-mobile)] max-lg:grid-cols-2 max-lg:gap-2 max-lg:px-3 max-lg:py-3"
+        className="relative grid min-h-[var(--hero-pk-grid-min-h)] auto-rows-min grid-cols-[282px_minmax(0,1fr)_282px] gap-5 px-8 py-8 max-xl:grid-cols-[238px_minmax(0,1fr)_238px] max-lg:min-h-[var(--hero-pk-grid-min-h-mobile)] max-lg:grid-cols-2 max-lg:gap-2 max-lg:px-3 max-lg:py-3 max-md:gap-1.5 max-md:px-2.5 max-md:py-2.5"
         style={{
           ['--hero-pk-grid-min-h' as string]: HERO_PK_GRID_MIN_HEIGHT,
           ['--hero-pk-grid-min-h-mobile' as string]: HERO_PK_MOBILE_GRID_MIN_HEIGHT,
@@ -931,26 +931,26 @@ function HeroPK({
             ['--hero-pk-mobile-stage-max-h' as string]: HERO_PK_MOBILE_STAGE_MAX_HEIGHT,
           }}
         >
-          <div className="mb-4 flex flex-wrap items-center justify-center gap-2 max-lg:mb-1.5 max-lg:gap-1">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#ffb15a]/40 bg-[#b91c1c]/78 px-6 py-2 text-[20px] font-black italic text-[#fff7d6] shadow-[0_0_22px_rgba(255,78,41,0.34)] max-lg:px-2.5 max-lg:py-1 max-lg:text-[11px]">
-              <Flame size={20} className="max-lg:h-3.5 max-lg:w-3.5" />
+          <div className="mb-4 flex flex-wrap items-center justify-center gap-2 max-lg:mb-1.5 max-lg:gap-1 max-md:mb-1">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#ffb15a]/40 bg-[#b91c1c]/78 px-6 py-2 text-[20px] font-black italic text-[#fff7d6] shadow-[0_0_22px_rgba(255,78,41,0.34)] max-lg:px-2.5 max-lg:py-1 max-lg:text-[11px] max-md:px-2 max-md:py-0.5 max-md:text-[10px]">
+              <Flame size={20} className="max-lg:h-3.5 max-lg:w-3.5 max-md:h-3 max-md:w-3" />
               全网热议 TOP1
             </span>
             <PhaseTag phase={pk.phase} />
           </div>
 
           <h1
-            className="mb-3 max-w-[760px] line-clamp-2 text-[82px] font-black leading-[0.92] tracking-[-0.09em] text-[#fff3dd] max-xl:text-[60px] max-lg:mb-1.5 max-lg:text-[26px] max-lg:leading-[1.02]"
+            className="mb-3 max-w-[760px] line-clamp-2 text-[82px] font-black leading-[0.92] tracking-[-0.09em] text-[#fff3dd] max-xl:text-[60px] max-lg:mb-1.5 max-lg:text-[26px] max-lg:leading-[1.02] max-md:text-[21px]"
             style={{ textShadow: '0 4px 0 rgba(116,38,8,0.58), 0 0 30px rgba(255,119,45,0.4), 0 0 38px rgba(76,220,255,0.18)' }}
           >
             {item.title}
           </h1>
 
-          <p className="mb-5 max-w-[660px] text-[23px] font-black italic tracking-[-0.045em] text-[#f8d3a3] drop-shadow-[0_2px_10px_rgba(0,0,0,0.68)] max-lg:mb-2 max-lg:line-clamp-1 max-lg:text-[12px] max-lg:leading-snug max-lg:not-italic">
+          <p className="mb-5 max-w-[660px] text-[23px] font-black italic tracking-[-0.045em] text-[#f8d3a3] drop-shadow-[0_2px_10px_rgba(0,0,0,0.68)] max-lg:mb-1.5 max-lg:line-clamp-1 max-lg:text-[12px] max-lg:leading-snug max-lg:not-italic max-md:text-[10px]">
             {item.summary || `${item.optionA} vs ${item.optionB}，谁才是最强阵营？`}
           </p>
 
-          <div className="mb-5 inline-flex max-w-full flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/44 px-6 py-3 text-[17px] font-black text-white/88 shadow-[0_0_30px_rgba(0,0,0,0.42)] backdrop-blur-md max-lg:mb-2 max-lg:gap-1.5 max-lg:px-2.5 max-lg:py-1.5 max-lg:text-[11px]">
+          <div className="mb-5 inline-flex max-w-full flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/44 px-6 py-3 text-[17px] font-black text-white/88 shadow-[0_0_30px_rgba(0,0,0,0.42)] backdrop-blur-md max-lg:mb-1.5 max-lg:gap-1.5 max-lg:px-2.5 max-lg:py-1 max-lg:text-[11px] max-md:text-[10px]">
             <span className="inline-flex items-center gap-1.5">
               <Flame size={18} className="text-[#ffb15a] max-lg:h-3 max-lg:w-3" />
               <span className="max-lg:truncate">{liveMetricLabel}</span>
@@ -965,25 +965,25 @@ function HeroPK({
           <button
             type="button"
             onClick={handleJoinBattle}
-            className="group relative mb-4 inline-flex border-0 bg-transparent p-0 drop-shadow-[0_10px_28px_rgba(255,72,24,0.42)] transition-transform hover:-translate-y-0.5 max-lg:mb-2"
+            className="group relative mb-4 inline-flex border-0 bg-transparent p-0 drop-shadow-[0_10px_28px_rgba(255,72,24,0.42)] transition-transform hover:-translate-y-0.5 max-lg:mb-1.5"
           >
             <img
               src="/image/btn-bg.png"
               alt=""
               aria-hidden
-              className="block h-auto w-[280px] max-lg:w-[min(100%,200px)]"
+              className="block h-auto w-[280px] max-lg:w-[min(100%,170px)] max-md:w-[min(100%,142px)]"
             />
-            <span className="absolute inset-0 flex items-center justify-center text-[24px] font-black tracking-[-0.04em] text-white drop-shadow-[0_2px_6px_rgba(120,20,0,0.55)] max-lg:text-[14px]">
+            <span className="absolute inset-0 flex items-center justify-center text-[24px] font-black tracking-[-0.04em] text-white drop-shadow-[0_2px_6px_rgba(120,20,0,0.55)] max-lg:text-[13px] max-md:text-[11px]">
               立即加入对立
             </span>
           </button>
 
-          <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[15px] font-black text-white/70 max-lg:mb-2 max-lg:gap-1.5 max-lg:text-[10px]">
+          <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[15px] font-black text-white/70 max-lg:mb-1.5 max-lg:gap-1.5 max-lg:text-[10px]">
             <HeroCountdown target={countdownTarget} label={countdownLabel} />
-            <span className="rounded-full bg-black/24 px-3 py-2 max-lg:px-2 max-lg:py-0.5 max-lg:text-[10px]">第{pk.currentRound}局</span>
+            <span className="rounded-full bg-black/24 px-3 py-2 max-lg:px-2 max-lg:py-0.5 max-lg:text-[10px] max-md:hidden">第{pk.currentRound}局</span>
           </div>
 
-          <div className="w-full max-lg:-mx-0.5 max-lg:scale-[0.94] max-lg:origin-center">
+          <div className="w-full max-lg:-mx-0.5 max-lg:origin-center max-md:scale-[0.82]">
             <HeroBattleRail pctA={pctA} pctB={pctB} />
           </div>
         </div>
@@ -1102,10 +1102,20 @@ function PKCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06 }}
-      className="group overflow-hidden rounded-[22px] border border-white/10 bg-[#0d1118] shadow-[0_14px_40px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#3ad9be]/24 hover:shadow-[0_20px_44px_rgba(0,0,0,0.34)]"
+      className="group relative overflow-hidden rounded-[16px] border border-white/10 bg-[#0d1118] shadow-[0_10px_28px_rgba(0,0,0,0.26),inset_0_1px_0_rgba(255,255,255,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#3ad9be]/24 hover:shadow-[0_20px_44px_rgba(0,0,0,0.34)] md:block md:rounded-[22px] md:shadow-[0_14px_40px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]"
     >
-      <div className="relative h-32 overflow-hidden">
-        <img src={item.listImage || item.image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-72" loading="lazy" />
+      <div className="absolute inset-0 md:hidden">
+        <img
+          src={item.listImage || item.image}
+          alt=""
+          className="h-full w-full object-cover opacity-74 saturate-125 contrast-105 transition-transform duration-300 group-hover:scale-[1.02]"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,11,18,0.62)_0%,rgba(8,13,22,0.42)_46%,rgba(8,13,22,0.68)_100%),linear-gradient(180deg,rgba(0,0,0,0.02),rgba(0,0,0,0.22))]" />
+      </div>
+
+      <div className="relative hidden overflow-hidden bg-[#070b12] md:block md:h-32">
+        <img src={item.listImage || item.image} alt="" className="h-full w-full object-cover opacity-72 transition-transform duration-300 group-hover:scale-105" loading="lazy" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,14,30,0.18),rgba(5,10,20,0.2))]" />
         <div className="absolute left-2 top-2 flex items-center gap-1.5">
           <PhaseTag phase={pk.phase} />
@@ -1120,11 +1130,15 @@ function PKCard({
         ) : null}
       </div>
 
-      <div className="p-3.5">
-        <h3 className="mb-2 line-clamp-2 text-sm font-bold leading-snug text-white">{item.title}</h3>
+      <div className="relative z-10 min-w-0 p-3 md:p-3.5">
+        <div className="mb-2 flex items-center gap-1 md:hidden">
+          <PhaseTag phase={pk.phase} />
+          <span className="rounded-full bg-black/34 px-1.5 py-0.5 text-[9px] font-bold text-white/80 backdrop-blur-sm">第{pk.currentRound}局</span>
+        </div>
+        <h3 className="mb-1.5 line-clamp-2 text-[13px] font-bold leading-snug text-white md:mb-2 md:text-sm">{item.title}</h3>
 
         <div className="mb-2">
-          <div className="mb-1 flex justify-between gap-2 text-[10px]">
+          <div className="mb-1 flex justify-between gap-2 text-[9px] md:text-[10px]">
             <span className="max-w-[46%] truncate font-semibold" style={{ color: theme.sideA.accent }} title={`${item.optionA} · 热度 ${formatPkHeatValue(pk.currentHeatA)}`}>
               {item.optionA} <span className="tabular-nums text-white/80">{formatPkHeatValue(pk.currentHeatA)}</span> · {pctA}%
             </span>
@@ -1136,17 +1150,17 @@ function PKCard({
           <RivalryHeatMeter heatA={pk.currentHeatA} heatB={pk.currentHeatB} theme={theme} variant="compact" />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-2 hidden md:block">
           {pk.phase === 'betting' ? <Countdown target={pk.lockTime} label="下注截止" color="text-amber-500" /> : null}
           {pk.phase === 'locked' ? <Countdown target={pk.roundEndTime} label="本局结束" color="text-amber-500" /> : null}
           {pk.phase === 'cooldown' && pk.nextRoundTime ? <Countdown target={pk.nextRoundTime} label="下一局" color="text-[#40ead0]" /> : null}
         </div>
 
-        <div className="mb-2 flex gap-2">
+        <div className="mb-2 flex gap-1.5 md:gap-2">
           <button
             onClick={() => onOpenBet(item, 'A')}
             disabled={isBetting || !!voted || pk.phase !== 'betting'}
-            className={`flex-1 rounded-xl border-0 py-2 text-xs font-bold ${
+            className={`flex-1 rounded-[10px] border-0 py-1.5 text-[10px] font-bold md:rounded-xl md:py-2 md:text-xs ${
               voted === 'A'
                 ? 'text-[#dcfff8]'
                 : isBetting || pk.phase !== 'betting'
@@ -1166,7 +1180,7 @@ function PKCard({
           <button
             onClick={() => onOpenBet(item, 'B')}
             disabled={isBetting || !!voted || pk.phase !== 'betting'}
-            className={`flex-1 rounded-xl border-0 py-2 text-xs font-bold ${
+            className={`flex-1 rounded-[10px] border-0 py-1.5 text-[10px] font-bold md:rounded-xl md:py-2 md:text-xs ${
               voted === 'B'
                 ? 'text-[#ffd7de]'
                 : isBetting || pk.phase !== 'betting'
@@ -1186,12 +1200,12 @@ function PKCard({
         </div>
 
         <div className="flex items-center justify-between">
-          <button onClick={() => onHistory(pk.id)} className="flex cursor-pointer items-center gap-1 border-0 bg-transparent text-[10px] text-white/46 transition-colors hover:text-[#40ead0]">
+          <button onClick={() => onHistory(pk.id)} className="flex cursor-pointer items-center gap-1 border-0 bg-transparent text-[9px] text-white/46 transition-colors hover:text-[#40ead0] md:text-[10px]">
             <History size={10} />
             历史战绩
           </button>
           {onEnterBattle ? (
-            <button onClick={() => onEnterBattle(item)} className="flex cursor-pointer items-center gap-1 rounded-full border border-[#4f6489]/36 bg-[#10273d]/24 px-2 py-1 text-[10px] font-bold text-[#ffd7de] transition-colors hover:bg-[#163252]">
+            <button onClick={() => onEnterBattle(item)} className="flex cursor-pointer items-center gap-1 rounded-full border border-[#4f6489]/36 bg-[#10273d]/24 px-1.5 py-0.5 text-[9px] font-bold text-[#ffd7de] transition-colors hover:bg-[#163252] md:px-2 md:py-1 md:text-[10px]">
               <MessageCircleMore size={10} className="text-[#5df3d7]" />
               进入撕裂带
             </button>
@@ -1400,7 +1414,7 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
   };
 
   return (
-    <section className="mx-0 grid w-full max-w-none gap-6 max-lg:gap-3">
+    <section className="mx-0 grid w-full max-w-none gap-6 max-lg:gap-3 max-md:gap-2.5">
       {heroPK ? (
         <HeroPK
           pk={heroPK}
@@ -1418,11 +1432,11 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
 
       {allPKs.filter((pk) => pk.id !== heroPK?.id).length > 0 ? (
         <div className="relative">
-          <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-slate-100">
-            <span className="h-5 w-1 rounded-full bg-gradient-to-b from-[#27d8cf] to-[#ff4f75]" />
+          <h2 className="mb-2.5 flex items-center gap-2 text-sm font-bold text-slate-100 md:mb-4 md:text-base">
+            <span className="h-4 w-1 rounded-full bg-gradient-to-b from-[#27d8cf] to-[#ff4f75] md:h-5" />
             全部对决
           </h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2.5 md:gap-4 md:grid-cols-2 xl:grid-cols-3">
             {allPKs.filter((pk) => pk.id !== heroPK?.id).map((pk, index) => (
               <PKCard
                 key={pk.id}

@@ -225,6 +225,26 @@
   transform: translate(-50%, -50%);
 }
 
+@media (max-width: 767px) {
+  .railWrap {
+    padding: 8px 0 10px;
+    --rail-shell-height: 32px;
+    --rail-shell-pad: 2px;
+  }
+
+  .railGlow {
+    inset: 4px 6px 6px;
+    filter: blur(12px);
+    opacity: 0.56;
+  }
+
+  .railGlowCenter {
+    width: 70px;
+    height: 46px;
+    filter: blur(6px);
+  }
+}
+
 .clash .centerSpark {
   top: 0;
 }
