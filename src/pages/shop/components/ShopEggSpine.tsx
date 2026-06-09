@@ -8,6 +8,8 @@ import {
   Spine,
 } from '@esotericsoftware/spine-pixi-v8';
 import {
+  SHOP_EGG_OPEN_ANIMATION_OFFSET,
+  SHOP_EGG_OPEN_ANIMATION_SCALE,
   SHOP_EGG_SPINE_AABB,
   SHOP_EGG_SPINE_ASSETS,
   SHOP_EGG_SPINE_STAGE_OFFSET,
@@ -71,12 +73,13 @@ function layoutEggSpine(
   stageOffset: { offsetX: number; offsetY: number },
   originX = 0,
   originY = 0,
+  scaleMultiplier = 1,
 ) {
   const bounds = createEggBoundsProvider().calculateBounds();
   const padding = EGG_LAYOUT.renderPadding;
   const targetWidth = Math.max(canvasWidth - padding * 2, 1);
   const targetHeight = Math.max(canvasHeight - padding * 2, 1);
-  const scale = Math.min(targetWidth / bounds.width, targetHeight / bounds.height);
+  const scale = Math.min(targetWidth / bounds.width, targetHeight / bounds.height) * scaleMultiplier;
   const scaledWidth = bounds.width * scale;
   const scaledHeight = bounds.height * scale;
 
@@ -119,6 +122,32 @@ function applySpineAnimation(spine: Spine, animationName: string, loop: boolean)
   spine.skeleton.updateWorldTransform(Physics.update);
   spine.update(0);
   return entry;
+}
+
+function layoutEggSpinePair(
+  spines: EggSpinePair,
+  canvasWidth: number,
+  canvasHeight: number,
+  stageOffset: { offsetX: number; offsetY: number },
+  bleedX: number,
+  bleedY: number,
+  displayMode: ShopEggDisplayMode,
+  stageVariant: ShopEggStageVariant,
+) {
+  layoutEggSpine(spines.guang, canvasWidth, canvasHeight, stageOffset, bleedX, bleedY, 1);
+  const openOffset = displayMode === 'egg' ? SHOP_EGG_OPEN_ANIMATION_OFFSET[stageVariant] : { offsetX: 0, offsetY: 0 };
+  layoutEggSpine(
+    spines.dan,
+    canvasWidth,
+    canvasHeight,
+    {
+      offsetX: stageOffset.offsetX + openOffset.offsetX,
+      offsetY: stageOffset.offsetY + openOffset.offsetY,
+    },
+    bleedX,
+    bleedY,
+    displayMode === 'egg' ? SHOP_EGG_OPEN_ANIMATION_SCALE : 1,
+  );
 }
 
 function hideEggSpines(spines: EggSpinePair) {
@@ -256,8 +285,7 @@ export function ShopEggSpine({
 
         app.stage.addChild(guang);
         app.stage.addChild(dan);
-        layoutEggSpine(guang, size.width, size.height, stageOffset, bleedX, bleedY);
-        layoutEggSpine(dan, size.width, size.height, stageOffset, bleedX, bleedY);
+        layoutEggSpinePair(spines, size.width, size.height, stageOffset, bleedX, bleedY, 'hidden', stageVariant);
         tickSpine = (ticker) => {
           const deltaSec = ticker.deltaMS / 1000;
           spines?.guang.update(deltaSec);
@@ -318,15 +346,17 @@ export function ShopEggSpine({
 
     playEggAnimation(spines, nextMode);
     playbackModeRef.current = nextMode;
-  }, [displayMode, isReady]);
+    const bleedX = Math.round(size.width * EGG_CANVAS_BLEED_RATIO);
+    const bleedY = Math.round(size.height * EGG_CANVAS_BLEED_RATIO);
+    layoutEggSpinePair(spines, size.width, size.height, stageOffset, bleedX, bleedY, nextMode, stageVariant);
+  }, [displayMode, isReady, size.height, size.width, stageVariant]);
 
   useEffect(() => {
     const spines = spinePairRef.current;
     if (!spines || !isReady) return;
     const bleedX = Math.round(size.width * EGG_CANVAS_BLEED_RATIO);
     const bleedY = Math.round(size.height * EGG_CANVAS_BLEED_RATIO);
-    layoutEggSpine(spines.guang, size.width, size.height, stageOffset, bleedX, bleedY);
-    layoutEggSpine(spines.dan, size.width, size.height, stageOffset, bleedX, bleedY);
+    layoutEggSpinePair(spines, size.width, size.height, stageOffset, bleedX, bleedY, playbackModeRef.current, stageVariant);
   }, [isReady, size.height, size.width, stageVariant]);
 
   return (

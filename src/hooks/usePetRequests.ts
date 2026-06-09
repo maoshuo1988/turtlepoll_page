@@ -16,7 +16,7 @@ import {
   API_Pet_Stamina_Consume,
   API_Pet_Stamina_Feed,
 } from "@/api/petApi";
-import { COIN_ME_QUERY_KEY } from "@/hooks/useCoinRequests";
+import { COIN_ME_QUERY_KEY, decreaseCoinMeBalanceCache, updateCoinMeBalanceCache } from "@/hooks/useCoinRequests";
 import { getAuthToken } from "@/utils/authStorage";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -283,8 +283,21 @@ function normalizePetEggHatchResponse(raw: unknown): PetEggHatchResponse {
     ...petValues('rarityLevel'),
     ...petValues('rarity_level'),
   ) || undefined;
+  const userCoin = isRecord(source.userCoin)
+    ? source.userCoin
+    : isRecord(source.user_coin)
+      ? source.user_coin
+      : undefined;
+  const coin = isRecord(source.coin) ? source.coin : undefined;
   const balanceBefore = pickFiniteNumber(source.balanceBefore, source.balance_before);
-  const balanceAfter = pickFiniteNumber(source.balanceAfter, source.balance_after);
+  const balanceAfter = pickFiniteNumber(
+    source.balanceAfter,
+    source.balance_after,
+    userCoin?.balance,
+    coin?.balanceAfter,
+    coin?.balance_after,
+    coin?.balance,
+  );
   const rewardType = pickNonEmptyString(source.rewardType, source.reward_type, source.prizeType, source.prize_type).toLowerCase();
   const missByRewardType = ['none', 'empty', 'miss', 'lose', 'lost', 'fail', 'failed', 'thank', 'thanks'].includes(
     rewardType,
@@ -333,7 +346,15 @@ function normalizePetEggHatchResponse(raw: unknown): PetEggHatchResponse {
 
   return {
     won,
-    cost: pickFiniteNumber(source.cost, source.actualCost, source.actual_cost) ?? 0,
+    cost: pickFiniteNumber(
+      source.cost,
+      source.actualCost,
+      source.actual_cost,
+      source.coinCost,
+      source.coin_cost,
+      source.totalCost,
+      source.total_cost,
+    ) ?? 0,
     refund: pickFiniteNumber(source.refund, source.refundAmount, source.refund_amount) ?? 0,
     isDuplicate: Boolean(source.isDuplicate ?? source.is_duplicate),
     pet: won
@@ -859,7 +880,17 @@ export function useRequestPetStaminaFeed() {
       });
       return assertSuccess<PetStaminaMutationResponse>(res);
     },
-    onSuccess: async () => {
+    onSuccess: async (result) => {
+      if (typeof result.balanceAfter === 'number') {
+        updateCoinMeBalanceCache(queryClient, result.balanceAfter);
+      } else {
+        const cost = typeof result.cost === 'number' ? result.cost : 0;
+        const refund = typeof result.refund === 'number' ? result.refund : 0;
+        const netCost = cost - refund;
+        if (netCost > 0) {
+          decreaseCoinMeBalanceCache(queryClient, netCost);
+        }
+      }
       await invalidatePetQueries(queryClient);
     },
   });
@@ -880,7 +911,17 @@ export function useRequestPetEggHatch() {
       });
       return normalizePetEggHatchResponse(assertSuccess<unknown>(res));
     },
-    onSuccess: async () => {
+    onSuccess: async (result) => {
+      if (typeof result.balanceAfter === 'number') {
+        updateCoinMeBalanceCache(queryClient, result.balanceAfter);
+      } else {
+        const cost = typeof result.cost === 'number' ? result.cost : 0;
+        const refund = typeof result.refund === 'number' ? result.refund : 0;
+        const netCost = cost - refund;
+        if (netCost > 0) {
+          decreaseCoinMeBalanceCache(queryClient, netCost);
+        }
+      }
       await invalidatePetQueries(queryClient);
     },
   });

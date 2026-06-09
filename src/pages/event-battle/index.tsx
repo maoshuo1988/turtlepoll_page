@@ -40,6 +40,7 @@ function mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCar
     oddsA: 1.8,
     oddsB: 1.8,
     oddsDraw: 1.8,
+    supportsDrawBet: false,
     status: 'open',
   });
 }

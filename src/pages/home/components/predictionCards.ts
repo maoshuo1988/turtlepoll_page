@@ -3,6 +3,11 @@
  */
 import { useMemo } from 'react';
 import type { FootballMarketAggregate, PredictContext } from '@/hooks/predictionTypes';
+import {
+  marketSupportsDrawBet,
+  resolveMarketDrawBase,
+  resolveMarketDrawPool,
+} from '@/hooks/predictionTypes';
 import { useRequestFootballMarkets, useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 
 export type PredictionCardType = 'politics' | 'tech' | 'sports' | 'entertainment' | 'finance';
@@ -72,6 +77,8 @@ export function resolvePredictionCardImageFields(context: Partial<PredictContext
   };
 }
 
+export { marketSupportsDrawBet } from '@/hooks/predictionTypes';
+
 export function resolveDrawText(context: Partial<PredictContext>) {
   return context.drawText?.trim() || context.neutralText?.trim() || context.tieText?.trim() || '平局';
 }
@@ -103,25 +110,26 @@ export function normalizePredictionCardItem(
     oddsA,
     oddsB,
     oddsDraw,
-    supportsDrawBet: item.supportsDrawBet ?? true,
+    supportsDrawBet: item.supportsDrawBet ?? false,
   } as PredictionCardItem;
 }
 
 export function calcPredictionMarketOdds(item: FootballMarketAggregate) {
   const context = item.context ?? {};
+  const supportsDraw = marketSupportsDrawBet(item.market);
   const votesA = context.proVoteCount ?? 0;
   const votesB = context.conVoteCount ?? 0;
-  const votesC = resolveDrawVoteCount(context);
+  const votesC = supportsDraw ? resolveDrawVoteCount(context) : 0;
   const poolA = item.market.poolA ?? votesA;
   const poolB = item.market.poolB ?? votesB;
-  const poolC = item.market.poolC ?? votesC;
+  const poolDraw = supportsDraw ? resolveMarketDrawPool(item.market, votesC) : 0;
   const baseA = item.market.baseA ?? 500;
   const baseB = item.market.baseB ?? 500;
-  const baseC = item.market.baseC ?? 500;
+  const baseDraw = supportsDraw ? resolveMarketDrawBase(item.market) : 0;
   const effectiveA = Math.max(1, baseA + poolA);
   const effectiveB = Math.max(1, baseB + poolB);
-  const effectiveC = Math.max(1, baseC + poolC);
-  const total = effectiveA + effectiveB + effectiveC;
+  const effectiveDraw = supportsDraw ? Math.max(1, baseDraw + poolDraw) : 1;
+  const total = supportsDraw ? effectiveA + effectiveB + effectiveDraw : effectiveA + effectiveB;
   const clampOdds = (value: number) => Number((Math.max(1.2, Math.min(5, value))).toFixed(1));
 
   return {
@@ -130,7 +138,7 @@ export function calcPredictionMarketOdds(item: FootballMarketAggregate) {
     votesC,
     oddsA: clampOdds(total / effectiveA),
     oddsB: clampOdds(total / effectiveB),
-    oddsDraw: clampOdds(total / effectiveC),
+    oddsDraw: supportsDraw ? clampOdds(total / effectiveDraw) : 0,
   };
 }
 
@@ -163,6 +171,7 @@ export function mapMarketToPredictionCard(item: FootballMarketAggregate): Predic
     oddsA,
     oddsB,
     oddsDraw,
+    supportsDrawBet: marketSupportsDrawBet(item.market),
     status:
       item.market.status === 'OPEN'
         ? 'open'

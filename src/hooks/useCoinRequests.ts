@@ -66,8 +66,64 @@ function normalizeCoinLeaderboardResult(raw: Record<string, unknown>): CoinLeade
 }
 
 // 统一写入金币账户缓存，所有使用 useRequestCoinMe 的地方都会同步刷新
-function updateCoinMeCache(queryClient: ReturnType<typeof useQueryClient>, userCoin: UserCoin) {
+function syncCoinLeaderboardMyBalanceCache(
+  queryClient: ReturnType<typeof useQueryClient>,
+  nextBalance: number,
+) {
+  if (!Number.isFinite(nextBalance)) return;
+
+  queryClient.setQueriesData<CoinLeaderboardResult | undefined>(COIN_LEADERBOARD_QUERY_KEY, (current) => {
+    if (!current) return current;
+    return {
+      ...current,
+      myBalance: nextBalance,
+    };
+  });
+}
+
+function decreaseCoinLeaderboardMyBalanceCache(queryClient: ReturnType<typeof useQueryClient>, cost: number) {
+  if (!Number.isFinite(cost) || cost <= 0) return;
+
+  queryClient.setQueriesData<CoinLeaderboardResult | undefined>(COIN_LEADERBOARD_QUERY_KEY, (current) => {
+    if (!current) return current;
+    return {
+      ...current,
+      myBalance: Math.max(0, current.myBalance - cost),
+    };
+  });
+}
+
+export function updateCoinMeCache(queryClient: ReturnType<typeof useQueryClient>, userCoin: UserCoin) {
   queryClient.setQueryData(COIN_ME_QUERY_KEY, userCoin);
+  if (typeof userCoin.balance === 'number') {
+    syncCoinLeaderboardMyBalanceCache(queryClient, userCoin.balance);
+  }
+}
+
+export function updateCoinMeBalanceCache(queryClient: ReturnType<typeof useQueryClient>, balance: number) {
+  if (!Number.isFinite(balance)) return;
+
+  queryClient.setQueryData<UserCoin | undefined>(COIN_ME_QUERY_KEY, (current) => {
+    if (!current) return current;
+    return {
+      ...current,
+      balance,
+    };
+  });
+  syncCoinLeaderboardMyBalanceCache(queryClient, balance);
+}
+
+export function decreaseCoinMeBalanceCache(queryClient: ReturnType<typeof useQueryClient>, cost: number) {
+  if (!Number.isFinite(cost) || cost <= 0) return;
+
+  queryClient.setQueryData<UserCoin | undefined>(COIN_ME_QUERY_KEY, (current) => {
+    if (!current) return current;
+    return {
+      ...current,
+      balance: Math.max(0, current.balance - cost),
+    };
+  });
+  decreaseCoinLeaderboardMyBalanceCache(queryClient, cost);
 }
 
 //查询我的金币账户

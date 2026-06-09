@@ -12,7 +12,7 @@ import {
   API_AI_Stamina_Apple,
 } from "@/api/aiApi";
 import { SERVER_API } from "@/config";
-import { COIN_ME_QUERY_KEY } from "@/hooks/useCoinRequests";
+import { COIN_ME_QUERY_KEY, decreaseCoinMeBalanceCache, updateCoinMeBalanceCache } from "@/hooks/useCoinRequests";
 import { getAuthToken } from "@/utils/authStorage";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { useEffect } from "react";
@@ -33,6 +33,55 @@ import type {
 
 export const AI_STAMINA_QUERY_KEY = ["requestAiStamina"] as const;
 export const AI_UNREAD_PUSHES_QUERY_KEY = ["requestAiUnreadPushes"] as const;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function pickFiniteNumber(...values: unknown[]): number | undefined {
+  for (const value of values) {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    if (typeof value === "string" && value.trim()) {
+      const parsed = Number(value);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+  }
+  return undefined;
+}
+
+function normalizeAiStaminaAppleResponse(raw: unknown): AiStaminaAppleResponse {
+  const source = isRecord(raw) ? raw : {};
+  const userCoin = isRecord(source.userCoin)
+    ? source.userCoin
+    : isRecord(source.user_coin)
+      ? source.user_coin
+      : undefined;
+  const coin = isRecord(source.coin) ? source.coin : undefined;
+  const requestedCount = pickFiniteNumber(source.requestedCount, source.requested_count, source.count);
+  const appleCoinCost = pickFiniteNumber(source.appleCoinCost, source.apple_coin_cost);
+  const coinCost =
+    pickFiniteNumber(source.coinCost, source.coin_cost, source.cost, source.totalCost, source.total_cost) ??
+    (typeof requestedCount === "number" && typeof appleCoinCost === "number" ? requestedCount * appleCoinCost : undefined);
+  const balanceAfter = pickFiniteNumber(
+    source.balanceAfter,
+    source.balance_after,
+    userCoin?.balance,
+    coin?.balanceAfter,
+    coin?.balance_after,
+    coin?.balance,
+  );
+
+  return {
+    ...(source as AiStaminaAppleResponse),
+    ...(requestedCount !== undefined ? { requestedCount } : {}),
+    ...(pickFiniteNumber(source.recoveredCount, source.recovered_count) !== undefined
+      ? { recoveredCount: pickFiniteNumber(source.recoveredCount, source.recovered_count) }
+      : {}),
+    ...(coinCost !== undefined ? { coinCost } : {}),
+    ...(appleCoinCost !== undefined ? { appleCoinCost } : {}),
+    ...(balanceAfter !== undefined ? { balanceAfter } : {}),
+  };
+}
 
 // GET /api/ai/stamina：查询 AI 聊天体力。未登录时不发请求，避免触发认证错误。
 export function useRequestAiStamina() {
@@ -213,10 +262,15 @@ export function useRequestAiStaminaApple() {
           "Content-Type": "application/json",
         },
       });
-      return assertSuccess<AiStaminaAppleResponse>(res);
+      return normalizeAiStaminaAppleResponse(assertSuccess<unknown>(res));
     },
     onSuccess: async (result) => {
       queryClient.setQueryData<AiStaminaResponse | undefined>(AI_STAMINA_QUERY_KEY, result);
+      if (typeof result.balanceAfter === "number") {
+        updateCoinMeBalanceCache(queryClient, result.balanceAfter);
+      } else if (typeof result.coinCost === "number") {
+        decreaseCoinMeBalanceCache(queryClient, result.coinCost);
+      }
       await Promise.all([
         queryClient.invalidateQueries(AI_STAMINA_QUERY_KEY),
         queryClient.invalidateQueries(COIN_ME_QUERY_KEY),

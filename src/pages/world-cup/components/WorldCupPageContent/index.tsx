@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { PredictionBetModal } from '@/pages/home/components/PredictionBetModal';
 import type { PredictionBetOption, PredictionCardItem } from '@/pages/home/components/predictionCards';
-import { calcPredictionMarketOdds } from '@/pages/home/components/predictionCards';
+import { calcPredictionMarketOdds, marketSupportsDrawBet } from '@/pages/home/components/predictionCards';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { useRequestFootballMarketsByTag } from '@/hooks/usePredictionRequests';
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
@@ -196,6 +196,7 @@ function mapFootballMarketToPredictionItem(item: FootballMarketAggregate): Predi
     oddsA,
     oddsB,
     oddsDraw,
+    supportsDrawBet: marketSupportsDrawBet(item.market),
     status:
       item.market.status === 'OPEN'
         ? 'open'

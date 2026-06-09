@@ -69,20 +69,56 @@ export type FootballMarket = {
   sourceModel?: string;
   sourceModelId?: number;
   title?: string;
+  /** 世界杯小组赛 `1x2` 才有平局；淘汰赛 / 二元盘为 `binary` */
   marketType?: string;
   optionCount?: number;
   status?: "OPEN" | "CLOSED" | "SETTLED" | string;
   closeTime?: number;
+  result?: string;
   externalKey?: string;
+  resolved?: boolean;
+  resolvedOutcomeId?: string;
+  resolvedOutcomeName?: string;
+  resolvedAt?: number;
   createTime?: number;
   updateTime?: number;
   baseA?: number;
   baseB?: number;
+  /** 兼容旧字段 */
   baseC?: number;
+  /** 接口实际字段：平局底池 */
+  baseDraw?: number;
   poolA?: number;
   poolB?: number;
+  /** 兼容旧字段 */
   poolC?: number;
+  /** 接口实际字段：平局池子 */
+  poolDraw?: number;
 };
+
+export function normalizeFootballMarketType(value?: string) {
+  return String(value ?? "").trim().toLowerCase();
+}
+
+/** 仅 `1x2` 市场展示/允许平局下注 */
+export function marketSupportsDrawBet(market?: Pick<FootballMarket, "marketType">) {
+  return normalizeFootballMarketType(market?.marketType) === "1x2";
+}
+
+export function resolveMarketDrawBase(market: Pick<FootballMarket, "baseC" | "baseDraw">) {
+  if (typeof market.baseDraw === "number") return market.baseDraw;
+  if (typeof market.baseC === "number") return market.baseC;
+  return 500;
+}
+
+export function resolveMarketDrawPool(
+  market: Pick<FootballMarket, "poolC" | "poolDraw">,
+  fallbackVotes = 0,
+) {
+  if (typeof market.poolDraw === "number") return market.poolDraw;
+  if (typeof market.poolC === "number") return market.poolC;
+  return fallbackVotes;
+}
 export type FootballMarketAggregate = {
   market: FootballMarket;
   context: Partial<PredictContext>;

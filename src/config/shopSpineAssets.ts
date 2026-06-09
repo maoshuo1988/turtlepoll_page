@@ -96,6 +96,18 @@ export const SHOP_GACHA_EGG_STAGE_LAYOUT = {
   },
 } as const;
 
+/** 开蛋 open 动画相对默认布局的放大倍率（仅 opening 阶段 dan 骨骼）。 */
+export const SHOP_EGG_OPEN_ANIMATION_SCALE = 1.32;
+
+/** 开蛋 open 动画额外下移（px，仅 opening 阶段 dan；放大后补偿视觉上偏上）。 */
+export const SHOP_EGG_OPEN_ANIMATION_OFFSET: Record<
+  keyof typeof SHOP_GACHA_EGG_STAGE_LAYOUT,
+  { offsetX: number; offsetY: number }
+> = {
+  mobile: { offsetX: 0, offsetY: 58 },
+  desktop: { offsetX: 0, offsetY: 74 },
+};
+
 /** 开蛋 Spine 在舞台内的微调（底对齐后向下压，避免放大后蛋身悬空）。 */
 export const SHOP_EGG_SPINE_STAGE_OFFSET: Record<
   keyof typeof SHOP_GACHA_EGG_STAGE_LAYOUT,

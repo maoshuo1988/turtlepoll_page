@@ -7,7 +7,7 @@ import { PetChat } from '@/components/common/pet/PetChat';
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import type { PetInfo } from '@/components/common/pet/petTypes';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
-import { useRequestCoinLeaderboard } from '@/hooks/useCoinRequests';
+import { useRequestCoinLeaderboard, useRequestCoinMe } from '@/hooks/useCoinRequests';
 import { createUserAvatarUrl } from '@/utils/userAvatar';
 import { PetProfilePanel } from './PetProfilePanel';
 import { ShopShortcutCard } from './ShopShortcutCard';
@@ -59,8 +59,10 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
   onOpenPetSpace,
 }) => {
   const userCurrent = useRequestUserCurrent();
+  const coinMe = useRequestCoinMe();
   const coinLeaderboard = useRequestCoinLeaderboard({ limit: 20 });
   const leaderboardMe = coinLeaderboard.data;
+  const displayBalance = coinMe.data?.balance ?? leaderboardMe?.myBalance ?? 0;
   const user = userCurrent.data;
   const displayName = user?.nickname || user?.username || user?.email || '未登录用户';
   const displaySubtitle = user?.levelTitle?.trim() || (user ? '暂无等级称号' : '登录后同步你的等级称号');
@@ -105,7 +107,7 @@ export const SidebarProfileCard: React.FC<SidebarProfileCardProps> = ({
           </button>
 
           <PetProfilePanel
-            balance={leaderboardMe?.myBalance ?? 0}
+            balance={displayBalance}
             winRate={leaderboardMe?.myWinRate ?? 0}
             winStreak={leaderboardMe?.myCurrentWinStreak ?? 0}
             totalPredictions={0}
