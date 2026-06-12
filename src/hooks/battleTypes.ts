@@ -163,6 +163,7 @@ export type BattleListResponse = {
 export type BattleStatsResponse = {
   unsettledCount?: number;
   bankerCount?: number;
+  challengerCount?: number;
   pendingCount?: number;
   poolTotal?: number;
 };
