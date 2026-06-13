@@ -75,6 +75,46 @@ export type BattleResultBy =
 
 export type BattleMyAction = "" | "confirm" | "dispute";
 
+export const BATTLE_DECLARE_WINDOW_SECONDS = 24 * 3600;
+export const BATTLE_CONFIRM_WINDOW_SECONDS = 24 * 3600;
+
+/** 兼容秒/毫秒时间戳，统一为 Unix 秒。 */
+export function normalizeBattleUnixSeconds(value?: number | null): number | undefined {
+  if (value === null || value === undefined || !Number.isFinite(value)) return undefined;
+  const num = Math.floor(value);
+  if (num <= 0) return undefined;
+  if (num >= 1_000_000_000_000) return Math.floor(num / 1000);
+  return num;
+}
+
+export function resolvePendingDeadlineSeconds(battle: Battle): number | undefined {
+  const pendingDeadline = normalizeBattleUnixSeconds(battle.pendingDeadline);
+  const settleTime = normalizeBattleUnixSeconds(battle.settleTime);
+  if (pendingDeadline) return pendingDeadline;
+  return settleTime ? settleTime + BATTLE_DECLARE_WINDOW_SECONDS : undefined;
+}
+
+/** 挑战者确认截止：优先 confirmDeadline，缺失或早于宣判时间时回退 resultTime + 24h。 */
+export function resolveConfirmDeadlineSeconds(battle: Battle): number | undefined {
+  const resultTime = normalizeBattleUnixSeconds(battle.resultTime);
+  const confirmDeadline = normalizeBattleUnixSeconds(battle.confirmDeadline);
+  const fromResult = resultTime ? resultTime + BATTLE_CONFIRM_WINDOW_SECONDS : undefined;
+
+  if (!normalizeBattleResult(battle.result) || !resultTime) {
+    return confirmDeadline;
+  }
+
+  if (!confirmDeadline) return fromResult;
+  if (confirmDeadline <= resultTime) return fromResult;
+
+  const pendingDeadline = resolvePendingDeadlineSeconds(battle);
+  if (pendingDeadline && confirmDeadline === pendingDeadline && fromResult) {
+    return fromResult;
+  }
+
+  return confirmDeadline;
+}
+
 export type Battle = {
   id: number;
   title: string;
@@ -83,6 +123,7 @@ export type Battle = {
   challengerSide: string;
   isPublic: boolean;
   inviteCode?: string;
+  inviteExpireAt?: number;
   status: BattleStatus;
   settleTime: number;
   pendingDeadline?: number;
@@ -162,10 +203,15 @@ export type BattleListResponse = {
 
 export type BattleStatsResponse = {
   unsettledCount?: number;
-  bankerCount?: number;
-  challengerCount?: number;
   pendingCount?: number;
   poolTotal?: number;
+  bankerCount?: number;
+};
+
+export type BattleDetailParams = {
+  battleId: number;
+  inviteCode?: string;
+  refreshInvite?: boolean | 0 | 1;
 };
 
 export type BattleDetailResponse = {
@@ -183,9 +229,14 @@ export type CreateBattlePayload = {
   challengerSide: string;
   stakeAmount: number;
   isPublic: boolean;
-  inviteCode?: string;
   settleTime: number;
   requestId?: string;
+};
+
+export type CreateBattleResponse = {
+  battle: Battle;
+  inviteCode: string;
+  inviteExpireAt: number;
 };
 
 export type JoinBattlePayload = {
@@ -242,10 +293,15 @@ export type BattleActionPermissions = {
 
 // 后端 battle 当前主要靠 message 区分错误场景，前端在这里做统一中文映射。
 const BATTLE_ERROR_MESSAGE_MAP: Record<string, string> = {
-  "battle not found": "赌局不存在或已删除",
+  "battle not found": "赌局不存在或已删除；或私人局无有效邀请码",
   "battle is not open": "赌局当前不可加入",
   "battle is full": "赌局已满",
+  "inviteCode is required for private battle": "私人局需要邀请码",
+  "inviteCode format invalid": "邀请码格式错误，需为 4 位字母数字",
   "invalid inviteCode": "邀请码错误",
+  "inviteCode expired": "邀请码已过期（48 小时有效期）",
+  "only banker can refresh inviteCode": "仅庄家可刷新邀请码",
+  "not battle banker": "不是该赌局的庄家",
   "permission denied": "无权限操作",
   "insufficient balance": "余额不足",
   "battle is not settled": "尚未结算，无法提取",
@@ -258,9 +314,9 @@ const BATTLE_ERROR_MESSAGE_MAP: Record<string, string> = {
   "sides are required": "请完整填写双方观点",
   "stakeAmount must be >= 100": "开战金额不能低于 100",
   "settleTime is required": "请选择结算时间",
-  "inviteCode is required for private battle": "私密场必须填写邀请码",
   "amount must be positive": "金额必须大于 0",
   "requestId is required": "请求标识不能为空",
+  "userId is required": "用户信息异常，请重新登录",
   "banker cannot join as challenger": "庄家不能以挑战者身份加入",
   "battle is not allowed to add stake": "当前阶段不能追加庄家押注",
   "battle already reached settle time": "已到结算时间，不能再加注",
@@ -319,8 +375,10 @@ export function getBattleActionPermissions(params: {
       : roleHint === "banker"
         ? false
         : currentUserIdText !== "" && !isBanker && hasChallengeFootprint;
-  const inPendingWindow = typeof battle.pendingDeadline === "number" ? now <= battle.pendingDeadline : true;
-  const inConfirmWindow = typeof battle.confirmDeadline === "number" ? now <= battle.confirmDeadline : true;
+  const pendingDeadline = resolvePendingDeadlineSeconds(battle);
+  const confirmDeadline = resolveConfirmDeadlineSeconds(battle);
+  const inPendingWindow = typeof pendingDeadline === "number" ? now <= pendingDeadline : true;
+  const inConfirmWindow = typeof confirmDeadline === "number" ? now <= confirmDeadline : true;
 
   const permissions: BattleActionPermissions = {
     isBanker,

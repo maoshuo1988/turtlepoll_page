@@ -4,13 +4,16 @@
 import styles from './index.module.scss';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useQueries, useQueryClient } from 'react-query';
-import { battleQueryKeys, fetchBattleDetail, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleStats, useRequestBattleWithdraw } from '@/hooks/useBattleRequests';
+import { battleQueryKeys, fetchBattleDetail, refreshBattleInviteCode, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleStats, useRequestBattleWithdraw } from '@/hooks/useBattleRequests';
 import { showOperationErrorToast } from '@/utils/operationToast';
 import {
   createBattleRequestId,
   getBattleErrorMessage,
   getBattleResultLabel,
   normalizeBattleResult,
+  normalizeBattleUnixSeconds,
+  resolveConfirmDeadlineSeconds,
+  resolvePendingDeadlineSeconds,
   type BattleDetailResponse,
   type BattleListItem,
 } from '@/hooks/battleTypes';
@@ -20,15 +23,31 @@ import { fetchCommentComments, type CommentResponse, useRequestCreateComment } f
 import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { createUserAvatarUrl } from '@/utils/userAvatar';
-import { Coins } from 'lucide-react';
+import { Coins, Clock3 } from 'lucide-react';
 import { BattlePlazaDuelCard } from '../BattlePlazaDuelCard';
+import { BattlePlazaInviteCodeModal } from '../BattlePlazaInviteCodeModal';
+import { BattlePlazaSettleDatePicker } from '../BattlePlazaSettleDatePicker';
 import { BattlePlazaStakeModal } from '../BattlePlazaStakeModal';
 import {
+  buildComposeSettleDayOptions,
+  buildComposeSettleMonthOptions,
+  buildComposeSettleYearOptions,
+  composeSettleTimestamp,
+  formatComposeSettleSummary,
+  getDefaultComposeSettleDate,
+  getMinComposeSettleDate,
+  isComposeSettleDateDisabled,
+  partsFromComposeSettleDate,
+  partsToComposeSettleDate,
+} from '../composeSettleDate';
+import {
   DEFAULT_USER_AVATAR,
+  formatBattleRoomDisplay,
   formatCoinLabel,
   formatTimestampLabel,
   mapBattleToDuel,
   mapCommentToDuelComment,
+  parseBattleIdFromRoomNumber,
   type DuelComment,
   type DuelItem,
   type PlazaTab,
@@ -82,48 +101,82 @@ function HubLockIcon({ className }: { className?: string }) {
   );
 }
 
-function HubGearIcon({ className }: { className?: string }) {
+function HubAlertTriangleIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 20 20" fill="none" aria-hidden>
-      <circle cx="10" cy="10" r="2.2" stroke="currentColor" strokeWidth="1.2" />
       <path
-        d="M10 3.2v1.6M10 15.2v1.6M3.2 10h1.6M15.2 10h1.6M5.1 5.1l1.1 1.1M13.8 13.8l1.1 1.1M5.1 14.9l1.1-1.1M13.8 6.2l1.1-1.1"
+        d="M10 3.5 16.5 16H3.5L10 3.5Z"
         stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
+        strokeWidth="1.3"
+        strokeLinejoin="round"
       />
+      <path d="M10 8.2v4.2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+      <circle cx="10" cy="14.2" r=".75" fill="currentColor" />
     </svg>
   );
 }
 
-function HubFlagIcon({ className }: { className?: string }) {
+function HubBanIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="none" aria-hidden>
+      <circle cx="10" cy="10" r="6.5" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M5.8 5.8 14.2 14.2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function HubCheckeredFlagIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 20 20" fill="none" aria-hidden>
       <path d="M4.5 4v12" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
       <path
-        d="M4.5 4.5h8.2c.8 0 1.3.9.8 1.6l-1.6 2.4 1.6 2.4c.5.7 0 1.6-.8 1.6H4.5"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
+        d="M4.5 4.5h8.5v4.8H4.5V4.5Zm0 4.8h4.2v4.8H4.5V9.3Zm4.2 0h4.3v4.8H8.7V9.3Z"
+        fill="currentColor"
+        opacity=".85"
       />
     </svg>
   );
 }
 
-const PLAZA_RULE_BASIC_ITEMS = [
-  '任意用户可设议题做庄，冻结押注龟币作为奖池。',
-  '挑战者加入即站庄家对立方，按容量上限先到先得。',
-  '公开赌局收取 5% 入场费，私人赌局凭房间号进入。',
+function HubPenaltyAlertIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M8 2.5 13.5 13H2.5L8 2.5Z"
+        stroke="currentColor"
+        strokeWidth="1.1"
+        strokeLinejoin="round"
+      />
+      <path d="M8 6.2v3.2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+      <circle cx="8" cy="11.2" r=".55" fill="currentColor" />
+    </svg>
+  );
+}
+
+const PLAZA_RULE_PENALTIES = [
+  {
+    title: '庄家虚报结果',
+    text: '按庄家输正常结算 + 额外扣庄家押注的 10% 罚金 + 禁止坐庄 7 天',
+  },
+  {
+    title: '庄家设定的议题模糊导致作废',
+    text: '挑战者冻结全额退还；庄家扣押注 10% 罚金 + 禁止坐庄 7 天，剩余押注退还；公开赌局的入场费不退',
+  },
+  {
+    title: '挑战者恶意 / 虚假异议',
+    text: '按庄家赢正常结算 + 提出异议的挑战者额外扣冻结额 10% 罚金',
+  },
 ] as const;
 
-const PLAZA_RULE_SETTLE_ITEMS = [
-  '议题揭晓后由庄家宣布结果，系统按胜负分配奖池。',
-  '庄家赢则通吃挑战者押注；庄家输则奖池按比例返还挑战者。',
-  '无人挑战则自动流局，全额退还庄家冻结龟币，不计胜负。',
+const PLAZA_RULE_SETTLE_STEPS = [
+  '到达结算时间 → 赌局自动封盘，不再接受新挑战者',
+  '庄家 24h 内宣布结果 — 选择「庄家赢」或「庄家输」。超时未宣布 = 庄家直接判输',
+  '挑战者 24h 确认 — 每位挑战者选择「同意」或「异议」。未操作视为同意',
+  '全部通过 → 立即结算；任一人异议 → 管理员仲裁 (不可再申诉)',
 ] as const;
 
 const PLAZA_RULE_SETTLE_TIP =
-  '庄家需考虑事件的所有可能性，例如平局结果纳入谁阵营，否则冲裁时判定庄家议题不清。';
+  '结算时间到后无任何挑战者 → 赌局自动取消，庄家押注全额退还。';
 
 function HubBuildingIcon({ className }: { className?: string }) {
   return (
@@ -171,6 +224,46 @@ function HubDiceIcon({ className }: { className?: string }) {
   );
 }
 
+function HubHomeIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M2.5 7.2 8 3.2l5.5 4v6.3a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V7.2Z"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <path d="M6.2 13.5V9.5h3.6v4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function HubTicketIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M3.5 5.2h9v1.6a1.4 1.4 0 0 0 0 2.8v1.6h-9V9.6a1.4 1.4 0 0 1 0-2.8V5.2Z"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <path d="M8 5.2v6.2" stroke="currentColor" strokeWidth="1.1" strokeDasharray="1.6 1.6" />
+    </svg>
+  );
+}
+
+function findPrivateDuelByRoomNumber(roomNumber: string, duels: DuelItem[]) {
+  const battleId = parseBattleIdFromRoomNumber(roomNumber);
+  if (!battleId) return undefined;
+  return duels.find((duel) => duel.battleId === battleId && duel.visibility === 'private');
+}
+
+function findPrivateDuelByInviteCode(code: string, duels: DuelItem[]) {
+  const normalized = code.trim().toUpperCase();
+  if (!normalized) return undefined;
+  return duels.find((duel) => duel.inviteCode?.toUpperCase() === normalized);
+}
+
 type PlazaSort =
   | '最新'
   | '进行中'
@@ -202,12 +295,14 @@ const COMPOSE_WAGER_OPTIONS = [1000, 5000, 10000, 20000];
 const DEFAULT_COMPOSE_WAGER = 5000;
 const DEFAULT_JOIN_AMOUNT = 500;
 
-const COMPOSE_SETTLE_PRESETS = [
-  { value: '24', label: '24 小时后', hours: 24 },
-  { value: '48', label: '48 小时后', hours: 48 },
-  { value: '72', label: '72 小时后', hours: 72 },
-  { value: '168', label: '7 天后', hours: 168 },
-] as const;
+function HubCalendarPickIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden>
+      <rect x="2.5" y="3.5" width="11" height="10.5" rx="1.8" stroke="currentColor" strokeWidth="1.1" />
+      <path d="M5 2.5v2.2M11 2.5v2.2M2.5 6.8h11" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 const PLAZA_LIST_PARAMS = { page: 1, pageSize: 50 } as const;
 const MY_BANKER_LIST_PARAMS = { page: 1, pageSize: 50, role: 'banker' as const };
@@ -253,18 +348,6 @@ function BattlePlazaListEmpty({ text }: { text: string }) {
   );
 }
 
-function PlazaRuleList({ items }: { items: readonly string[] }) {
-  return (
-    <ul className={css("rules-list")}>
-      {items.map((item) => (
-        <li key={item} className={css("rules-list-item")}>
-          {item}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export const BattlePlazaPage: React.FC = () => {
   const { user } = useAppSession();
   const authToken = getAuthToken();
@@ -296,11 +379,18 @@ export const BattlePlazaPage: React.FC = () => {
   const [topic, setTopic] = useState('');
   const [bankerOpinion, setBankerOpinion] = useState('');
   const [challengerOpinion, setChallengerOpinion] = useState('');
-  const [wager, setWager] = useState(DEFAULT_COMPOSE_WAGER);
+  const [wagerInput, setWagerInput] = useState(String(DEFAULT_COMPOSE_WAGER));
   const [visibility, setVisibility] = useState<'public' | 'private'>('public');
-  const [settlePreset, setSettlePreset] = useState<string>(COMPOSE_SETTLE_PRESETS[0].value);
-  const [inviteInput, setInviteInput] = useState('');
-  const [quickRoomCode, setQuickRoomCode] = useState('');
+  const [settleDate, setSettleDate] = useState(getDefaultComposeSettleDate);
+  const [settleCalendarOpen, setSettleCalendarOpen] = useState(false);
+  const [inviteCodeModal, setInviteCodeModal] = useState<{
+    inviteCode: string;
+    roomNumberDisplay: string;
+    expireAt?: number;
+  } | null>(null);
+  const [joinInviteInput, setJoinInviteInput] = useState('');
+  const [privateRoomNumber, setPrivateRoomNumber] = useState('');
+  const [privateInviteCode, setPrivateInviteCode] = useState('');
   const [joinAmount, setJoinAmount] = useState(DEFAULT_JOIN_AMOUNT);
   const [joinModal, setJoinModal] = useState<JoinModalState | null>(null);
   const [addStakeAmount, setAddStakeAmount] = useState(500);
@@ -437,14 +527,14 @@ export const BattlePlazaPage: React.FC = () => {
     () => new Set(fallbackUnsettledItems.map((item) => item.battle.bankerUserId)).size,
     [fallbackUnsettledItems],
   );
-  const fallbackChallengerCount = useMemo(
-    () => (plazaQuery.data?.list ?? []).filter((item) => item.battle.challengerStakeTotal > 0).length,
+  const fallbackPendingCount = useMemo(
+    () => (plazaQuery.data?.list ?? []).filter((item) => item.battle.status === 'pending').length,
     [plazaQuery.data?.list],
   );
   const totalFrozen = battleStatsQuery.data?.poolTotal ?? fallbackPoolTotal;
   const totalBattleCount = battleStatsQuery.data?.unsettledCount ?? fallbackUnsettledCount;
   const totalBankerCount = battleStatsQuery.data?.bankerCount ?? fallbackBankerCount;
-  const totalChallengerCount = battleStatsQuery.data?.challengerCount ?? fallbackChallengerCount;
+  const totalPendingCount = battleStatsQuery.data?.pendingCount ?? fallbackPendingCount;
 
   const battleListRefreshing =
     plazaQuery.isFetching || battleStatsQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching;
@@ -467,23 +557,36 @@ export const BattlePlazaPage: React.FC = () => {
   const joinModalMax = joinModal ? Math.max(100, joinModal.max) : 100;
   const normalizedJoinAmount = joinModal ? clampAmount(joinAmount, 100, joinModalMax) : 100;
   const normalizedAddStakeAmount = Math.max(100, Number(addStakeAmount) || 0);
+  const settleDateParts = useMemo(() => partsFromComposeSettleDate(settleDate), [settleDate]);
+  const settleYearOptions = useMemo(() => buildComposeSettleYearOptions(), []);
+  const settleMonthOptions = useMemo(() => buildComposeSettleMonthOptions(), []);
+  const settleDayOptions = useMemo(
+    () => buildComposeSettleDayOptions(settleDateParts.year, settleDateParts.month),
+    [settleDateParts.month, settleDateParts.year],
+  );
+  const settleTimestamp = useMemo(() => composeSettleTimestamp(settleDate), [settleDate]);
+  const composeWagerAmount = useMemo(() => {
+    if (!wagerInput.trim()) return Number.NaN;
+    const next = Number(wagerInput);
+    return Number.isFinite(next) ? next : Number.NaN;
+  }, [wagerInput]);
   const canSubmitCreate =
     isAuthenticated &&
     !createBattleMutation.isLoading &&
     topic.trim().length > 0 &&
     bankerOpinion.trim().length > 0 &&
     challengerOpinion.trim().length > 0 &&
-    Number.isFinite(wager) &&
-    wager >= 100 &&
-    Boolean(settlePreset) &&
-    (visibility === 'public' || inviteInput.trim().length > 0);
+    Number.isFinite(composeWagerAmount) &&
+    composeWagerAmount >= 100 &&
+    Boolean(settleTimestamp) &&
+    !isComposeSettleDateDisabled(settleDate);
   const canSubmitJoin =
     isAuthenticated &&
     !joinBattleMutation.isLoading &&
     Boolean(joinModal) &&
     normalizedJoinAmount >= 100 &&
     normalizedJoinAmount <= joinModalMax &&
-    (joinModal?.visibility !== 'private' || inviteInput.trim().length > 0);
+    (joinModal?.visibility !== 'private' || joinInviteInput.trim().length === 4);
   const canSubmitAddStake =
     isAuthenticated &&
     !addStakeMutation.isLoading &&
@@ -524,15 +627,54 @@ export const BattlePlazaPage: React.FC = () => {
     setComposeOpen(true);
   };
 
+  const handleGenerateInvite = async (duel: DuelItem) => {
+    if (!requireAuth()) return;
+    try {
+      const detail = await refreshBattleInviteCode(duel.battleId);
+      const inviteCode = detail.battle.inviteCode?.trim().toUpperCase();
+      if (!inviteCode) {
+        pushFeedback('error', '当前赌局暂无邀请码，请稍后重试。');
+        return;
+      }
+      await Promise.all([
+        queryClient.invalidateQueries(battleQueryKeys.detail(duel.battleId)),
+        queryClient.invalidateQueries(battleQueryKeys.lists()),
+      ]);
+      setInviteCodeModal({
+        inviteCode,
+        roomNumberDisplay: duel.roomNumberDisplay ?? formatBattleRoomDisplay(duel.battleId),
+        expireAt: normalizeBattleUnixSeconds(detail.battle.inviteExpireAt),
+      });
+    } catch (error) {
+      setMappedError(error);
+    }
+  };
+
+  const updateSettleParts = (next: Partial<{ year: number; month: number; day: number }>) => {
+    const merged = {
+      ...settleDateParts,
+      ...next,
+    };
+    setSettleDate(partsToComposeSettleDate(merged.year, merged.month, merged.day));
+  };
+
   /** 做庄表单 + 底部私人邀请码：确认开局后清空 */
   const resetComposeInputs = () => {
     setTopic('');
     setBankerOpinion('');
     setChallengerOpinion('');
-    setWager(DEFAULT_COMPOSE_WAGER);
+    setWagerInput(String(DEFAULT_COMPOSE_WAGER));
     setVisibility('public');
-    setSettlePreset(COMPOSE_SETTLE_PRESETS[0].value);
-    setInviteInput('');
+    setSettleDate(getDefaultComposeSettleDate());
+    setSettleCalendarOpen(false);
+  };
+
+  const openInviteCodeModal = (params: { inviteCode: string; battleId: number; expireAt?: number }) => {
+    setInviteCodeModal({
+      inviteCode: params.inviteCode,
+      roomNumberDisplay: formatBattleRoomDisplay(params.battleId),
+      expireAt: params.expireAt,
+    });
   };
 
   const refetchTabData = (tab: PlazaTab) => {
@@ -555,18 +697,8 @@ export const BattlePlazaPage: React.FC = () => {
     refetchTabData(tab);
   };
 
-  const handleEnterPrivateRoom = () => {
-    const code = quickRoomCode.trim().toUpperCase();
-    if (!code) {
-      pushFeedback('error', '请输入房间号。');
-      return;
-    }
-    setInviteInput(code);
-    const duel = plazaDuels.find((item) => item.inviteCode?.toUpperCase() === code);
-    if (!duel) {
-      pushFeedback('error', '未找到该私人赌局，请确认房间号是否正确。');
-      return;
-    }
+  const openPrivateDuel = (duel: DuelItem, codeForJoin: string) => {
+    setJoinInviteInput(codeForJoin.trim().toUpperCase());
     setActiveTab('private');
     refetchTabData('private');
     if (duel.canJoin) {
@@ -582,30 +714,63 @@ export const BattlePlazaPage: React.FC = () => {
     pushFeedback('info', '已定位到该房间，请查看列表详情。');
   };
 
+  const handleEnterPrivateRoomByNumber = async () => {
+    const battleId = parseBattleIdFromRoomNumber(privateRoomNumber);
+    if (!battleId) {
+      pushFeedback('error', '请输入 12 位房间号。');
+      return;
+    }
+    const cached = findPrivateDuelByRoomNumber(privateRoomNumber, plazaDuels);
+    if (cached) {
+      openPrivateDuel(cached, cached.inviteCode ?? '');
+      return;
+    }
+    try {
+      const detail = await fetchBattleDetail(battleId);
+      const duel = mapBattleToDuel(
+        { battle: detail.battle, myAction: detail.myAction },
+        currentUserId,
+        detail,
+        [],
+        myBankerBattleIds.has(detail.battle.id) ? 'banker' : undefined,
+      );
+      openPrivateDuel(duel, duel.inviteCode ?? '');
+    } catch (error) {
+      setMappedError(error);
+    }
+  };
+
+  const handleEnterPrivateRoomByInvite = async () => {
+    const code = privateInviteCode.trim().toUpperCase();
+    if (code.length !== 4) {
+      pushFeedback('error', '请输入 4 位邀请码。');
+      return;
+    }
+    const cached = findPrivateDuelByInviteCode(code, plazaDuels);
+    if (cached) {
+      openPrivateDuel(cached, code);
+      return;
+    }
+    pushFeedback('error', '当前列表未找到该私人赌局，请确认邀请码是否正确，或先用房间号进入。');
+  };
+
   const handleCreate = async () => {
     if (!requireAuth()) return;
     if (!topic.trim() || !bankerOpinion.trim() || !challengerOpinion.trim()) {
       pushFeedback('error', '请先完整填写议题和双方立场。');
       return;
     }
-    if (!settlePreset) {
+    if (!settleTimestamp) {
       pushFeedback('error', '请选择结算时间。');
       return;
     }
 
-    const settleHours = COMPOSE_SETTLE_PRESETS.find((item) => item.value === settlePreset)?.hours;
-    if (!settleHours) {
-      pushFeedback('error', '结算时间格式不正确。');
+    if (isComposeSettleDateDisabled(settleDate)) {
+      pushFeedback('error', '结算时间必须晚于当前时间。');
       return;
     }
-
-    const settleTimestamp = Math.floor(Date.now() / 1000) + settleHours * 3600;
-    if (wager < 100) {
+    if (!Number.isFinite(composeWagerAmount) || composeWagerAmount < 100) {
       pushFeedback('error', '开战金额不能低于 100。');
-      return;
-    }
-    if (visibility === 'private' && inviteInput.trim().length === 0) {
-      pushFeedback('error', '私密场必须填写邀请码。');
       return;
     }
     if (settleTimestamp <= Math.floor(Date.now() / 1000)) {
@@ -617,19 +782,31 @@ export const BattlePlazaPage: React.FC = () => {
       title: topic.trim(),
       bankerSide: bankerOpinion.trim(),
       challengerSide: challengerOpinion.trim(),
-      stakeAmount: wager,
+      stakeAmount: composeWagerAmount,
       isPublic: visibility === 'public',
-      inviteCode: visibility === 'private' ? inviteInput.trim() : '',
       settleTime: settleTimestamp,
       requestId: createBattleRequestId('battle-create'),
     };
 
-    resetComposeInputs();
-
     try {
-      await createBattleMutation.mutateAsync(createPayload);
+      const result = await createBattleMutation.mutateAsync(createPayload);
+      resetComposeInputs();
       setComposeOpen(false);
-      pushFeedback('success', '赌局已创建，广场列表已刷新。');
+      const inviteCode = result.inviteCode?.trim().toUpperCase();
+      const inviteExpireAt =
+        normalizeBattleUnixSeconds(result.inviteExpireAt) ??
+        normalizeBattleUnixSeconds(result.battle.inviteExpireAt);
+      if (!result.battle.isPublic && inviteCode) {
+        openInviteCodeModal({
+          inviteCode,
+          battleId: result.battle.id,
+          expireAt: inviteExpireAt,
+        });
+      }
+      pushFeedback(
+        'success',
+        result.battle.isPublic ? '赌局已创建，广场列表已刷新。' : '私人赌局已创建，邀请码已生成。',
+      );
     } catch (error) {
       setMappedError(error);
     }
@@ -638,8 +815,8 @@ export const BattlePlazaPage: React.FC = () => {
   const handleJoinBattle = async () => {
     if (!joinModal) return;
     if (!requireAuth()) return;
-    if (joinModal.visibility === 'private' && inviteInput.trim().length === 0) {
-      pushFeedback('error', '私密赌局需要先填写邀请码。');
+    if (joinModal.visibility === 'private' && joinInviteInput.trim().length !== 4) {
+      pushFeedback('error', '私人赌局需要 4 位邀请码。');
       return;
     }
     if (normalizedJoinAmount > joinModal.max) {
@@ -651,9 +828,10 @@ export const BattlePlazaPage: React.FC = () => {
         battleId: joinModal.duelId,
         amount: normalizedJoinAmount,
         requestId: createBattleRequestId(`battle-join-${joinModal.duelId}`),
-        inviteCode: joinModal.visibility === 'private' ? inviteInput.trim() : '',
+        inviteCode: joinModal.visibility === 'private' ? joinInviteInput.trim().toUpperCase() : undefined,
       });
       setJoinModal(null);
+      setJoinInviteInput('');
       pushFeedback('success', '已成功加入赌局。');
     } catch (error) {
       setMappedError(error);
@@ -791,9 +969,7 @@ export const BattlePlazaPage: React.FC = () => {
           onJoin={() => {
             if (!requireAuth()) return;
             setJoinAmount(DEFAULT_JOIN_AMOUNT);
-            if (duel.visibility === 'private' && duel.inviteCode) {
-              setInviteInput(duel.inviteCode);
-            }
+            setJoinInviteInput(duel.inviteCode?.trim().toUpperCase() ?? '');
             setJoinModal({
               duelId: duel.battleId,
               title: duel.topic,
@@ -802,8 +978,12 @@ export const BattlePlazaPage: React.FC = () => {
             });
           }}
           onCopyInvite={(code) => {
-            void navigator.clipboard?.writeText(code);
+            void navigator.clipboard?.writeText(code).then(
+              () => pushFeedback('success', code.length <= 4 ? `邀请码 ${code} 已复制。` : '房间号已复制。'),
+              () => pushFeedback('error', '复制失败，请手动复制。'),
+            );
           }}
+          onGenerateInvite={() => void handleGenerateInvite(duel)}
           onAddStake={() => {
             if (!requireAuth()) return;
             setAddStakeAmount(500);
@@ -956,9 +1136,9 @@ export const BattlePlazaPage: React.FC = () => {
                 <div className={css("phb-metric")}>
                   <div className={css("phb-metric-head")}>
                     <img src={BATTLE_HUB_ASSETS.challengers} alt="" className={css("phb-metric-ico-img")} />
-                    <span className={css("phb-metric-lbl")}>挑战者人数</span>
+                    <span className={css("phb-metric-lbl")}>待结算</span>
                   </div>
-                  <span className={css("phb-metric-val phb-metric-val--purple")}>{totalChallengerCount}</span>
+                  <span className={css("phb-metric-val phb-metric-val--purple")}>{totalPendingCount}</span>
                 </div>
               </div>
             </div>
@@ -995,27 +1175,60 @@ export const BattlePlazaPage: React.FC = () => {
                 <div className={css("plaza-rules-body")}>
                   <div className={css("rules-section")}>
                     <div className={css("rules-section-head")}>
-                      <HubGearIcon className={css("rules-section-ico")} />
-                      <div className={css("rules-section-title")}>基本机制</div>
+                      <HubAlertTriangleIcon className={css("rules-section-ico")} />
+                      <div className={css("rules-section-title")}>重要须知</div>
                     </div>
-                    <PlazaRuleList items={PLAZA_RULE_BASIC_ITEMS} />
+                    <div className={css("rules-notice-box")}>
+                      <div className={css("rules-notice-head")}>
+                        <HubLockIcon className={css("rules-notice-lock")} />
+                        <span className={css("rules-notice-tag")}>不可修改</span>
+                      </div>
+                      <p className={css("rules-notice-text")}>
+                        赌局创建后，议题、双方立场、押注金额、结算时间全部锁定不可更改。开局前请仔细确认。
+                      </p>
+                    </div>
                   </div>
+
                   <div className={css("rules-section")}>
                     <div className={css("rules-section-head")}>
-                      <HubFlagIcon className={css("rules-section-ico")} />
+                      <HubBanIcon className={css("rules-section-ico")} />
+                      <div className={css("rules-section-title-wrap")}>
+                        <div className={css("rules-section-title")}>违规处罚</div>
+                        <span className={css("rules-section-subtitle")}>（罚金直接销毁，不给任何一方）</span>
+                      </div>
+                    </div>
+                    <div className={css("rules-penalty-list")}>
+                      {PLAZA_RULE_PENALTIES.map((item) => (
+                        <div key={item.title} className={css("rules-penalty-item")}>
+                          <div className={css("rules-penalty-head")}>
+                            <HubPenaltyAlertIcon className={css("rules-penalty-ico")} />
+                            <span className={css("rules-penalty-title")}>{item.title}</span>
+                          </div>
+                          <p className={css("rules-penalty-text")}>{item.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className={css("rules-section")}>
+                    <div className={css("rules-section-head")}>
+                      <HubCheckeredFlagIcon className={css("rules-section-ico")} />
                       <div className={css("rules-section-title")}>结算流程</div>
                     </div>
-                    <ul className={css("rules-list")}>
-                      {PLAZA_RULE_SETTLE_ITEMS.map((item) => (
-                        <li key={item} className={css("rules-list-item")}>
-                          {item}
+                    <ol className={css("rules-steps-list")}>
+                      {PLAZA_RULE_SETTLE_STEPS.map((step, index) => (
+                        <li key={step} className={css("rules-step-item")}>
+                          <span className={css("rules-step-num")}>{index + 1}</span>
+                          <span className={css("rules-step-text")}>{step}</span>
                         </li>
                       ))}
-                      <li className={css("rules-list-item rules-list-item--tip")}>
-                        <span className={css("rules-tip-label")}>温馨提示：</span>
-                        {PLAZA_RULE_SETTLE_TIP}
-                      </li>
-                    </ul>
+                    </ol>
+                    <div className={css("rules-settle-tip-box")}>
+                      <span className={css("rules-settle-tip-star")} aria-hidden>
+                        *
+                      </span>
+                      <p className={css("rules-settle-tip-text")}>{PLAZA_RULE_SETTLE_TIP}</p>
+                    </div>
                   </div>
                 </div>
               ) : null}
@@ -1023,27 +1236,62 @@ export const BattlePlazaPage: React.FC = () => {
 
             <div className={css("bp-hub-divider")} aria-hidden />
 
-            <div className={css("quick-room-entry")}>
-              <div className={css("quick-room-left")}>
-                <HubLockIcon className={css("quick-room-ico")} />
-                <span className={css("quick-room-label")}>私人赌局快速进入</span>
+            <div className={css("private-entry")}>
+              <div className={css("private-entry-head")}>
+                <HubLockIcon className={css("private-entry-head-ico")} />
+                <span className={css("private-entry-title")}>私人赌局 · 两种进入方式</span>
               </div>
-              <input
-                className={css("quick-room-input")}
-                value={quickRoomCode}
-                onChange={(e) => setQuickRoomCode(e.target.value.toUpperCase())}
-                placeholder="输入 4 位房间号 (A7K9)"
-                maxLength={20}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    event.preventDefault();
-                    handleEnterPrivateRoom();
-                  }
-                }}
-              />
-              <button type="button" className={css("quick-room-btn")} onClick={handleEnterPrivateRoom}>
-                进入房间
-              </button>
+              <div className={css("private-entry-grid")}>
+                <div className={css("private-entry-card")}>
+                  <div className={css("private-entry-card-head")}>
+                    <HubHomeIcon className={css("private-entry-card-ico")} />
+                    <span>房间号入口 · 12位 · 与赌局绑定，长期有效</span>
+                  </div>
+                  <div className={css("private-entry-row")}>
+                    <input
+                      className={css("private-entry-input")}
+                      value={privateRoomNumber}
+                      onChange={(e) => setPrivateRoomNumber(e.target.value.replace(/\D/g, '').slice(0, 12))}
+                      placeholder="输入 12 位房间号"
+                      inputMode="numeric"
+                      maxLength={12}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                          event.preventDefault();
+                          handleEnterPrivateRoomByNumber();
+                        }
+                      }}
+                    />
+                    <button type="button" className={css("private-entry-btn", "private-entry-btn-room")} onClick={handleEnterPrivateRoomByNumber}>
+                      进入房间
+                    </button>
+                  </div>
+                </div>
+                <div className={css("private-entry-card")}>
+                  <div className={css("private-entry-card-head")}>
+                    <HubTicketIcon className={css("private-entry-card-ico")} />
+                    <span>邀请码入口 · 4位 · 48小时内有效</span>
+                  </div>
+                  <div className={css("private-entry-row")}>
+                    <input
+                      className={css("private-entry-input")}
+                      value={privateInviteCode}
+                      onChange={(e) => setPrivateInviteCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4))}
+                      placeholder="输入 4 位邀请码"
+                      maxLength={4}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                          event.preventDefault();
+                          handleEnterPrivateRoomByInvite();
+                        }
+                      }}
+                    />
+                    <button type="button" className={css("private-entry-btn", "private-entry-btn-invite")} onClick={handleEnterPrivateRoomByInvite}>
+                      用邀请码进入
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1313,8 +1561,14 @@ export const BattlePlazaPage: React.FC = () => {
                       className={css("compose-wager-input")}
                       type="number"
                       min={100}
-                      value={wager}
-                      onChange={(e) => setWager(Number(e.target.value || 0))}
+                      inputMode="numeric"
+                      value={wagerInput}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        if (raw === '' || /^\d+$/.test(raw)) {
+                          setWagerInput(raw);
+                        }
+                      }}
                     />
                     <TurtleCoinIcon size={16} className={css("compose-wager-coin")} />
                   </div>
@@ -1323,8 +1577,8 @@ export const BattlePlazaPage: React.FC = () => {
                       <button
                         key={amount}
                         type="button"
-                        className={css(`compose-wager-opt ${wager === amount ? 'on' : ''}`)}
-                        onClick={() => setWager(amount)}
+                        className={css(`compose-wager-opt ${composeWagerAmount === amount ? 'on' : ''}`)}
+                        onClick={() => setWagerInput(String(amount))}
                       >
                         {amount}
                       </button>
@@ -1356,33 +1610,78 @@ export const BattlePlazaPage: React.FC = () => {
 
                 {visibility === 'private' ? (
                   <div className={css("compose-field")}>
-                    <label className={css("compose-label")} htmlFor="compose-invite">邀请码</label>
-                    <input
-                      id="compose-invite"
-                      className={css("compose-input")}
-                      value={inviteInput}
-                      onChange={(e) => setInviteInput(e.target.value.toUpperCase())}
-                      placeholder="私密场必须填写邀请码"
-                    />
+                    <div className={css("compose-label")}>邀请码</div>
+                    <p className={css("compose-settle-hint")}>
+                      私人场邀请码由系统自动生成，开局成功后会弹出 4 位邀请码（48 小时有效）。
+                    </p>
                   </div>
                 ) : null}
 
                 <div className={css("compose-field")}>
-                  <label className={css("compose-label")} htmlFor="compose-settle">结算时间</label>
-                  <div className={css("compose-select-wrap")}>
-                    <select
-                      id="compose-settle"
-                      className={css("compose-select")}
-                      value={settlePreset}
-                      onChange={(e) => setSettlePreset(e.target.value)}
-                    >
-                      {COMPOSE_SETTLE_PRESETS.map((item) => (
-                        <option key={item.value} value={item.value}>
-                          {item.label}
-                        </option>
-                      ))}
-                    </select>
+                  <div className={css("compose-label")}>结算时间</div>
+                  <div className={css("compose-settle-pickers")}>
+                    <div className={css("compose-select-wrap")}>
+                      <select
+                        className={css("compose-select compose-settle-select")}
+                        value={settleDateParts.year}
+                        onChange={(e) => updateSettleParts({ year: Number(e.target.value) })}
+                        aria-label="结算年份"
+                      >
+                        {settleYearOptions.map((year) => (
+                          <option key={year} value={year}>
+                            {year} 年
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className={css("compose-select-wrap")}>
+                      <select
+                        className={css("compose-select compose-settle-select")}
+                        value={settleDateParts.month}
+                        onChange={(e) => updateSettleParts({ month: Number(e.target.value) })}
+                        aria-label="结算月份"
+                      >
+                        {settleMonthOptions.map((month) => (
+                          <option key={month} value={month}>
+                            {String(month).padStart(2, '0')} 月
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className={css("compose-select-wrap")}>
+                      <select
+                        className={css("compose-select compose-settle-select")}
+                        value={settleDateParts.day}
+                        onChange={(e) => updateSettleParts({ day: Number(e.target.value) })}
+                        aria-label="结算日期"
+                      >
+                        {settleDayOptions.map((day) => (
+                          <option key={day} value={day}>
+                            {String(day).padStart(2, '0')} 日
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
+                  <div className={css("compose-settle-meta")}>
+                    <div className={css("compose-settle-summary")}>
+                      <Clock3 size={14} aria-hidden className={css("compose-settle-clock")} />
+                      <span>{formatComposeSettleSummary(settleDate)}</span>
+                    </div>
+                    <button
+                      type="button"
+                      className={css("compose-settle-calendar-btn")}
+                      onClick={() => setSettleCalendarOpen(true)}
+                    >
+                      <HubCalendarPickIcon className={css("compose-settle-calendar-ico")} />
+                      日历选择
+                    </button>
+                  </div>
+                  {isComposeSettleDateDisabled(settleDate) ? (
+                    <p className={css("compose-settle-hint")}>
+                      最早可选 {getMinComposeSettleDate()} 18:00 之后的结算时间。
+                    </p>
+                  ) : null}
                 </div>
               </div>
 
@@ -1410,6 +1709,22 @@ export const BattlePlazaPage: React.FC = () => {
             </div>
           </div>
         ) : null}
+
+        <BattlePlazaSettleDatePicker
+          open={composeOpen && settleCalendarOpen}
+          value={settleDate}
+          onClose={() => setSettleCalendarOpen(false)}
+          onConfirm={setSettleDate}
+        />
+
+        <BattlePlazaInviteCodeModal
+          open={Boolean(inviteCodeModal)}
+          inviteCode={inviteCodeModal?.inviteCode ?? ''}
+          roomNumberDisplay={inviteCodeModal?.roomNumberDisplay ?? ''}
+          expireAt={inviteCodeModal?.expireAt}
+          onClose={() => setInviteCodeModal(null)}
+          onCopy={() => pushFeedback('success', '邀请码已复制。')}
+        />
 
         {detailBattleId !== null && (
           <div className={css("duel-overlay")} onClick={() => setDetailBattleId(null)}>
@@ -1446,9 +1761,13 @@ export const BattlePlazaPage: React.FC = () => {
                   </div>
 
                   <div className={css("dm-fee-note")}>
-                    {detailBattle.pendingDeadline ? `庄家宣判截止：${formatTimestampLabel(detailBattle.pendingDeadline)}` : '当前没有庄家宣判截止时间。'}
+                    {resolvePendingDeadlineSeconds(detailBattle)
+                      ? `庄家宣判截止：${formatTimestampLabel(resolvePendingDeadlineSeconds(detailBattle))}`
+                      : '当前没有庄家宣判截止时间。'}
                     <br />
-                    {detailBattle.confirmDeadline ? `挑战者确认截止：${formatTimestampLabel(detailBattle.confirmDeadline)}` : '当前没有挑战者确认截止时间。'}
+                    {resolveConfirmDeadlineSeconds(detailBattle)
+                      ? `挑战者确认截止：${formatTimestampLabel(resolveConfirmDeadlineSeconds(detailBattle))}`
+                      : '当前没有挑战者确认截止时间。'}
                     <br />
                     {detailBattle.resultTime ? `结果生效时间：${formatTimestampLabel(detailBattle.resultTime)}` : '结果尚未生效。'}
                   </div>
@@ -1498,7 +1817,12 @@ export const BattlePlazaPage: React.FC = () => {
           }
           submitting={joinBattleMutation.isLoading}
           canSubmit={canSubmitJoin}
-          onClose={() => setJoinModal(null)}
+          inviteCode={joinInviteInput}
+          onInviteCodeChange={setJoinInviteInput}
+          onClose={() => {
+            setJoinModal(null);
+            setJoinInviteInput('');
+          }}
           onAmountChange={setJoinAmount}
           onSubmit={() => void handleJoinBattle()}
         />

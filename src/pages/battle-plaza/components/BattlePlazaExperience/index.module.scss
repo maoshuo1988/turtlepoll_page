@@ -76,7 +76,7 @@
     backdrop-filter:none !important;
     margin:0 !important;
   }
-  .page-battle-square .bp-hub .quick-room-entry {
+  .page-battle-square .bp-hub .private-entry {
     background:transparent !important;
     border:none !important;
     border-radius:0 !important;
@@ -139,6 +139,12 @@
     gap:8px;
     margin-bottom:12px;
   }
+  .page-battle-square .bp-hub .rules-section-title-wrap {
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:4px;
+  }
   .page-battle-square .bp-hub .rules-section-title {
     font-size:15px;
     font-weight:700;
@@ -146,39 +152,136 @@
     letter-spacing:0;
     text-transform:none;
   }
+  .page-battle-square .bp-hub .rules-section-subtitle {
+    font-size:13px;
+    font-weight:600;
+    color:#f87171;
+  }
   .page-battle-square .bp-hub .rules-section-ico {
     width:18px;
     height:18px;
     color:#d4d4d8;
     flex-shrink:0;
   }
-  .page-battle-square .bp-hub .rules-list {
+  .page-battle-square .bp-hub .rules-notice-box {
+    border:1px solid rgba(251,191,36,.28);
+    background:rgba(251,191,36,.06);
+    border-radius:12px;
+    padding:12px 14px;
+  }
+  .page-battle-square .bp-hub .rules-notice-head {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:8px;
+  }
+  .page-battle-square .bp-hub .rules-notice-lock {
+    width:16px;
+    height:16px;
+    color:#fbbf24;
+    flex-shrink:0;
+  }
+  .page-battle-square .bp-hub .rules-notice-tag {
+    display:inline-flex;
+    align-items:center;
+    font-size:12px;
+    font-weight:700;
+    color:#fbbf24;
+  }
+  .page-battle-square .bp-hub .rules-notice-text {
+    margin:0;
+    font-size:13px;
+    line-height:1.65;
+    color:#949494;
+  }
+  .page-battle-square .bp-hub .rules-penalty-list {
+    display:grid;
+    gap:8px;
+  }
+  .page-battle-square .bp-hub .rules-penalty-item {
+    border:1px solid rgba(239,68,68,.22);
+    background:rgba(127,29,29,.18);
+    border-radius:12px;
+    padding:11px 13px;
+  }
+  .page-battle-square .bp-hub .rules-penalty-head {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:6px;
+  }
+  .page-battle-square .bp-hub .rules-penalty-ico {
+    width:14px;
+    height:14px;
+    color:#f87171;
+    flex-shrink:0;
+  }
+  .page-battle-square .bp-hub .rules-penalty-title {
+    font-size:13px;
+    font-weight:700;
+    color:#f87171;
+  }
+  .page-battle-square .bp-hub .rules-penalty-text {
+    margin:0;
+    font-size:12px;
+    line-height:1.65;
+    color:rgba(244,244,245,.62);
+  }
+  .page-battle-square .bp-hub .rules-steps-list {
     list-style:none;
     margin:0;
     padding:0;
     display:grid;
     gap:10px;
   }
-  .page-battle-square .bp-hub .rules-list-item {
-    position:relative;
-    padding-left:14px;
+  .page-battle-square .bp-hub .rules-step-item {
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .page-battle-square .bp-hub .rules-step-num {
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:rgba(34,197,94,.14);
+    border:1px solid rgba(34,197,94,.28);
+    color:#22c55e;
+    font-size:12px;
+    font-weight:800;
+    display:grid;
+    place-items:center;
+    flex-shrink:0;
+    margin-top:1px;
+  }
+  .page-battle-square .bp-hub .rules-step-text {
+    flex:1;
+    min-width:0;
     font-size:13px;
     line-height:1.65;
     color:#949494;
   }
-  .page-battle-square .bp-hub .rules-list-item::before {
-    content:'·';
-    position:absolute;
-    left:0;
-    top:0;
-    color:#949494;
+  .page-battle-square .bp-hub .rules-settle-tip-box {
+    margin-top:12px;
+    border:1px solid rgba(251,191,36,.24);
+    background:rgba(251,191,36,.05);
+    border-radius:12px;
+    padding:11px 13px;
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
   }
-  .page-battle-square .bp-hub .rules-list-item--tip {
-    margin-top:2px;
+  .page-battle-square .bp-hub .rules-settle-tip-star {
+    color:#fbbf24;
+    font-size:16px;
+    font-weight:800;
+    line-height:1.4;
+    flex-shrink:0;
   }
-  .page-battle-square .bp-hub .rules-tip-label {
-    color:#fafafa;
-    font-weight:600;
+  .page-battle-square .bp-hub .rules-settle-tip-text {
+    margin:0;
+    font-size:13px;
+    line-height:1.65;
+    color:#fbbf24;
   }
   .page-battle-square .phb-stats {
     display:grid;
@@ -278,39 +381,60 @@
   }
   .page-battle-square .bp-hub .dc-btn:hover { filter:brightness(1.05); }
   .page-battle-square .dc-btn-icon { width:16px; height:16px; display:block; flex-shrink:0; }
-  .page-battle-square .quick-room-entry {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:0;
-    border-radius:0;
-    background:transparent;
-    border:none;
-  }
-  .page-battle-square .quick-room-left {
+  .page-battle-square .private-entry-head {
     display:flex;
     align-items:center;
     gap:8px;
-    flex-shrink:0;
+    margin-bottom:14px;
   }
-  .page-battle-square .quick-room-ico {
+  .page-battle-square .private-entry-head-ico {
     width:16px;
     height:16px;
     color:#71717a;
     flex-shrink:0;
   }
-  .page-battle-square .quick-room-label {
-    font-size:13px;
-    font-weight:500;
-    color:#a1a1aa;
-    white-space:nowrap;
-    margin:0;
-    letter-spacing:0;
+  .page-battle-square .private-entry-title {
+    font-size:14px;
+    font-weight:600;
+    color:#d4d4d8;
+    letter-spacing:.01em;
   }
-  .page-battle-square .quick-room-input {
+  .page-battle-square .private-entry-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .page-battle-square .private-entry-card {
+    padding:14px 14px 16px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.06);
+    background:#141416;
+  }
+  .page-battle-square .private-entry-card-head {
+    display:flex;
+    align-items:flex-start;
+    gap:6px;
+    font-size:11px;
+    line-height:1.55;
+    color:#71717a;
+  }
+  .page-battle-square .private-entry-card-ico {
+    width:14px;
+    height:14px;
+    margin-top:1px;
+    color:#52525b;
+    flex-shrink:0;
+  }
+  .page-battle-square .private-entry-row {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:12px;
+  }
+  .page-battle-square .private-entry-input {
     flex:1;
-    min-width:120px;
-    padding:10px 14px;
+    min-width:0;
+    padding:10px 12px;
     border-radius:10px;
     border:1px solid rgba(255,255,255,.06);
     background:#0e0e10;
@@ -320,29 +444,36 @@
     letter-spacing:.04em;
     outline:none;
   }
-  .page-battle-square .quick-room-input::placeholder {
+  .page-battle-square .private-entry-input::placeholder {
     color:#52525b;
     letter-spacing:0;
     font-weight:400;
   }
-  .page-battle-square .quick-room-input:focus {
+  .page-battle-square .private-entry-input:focus {
     border-color:rgba(56,189,248,.35);
     box-shadow:0 0 0 2px rgba(56,189,248,.12);
   }
-  .page-battle-square .quick-room-btn {
-    padding:10px 18px;
+  .page-battle-square .private-entry-btn {
+    padding:10px 14px;
     border-radius:999px;
     border:none;
-    background:#38bdf8;
-    color:#0a0a0a;
-    font-size:13px;
+    font-size:12px;
     font-weight:800;
     cursor:pointer;
     font:inherit;
     white-space:nowrap;
     flex-shrink:0;
+    transition:filter .15s ease;
   }
-  .page-battle-square .quick-room-btn:hover { filter:brightness(1.06); }
+  .page-battle-square .private-entry-btn:hover { filter:brightness(1.06); }
+  .page-battle-square .private-entry-btn-room {
+    background:#38bdf8;
+    color:#0a0a0a;
+  }
+  .page-battle-square .private-entry-btn-invite {
+    background:#a855f7;
+    color:#fafafa;
+  }
   .page-battle-square .plaza-rules,
   .page-battle-square .duel-compose,
   .page-battle-square .invite-entry,
@@ -360,10 +491,156 @@
   .page-battle-square .plaza-rules-header:hover { background:var(--surface2); }
   .page-battle-square .plaza-rules-title { font-size:15px; font-weight:700; color:var(--ink); flex:1; }
   .page-battle-square .plaza-rules-chev { font-size:13px; color:var(--muted); transition:transform .2s; }
-  .page-battle-square .plaza-rules-chev.open { transform:rotate(90deg); }
+  .page-battle-square .plaza-rules-chev.open { transform:rotate(180deg); }
   .page-battle-square .plaza-rules-body { padding:0 18px 16px; }
   .page-battle-square .rules-section { margin-top:14px; }
   .page-battle-square .rules-section:first-child { margin-top:0; }
+  .page-battle-square .rules-section-head {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .page-battle-square .rules-section-title-wrap {
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:4px;
+  }
+  .page-battle-square .rules-section-title {
+    font-size:15px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .page-battle-square .rules-section-subtitle {
+    font-size:13px;
+    font-weight:600;
+    color:var(--red);
+  }
+  .page-battle-square .rules-section-ico {
+    width:18px;
+    height:18px;
+    color:var(--muted);
+    flex-shrink:0;
+  }
+  .page-battle-square .rules-notice-box {
+    border:1px solid rgba(251,191,36,.28);
+    background:rgba(251,191,36,.06);
+    border-radius:12px;
+    padding:12px 14px;
+  }
+  .page-battle-square .rules-notice-head {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:8px;
+  }
+  .page-battle-square .rules-notice-lock {
+    width:16px;
+    height:16px;
+    color:var(--gold);
+    flex-shrink:0;
+  }
+  .page-battle-square .rules-notice-tag {
+    font-size:12px;
+    font-weight:700;
+    color:var(--gold);
+  }
+  .page-battle-square .rules-notice-text {
+    margin:0;
+    font-size:13px;
+    line-height:1.65;
+    color:var(--muted);
+  }
+  .page-battle-square .rules-penalty-list {
+    display:grid;
+    gap:8px;
+  }
+  .page-battle-square .rules-penalty-item {
+    border:1px solid rgba(239,68,68,.22);
+    background:rgba(127,29,29,.18);
+    border-radius:12px;
+    padding:11px 13px;
+  }
+  .page-battle-square .rules-penalty-head {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:6px;
+  }
+  .page-battle-square .rules-penalty-ico {
+    width:14px;
+    height:14px;
+    color:var(--red);
+    flex-shrink:0;
+  }
+  .page-battle-square .rules-penalty-title {
+    font-size:13px;
+    font-weight:700;
+    color:var(--red);
+  }
+  .page-battle-square .rules-penalty-text {
+    margin:0;
+    font-size:12px;
+    line-height:1.65;
+    color:rgba(240,237,232,.68);
+  }
+  .page-battle-square .rules-steps-list {
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:10px;
+  }
+  .page-battle-square .rules-step-item {
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .page-battle-square .rules-step-num {
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:rgba(34,197,94,.14);
+    border:1px solid rgba(34,197,94,.28);
+    color:#22c55e;
+    font-size:12px;
+    font-weight:800;
+    display:grid;
+    place-items:center;
+    flex-shrink:0;
+    margin-top:1px;
+  }
+  .page-battle-square .rules-step-text {
+    flex:1;
+    min-width:0;
+    font-size:13px;
+    line-height:1.65;
+    color:rgba(240,237,232,.68);
+  }
+  .page-battle-square .rules-settle-tip-box {
+    margin-top:12px;
+    border:1px solid rgba(251,191,36,.24);
+    background:rgba(251,191,36,.05);
+    border-radius:12px;
+    padding:11px 13px;
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+  }
+  .page-battle-square .rules-settle-tip-star {
+    color:var(--gold);
+    font-size:16px;
+    font-weight:800;
+    line-height:1.4;
+    flex-shrink:0;
+  }
+  .page-battle-square .rules-settle-tip-text {
+    margin:0;
+    font-size:13px;
+    line-height:1.65;
+    color:var(--gold);
+  }
   .page-battle-square .rules-title { font-size:12px; font-weight:800; color:var(--gold); letter-spacing:.8px; text-transform:uppercase; margin-bottom:8px; }
   .page-battle-square .pr-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .page-battle-square .pr-item { background:var(--surface2); border:none; border-radius:12px; padding:10px 12px; }
@@ -908,6 +1185,63 @@
     background-repeat:no-repeat;
     background-position:right 14px center;
   }
+  .page-battle-square .compose-settle-pickers {
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:8px;
+  }
+  .page-battle-square .compose-settle-select {
+    padding:11px 34px 11px 12px;
+    font-size:14px;
+    font-weight:600;
+  }
+  .page-battle-square .compose-settle-meta {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .page-battle-square .compose-settle-summary {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    color:#71717a;
+    min-width:0;
+  }
+  .page-battle-square .compose-settle-clock {
+    color:#71717a;
+    flex-shrink:0;
+  }
+  .page-battle-square .compose-settle-calendar-btn {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid rgba(167,139,250,.28);
+    background:rgba(88,28,135,.18);
+    color:#c084fc;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    font:inherit;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .page-battle-square .compose-settle-calendar-ico {
+    width:15px;
+    height:15px;
+    display:block;
+  }
+  .page-battle-square .compose-settle-calendar-btn:hover { filter:brightness(1.06); }
+  .page-battle-square .compose-settle-hint {
+    margin:0;
+    font-size:12px;
+    line-height:1.55;
+    color:#fb923c;
+  }
   .page-battle-square .compose-modal-foot {
     display:grid;
     grid-template-columns:1fr 1.2fr;
@@ -954,6 +1288,9 @@
     .page-battle-square .compose-modal-foot { padding:14px 16px 16px; }
     .page-battle-square .compose-wager-opts { grid-template-columns:repeat(2, minmax(0, 1fr)); }
     .page-battle-square .compose-modal-foot { grid-template-columns:1fr; }
+    .page-battle-square .compose-settle-pickers { grid-template-columns:1fr; }
+    .page-battle-square .compose-settle-meta { align-items:stretch; }
+    .page-battle-square .compose-settle-calendar-btn { justify-content:center; width:100%; }
   }
   :global(html.dark) .page-battle-square {
     --red:#ff5d72; --red-dim:rgba(255,93,114,.12); --red-glow:rgba(255,93,114,.26);
@@ -985,10 +1322,9 @@
     .page-battle-square .banker-overview,
     .page-battle-square .dm-info-grid { grid-template-columns:1fr; }
     .page-battle-square .dc-inline,
-    .page-battle-square .quick-room-entry { flex-wrap:wrap; }
-    .page-battle-square .quick-room-left { flex:1 1 100%; }
-    .page-battle-square .quick-room-input { width:100%; min-width:0; flex:1 1 160px; }
-    .page-battle-square .quick-room-btn { width:auto; min-width:96px; }
+    .page-battle-square .private-entry-grid { grid-template-columns:1fr; }
+    .page-battle-square .private-entry-row { flex-wrap:wrap; }
+    .page-battle-square .private-entry-btn { min-height:42px; padding:10px 16px; }
     .page-battle-square .duel-banker-row { align-items:flex-start; flex-wrap:wrap; }
     .page-battle-square .duel-banker-stake { margin-left:0; width:100%; text-align:left; }
     .page-battle-square .duel-title { font-size:16px; }
@@ -1070,7 +1406,7 @@
     .page-battle-square .bp-hub .dc-form { padding:0 16px 18px; }
     .page-battle-square .bp-hub .plaza-rules-header { padding:18px 16px; }
     .page-battle-square .bp-hub .plaza-rules-body { padding:0 16px 18px; }
-    .page-battle-square .bp-hub .quick-room-entry { margin:18px 16px 18px !important; }
+    .page-battle-square .bp-hub .private-entry { margin:18px 16px 18px !important; }
     .page-battle-square .bp-hub-metrics .phb-metric {
       padding:0;
       background:transparent;
@@ -1098,14 +1434,15 @@
       margin-left:auto;
       min-height:40px;
     }
-    .page-battle-square .quick-room-entry {
+    .page-battle-square .private-entry-row {
       flex-direction:column;
       align-items:stretch;
       gap:10px;
-      padding:0;
     }
-    .page-battle-square .quick-room-left { flex:initial; }
-    .page-battle-square .quick-room-btn { width:100%; min-height:42px; }
+    .page-battle-square .private-entry-btn {
+      width:100%;
+      min-height:42px;
+    }
     .page-battle-square .invite-entry-btn {
       min-height:44px;
       padding:10px 18px;

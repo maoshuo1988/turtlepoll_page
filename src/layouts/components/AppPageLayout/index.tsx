@@ -76,7 +76,6 @@ export function AppLayoutHeader(props: HeaderProps) {
       <MobileHeader
         darkMode={props.darkMode}
         onOpenGames={openGames}
-        onOpenWorldCup={() => navigate('/world-cup')}
         onOpenPet={() => navigate('/pet')}
         onOpenShop={() => navigate('/shop')}
         onOpenAuth={props.onOpenAuth}

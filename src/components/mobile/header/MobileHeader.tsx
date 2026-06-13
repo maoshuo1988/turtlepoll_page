@@ -2,14 +2,13 @@
  * 文件说明：mobile Header 组件，负责手机浏览器顶栏（与 PC 分离的紧凑布局）。
  */
 import React, { useState } from 'react';
-import { Gamepad2, Menu, Trophy, X } from 'lucide-react';
+import { Gamepad2, Menu, X } from 'lucide-react';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { MOBILE_HEADER_INNER_HEIGHT_PX } from './mobileHeaderMetrics';
 
 export interface MobileHeaderProps {
   darkMode: boolean;
   onOpenGames: () => void;
-  onOpenWorldCup: () => void;
   onOpenPet: () => void;
   onOpenShop: () => void;
   onOpenAuth: () => void;
@@ -20,7 +19,6 @@ export interface MobileHeaderProps {
 export const MobileHeader: React.FC<MobileHeaderProps> = ({
   darkMode,
   onOpenGames,
-  onOpenWorldCup,
   onOpenPet,
   onOpenShop,
   onOpenAuth,
@@ -44,14 +42,6 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
           </div>
 
           <div className="flex shrink-0 items-center gap-1.5">
-            <button
-              type="button"
-              onClick={onOpenWorldCup}
-              className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full border border-amber-500/35 bg-amber-950/35 px-2 text-[10px] font-bold leading-none text-amber-100 dark:border-amber-400/45 dark:bg-amber-950/55 dark:text-amber-50"
-            >
-              <Trophy size={13} className="shrink-0 text-amber-400" strokeWidth={2} />
-              <span className="whitespace-nowrap">世界杯2026</span>
-            </button>
             <button
               type="button"
               onClick={onOpenGames}

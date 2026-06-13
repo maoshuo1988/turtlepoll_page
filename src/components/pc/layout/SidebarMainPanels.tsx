@@ -14,7 +14,7 @@ import type { PredictionCardItem } from '@/components/common/predictions/predict
 export type ViewType = 'worldCup' | 'predictions' | 'rivalry' | 'forum' | 'games' | 'turtleContest' | 'jump' | 'lab' | 'battle' | 'battlePlaza' | 'pet' | 'shop' | 'rank' | 'profile' | 'inventory' | 'activePredictions';
 
 export const NAV_ITEMS: SidebarNavItem[] = [
-  { key: 'world-cup', label: '世界杯', icon: <Flag size={22} />, view: 'worldCup', enabled: true },
+  { key: 'world-cup', label: '世界杯', icon: <Flag size={22} />, view: 'worldCup', enabled: false },
   { key: 'predictions', label: '暗盘', icon: <TrendingUp size={22} />, view: 'predictions', enabled: true },
   { key: 'rivalry', label: '开撕台', icon: <Flame size={22} />, view: 'rivalry', enabled: true },
   { key: 'forum', label: '线报', icon: <MessageSquare size={22} />, view: 'forum', enabled: true },

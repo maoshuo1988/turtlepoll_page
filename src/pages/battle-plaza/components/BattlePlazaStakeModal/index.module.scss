@@ -78,6 +78,40 @@
   color: #fbbf24;
 }
 
+.invite-field {
+  margin-bottom: 14px;
+}
+
+.invite-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #9ca3af;
+}
+
+.invite-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0a0a0b;
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #f4f4f5;
+  outline: none;
+}
+
+.invite-input::placeholder {
+  letter-spacing: normal;
+  font-size: 14px;
+  font-weight: 500;
+  color: #52525b;
+}
+
 .amount-box {
   position: relative;
   margin-bottom: 12px;

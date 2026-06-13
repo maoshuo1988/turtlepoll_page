@@ -29,6 +29,8 @@ import type {
   BattleSettlementItem,
   BattleWithdrawPayload,
   CreateBattlePayload,
+  CreateBattleResponse,
+  BattleDetailParams,
   DeclareBattlePayload,
   JoinBattlePayload,
   JoinBattleResponse,
@@ -51,14 +53,22 @@ function battleListRequiresAuth(_params: BattleListParams) {
   return true;
 }
 
-export async function fetchBattleDetail(battleId?: number) {
+export async function fetchBattleDetail(battleId?: number, options: Omit<BattleDetailParams, "battleId"> = {}) {
   const res = await axiosCustom({
     method: "get",
     cmd: API_Battle_By,
-    params: { battleId },
+    params: {
+      battleId,
+      inviteCode: options.inviteCode?.trim().toUpperCase() || undefined,
+      refreshInvite: options.refreshInvite ? 1 : undefined,
+    },
     headers: getAuthorizationHeaders(),
   });
   return assertSuccess(res) as BattleDetailResponse;
+}
+
+export async function refreshBattleInviteCode(battleId: number) {
+  return fetchBattleDetail(battleId, { refreshInvite: 1 });
 }
 
 // battle 的 mutation 会同时影响列表、详情和金币余额，所以统一在这里失效缓存。
@@ -158,10 +168,10 @@ export function useRequestBattleCreate() {
           "Content-Type": "application/json",
         },
       });
-      return assertSuccess(res) as Battle;
+      return assertSuccess(res) as CreateBattleResponse;
     },
-    onSuccess: async (battle) => {
-      await invalidateBattleQueries(queryClient, battle.id);
+    onSuccess: async (result) => {
+      await invalidateBattleQueries(queryClient, result.battle.id);
     },
   });
 }

@@ -26,6 +26,8 @@ export interface BattlePlazaStakeModalProps {
   feeNote: string;
   submitting?: boolean;
   canSubmit?: boolean;
+  inviteCode?: string;
+  onInviteCodeChange?: (value: string) => void;
   onClose: () => void;
   onAmountChange: (amount: number) => void;
   onSubmit: () => void;
@@ -43,6 +45,8 @@ export function BattlePlazaStakeModal({
   feeNote,
   submitting = false,
   canSubmit = true,
+  inviteCode = '',
+  onInviteCodeChange,
   onClose,
   onAmountChange,
   onSubmit,
@@ -121,6 +125,25 @@ export function BattlePlazaStakeModal({
             </>
           )}
         </p>
+
+        {isJoin && visibility === 'private' ? (
+          <div className={css('invite-field')}>
+            <label className={css('invite-label')} htmlFor="bp-stake-invite-code">
+              邀请码
+            </label>
+            <input
+              id="bp-stake-invite-code"
+              className={css('invite-input')}
+              value={inviteCode}
+              onChange={(event) =>
+                onInviteCodeChange?.(event.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4))
+              }
+              placeholder="4 位字母数字"
+              maxLength={4}
+              autoComplete="off"
+            />
+          </div>
+        ) : null}
 
         <div className={css('amount-box')}>
           <input
