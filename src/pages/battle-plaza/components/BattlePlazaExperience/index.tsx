@@ -5,7 +5,7 @@ import styles from './index.module.scss';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useQueries, useQueryClient } from 'react-query';
 import { battleQueryKeys, fetchBattleDetail, refreshBattleInviteCode, useRequestBattleBankerAddStake, useRequestBattleChallengerConfirm, useRequestBattleChallengerDispute, useRequestBattleCreate, useRequestBattleDeclare, useRequestBattleDetail, useRequestBattleJoin, useRequestBattleList, useRequestBattleStats, useRequestBattleWithdraw } from '@/hooks/useBattleRequests';
-import { showOperationErrorToast } from '@/utils/operationToast';
+import { showOperationErrorFromUnknown, showOperationErrorToast, showOperationToast } from '@/utils/operationToast';
 import {
   createBattleRequestId,
   getBattleErrorMessage,
@@ -16,6 +16,8 @@ import {
   resolvePendingDeadlineSeconds,
   type BattleDetailResponse,
   type BattleListItem,
+  type BattleListParams,
+  type BattleListScope,
 } from '@/hooks/battleTypes';
 import { useAppSession } from '@/hooks/useAppSession';
 import { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';
@@ -42,11 +44,16 @@ import {
 } from '../composeSettleDate';
 import {
   DEFAULT_USER_AVATAR,
+  buildBattleListItemFromDetail,
+  findBattleListItemByInviteCode,
   formatBattleRoomDisplay,
   formatCoinLabel,
   formatTimestampLabel,
+  getRoomNumberDigits,
+  isValidInviteCodeText,
   mapBattleToDuel,
   mapCommentToDuelComment,
+  normalizeInviteCodeText,
   parseBattleIdFromRoomNumber,
   type DuelComment,
   type DuelItem,
@@ -259,7 +266,7 @@ function findPrivateDuelByRoomNumber(roomNumber: string, duels: DuelItem[]) {
 }
 
 function findPrivateDuelByInviteCode(code: string, duels: DuelItem[]) {
-  const normalized = code.trim().toUpperCase();
+  const normalized = normalizeInviteCodeText(code);
   if (!normalized) return undefined;
   return duels.find((duel) => duel.inviteCode?.toUpperCase() === normalized);
 }
@@ -294,6 +301,42 @@ const PLAZA_SORTS: PlazaSort[] = [
 const COMPOSE_WAGER_OPTIONS = [1000, 5000, 10000, 20000];
 const DEFAULT_COMPOSE_WAGER = 5000;
 const DEFAULT_JOIN_AMOUNT = 500;
+const BATTLE_LIST_PAGE_SIZE = 50;
+
+function buildScopedListParams(listScope: BattleListScope, sort: PlazaSort): BattleListParams {
+  const base: BattleListParams = {
+    page: 1,
+    pageSize: BATTLE_LIST_PAGE_SIZE,
+    listScope,
+    sort: 'latest',
+  };
+  switch (sort) {
+    case '进行中':
+      return { ...base, status: 'open' };
+    case '待结果':
+      return { ...base, status: 'pending' };
+    case '已结算':
+      return { ...base, status: 'settled' };
+    default:
+      return base;
+  }
+}
+
+const MY_BANKER_PUBLIC_LIST_PARAMS: BattleListParams = {
+  page: 1,
+  pageSize: BATTLE_LIST_PAGE_SIZE,
+  listScope: 'public',
+  role: 'banker',
+  sort: 'latest',
+};
+
+const MY_CHALLENGER_PUBLIC_LIST_PARAMS: BattleListParams = {
+  page: 1,
+  pageSize: BATTLE_LIST_PAGE_SIZE,
+  listScope: 'public',
+  role: 'challenger',
+  sort: 'latest',
+};
 
 function HubCalendarPickIcon({ className }: { className?: string }) {
   return (
@@ -303,10 +346,6 @@ function HubCalendarPickIcon({ className }: { className?: string }) {
     </svg>
   );
 }
-
-const PLAZA_LIST_PARAMS = { page: 1, pageSize: 50 } as const;
-const MY_BANKER_LIST_PARAMS = { page: 1, pageSize: 50, role: 'banker' as const };
-const MY_CHALLENGER_LIST_PARAMS = { page: 1, pageSize: 50, role: 'challenger' as const };
 
 function formatCoins(value: number) {
   return value.toLocaleString('zh-CN');
@@ -357,10 +396,20 @@ export const BattlePlazaPage: React.FC = () => {
   const isAuthenticated = Boolean(authToken);
   const requireAuth = useRequireAuth();
   const queryClient = useQueryClient();
-  const plazaQuery = useRequestBattleList(PLAZA_LIST_PARAMS);
+  const [activeSort, setActiveSort] = useState<PlazaSort>('最新');
+  const publicListParams = useMemo(
+    () => buildScopedListParams('public', activeSort),
+    [activeSort],
+  );
+  const privateListParams = useMemo(
+    () => buildScopedListParams('private', activeSort),
+    [activeSort],
+  );
+  const plazaQuery = useRequestBattleList(publicListParams);
+  const privateListQuery = useRequestBattleList(privateListParams, { enabled: isAuthenticated });
   const battleStatsQuery = useRequestBattleStats({ enabled: isAuthenticated });
-  const myBankerQuery = useRequestBattleList(MY_BANKER_LIST_PARAMS, { enabled: isAuthenticated });
-  const myChallengerQuery = useRequestBattleList(MY_CHALLENGER_LIST_PARAMS, { enabled: isAuthenticated });
+  const myBankerPublicQuery = useRequestBattleList(MY_BANKER_PUBLIC_LIST_PARAMS, { enabled: isAuthenticated });
+  const myChallengerPublicQuery = useRequestBattleList(MY_CHALLENGER_PUBLIC_LIST_PARAMS, { enabled: isAuthenticated });
   const createBattleMutation = useRequestBattleCreate();
   const joinBattleMutation = useRequestBattleJoin();
   const addStakeMutation = useRequestBattleBankerAddStake();
@@ -375,7 +424,6 @@ export const BattlePlazaPage: React.FC = () => {
   const [rulesOpen, setRulesOpen] = useState(false);
   const [composeOpen, setComposeOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<PlazaTab>('plaza');
-  const [activeSort, setActiveSort] = useState<PlazaSort>('最新');
   const [topic, setTopic] = useState('');
   const [bankerOpinion, setBankerOpinion] = useState('');
   const [challengerOpinion, setChallengerOpinion] = useState('');
@@ -396,27 +444,49 @@ export const BattlePlazaPage: React.FC = () => {
   const [addStakeAmount, setAddStakeAmount] = useState(500);
   const [addStakeModal, setAddStakeModal] = useState<AddStakeModalState | null>(null);
   const [detailBattleId, setDetailBattleId] = useState<number | null>(null);
+  const [detailInviteCode, setDetailInviteCode] = useState<string | undefined>(undefined);
   const [commentOpen, setCommentOpen] = useState<Record<string, boolean>>({});
   const [commentDraftMap, setCommentDraftMap] = useState<Record<string, string>>({});
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [feedback, setFeedback] = useState<{ tone: 'success' | 'error' | 'info'; text: string } | null>(null);
-  const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, { enabled: detailBattleId !== null });
+  const detailBattleQuery = useRequestBattleDetail(detailBattleId ?? undefined, {
+    enabled: detailBattleId !== null,
+    inviteCode: detailInviteCode,
+  });
+
+  const myBankerBattleItems = useMemo(() => {
+    const map = new Map<number, BattleListItem>();
+    (myBankerPublicQuery.data?.list ?? []).forEach((item) => {
+      map.set(item.battle.id, item);
+    });
+    (privateListQuery.data?.list ?? [])
+      .filter((item) => item.myRole === 'banker')
+      .forEach((item) => {
+        map.set(item.battle.id, item);
+      });
+    return Array.from(map.values());
+  }, [myBankerPublicQuery.data?.list, privateListQuery.data?.list]);
+
+  const myChallengerBattleItems = useMemo(() => {
+    const map = new Map<number, BattleListItem>();
+    (myChallengerPublicQuery.data?.list ?? []).forEach((item) => {
+      map.set(item.battle.id, item);
+    });
+    (privateListQuery.data?.list ?? [])
+      .filter((item) => item.myRole === 'challenger')
+      .forEach((item) => {
+        map.set(item.battle.id, item);
+      });
+    return Array.from(map.values());
+  }, [myChallengerPublicQuery.data?.list, privateListQuery.data?.list]);
 
   const myRoleBattleItems = useMemo(() => {
     const map = new Map<number, BattleListItem>();
-    [...(myBankerQuery.data?.list ?? []), ...(myChallengerQuery.data?.list ?? [])].forEach((item) => {
+    [...myBankerBattleItems, ...myChallengerBattleItems].forEach((item) => {
       map.set(item.battle.id, item);
     });
     return Array.from(map.values());
-  }, [myBankerQuery.data?.list, myChallengerQuery.data?.list]);
-  const myBankerBattleIds = useMemo(
-    () => new Set((myBankerQuery.data?.list ?? []).map((item) => item.battle.id)),
-    [myBankerQuery.data?.list],
-  );
-  const myChallengerBattleIds = useMemo(
-    () => new Set((myChallengerQuery.data?.list ?? []).map((item) => item.battle.id)),
-    [myChallengerQuery.data?.list],
-  );
+  }, [myBankerBattleItems, myChallengerBattleItems]);
 
   // 列表接口不带 settlement，只有“我的庄局 / 我的挑战”页才补详情查询。
   // 这样可以保住首页请求量，同时又能在我的页面正确计算 withdraw / confirm / dispute 按钮态。
@@ -430,11 +500,15 @@ export const BattlePlazaPage: React.FC = () => {
 
   const allBattleItems = useMemo(() => {
     const map = new Map<number, BattleListItem>();
-    [...(plazaQuery.data?.list ?? []), ...myRoleBattleItems].forEach((item) => {
+    [
+      ...(plazaQuery.data?.list ?? []),
+      ...(privateListQuery.data?.list ?? []),
+      ...myRoleBattleItems,
+    ].forEach((item) => {
       map.set(item.battle.id, item);
     });
     return Array.from(map.values());
-  }, [myRoleBattleItems, plazaQuery.data?.list]);
+  }, [myRoleBattleItems, plazaQuery.data?.list, privateListQuery.data?.list]);
 
   const commentQueries = useQueries(
     allBattleItems.map((item) => {
@@ -475,43 +549,32 @@ export const BattlePlazaPage: React.FC = () => {
   const plazaDuels = useMemo(
     () =>
       (plazaQuery.data?.list ?? []).map((item) =>
-        mapBattleToDuel(
-          item,
-          currentUserId,
-          undefined,
-          commentMap.get(item.battle.id) ?? [],
-          myBankerBattleIds.has(item.battle.id) ? 'banker' : myChallengerBattleIds.has(item.battle.id) ? 'challenger' : undefined,
-        ),
+        mapBattleToDuel(item, currentUserId, undefined, commentMap.get(item.battle.id) ?? []),
       ),
-    [plazaQuery.data?.list, currentUserId, commentMap, myBankerBattleIds, myChallengerBattleIds],
+    [plazaQuery.data?.list, currentUserId, commentMap],
   );
   const myBankerDuels = useMemo(
-    () => (myBankerQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], 'banker')),
-    [myBankerQuery.data?.list, currentUserId, detailMap, commentMap],
+    () => myBankerBattleItems.map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [])),
+    [myBankerBattleItems, currentUserId, detailMap, commentMap],
   );
   const myChallengerDuels = useMemo(
-    () => (myChallengerQuery.data?.list ?? []).map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [], 'challenger')),
-    [myChallengerQuery.data?.list, currentUserId, detailMap, commentMap],
+    () => myChallengerBattleItems.map((item) => mapBattleToDuel(item, currentUserId, detailMap.get(item.battle.id), commentMap.get(item.battle.id) ?? [])),
+    [myChallengerBattleItems, currentUserId, detailMap, commentMap],
   );
 
   const sortDuels = (list: DuelItem[]) => {
-    const next = [...list];
-    switch (activeSort) {
-      case '最新':
-        return next.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
-      case '进行中':
-        return next.filter((duel) => duel.rawStatus === 'open');
-      case '待结果':
-        return next.filter((duel) => duel.rawStatus === 'pending');
-      case '已结算':
-        return next.filter((duel) => duel.rawStatus === 'settled');
-      default:
-        return next.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
-    }
+    if (activeSort !== '最新') return list;
+    return [...list].sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
   };
 
   const sortedPlazaDuels = useMemo(() => sortDuels(plazaDuels), [activeSort, plazaDuels]);
-  const privateDuels = useMemo(() => plazaDuels.filter((duel) => duel.visibility === 'private'), [plazaDuels]);
+  const privateDuels = useMemo(
+    () =>
+      (privateListQuery.data?.list ?? []).map((item) =>
+        mapBattleToDuel(item, currentUserId, undefined, commentMap.get(item.battle.id) ?? []),
+      ),
+    [privateListQuery.data?.list, currentUserId, commentMap],
+  );
   const sortedPrivateDuels = useMemo(() => sortDuels(privateDuels), [activeSort, privateDuels]);
 
   const fallbackUnsettledItems = useMemo(
@@ -537,7 +600,11 @@ export const BattlePlazaPage: React.FC = () => {
   const totalPendingCount = battleStatsQuery.data?.pendingCount ?? fallbackPendingCount;
 
   const battleListRefreshing =
-    plazaQuery.isFetching || battleStatsQuery.isFetching || myBankerQuery.isFetching || myChallengerQuery.isFetching;
+    plazaQuery.isFetching ||
+    privateListQuery.isFetching ||
+    battleStatsQuery.isFetching ||
+    myBankerPublicQuery.isFetching ||
+    myChallengerPublicQuery.isFetching;
 
   const refetchBattleLists = () => {
     void (async () => {
@@ -586,7 +653,7 @@ export const BattlePlazaPage: React.FC = () => {
     Boolean(joinModal) &&
     normalizedJoinAmount >= 100 &&
     normalizedJoinAmount <= joinModalMax &&
-    (joinModal?.visibility !== 'private' || joinInviteInput.trim().length === 4);
+    (joinModal?.visibility !== 'private' || isValidInviteCodeText(joinInviteInput));
   const canSubmitAddStake =
     isAuthenticated &&
     !addStakeMutation.isLoading &&
@@ -601,9 +668,27 @@ export const BattlePlazaPage: React.FC = () => {
     setFeedback({ tone, text });
   };
 
+  const handleCopyClipboardText = (text: string, successMessage: string) => {
+    void navigator.clipboard?.writeText(text).then(
+      () => showOperationToast(successMessage, { tone: 'success' }),
+      () => showOperationToast('复制失败，请手动复制。', { tone: 'error' }),
+    );
+  };
+
   const setMappedError = (error: unknown) => {
-    const message = error instanceof Error ? error.message : '';
-    showOperationErrorToast(getBattleErrorMessage(message));
+    showOperationErrorFromUnknown(error, { mapMessage: getBattleErrorMessage });
+  };
+
+  const mapDetailToPrivateDuel = (detail: BattleDetailResponse, fallback?: BattleListItem) =>
+    mapBattleToDuel(buildBattleListItemFromDetail(detail, fallback), currentUserId, detail, []);
+
+  const openPrivateDuelFromDetail = (
+    detail: BattleDetailResponse,
+    inviteCodeForJoin: string,
+    fallback?: BattleListItem,
+  ) => {
+    const duel = mapDetailToPrivateDuel(detail, fallback);
+    openPrivateDuel(duel, inviteCodeForJoin || duel.inviteCode || '');
   };
 
   useEffect(() => {
@@ -612,14 +697,14 @@ export const BattlePlazaPage: React.FC = () => {
   }, [isAuthenticated, plazaQuery.error, plazaQuery.isError]);
 
   useEffect(() => {
-    if (!isAuthenticated || activeTab !== 'my-banker' || !myBankerQuery.isError) return;
-    setMappedError(myBankerQuery.error);
-  }, [activeTab, isAuthenticated, myBankerQuery.error, myBankerQuery.isError]);
+    if (!isAuthenticated || activeTab !== 'my-banker' || (!myBankerPublicQuery.isError && !privateListQuery.isError)) return;
+    setMappedError(myBankerPublicQuery.error ?? privateListQuery.error);
+  }, [activeTab, isAuthenticated, myBankerPublicQuery.error, myBankerPublicQuery.isError, privateListQuery.error, privateListQuery.isError]);
 
   useEffect(() => {
-    if (!isAuthenticated || activeTab !== 'my-challenger' || !myChallengerQuery.isError) return;
-    setMappedError(myChallengerQuery.error);
-  }, [activeTab, isAuthenticated, myChallengerQuery.error, myChallengerQuery.isError]);
+    if (!isAuthenticated || activeTab !== 'my-challenger' || (!myChallengerPublicQuery.isError && !privateListQuery.isError)) return;
+    setMappedError(myChallengerPublicQuery.error ?? privateListQuery.error);
+  }, [activeTab, isAuthenticated, myChallengerPublicQuery.error, myChallengerPublicQuery.isError, privateListQuery.error, privateListQuery.isError]);
 
   // 创建前先在页面层挡一轮基础校验，避免无意义请求直接打后端。
   const handleOpenCompose = () => {
@@ -678,16 +763,22 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   const refetchTabData = (tab: PlazaTab) => {
-    if (tab === 'plaza' || tab === 'private') {
-      void queryClient.refetchQueries(battleQueryKeys.list(PLAZA_LIST_PARAMS));
+    if (tab === 'plaza') {
+      void queryClient.refetchQueries(battleQueryKeys.list(publicListParams));
+      return;
+    }
+    if (tab === 'private') {
+      void queryClient.refetchQueries(battleQueryKeys.list(privateListParams));
       return;
     }
     if (tab === 'my-banker') {
-      void queryClient.refetchQueries(battleQueryKeys.list(MY_BANKER_LIST_PARAMS));
+      void queryClient.refetchQueries(battleQueryKeys.list(MY_BANKER_PUBLIC_LIST_PARAMS));
+      void queryClient.refetchQueries(battleQueryKeys.list(privateListParams));
       return;
     }
     if (tab === 'my-challenger') {
-      void queryClient.refetchQueries(battleQueryKeys.list(MY_CHALLENGER_LIST_PARAMS));
+      void queryClient.refetchQueries(battleQueryKeys.list(MY_CHALLENGER_PUBLIC_LIST_PARAMS));
+      void queryClient.refetchQueries(battleQueryKeys.list(privateListParams));
     }
   };
 
@@ -715,43 +806,72 @@ export const BattlePlazaPage: React.FC = () => {
   };
 
   const handleEnterPrivateRoomByNumber = async () => {
-    const battleId = parseBattleIdFromRoomNumber(privateRoomNumber);
-    if (!battleId) {
+    const roomDigits = getRoomNumberDigits(privateRoomNumber);
+    if (roomDigits.length !== 12) {
       pushFeedback('error', '请输入 12 位房间号。');
       return;
     }
-    const cached = findPrivateDuelByRoomNumber(privateRoomNumber, plazaDuels);
+    const battleId = parseBattleIdFromRoomNumber(privateRoomNumber);
+    if (!battleId) {
+      pushFeedback('error', '房间号无效，请检查后重试。');
+      return;
+    }
+    const inviteCode = isValidInviteCodeText(privateInviteCode)
+      ? normalizeInviteCodeText(privateInviteCode)
+      : undefined;
+    const cached = findPrivateDuelByRoomNumber(privateRoomNumber, privateDuels);
     if (cached) {
-      openPrivateDuel(cached, cached.inviteCode ?? '');
+      openPrivateDuel(cached, inviteCode ?? cached.inviteCode ?? '');
       return;
     }
     try {
-      const detail = await fetchBattleDetail(battleId);
-      const duel = mapBattleToDuel(
-        { battle: detail.battle, myAction: detail.myAction },
-        currentUserId,
-        detail,
-        [],
-        myBankerBattleIds.has(detail.battle.id) ? 'banker' : undefined,
-      );
-      openPrivateDuel(duel, duel.inviteCode ?? '');
+      const detail = await fetchBattleDetail(battleId, { inviteCode });
+      openPrivateDuelFromDetail(detail, inviteCode ?? detail.battle.inviteCode ?? '');
     } catch (error) {
       setMappedError(error);
     }
   };
 
   const handleEnterPrivateRoomByInvite = async () => {
-    const code = privateInviteCode.trim().toUpperCase();
-    if (code.length !== 4) {
+    const code = normalizeInviteCodeText(privateInviteCode);
+    if (!isValidInviteCodeText(code)) {
       pushFeedback('error', '请输入 4 位邀请码。');
       return;
     }
-    const cached = findPrivateDuelByInviteCode(code, plazaDuels);
+    const cached = findPrivateDuelByInviteCode(code, privateDuels);
     if (cached) {
       openPrivateDuel(cached, code);
       return;
     }
-    pushFeedback('error', '当前列表未找到该私人赌局，请确认邀请码是否正确，或先用房间号进入。');
+    const listItem = findBattleListItemByInviteCode(code, allBattleItems);
+    if (listItem) {
+      try {
+        const detail = await fetchBattleDetail(listItem.battle.id, { inviteCode: code });
+        openPrivateDuelFromDetail(detail, code, listItem);
+        return;
+      } catch (error) {
+        setMappedError(error);
+        return;
+      }
+    }
+    const roomDigits = getRoomNumberDigits(privateRoomNumber);
+    if (roomDigits.length === 12) {
+      const battleId = parseBattleIdFromRoomNumber(privateRoomNumber);
+      if (battleId) {
+        try {
+          const detail = await fetchBattleDetail(battleId, { inviteCode: code });
+          openPrivateDuelFromDetail(detail, code);
+          return;
+        } catch (error) {
+          setMappedError(error);
+          return;
+        }
+      }
+    }
+    pushFeedback(
+      'error',
+      '未找到该邀请码对应的赌局。请确认邀请码是否正确，或输入对应的 12 位房间号后再试。',
+    );
   };
 
   const handleCreate = async () => {
@@ -815,7 +935,7 @@ export const BattlePlazaPage: React.FC = () => {
   const handleJoinBattle = async () => {
     if (!joinModal) return;
     if (!requireAuth()) return;
-    if (joinModal.visibility === 'private' && joinInviteInput.trim().length !== 4) {
+    if (joinModal.visibility === 'private' && !isValidInviteCodeText(joinInviteInput)) {
       pushFeedback('error', '私人赌局需要 4 位邀请码。');
       return;
     }
@@ -828,7 +948,7 @@ export const BattlePlazaPage: React.FC = () => {
         battleId: joinModal.duelId,
         amount: normalizedJoinAmount,
         requestId: createBattleRequestId(`battle-join-${joinModal.duelId}`),
-        inviteCode: joinModal.visibility === 'private' ? joinInviteInput.trim().toUpperCase() : undefined,
+        inviteCode: joinModal.visibility === 'private' ? normalizeInviteCodeText(joinInviteInput) : undefined,
       });
       setJoinModal(null);
       setJoinInviteInput('');
@@ -978,10 +1098,12 @@ export const BattlePlazaPage: React.FC = () => {
             });
           }}
           onCopyInvite={(code) => {
-            void navigator.clipboard?.writeText(code).then(
-              () => pushFeedback('success', code.length <= 4 ? `邀请码 ${code} 已复制。` : '房间号已复制。'),
-              () => pushFeedback('error', '复制失败，请手动复制。'),
-            );
+            const normalized = code.replace(/\s/g, '');
+            const successMessage =
+              normalized.length <= 4
+                ? `邀请码 ${normalized.toUpperCase()} 已复制`
+                : `房间号 ${code} 已复制`;
+            handleCopyClipboardText(normalized.length <= 4 ? normalized.toUpperCase() : code.replace(/\s/g, ''), successMessage);
           }}
           onGenerateInvite={() => void handleGenerateInvite(duel)}
           onAddStake={() => {
@@ -994,7 +1116,14 @@ export const BattlePlazaPage: React.FC = () => {
               currentWager: duel.wager,
             });
           }}
-          onViewDetail={() => setDetailBattleId(duel.battleId)}
+          onViewDetail={() => {
+            setDetailBattleId(duel.battleId);
+            setDetailInviteCode(
+              duel.visibility === 'private' && duel.inviteCode
+                ? normalizeInviteCodeText(duel.inviteCode)
+                : undefined,
+            );
+          }}
           onDeclare={(result) => void handleDeclareResult(duel, result)}
           onConfirm={() => void handleChallengeConfirm(duel)}
           onDispute={() => void handleChallengeDispute(duel)}
@@ -1251,10 +1380,9 @@ export const BattlePlazaPage: React.FC = () => {
                     <input
                       className={css("private-entry-input")}
                       value={privateRoomNumber}
-                      onChange={(e) => setPrivateRoomNumber(e.target.value.replace(/\D/g, '').slice(0, 12))}
-                      placeholder="输入 12 位房间号"
-                      inputMode="numeric"
-                      maxLength={12}
+                      onChange={(e) => setPrivateRoomNumber(e.target.value)}
+                      placeholder="粘贴或输入房间号，如 0001-0002-0003"
+                      maxLength={18}
                       onKeyDown={(event) => {
                         if (event.key === 'Enter') {
                           event.preventDefault();
@@ -1276,9 +1404,9 @@ export const BattlePlazaPage: React.FC = () => {
                     <input
                       className={css("private-entry-input")}
                       value={privateInviteCode}
-                      onChange={(e) => setPrivateInviteCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4))}
-                      placeholder="输入 4 位邀请码"
-                      maxLength={4}
+                      onChange={(e) => setPrivateInviteCode(e.target.value)}
+                      placeholder="粘贴或输入邀请码，如 A B C D"
+                      maxLength={12}
                       onKeyDown={(event) => {
                         if (event.key === 'Enter') {
                           event.preventDefault();
@@ -1398,13 +1526,13 @@ export const BattlePlazaPage: React.FC = () => {
 
           {activeTab === 'private' && (
             <>
-              {plazaQuery.isLoading ? (
+              {privateListQuery.isLoading ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⏳</div>
                   <div className={css("empty-title")}>私人赌局加载中</div>
                   <div className={css("empty-sub")}>正在同步最新私密场数据…</div>
                 </div>
-              ) : plazaQuery.isError ? (
+              ) : privateListQuery.isError ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⚠️</div>
                   <div className={css("empty-title")}>私人赌局加载失败</div>
@@ -1438,7 +1566,7 @@ export const BattlePlazaPage: React.FC = () => {
                 <div className={css("bo-item")}><div className={css("bo-num")}>{myBankerDuels.filter((d) => d.status === 'settled').length}</div><div className={css("bo-label")}>已结算</div></div>
                 <div className={css("bo-item")}><div className={css("bo-num")}>{formatCoins(myBankerDuels.reduce((sum, duel) => sum + duel.currentPool, 0))}</div><div className={css("bo-label")}>挑战总额</div></div>
               </div>
-              {myBankerQuery.isLoading ? (
+              {myBankerPublicQuery.isLoading || privateListQuery.isLoading ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⏳</div>
                   <div className={css("empty-title")}>正在加载我的庄局</div>
@@ -1453,7 +1581,7 @@ export const BattlePlazaPage: React.FC = () => {
                     去登录
                   </button>
                 </div>
-              ) : myBankerQuery.isError ? (
+              ) : myBankerPublicQuery.isError || privateListQuery.isError ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⚠️</div>
                   <div className={css("empty-title")}>我的庄局加载失败</div>
@@ -1474,7 +1602,7 @@ export const BattlePlazaPage: React.FC = () => {
                   <div className={css("bt-tip")}><div>⚠️</div><div>异议要有理有据，恶意异议会被扣冻结额 10% 罚金。</div></div>
                 </div>
               </div>
-              {myChallengerQuery.isLoading ? (
+              {myChallengerPublicQuery.isLoading || privateListQuery.isLoading ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⏳</div>
                   <div className={css("empty-title")}>正在加载我的挑战</div>
@@ -1489,7 +1617,7 @@ export const BattlePlazaPage: React.FC = () => {
                     去登录
                   </button>
                 </div>
-              ) : myChallengerQuery.isError ? (
+              ) : myChallengerPublicQuery.isError || privateListQuery.isError ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⚠️</div>
                   <div className={css("empty-title")}>我的挑战加载失败</div>
@@ -1723,13 +1851,27 @@ export const BattlePlazaPage: React.FC = () => {
           roomNumberDisplay={inviteCodeModal?.roomNumberDisplay ?? ''}
           expireAt={inviteCodeModal?.expireAt}
           onClose={() => setInviteCodeModal(null)}
-          onCopy={() => pushFeedback('success', '邀请码已复制。')}
+          onCopyInvite={() => {
+            const code = inviteCodeModal?.inviteCode.replace(/\s/g, '').toUpperCase() ?? '';
+            showOperationToast(code ? `邀请码 ${code} 已复制` : '邀请码已复制', { tone: 'success' });
+          }}
+          onCopyRoom={() => {
+            const room = inviteCodeModal?.roomNumberDisplay.replace(/\s/g, '') ?? '';
+            showOperationToast(room ? `房间号 ${room} 已复制` : '房间号已复制', { tone: 'success' });
+          }}
+          onCopyFailed={() => showOperationToast('复制失败，请手动复制。', { tone: 'error' })}
         />
 
         {detailBattleId !== null && (
-          <div className={css("duel-overlay")} onClick={() => setDetailBattleId(null)}>
+          <div className={css("duel-overlay")} onClick={() => {
+            setDetailBattleId(null);
+            setDetailInviteCode(undefined);
+          }}>
             <div className={css("duel-modal")} onClick={(e) => e.stopPropagation()}>
-              <div className={css("dm-close")} onClick={() => setDetailBattleId(null)}>✕</div>
+              <div className={css("dm-close")} onClick={() => {
+                setDetailBattleId(null);
+                setDetailInviteCode(undefined);
+              }}>✕</div>
               <div className={css("dm-title")}>赌局详情</div>
               <div className={css("dm-sub")}>Battle #{detailBattleId}</div>
 

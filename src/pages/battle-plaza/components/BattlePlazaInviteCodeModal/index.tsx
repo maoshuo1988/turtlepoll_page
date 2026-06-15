@@ -36,7 +36,9 @@ export interface BattlePlazaInviteCodeModalProps {
   roomNumberDisplay: string;
   expireAt?: number;
   onClose: () => void;
-  onCopy?: () => void;
+  onCopyInvite?: () => void;
+  onCopyRoom?: () => void;
+  onCopyFailed?: () => void;
 }
 
 export function BattlePlazaInviteCodeModal({
@@ -45,7 +47,9 @@ export function BattlePlazaInviteCodeModal({
   roomNumberDisplay,
   expireAt,
   onClose,
-  onCopy,
+  onCopyInvite,
+  onCopyRoom,
+  onCopyFailed,
 }: BattlePlazaInviteCodeModalProps) {
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
   const resolvedExpireAt = expireAt ?? now + INVITE_VALID_SECONDS;
@@ -63,12 +67,19 @@ export function BattlePlazaInviteCodeModal({
 
   const countdown = formatCountdownHms(resolvedExpireAt, now);
 
-  const handleCopy = () => {
-    const normalized = inviteCode.replace(/\s/g, '').toUpperCase();
-    void navigator.clipboard?.writeText(normalized).then(
-      () => onCopy?.(),
-      () => undefined,
+  const copyText = (text: string, onSuccess?: () => void) => {
+    void navigator.clipboard?.writeText(text).then(
+      () => onSuccess?.(),
+      () => onCopyFailed?.(),
     );
+  };
+
+  const handleCopyInvite = () => {
+    copyText(inviteCode.replace(/\s/g, '').toUpperCase(), onCopyInvite);
+  };
+
+  const handleCopyRoom = () => {
+    copyText(roomNumberDisplay.replace(/\s/g, ''), onCopyRoom);
   };
 
   return (
@@ -109,14 +120,23 @@ export function BattlePlazaInviteCodeModal({
             </div>
             <div className={css('info-row')}>
               <span className={css('info-left')}>所属房间号</span>
-              <span className={css('info-room')}>{roomNumberDisplay}</span>
+              <button type="button" className={css('info-room-btn')} onClick={handleCopyRoom}>
+                <span className={css('info-room')}>{roomNumberDisplay}</span>
+                <ClipboardCopy size={14} aria-hidden className={css('info-room-copy')} />
+              </button>
             </div>
           </div>
 
-          <button type="button" className={css('copy-btn')} onClick={handleCopy}>
-            <ClipboardCopy size={16} aria-hidden />
-            复制邀请码
-          </button>
+          <div className={css('copy-actions')}>
+            <button type="button" className={css('copy-btn')} onClick={handleCopyInvite}>
+              <ClipboardCopy size={16} aria-hidden />
+              复制邀请码
+            </button>
+            <button type="button" className={css('copy-btn', 'copy-btn-secondary')} onClick={handleCopyRoom}>
+              <ClipboardCopy size={16} aria-hidden />
+              复制房间号
+            </button>
+          </div>
 
           <p className={css('foot-note')}>
             邀请码失效后房主可重新生成；房间号长期有效，与赌局绑定。

@@ -1,22 +1,33 @@
-/** 文件说明：操作失败 Toast，仅展示简短失败文案。 */
+/** 文件说明：全局顶部操作 Toast，展示一行简短反馈文案。 */
 
 const DEFAULT_DURATION_MS = 2800;
 
-type ToastListener = (message: string | null) => void;
+export type OperationToastTone = "error" | "success" | "info";
+
+export type OperationToastPayload = {
+  message: string;
+  tone: OperationToastTone;
+};
+
+type ToastListener = (payload: OperationToastPayload | null) => void;
 
 const listeners = new Set<ToastListener>();
 let hideTimer: ReturnType<typeof setTimeout> | null = null;
 
-function notify(message: string | null) {
-  listeners.forEach((listener) => listener(message));
+function notify(payload: OperationToastPayload | null) {
+  listeners.forEach((listener) => listener(payload));
 }
 
-/** 展示操作失败提示（仅一行文字，无标题/图标/按钮） */
-export function showOperationErrorToast(message: string, durationMs = DEFAULT_DURATION_MS) {
+/** 展示顶部 Toast（一行文字，无标题/图标/按钮） */
+export function showOperationToast(
+  message: string,
+  options?: { tone?: OperationToastTone; durationMs?: number },
+) {
   const text = message.trim();
   if (!text) return;
 
-  notify(text);
+  const durationMs = options?.durationMs ?? DEFAULT_DURATION_MS;
+  notify({ message: text, tone: options?.tone ?? "error" });
 
   if (hideTimer) clearTimeout(hideTimer);
   hideTimer = setTimeout(() => {
@@ -25,11 +36,23 @@ export function showOperationErrorToast(message: string, durationMs = DEFAULT_DU
   }, durationMs);
 }
 
-export function subscribeOperationErrorToast(listener: ToastListener) {
+/** 展示操作失败提示 */
+export function showOperationErrorToast(message: string, durationMs = DEFAULT_DURATION_MS) {
+  showOperationToast(message, { tone: "error", durationMs });
+}
+
+export function subscribeOperationToast(listener: ToastListener) {
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
   };
+}
+
+/** 兼容旧订阅签名，仅传递 message */
+export function subscribeOperationErrorToast(listener: (message: string | null) => void) {
+  return subscribeOperationToast((payload) => {
+    listener(payload?.message ?? null);
+  });
 }
 
 /** 从接口/异常对象提取可展示的错误文案 */

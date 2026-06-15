@@ -10,7 +10,9 @@ import {
   type BattleDetailResponse,
   type BattleListItem,
   type BattleMyAction,
+  type BattleMyRole,
   type BattleResult,
+  normalizeBattleMyAction,
 } from '@/hooks/battleTypes';
 import type { CommentResponse } from '@/hooks/useCommentRequests';
 import { createUserAvatarUrl } from '@/utils/userAvatar';
@@ -41,6 +43,7 @@ export interface DuelChallenger {
 export type DuelCardPhase =
   | 'open-active'
   | 'open-private-owner'
+  | 'open-private-guest'
   | 'sealed-await-declare'
   | 'pending-await-declare'
   | 'pending-await-confirm'
@@ -118,7 +121,7 @@ export interface DuelItem {
   settlementBarLeft?: string;
   settlementBarRight?: string;
   voidInfoText?: string;
-  privateOwnerNote?: string;
+  privateRoomNote?: string;
   showInviteGenerator?: boolean;
   footerTimeLabel?: string;
   withdrawLabel?: string;
@@ -203,11 +206,62 @@ export function formatBattleRoomDisplay(battleId: number) {
 }
 
 export function parseBattleIdFromRoomNumber(roomNumber: string) {
-  const normalized = roomNumber.replace(/\s/g, '');
-  if (!normalized) return null;
-  const numericId = Number(normalized.replace(/^0+/, '') || '0');
+  const digits = roomNumber.replace(/\D/g, '');
+  if (!digits) return null;
+  const numericId = Number(digits.replace(/^0+/, '') || '0');
   if (!Number.isFinite(numericId) || numericId <= 0) return null;
   return Math.floor(numericId);
+}
+
+export function getRoomNumberDigits(roomNumber: string) {
+  return roomNumber.replace(/\D/g, '');
+}
+
+export function normalizeInviteCodeText(code: string) {
+  return code.replace(/\s/g, '').trim().toUpperCase();
+}
+
+export function isValidInviteCodeText(code: string) {
+  const normalized = normalizeInviteCodeText(code);
+  return normalized.length === 4 && /^[0-9A-Z]{4}$/.test(normalized);
+}
+
+export function findBattleListItemByInviteCode(code: string, items: BattleListItem[]) {
+  const normalized = normalizeInviteCodeText(code);
+  if (!normalized) return undefined;
+  return items.find((item) => normalizeInviteCodeText(item.battle.inviteCode ?? '') === normalized);
+}
+
+export function buildBattleListItemFromDetail(
+  detail: BattleDetailResponse,
+  fallback?: Partial<BattleListItem>,
+): BattleListItem {
+  return {
+    battle: detail.battle,
+    myRole: detail.myRole,
+    myAction: detail.myAction,
+    bankerNickname: fallback?.bankerNickname ?? '',
+    commentCount: fallback?.commentCount,
+    likeCount: fallback?.likeCount,
+  };
+}
+
+export function resolveEffectiveMyRole(
+  item: Pick<BattleListItem, 'myRole' | 'myAction'> & { battle: Pick<Battle, 'bankerUserId'> },
+  currentUserId?: number | string | null,
+  settlementItem?: { payoutAmount?: number; withdrawn?: boolean } | null,
+): BattleMyRole {
+  if (item.myRole === 'banker' || item.myRole === 'challenger') {
+    return item.myRole;
+  }
+  if (String(item.battle.bankerUserId) === String(currentUserId ?? '')) {
+    return 'banker';
+  }
+  const myAction = normalizeBattleMyAction(item.myAction);
+  if (myAction !== '' || settlementItem) {
+    return 'challenger';
+  }
+  return item.myRole ?? 'none';
 }
 
 function deriveDuelCardPhase(params: {
@@ -228,7 +282,9 @@ function deriveDuelCardPhase(params: {
     return effectiveResult ? 'pending-await-confirm' : 'pending-await-declare';
   }
   if (battle.status === 'sealed' || capacityFull) return 'sealed-await-declare';
-  if (!battle.isPublic && isBanker && battle.status === 'open') return 'open-private-owner';
+  if (!battle.isPublic && battle.status === 'open') {
+    return isBanker ? 'open-private-owner' : 'open-private-guest';
+  }
   return 'open-active';
 }
 
@@ -236,6 +292,8 @@ function deriveStatusBadge(phase: DuelCardPhase, isPrivate: boolean): DuelStatus
   switch (phase) {
     case 'open-private-owner':
       return { label: '我做的庄', className: 'dbadge-my-banker' };
+    case 'open-private-guest':
+      return { label: '他人主办', className: 'dbadge-hosted-private' };
     case 'sealed-await-declare':
     case 'pending-await-declare':
       return { label: '待宣判', className: 'dbadge-await-declare' };
@@ -335,17 +393,21 @@ export function mapBattleToDuel(
   currentUserId?: number | string | null,
   detail?: BattleDetailResponse,
   comments: DuelComment[] = [],
-  roleHint?: 'banker' | 'challenger',
 ): DuelItem {
   const battle = detail?.battle ? { ...item.battle, ...detail.battle } : item.battle;
-  const myAction = detail?.myAction ?? item.myAction;
+  const myAction = normalizeBattleMyAction(detail?.myAction ?? item.myAction);
   const settlementItem = detail?.settlement?.myItem ?? null;
+  const myRole = resolveEffectiveMyRole(
+    { battle, myRole: detail?.myRole ?? item.myRole, myAction: item.myAction },
+    currentUserId,
+    settlementItem,
+  );
   const permissions = getBattleActionPermissions({
     battle,
+    myRole,
     myAction,
     currentUserId,
     settlementItem,
-    roleHint,
   });
 
   let status: DuelStatus;
@@ -498,10 +560,12 @@ export function mapBattleToDuel(
       ? '本局结算时未有挑战者参与，已退还庄家冻结的全部龟币，感谢参与地下钱庄！'
       : undefined;
 
-  const privateOwnerNote =
+  const privateRoomNote =
     displayPhase === 'open-private-owner'
       ? '我创建的私人局 · 房间号长期有效 · 可生成邀请码邀好友'
-      : undefined;
+      : displayPhase === 'open-private-guest'
+        ? '他人主办的私人局 · 凭房间号 / 邀请码进入'
+        : undefined;
 
   const footerTimeLabel =
     displayPhase === 'settled-banker-wins'
@@ -514,6 +578,8 @@ export function mapBattleToDuel(
             ? undefined
             : displayPhase === 'open-private-owner'
               ? `我做庄 · ${timeAgoShort}`
+              : displayPhase === 'open-private-guest'
+                ? `私人 · ${timeAgoShort}`
               : !battle.isPublic
                 ? `私人 · ${timeAgoShort}`
                 : timeAgoShort;
@@ -531,7 +597,7 @@ export function mapBattleToDuel(
     banker: {
       name: permissions.isBanker ? '你' : item.bankerNickname || getDefaultBankerName(battle, currentUserId),
       avatar: permissions.isBanker ? '🦊' : getDefaultBankerAvatar(battle, currentUserId),
-      avatarUrl: bankerAvatarUrl,
+      avatarUrl: !battle.isPublic && !permissions.isBanker ? undefined : bankerAvatarUrl,
       stance: battle.bankerSide,
       isMe: permissions.isBanker,
     },
@@ -611,7 +677,7 @@ export function mapBattleToDuel(
     settlementBarLeft,
     settlementBarRight,
     voidInfoText,
-    privateOwnerNote,
+    privateRoomNote,
     showInviteGenerator: displayPhase === 'open-private-owner',
     footerTimeLabel,
     withdrawLabel,

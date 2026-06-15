@@ -75,6 +75,26 @@ export type BattleResultBy =
 
 export type BattleMyAction = "" | "confirm" | "dispute";
 
+export type BattleMyRole = "banker" | "challenger" | "none";
+
+/** 归一化列表/详情里的挑战者动作字段。 */
+export function normalizeBattleMyAction(raw: unknown): BattleMyAction {
+  if (raw == null || raw === "") return "";
+  const text = String(raw).trim().toLowerCase();
+  if (text === "confirm") return "confirm";
+  if (text === "dispute") return "dispute";
+  return "";
+}
+
+/** 归一化列表里的当前用户身份字段。 */
+export function normalizeBattleMyRole(raw: unknown): BattleMyRole {
+  if (raw == null || raw === "") return "none";
+  const text = String(raw).trim().toLowerCase();
+  if (text === "banker") return "banker";
+  if (text === "challenger") return "challenger";
+  return "none";
+}
+
 export const BATTLE_DECLARE_WINDOW_SECONDS = 24 * 3600;
 export const BATTLE_CONFIRM_WINDOW_SECONDS = 24 * 3600;
 
@@ -181,17 +201,41 @@ export type BattleSettlementItem = {
 
 export type BattleListItem = {
   battle: Battle;
+  myRole: BattleMyRole;
   myAction: BattleMyAction;
   bankerNickname?: string;
   commentCount?: number;
   likeCount?: number;
 };
 
+export function normalizeBattleListItem(raw: BattleListItem): BattleListItem {
+  return {
+    ...raw,
+    myRole: normalizeBattleMyRole(raw.myRole),
+    myAction: normalizeBattleMyAction(raw.myAction),
+    bankerNickname: raw.bankerNickname ?? "",
+  };
+}
+
+export function normalizeBattleListResponse(raw: BattleListResponse): BattleListResponse {
+  return {
+    ...raw,
+    list: (raw.list ?? []).map((item) => normalizeBattleListItem(item)),
+  };
+}
+
+export type BattleListScope = "public" | "private";
+
+export type BattleListSort = "latest" | "heat" | "big" | "settle_soon";
+
 export type BattleListParams = {
   page?: number;
   pageSize?: number;
   status?: BattleStatus;
+  listScope?: BattleListScope;
   role?: "banker" | "challenger";
+  mine?: "1";
+  sort?: BattleListSort;
 };
 
 export type BattleListResponse = {
@@ -216,12 +260,21 @@ export type BattleDetailParams = {
 
 export type BattleDetailResponse = {
   battle: Battle;
+  myRole: BattleMyRole;
   myAction: BattleMyAction;
   settlement: {
     settlement: BattleSettlement | null;
     myItem: BattleSettlementItem | null;
   };
 };
+
+export function normalizeBattleDetailResponse(raw: BattleDetailResponse): BattleDetailResponse {
+  return {
+    ...raw,
+    myRole: normalizeBattleMyRole(raw.myRole),
+    myAction: normalizeBattleMyAction(raw.myAction),
+  };
+}
 
 export type CreateBattlePayload = {
   title: string;
@@ -323,6 +376,7 @@ const BATTLE_ERROR_MESSAGE_MAP: Record<string, string> = {
   "invalid result": "结果参数不正确",
   "only challenger can confirm": "只有挑战者可以确认结果",
   "only challenger can dispute": "只有挑战者可以发起异议",
+  "invalid listScope": "列表范围参数不正确",
 };
 
 export function getBattleErrorMessage(message?: string | null) {
@@ -348,18 +402,18 @@ export function createBattleRequestId(prefix: string) {
 
 export function getBattleActionPermissions(params: {
   battle: Battle;
+  myRole?: BattleMyRole;
   myAction?: BattleMyAction;
   currentUserId?: number | string | null;
   settlementItem?: BattleSettlementItem | null;
-  roleHint?: "banker" | "challenger";
   now?: number;
 }) {
   const {
     battle,
+    myRole,
     myAction = "",
     currentUserId,
     settlementItem,
-    roleHint,
     now = Math.floor(Date.now() / 1000),
   } = params;
 
@@ -367,14 +421,26 @@ export function getBattleActionPermissions(params: {
   const currentUserIdText = currentUserId === undefined || currentUserId === null || currentUserId === "" ? "" : String(currentUserId);
   const bankerUserIdText = String(battle.bankerUserId);
   const matchedBankerById = currentUserIdText !== "" && bankerUserIdText === currentUserIdText;
-  const isBanker = roleHint === "banker" ? true : roleHint === "challenger" ? false : matchedBankerById;
   const hasChallengeFootprint = myAction !== "" || Boolean(settlementItem);
-  const isChallenger =
-    roleHint === "challenger"
-      ? true
-      : roleHint === "banker"
-        ? false
-        : currentUserIdText !== "" && !isBanker && hasChallengeFootprint;
+
+  let isBanker: boolean;
+  let isChallenger: boolean;
+
+  if (myRole === "banker") {
+    isBanker = true;
+    isChallenger = false;
+  } else if (myRole === "challenger") {
+    isBanker = matchedBankerById;
+    isChallenger = !isBanker;
+  } else if (myRole === "none") {
+    isBanker = matchedBankerById;
+    isChallenger = false;
+  } else {
+    // 详情等未带 myRole 的场景，回退 bankerUserId / 挑战痕迹推断。
+    isBanker = matchedBankerById;
+    isChallenger =
+      !isBanker && currentUserIdText !== "" && hasChallengeFootprint;
+  }
   const pendingDeadline = resolvePendingDeadlineSeconds(battle);
   const confirmDeadline = resolveConfirmDeadlineSeconds(battle);
   const inPendingWindow = typeof pendingDeadline === "number" ? now <= pendingDeadline : true;

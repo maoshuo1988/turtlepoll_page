@@ -147,8 +147,35 @@
   white-space: nowrap;
 }
 
-.copy-btn {
+.info-room-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.info-room-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.info-room-copy {
+  color: #a1a1aa;
+  flex-shrink: 0;
+}
+
+.copy-actions {
   margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.copy-btn {
   width: 100%;
   min-height: 48px;
   border: none;
@@ -167,6 +194,12 @@
 
 .copy-btn:hover {
   filter: brightness(1.05);
+}
+
+.copy-btn-secondary {
+  background: #27272a;
+  color: #e4e4e7;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .foot-note {

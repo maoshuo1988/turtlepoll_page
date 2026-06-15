@@ -31,12 +31,12 @@ function css(...classNames: Array<string | false | null | undefined>) {
     .join(' ');
 }
 
-function TurtleCoinIcon({ size = 14, className }: { size?: number; className?: string }) {
+function TurtleCoinIcon({ size = 14, className, tone = 'emerald' }: { size?: number; className?: string; tone?: 'emerald' | 'gold' }) {
   return (
     <Coins
       size={size}
       aria-hidden
-      className={`inline-block shrink-0 text-emerald-400 ${className ?? ''}`.trim()}
+      className={`inline-block shrink-0 ${tone === 'gold' ? 'text-amber-400' : 'text-emerald-400'} ${className ?? ''}`.trim()}
     />
   );
 }
@@ -47,19 +47,21 @@ function CoinAmount({
   className,
   highlight,
   fullHighlight,
+  coinTone = 'emerald',
 }: {
   amount: number;
   iconSize?: number;
   className?: string;
   highlight?: boolean;
   fullHighlight?: boolean;
+  coinTone?: 'emerald' | 'gold';
 }) {
   return (
     <span className={`inline-flex items-center gap-0.5 align-middle ${className ?? ''}`.trim()}>
       <span className={fullHighlight ? css('cap-nums-full') : highlight ? css('cap-nums-current') : undefined}>
         {formatCoins(amount)}
       </span>
-      <TurtleCoinIcon size={iconSize} />
+      <TurtleCoinIcon size={iconSize} tone={coinTone} />
     </span>
   );
 }
@@ -160,10 +162,12 @@ export function BattlePlazaDuelCard({
   const capacityPct = duel.wager > 0 ? Math.min(100, Math.round((duel.currentPool / duel.wager) * 100)) : 0;
   const isPrivate = duel.visibility === 'private';
   const isPrivateOwnerOpen = duel.displayPhase === 'open-private-owner';
-  const isMyBanker = duel.banker.isMe || isPrivateOwnerOpen;
+  const isPrivateGuestOpen = duel.displayPhase === 'open-private-guest';
+  const isPrivateOpen = isPrivateOwnerOpen || isPrivateGuestOpen;
+  const isMyBanker = duel.banker.isMe === true;
   const isWaitingChallenger =
     duel.currentPool <= 0 &&
-    (duel.displayPhase === 'open-active' || isPrivateOwnerOpen);
+    (duel.displayPhase === 'open-active' || isPrivateOpen);
   const remainingCapacity = Math.max(0, duel.wager - duel.currentPool);
   const bankerDisplayName = isMyBanker ? `${duel.banker.name}（庄家）` : duel.banker.name;
 
@@ -185,16 +189,12 @@ export function BattlePlazaDuelCard({
 
   const bankerWins = duel.winningSide === 'banker';
   const challengerWins = duel.winningSide === 'challenger';
-  const showLegacyPrivateRoom =
-    isPrivate &&
-    !isPrivateOwnerOpen &&
-    duel.roomNumberDisplay &&
-    Boolean(duel.inviteCode);
 
   return (
     <article
       className={css(
         'card',
+        isPrivateOpen && 'card-private-open',
         duel.displayPhase.startsWith('settled-') && duel.displayPhase !== 'settled-void' && 'card-settled',
       )}
     >
@@ -207,6 +207,7 @@ export function BattlePlazaDuelCard({
                 🦊
               </span>
             ) : null}
+            {isPrivateGuestOpen ? <Lock size={11} aria-hidden className={css('badge-lock-ico')} /> : null}
             {duel.statusBadge.label}
           </span>
         </div>
@@ -229,7 +230,7 @@ export function BattlePlazaDuelCard({
           </div>
           <div className={css('banker-stake')}>
             <div className={css('banker-stake-amount')}>
-              <CoinAmount amount={duel.wager} iconSize={15} />
+              <CoinAmount amount={duel.wager} iconSize={15} coinTone="gold" />
             </div>
             <span className={css('banker-stake-label')}>/ 庄家押注</span>
           </div>
@@ -272,18 +273,17 @@ export function BattlePlazaDuelCard({
           </>
         ) : null}
 
-        {showLegacyPrivateRoom ? (
-          <div className={css('private-owner-block')}>
-            <div className={css('room-meta')}>
-              <button
-                type="button"
-                className={css('room-code')}
-                onClick={() => onCopyInvite(duel.roomNumberDisplay ?? duel.inviteCode ?? '')}
-              >
-                房间号 {duel.roomNumberDisplay ?? duel.inviteCode}
-                <Copy size={12} aria-hidden />
-              </button>
-            </div>
+        {isPrivateOpen && duel.roomNumberDisplay ? (
+          <div className={css('room-meta', 'room-meta-open')}>
+            <button
+              type="button"
+              className={css('room-code', 'room-code-open')}
+              onClick={() => onCopyInvite(duel.roomNumberDisplay ?? '')}
+            >
+              <Lock size={12} aria-hidden className={css('room-code-lock')} />
+              <span>房间号 {duel.roomNumberDisplay}</span>
+              <Copy size={12} aria-hidden className={css('room-code-copy')} />
+            </button>
           </div>
         ) : null}
 
@@ -296,34 +296,22 @@ export function BattlePlazaDuelCard({
       </div>
 
       {duel.showCapacity ? (
-        <div className={css('capacity', isPrivateOwnerOpen && 'capacity-private-owner')}>
-          {isPrivateOwnerOpen && duel.roomNumberDisplay ? (
-            <div className={css('room-meta', 'room-meta-owner')}>
-              <button
-                type="button"
-                className={css('room-code', 'room-code-owner')}
-                onClick={() => onCopyInvite(duel.roomNumberDisplay ?? '')}
-              >
-                <Lock size={12} aria-hidden className={css('room-code-lock')} />
-                <span>房间号 {duel.roomNumberDisplay}</span>
-                <Copy size={12} aria-hidden className={css('room-code-copy')} />
-              </button>
-            </div>
-          ) : null}
+        <div className={css('capacity', isPrivateOpen && 'capacity-private-open')}>
           <div className={css('cap-header')}>
             <span className={css('cap-label')}>挑战者容量</span>
             <span className={css('cap-nums')}>
               <CoinAmount
                 amount={duel.currentPool}
                 iconSize={13}
+                coinTone="gold"
                 highlight={duel.currentPool > 0 && !duel.capacityFull}
                 fullHighlight={duel.capacityFull}
               />
               <span>/</span>
-              <CoinAmount amount={duel.wager} iconSize={13} fullHighlight={duel.capacityFull} />
+              <CoinAmount amount={duel.wager} iconSize={13} coinTone="gold" fullHighlight={duel.capacityFull} />
             </span>
           </div>
-          <div className={css('cap-bar', isPrivateOwnerOpen && isWaitingChallenger && 'cap-bar-waiting-owner')}>
+          <div className={css('cap-bar', isPrivateOpen && isWaitingChallenger && 'cap-bar-waiting-open')}>
             {isWaitingChallenger ? (
               <span className={css('cap-waiting')}>
                 <Hourglass size={12} aria-hidden />
@@ -340,10 +328,10 @@ export function BattlePlazaDuelCard({
               />
             )}
           </div>
-          {isPrivateOwnerOpen && duel.privateOwnerNote ? (
-            <p className={css('private-owner-note', 'private-owner-note-below-cap')}>{duel.privateOwnerNote}</p>
+          {isPrivateOpen && duel.privateRoomNote ? (
+            <p className={css('private-room-note')}>{duel.privateRoomNote}</p>
           ) : null}
-          {!isPrivateOwnerOpen && !duel.capacityNote ? (
+          {!isPrivateOpen && !duel.capacityNote ? (
             <div className={css('cap-detail')}>
               <span>已加入 {duel.challengerCount} 人</span>
               <span className="inline-flex flex-wrap items-center gap-1">
@@ -356,9 +344,6 @@ export function BattlePlazaDuelCard({
                   </>
                 )}
               </span>
-              {isPrivate && isWaitingChallenger ? (
-                <span className={css('cap-private-note')}>私人房间，仅限持房间号者加入</span>
-              ) : null}
             </div>
           ) : null}
         </div>
@@ -512,6 +497,8 @@ export function BattlePlazaDuelCard({
           <span
             className={css(
               'foot-time',
+              isPrivateGuestOpen && 'foot-time-private',
+              isPrivateOwnerOpen && 'foot-time-owner',
               duel.displayPhase === 'pending-await-confirm' && 'foot-time-confirm',
               (duel.displayPhase === 'pending-await-declare' || duel.displayPhase === 'sealed-await-declare') &&
                 'foot-time-declare',
@@ -521,6 +508,11 @@ export function BattlePlazaDuelCard({
               <>
                 {duel.displayPhase === 'pending-await-confirm' ? <Hourglass size={12} aria-hidden /> : null}
                 {footerCountdownText}
+              </>
+            ) : isPrivateGuestOpen ? (
+              <>
+                <Lock size={12} aria-hidden />
+                {duel.footerTimeLabel}
               </>
             ) : (
               duel.footerTimeLabel

@@ -18,6 +18,10 @@ import { getAuthToken } from "@/utils/authStorage";
 import { assertSuccess, getAuthorizationHeaders } from "@/utils/requestUtils";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { COIN_ME_QUERY_KEY } from "./useCoinRequests";
+import {
+  normalizeBattleDetailResponse,
+  normalizeBattleListResponse,
+} from "./battleTypes";
 import type {
   BankerAddStakePayload,
   Battle,
@@ -42,7 +46,8 @@ export const battleQueryKeys = {
   list: (params: BattleListParams = {}) => [...battleQueryKeys.lists(), params] as const,
   stats: () => [...battleQueryKeys.all, "stats"] as const,
   details: () => [...battleQueryKeys.all, "detail"] as const,
-  detail: (battleId?: number) => [...battleQueryKeys.details(), battleId] as const,
+  detail: (battleId?: number, inviteCode?: string) =>
+    [...battleQueryKeys.details(), battleId, inviteCode ?? ""] as const,
 };
 
 type BattleQueryOptions = {
@@ -64,7 +69,8 @@ export async function fetchBattleDetail(battleId?: number, options: Omit<BattleD
     },
     headers: getAuthorizationHeaders(),
   });
-  return assertSuccess(res) as BattleDetailResponse;
+  const data = assertSuccess(res) as BattleDetailResponse;
+  return normalizeBattleDetailResponse(data);
 }
 
 export async function refreshBattleInviteCode(battleId: number) {
@@ -110,11 +116,14 @@ export function useRequestBattleList(params: BattleListParams = {}, options: Bat
           page: params.page ?? 1,
           pageSize: params.pageSize ?? 20,
           status: params.status,
+          listScope: params.listScope,
           role: params.role,
+          mine: params.mine,
+          sort: params.sort,
         },
         headers: getAuthorizationHeaders(),
       });
-      return assertSuccess(res);
+      return normalizeBattleListResponse(assertSuccess(res) as BattleListResponse);
     },
     enabled: (options.enabled ?? true) && (!requiresAuth || Boolean(token)),
     refetchOnWindowFocus: false,
@@ -141,10 +150,15 @@ export function useRequestBattleStats(options: BattleQueryOptions = {}) {
 }
 
 // 赌局详情
-export function useRequestBattleDetail(battleId?: number, options: BattleQueryOptions = {}) {
+export function useRequestBattleDetail(
+  battleId?: number,
+  options: BattleQueryOptions & { inviteCode?: string } = {},
+) {
+  const inviteCode = options.inviteCode?.trim().toUpperCase() || undefined;
+
   return useQuery<BattleDetailResponse>({
-    queryKey: battleQueryKeys.detail(battleId),
-    queryFn: async () => fetchBattleDetail(battleId),
+    queryKey: battleQueryKeys.detail(battleId, inviteCode),
+    queryFn: async () => fetchBattleDetail(battleId, { inviteCode }),
     enabled: (options.enabled ?? true) && typeof battleId === "number",
     refetchOnWindowFocus: false,
   });

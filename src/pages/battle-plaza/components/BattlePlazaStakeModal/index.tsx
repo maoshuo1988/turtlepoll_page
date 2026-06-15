@@ -135,11 +135,9 @@ export function BattlePlazaStakeModal({
               id="bp-stake-invite-code"
               className={css('invite-input')}
               value={inviteCode}
-              onChange={(event) =>
-                onInviteCodeChange?.(event.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4))
-              }
-              placeholder="4 位字母数字"
-              maxLength={4}
+              onChange={(event) => onInviteCodeChange?.(event.target.value)}
+              placeholder="粘贴或输入邀请码，如 A B C D"
+              maxLength={12}
               autoComplete="off"
             />
           </div>
