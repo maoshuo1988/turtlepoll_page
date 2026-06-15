@@ -134,6 +134,13 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -220,7 +227,29 @@
             7,
             18,
             8,
-            20
+            20,
+            5,
+            9,
+            17,
+            10,
+            6,
+            9,
+            11,
+            11,
+            8,
+            8,
+            11,
+            7,
+            6,
+            13,
+            7,
+            6,
+            10,
+            9,
+            8,
+            6,
+            7,
+            25
           ]
         },
         "register": 1
@@ -248,7 +277,14 @@
             100,
             5,
             11,
-            12
+            12,
+            17,
+            25,
+            18,
+            13,
+            17,
+            18,
+            14
           ]
         },
         "register": 10
@@ -265,6 +301,13 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -311,6 +354,13 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -373,6 +423,14 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0
@@ -1376,6 +1434,12 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1401,9 +1465,23 @@
             1,
             0,
             1,
+            0,
+            3,
+            1,
+            1,
+            1,
+            0,
+            0,
             0
           ],
           "addRuntimePlugin": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1494,9 +1572,30 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1555,9 +1654,30 @@
             14,
             6,
             9,
-            9
+            9,
+            25,
+            25,
+            14,
+            12,
+            9,
+            13,
+            5
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1608,6 +1728,20 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1626,6 +1760,13 @@
         "hooks": {
           "onGenerateFiles": [
             82,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1684,7 +1825,14 @@
             0,
             0,
             0,
-            0
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
           ],
           "addBeforeMiddlewares": [
             0
@@ -1721,6 +1869,20 @@
             4,
             0,
             5,
+            1,
+            11,
+            1,
+            27,
+            2,
+            9,
+            1,
+            6,
+            1,
+            8,
+            1,
+            8,
+            1,
+            4,
             1
           ]
         },
@@ -1784,6 +1946,13 @@
             3,
             4,
             4,
+            4,
+            13,
+            9,
+            6,
+            5,
+            5,
+            5,
             4
           ]
         },
@@ -1876,6 +2045,13 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0
           ]
@@ -2016,6 +2192,12 @@
             0,
             0,
             1,
+            0,
+            0,
+            1,
+            0,
+            2,
+            0,
             0
           ]
         },
@@ -6850,6 +7032,27 @@
             ],
             "format": "esm"
           },
+          "src/pages/battle-plaza/components/BattlePlazaPrivateEntryPreviewModal/index.tsx": {
+            "bytes": 6414,
+            "imports": [
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./index.module.scss",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/pages/battle-plaza/components/battlePlazaDuelModel.ts",
+                "kind": "import-statement",
+                "original": "../battlePlazaDuelModel"
+              }
+            ],
+            "format": "esm"
+          },
           "src/pages/battle-plaza/components/composeSettleDate.ts": {
             "bytes": 4243,
             "imports": [
@@ -6919,7 +7122,7 @@
             "format": "esm"
           },
           "src/pages/battle-plaza/components/BattlePlazaExperience/index.tsx": {
-            "bytes": 83247,
+            "bytes": 84368,
             "imports": [
               {
                 "path": "./index.module.scss",
@@ -6995,6 +7198,11 @@
                 "path": "src/pages/battle-plaza/components/BattlePlazaInviteCodeModal/index.tsx",
                 "kind": "import-statement",
                 "original": "../BattlePlazaInviteCodeModal"
+              },
+              {
+                "path": "src/pages/battle-plaza/components/BattlePlazaPrivateEntryPreviewModal/index.tsx",
+                "kind": "import-statement",
+                "original": "../BattlePlazaPrivateEntryPreviewModal"
               },
               {
                 "path": "src/pages/battle-plaza/components/BattlePlazaSettleDatePicker/index.tsx",
@@ -9058,6 +9266,16 @@
                 "external": true
               },
               {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./index.module.scss",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "dayjs",
                 "kind": "import-statement",
                 "external": true
@@ -10890,6 +11108,9 @@
               "src/pages/battle-plaza/components/BattlePlazaInviteCodeModal/index.tsx": {
                 "bytesInOutput": 5539
               },
+              "src/pages/battle-plaza/components/BattlePlazaPrivateEntryPreviewModal/index.tsx": {
+                "bytesInOutput": 7162
+              },
               "src/pages/battle-plaza/components/composeSettleDate.ts": {
                 "bytesInOutput": 3785
               },
@@ -10897,10 +11118,10 @@
                 "bytesInOutput": 5324
               },
               "src/pages/battle-plaza/components/BattlePlazaStakeModal/index.tsx": {
-                "bytesInOutput": 5884
+                "bytesInOutput": 5886
               },
               "src/pages/battle-plaza/components/BattlePlazaExperience/index.tsx": {
-                "bytesInOutput": 90283
+                "bytesInOutput": 91735
               },
               "src/pages/battle-plaza/components/BattlePlazaPage.tsx": {
                 "bytesInOutput": 240
@@ -11056,7 +11277,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1147458
+            "bytes": 1156158
           }
         }
       }
@@ -20457,7 +20678,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 1791,
+          "end": 1807,
+          "importKind": "value",
+          "source": "../BattlePlazaPrivateEntryPreviewModal",
+          "specifiers": [
+            {
+              "imported": "BattlePlazaPrivateEntryPreviewModal",
+              "local": "BattlePlazaPrivateEntryPreviewModal",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1714,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1885,
           "importKind": "value",
           "source": "../BattlePlazaSettleDatePicker",
           "specifiers": [
@@ -20467,11 +20702,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1714,
+          "start": 1808,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1857,
+          "end": 1951,
           "importKind": "value",
           "source": "../BattlePlazaStakeModal",
           "specifiers": [
@@ -20481,11 +20716,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1792,
+          "start": 1886,
           "type": "ImportDeclaration"
         },
         {
-          "end": 2199,
+          "end": 2293,
           "importKind": "value",
           "source": "../composeSettleDate",
           "specifiers": [
@@ -20540,11 +20775,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1858,
+          "start": 1952,
           "type": "ImportDeclaration"
         },
         {
-          "end": 2608,
+          "end": 2702,
           "importKind": "value",
           "source": "../battlePlazaDuelModel",
           "specifiers": [
@@ -20624,7 +20859,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 2200,
+          "start": 2294,
           "type": "ImportDeclaration"
         }
       ],
@@ -20720,6 +20955,74 @@
             }
           ],
           "start": 96,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/battle-plaza/components/BattlePlazaPrivateEntryPreviewModal/index.tsx": [
+        {
+          "end": 134,
+          "importKind": "value",
+          "source": "lucide-react",
+          "specifiers": [
+            {
+              "imported": "Clock3",
+              "local": "Clock3",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Lock",
+              "local": "Lock",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Swords",
+              "local": "Swords",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "X",
+              "local": "X",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 79,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 176,
+          "importKind": "value",
+          "source": "./index.module.scss",
+          "specifiers": [
+            {
+              "local": "styles",
+              "type": "ImportDefaultSpecifier"
+            }
+          ],
+          "start": 135,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 268,
+          "importKind": "value",
+          "source": "../battlePlazaDuelModel",
+          "specifiers": [
+            {
+              "imported": "formatCoins",
+              "local": "formatCoins",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "formatTimestampLabel",
+              "local": "formatTimestampLabel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "DuelItem",
+              "local": "DuelItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 177,
           "type": "ImportDeclaration"
         }
       ],

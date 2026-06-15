@@ -28,6 +28,7 @@ import { createUserAvatarUrl } from '@/utils/userAvatar';
 import { Coins, Clock3 } from 'lucide-react';
 import { BattlePlazaDuelCard } from '../BattlePlazaDuelCard';
 import { BattlePlazaInviteCodeModal } from '../BattlePlazaInviteCodeModal';
+import { BattlePlazaPrivateEntryPreviewModal } from '../BattlePlazaPrivateEntryPreviewModal';
 import { BattlePlazaSettleDatePicker } from '../BattlePlazaSettleDatePicker';
 import { BattlePlazaStakeModal } from '../BattlePlazaStakeModal';
 import {
@@ -436,6 +437,11 @@ export const BattlePlazaPage: React.FC = () => {
     roomNumberDisplay: string;
     expireAt?: number;
   } | null>(null);
+  const [privateEntryPreview, setPrivateEntryPreview] = useState<{
+    duel: DuelItem;
+    inviteCode: string;
+  } | null>(null);
+  const [privateEntryPreviewLoading, setPrivateEntryPreviewLoading] = useState(false);
   const [joinInviteInput, setJoinInviteInput] = useState('');
   const [privateRoomNumber, setPrivateRoomNumber] = useState('');
   const [privateInviteCode, setPrivateInviteCode] = useState('');
@@ -682,15 +688,6 @@ export const BattlePlazaPage: React.FC = () => {
   const mapDetailToPrivateDuel = (detail: BattleDetailResponse, fallback?: BattleListItem) =>
     mapBattleToDuel(buildBattleListItemFromDetail(detail, fallback), currentUserId, detail, []);
 
-  const openPrivateDuelFromDetail = (
-    detail: BattleDetailResponse,
-    inviteCodeForJoin: string,
-    fallback?: BattleListItem,
-  ) => {
-    const duel = mapDetailToPrivateDuel(detail, fallback);
-    openPrivateDuel(duel, inviteCodeForJoin || duel.inviteCode || '');
-  };
-
   useEffect(() => {
     if (!plazaQuery.isError || !isAuthenticated) return;
     setMappedError(plazaQuery.error);
@@ -788,24 +785,36 @@ export const BattlePlazaPage: React.FC = () => {
     refetchTabData(tab);
   };
 
-  const openPrivateDuel = (duel: DuelItem, codeForJoin: string) => {
-    setJoinInviteInput(codeForJoin.trim().toUpperCase());
-    setActiveTab('private');
-    refetchTabData('private');
-    if (duel.canJoin) {
-      setJoinModal({
-        duelId: duel.battleId,
-        title: duel.topic,
-        max: Math.max(0, duel.wager - duel.currentPool),
-        visibility: 'private',
-      });
-      setJoinAmount(DEFAULT_JOIN_AMOUNT);
-      return;
-    }
-    pushFeedback('info', '已定位到该房间，请查看列表详情。');
+  const showPrivateEntryPreview = (duel: DuelItem, inviteCodeForJoin: string) => {
+    const code = inviteCodeForJoin.trim().toUpperCase() || duel.inviteCode?.trim().toUpperCase() || '';
+    setJoinInviteInput(code);
+    setPrivateEntryPreview({ duel, inviteCode: code });
+  };
+
+  const closePrivateEntryPreview = () => {
+    setPrivateEntryPreview(null);
+    setPrivateEntryPreviewLoading(false);
+  };
+
+  const handlePrivateEntryPreviewJoin = () => {
+    if (!privateEntryPreview) return;
+    if (!requireAuth()) return;
+    const { duel, inviteCode } = privateEntryPreview;
+    if (!duel.canJoin) return;
+    setPrivateEntryPreview(null);
+    setJoinInviteInput(inviteCode);
+    setJoinModal({
+      duelId: duel.battleId,
+      title: duel.topic,
+      max: Math.max(0, duel.wager - duel.currentPool),
+      visibility: duel.visibility,
+    });
+    setJoinAmount(DEFAULT_JOIN_AMOUNT);
   };
 
   const handleEnterPrivateBattle = async () => {
+    if (!requireAuth()) return;
+
     const roomDigits = getRoomNumberDigits(privateRoomNumber);
     const hasValidRoom = roomDigits.length === 12;
     const battleId = hasValidRoom ? parseBattleIdFromRoomNumber(privateRoomNumber) : null;
@@ -825,7 +834,7 @@ export const BattlePlazaPage: React.FC = () => {
     if (battleId) {
       const cachedByRoom = findPrivateDuelByRoomNumber(privateRoomNumber, privateDuels);
       if (cachedByRoom) {
-        openPrivateDuel(cachedByRoom, inviteCode ?? cachedByRoom.inviteCode ?? '');
+        showPrivateEntryPreview(cachedByRoom, inviteCode ?? cachedByRoom.inviteCode ?? '');
         return;
       }
     }
@@ -833,34 +842,44 @@ export const BattlePlazaPage: React.FC = () => {
     if (inviteCode) {
       const cachedByInvite = findPrivateDuelByInviteCode(inviteCode, privateDuels);
       if (cachedByInvite) {
-        openPrivateDuel(cachedByInvite, inviteCode);
+        showPrivateEntryPreview(cachedByInvite, inviteCode);
         return;
       }
       const listItem = findBattleListItemByInviteCode(inviteCode, allBattleItems);
       if (listItem) {
+        setPrivateEntryPreviewLoading(true);
+        setPrivateEntryPreview(null);
         try {
           const detail = await fetchBattleDetail(listItem.battle.id, { inviteCode });
-          openPrivateDuelFromDetail(detail, inviteCode, listItem);
-          return;
+          showPrivateEntryPreview(mapDetailToPrivateDuel(detail, listItem), inviteCode);
         } catch (error) {
           setMappedError(error);
-          return;
+        } finally {
+          setPrivateEntryPreviewLoading(false);
         }
+        return;
       }
     }
 
+    setPrivateEntryPreviewLoading(true);
+    setPrivateEntryPreview(null);
     try {
       if (battleId) {
         const detail = await fetchBattleDetail(battleId, inviteCode ? { inviteCode } : {});
-        openPrivateDuelFromDetail(detail, inviteCode ?? detail.battle.inviteCode ?? '');
+        showPrivateEntryPreview(
+          mapDetailToPrivateDuel(detail),
+          inviteCode ?? detail.battle.inviteCode ?? '',
+        );
         return;
       }
       if (inviteCode) {
         const detail = await fetchBattleDetail(undefined, { inviteCode });
-        openPrivateDuelFromDetail(detail, inviteCode);
+        showPrivateEntryPreview(mapDetailToPrivateDuel(detail), inviteCode);
       }
     } catch (error) {
       setMappedError(error);
+    } finally {
+      setPrivateEntryPreviewLoading(false);
     }
   };
 
@@ -1850,6 +1869,14 @@ export const BattlePlazaPage: React.FC = () => {
             showOperationToast(room ? `房间号 ${room} 已复制` : '房间号已复制', { tone: 'success' });
           }}
           onCopyFailed={() => showOperationToast('复制失败，请手动复制。', { tone: 'error' })}
+        />
+
+        <BattlePlazaPrivateEntryPreviewModal
+          open={privateEntryPreviewLoading || Boolean(privateEntryPreview)}
+          loading={privateEntryPreviewLoading}
+          duel={privateEntryPreview?.duel}
+          onClose={closePrivateEntryPreview}
+          onJoin={handlePrivateEntryPreviewJoin}
         />
 
         {detailBattleId !== null && (
