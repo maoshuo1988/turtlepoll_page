@@ -40,8 +40,6 @@ export function BattlePlazaStakeModal({
   visibility = 'public',
   currentWager,
   amount,
-  minAmount = 100,
-  maxAmount,
   feeNote,
   submitting = false,
   canSubmit = true,
@@ -56,24 +54,14 @@ export function BattlePlazaStakeModal({
   const isJoin = mode === 'join';
   const title = isJoin ? '挑战庄家' : '庄家加注';
   const modeLabel = visibility === 'public' ? '公开' : '私人';
-  const cappedMax = typeof maxAmount === 'number' ? Math.max(minAmount, maxAmount) : undefined;
 
   const handlePresetClick = (preset: number) => {
-    if (cappedMax !== undefined) {
-      onAmountChange(Math.min(cappedMax, Math.max(minAmount, preset)));
-      return;
-    }
-    onAmountChange(Math.max(minAmount, preset));
+    onAmountChange(preset);
   };
 
   const handleAmountInput = (raw: string) => {
-    const next = Number(raw || 0);
-    if (!Number.isFinite(next)) return;
-    if (cappedMax !== undefined) {
-      onAmountChange(Math.min(cappedMax, Math.max(minAmount, Math.floor(next))));
-      return;
-    }
-    onAmountChange(Math.max(minAmount, Math.floor(next)));
+    const next = Number(raw);
+    onAmountChange(Number.isFinite(next) ? Math.floor(next) : 0);
   };
 
   const submitLabel = isJoin
@@ -147,8 +135,7 @@ export function BattlePlazaStakeModal({
           <input
             className={css('amount-input')}
             type="number"
-            min={minAmount}
-            max={cappedMax}
+            min={0}
             value={amount}
             onChange={(event) => handleAmountInput(event.target.value)}
             aria-label={isJoin ? '挑战金额' : '加注金额'}

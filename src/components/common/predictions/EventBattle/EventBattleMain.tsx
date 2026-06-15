@@ -557,7 +557,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                               <button
                                 type="button"
                                 onClick={() => onBet?.(news.id, betIntent, activeBetOdds, numericBetAmount)}
-                                disabled={!canPlaceBet || isBetting || !Number.isFinite(numericBetAmount) || numericBetAmount <= 0 || numericBetAmount > balance}
+                                disabled={!canPlaceBet || isBetting}
                                 className={css(`inline-flex min-w-[92px] items-center justify-center gap-1 border px-3 py-2 text-[12px] font-bold transition-colors ${betIntent === 'A'
                                   ? 'border-cyan-300/26 bg-cyan-400/10 text-cyan-100 hover:bg-cyan-400/16'
                                   : 'border-rose-300/26 bg-rose-400/10 text-rose-100 hover:bg-rose-400/16'
@@ -567,9 +567,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({ news, onBack, userSide
                                 {isBetting ? '下注中...' : news.hasBet ? '已参与' : news.status === 'open' ? '确认下注' : '不可下注'}
                               </button>
                             </div>
-                            {Number.isFinite(numericBetAmount) && numericBetAmount > balance && (
-                              <div className={css("text-[11px] text-rose-300")}>余额不足，当前无法完成这笔下注。</div>
-                            )}
                           </div>
                         </motion.div>
                       )}

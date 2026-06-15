@@ -48,7 +48,6 @@ import {
   buildBattleListItemFromDetail,
   findBattleListItemByInviteCode,
   formatBattleRoomDisplay,
-  formatCoinLabel,
   formatTimestampLabel,
   getRoomNumberDigits,
   isValidInviteCodeText,
@@ -372,11 +371,6 @@ function CoinAmount({ amount, iconSize = 14, className }: { amount: number; icon
   );
 }
 
-function clampAmount(value: number, min: number, max: number) {
-  if (!Number.isFinite(value)) return min;
-  return Math.min(max, Math.max(min, Math.floor(value)));
-}
-
 function BattlePlazaListEmpty({ text }: { text: string }) {
   return (
     <div className={css("bp-list-empty")}>
@@ -627,9 +621,8 @@ export const BattlePlazaPage: React.FC = () => {
     [currentUserId],
   );
 
-  const joinModalMax = joinModal ? Math.max(100, joinModal.max) : 100;
-  const normalizedJoinAmount = joinModal ? clampAmount(joinAmount, 100, joinModalMax) : 100;
-  const normalizedAddStakeAmount = Math.max(100, Number(addStakeAmount) || 0);
+  const joinAmountValue = Number(joinAmount);
+  const addStakeAmountValue = Number(addStakeAmount);
   const settleDateParts = useMemo(() => partsFromComposeSettleDate(settleDate), [settleDate]);
   const settleYearOptions = useMemo(() => buildComposeSettleYearOptions(), []);
   const settleMonthOptions = useMemo(() => buildComposeSettleMonthOptions(), []);
@@ -649,22 +642,18 @@ export const BattlePlazaPage: React.FC = () => {
     topic.trim().length > 0 &&
     bankerOpinion.trim().length > 0 &&
     challengerOpinion.trim().length > 0 &&
-    Number.isFinite(composeWagerAmount) &&
-    composeWagerAmount >= 100 &&
+    wagerInput.trim().length > 0 &&
     Boolean(settleTimestamp) &&
     !isComposeSettleDateDisabled(settleDate);
   const canSubmitJoin =
     isAuthenticated &&
     !joinBattleMutation.isLoading &&
     Boolean(joinModal) &&
-    normalizedJoinAmount >= 100 &&
-    normalizedJoinAmount <= joinModalMax &&
     (joinModal?.visibility !== 'private' || isValidInviteCodeText(joinInviteInput));
   const canSubmitAddStake =
     isAuthenticated &&
     !addStakeMutation.isLoading &&
-    Boolean(addStakeModal) &&
-    normalizedAddStakeAmount >= 100;
+    Boolean(addStakeModal);
 
   const pushFeedback = (tone: 'success' | 'error' | 'info', text: string) => {
     if (tone === 'error') {
@@ -898,10 +887,6 @@ export const BattlePlazaPage: React.FC = () => {
       pushFeedback('error', '结算时间必须晚于当前时间。');
       return;
     }
-    if (!Number.isFinite(composeWagerAmount) || composeWagerAmount < 100) {
-      pushFeedback('error', '开战金额不能低于 100。');
-      return;
-    }
     if (settleTimestamp <= Math.floor(Date.now() / 1000)) {
       pushFeedback('error', '结算时间必须晚于当前时间。');
       return;
@@ -948,14 +933,10 @@ export const BattlePlazaPage: React.FC = () => {
       pushFeedback('error', '私人赌局需要 4 位邀请码。');
       return;
     }
-    if (normalizedJoinAmount > joinModal.max) {
-      pushFeedback('error', `挑战金额超过剩余额度，当前最多 ${formatCoinLabel(joinModal.max)}。`);
-      return;
-    }
     try {
       await joinBattleMutation.mutateAsync({
         battleId: joinModal.duelId,
-        amount: normalizedJoinAmount,
+        amount: joinAmountValue,
         requestId: createBattleRequestId(`battle-join-${joinModal.duelId}`),
         inviteCode: joinModal.visibility === 'private' ? normalizeInviteCodeText(joinInviteInput) : undefined,
       });
@@ -973,7 +954,7 @@ export const BattlePlazaPage: React.FC = () => {
     try {
       await addStakeMutation.mutateAsync({
         battleId: addStakeModal.duelId,
-        amount: normalizedAddStakeAmount,
+        amount: addStakeAmountValue,
         requestId: createBattleRequestId(`battle-banker-add-${addStakeModal.duelId}`),
       });
       setAddStakeModal(null);
@@ -1964,11 +1945,9 @@ export const BattlePlazaPage: React.FC = () => {
         <BattlePlazaStakeModal
           open={Boolean(joinModal)}
           mode="join"
-          remainingAmount={joinModalMax}
+          remainingAmount={joinModal?.max ?? 0}
           visibility={joinModal?.visibility}
-          amount={normalizedJoinAmount}
-          minAmount={100}
-          maxAmount={joinModalMax}
+          amount={joinAmountValue}
           feeNote={
             joinModal?.visibility === 'public'
               ? '公开赌局收取 5% 入场费'
@@ -1991,8 +1970,7 @@ export const BattlePlazaPage: React.FC = () => {
           mode="add-stake"
           visibility={addStakeModal?.visibility}
           currentWager={addStakeModal?.currentWager}
-          amount={normalizedAddStakeAmount}
-          minAmount={100}
+          amount={addStakeAmountValue}
           feeNote="追加押注将同步扩大挑战者容量上限"
           submitting={addStakeMutation.isLoading}
           canSubmit={canSubmitAddStake}

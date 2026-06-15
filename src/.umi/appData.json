@@ -141,6 +141,18 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -249,7 +261,62 @@
             8,
             6,
             7,
-            25
+            25,
+            8,
+            15,
+            7,
+            9,
+            8,
+            8,
+            25,
+            6,
+            154,
+            39,
+            20,
+            8,
+            42,
+            22,
+            19,
+            16,
+            10,
+            29,
+            11,
+            15,
+            7,
+            11,
+            14,
+            9,
+            10,
+            9,
+            17,
+            8,
+            7,
+            9,
+            8,
+            12,
+            21,
+            11,
+            24,
+            11,
+            97,
+            8,
+            9,
+            18,
+            8,
+            11,
+            10,
+            16,
+            7,
+            10,
+            8,
+            8,
+            14,
+            13,
+            19,
+            9,
+            7,
+            8,
+            16
           ]
         },
         "register": 1
@@ -284,7 +351,19 @@
             13,
             17,
             18,
-            14
+            14,
+            24,
+            16,
+            15,
+            16,
+            16,
+            23,
+            123,
+            22,
+            6,
+            14,
+            26,
+            16
           ]
         },
         "register": 10
@@ -301,6 +380,18 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -354,6 +445,25 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -433,7 +543,33 @@
             0,
             0,
             0,
-            0
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
           ]
         },
         "register": 0
@@ -1440,6 +1576,12 @@
             0,
             0,
             0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1472,9 +1614,33 @@
             1,
             0,
             0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            2,
+            0,
+            1,
+            0,
+            0,
+            1,
             0
           ],
           "addRuntimePlugin": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1579,9 +1745,45 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1661,9 +1863,45 @@
             12,
             9,
             13,
-            5
+            5,
+            11,
+            31,
+            12,
+            7,
+            9,
+            33,
+            12,
+            20,
+            8,
+            16,
+            15,
+            24
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1742,6 +1980,30 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1760,6 +2022,18 @@
         "hooks": {
           "onGenerateFiles": [
             82,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1832,7 +2106,19 @@
             0,
             0,
             0,
-            1
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
           ],
           "addBeforeMiddlewares": [
             0
@@ -1883,6 +2169,30 @@
             8,
             1,
             4,
+            1,
+            11,
+            1,
+            18,
+            4,
+            7,
+            1,
+            11,
+            1,
+            5,
+            0,
+            7,
+            1,
+            4,
+            0,
+            5,
+            0,
+            3,
+            0,
+            7,
+            1,
+            7,
+            1,
+            11,
             1
           ]
         },
@@ -1953,7 +2263,19 @@
             5,
             5,
             5,
-            4
+            4,
+            6,
+            16,
+            7,
+            8,
+            9,
+            7,
+            4,
+            7,
+            4,
+            5,
+            8,
+            7
           ]
         },
         "register": 1
@@ -2046,6 +2368,18 @@
             0,
             1,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            7,
+            0,
+            1,
             0,
             0,
             0,
@@ -2197,6 +2531,12 @@
             1,
             0,
             2,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
             0,
             0
           ]
@@ -5757,7 +6097,7 @@
             "format": "esm"
           },
           "src/pages/home/components/PredictionBetModal.tsx": {
-            "bytes": 9524,
+            "bytes": 9140,
             "imports": [
               {
                 "path": "react",
@@ -6155,7 +6495,7 @@
             "format": "esm"
           },
           "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-            "bytes": 71466,
+            "bytes": 71209,
             "imports": [
               {
                 "path": "react",
@@ -6394,7 +6734,7 @@
             "format": "esm"
           },
           "src/pages/rivalry/components/RivalryBetModal.tsx": {
-            "bytes": 8788,
+            "bytes": 8404,
             "imports": [
               {
                 "path": "react",
@@ -7101,7 +7441,7 @@
             "format": "esm"
           },
           "src/pages/battle-plaza/components/BattlePlazaStakeModal/index.tsx": {
-            "bytes": 5826,
+            "bytes": 5339,
             "imports": [
               {
                 "path": "./index.module.scss",
@@ -7122,7 +7462,7 @@
             "format": "esm"
           },
           "src/pages/battle-plaza/components/BattlePlazaExperience/index.tsx": {
-            "bytes": 84368,
+            "bytes": 83437,
             "imports": [
               {
                 "path": "./index.module.scss",
@@ -10929,7 +11269,7 @@
                 "bytesInOutput": 5792
               },
               "src/pages/home/components/PredictionBetModal.tsx": {
-                "bytesInOutput": 9988
+                "bytesInOutput": 9502
               },
               "src/pages/home/components/PredictionCardCover.tsx": {
                 "bytesInOutput": 2113
@@ -10986,7 +11326,7 @@
                 "bytesInOutput": 8286
               },
               "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-                "bytesInOutput": 77108
+                "bytesInOutput": 76843
               },
               "src/pages/event-battle/components/EventBattleLiveRoom.tsx": {
                 "bytesInOutput": 149
@@ -11016,7 +11356,7 @@
                 "bytesInOutput": 258
               },
               "src/pages/rivalry/components/RivalryBetModal.tsx": {
-                "bytesInOutput": 9530
+                "bytesInOutput": 9044
               },
               "src/pages/rivalry/components/HeroBattleRail/index.tsx": {
                 "bytesInOutput": 11633
@@ -11118,10 +11458,10 @@
                 "bytesInOutput": 5324
               },
               "src/pages/battle-plaza/components/BattlePlazaStakeModal/index.tsx": {
-                "bytesInOutput": 5886
+                "bytesInOutput": 5412
               },
               "src/pages/battle-plaza/components/BattlePlazaExperience/index.tsx": {
-                "bytesInOutput": 91735
+                "bytesInOutput": 90747
               },
               "src/pages/battle-plaza/components/BattlePlazaPage.tsx": {
                 "bytesInOutput": 240
@@ -11277,7 +11617,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1156158
+            "bytes": 1153459
           }
         }
       }
@@ -20779,7 +21119,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 2702,
+          "end": 2683,
           "importKind": "value",
           "source": "../battlePlazaDuelModel",
           "specifiers": [
@@ -20801,11 +21141,6 @@
             {
               "imported": "formatBattleRoomDisplay",
               "local": "formatBattleRoomDisplay",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "formatCoinLabel",
-              "local": "formatCoinLabel",
               "type": "ImportSpecifier"
             },
             {

@@ -46,21 +46,6 @@ export function RivalryBetModal({
   if (!open || !item || !option) return null;
 
   const handleSubmit = async () => {
-    if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-      setErrorText('请输入有效的下注金额。');
-      return;
-    }
-
-    if (!Number.isInteger(numericAmount)) {
-      setErrorText('下注金额请使用整数。');
-      return;
-    }
-
-    if (numericAmount > balance) {
-      setErrorText('龟币余额不足，无法完成下注。');
-      return;
-    }
-
     try {
       setErrorText('');
       await onConfirm(item, option, numericAmount);

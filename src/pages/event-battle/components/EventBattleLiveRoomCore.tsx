@@ -1013,7 +1013,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     }
     const targetSide = sideOverride ?? betIntent;
     const targetOdds = resolveBetOdds(targetSide);
-    if (!Number.isFinite(effectiveBetAmount) || effectiveBetAmount <= 0 || effectiveBetAmount > balance) return;
     if (shouldUsePkBet && pkTopicId) {
       if (targetSide === 'C') return;
       try {
@@ -1055,7 +1054,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     appendFeed(targetSide === 'C' ? 'A' : targetSide, `${currentUserName} 为${targetLabel}追加了 ${formatVotes(effectiveBetAmount)} 龟币`);
   }, [
     appendFeed,
-    balance,
     betIntent,
     canComment,
     canPlaceCoinBet,
@@ -1645,7 +1643,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 type="button"
                 className="confirm"
                 onClick={() => void confirmBetDialog()}
-                disabled={isBetting || !canPlaceBet || effectiveBetAmount > balance}
+                disabled={isBetting || !canPlaceBet}
               >
                 {isBetting ? '下注中...' : '确认下注'}
               </button>
@@ -1766,7 +1764,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
               type="button"
               className="eb-bet-submit"
               onClick={() => openBetDialog(betIntent)}
-              disabled={!canPlaceBet || isBetting || !Number.isFinite(effectiveBetAmount) || effectiveBetAmount <= 0 || effectiveBetAmount > balance}
+              disabled={!canPlaceBet || isBetting}
             >
               {isBetting ? '下注中...' : `支持${betIntent === 'A' ? displayNews.optionA : betIntent === 'B' ? displayNews.optionB : displayNews.optionDraw}`}
             </button>

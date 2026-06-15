@@ -35,7 +35,7 @@ const CreateBattleForm: React.FC<{
   const [side, setSide] = useState<BattleSide>('A');
   const [wager, setWager] = useState(100);
 
-  const canSubmit = topic.trim() && optA.trim() && optB.trim() && wager > 0 && wager <= balance;
+  const canSubmit = topic.trim() && optA.trim() && optB.trim() && wager > 0;
 
   const submit = () => {
     if (!canSubmit) return;
