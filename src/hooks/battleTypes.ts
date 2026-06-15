@@ -253,7 +253,7 @@ export type BattleStatsResponse = {
 };
 
 export type BattleDetailParams = {
-  battleId: number;
+  battleId?: number;
   inviteCode?: string;
   refreshInvite?: boolean | 0 | 1;
 };

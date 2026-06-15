@@ -805,62 +805,42 @@ export const BattlePlazaPage: React.FC = () => {
     pushFeedback('info', '已定位到该房间，请查看列表详情。');
   };
 
-  const handleEnterPrivateRoomByNumber = async () => {
+  const handleEnterPrivateBattle = async () => {
     const roomDigits = getRoomNumberDigits(privateRoomNumber);
-    if (roomDigits.length !== 12) {
-      pushFeedback('error', '请输入 12 位房间号。');
-      return;
-    }
-    const battleId = parseBattleIdFromRoomNumber(privateRoomNumber);
-    if (!battleId) {
-      pushFeedback('error', '房间号无效，请检查后重试。');
-      return;
-    }
+    const hasValidRoom = roomDigits.length === 12;
+    const battleId = hasValidRoom ? parseBattleIdFromRoomNumber(privateRoomNumber) : null;
     const inviteCode = isValidInviteCodeText(privateInviteCode)
       ? normalizeInviteCodeText(privateInviteCode)
       : undefined;
-    const cached = findPrivateDuelByRoomNumber(privateRoomNumber, privateDuels);
-    if (cached) {
-      openPrivateDuel(cached, inviteCode ?? cached.inviteCode ?? '');
-      return;
-    }
-    try {
-      const detail = await fetchBattleDetail(battleId, { inviteCode });
-      openPrivateDuelFromDetail(detail, inviteCode ?? detail.battle.inviteCode ?? '');
-    } catch (error) {
-      setMappedError(error);
-    }
-  };
 
-  const handleEnterPrivateRoomByInvite = async () => {
-    const code = normalizeInviteCodeText(privateInviteCode);
-    if (!isValidInviteCodeText(code)) {
-      pushFeedback('error', '请输入 4 位邀请码。');
+    if (!hasValidRoom && !inviteCode) {
+      pushFeedback('error', '请输入房间号或邀请码。');
       return;
     }
-    const cached = findPrivateDuelByInviteCode(code, privateDuels);
-    if (cached) {
-      openPrivateDuel(cached, code);
+    if (hasValidRoom && !battleId) {
+      pushFeedback('error', '房间号无效，请检查后重试。');
       return;
     }
-    const listItem = findBattleListItemByInviteCode(code, allBattleItems);
-    if (listItem) {
-      try {
-        const detail = await fetchBattleDetail(listItem.battle.id, { inviteCode: code });
-        openPrivateDuelFromDetail(detail, code, listItem);
-        return;
-      } catch (error) {
-        setMappedError(error);
+
+    if (battleId) {
+      const cachedByRoom = findPrivateDuelByRoomNumber(privateRoomNumber, privateDuels);
+      if (cachedByRoom) {
+        openPrivateDuel(cachedByRoom, inviteCode ?? cachedByRoom.inviteCode ?? '');
         return;
       }
     }
-    const roomDigits = getRoomNumberDigits(privateRoomNumber);
-    if (roomDigits.length === 12) {
-      const battleId = parseBattleIdFromRoomNumber(privateRoomNumber);
-      if (battleId) {
+
+    if (inviteCode) {
+      const cachedByInvite = findPrivateDuelByInviteCode(inviteCode, privateDuels);
+      if (cachedByInvite) {
+        openPrivateDuel(cachedByInvite, inviteCode);
+        return;
+      }
+      const listItem = findBattleListItemByInviteCode(inviteCode, allBattleItems);
+      if (listItem) {
         try {
-          const detail = await fetchBattleDetail(battleId, { inviteCode: code });
-          openPrivateDuelFromDetail(detail, code);
+          const detail = await fetchBattleDetail(listItem.battle.id, { inviteCode });
+          openPrivateDuelFromDetail(detail, inviteCode, listItem);
           return;
         } catch (error) {
           setMappedError(error);
@@ -868,10 +848,20 @@ export const BattlePlazaPage: React.FC = () => {
         }
       }
     }
-    pushFeedback(
-      'error',
-      '未找到该邀请码对应的赌局。请确认邀请码是否正确，或输入对应的 12 位房间号后再试。',
-    );
+
+    try {
+      if (battleId) {
+        const detail = await fetchBattleDetail(battleId, inviteCode ? { inviteCode } : {});
+        openPrivateDuelFromDetail(detail, inviteCode ?? detail.battle.inviteCode ?? '');
+        return;
+      }
+      if (inviteCode) {
+        const detail = await fetchBattleDetail(undefined, { inviteCode });
+        openPrivateDuelFromDetail(detail, inviteCode);
+      }
+    } catch (error) {
+      setMappedError(error);
+    }
   };
 
   const handleCreate = async () => {
@@ -1386,11 +1376,11 @@ export const BattlePlazaPage: React.FC = () => {
                       onKeyDown={(event) => {
                         if (event.key === 'Enter') {
                           event.preventDefault();
-                          handleEnterPrivateRoomByNumber();
+                          handleEnterPrivateBattle();
                         }
                       }}
                     />
-                    <button type="button" className={css("private-entry-btn", "private-entry-btn-room")} onClick={handleEnterPrivateRoomByNumber}>
+                    <button type="button" className={css("private-entry-btn", "private-entry-btn-room")} onClick={handleEnterPrivateBattle}>
                       进入房间
                     </button>
                   </div>
@@ -1410,11 +1400,11 @@ export const BattlePlazaPage: React.FC = () => {
                       onKeyDown={(event) => {
                         if (event.key === 'Enter') {
                           event.preventDefault();
-                          handleEnterPrivateRoomByInvite();
+                          handleEnterPrivateBattle();
                         }
                       }}
                     />
-                    <button type="button" className={css("private-entry-btn", "private-entry-btn-invite")} onClick={handleEnterPrivateRoomByInvite}>
+                    <button type="button" className={css("private-entry-btn", "private-entry-btn-invite")} onClick={handleEnterPrivateBattle}>
                       用邀请码进入
                     </button>
                   </div>

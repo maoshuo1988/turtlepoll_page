@@ -133,6 +133,7 @@
             0,
             0,
             0,
+            0,
             0
           ]
         },
@@ -201,7 +202,25 @@
             9,
             8,
             13,
-            14
+            14,
+            6,
+            7,
+            10,
+            28,
+            7,
+            5,
+            7,
+            7,
+            8,
+            6,
+            7,
+            11,
+            11,
+            12,
+            7,
+            18,
+            8,
+            20
           ]
         },
         "register": 1
@@ -228,7 +247,8 @@
             19,
             100,
             5,
-            11
+            11,
+            12
           ]
         },
         "register": 10
@@ -245,6 +265,7 @@
       "time": {
         "hooks": {
           "addEntryCode": [
+            0,
             0,
             0,
             0,
@@ -300,6 +321,10 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "onCheckCode": [
@@ -342,6 +367,12 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
             0,
             0,
             0
@@ -1342,6 +1373,9 @@
             0,
             0,
             1,
+            0,
+            0,
+            1,
             0
           ]
         },
@@ -1366,9 +1400,11 @@
             0,
             1,
             0,
-            1
+            1,
+            0
           ],
           "addRuntimePlugin": [
+            0,
             0,
             0,
             0,
@@ -1457,9 +1493,12 @@
             0,
             0,
             0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
             0,
             0,
             0,
@@ -1515,9 +1554,12 @@
             14,
             14,
             6,
+            9,
             9
           ],
           "addPolyfillImports": [
+            0,
+            0,
             0,
             0,
             0,
@@ -1564,6 +1606,8 @@
             0,
             0,
             0,
+            0,
+            0,
             0
           ]
         },
@@ -1582,6 +1626,7 @@
         "hooks": {
           "onGenerateFiles": [
             82,
+            0,
             0,
             0,
             0,
@@ -1638,6 +1683,7 @@
             0,
             0,
             0,
+            0,
             0
           ],
           "addBeforeMiddlewares": [
@@ -1673,7 +1719,9 @@
             3,
             0,
             4,
-            0
+            0,
+            5,
+            1
           ]
         },
         "register": 1
@@ -1734,6 +1782,7 @@
             8,
             9,
             3,
+            4,
             4,
             4
           ]
@@ -1827,6 +1876,7 @@
             0,
             0,
             1,
+            0,
             0
           ]
         },
@@ -1963,6 +2013,9 @@
             23,
             6,
             0,
+            0,
+            0,
+            1,
             0
           ]
         },
@@ -5236,12 +5289,12 @@
             "format": "esm"
           },
           "src/hooks/battleTypes.ts": {
-            "bytes": 14280,
+            "bytes": 14281,
             "imports": [],
             "format": "esm"
           },
           "src/hooks/useBattleRequests.ts": {
-            "bytes": 10464,
+            "bytes": 10568,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -6866,7 +6919,7 @@
             "format": "esm"
           },
           "src/pages/battle-plaza/components/BattlePlazaExperience/index.tsx": {
-            "bytes": 83651,
+            "bytes": 83247,
             "imports": [
               {
                 "path": "./index.module.scss",
@@ -10631,7 +10684,7 @@
                 "bytesInOutput": 10032
               },
               "src/hooks/useBattleRequests.ts": {
-                "bytesInOutput": 8099
+                "bytesInOutput": 8222
               },
               "src/api/petApi.ts": {
                 "bytesInOutput": 474
@@ -10847,7 +10900,7 @@
                 "bytesInOutput": 5884
               },
               "src/pages/battle-plaza/components/BattlePlazaExperience/index.tsx": {
-                "bytesInOutput": 90873
+                "bytesInOutput": 90283
               },
               "src/pages/battle-plaza/components/BattlePlazaPage.tsx": {
                 "bytesInOutput": 240
@@ -11003,7 +11056,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1147925
+            "bytes": 1147458
           }
         }
       }
@@ -16718,7 +16771,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 809,
+          "end": 782,
           "importKind": "value",
           "source": "./battleTypes",
           "specifiers": [
@@ -16731,18 +16784,13 @@
               "imported": "normalizeBattleListResponse",
               "local": "normalizeBattleListResponse",
               "type": "ImportSpecifier"
-            },
-            {
-              "imported": "normalizeBattleMyAction",
-              "local": "normalizeBattleMyAction",
-              "type": "ImportSpecifier"
             }
           ],
           "start": 686,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1188,
+          "end": 1161,
           "importKind": "type",
           "source": "./battleTypes",
           "specifiers": [
@@ -16822,7 +16870,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 810,
+          "start": 783,
           "type": "ImportDeclaration"
         }
       ],

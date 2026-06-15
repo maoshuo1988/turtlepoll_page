@@ -58,13 +58,21 @@ function battleListRequiresAuth(_params: BattleListParams) {
   return true;
 }
 
-export async function fetchBattleDetail(battleId?: number, options: Omit<BattleDetailParams, "battleId"> = {}) {
+export async function fetchBattleDetail(
+  battleId?: number,
+  options: Omit<BattleDetailParams, "battleId"> = {},
+) {
+  const inviteCode = options.inviteCode?.trim().toUpperCase() || undefined;
+  if (typeof battleId !== "number" && !inviteCode) {
+    throw new Error("battleId is required");
+  }
+
   const res = await axiosCustom({
     method: "get",
     cmd: API_Battle_By,
     params: {
       battleId,
-      inviteCode: options.inviteCode?.trim().toUpperCase() || undefined,
+      inviteCode,
       refreshInvite: options.refreshInvite ? 1 : undefined,
     },
     headers: getAuthorizationHeaders(),
