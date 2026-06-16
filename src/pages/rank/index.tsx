@@ -11,7 +11,7 @@ export default function RankPage() {
   const { onOpenAuth } = useHomeLayoutContext();
   const token = getAuthToken();
   const { user } = useAppSession();
-  const leaderboardQuery = useRequestCoinLeaderboard({ limit: 100 });
+  const leaderboardQuery = useRequestCoinLeaderboard({ limit: 200 });
 
   const currentUserId =
     user?.id !== undefined && user?.id !== null && String(user.id).trim() !== '' ? user.id : undefined;
