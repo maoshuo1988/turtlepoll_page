@@ -26,7 +26,7 @@ export function RankPageView({
   onRetry,
 }: RankPageViewProps) {
   return (
-    <section className="w-full max-w-none min-h-full mx-0 grid content-start gap-4 pt-[10px] max-lg:gap-3 view-rank">
+    <section className="view-rank mx-0 flex h-full min-h-0 w-full max-w-none flex-col px-3 pt-[10px] lg:px-4">
       <RankPage
         isLoginRequired={isLoginRequired}
         isLoading={isLoading}

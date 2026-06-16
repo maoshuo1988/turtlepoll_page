@@ -89,6 +89,7 @@ export type CoinLeaderboardItem = {
   balance: number;
   winRate: number;
   currentWinStreak: number;
+  predictionCount: number;
 };
 
 export type CoinLeaderboardResult = {
@@ -97,6 +98,7 @@ export type CoinLeaderboardResult = {
   myBalance: number;
   myWinRate: number;
   myCurrentWinStreak: number;
+  total: number;
 };
 
 export type CoinLeaderboardParams = {

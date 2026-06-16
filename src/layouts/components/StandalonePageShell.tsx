@@ -451,9 +451,11 @@ export function StandalonePageShell({
   const resolvedContentClassName =
     activeView === 'profile'
       ? `${contentClassName} lg:h-full lg:min-h-full lg:bg-[#080808]`
-      : activeView === 'pet'
-        ? `${contentClassName} px-3 pb-4 pt-[10px] lg:px-4`
-        : contentClassName;
+      : activeView === 'rank'
+        ? `${contentClassName} flex h-full min-h-0 flex-col lg:h-full`
+        : activeView === 'pet'
+          ? `${contentClassName} px-3 pb-4 pt-[10px] lg:px-4`
+          : contentClassName;
 
   return (
     <AppPageLayout

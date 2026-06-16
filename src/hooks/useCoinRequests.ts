@@ -44,6 +44,14 @@ function normalizeCoinLeaderboardItem(raw: Record<string, unknown>): CoinLeaderb
     balance: toNumber(raw.balance),
     winRate: toNumber(raw.winRate ?? raw.win_rate),
     currentWinStreak: toNumber(raw.currentWinStreak ?? raw.current_win_streak),
+    predictionCount: toNumber(
+      raw.predictionCount ??
+        raw.prediction_count ??
+        raw.predictedCount ??
+        raw.predicted_count ??
+        raw.betCount ??
+        raw.bet_count,
+    ),
   };
 }
 
@@ -62,6 +70,7 @@ function normalizeCoinLeaderboardResult(raw: Record<string, unknown>): CoinLeade
     myBalance: toNumber(raw.myBalance ?? raw.my_balance),
     myWinRate: toNumber(raw.myWinRate ?? raw.my_win_rate),
     myCurrentWinStreak: toNumber(raw.myCurrentWinStreak ?? raw.my_current_win_streak),
+    total: toNumber(raw.total ?? raw.count, itemsSource.length),
   };
 }
 

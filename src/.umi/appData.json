@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 9
+        "register": 7
       },
       "enableBy": "register"
     },
@@ -95,7 +95,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -112,7 +112,7 @@
             1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -126,6 +126,13 @@
       "time": {
         "hooks": {
           "modifyRoutes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -170,153 +177,179 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            26,
-            7,
-            8,
-            16,
-            10,
-            7,
-            7,
-            7,
-            7,
             22,
-            13,
-            27,
-            7,
-            10,
-            7,
             8,
+            59,
+            48,
             18,
             9,
-            8,
-            15,
-            35,
+            7,
             10,
             9,
+            7,
+            11,
             12,
-            8,
+            9,
+            7,
+            6,
+            7,
+            5,
+            5,
+            6,
+            13,
+            5,
+            7,
+            6,
+            5,
+            7,
+            5,
+            7,
+            16,
+            10,
+            14,
+            11,
             8,
             11,
+            10,
+            11,
+            8,
+            6,
+            6,
+            11,
+            8,
+            8,
+            8,
+            8,
+            7,
+            9,
+            11,
+            9,
+            9,
+            5,
+            5,
+            7,
+            6,
+            7,
+            11,
+            11,
+            16,
+            7,
+            5,
+            8,
+            7,
+            12,
+            7,
+            6,
+            8,
+            18,
+            14,
+            7,
+            10,
+            7,
+            11,
+            9,
+            7,
+            5,
+            6,
+            5,
+            7,
+            5,
+            9,
+            10,
+            13,
+            10,
+            7,
+            13,
+            7,
+            11,
+            6,
+            6,
+            8,
+            8,
+            8,
+            13,
+            14,
+            8,
+            7,
+            16,
+            9,
+            8,
+            5,
+            13,
             4,
-            11,
-            14,
-            12,
-            6,
-            11,
-            8,
-            8,
-            13,
             5,
-            4,
-            7,
-            7,
-            16,
-            12,
-            6,
-            7,
-            6,
-            16,
-            6,
-            17,
             9,
-            8,
-            13,
-            14,
             6,
+            6,
+            7,
+            6,
+            6,
+            10,
+            9,
+            14,
+            9,
+            7,
+            16,
+            8,
+            10,
+            5,
+            6,
+            8,
+            5,
+            8,
+            7,
+            8,
+            5,
+            6,
+            7,
+            6,
+            6,
+            144,
+            11,
+            6,
+            12,
+            12,
+            7,
+            8,
             7,
             10,
-            28,
-            7,
+            9,
+            10,
+            6,
+            9,
+            6,
+            8,
             5,
             7,
-            7,
+            5,
             8,
-            6,
+            9,
+            10,
             7,
-            11,
-            11,
-            12,
+            52,
             7,
+            5,
             18,
-            8,
-            20,
-            5,
-            9,
-            17,
-            10,
             6,
-            9,
-            11,
-            11,
-            8,
-            8,
-            11,
-            7,
-            6,
-            13,
-            7,
             6,
             10,
+            7,
             9,
-            8,
+            7,
             6,
-            7,
-            25,
-            8,
-            15,
-            7,
-            9,
-            8,
-            8,
-            25,
-            6,
-            154,
-            39,
-            20,
-            8,
-            42,
-            22,
-            19,
-            16,
-            10,
-            29,
-            11,
-            15,
-            7,
-            11,
-            14,
-            9,
-            10,
-            9,
-            17,
-            8,
-            7,
-            9,
-            8,
             12,
-            21,
-            11,
-            24,
-            11,
-            97,
-            8,
+            41,
             9,
-            18,
             8,
-            11,
             10,
-            16,
             7,
-            10,
-            8,
-            8,
-            14,
-            13,
-            19,
             9,
-            7,
-            8,
-            16
+            11,
+            5,
+            6,
+            5,
+            5,
+            5
           ]
         },
         "register": 1
@@ -333,37 +366,44 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            10
+            11
           ],
           "onGenerateFiles": [
-            1,
-            16,
-            7,
-            12,
-            19,
-            100,
-            5,
-            11,
-            12,
+            0,
             17,
-            25,
-            18,
+            16,
+            17,
             13,
             17,
-            18,
             14,
-            24,
-            16,
+            11,
+            13,
+            11,
+            5,
             15,
-            16,
-            16,
-            23,
-            123,
-            22,
-            6,
+            13,
+            15,
+            12,
+            11,
+            15,
             14,
-            26,
-            16
+            16,
+            18,
+            12,
+            12,
+            15,
+            12,
+            12,
+            13,
+            5,
+            16,
+            13,
+            14,
+            13,
+            11,
+            13,
+            16,
+            13
           ]
         },
         "register": 10
@@ -407,10 +447,17 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -430,29 +477,6 @@
             0
           ],
           "onPrepareBuildSuccess": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -501,38 +525,6 @@
             0,
             0,
             0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
             0,
             0,
             0,
@@ -553,7 +545,6 @@
             0,
             0,
             0,
-            1,
             0,
             0,
             0,
@@ -565,11 +556,19 @@
             0,
             0,
             0,
-            1,
             0,
             0,
             0,
-            1
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
           ]
         },
         "register": 0
@@ -1518,7 +1517,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 41
+        "register": 46
       },
       "enableBy": "register"
     },
@@ -1544,7 +1543,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 10
       },
       "enableBy": "config"
     },
@@ -1566,18 +1565,12 @@
           "modifyHTMLFavicon": [
             0,
             0,
-            1,
-            0,
-            0,
-            1,
             0,
             0,
             0,
             0,
             0,
             0,
-            0,
-            1,
             0,
             0,
             0,
@@ -1600,35 +1593,49 @@
         "hooks": {
           "onGenerateFiles": [
             1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            3,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
             2,
-            1,
             0,
-            0,
-            1,
+            5,
             0,
             1,
             0,
             3,
-            1,
-            1,
-            1,
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            1,
-            0,
-            2,
             0,
             1,
             0,
             0,
+            0,
+            1,
+            1,
             1,
             0
           ],
           "addRuntimePlugin": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1672,7 +1679,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1686,13 +1693,13 @@
       "time": {
         "hooks": {
           "onStart": [
-            1
+            0
           ],
           "addBeforeMiddlewares": [
             1
           ]
         },
-        "register": 17
+        "register": 15
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1704,7 +1711,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1717,7 +1724,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides": {
@@ -1730,6 +1737,13 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1815,6 +1829,20 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1845,39 +1873,60 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ],
           "onGenerateFiles": [
             38,
-            12,
-            8,
-            13,
-            14,
-            14,
-            6,
-            9,
-            9,
-            25,
-            25,
-            14,
-            12,
-            9,
-            13,
-            5,
-            11,
             31,
+            24,
+            21,
+            15,
+            13,
+            13,
+            15,
+            17,
             12,
             7,
+            14,
+            14,
+            13,
+            13,
             9,
-            33,
-            12,
+            25,
+            24,
             20,
-            8,
-            16,
+            19,
+            19,
+            17,
+            26,
+            12,
+            12,
+            14,
+            11,
+            17,
             15,
-            24
+            12,
+            10,
+            10,
+            22,
+            21,
+            13
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2004,6 +2053,20 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -2021,7 +2084,14 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            82,
+            85,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2051,7 +2121,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2064,7 +2134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2104,17 +2174,24 @@
             0,
             0,
             0,
-            0,
-            0,
-            1,
-            0,
-            0,
             1,
             0,
             0,
             0,
+            1,
+            0,
+            1,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
             0,
             0,
             0,
@@ -2140,63 +2217,77 @@
           "onGenerateFiles": [
             6,
             2,
-            7,
-            1,
-            6,
-            1,
-            6,
-            0,
-            7,
-            1,
-            7,
-            1,
-            3,
-            0,
-            4,
-            0,
-            5,
-            1,
+            61,
+            2,
             11,
             1,
-            27,
-            2,
+            8,
+            0,
+            7,
+            0,
+            8,
+            0,
             9,
             1,
+            5,
+            1,
+            7,
+            0,
+            7,
+            1,
             6,
             1,
+            7,
+            0,
+            8,
+            1,
+            7,
+            1,
+            7,
+            0,
+            4,
+            1,
+            8,
+            1,
+            11,
+            1,
             8,
             1,
             8,
             1,
-            4,
+            8,
             1,
-            11,
-            1,
-            18,
-            4,
             7,
             1,
-            11,
+            9,
+            0,
+            7,
+            0,
+            7,
             1,
+            7,
+            0,
+            4,
+            1,
+            7,
+            0,
+            8,
+            1,
+            7,
+            0,
             5,
-            0,
-            7,
             1,
             4,
-            0,
-            5,
-            0,
-            3,
-            0,
+            1,
             7,
             1,
             7,
             1,
-            11,
+            6,
             1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -2248,34 +2339,41 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            191,
-            16,
-            7,
+            199,
+            15,
+            10,
+            5,
             8,
-            9,
+            5,
+            7,
+            6,
+            10,
+            5,
             3,
             4,
-            4,
-            4,
-            13,
-            9,
+            6,
+            6,
+            7,
+            3,
+            7,
+            7,
+            7,
             6,
             5,
             5,
-            5,
             4,
             6,
-            16,
-            7,
+            4,
             8,
-            9,
+            3,
             7,
-            4,
-            7,
-            4,
+            6,
             5,
+            6,
+            4,
+            7,
             8,
-            7
+            4
           ]
         },
         "register": 1
@@ -2334,7 +2432,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -2346,7 +2444,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 11
       },
       "enableBy": "config"
     },
@@ -2360,7 +2458,9 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            2,
+            1,
+            1,
+            0,
             1,
             1,
             1,
@@ -2369,15 +2469,21 @@
             1,
             0,
             0,
+            1,
+            0,
+            1,
+            1,
             0,
             0,
             0,
             0,
+            1,
             0,
+            1,
+            1,
+            1,
             0,
-            0,
-            0,
-            7,
+            1,
             0,
             1,
             0,
@@ -2385,12 +2491,11 @@
             0,
             0,
             0,
-            0,
-            0,
+            1,
             0
           ]
         },
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -2457,7 +2562,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2470,7 +2575,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -2482,7 +2587,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2495,7 +2600,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -2520,28 +2625,22 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
-            23,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            7,
+            7,
+            7,
             6,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            1,
-            0,
-            2,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
             0,
             0
           ]
         },
-        "register": 13
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -2553,7 +2652,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2567,7 +2666,7 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            303
+            271
           ]
         },
         "register": 0
@@ -2583,7 +2682,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2596,7 +2695,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 19
       },
       "enableBy": "register"
     },
@@ -2610,10 +2709,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            6
+            7
           ]
         },
-        "register": 18
+        "register": 15
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -2625,7 +2724,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2651,7 +2750,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2677,7 +2776,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2690,7 +2789,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2703,7 +2802,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2729,7 +2828,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2768,7 +2867,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2781,7 +2880,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2859,7 +2958,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 12
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -2898,7 +2997,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     }
@@ -3298,7 +3397,7 @@
       "parentId": "3",
       "id": "12",
       "absPath": "/rank",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责排行榜取数、登录校验与页面组装。\n */\nimport { RankPageView } from './components/RankPageView';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport { useRequestCoinLeaderboard } from '@/hooks/useCoinRequests';\nimport { getAuthToken } from '@/utils/authStorage';\n\nexport default function RankPage() {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const token = getAuthToken();\n  const { user } = useAppSession();\n  const leaderboardQuery = useRequestCoinLeaderboard({ limit: 20 });\n\n  const currentUserId =\n    user?.id !== undefined && user?.id !== null && String(user.id).trim() !== '' ? user.id : undefined;\n  const currentUserName = user?.nickname || user?.username || '我';\n\n  return (\n    <RankPageView\n      isLoginRequired={!token}\n      isLoading={Boolean(token) && leaderboardQuery.isLoading}\n      isError={Boolean(token) && leaderboardQuery.isError}\n      errorMessage={leaderboardQuery.error instanceof Error ? leaderboardQuery.error.message : undefined}\n      data={leaderboardQuery.data ?? null}\n      currentUserId={currentUserId}\n      currentUserName={currentUserName}\n      onOpenAuth={onOpenAuth}\n      onRetry={() => {\n        void leaderboardQuery.refetch();\n      }}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责排行榜取数、登录校验与页面组装。\n */\nimport { RankPageView } from './components/RankPageView';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport { useRequestCoinLeaderboard } from '@/hooks/useCoinRequests';\nimport { getAuthToken } from '@/utils/authStorage';\n\nexport default function RankPage() {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const token = getAuthToken();\n  const { user } = useAppSession();\n  const leaderboardQuery = useRequestCoinLeaderboard({ limit: 100 });\n\n  const currentUserId =\n    user?.id !== undefined && user?.id !== null && String(user.id).trim() !== '' ? user.id : undefined;\n  const currentUserName = user?.nickname || user?.username || '我';\n\n  return (\n    <RankPageView\n      isLoginRequired={!token}\n      isLoading={Boolean(token) && leaderboardQuery.isLoading}\n      isError={Boolean(token) && leaderboardQuery.isError}\n      errorMessage={leaderboardQuery.error instanceof Error ? leaderboardQuery.error.message : undefined}\n      data={leaderboardQuery.data ?? null}\n      currentUserId={currentUserId}\n      currentUserName={currentUserName}\n      onOpenAuth={onOpenAuth}\n      onRetry={() => {\n        void leaderboardQuery.refetch();\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rank/index.tsx"
     },
@@ -3510,7 +3609,7 @@
     "tsVersion": "5.9.3",
     "tslibVersion": "2.8.1"
   },
-  "port": 8000,
+  "port": 8001,
   "host": "0.0.0.0",
   "ip": "192.168.1.7",
   "prepare": {
@@ -4954,12 +5053,12 @@
             "format": "esm"
           },
           "src/hooks/coinTypes.ts": {
-            "bytes": 2130,
+            "bytes": 2174,
             "imports": [],
             "format": "esm"
           },
           "src/hooks/useCoinRequests.ts": {
-            "bytes": 7824,
+            "bytes": 8096,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -5918,7 +6017,7 @@
             "format": "esm"
           },
           "src/layouts/components/StandalonePageShell.tsx": {
-            "bytes": 17546,
+            "bytes": 17653,
             "imports": [
               {
                 "path": "react",
@@ -7612,7 +7711,7 @@
             "format": "esm"
           },
           "src/pages/rank/components/RankPage/index.tsx": {
-            "bytes": 8022,
+            "bytes": 16721,
             "imports": [
               {
                 "path": "react",
@@ -7643,7 +7742,7 @@
             "format": "esm"
           },
           "src/pages/rank/components/RankPageView.tsx": {
-            "bytes": 1128,
+            "bytes": 1121,
             "imports": [
               {
                 "path": "src/pages/rank/components/RankPage/index.tsx",
@@ -7654,7 +7753,7 @@
             "format": "esm"
           },
           "src/pages/rank/index.tsx": {
-            "bytes": 1347,
+            "bytes": 1348,
             "imports": [
               {
                 "path": "src/pages/rank/components/RankPageView.tsx",
@@ -11122,7 +11221,7 @@
                 "bytesInOutput": 163
               },
               "src/hooks/useCoinRequests.ts": {
-                "bytesInOutput": 6451
+                "bytesInOutput": 6682
               },
               "src/hooks/useAiRequests.ts": {
                 "bytesInOutput": 7470
@@ -11254,7 +11353,7 @@
                 "bytesInOutput": 295
               },
               "src/layouts/components/StandalonePageShell.tsx": {
-                "bytesInOutput": 14402
+                "bytesInOutput": 14489
               },
               "src/layouts/components/index.ts": {
                 "bytesInOutput": 136
@@ -11476,13 +11575,13 @@
                 "bytesInOutput": 3157
               },
               "src/pages/rank/components/RankPage/index.tsx": {
-                "bytesInOutput": 8747
+                "bytesInOutput": 18231
               },
               "src/pages/rank/components/RankPageView.tsx": {
-                "bytesInOutput": 668
+                "bytesInOutput": 661
               },
               "src/pages/rank/index.tsx": {
-                "bytesInOutput": 1182
+                "bytesInOutput": 1183
               },
               "src/pages/shop/components/shopPetPreviewStyles.ts": {
                 "bytesInOutput": 1009
@@ -11554,7 +11653,7 @@
                 "bytesInOutput": 7494
               },
               "src/pages/profile/components/ProfilePage.tsx": {
-                "bytesInOutput": 27898
+                "bytesInOutput": 27900
               },
               "src/pages/profile/components/ProfilePageView.tsx": {
                 "bytesInOutput": 346
@@ -11617,7 +11716,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1153459
+            "bytes": 1163257
           }
         }
       }
@@ -25531,39 +25630,79 @@
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rank/components/RankPage/index.tsx": [
         {
-          "end": 90,
+          "end": 145,
           "importKind": "value",
           "source": "react",
           "specifiers": [
             {
               "local": "React",
               "type": "ImportDefaultSpecifier"
+            },
+            {
+              "imported": "useCallback",
+              "local": "useCallback",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRef",
+              "local": "useRef",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useState",
+              "local": "useState",
+              "type": "ImportSpecifier"
             }
           ],
           "start": 64,
           "type": "ImportDeclaration"
         },
         {
-          "end": 135,
+          "end": 240,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
+            {
+              "imported": "ChevronLeft",
+              "local": "ChevronLeft",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "ChevronRight",
+              "local": "ChevronRight",
+              "type": "ImportSpecifier"
+            },
             {
               "imported": "Coins",
               "local": "Coins",
               "type": "ImportSpecifier"
             },
             {
-              "imported": "Flame",
-              "local": "Flame",
+              "imported": "Crosshair",
+              "local": "Crosshair",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Search",
+              "local": "Search",
               "type": "ImportSpecifier"
             }
           ],
-          "start": 91,
+          "start": 146,
           "type": "ImportDeclaration"
         },
         {
-          "end": 220,
+          "end": 325,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -25578,11 +25717,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 136,
+          "start": 241,
           "type": "ImportDeclaration"
         },
         {
-          "end": 308,
+          "end": 413,
           "importKind": "value",
           "source": "@/components/common/state/PageState",
           "specifiers": [
@@ -25597,11 +25736,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 221,
+          "start": 326,
           "type": "ImportDeclaration"
         },
         {
-          "end": 366,
+          "end": 471,
           "importKind": "value",
           "source": "@/utils/userAvatar",
           "specifiers": [
@@ -25611,11 +25750,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 309,
+          "start": 414,
           "type": "ImportDeclaration"
         },
         {
-          "end": 408,
+          "end": 513,
           "importKind": "value",
           "source": "./index.module.scss",
           "specifiers": [
@@ -25624,7 +25763,7 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 367,
+          "start": 472,
           "type": "ImportDeclaration"
         }
       ],
