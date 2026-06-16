@@ -148,6 +148,50 @@
   cursor: not-allowed;
 }
 
+.time-section {
+  margin-top: 14px;
+}
+
+.time-label {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #a1a1aa;
+}
+
+.time-pickers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.select-wrap {
+  min-width: 0;
+}
+
+.time-select {
+  width: 100%;
+  appearance: none;
+  padding: 11px 34px 11px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0e0e10;
+  color: #fafafa;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5' stroke='%2371717a' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+.hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #f59e0b;
+}
+
 .selected-box {
   margin-top: 14px;
   padding: 12px 14px;

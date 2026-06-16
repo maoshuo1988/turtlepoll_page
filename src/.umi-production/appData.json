@@ -65,7 +65,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -109,10 +109,10 @@
       "time": {
         "hooks": {
           "onStart": [
-            0
+            1
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -129,7 +129,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -156,10 +156,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            8
+            10
           ]
         },
-        "register": 12
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -172,7 +172,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1105,10 +1105,10 @@
       "time": {
         "hooks": {
           "onStart": [
-            1
+            0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1121,7 +1121,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1134,7 +1134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 41
+        "register": 44
       },
       "enableBy": "register"
     },
@@ -1216,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 17
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1280,10 +1280,10 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1295,7 +1295,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1321,7 +1321,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1334,7 +1334,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1360,7 +1360,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -1488,7 +1488,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1500,7 +1500,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/legacy/legacy": {
@@ -1525,7 +1525,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1538,7 +1538,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1567,7 +1567,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1579,7 +1579,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 14
+        "register": 15
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1641,7 +1641,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1654,7 +1654,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 13
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1692,7 +1692,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1770,7 +1770,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1796,7 +1796,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1835,7 +1835,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1848,7 +1848,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1939,7 +1939,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2365,7 +2365,7 @@
       "parentId": "3",
       "id": "12",
       "absPath": "/rank",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责排行榜取数、登录校验与页面组装。\n */\nimport { RankPageView } from './components/RankPageView';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport { useRequestCoinLeaderboard } from '@/hooks/useCoinRequests';\nimport { getAuthToken } from '@/utils/authStorage';\n\nexport default function RankPage() {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const token = getAuthToken();\n  const { user } = useAppSession();\n  const leaderboardQuery = useRequestCoinLeaderboard({ limit: 100 });\n\n  const currentUserId =\n    user?.id !== undefined && user?.id !== null && String(user.id).trim() !== '' ? user.id : undefined;\n  const currentUserName = user?.nickname || user?.username || '我';\n\n  return (\n    <RankPageView\n      isLoginRequired={!token}\n      isLoading={Boolean(token) && leaderboardQuery.isLoading}\n      isError={Boolean(token) && leaderboardQuery.isError}\n      errorMessage={leaderboardQuery.error instanceof Error ? leaderboardQuery.error.message : undefined}\n      data={leaderboardQuery.data ?? null}\n      currentUserId={currentUserId}\n      currentUserName={currentUserName}\n      onOpenAuth={onOpenAuth}\n      onRetry={() => {\n        void leaderboardQuery.refetch();\n      }}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责排行榜取数、登录校验与页面组装。\n */\nimport { RankPageView } from './components/RankPageView';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport { useRequestCoinLeaderboard } from '@/hooks/useCoinRequests';\nimport { getAuthToken } from '@/utils/authStorage';\n\nexport default function RankPage() {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const token = getAuthToken();\n  const { user } = useAppSession();\n  const leaderboardQuery = useRequestCoinLeaderboard({ limit: 200 });\n\n  const currentUserId =\n    user?.id !== undefined && user?.id !== null && String(user.id).trim() !== '' ? user.id : undefined;\n  const currentUserName = user?.nickname || user?.username || '我';\n\n  return (\n    <RankPageView\n      isLoginRequired={!token}\n      isLoading={Boolean(token) && leaderboardQuery.isLoading}\n      isError={Boolean(token) && leaderboardQuery.isError}\n      errorMessage={leaderboardQuery.error instanceof Error ? leaderboardQuery.error.message : undefined}\n      data={leaderboardQuery.data ?? null}\n      currentUserId={currentUserId}\n      currentUserName={currentUserName}\n      onOpenAuth={onOpenAuth}\n      onRetry={() => {\n        void leaderboardQuery.refetch();\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rank/index.tsx"
     },

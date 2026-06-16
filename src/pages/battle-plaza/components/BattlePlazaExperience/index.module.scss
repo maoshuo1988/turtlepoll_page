@@ -1190,6 +1190,9 @@
     grid-template-columns:repeat(3, minmax(0, 1fr));
     gap:8px;
   }
+  .page-battle-square .compose-settle-time-pickers {
+    margin-top:8px;
+  }
   .page-battle-square .compose-settle-select {
     padding:11px 34px 11px 12px;
     font-size:14px;

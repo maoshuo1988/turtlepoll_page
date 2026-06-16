@@ -33,15 +33,21 @@ import { BattlePlazaSettleDatePicker } from '../BattlePlazaSettleDatePicker';
 import { BattlePlazaStakeModal } from '../BattlePlazaStakeModal';
 import {
   buildComposeSettleDayOptions,
+  buildComposeSettleHourOptions,
+  buildComposeSettleMinuteOptions,
   buildComposeSettleMonthOptions,
+  buildComposeSettleSecondOptions,
   buildComposeSettleYearOptions,
-  composeSettleTimestamp,
+  composeSettleTimestampFromParts,
   formatComposeSettleSummary,
-  getDefaultComposeSettleDate,
-  getMinComposeSettleDate,
-  isComposeSettleDateDisabled,
+  getDefaultComposeSettleDateTime,
+  getMinComposeSettleDateTimeLabel,
+  isComposeSettleDateTimeDisabled,
+  normalizeComposeSettleDateTimeParts,
   partsFromComposeSettleDate,
   partsToComposeSettleDate,
+  type ComposeSettleDateParts,
+  type ComposeSettleDateTimeParts,
 } from '../composeSettleDate';
 import {
   DEFAULT_USER_AVATAR,
@@ -424,7 +430,7 @@ export const BattlePlazaPage: React.FC = () => {
   const [challengerOpinion, setChallengerOpinion] = useState('');
   const [wagerInput, setWagerInput] = useState(String(DEFAULT_COMPOSE_WAGER));
   const [visibility, setVisibility] = useState<'public' | 'private'>('public');
-  const [settleDate, setSettleDate] = useState(getDefaultComposeSettleDate);
+  const [settleDateTime, setSettleDateTime] = useState<ComposeSettleDateTimeParts>(getDefaultComposeSettleDateTime);
   const [settleCalendarOpen, setSettleCalendarOpen] = useState(false);
   const [inviteCodeModal, setInviteCodeModal] = useState<{
     inviteCode: string;
@@ -623,14 +629,21 @@ export const BattlePlazaPage: React.FC = () => {
 
   const joinAmountValue = Number(joinAmount);
   const addStakeAmountValue = Number(addStakeAmount);
-  const settleDateParts = useMemo(() => partsFromComposeSettleDate(settleDate), [settleDate]);
+  const settleDateParts = useMemo(() => partsFromComposeSettleDate(partsToComposeSettleDate(
+    settleDateTime.year,
+    settleDateTime.month,
+    settleDateTime.day,
+  )), [settleDateTime.day, settleDateTime.month, settleDateTime.year]);
   const settleYearOptions = useMemo(() => buildComposeSettleYearOptions(), []);
   const settleMonthOptions = useMemo(() => buildComposeSettleMonthOptions(), []);
   const settleDayOptions = useMemo(
     () => buildComposeSettleDayOptions(settleDateParts.year, settleDateParts.month),
     [settleDateParts.month, settleDateParts.year],
   );
-  const settleTimestamp = useMemo(() => composeSettleTimestamp(settleDate), [settleDate]);
+  const settleHourOptions = useMemo(() => buildComposeSettleHourOptions(), []);
+  const settleMinuteOptions = useMemo(() => buildComposeSettleMinuteOptions(), []);
+  const settleSecondOptions = useMemo(() => buildComposeSettleSecondOptions(), []);
+  const settleTimestamp = useMemo(() => composeSettleTimestampFromParts(settleDateTime), [settleDateTime]);
   const composeWagerAmount = useMemo(() => {
     if (!wagerInput.trim()) return Number.NaN;
     const next = Number(wagerInput);
@@ -644,7 +657,7 @@ export const BattlePlazaPage: React.FC = () => {
     challengerOpinion.trim().length > 0 &&
     wagerInput.trim().length > 0 &&
     Boolean(settleTimestamp) &&
-    !isComposeSettleDateDisabled(settleDate);
+    !isComposeSettleDateTimeDisabled(settleDateTime);
   const canSubmitJoin =
     isAuthenticated &&
     !joinBattleMutation.isLoading &&
@@ -721,12 +734,15 @@ export const BattlePlazaPage: React.FC = () => {
     }
   };
 
-  const updateSettleParts = (next: Partial<{ year: number; month: number; day: number }>) => {
-    const merged = {
-      ...settleDateParts,
+  const updateSettleParts = (next: Partial<ComposeSettleDateTimeParts>) => {
+    setSettleDateTime((current) => normalizeComposeSettleDateTimeParts({
+      ...current,
       ...next,
-    };
-    setSettleDate(partsToComposeSettleDate(merged.year, merged.month, merged.day));
+    }));
+  };
+
+  const updateSettleDateParts = (next: Partial<ComposeSettleDateParts>) => {
+    updateSettleParts(next);
   };
 
   /** 做庄表单 + 底部私人邀请码：确认开局后清空 */
@@ -736,7 +752,7 @@ export const BattlePlazaPage: React.FC = () => {
     setChallengerOpinion('');
     setWagerInput(String(DEFAULT_COMPOSE_WAGER));
     setVisibility('public');
-    setSettleDate(getDefaultComposeSettleDate());
+    setSettleDateTime(getDefaultComposeSettleDateTime());
     setSettleCalendarOpen(false);
   };
 
@@ -883,11 +899,7 @@ export const BattlePlazaPage: React.FC = () => {
       return;
     }
 
-    if (isComposeSettleDateDisabled(settleDate)) {
-      pushFeedback('error', '结算时间必须晚于当前时间。');
-      return;
-    }
-    if (settleTimestamp <= Math.floor(Date.now() / 1000)) {
+    if (isComposeSettleDateTimeDisabled(settleDateTime)) {
       pushFeedback('error', '结算时间必须晚于当前时间。');
       return;
     }
@@ -1742,7 +1754,7 @@ export const BattlePlazaPage: React.FC = () => {
                       <select
                         className={css("compose-select compose-settle-select")}
                         value={settleDateParts.year}
-                        onChange={(e) => updateSettleParts({ year: Number(e.target.value) })}
+                        onChange={(e) => updateSettleDateParts({ year: Number(e.target.value) })}
                         aria-label="结算年份"
                       >
                         {settleYearOptions.map((year) => (
@@ -1756,7 +1768,7 @@ export const BattlePlazaPage: React.FC = () => {
                       <select
                         className={css("compose-select compose-settle-select")}
                         value={settleDateParts.month}
-                        onChange={(e) => updateSettleParts({ month: Number(e.target.value) })}
+                        onChange={(e) => updateSettleDateParts({ month: Number(e.target.value) })}
                         aria-label="结算月份"
                       >
                         {settleMonthOptions.map((month) => (
@@ -1770,7 +1782,7 @@ export const BattlePlazaPage: React.FC = () => {
                       <select
                         className={css("compose-select compose-settle-select")}
                         value={settleDateParts.day}
-                        onChange={(e) => updateSettleParts({ day: Number(e.target.value) })}
+                        onChange={(e) => updateSettleDateParts({ day: Number(e.target.value) })}
                         aria-label="结算日期"
                       >
                         {settleDayOptions.map((day) => (
@@ -1781,10 +1793,54 @@ export const BattlePlazaPage: React.FC = () => {
                       </select>
                     </div>
                   </div>
+                  <div className={css("compose-settle-pickers compose-settle-time-pickers")}>
+                    <div className={css("compose-select-wrap")}>
+                      <select
+                        className={css("compose-select compose-settle-select")}
+                        value={settleDateTime.hour}
+                        onChange={(e) => updateSettleParts({ hour: Number(e.target.value) })}
+                        aria-label="结算小时"
+                      >
+                        {settleHourOptions.map((hour) => (
+                          <option key={hour} value={hour}>
+                            {String(hour).padStart(2, '0')} 时
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className={css("compose-select-wrap")}>
+                      <select
+                        className={css("compose-select compose-settle-select")}
+                        value={settleDateTime.minute}
+                        onChange={(e) => updateSettleParts({ minute: Number(e.target.value) })}
+                        aria-label="结算分钟"
+                      >
+                        {settleMinuteOptions.map((minute) => (
+                          <option key={minute} value={minute}>
+                            {String(minute).padStart(2, '0')} 分
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className={css("compose-select-wrap")}>
+                      <select
+                        className={css("compose-select compose-settle-select")}
+                        value={settleDateTime.second}
+                        onChange={(e) => updateSettleParts({ second: Number(e.target.value) })}
+                        aria-label="结算秒数"
+                      >
+                        {settleSecondOptions.map((second) => (
+                          <option key={second} value={second}>
+                            {String(second).padStart(2, '0')} 秒
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                   <div className={css("compose-settle-meta")}>
                     <div className={css("compose-settle-summary")}>
                       <Clock3 size={14} aria-hidden className={css("compose-settle-clock")} />
-                      <span>{formatComposeSettleSummary(settleDate)}</span>
+                      <span>{formatComposeSettleSummary(settleDateTime)}</span>
                     </div>
                     <button
                       type="button"
@@ -1795,9 +1851,9 @@ export const BattlePlazaPage: React.FC = () => {
                       日历选择
                     </button>
                   </div>
-                  {isComposeSettleDateDisabled(settleDate) ? (
+                  {isComposeSettleDateTimeDisabled(settleDateTime) ? (
                     <p className={css("compose-settle-hint")}>
-                      最早可选 {getMinComposeSettleDate()} 18:00 之后的结算时间。
+                      结算时间必须晚于当前时间，最早可选 {getMinComposeSettleDateTimeLabel()} 之后。
                     </p>
                   ) : null}
                 </div>
@@ -1830,9 +1886,9 @@ export const BattlePlazaPage: React.FC = () => {
 
         <BattlePlazaSettleDatePicker
           open={composeOpen && settleCalendarOpen}
-          value={settleDate}
+          value={settleDateTime}
           onClose={() => setSettleCalendarOpen(false)}
-          onConfirm={setSettleDate}
+          onConfirm={(nextDateTime) => setSettleDateTime(normalizeComposeSettleDateTimeParts(nextDateTime))}
         />
 
         <BattlePlazaInviteCodeModal

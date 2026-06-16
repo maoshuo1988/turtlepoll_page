@@ -1,14 +1,19 @@
-/** 文件说明：做庄弹框结算日期日历选择器。 */
+/** 文件说明：做庄弹框结算日期与时间选择器。 */
 import { useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { Check } from 'lucide-react';
 import styles from './index.module.scss';
 import {
   buildComposeCalendarCells,
+  buildComposeSettleHourOptions,
+  buildComposeSettleMinuteOptions,
+  buildComposeSettleSecondOptions,
   COMPOSE_SETTLE_WEEK_LABELS,
   formatComposeSettleDisplay,
-  isComposeSettleDateDisabled,
-  parseComposeSettleDate,
+  isComposeSettleDateTimeDisabled,
+  normalizeComposeSettleDateTimeParts,
+  partsFromComposeSettleDate,
+  type ComposeSettleDateTimeParts,
 } from '../composeSettleDate';
 
 function css(...classNames: Array<string | false | null | undefined>) {
@@ -34,9 +39,9 @@ function CalendarTitleIcon({ className }: { className?: string }) {
 
 export interface BattlePlazaSettleDatePickerProps {
   open: boolean;
-  value: string;
+  value: ComposeSettleDateTimeParts;
   onClose: () => void;
-  onConfirm: (dateValue: string) => void;
+  onConfirm: (dateTime: ComposeSettleDateTimeParts) => void;
 }
 
 export function BattlePlazaSettleDatePicker({
@@ -45,22 +50,33 @@ export function BattlePlazaSettleDatePicker({
   onClose,
   onConfirm,
 }: BattlePlazaSettleDatePickerProps) {
-  const [draftDate, setDraftDate] = useState(value);
-  const [viewMonth, setViewMonth] = useState(() => parseComposeSettleDate(value) ?? dayjs());
+  const [draftDateTime, setDraftDateTime] = useState<ComposeSettleDateTimeParts>(value);
+  const [viewMonth, setViewMonth] = useState(() => dayjs(`${value.year}-${String(value.month).padStart(2, '0')}-${String(value.day).padStart(2, '0')}T12:00:00`));
 
   useEffect(() => {
     if (!open) return;
-    setDraftDate(value);
-    setViewMonth(parseComposeSettleDate(value) ?? dayjs());
+    const next = normalizeComposeSettleDateTimeParts(value);
+    setDraftDateTime(next);
+    setViewMonth(dayjs(`${next.year}-${String(next.month).padStart(2, '0')}-${String(next.day).padStart(2, '0')}T12:00:00`));
   }, [open, value]);
 
+  const draftDate = `${draftDateTime.year}-${String(draftDateTime.month).padStart(2, '0')}-${String(draftDateTime.day).padStart(2, '0')}`;
   const cells = useMemo(() => buildComposeCalendarCells(viewMonth), [viewMonth]);
+  const hourOptions = useMemo(() => buildComposeSettleHourOptions(), []);
+  const minuteOptions = useMemo(() => buildComposeSettleMinuteOptions(), []);
+  const secondOptions = useMemo(() => buildComposeSettleSecondOptions(), []);
+  const draftDisplay = useMemo(() => formatComposeSettleDisplay(draftDateTime), [draftDateTime]);
+  const isDraftDisabled = isComposeSettleDateTimeDisabled(draftDateTime);
 
   if (!open) return null;
 
+  const updateDraft = (next: Partial<ComposeSettleDateTimeParts>) => {
+    setDraftDateTime((current) => normalizeComposeSettleDateTimeParts({ ...current, ...next }));
+  };
+
   const handleConfirm = () => {
-    if (isComposeSettleDateDisabled(draftDate)) return;
-    onConfirm(draftDate);
+    if (isDraftDisabled) return;
+    onConfirm(draftDateTime);
     onClose();
   };
 
@@ -76,7 +92,7 @@ export function BattlePlazaSettleDatePicker({
         <div className={css('head')}>
           <div className={css('title-row')} id="compose-settle-picker-title">
             <CalendarTitleIcon className={css('title-ico')} />
-            <span>选择结算日期</span>
+            <span>选择结算时间</span>
           </div>
           <button type="button" className={css('close')} aria-label="关闭" onClick={onClose}>
             ✕
@@ -125,17 +141,69 @@ export function BattlePlazaSettleDatePicker({
                   cell.disabled && 'day-disabled',
                 )}
                 disabled={cell.disabled}
-                onClick={() => setDraftDate(cell.date)}
+                onClick={() => updateDraft(partsFromComposeSettleDate(cell.date))}
               >
                 {cell.label}
               </button>
             ))}
           </div>
 
-          <div className={css('selected-box')}>
-            <span className={css('selected-label')}>已选结算日期</span>
-            <span className={css('selected-value')}>{formatComposeSettleDisplay(draftDate)}</span>
+          <div className={css('time-section')}>
+            <div className={css('time-label')}>结算时分秒</div>
+            <div className={css('time-pickers')}>
+              <div className={css('select-wrap')}>
+                <select
+                  className={css('time-select')}
+                  value={draftDateTime.hour}
+                  onChange={(event) => updateDraft({ hour: Number(event.target.value) })}
+                  aria-label="结算小时"
+                >
+                  {hourOptions.map((hour) => (
+                    <option key={hour} value={hour}>
+                      {String(hour).padStart(2, '0')} 时
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={css('select-wrap')}>
+                <select
+                  className={css('time-select')}
+                  value={draftDateTime.minute}
+                  onChange={(event) => updateDraft({ minute: Number(event.target.value) })}
+                  aria-label="结算分钟"
+                >
+                  {minuteOptions.map((minute) => (
+                    <option key={minute} value={minute}>
+                      {String(minute).padStart(2, '0')} 分
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={css('select-wrap')}>
+                <select
+                  className={css('time-select')}
+                  value={draftDateTime.second}
+                  onChange={(event) => updateDraft({ second: Number(event.target.value) })}
+                  aria-label="结算秒数"
+                >
+                  {secondOptions.map((second) => (
+                    <option key={second} value={second}>
+                      {String(second).padStart(2, '0')} 秒
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
+
+          <div className={css('selected-box')}>
+            <span className={css('selected-label')}>已选结算时间</span>
+            <span className={css('selected-value')}>{draftDisplay}</span>
+          </div>
+
+          {isDraftDisabled ? (
+            <p className={css('hint')}>结算时间必须晚于当前时间。</p>
+          ) : null}
         </div>
 
         <div className={css('foot')}>
@@ -146,11 +214,11 @@ export function BattlePlazaSettleDatePicker({
             type="button"
             className={css('confirm')}
             onClick={handleConfirm}
-            disabled={isComposeSettleDateDisabled(draftDate)}
-            style={isComposeSettleDateDisabled(draftDate) ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
+            disabled={isDraftDisabled}
+            style={isDraftDisabled ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
           >
             <Check size={16} aria-hidden />
-            确认日期
+            确认时间
           </button>
         </div>
       </div>
