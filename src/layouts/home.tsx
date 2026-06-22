@@ -53,6 +53,9 @@ export default function HomeLayout() {
   const location = useLocation();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const activeView = useMemo(() => {
+    if (location.pathname.startsWith('/settlement/')) {
+      return 'predictions';
+    }
     if (location.pathname === '/event-battle') {
       const routeState = location.state as EventBattleRouteState | null;
       const returnPath = routeState?.returnTo?.split('?')[0];

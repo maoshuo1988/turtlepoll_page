@@ -44,6 +44,8 @@ import {
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import { AUTH_REQUIRED_EVENT, clearAuthRequiredFlag, clearInfo, getAuthToken, hasAuthRequiredFlag, requireAuthOrOpen } from '@/utils/authStorage';
 import { scrollAppContentToTop } from '@/utils/scrollAppContent';
+import { SettlementHost, useSettlementEntryState } from '@/components/common/settlement/SettlementHost';
+import { SettlementLayoutProvider } from '@/layouts/context/SettlementLayoutContext';
 
 const THEME_KEY = 'theme';
 
@@ -129,11 +131,20 @@ export function StandalonePageShell({
   const [aiPetDialogue, setAiPetDialogue] = useState<string | null>(null);
   const [aiPushMessages, setAiPushMessages] = useState<AiPushMessage[]>([]);
   const [guideTourOpen, setGuideTourOpen] = useState(false);
+  const {
+    drawerOpen: settlementDrawerOpen,
+    setDrawerOpen: setSettlementDrawerOpen,
+    hiddenIds: settlementHiddenIds,
+    hideItem: hideSettlementItem,
+    resetHiddenIds: resetSettlementHiddenIds,
+    visibleCount: pendingSettlementCount,
+  } = useSettlementEntryState();
   const signOutMutation = useRequestSignout();
   const darkMode = theme === 'dark';
   const { coinMe } = useAppSession();
   const isAuthenticated = Boolean(getAuthToken());
   const isEventBattleRoute = location.pathname === '/event-battle';
+  const isSettlementRoute = location.pathname.startsWith('/settlement/');
   // 左侧栏宠物卡片需要同时读取装备、拥有、体力和心情状态。
   const petEquipQuery = useRequestPetEquip();
   const petOwnedQuery = useRequestPetOwned();
@@ -374,6 +385,11 @@ export function StandalonePageShell({
     setGuideTourOpen(true);
   }, []);
 
+  const handleOpenSettlements = useCallback(() => {
+    if (!requireAuthOrOpen(() => onAuthModalOpenChange(true))) return;
+    setSettlementDrawerOpen(true);
+  }, [onAuthModalOpenChange]);
+
   const handleRequireAuthNavigation = useCallback((path: string) => {
     if (!requireAuthOrOpen(() => onAuthModalOpenChange(true))) return;
 
@@ -413,7 +429,8 @@ export function StandalonePageShell({
     setAiPetDialogue(null);
     setAiPushMessages([]);
     displayedAiPushIdsRef.current.clear();
-  }, [queryClient]);
+    resetSettlementHiddenIds();
+  }, [queryClient, resetSettlementHiddenIds]);
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -451,7 +468,7 @@ export function StandalonePageShell({
   const resolvedContentClassName =
     activeView === 'profile'
       ? `${contentClassName} lg:h-full lg:min-h-full lg:bg-[#080808]`
-      : activeView === 'rank'
+      : isSettlementRoute || activeView === 'rank'
         ? `${contentClassName} flex h-full min-h-0 flex-col lg:h-full`
         : activeView === 'pet'
           ? `${contentClassName} px-3 pb-4 pt-[10px] lg:px-4`
@@ -480,10 +497,19 @@ export function StandalonePageShell({
 
         navigate({ pathname: '/profile', hash: 'settings' });
       }}
+      onOpenSettlements={handleOpenSettlements}
+      pendingSettlementCount={isAuthenticated ? pendingSettlementCount : 0}
       showSidebar={showSidebar && Boolean(sidebarProps)}
       sidebarProps={sidebarProps}
     >
-      {typeof children === 'function' ? children({ darkMode, onToggleTheme: handleToggleTheme, aiPushMessages }) : children}
+      <SettlementLayoutProvider
+        value={{
+          openSettlementDrawer: () => setSettlementDrawerOpen(true),
+          hideSettlementItem,
+        }}
+      >
+        {typeof children === 'function' ? children({ darkMode, onToggleTheme: handleToggleTheme, aiPushMessages }) : children}
+      </SettlementLayoutProvider>
 
       <AuthModal
         open={authModalOpen}
@@ -493,6 +519,14 @@ export function StandalonePageShell({
       />
 
       <GuideTourModal open={guideTourOpen} onClose={() => setGuideTourOpen(false)} />
+
+      {isAuthenticated ? (
+        <SettlementHost
+          open={settlementDrawerOpen}
+          onOpenChange={setSettlementDrawerOpen}
+          hiddenIds={settlementHiddenIds}
+        />
+      ) : null}
     </AppPageLayout>
   );
 }

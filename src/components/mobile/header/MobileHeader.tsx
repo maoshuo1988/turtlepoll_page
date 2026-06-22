@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Gamepad2, Menu, X } from 'lucide-react';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { MOBILE_HEADER_INNER_HEIGHT_PX } from './mobileHeaderMetrics';
+import { SettlementEntryButton } from '@/components/common/settlement/SettlementEntryButton';
 
 export interface MobileHeaderProps {
   darkMode: boolean;
@@ -14,6 +15,8 @@ export interface MobileHeaderProps {
   onOpenAuth: () => void;
   onOpenProfile?: () => void;
   onSignOut?: () => void | Promise<void>;
+  onOpenSettlements?: () => void;
+  pendingSettlementCount?: number;
 }
 
 export const MobileHeader: React.FC<MobileHeaderProps> = ({
@@ -24,6 +27,8 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
   onOpenAuth,
   onOpenProfile,
   onSignOut,
+  onOpenSettlements,
+  pendingSettlementCount = 0,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -42,6 +47,13 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
           </div>
 
           <div className="flex shrink-0 items-center gap-1.5">
+            {onOpenSettlements ? (
+              <SettlementEntryButton
+                pendingCount={pendingSettlementCount}
+                onClick={onOpenSettlements}
+                className="h-9 px-3 text-[12px] lg:hidden"
+              />
+            ) : null}
             <button
               type="button"
               onClick={onOpenGames}

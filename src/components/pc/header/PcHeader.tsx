@@ -7,6 +7,7 @@ import { CircleHelp, Gamepad2, LogIn, LogOut, Settings, Shield, Trophy, UserRoun
 import { getAuthToken } from '@/utils/authStorage';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { createUserAvatarUrl } from '@/utils/userAvatar';
+import { SettlementEntryButton } from '@/components/common/settlement/SettlementEntryButton';
 
 export interface PcHeaderProps {
   darkMode: boolean;
@@ -19,6 +20,8 @@ export interface PcHeaderProps {
   onOpenRank?: () => void;
   /** 已登录时头像菜单「设置」 */
   onOpenSettings?: () => void;
+  onOpenSettlements?: () => void;
+  pendingSettlementCount?: number;
 }
 
 export const PcHeader: React.FC<PcHeaderProps> = ({
@@ -29,6 +32,8 @@ export const PcHeader: React.FC<PcHeaderProps> = ({
   onOpenHelp,
   onOpenRank,
   onOpenSettings,
+  onOpenSettlements,
+  pendingSettlementCount = 0,
 }) => {
   const navigate = useNavigate();
   const isAuthenticated = Boolean(getAuthToken());
@@ -87,6 +92,12 @@ export const PcHeader: React.FC<PcHeaderProps> = ({
               <Trophy size={18} className="shrink-0 text-amber-400" strokeWidth={2} aria-hidden />
               <span>排行榜</span>
             </button>
+          ) : null}
+          {onOpenSettlements ? (
+            <SettlementEntryButton
+              pendingCount={pendingSettlementCount}
+              onClick={onOpenSettlements}
+            />
           ) : null}
           <div className="group relative">
             <button

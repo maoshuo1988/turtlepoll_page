@@ -41,6 +41,7 @@ export default defineConfig({
         { path: '/pet', component: 'pet', name: '宠物' },
         { path: '/profile', component: 'profile', name: '个人中心' },
         { path: '/active-predictions', component: 'active-predictions', name: '活跃预测' },
+        { path: '/settlement/:kind/:id', component: 'settlement', name: '结算详情' },
       ],
     },
   ],

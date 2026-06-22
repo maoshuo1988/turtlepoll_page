@@ -36,6 +36,9 @@ type HeaderProps = {
   onOpenRank?: () => void;
   /** PC 顶栏头像菜单「设置」（登录态） */
   onOpenSettings?: () => void;
+  /** 顶栏「结算」抽屉 */
+  onOpenSettlements?: () => void;
+  pendingSettlementCount?: number;
 };
 
 type SidebarProps = React.ComponentProps<typeof Sidebar>;
@@ -72,6 +75,8 @@ export function AppLayoutHeader(props: HeaderProps) {
         onOpenHelp={props.onOpenHelp}
         onOpenRank={props.onOpenRank}
         onOpenSettings={props.onOpenSettings}
+        onOpenSettlements={props.onOpenSettlements}
+        pendingSettlementCount={props.pendingSettlementCount}
       />
       <MobileHeader
         darkMode={props.darkMode}
@@ -81,6 +86,8 @@ export function AppLayoutHeader(props: HeaderProps) {
         onOpenAuth={props.onOpenAuth}
         onOpenProfile={props.onOpenProfile}
         onSignOut={props.onSignOut}
+        onOpenSettlements={props.onOpenSettlements}
+        pendingSettlementCount={props.pendingSettlementCount}
       />
     </>
   );
@@ -127,6 +134,8 @@ export function AppPageLayout({
   onOpenHelp,
   onOpenRank,
   onOpenSettings,
+  onOpenSettlements,
+  pendingSettlementCount,
   sidebarProps,
   showSidebar = false,
   showFooter = true,
@@ -178,6 +187,8 @@ export function AppPageLayout({
         onOpenHelp={onOpenHelp}
         onOpenRank={onOpenRank}
         onOpenSettings={onOpenSettings}
+        onOpenSettlements={onOpenSettlements}
+        pendingSettlementCount={pendingSettlementCount}
       />
 
       {showSidebar && sidebarProps ? (

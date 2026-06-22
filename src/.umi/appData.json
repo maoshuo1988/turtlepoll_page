@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 10
       },
       "enableBy": "register"
     },
@@ -137,6 +137,14 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -154,53 +162,91 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            18,
+            28,
+            6,
+            48,
+            28,
+            9,
             8,
-            35,
-            16,
             7,
-            6,
-            8,
-            10,
             9,
-            22,
-            9,
-            6,
+            11,
             10,
             8,
-            9,
-            4,
-            8,
-            6,
-            5,
-            5,
-            6,
-            6,
-            8,
-            6,
-            5,
-            5,
-            8,
+            10,
             7,
-            7,
-            9,
-            5,
             12,
-            14,
-            6,
             10,
             8,
             9,
+            10,
+            9,
+            16,
+            5,
+            10,
+            7,
+            15,
+            16,
+            19,
+            23,
+            12,
+            8,
+            9,
+            9,
+            10,
+            7,
+            13,
+            6,
+            6,
+            8,
             7,
             10,
+            7,
+            12,
+            11,
+            7,
+            8,
+            6,
+            12,
+            9,
+            7,
+            8,
             11,
             6,
-            55,
+            11,
+            10,
+            7,
+            9,
+            7,
+            7,
+            5,
+            8,
+            6,
+            6,
+            7,
+            8,
+            17,
+            10,
+            6,
+            7,
+            7,
+            7,
+            23,
+            19,
+            23,
+            9,
+            8,
+            16,
             14,
+            11,
             13,
+            6,
             8,
             9,
-            12
+            7,
+            11,
+            11,
+            6
           ]
         },
         "register": 0
@@ -217,21 +263,29 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            9
+            13
           ],
           "onGenerateFiles": [
-            0,
-            12,
-            19,
-            17,
-            8,
-            19,
-            6,
-            6,
-            8,
+            1,
             14,
-            16,
-            13
+            18,
+            17,
+            17,
+            6,
+            8,
+            15,
+            15,
+            12,
+            13,
+            18,
+            13,
+            13,
+            11,
+            15,
+            13,
+            15,
+            9,
+            10
           ]
         },
         "register": 11
@@ -257,7 +311,15 @@
             0,
             0,
             0,
-            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0
           ]
@@ -276,6 +338,7 @@
       "time": {
         "hooks": {
           "onCheckConfig": [
+            0,
             0
           ],
           "onCheck": [
@@ -284,6 +347,18 @@
           "onPrepareBuildSuccess": [
             0,
             0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -301,10 +376,29 @@
             0,
             0,
             1,
+            0,
+            0,
             0
           ],
           "onCheckCode": [
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             1,
             0,
             0,
@@ -325,6 +419,27 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
             0,
             0,
             0,
@@ -358,7 +473,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -385,10 +500,11 @@
       "time": {
         "hooks": {
           "modifyConfig": [
+            0,
             0
           ]
         },
-        "register": 4
+        "register": 5
       },
       "enableBy": "register"
     },
@@ -1257,7 +1373,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1271,10 +1387,10 @@
       "time": {
         "hooks": {
           "addBeforeMiddlewares": [
-            6
+            5
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1287,7 +1403,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 39
+        "register": 42
       },
       "enableBy": "register"
     },
@@ -1300,7 +1416,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 17
       },
       "enableBy": "config"
     },
@@ -1313,7 +1429,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 10
       },
       "enableBy": "config"
     },
@@ -1341,8 +1457,6 @@
             0,
             0,
             0,
-            0,
-            0,
             0
           ]
         },
@@ -1361,21 +1475,37 @@
         "hooks": {
           "onGenerateFiles": [
             1,
+            0,
+            0,
+            1,
+            4,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
             1,
             0,
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            1,
+            2,
             0,
             0
           ],
           "addRuntimePlugin": [
             0,
+            0,
+            0,
+            0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1388,7 +1518,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1401,7 +1531,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1418,7 +1548,7 @@
             0
           ],
           "addBeforeMiddlewares": [
-            0
+            1
           ]
         },
         "register": 17
@@ -1433,7 +1563,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1446,7 +1576,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides": {
@@ -1470,9 +1600,33 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1526,23 +1680,48 @@
       "time": {
         "hooks": {
           "modifyConfig": [
+            0,
             0
           ],
           "onGenerateFiles": [
             38,
             25,
+            22,
             18,
-            7,
-            7,
+            25,
             9,
-            7,
-            7,
-            7,
-            20,
+            14,
+            13,
+            15,
+            12,
+            10,
             18,
-            15
+            11,
+            9,
+            15,
+            8,
+            9,
+            18,
+            10,
+            8
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1605,6 +1784,22 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1622,7 +1817,15 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            87,
+            85,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1681,19 +1884,27 @@
             0,
             0,
             0,
-            1,
             0,
             0,
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
             0
           ],
           "addBeforeMiddlewares": [
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1707,30 +1918,46 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            6,
+            5,
+            2,
+            21,
+            2,
+            18,
             1,
-            132,
-            12,
+            8,
+            1,
             9,
             1,
-            5,
+            4,
+            1,
+            8,
+            1,
+            8,
+            1,
+            9,
+            1,
+            9,
+            0,
+            6,
             1,
             7,
             0,
-            9,
-            1,
-            5,
-            0,
             4,
             0,
+            5,
+            0,
+            6,
+            0,
+            6,
+            1,
             5,
             0,
             8,
-            0,
-            11,
             1,
-            4,
-            1
+            5,
+            1,
+            6,
+            0
           ]
         },
         "register": 2
@@ -1759,7 +1986,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1771,7 +1998,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -1785,18 +2012,26 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            192,
-            51,
-            5,
+            189,
+            19,
+            13,
+            11,
+            8,
+            4,
+            3,
             6,
+            4,
             5,
             8,
-            3,
+            7,
+            7,
             3,
             5,
-            6,
-            6,
-            15
+            3,
+            4,
+            7,
+            4,
+            4
           ]
         },
         "register": 1
@@ -1867,7 +2102,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 11
       },
       "enableBy": "config"
     },
@@ -1882,20 +2117,28 @@
         "hooks": {
           "onGenerateFiles": [
             1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
             3,
             0,
+            1,
+            1,
+            1,
+            0,
             0,
             1,
             0,
-            1,
-            1,
             0,
-            1,
-            0,
-            10
+            0
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1907,7 +2150,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1933,7 +2176,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1946,7 +2189,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1987,7 +2230,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2026,9 +2269,7 @@
         "hooks": {
           "addHTMLHeadScripts": [
             0,
-            0,
-            0,
-            8,
+            1,
             0,
             0,
             0,
@@ -2038,7 +2279,7 @@
             0
           ]
         },
-        "register": 13
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -2050,7 +2291,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2064,7 +2305,7 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            258
+            270
           ]
         },
         "register": 1
@@ -2080,7 +2321,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -2093,7 +2334,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 19
       },
       "enableBy": "register"
     },
@@ -2110,7 +2351,7 @@
             6
           ]
         },
-        "register": 18
+        "register": 17
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -2135,7 +2376,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2148,7 +2389,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2213,7 +2454,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2226,7 +2467,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2265,7 +2506,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2291,7 +2532,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2343,7 +2584,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2395,7 +2636,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     }
@@ -2696,7 +2937,7 @@
       "parentId": "@@/global-layout",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 真实撕裂带直达页：复用首页撕裂带逻辑，支持独立路径访问。\n  '/event-battle': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 龟龟争霸：Phaser 版对战（与旧版游戏管理独立）。\n  '/turtle-contest': 'turtleContest',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\ntype EventBattleRouteState = {\n  returnTo?: string;\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => {\n    if (location.pathname === '/event-battle') {\n      const routeState = location.state as EventBattleRouteState | null;\n      const returnPath = routeState?.returnTo?.split('?')[0];\n      if (returnPath && PATH_VIEW_MAP[returnPath]) {\n        return PATH_VIEW_MAP[returnPath];\n      }\n    }\n    return PATH_VIEW_MAP[location.pathname] ?? 'predictions';\n  }, [location.pathname, location.state]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme, aiPushMessages }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n            aiPushMessages,\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 真实撕裂带直达页：复用首页撕裂带逻辑，支持独立路径访问。\n  '/event-battle': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 龟龟争霸：Phaser 版对战（与旧版游戏管理独立）。\n  '/turtle-contest': 'turtleContest',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\ntype EventBattleRouteState = {\n  returnTo?: string;\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => {\n    if (location.pathname.startsWith('/settlement/')) {\n      return 'predictions';\n    }\n    if (location.pathname === '/event-battle') {\n      const routeState = location.state as EventBattleRouteState | null;\n      const returnPath = routeState?.returnTo?.split('?')[0];\n      if (returnPath && PATH_VIEW_MAP[returnPath]) {\n        return PATH_VIEW_MAP[returnPath];\n      }\n    }\n    return PATH_VIEW_MAP[location.pathname] ?? 'predictions';\n  }, [location.pathname, location.state]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme, aiPushMessages }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n            aiPushMessages,\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/home.tsx"
     },
@@ -2842,6 +3083,17 @@
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ActivePredictionsPageView } from './components/ActivePredictionsPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ActivePredictionsPage() {\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });\n  const activePredictionItems = useMemo<PredictionCardItem[]>(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const liveNews = Array.isArray(list) && list.length > 0\n      ? list.map(mapMarketToPredictionCard)\n      : [];\n    return liveNews.filter((item) => item.status === 'open');\n  }, [footballMarkets.data]);\n\n  return (\n    <ActivePredictionsPageView\n      items={activePredictionItems}\n      onBack={() => {\n        navigate('/');\n      }}\n      onEnterBattle={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/active-predictions/index.tsx"
+    },
+    "17": {
+      "path": "/settlement/:kind/:id",
+      "name": "结算详情",
+      "file": "@/pages/settlement/index.tsx",
+      "parentId": "3",
+      "id": "17",
+      "absPath": "/settlement/:kind/:id",
+      "__content": "/**\n * 文件说明：结算详情页路由入口，负责领取结算与详情展示。\n */\nimport { useEffect, useMemo, useState } from 'react';\nimport { useNavigate, useParams, useSearchParams } from '@umijs/renderer-react';\nimport { createBattleRequestId } from '@/hooks/battleTypes';\nimport type { CoinSettleResult } from '@/hooks/coinTypes';\nimport type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';\nimport { useSettlementRecords } from '@/hooks/usePendingSettlements';\nimport { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';\nimport { useRequestCoinSettle } from '@/hooks/useCoinRequests';\nimport { useSettlementDetailBuilder } from '@/hooks/useSettlementDetail';\nimport { useSettlementLayout } from '@/layouts/context/SettlementLayoutContext';\nimport { requireAuthOrOpen } from '@/utils/authStorage';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { SettlementDetailPage } from './components/SettlementDetailPage';\nimport {\n  settlementItemIdFromRoute,\n  type SettlementDetailAction,\n  type SettlementRouteKind,\n} from './settlementNavigation';\n\nfunction resolveCampSideFromMarket(\n  marketList: ReturnType<typeof useSettlementRecords>['marketList'],\n  marketId: number,\n): SettlementRecordItem['campSide'] {\n  const item = marketList.find((entry) => entry.market.id === marketId);\n  if (!item) return 'unknown';\n  const raw = item as typeof item & { bet?: { option?: string }; myBet?: { option?: string } };\n  const option = String(raw.bet?.option ?? raw.myBet?.option ?? '').trim().toUpperCase();\n  if (option === 'A') return 'A';\n  if (option === 'B') return 'B';\n  if (option === 'DRAW' || option === 'C') return 'draw';\n  return 'unknown';\n}\n\nexport default function SettlementPage() {\n  const navigate = useNavigate();\n  const params = useParams<{ kind: SettlementRouteKind; id: string }>();\n  const [searchParams] = useSearchParams();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const { openSettlementDrawer, hideSettlementItem } = useSettlementLayout();\n  const { marketList } = useSettlementRecords();\n  const { buildDetailModel } = useSettlementDetailBuilder(marketList);\n  const coinSettleMutation = useRequestCoinSettle();\n  const battleWithdrawMutation = useRequestBattleWithdraw();\n\n  const kind = params.kind;\n  const rawId = params.id ?? '';\n  const numericId = Number(rawId);\n  const action = (searchParams.get('action') as SettlementDetailAction | null) ?? 'view';\n\n  const record = useMemo<SettlementRecordItem | null>(() => {\n    if (!kind || !Number.isFinite(numericId) || numericId <= 0) return null;\n    const id = settlementItemIdFromRoute(kind, rawId);\n    if (kind === 'coin') {\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'dark',\n        title: '',\n        subtitle: '',\n        campSide: resolveCampSideFromMarket(marketList, numericId),\n        marketId: numericId,\n      };\n    }\n    return {\n      id,\n      status: action === 'settle' ? 'pending' : 'settled',\n      sourceTab: 'arena',\n      title: '',\n      subtitle: '',\n      campSide: 'unknown',\n      battleId: numericId,\n    };\n  }, [action, kind, marketList, numericId, rawId]);\n\n  const [model, setModel] = useState<SettlementDetailViewModel | null>(null);\n  const [loading, setLoading] = useState(true);\n  const [errorText, setErrorText] = useState<string | undefined>();\n  const [settledItemId, setSettledItemId] = useState<string | null>(null);\n\n  useEffect(() => {\n    if (!record) {\n      setLoading(false);\n      setErrorText('无效的结算链接');\n      return;\n    }\n\n    if (!requireAuthOrOpen(onOpenAuth)) {\n      setLoading(false);\n      setErrorText('请先登录后查看结算详情');\n      return;\n    }\n\n    let cancelled = false;\n\n    const run = async () => {\n      setLoading(true);\n      setErrorText(undefined);\n      setModel(null);\n\n      try {\n        let settlePayload: CoinSettleResult | SettlementActionResult | null = null;\n\n        if (action === 'settle' && record.status === 'pending') {\n          if (record.sourceTab === 'dark' && record.marketId) {\n            settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });\n          } else if (record.sourceTab === 'arena' && record.battleId) {\n            const withdrawResult = await battleWithdrawMutation.mutateAsync({\n              battleId: record.battleId,\n              requestId: createBattleRequestId(`battle-withdraw-${record.battleId}`),\n            });\n            const payout = withdrawResult.payoutAmount ?? 0;\n            settlePayload = {\n              payout,\n              outcome: payout > 0 ? 'win' : 'neutral',\n              message: '奖励已提取到你的龟币账户。',\n            };\n          }\n          if (!cancelled) {\n            setSettledItemId(record.id);\n          }\n        }\n\n        const nextModel = await buildDetailModel(\n          { ...record, status: 'settled' },\n          settlePayload,\n        );\n        if (!cancelled) {\n          setModel(nextModel);\n        }\n      } catch (error) {\n        if (!cancelled) {\n          const message = error instanceof Error ? error.message : '加载结算详情失败';\n          setErrorText(message);\n          setModel(null);\n        }\n      } finally {\n        if (!cancelled) {\n          setLoading(false);\n        }\n      }\n    };\n\n    void run();\n\n    return () => {\n      cancelled = true;\n    };\n  }, [\n    action,\n    battleWithdrawMutation.mutateAsync,\n    buildDetailModel,\n    coinSettleMutation.mutateAsync,\n    onOpenAuth,\n    record,\n  ]);\n\n  const handleBack = () => {\n    if (settledItemId) {\n      hideSettlementItem(settledItemId);\n    }\n    openSettlementDrawer();\n    if (window.history.length > 1) {\n      navigate(-1);\n      return;\n    }\n    navigate('/');\n  };\n\n  return (\n    <SettlementDetailPage\n      model={model}\n      loading={loading}\n      errorText={errorText}\n      onBack={handleBack}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/settlement/index.tsx"
     },
     "@@/global-layout": {
       "id": "@@/global-layout",
@@ -4310,8 +4562,24 @@
             ],
             "format": "esm"
           },
+          "src/components/common/settlement/SettlementEntryButton.tsx": {
+            "bytes": 1351,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
           "src/components/mobile/header/MobileHeader.tsx": {
-            "bytes": 3068,
+            "bytes": 3550,
             "imports": [
               {
                 "path": "react",
@@ -4332,6 +4600,11 @@
                 "path": "src/components/mobile/header/mobileHeaderMetrics.ts",
                 "kind": "import-statement",
                 "original": "./mobileHeaderMetrics"
+              },
+              {
+                "path": "src/components/common/settlement/SettlementEntryButton.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/settlement/SettlementEntryButton"
               }
             ],
             "format": "esm"
@@ -4405,7 +4678,7 @@
             "format": "esm"
           },
           "src/components/pc/header/PcHeader.tsx": {
-            "bytes": 8622,
+            "bytes": 9033,
             "imports": [
               {
                 "path": "react",
@@ -4436,6 +4709,11 @@
                 "path": "src/utils/userAvatar.ts",
                 "kind": "import-statement",
                 "original": "@/utils/userAvatar"
+              },
+              {
+                "path": "src/components/common/settlement/SettlementEntryButton.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/settlement/SettlementEntryButton"
               }
             ],
             "format": "esm"
@@ -5156,7 +5434,7 @@
             "format": "esm"
           },
           "src/layouts/components/AppPageLayout/index.tsx": {
-            "bytes": 7574,
+            "bytes": 8054,
             "imports": [
               {
                 "path": "react",
@@ -5414,8 +5692,132 @@
             "imports": [],
             "format": "esm"
           },
+          "src/hooks/usePendingSettlements.ts": {
+            "bytes": 6430,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react-query",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/utils/authStorage.ts",
+                "kind": "import-statement",
+                "original": "@/utils/authStorage"
+              },
+              {
+                "path": "src/hooks/useBattleRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useBattleRequests"
+              },
+              {
+                "path": "src/hooks/battleTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/battleTypes"
+              },
+              {
+                "path": "src/hooks/usePredictionRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/usePredictionRequests"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/components/common/settlement/settlementCampColors.ts": {
+            "bytes": 478,
+            "imports": [],
+            "format": "esm"
+          },
+          "src/components/common/settlement/SettlementDrawer/index.tsx": {
+            "bytes": 10184,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "framer-motion",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react-dom",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/components/common/settlement/settlementCampColors.ts",
+                "kind": "import-statement",
+                "original": "../settlementCampColors"
+              },
+              {
+                "path": "./index.module.scss",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/settlement/settlementNavigation.ts": {
+            "bytes": 1012,
+            "imports": [],
+            "format": "esm"
+          },
+          "src/components/common/settlement/SettlementHost.tsx": {
+            "bytes": 2543,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/hooks/usePendingSettlements.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/usePendingSettlements"
+              },
+              {
+                "path": "src/components/common/settlement/SettlementDrawer/index.tsx",
+                "kind": "import-statement",
+                "original": "./SettlementDrawer"
+              },
+              {
+                "path": "src/pages/settlement/settlementNavigation.ts",
+                "kind": "import-statement",
+                "original": "@/pages/settlement/settlementNavigation"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/layouts/context/SettlementLayoutContext.tsx": {
+            "bytes": 901,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
           "src/layouts/components/StandalonePageShell.tsx": {
-            "bytes": 17653,
+            "bytes": 19005,
             "imports": [
               {
                 "path": "react",
@@ -5516,6 +5918,16 @@
                 "path": "src/utils/scrollAppContent.ts",
                 "kind": "import-statement",
                 "original": "@/utils/scrollAppContent"
+              },
+              {
+                "path": "src/components/common/settlement/SettlementHost.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/settlement/SettlementHost"
+              },
+              {
+                "path": "src/layouts/context/SettlementLayoutContext.tsx",
+                "kind": "import-statement",
+                "original": "@/layouts/context/SettlementLayoutContext"
               }
             ],
             "format": "esm"
@@ -5537,7 +5949,7 @@
             "format": "esm"
           },
           "src/layouts/home.tsx": {
-            "bytes": 3218,
+            "bytes": 3308,
             "imports": [
               {
                 "path": "react",
@@ -7992,6 +8404,161 @@
             ],
             "format": "esm"
           },
+          "src/components/common/settlement/settlementModel.ts": {
+            "bytes": 12032,
+            "imports": [
+              {
+                "path": "src/components/common/settlement/settlementCampColors.ts",
+                "kind": "import-statement",
+                "original": "./settlementCampColors"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/hooks/useSettlementDetail.ts": {
+            "bytes": 2357,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/hooks/useBattleRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useBattleRequests"
+              },
+              {
+                "path": "src/hooks/useAuthRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useAuthRequests"
+              },
+              {
+                "path": "src/components/common/settlement/settlementModel.ts",
+                "kind": "import-statement",
+                "original": "@/components/common/settlement/settlementModel"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/components/common/settlement/SettlementDetailView/index.tsx": {
+            "bytes": 9234,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/components/common/settlement/settlementModel.ts",
+                "kind": "import-statement",
+                "original": "../settlementModel"
+              },
+              {
+                "path": "./index.module.scss",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/settlement/components/SettlementDetailPage.tsx": {
+            "bytes": 1795,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/components/common/settlement/SettlementDetailView/index.tsx",
+                "kind": "import-statement",
+                "original": "@/components/common/settlement/SettlementDetailView"
+              },
+              {
+                "path": "./SettlementDetailPage.module.scss",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/settlement/index.tsx": {
+            "bytes": 6000,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/hooks/battleTypes.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/battleTypes"
+              },
+              {
+                "path": "src/hooks/usePendingSettlements.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/usePendingSettlements"
+              },
+              {
+                "path": "src/hooks/useBattleRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useBattleRequests"
+              },
+              {
+                "path": "src/hooks/useCoinRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useCoinRequests"
+              },
+              {
+                "path": "src/hooks/useSettlementDetail.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useSettlementDetail"
+              },
+              {
+                "path": "src/layouts/context/SettlementLayoutContext.tsx",
+                "kind": "import-statement",
+                "original": "@/layouts/context/SettlementLayoutContext"
+              },
+              {
+                "path": "src/utils/authStorage.ts",
+                "kind": "import-statement",
+                "original": "@/utils/authStorage"
+              },
+              {
+                "path": "src/layouts/context/index.ts",
+                "kind": "import-statement",
+                "original": "@/layouts/context"
+              },
+              {
+                "path": "src/pages/settlement/components/SettlementDetailPage.tsx",
+                "kind": "import-statement",
+                "original": "./components/SettlementDetailPage"
+              },
+              {
+                "path": "src/pages/settlement/settlementNavigation.ts",
+                "kind": "import-statement",
+                "original": "./settlementNavigation"
+              }
+            ],
+            "format": "esm"
+          },
           "src/components/common/feedback/OperationToast/index.tsx": {
             "bytes": 1261,
             "imports": [
@@ -8040,7 +8607,7 @@
             "format": "esm"
           },
           "src/.umi/core/route.tsx": {
-            "bytes": 3291,
+            "bytes": 3486,
             "imports": [
               {
                 "path": "react",
@@ -8126,6 +8693,11 @@
                 "path": "src/pages/active-predictions/index.tsx",
                 "kind": "dynamic-import",
                 "original": "@/pages/active-predictions/index.tsx"
+              },
+              {
+                "path": "src/pages/settlement/index.tsx",
+                "kind": "dynamic-import",
+                "original": "@/pages/settlement/index.tsx"
               },
               {
                 "path": "src/layouts/index.tsx",
@@ -8443,6 +9015,16 @@
                 "external": true
               },
               {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "axios",
                 "kind": "import-statement",
                 "external": true
@@ -8709,6 +9291,56 @@
               },
               {
                 "path": "react-query",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react-query",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "framer-motion",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react-dom",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./index.module.scss",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -9349,6 +9981,51 @@
               },
               {
                 "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./index.module.scss",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./SettlementDetailPage.module.scss",
                 "kind": "import-statement",
                 "external": true
               },
@@ -10591,8 +11268,11 @@
               "src/components/mobile/header/MobileNavDrawer.tsx": {
                 "bytesInOutput": 10036
               },
+              "src/components/common/settlement/SettlementEntryButton.tsx": {
+                "bytesInOutput": 1445
+              },
               "src/components/mobile/header/MobileHeader.tsx": {
-                "bytesInOutput": 3306
+                "bytesInOutput": 3678
               },
               "src/api/authApi.ts": {
                 "bytesInOutput": 485
@@ -10607,7 +11287,7 @@
                 "bytesInOutput": 2232
               },
               "src/components/pc/header/PcHeader.tsx": {
-                "bytesInOutput": 8739
+                "bytesInOutput": 9087
               },
               "src/api/aiApi.ts": {
                 "bytesInOutput": 514
@@ -10709,7 +11389,7 @@
                 "bytesInOutput": 5191
               },
               "src/layouts/components/AppPageLayout/index.tsx": {
-                "bytesInOutput": 5400
+                "bytesInOutput": 5722
               },
               "src/utils/petHelpers.ts": {
                 "bytesInOutput": 2425
@@ -10750,23 +11430,41 @@
               "src/utils/scrollAppContent.ts": {
                 "bytesInOutput": 295
               },
+              "src/hooks/usePendingSettlements.ts": {
+                "bytesInOutput": 5154
+              },
+              "src/components/common/settlement/settlementCampColors.ts": {
+                "bytesInOutput": 466
+              },
+              "src/components/common/settlement/SettlementDrawer/index.tsx": {
+                "bytesInOutput": 9892
+              },
+              "src/pages/settlement/settlementNavigation.ts": {
+                "bytesInOutput": 604
+              },
+              "src/components/common/settlement/SettlementHost.tsx": {
+                "bytesInOutput": 2329
+              },
+              "src/layouts/context/SettlementLayoutContext.tsx": {
+                "bytesInOutput": 684
+              },
               "src/layouts/components/StandalonePageShell.tsx": {
-                "bytesInOutput": 14489
+                "bytesInOutput": 15757
               },
               "src/layouts/components/index.ts": {
                 "bytesInOutput": 136
               },
               "src/layouts/home.tsx": {
-                "bytesInOutput": 2726
+                "bytesInOutput": 2818
               },
               "src/hooks/predictionTypes.ts": {
                 "bytesInOutput": 689
               },
               "src/pages/home/components/predictionCards.ts": {
-                "bytesInOutput": 5792
+                "bytesInOutput": 5794
               },
               "src/pages/home/components/PredictionBetModal.tsx": {
-                "bytesInOutput": 9502
+                "bytesInOutput": 9504
               },
               "src/pages/home/components/PredictionCardCover.tsx": {
                 "bytesInOutput": 2113
@@ -10823,7 +11521,7 @@
                 "bytesInOutput": 8286
               },
               "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-                "bytesInOutput": 76843
+                "bytesInOutput": 76865
               },
               "src/pages/event-battle/components/EventBattleLiveRoom.tsx": {
                 "bytesInOutput": 149
@@ -10874,7 +11572,7 @@
                 "bytesInOutput": 700
               },
               "src/pages/rivalry/index.tsx": {
-                "bytesInOutput": 2546
+                "bytesInOutput": 2548
               },
               "src/pages/forum/components/forumTags.ts": {
                 "bytesInOutput": 540
@@ -10943,10 +11641,10 @@
                 "bytesInOutput": 21292
               },
               "src/pages/battle-plaza/components/BattlePlazaInviteCodeModal/index.tsx": {
-                "bytesInOutput": 5539
+                "bytesInOutput": 5541
               },
               "src/pages/battle-plaza/components/BattlePlazaPrivateEntryPreviewModal/index.tsx": {
-                "bytesInOutput": 7162
+                "bytesInOutput": 7164
               },
               "src/pages/battle-plaza/components/composeSettleDate.ts": {
                 "bytesInOutput": 5824
@@ -10955,10 +11653,10 @@
                 "bytesInOutput": 8164
               },
               "src/pages/battle-plaza/components/BattlePlazaStakeModal/index.tsx": {
-                "bytesInOutput": 5412
+                "bytesInOutput": 5433
               },
               "src/pages/battle-plaza/components/BattlePlazaExperience/index.tsx": {
-                "bytesInOutput": 93146
+                "bytesInOutput": 93163
               },
               "src/pages/battle-plaza/components/BattlePlazaPage.tsx": {
                 "bytesInOutput": 240
@@ -11015,7 +11713,7 @@
                 "bytesInOutput": 2691
               },
               "src/pages/shop/components/ShopGachaHeroMobile.tsx": {
-                "bytesInOutput": 7108
+                "bytesInOutput": 7111
               },
               "src/pages/shop/components/Shop.tsx": {
                 "bytesInOutput": 41620
@@ -11074,6 +11772,21 @@
               "src/pages/active-predictions/index.tsx": {
                 "bytesInOutput": 1143
               },
+              "src/components/common/settlement/settlementModel.ts": {
+                "bytesInOutput": 11927
+              },
+              "src/hooks/useSettlementDetail.ts": {
+                "bytesInOutput": 1791
+              },
+              "src/components/common/settlement/SettlementDetailView/index.tsx": {
+                "bytesInOutput": 10137
+              },
+              "src/pages/settlement/components/SettlementDetailPage.tsx": {
+                "bytesInOutput": 1708
+              },
+              "src/pages/settlement/index.tsx": {
+                "bytesInOutput": 5212
+              },
               "src/components/common/feedback/OperationToast/index.tsx": {
                 "bytesInOutput": 1263
               },
@@ -11087,7 +11800,7 @@
                 "bytesInOutput": 1827
               },
               "src/.umi/core/route.tsx": {
-                "bytesInOutput": 3347
+                "bytesInOutput": 3558
               },
               "src/app.ts": {
                 "bytesInOutput": 1575
@@ -11102,7 +11815,7 @@
                 "bytesInOutput": 18
               },
               "src/.umi/exports.ts": {
-                "bytesInOutput": 892
+                "bytesInOutput": 926
               },
               "src/.umi/core/history.ts": {
                 "bytesInOutput": 1239
@@ -11114,7 +11827,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1170535
+            "bytes": 1225245
           }
         }
       }
@@ -14517,6 +15230,466 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/settlement/SettlementDetailView/index.tsx": [
+        {
+          "end": 158,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "local": "React",
+              "type": "ImportDefaultSpecifier"
+            },
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useState",
+              "local": "useState",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 109,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 203,
+          "importKind": "value",
+          "source": "lucide-react",
+          "specifiers": [
+            {
+              "imported": "Check",
+              "local": "Check",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Coins",
+              "local": "Coins",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 159,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 277,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementDetailViewModel",
+              "local": "SettlementDetailViewModel",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 204,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 347,
+          "importKind": "value",
+          "source": "../settlementModel",
+          "specifiers": [
+            {
+              "imported": "campColor",
+              "local": "campColor",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "formatSettlementHeat",
+              "local": "formatSettlementHeat",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 278,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 389,
+          "importKind": "value",
+          "source": "./index.module.scss",
+          "specifiers": [
+            {
+              "local": "styles",
+              "type": "ImportDefaultSpecifier"
+            }
+          ],
+          "start": 348,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/settlement/SettlementDrawer/index.tsx": [
+        {
+          "end": 182,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "local": "React",
+              "type": "ImportDefaultSpecifier"
+            },
+            {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useState",
+              "local": "useState",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 122,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 239,
+          "importKind": "value",
+          "source": "framer-motion",
+          "specifiers": [
+            {
+              "imported": "AnimatePresence",
+              "local": "AnimatePresence",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "motion",
+              "local": "motion",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 183,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 281,
+          "importKind": "value",
+          "source": "react-dom",
+          "specifiers": [
+            {
+              "imported": "createPortal",
+              "local": "createPortal",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 240,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 315,
+          "importKind": "value",
+          "source": "lucide-react",
+          "specifiers": [
+            {
+              "imported": "X",
+              "local": "X",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 282,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 405,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementRecordItem",
+              "local": "SettlementRecordItem",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementSourceTab",
+              "local": "SettlementSourceTab",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 316,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 502,
+          "importKind": "value",
+          "source": "../settlementCampColors",
+          "specifiers": [
+            {
+              "imported": "SETTLEMENT_TAB_DOT_COLORS",
+              "local": "SETTLEMENT_TAB_DOT_COLORS",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveSettlementChipColor",
+              "local": "resolveSettlementChipColor",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 406,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 544,
+          "importKind": "value",
+          "source": "./index.module.scss",
+          "specifiers": [
+            {
+              "local": "styles",
+              "type": "ImportDefaultSpecifier"
+            }
+          ],
+          "start": 503,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/settlement/SettlementEntryButton.tsx": [
+        {
+          "end": 126,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "local": "React",
+              "type": "ImportDefaultSpecifier"
+            }
+          ],
+          "start": 100,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 168,
+          "importKind": "value",
+          "source": "lucide-react",
+          "specifiers": [
+            {
+              "imported": "HandCoins",
+              "local": "HandCoins",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 127,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/settlement/SettlementHost.tsx": [
+        {
+          "end": 156,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "local": "React",
+              "type": "ImportDefaultSpecifier"
+            },
+            {
+              "imported": "useCallback",
+              "local": "useCallback",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useState",
+              "local": "useState",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 94,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 209,
+          "importKind": "value",
+          "source": "@umijs/renderer-react",
+          "specifiers": [
+            {
+              "imported": "useNavigate",
+              "local": "useNavigate",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 157,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 279,
+          "importKind": "value",
+          "source": "@/hooks/usePendingSettlements",
+          "specifiers": [
+            {
+              "imported": "useSettlementRecords",
+              "local": "useSettlementRecords",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 210,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 348,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementRecordItem",
+              "local": "SettlementRecordItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 280,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 403,
+          "importKind": "value",
+          "source": "./SettlementDrawer",
+          "specifiers": [
+            {
+              "imported": "SettlementDrawer",
+              "local": "SettlementDrawer",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 349,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 485,
+          "importKind": "value",
+          "source": "@/pages/settlement/settlementNavigation",
+          "specifiers": [
+            {
+              "imported": "settlementRecordToPath",
+              "local": "settlementRecordToPath",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 404,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/settlement/settlementCampColors.ts": [
+        {
+          "end": 136,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementCampSide",
+              "local": "SettlementCampSide",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 70,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/settlement/settlementModel.ts": [
+        {
+          "end": 158,
+          "importKind": "type",
+          "source": "@/hooks/battleTypes",
+          "specifiers": [
+            {
+              "imported": "BattleDetailResponse",
+              "local": "BattleDetailResponse",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 94,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 229,
+          "importKind": "type",
+          "source": "@/hooks/coinTypes",
+          "specifiers": [
+            {
+              "imported": "CoinSettleResult",
+              "local": "CoinSettleResult",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictBet",
+              "local": "PredictBet",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 159,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 301,
+          "importKind": "type",
+          "source": "@/hooks/predictionTypes",
+          "specifiers": [
+            {
+              "imported": "FootballMarketAggregate",
+              "local": "FootballMarketAggregate",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 230,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 478,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementActionResult",
+              "local": "SettlementActionResult",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementCampSide",
+              "local": "SettlementCampSide",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementDetailViewModel",
+              "local": "SettlementDetailViewModel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementLeaderboardRow",
+              "local": "SettlementLeaderboardRow",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementRecordItem",
+              "local": "SettlementRecordItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 302,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 543,
+          "importKind": "value",
+          "source": "./settlementCampColors",
+          "specifiers": [
+            {
+              "imported": "SETTLEMENT_CAMP_COLORS",
+              "local": "SETTLEMENT_CAMP_COLORS",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 479,
+          "type": "ImportDeclaration"
+        }
+      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/spine/CommonSpine.tsx": [
         {
           "end": 170,
@@ -14885,6 +16058,20 @@
           ],
           "start": 259,
           "type": "ImportDeclaration"
+        },
+        {
+          "end": 423,
+          "importKind": "value",
+          "source": "@/components/common/settlement/SettlementEntryButton",
+          "specifiers": [
+            {
+              "imported": "SettlementEntryButton",
+              "local": "SettlementEntryButton",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 330,
+          "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/mobile/header/MobileNavDrawer.tsx": [
@@ -15111,6 +16298,20 @@
             }
           ],
           "start": 388,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 539,
+          "importKind": "value",
+          "source": "@/components/common/settlement/SettlementEntryButton",
+          "specifiers": [
+            {
+              "imported": "SettlementEntryButton",
+              "local": "SettlementEntryButton",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 446,
           "type": "ImportDeclaration"
         }
       ],
@@ -17463,6 +18664,135 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/usePendingSettlements.ts": [
+        {
+          "end": 114,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 82,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 156,
+          "importKind": "value",
+          "source": "react-query",
+          "specifiers": [
+            {
+              "imported": "useQueries",
+              "local": "useQueries",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 115,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 208,
+          "importKind": "value",
+          "source": "@/utils/authStorage",
+          "specifiers": [
+            {
+              "imported": "getAuthToken",
+              "local": "getAuthToken",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 157,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 317,
+          "importKind": "value",
+          "source": "@/hooks/useBattleRequests",
+          "specifiers": [
+            {
+              "imported": "fetchBattleDetail",
+              "local": "fetchBattleDetail",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "battleQueryKeys",
+              "local": "battleQueryKeys",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRequestBattleList",
+              "local": "useRequestBattleList",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 209,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 383,
+          "importKind": "value",
+          "source": "@/hooks/battleTypes",
+          "specifiers": [
+            {
+              "imported": "getBattleActionPermissions",
+              "local": "getBattleActionPermissions",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 318,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 455,
+          "importKind": "type",
+          "source": "@/hooks/predictionTypes",
+          "specifiers": [
+            {
+              "imported": "FootballMarketAggregate",
+              "local": "FootballMarketAggregate",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 384,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 530,
+          "importKind": "value",
+          "source": "@/hooks/usePredictionRequests",
+          "specifiers": [
+            {
+              "imported": "useRequestFootballMarkets",
+              "local": "useRequestFootballMarkets",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 456,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 619,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementCampSide",
+              "local": "SettlementCampSide",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementRecordItem",
+              "local": "SettlementRecordItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 531,
+          "type": "ImportDeclaration"
+        }
+      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/usePetRequests.ts": [
         {
           "end": 154,
@@ -18308,6 +19638,121 @@
             }
           ],
           "start": 186,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/useSettlementDetail.ts": [
+        {
+          "end": 118,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "useCallback",
+              "local": "useCallback",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 82,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 181,
+          "importKind": "value",
+          "source": "@/hooks/useBattleRequests",
+          "specifiers": [
+            {
+              "imported": "fetchBattleDetail",
+              "local": "fetchBattleDetail",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 119,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 240,
+          "importKind": "type",
+          "source": "@/hooks/coinTypes",
+          "specifiers": [
+            {
+              "imported": "CoinSettleResult",
+              "local": "CoinSettleResult",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 182,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 367,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementActionResult",
+              "local": "SettlementActionResult",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementDetailViewModel",
+              "local": "SettlementDetailViewModel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementRecordItem",
+              "local": "SettlementRecordItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 241,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 439,
+          "importKind": "type",
+          "source": "@/hooks/predictionTypes",
+          "specifiers": [
+            {
+              "imported": "FootballMarketAggregate",
+              "local": "FootballMarketAggregate",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 368,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 504,
+          "importKind": "value",
+          "source": "@/hooks/useAuthRequests",
+          "specifiers": [
+            {
+              "imported": "useRequestUserCurrent",
+              "local": "useRequestUserCurrent",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 440,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 630,
+          "importKind": "value",
+          "source": "@/components/common/settlement/settlementModel",
+          "specifiers": [
+            {
+              "imported": "buildBattleSettlementDetail",
+              "local": "buildBattleSettlementDetail",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "buildCoinSettlementDetail",
+              "local": "buildCoinSettlementDetail",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 505,
           "type": "ImportDeclaration"
         }
       ],
@@ -19480,6 +20925,39 @@
           ],
           "start": 2050,
           "type": "ImportDeclaration"
+        },
+        {
+          "end": 2220,
+          "importKind": "value",
+          "source": "@/components/common/settlement/SettlementHost",
+          "specifiers": [
+            {
+              "imported": "SettlementHost",
+              "local": "SettlementHost",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useSettlementEntryState",
+              "local": "useSettlementEntryState",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 2116,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 2306,
+          "importKind": "value",
+          "source": "@/layouts/context/SettlementLayoutContext",
+          "specifiers": [
+            {
+              "imported": "SettlementLayoutProvider",
+              "local": "SettlementLayoutProvider",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 2221,
+          "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/components/index.ts": [
@@ -19610,6 +21088,40 @@
             }
           ],
           "start": 207,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/context/SettlementLayoutContext.tsx": [
+        {
+          "end": 156,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "createContext",
+              "local": "createContext",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useContext",
+              "local": "useContext",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 106,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 188,
+          "importKind": "type",
+          "source": "react",
+          "specifiers": [
+            {
+              "local": "React",
+              "type": "ImportDefaultSpecifier"
+            }
+          ],
+          "start": 157,
           "type": "ImportDeclaration"
         }
       ],
@@ -25927,6 +27439,330 @@
             }
           ],
           "start": 466,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/settlement/components/SettlementDetailPage.tsx": [
+        {
+          "end": 123,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "local": "React",
+              "type": "ImportDefaultSpecifier"
+            }
+          ],
+          "start": 97,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 167,
+          "importKind": "value",
+          "source": "lucide-react",
+          "specifiers": [
+            {
+              "imported": "ChevronLeft",
+              "local": "ChevronLeft",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 124,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 241,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementDetailViewModel",
+              "local": "SettlementDetailViewModel",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 168,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 333,
+          "importKind": "value",
+          "source": "@/components/common/settlement/SettlementDetailView",
+          "specifiers": [
+            {
+              "imported": "SettlementDetailView",
+              "local": "SettlementDetailView",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 242,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 390,
+          "importKind": "value",
+          "source": "./SettlementDetailPage.module.scss",
+          "specifiers": [
+            {
+              "local": "styles",
+              "type": "ImportDefaultSpecifier"
+            }
+          ],
+          "start": 334,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/settlement/index.tsx": [
+        {
+          "end": 147,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useState",
+              "local": "useState",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 94,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 228,
+          "importKind": "value",
+          "source": "@umijs/renderer-react",
+          "specifiers": [
+            {
+              "imported": "useNavigate",
+              "local": "useNavigate",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useParams",
+              "local": "useParams",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useSearchParams",
+              "local": "useSearchParams",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 148,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 289,
+          "importKind": "value",
+          "source": "@/hooks/battleTypes",
+          "specifiers": [
+            {
+              "imported": "createBattleRequestId",
+              "local": "createBattleRequestId",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 229,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 348,
+          "importKind": "type",
+          "source": "@/hooks/coinTypes",
+          "specifiers": [
+            {
+              "imported": "CoinSettleResult",
+              "local": "CoinSettleResult",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 290,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 468,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementActionResult",
+              "local": "SettlementActionResult",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementDetailViewModel",
+              "local": "SettlementDetailViewModel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementRecordItem",
+              "local": "SettlementRecordItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 349,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 538,
+          "importKind": "value",
+          "source": "@/hooks/usePendingSettlements",
+          "specifiers": [
+            {
+              "imported": "useSettlementRecords",
+              "local": "useSettlementRecords",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 469,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 608,
+          "importKind": "value",
+          "source": "@/hooks/useBattleRequests",
+          "specifiers": [
+            {
+              "imported": "useRequestBattleWithdraw",
+              "local": "useRequestBattleWithdraw",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 539,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 672,
+          "importKind": "value",
+          "source": "@/hooks/useCoinRequests",
+          "specifiers": [
+            {
+              "imported": "useRequestCoinSettle",
+              "local": "useRequestCoinSettle",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 609,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 746,
+          "importKind": "value",
+          "source": "@/hooks/useSettlementDetail",
+          "specifiers": [
+            {
+              "imported": "useSettlementDetailBuilder",
+              "local": "useSettlementDetailBuilder",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 673,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 827,
+          "importKind": "value",
+          "source": "@/layouts/context/SettlementLayoutContext",
+          "specifiers": [
+            {
+              "imported": "useSettlementLayout",
+              "local": "useSettlementLayout",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 747,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 884,
+          "importKind": "value",
+          "source": "@/utils/authStorage",
+          "specifiers": [
+            {
+              "imported": "requireAuthOrOpen",
+              "local": "requireAuthOrOpen",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 828,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 942,
+          "importKind": "value",
+          "source": "@/layouts/context",
+          "specifiers": [
+            {
+              "imported": "useHomeLayoutContext",
+              "local": "useHomeLayoutContext",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 885,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1016,
+          "importKind": "value",
+          "source": "./components/SettlementDetailPage",
+          "specifiers": [
+            {
+              "imported": "SettlementDetailPage",
+              "local": "SettlementDetailPage",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 943,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1146,
+          "importKind": "value",
+          "source": "./settlementNavigation",
+          "specifiers": [
+            {
+              "imported": "settlementItemIdFromRoute",
+              "local": "settlementItemIdFromRoute",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementDetailAction",
+              "local": "SettlementDetailAction",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementRouteKind",
+              "local": "SettlementRouteKind",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1017,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/settlement/settlementNavigation.ts": [
+        {
+          "end": 141,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementRecordItem",
+              "local": "SettlementRecordItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 73,
           "type": "ImportDeclaration"
         }
       ],
