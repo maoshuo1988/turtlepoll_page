@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -95,7 +95,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -112,7 +112,7 @@
             1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -127,20 +127,10 @@
         "hooks": {
           "modifyRoutes": [
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -154,53 +144,14 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            18,
-            8,
-            35,
-            16,
-            7,
-            6,
-            8,
-            10,
+            33,
             9,
-            22,
-            9,
-            6,
-            10,
-            8,
-            9,
-            4,
-            8,
-            6,
-            5,
-            5,
-            6,
-            6,
-            8,
-            6,
-            5,
-            5,
-            8,
-            7,
-            7,
-            9,
-            5,
-            12,
-            14,
-            6,
-            10,
-            8,
-            9,
-            7,
-            10,
             11,
             6,
-            55,
-            14,
-            13,
-            8,
             9,
-            12
+            5,
+            5,
+            7
           ]
         },
         "register": 0
@@ -217,20 +168,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            9
+            17
           ],
           "onGenerateFiles": [
-            0,
-            12,
-            19,
-            17,
-            8,
-            19,
-            6,
-            6,
-            8,
-            14,
-            16,
+            2,
             13
           ]
         },
@@ -249,20 +190,10 @@
         "hooks": {
           "addEntryCode": [
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -285,37 +216,9 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
             0
           ],
           "onCheckCode": [
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -355,10 +258,10 @@
       "time": {
         "hooks": {
           "onCheck": [
-            0
+            1
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -371,7 +274,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1271,10 +1174,10 @@
       "time": {
         "hooks": {
           "addBeforeMiddlewares": [
-            6
+            7
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1287,7 +1190,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 39
+        "register": 46
       },
       "enableBy": "register"
     },
@@ -1300,7 +1203,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 27
       },
       "enableBy": "config"
     },
@@ -1313,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 12
       },
       "enableBy": "config"
     },
@@ -1343,6 +1246,11 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1361,34 +1269,14 @@
         "hooks": {
           "onGenerateFiles": [
             1,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0
+            1
           ],
           "addRuntimePlugin": [
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1401,7 +1289,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1415,13 +1303,13 @@
       "time": {
         "hooks": {
           "onStart": [
-            0
+            2
           ],
           "addBeforeMiddlewares": [
-            0
+            1
           ]
         },
-        "register": 17
+        "register": 18
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1433,7 +1321,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1446,7 +1334,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides": {
@@ -1460,39 +1348,9 @@
         "hooks": {
           "onGenerateFiles": [
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ],
           "addEntryImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -1526,43 +1384,13 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            0
+            1
           ],
           "onGenerateFiles": [
-            38,
-            25,
-            18,
-            7,
-            7,
-            9,
-            7,
-            7,
-            7,
-            20,
-            18,
-            15
+            65,
+            17
           ],
           "addPolyfillImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -1585,26 +1413,6 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -1623,16 +1431,6 @@
         "hooks": {
           "onGenerateFiles": [
             87,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -1677,23 +1475,13 @@
         "hooks": {
           "onGenerateFiles": [
             0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            1,
             0
           ],
           "addBeforeMiddlewares": [
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1707,33 +1495,13 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            6,
-            1,
-            132,
-            12,
-            9,
-            1,
-            5,
-            1,
-            7,
-            0,
-            9,
-            1,
-            5,
-            0,
-            4,
-            0,
-            5,
-            0,
             8,
-            0,
-            11,
-            1,
-            4,
+            2,
+            10,
             1
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1746,7 +1514,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1759,7 +1527,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1785,18 +1553,8 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            192,
-            51,
-            5,
-            6,
-            5,
-            8,
-            3,
-            3,
-            5,
-            6,
-            6,
-            15
+            226,
+            10
           ]
         },
         "register": 1
@@ -1816,7 +1574,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1867,7 +1625,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 12
       },
       "enableBy": "config"
     },
@@ -1881,18 +1639,8 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            1,
-            3,
-            0,
-            0,
-            1,
-            0,
-            1,
-            1,
-            0,
-            1,
-            0,
-            10
+            2,
+            1
           ]
         },
         "register": 0
@@ -1907,7 +1655,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1975,7 +1723,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1987,7 +1735,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2025,10 +1773,15 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
+            7,
             0,
             0,
             0,
-            8,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -2038,7 +1791,7 @@
             0
           ]
         },
-        "register": 13
+        "register": 15
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -2050,7 +1803,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2064,7 +1817,7 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            258
+            286
           ]
         },
         "register": 1
@@ -2080,7 +1833,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -2093,7 +1846,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 22
       },
       "enableBy": "register"
     },
@@ -2107,10 +1860,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            6
+            18
           ]
         },
-        "register": 18
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -2122,7 +1875,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2148,7 +1901,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2161,7 +1914,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2213,7 +1966,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2252,7 +2005,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2265,7 +2018,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2317,7 +2070,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2343,7 +2096,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2356,7 +2109,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -3009,7 +2762,7 @@
   },
   "port": 8000,
   "host": "0.0.0.0",
-  "ip": "192.168.1.7",
+  "ip": "192.168.1.4",
   "prepare": {
     "buildResult": {
       "errors": [],
@@ -5796,7 +5549,7 @@
             "format": "esm"
           },
           "src/pages/home/components/PredictionsView.tsx": {
-            "bytes": 1908,
+            "bytes": 2009,
             "imports": [
               {
                 "path": "react",
@@ -5807,6 +5560,11 @@
                 "path": "src/pages/home/components/HeroPrediction.tsx",
                 "kind": "import-statement",
                 "original": "./HeroPrediction"
+              },
+              {
+                "path": "./HomeSpinePreviewRow",
+                "kind": "import-statement",
+                "external": true
               },
               {
                 "path": "src/pages/home/components/NewsFeed.tsx",
@@ -23285,7 +23043,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 202,
+          "end": 224,
+          "importKind": "value",
+          "source": "./HomeSpinePreviewRow",
+          "specifiers": [
+            {
+              "imported": "HomeSpinePreviewRow",
+              "local": "HomeSpinePreviewRow",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 164,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 263,
           "importKind": "value",
           "source": "./NewsFeed",
           "specifiers": [
@@ -23295,11 +23067,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 164,
+          "start": 225,
           "type": "ImportDeclaration"
         },
         {
-          "end": 352,
+          "end": 413,
           "importKind": "type",
           "source": "./predictionCards",
           "specifiers": [
@@ -23314,11 +23086,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 271,
+          "start": 332,
           "type": "ImportDeclaration"
         },
         {
-          "end": 409,
+          "end": 470,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -23328,7 +23100,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 353,
+          "start": 414,
           "type": "ImportDeclaration"
         }
       ],

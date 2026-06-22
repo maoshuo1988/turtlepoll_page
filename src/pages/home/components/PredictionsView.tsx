@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { HeroPrediction } from './HeroPrediction';
+import { HomeSpinePreviewRow } from './HomeSpinePreviewRow';
 import { NewsFeed } from './NewsFeed';
 // import { PredictTagCategoryBar } from './PredictTagCategoryBar';
 import type { PredictionBetOption, PredictionCardItem } from './predictionCards';
@@ -32,6 +33,7 @@ export const PredictionsView: React.FC<PredictionsViewProps> = ({
         <PredictTagCategoryBar selectedTag={selectedTag} onTagChange={onTagChange} />
       </div> */}
       <div className="grid w-full gap-3 md:gap-4">
+        {/* <HomeSpinePreviewRow /> */}
         <HeroPrediction
           news={selectedPrediction}
           selectedTag={selectedTag}
