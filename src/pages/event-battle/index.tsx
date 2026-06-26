@@ -1,5 +1,5 @@
 /**
- * 文件说明：event-battle 页面路由入口，负责根据 market 参数装配真实撕裂带页面。
+ * 文件说明：暗盘撕裂带页面路由入口，根据 market 参数装配预测市场撕裂带。
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from '@umijs/renderer-react';

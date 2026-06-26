@@ -1,7 +1,7 @@
 /** 文件说明：开撕台 Hero 对抗条，火/冰双轨 + 两侧向中心汇聚粒子。 */
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { buildFixedRailClipPathD, clipPathUrl } from '@/pages/event-battle/components/eventBattleEnergyTaper';
+import { buildHeroBattleRailClipPathD, heroBattleRailClipPathUrl } from './heroBattleRailClip';
 import styles from './index.module.scss';
 
 interface HeroBattleRailProps {
@@ -108,7 +108,7 @@ export function HeroBattleRail({ pctA, pctB }: HeroBattleRailProps) {
   }, []);
 
   const railClipD = useMemo(
-    () => buildFixedRailClipPathD(trackSizePx.width, trackSizePx.height),
+    () => buildHeroBattleRailClipPathD(trackSizePx.width, trackSizePx.height),
     [trackSizePx.height, trackSizePx.width],
   );
   const convergeParticles = useMemo(() => buildConvergeParticles(), []);
@@ -133,7 +133,7 @@ export function HeroBattleRail({ pctA, pctB }: HeroBattleRailProps) {
       />
 
       <div className={styles.railShell}>
-        <div ref={trackRef} className={styles.railTrack} style={{ clipPath: clipPathUrl(railClipId) }}>
+        <div ref={trackRef} className={styles.railTrack} style={{ clipPath: heroBattleRailClipPathUrl(railClipId) }}>
           <motion.div
             className={`${styles.side} ${styles.sideA}`}
             initial={false}

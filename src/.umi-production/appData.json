@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 8
+        "register": 7
       },
       "enableBy": "register"
     },
@@ -95,7 +95,7 @@
             0
           ]
         },
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -109,7 +109,7 @@
       "time": {
         "hooks": {
           "onStart": [
-            2
+            1
           ]
         },
         "register": 1
@@ -129,7 +129,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -142,7 +142,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -156,10 +156,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            13
+            9
           ]
         },
-        "register": 13
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -172,7 +172,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -189,7 +189,7 @@
             0
           ],
           "onCheck": [
-            0
+            1
           ]
         },
         "register": 0
@@ -209,7 +209,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -222,7 +222,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1091,7 +1091,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1108,7 +1108,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1121,7 +1121,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1134,7 +1134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 50
+        "register": 42
       },
       "enableBy": "register"
     },
@@ -1147,7 +1147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 24
+        "register": 18
       },
       "enableBy": "config"
     },
@@ -1160,7 +1160,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 8
+        "register": 7
       },
       "enableBy": "config"
     },
@@ -1216,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 19
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1266,7 +1266,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1280,10 +1280,10 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1295,7 +1295,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1308,7 +1308,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1334,7 +1334,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1360,7 +1360,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1398,7 +1398,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1424,7 +1424,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1437,7 +1437,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1475,7 +1475,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 14
+        "register": 11
       },
       "enableBy": "config"
     },
@@ -1500,7 +1500,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/legacy/legacy": {
@@ -1512,7 +1512,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1567,7 +1567,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1579,7 +1579,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1592,7 +1592,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 16
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1628,7 +1628,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1654,7 +1654,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 22
+        "register": 21
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1705,7 +1705,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1757,7 +1757,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1861,7 +1861,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1874,7 +1874,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1900,7 +1900,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1913,7 +1913,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1926,7 +1926,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 13
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -1939,7 +1939,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1952,7 +1952,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2009,6 +2009,11 @@
             "path": "/",
             "component": "home",
             "name": "首页"
+          },
+          {
+            "path": "/rivalry-battle",
+            "component": "rivalry-battle",
+            "name": "开撕台撕裂带"
           },
           {
             "path": "/event-battle",
@@ -2155,6 +2160,11 @@
             "name": "首页"
           },
           {
+            "path": "/rivalry-battle",
+            "component": "rivalry-battle",
+            "name": "开撕台撕裂带"
+          },
+          {
             "path": "/event-battle",
             "component": "event-battle",
             "name": "撕裂带"
@@ -2276,7 +2286,7 @@
       "parentId": "@@/global-layout",
       "id": "3",
       "absPath": "/",
-      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 真实撕裂带直达页：复用首页撕裂带逻辑，支持独立路径访问。\n  '/event-battle': 'predictions',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 龟龟争霸：Phaser 版对战（与旧版游戏管理独立）。\n  '/turtle-contest': 'turtleContest',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\ntype EventBattleRouteState = {\n  returnTo?: string;\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => {\n    if (location.pathname.startsWith('/settlement/')) {\n      return 'predictions';\n    }\n    if (location.pathname === '/event-battle') {\n      const routeState = location.state as EventBattleRouteState | null;\n      const returnPath = routeState?.returnTo?.split('?')[0];\n      if (returnPath && PATH_VIEW_MAP[returnPath]) {\n        return PATH_VIEW_MAP[returnPath];\n      }\n    }\n    return PATH_VIEW_MAP[location.pathname] ?? 'predictions';\n  }, [location.pathname, location.state]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme, aiPushMessages }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n            aiPushMessages,\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。\n */\nimport { useMemo, useState } from 'react';\nimport { Outlet, useLocation } from '@umijs/renderer-react';\nimport { StandalonePageShell, type ViewType } from './components';\nimport { HomeLayoutProvider } from './context';\n\n// 路由路径和左侧导航状态的映射关系。\n// 这里集中维护，可以避免每个页面自己判断当前高亮菜单。\nconst PATH_VIEW_MAP: Record<string, ViewType> = {\n  // 世界杯页：展示杯赛专题盘口、赛程热度和冠军预测。\n  '/world-cup': 'worldCup',\n  // 首页：默认展示撕裂带预测信息流。\n  '/': 'predictions',\n  // 真实撕裂带直达页：复用首页撕裂带逻辑，支持独立路径访问。\n  '/event-battle': 'predictions',\n  '/rivalry-battle': 'rivalry',\n  // 对抗页：展示龟龟阵营、对抗态势等内容。\n  '/rivalry': 'rivalry',\n  // 论坛页：展示话题列表和评论互动。\n  '/forum': 'forum',\n  // 游戏管理页：展示龟龟跳海等游戏入口。\n  '/games': 'games',\n  // 龟龟争霸：Phaser 版对战（与旧版游戏管理独立）。\n  '/turtle-contest': 'turtleContest',\n  // 撕裂带广场页：展示战斗广场和下注对局。\n  '/battle-plaza': 'battlePlaza',\n  // 排行榜页：展示用户、宠物或战绩排名。\n  '/rank': 'rank',\n  // 商城页：展示宠物蛋、体力补给等商品。\n  '/shop': 'shop',\n  // 宠物页：展示用户宠物资产和养成状态。\n  '/pet': 'pet',\n  // 个人中心页：展示用户资料、资产和历史记录。\n  '/profile': 'profile',\n  // 活跃预测页：展示当前正在进行的预测市场。\n  '/active-predictions': 'activePredictions',\n};\n\ntype TearStripRouteState = {\n  returnTo?: string;\n};\n\n/**\n * 业务主 layout。\n *\n * 这个文件只负责三件事：\n * 1. 根据当前路由推导左侧导航高亮项。\n * 2. 控制全局登录弹窗的打开状态。\n * 3. 把主题切换、打开登录弹窗等布局能力通过 context 给页面使用。\n */\nexport default function HomeLayout() {\n  const location = useLocation();\n  const [authModalOpen, setAuthModalOpen] = useState(false);\n  const activeView = useMemo(() => {\n    if (location.pathname.startsWith('/settlement/')) {\n      return 'predictions';\n    }\n    if (location.pathname === '/event-battle' || location.pathname === '/rivalry-battle') {\n      const routeState = location.state as TearStripRouteState | null;\n      const returnPath = routeState?.returnTo?.split('?')[0];\n      if (returnPath && PATH_VIEW_MAP[returnPath]) {\n        return PATH_VIEW_MAP[returnPath];\n      }\n    }\n    return PATH_VIEW_MAP[location.pathname] ?? 'predictions';\n  }, [location.pathname, location.state]);\n\n  return (\n    <StandalonePageShell\n      activeView={activeView}\n      authModalOpen={authModalOpen}\n      onAuthModalOpenChange={setAuthModalOpen}\n    >\n      {/* StandalonePageShell 负责真实页面壳，这里只把页面需要的 layout 能力透传下去。 */}\n      {({ darkMode, onToggleTheme, aiPushMessages }) => (\n        <HomeLayoutProvider\n          value={{\n            darkMode,\n            onToggleTheme,\n            onOpenAuth: () => setAuthModalOpen(true),\n            aiPushMessages,\n          }}\n        >\n          <Outlet />\n        </HomeLayoutProvider>\n      )}\n    </StandalonePageShell>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/layouts/home.tsx"
     },
@@ -2292,143 +2302,154 @@
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/home/index.tsx"
     },
     "5": {
+      "path": "/rivalry-battle",
+      "name": "开撕台撕裂带",
+      "file": "@/pages/rivalry-battle/index.tsx",
+      "parentId": "3",
+      "id": "5",
+      "absPath": "/rivalry-battle",
+      "__content": "/**\n * 文件说明：开撕台撕裂带直播页路由入口，根据 topic 参数装配 PK 撕裂带。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { RivalryBattleNewsItem } from './types';\nimport { RivalryBattlePage } from './components/RivalryBattlePage';\n\ntype RivalryBattleLocationState = {\n  openBattleNews?: RivalryBattleNewsItem;\n  returnTo?: string;\n};\n\nfunction normalizeRivalryBattleNews(item: RivalryBattleNewsItem): RivalryBattleNewsItem {\n  return {\n    ...item,\n    id: String(item.id),\n    marketId: Number(item.marketId || item.id),\n    type: 'rivalry',\n    status: item.status === 'closed' ? 'closed' : 'open',\n  };\n}\n\nexport default function RivalryBattleRoutePage() {\n  const [selectedBattleNews, setSelectedBattleNews] = useState<RivalryBattleNewsItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTopic = searchParams.get('topic');\n  const routeState = location.state as RivalryBattleLocationState | null;\n  const routeStateBattleNews = routeState?.openBattleNews ?? null;\n  const returnTo = routeState?.returnTo;\n\n  const selectedNews = useMemo(() => {\n    if (routeStateBattleNews) return normalizeRivalryBattleNews(routeStateBattleNews);\n    if (!selectedTopic) return null;\n    const topicId = Number(selectedTopic);\n    if (!Number.isFinite(topicId) || topicId <= 0) return null;\n    return normalizeRivalryBattleNews({\n      id: String(topicId),\n      marketId: topicId,\n      title: '开撕台对局',\n      summary: '',\n      image: '',\n      type: 'rivalry',\n      votes: { A: 0, B: 0 },\n      optionA: '阵营 A',\n      optionB: '阵营 B',\n      oddsA: 1.8,\n      oddsB: 1.8,\n      status: 'open',\n    });\n  }, [routeStateBattleNews, selectedTopic]);\n\n  useEffect(() => {\n    const raw = location.state as RivalryBattleLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(normalizeRivalryBattleNews(raw.openBattleNews));\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: raw.returnTo ? { returnTo: raw.returnTo } : undefined,\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  useEffect(() => {\n    if (!selectedNews) return;\n    setSelectedBattleNews(selectedNews);\n  }, [selectedNews]);\n\n  const handleBack = useCallback(() => {\n    if (returnTo) {\n      navigate(returnTo);\n      return;\n    }\n    navigate('/rivalry');\n  }, [navigate, returnTo]);\n\n  return (\n    <RivalryBattlePage\n      battleNews={selectedNews ?? selectedBattleNews}\n      userSide={null}\n      isLoading={false}\n      onBack={handleBack}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rivalry-battle/index.tsx"
+    },
+    "6": {
       "path": "/event-battle",
       "name": "撕裂带",
       "file": "@/pages/event-battle/index.tsx",
       "parentId": "3",
-      "id": "5",
+      "id": "6",
       "absPath": "/event-battle",
-      "__content": "/**\n * 文件说明：event-battle 页面路由入口，负责根据 market 参数装配真实撕裂带页面。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { EventBattlePage } from './components/EventBattlePage';\nimport {\n  normalizePredictionCardItem,\n  resolveDrawText,\n  resolveDrawVoteCount,\n  resolvePredictionCardImageFields,\n  type PredictionCardItem,\n} from '@/pages/home/components/predictionCards';\n\ntype EventBattleLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n  returnTo?: string;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return normalizePredictionCardItem({\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n      C: resolveDrawVoteCount(topic.context),\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    optionDraw: resolveDrawText(topic.context),\n    oddsA: 1.8,\n    oddsB: 1.8,\n    oddsDraw: 1.8,\n    supportsDrawBet: false,\n    status: 'open',\n  });\n}\n\nexport default function EventBattleRoutePage() {\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const routeState = location.state as EventBattleLocationState | null;\n  const sidebarTopic = routeState?.sidebarTopic;\n  const routeStateBattleNews = routeState?.openBattleNews ?? null;\n  const returnTo = routeState?.returnTo;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const selectedPrediction = useMemo(() => {\n    if (routeStateBattleNews) return routeStateBattleNews;\n    if (!selectedMarket || selectedMarketId === null) return null;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allFallbackItems,\n    routeStateBattleNews,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  useEffect(() => {\n    const raw = location.state as EventBattleLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: {\n        ...(raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {}),\n        ...(raw.returnTo ? { returnTo: raw.returnTo } : {}),\n      },\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  useEffect(() => {\n    if (!selectedPrediction) return;\n    setSelectedBattleNews(selectedPrediction);\n  }, [selectedPrediction]);\n\n  const handleBack = useCallback(() => {\n    if (returnTo) {\n      navigate(returnTo);\n      return;\n    }\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    const nextUrl = nextSearch.toString() ? `/?${nextSearch.toString()}` : '/';\n    navigate(nextUrl);\n  }, [navigate, returnTo, selectedTag]);\n\n  return (\n    <EventBattlePage\n      battleNews={selectedPrediction ?? selectedBattleNews}\n      userSide={null}\n      isLoading={false}\n      onBack={handleBack}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：暗盘撕裂带页面路由入口，根据 market 参数装配预测市场撕裂带。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { EventBattlePage } from './components/EventBattlePage';\nimport {\n  normalizePredictionCardItem,\n  resolveDrawText,\n  resolveDrawVoteCount,\n  resolvePredictionCardImageFields,\n  type PredictionCardItem,\n} from '@/pages/home/components/predictionCards';\n\ntype EventBattleLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n  returnTo?: string;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return normalizePredictionCardItem({\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n      C: resolveDrawVoteCount(topic.context),\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    optionDraw: resolveDrawText(topic.context),\n    oddsA: 1.8,\n    oddsB: 1.8,\n    oddsDraw: 1.8,\n    supportsDrawBet: false,\n    status: 'open',\n  });\n}\n\nexport default function EventBattleRoutePage() {\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const routeState = location.state as EventBattleLocationState | null;\n  const sidebarTopic = routeState?.sidebarTopic;\n  const routeStateBattleNews = routeState?.openBattleNews ?? null;\n  const returnTo = routeState?.returnTo;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const selectedPrediction = useMemo(() => {\n    if (routeStateBattleNews) return routeStateBattleNews;\n    if (!selectedMarket || selectedMarketId === null) return null;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allFallbackItems,\n    routeStateBattleNews,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  useEffect(() => {\n    const raw = location.state as EventBattleLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: {\n        ...(raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {}),\n        ...(raw.returnTo ? { returnTo: raw.returnTo } : {}),\n      },\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  useEffect(() => {\n    if (!selectedPrediction) return;\n    setSelectedBattleNews(selectedPrediction);\n  }, [selectedPrediction]);\n\n  const handleBack = useCallback(() => {\n    if (returnTo) {\n      navigate(returnTo);\n      return;\n    }\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    const nextUrl = nextSearch.toString() ? `/?${nextSearch.toString()}` : '/';\n    navigate(nextUrl);\n  }, [navigate, returnTo, selectedTag]);\n\n  return (\n    <EventBattlePage\n      battleNews={selectedPrediction ?? selectedBattleNews}\n      userSide={null}\n      isLoading={false}\n      onBack={handleBack}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/event-battle/index.tsx"
     },
-    "6": {
+    "7": {
       "path": "/world-cup",
       "name": "世界杯",
       "file": "@/pages/world-cup/index.tsx",
       "parentId": "3",
-      "id": "6",
+      "id": "7",
       "absPath": "/world-cup",
       "__content": "/** 文件说明：World Cup 页面路由入口，负责挂载世界杯专题页面组件。 */\nimport { WorldCupPage } from './components/WorldCupPage';\n\nexport default WorldCupPage;\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/world-cup/index.tsx"
     },
-    "7": {
+    "8": {
       "path": "/rivalry",
       "name": "开撕台",
       "file": "@/pages/rivalry/index.tsx",
       "parentId": "3",
-      "id": "7",
+      "id": "8",
       "absPath": "/rivalry",
-      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useRequestPKBet } from '@/hooks/usePkRequests';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useRequireAuth } from '@/hooks/useRequireAuth';\nimport type { RivalryNewsItem } from './components/rivalryTypes';\nimport { RivalryPageView } from './components/RivalryPageView';\n\nfunction createRequestId(prefix: string) {\n  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {\n    return `${prefix}-${crypto.randomUUID()}`;\n  }\n  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;\n}\n\nexport default function RivalryPage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [betError, setBetError] = useState<string | null>(null);\n  const [pendingBetId, setPendingBetId] = useState<string | null>(null);\n  const pkBetMutation = useRequestPKBet();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const requireAuth = useRequireAuth(onOpenAuth);\n\n  const handleRivalryBet = useCallback(async (newsId: string, option: 'A' | 'B', _odds: number, amount?: number) => {\n    setBetError(null);\n\n    if (!requireAuth()) return;\n\n    if (newsId.startsWith('pk-')) {\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n      return;\n    }\n\n    try {\n      setPendingBetId(newsId);\n      await pkBetMutation.mutateAsync({\n        topicId: newsId,\n        side: option,\n        requestId: createRequestId(`pk-bet-${newsId}`),\n        amount,\n      });\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n    } catch (error) {\n      const message = error instanceof Error ? error.message : '下注失败，请稍后再试';\n      if (message.includes('NotLogin')) {\n        onOpenAuth();\n        return;\n      }\n      setBetError(message);\n    } finally {\n      setPendingBetId(null);\n    }\n  }, [onOpenAuth, pkBetMutation, requireAuth]);\n\n  const handleEnterBattle = useCallback((item: RivalryNewsItem) => {\n    navigate(`/event-battle?market=${item.id}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <RivalryPageView\n        userVotes={userVotes}\n        betError={betError}\n        pendingBetId={pendingBetId}\n        onBet={handleRivalryBet}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
+      "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useRequestPKBet } from '@/hooks/usePkRequests';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useRequireAuth } from '@/hooks/useRequireAuth';\nimport type { RivalryNewsItem } from './components/rivalryTypes';\nimport { RivalryPageView } from './components/RivalryPageView';\n\nfunction createRequestId(prefix: string) {\n  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {\n    return `${prefix}-${crypto.randomUUID()}`;\n  }\n  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;\n}\n\nexport default function RivalryPage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});\n  const [betError, setBetError] = useState<string | null>(null);\n  const [pendingBetId, setPendingBetId] = useState<string | null>(null);\n  const pkBetMutation = useRequestPKBet();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const requireAuth = useRequireAuth(onOpenAuth);\n\n  const handleRivalryBet = useCallback(async (newsId: string, option: 'A' | 'B', _odds: number, amount?: number) => {\n    setBetError(null);\n\n    if (!requireAuth()) return;\n\n    if (newsId.startsWith('pk-')) {\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n      return;\n    }\n\n    try {\n      setPendingBetId(newsId);\n      await pkBetMutation.mutateAsync({\n        topicId: newsId,\n        side: option,\n        requestId: createRequestId(`pk-bet-${newsId}`),\n        amount,\n      });\n      setUserVotes((prev) => ({ ...prev, [newsId]: option }));\n    } catch (error) {\n      const message = error instanceof Error ? error.message : '下注失败，请稍后再试';\n      if (message.includes('NotLogin')) {\n        onOpenAuth();\n        return;\n      }\n      setBetError(message);\n    } finally {\n      setPendingBetId(null);\n    }\n  }, [onOpenAuth, pkBetMutation, requireAuth]);\n\n  const handleEnterBattle = useCallback((item: RivalryNewsItem) => {\n    navigate(`/rivalry-battle?topic=${item.id}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  }, [location.pathname, location.search, navigate]);\n\n  return (\n    <div className=\"pt-[10px]\">\n      <RivalryPageView\n        userVotes={userVotes}\n        betError={betError}\n        pendingBetId={pendingBetId}\n        onBet={handleRivalryBet}\n        onEnterBattle={handleEnterBattle}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rivalry/index.tsx"
     },
-    "8": {
+    "9": {
       "path": "/forum",
       "name": "论坛",
       "file": "@/pages/forum/index.tsx",
       "parentId": "3",
-      "id": "8",
+      "id": "9",
       "absPath": "/forum",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ForumPageView } from './components/ForumPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ForumPage() {\n  const location = useLocation();\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });\n  const newsByMarketId = useMemo(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const cards = Array.isArray(list) ? list.map(mapMarketToPredictionCard) : [];\n    return new Map(cards.filter((item) => typeof item.marketId === 'number').map((item) => [item.marketId as number, item]));\n  }, [footballMarkets.data]);\n\n  const handleOpenLinkedPrediction = (item: PredictionCardItem) => {\n    navigate(`/event-battle?market=${item.marketId ?? item.id}`, {\n      state: {\n        openBattleNews: item,\n        returnTo: `${location.pathname}${location.search || ''}`,\n      },\n    });\n  };\n\n  return (\n    <div className=\"pt-[10px]\">\n      <ForumPageView\n        newsByMarketId={newsByMarketId}\n        onOpenLinkedPrediction={handleOpenLinkedPrediction}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/forum/index.tsx"
     },
-    "9": {
+    "10": {
       "path": "/games",
       "name": "游戏",
       "file": "@/pages/games/index.tsx",
       "parentId": "3",
-      "id": "9",
+      "id": "10",
       "absPath": "/games",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { GamesPageView } from './components/GamesPageView';\n\nfunction openLabStandalone() {\n  window.location.href = '/games/turtle-jump/index.html';\n}\n\nfunction openBattleStandalone() {\n  window.location.href = '/games/turtle-arena-game/index.html';\n}\n\nexport default function GamesPage() {\n  const navigate = useNavigate();\n\n  return (\n    <div className=\"pt-[10px]\">\n      <GamesPageView\n        onOpenJump={() => navigate('/jump')}\n        onOpenLab={openLabStandalone}\n        onOpenBattle={openBattleStandalone}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/games/index.tsx"
     },
-    "10": {
+    "11": {
       "path": "/turtle-contest",
       "name": "龟龟争霸",
       "file": "@/pages/turtle-contest/index.tsx",
       "parentId": "3",
-      "id": "10",
+      "id": "11",
       "absPath": "/turtle-contest",
       "__content": "/**\n * 文件说明：turtle-contest 页面路由入口，负责挂载新的龟战 Arena 游戏。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { TurtleContestPageView } from './components/TurtleContestPageView';\n\nexport default function TurtleContestPage() {\n  const navigate = useNavigate();\n\n  return (\n    <TurtleContestPageView\n      isMobileMode={typeof window !== 'undefined' ? window.innerWidth < 1024 : false}\n      onBack={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/turtle-contest/index.tsx"
     },
-    "11": {
+    "12": {
       "path": "/battle-plaza",
       "name": "撕裂带广场",
       "file": "@/pages/battle-plaza/index.tsx",
       "parentId": "3",
-      "id": "11",
+      "id": "12",
       "absPath": "/battle-plaza",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { BattlePlazaPageView } from './components/BattlePlazaPageView';\n\nexport default function BattlePlazaPage() {\n  return (\n    <div className=\"pt-0 lg:pt-3\">\n      <BattlePlazaPageView />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/battle-plaza/index.tsx"
     },
-    "12": {
+    "13": {
       "path": "/rank",
       "name": "排行榜",
       "file": "@/pages/rank/index.tsx",
       "parentId": "3",
-      "id": "12",
+      "id": "13",
       "absPath": "/rank",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责排行榜取数、登录校验与页面组装。\n */\nimport { RankPageView } from './components/RankPageView';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport { useRequestCoinLeaderboard } from '@/hooks/useCoinRequests';\nimport { getAuthToken } from '@/utils/authStorage';\n\nexport default function RankPage() {\n  const { onOpenAuth } = useHomeLayoutContext();\n  const token = getAuthToken();\n  const { user } = useAppSession();\n  const leaderboardQuery = useRequestCoinLeaderboard({ limit: 200 });\n\n  const currentUserId =\n    user?.id !== undefined && user?.id !== null && String(user.id).trim() !== '' ? user.id : undefined;\n  const currentUserName = user?.nickname || user?.username || '我';\n\n  return (\n    <RankPageView\n      isLoginRequired={!token}\n      isLoading={Boolean(token) && leaderboardQuery.isLoading}\n      isError={Boolean(token) && leaderboardQuery.isError}\n      errorMessage={leaderboardQuery.error instanceof Error ? leaderboardQuery.error.message : undefined}\n      data={leaderboardQuery.data ?? null}\n      currentUserId={currentUserId}\n      currentUserName={currentUserName}\n      onOpenAuth={onOpenAuth}\n      onRetry={() => {\n        void leaderboardQuery.refetch();\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rank/index.tsx"
     },
-    "13": {
+    "14": {
       "path": "/shop",
       "name": "商店",
       "file": "@/pages/shop/index.tsx",
       "parentId": "3",
-      "id": "13",
+      "id": "14",
       "absPath": "/shop",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { ShopPageView } from './components/ShopPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ShopPage() {\n  const navigate = useNavigate();\n  const [balance, setBalance] = useState(0);\n  const [petStamina, setPetStamina] = useState(0);\n  const [skins] = useState<PetSkin[]>([]);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 商城页自己维护它需要的金币和宠物接口，页面壳统一交给 layouts/home。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof coinMe.data?.balance === 'number') {\n      setBalance(coinMe.data.balance);\n    }\n  }, [coinMe.data?.balance]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  return (\n    <ShopPageView\n      balance={balance}\n      pet={currentPet}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onBack={() => {\n        navigate('/');\n      }}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/shop/index.tsx"
     },
-    "14": {
+    "15": {
       "path": "/pet",
       "name": "宠物",
       "file": "@/pages/pet/index.tsx",
       "parentId": "3",
-      "id": "14",
+      "id": "15",
       "absPath": "/pet",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetEquipUpdate,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { PetPageView } from './components/PetPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\nimport { useHomeLayoutContext } from '@/layouts/context';\n\nexport default function PetPage() {\n  const navigate = useNavigate();\n  const { aiPushMessages } = useHomeLayoutContext();\n  const [petStamina, setPetStamina] = useState(0);\n  const [skins, setSkins] = useState<PetSkin[]>([]);\n\n  // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n  const petEquipMutation = useRequestPetEquipUpdate();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  const handleEquipSkin = useCallback((skinId: string) => {\n    setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));\n  }, []);\n\n  const handleEquipPet = useCallback(async (petId: number) => {\n    const result = await petEquipMutation.mutateAsync({ petId });\n    void Promise.all([\n      petEquipQuery.refetch(),\n      petOwnedQuery.refetch(),\n      petStatusQuery.refetch(),\n    ]);\n    return result;\n  }, [petEquipMutation, petEquipQuery, petOwnedQuery, petStatusQuery]);\n\n  return (\n    <PetPageView\n      pet={currentPet}\n      balance={coinMe.data?.balance ?? 0}\n      winRate={0}\n      winStreak={0}\n      totalPredictions={0}\n      onBack={() => {\n        navigate('/');\n      }}\n      skins={skins}\n      onEquipSkin={handleEquipSkin}\n      equippedPet={petEquipQuery.data ?? null}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n      petStatus={petStatusQuery.data ?? null}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onEquipPet={handleEquipPet}\n      equippingPetId={\n        petEquipMutation.isLoading\n          ? (petEquipMutation.variables?.petId ?? null)\n          : null\n      }\n      onStaminaChange={setPetStamina}\n      aiPushMessages={aiPushMessages}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/pet/index.tsx"
     },
-    "15": {
+    "16": {
       "path": "/profile",
       "name": "个人中心",
       "file": "@/pages/profile/index.tsx",
       "parentId": "3",
-      "id": "15",
+      "id": "16",
       "absPath": "/profile",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';\nimport { createUserAvatarUrl } from '@/utils/userAvatar';\nimport { ProfilePageView } from './components/ProfilePageView';\nimport { getPetDisplayAvatar, getPetMoodLabel } from './components/petDisplay';\n\nexport default function ProfilePage() {\n  const navigate = useNavigate();\n  const [skins] = useState<PetSkin[]>([]);\n  const { onOpenAuth } = useHomeLayoutContext();\n  const token = getAuthToken();\n\n  // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。\n  const { user, coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const storedUser = getStoredUserInfo();\n  const userId = user?.id;\n  const displayName = storedUser?.nickname ?? storedUser?.username ?? '未登录用户';\n  const displayHandle = storedUser?.username ? `@${storedUser.username}` : '';\n  const avatarUrl = createUserAvatarUrl(userId, 96);\n  const petStamina = petStaminaQuery.data?.current ?? 0;\n  const petKey = petEquipQuery.data?.petKey ?? equippedOwnedPet?.petKey;\n  const petName = petEquipQuery.data?.petName ?? equippedOwnedPet?.petName ?? '';\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petName,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar || getPetDisplayAvatar(petKey, petName),\n    petKey,\n    icon: petEquipQuery.data?.icon,\n    image: petEquipQuery.data?.image,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.icon,\n    petEquipQuery.data?.image,\n    petEquipQuery.data?.level,\n    petKey,\n    petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  if (!token) {\n    return (\n      <section className=\"view-profile h-full min-h-full xl:bg-[#080808] px-3 pt-[10px]\">\n        <LoginRequiredPage\n          title=\"登录后查看个人中心\"\n          description=\"登录后即可查看和管理你的帖子、评论与宠物档案。\"\n          actionLabel=\"去登录\"\n          onAction={onOpenAuth}\n          className=\"min-h-[420px]\"\n        />\n      </section>\n    );\n  }\n\n  return (\n    <ProfilePageView\n      userName={displayName}\n      userHandle={displayHandle}\n      avatarUrl={avatarUrl}\n      pet={currentPet}\n      skins={skins}\n      balance={coinMe.data?.balance ?? 0}\n      onBack={() => {\n        navigate('/');\n      }}\n      onOpenForum={() => {\n        navigate('/forum');\n      }}\n      onOpenAuth={onOpenAuth}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/profile/index.tsx"
     },
-    "16": {
+    "17": {
       "path": "/active-predictions",
       "name": "活跃预测",
       "file": "@/pages/active-predictions/index.tsx",
       "parentId": "3",
-      "id": "16",
+      "id": "17",
       "absPath": "/active-predictions",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ActivePredictionsPageView } from './components/ActivePredictionsPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ActivePredictionsPage() {\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });\n  const activePredictionItems = useMemo<PredictionCardItem[]>(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const liveNews = Array.isArray(list) && list.length > 0\n      ? list.map(mapMarketToPredictionCard)\n      : [];\n    return liveNews.filter((item) => item.status === 'open');\n  }, [footballMarkets.data]);\n\n  return (\n    <ActivePredictionsPageView\n      items={activePredictionItems}\n      onBack={() => {\n        navigate('/');\n      }}\n      onEnterBattle={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/active-predictions/index.tsx"
     },
-    "17": {
+    "18": {
       "path": "/settlement/:kind/:id",
       "name": "结算详情",
       "file": "@/pages/settlement/index.tsx",
       "parentId": "3",
-      "id": "17",
+      "id": "18",
       "absPath": "/settlement/:kind/:id",
       "__content": "/**\n * 文件说明：结算详情页路由入口，负责领取结算与详情展示。\n */\nimport { useEffect, useMemo, useState } from 'react';\nimport { useNavigate, useParams, useSearchParams } from '@umijs/renderer-react';\nimport { createBattleRequestId } from '@/hooks/battleTypes';\nimport type { CoinSettleResult } from '@/hooks/coinTypes';\nimport type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';\nimport { useSettlementRecords } from '@/hooks/usePendingSettlements';\nimport { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';\nimport { useRequestCoinSettle } from '@/hooks/useCoinRequests';\nimport { useSettlementDetailBuilder } from '@/hooks/useSettlementDetail';\nimport { useSettlementLayout } from '@/layouts/context/SettlementLayoutContext';\nimport { requireAuthOrOpen } from '@/utils/authStorage';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { SettlementDetailPage } from './components/SettlementDetailPage';\nimport {\n  settlementItemIdFromRoute,\n  type SettlementDetailAction,\n  type SettlementRouteKind,\n} from './settlementNavigation';\n\nfunction resolveCampSideFromMarket(\n  marketList: ReturnType<typeof useSettlementRecords>['marketList'],\n  marketId: number,\n): SettlementRecordItem['campSide'] {\n  const item = marketList.find((entry) => entry.market.id === marketId);\n  if (!item) return 'unknown';\n  const raw = item as typeof item & { bet?: { option?: string }; myBet?: { option?: string } };\n  const option = String(raw.bet?.option ?? raw.myBet?.option ?? '').trim().toUpperCase();\n  if (option === 'A') return 'A';\n  if (option === 'B') return 'B';\n  if (option === 'DRAW' || option === 'C') return 'draw';\n  return 'unknown';\n}\n\nexport default function SettlementPage() {\n  const navigate = useNavigate();\n  const params = useParams<{ kind: SettlementRouteKind; id: string }>();\n  const [searchParams] = useSearchParams();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const { openSettlementDrawer, hideSettlementItem } = useSettlementLayout();\n  const { marketList } = useSettlementRecords();\n  const { buildDetailModel } = useSettlementDetailBuilder(marketList);\n  const coinSettleMutation = useRequestCoinSettle();\n  const battleWithdrawMutation = useRequestBattleWithdraw();\n\n  const kind = params.kind;\n  const rawId = params.id ?? '';\n  const numericId = Number(rawId);\n  const action = (searchParams.get('action') as SettlementDetailAction | null) ?? 'view';\n\n  const record = useMemo<SettlementRecordItem | null>(() => {\n    if (!kind || !Number.isFinite(numericId) || numericId <= 0) return null;\n    const id = settlementItemIdFromRoute(kind, rawId);\n    if (kind === 'coin') {\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'dark',\n        title: '',\n        subtitle: '',\n        campSide: resolveCampSideFromMarket(marketList, numericId),\n        marketId: numericId,\n      };\n    }\n    return {\n      id,\n      status: action === 'settle' ? 'pending' : 'settled',\n      sourceTab: 'arena',\n      title: '',\n      subtitle: '',\n      campSide: 'unknown',\n      battleId: numericId,\n    };\n  }, [action, kind, marketList, numericId, rawId]);\n\n  const [model, setModel] = useState<SettlementDetailViewModel | null>(null);\n  const [loading, setLoading] = useState(true);\n  const [errorText, setErrorText] = useState<string | undefined>();\n  const [settledItemId, setSettledItemId] = useState<string | null>(null);\n\n  useEffect(() => {\n    if (!record) {\n      setLoading(false);\n      setErrorText('无效的结算链接');\n      return;\n    }\n\n    if (!requireAuthOrOpen(onOpenAuth)) {\n      setLoading(false);\n      setErrorText('请先登录后查看结算详情');\n      return;\n    }\n\n    let cancelled = false;\n\n    const run = async () => {\n      setLoading(true);\n      setErrorText(undefined);\n      setModel(null);\n\n      try {\n        let settlePayload: CoinSettleResult | SettlementActionResult | null = null;\n\n        if (action === 'settle' && record.status === 'pending') {\n          if (record.sourceTab === 'dark' && record.marketId) {\n            settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });\n          } else if (record.sourceTab === 'arena' && record.battleId) {\n            const withdrawResult = await battleWithdrawMutation.mutateAsync({\n              battleId: record.battleId,\n              requestId: createBattleRequestId(`battle-withdraw-${record.battleId}`),\n            });\n            const payout = withdrawResult.payoutAmount ?? 0;\n            settlePayload = {\n              payout,\n              outcome: payout > 0 ? 'win' : 'neutral',\n              message: '奖励已提取到你的龟币账户。',\n            };\n          }\n          if (!cancelled) {\n            setSettledItemId(record.id);\n          }\n        }\n\n        const nextModel = await buildDetailModel(\n          { ...record, status: 'settled' },\n          settlePayload,\n        );\n        if (!cancelled) {\n          setModel(nextModel);\n        }\n      } catch (error) {\n        if (!cancelled) {\n          const message = error instanceof Error ? error.message : '加载结算详情失败';\n          setErrorText(message);\n          setModel(null);\n        }\n      } finally {\n        if (!cancelled) {\n          setLoading(false);\n        }\n      }\n    };\n\n    void run();\n\n    return () => {\n      cancelled = true;\n    };\n  }, [\n    action,\n    battleWithdrawMutation.mutateAsync,\n    buildDetailModel,\n    coinSettleMutation.mutateAsync,\n    onOpenAuth,\n    record,\n  ]);\n\n  const handleBack = () => {\n    if (settledItemId) {\n      hideSettlementItem(settledItemId);\n    }\n    openSettlementDrawer();\n    if (window.history.length > 1) {\n      navigate(-1);\n      return;\n    }\n    navigate('/');\n  };\n\n  return (\n    <SettlementDetailPage\n      model={model}\n      loading={loading}\n      errorText={errorText}\n      onBack={handleBack}\n    />\n  );\n}\n",
       "__isJSFile": true,

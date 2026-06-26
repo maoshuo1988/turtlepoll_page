@@ -1,0 +1,5 @@
+@import './RivalryBattleLiveRoomStyles/base.css';
+@import './RivalryBattleLiveRoomStyles/legacy-room.css';
+@import './RivalryBattleLiveRoomStyles/arena.css';
+@import './RivalryBattleLiveRoomStyles/compact.css';
+@import './RivalryBattleLiveRoomStyles/effects.css';

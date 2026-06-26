@@ -29,6 +29,7 @@ export default defineConfig({
       component: '@/layouts/home',
       routes: [
         { path: '/', component: 'home', name: '首页' },
+        { path: '/rivalry-battle', component: 'rivalry-battle', name: '开撕台撕裂带' },
         { path: '/event-battle', component: 'event-battle', name: '撕裂带' },
         { path: '/world-cup', component: 'world-cup', name: '世界杯' },
         { path: '/rivalry', component: 'rivalry', name: '开撕台' },

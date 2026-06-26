@@ -58,7 +58,7 @@ export default function RivalryPage() {
   }, [onOpenAuth, pkBetMutation, requireAuth]);
 
   const handleEnterBattle = useCallback((item: RivalryNewsItem) => {
-    navigate(`/event-battle?market=${item.id}`, {
+    navigate(`/rivalry-battle?topic=${item.id}`, {
       state: {
         openBattleNews: item,
         returnTo: `${location.pathname}${location.search || ''}`,

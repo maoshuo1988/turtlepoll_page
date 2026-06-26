@@ -15,6 +15,7 @@ const PATH_VIEW_MAP: Record<string, ViewType> = {
   '/': 'predictions',
   // 真实撕裂带直达页：复用首页撕裂带逻辑，支持独立路径访问。
   '/event-battle': 'predictions',
+  '/rivalry-battle': 'rivalry',
   // 对抗页：展示龟龟阵营、对抗态势等内容。
   '/rivalry': 'rivalry',
   // 论坛页：展示话题列表和评论互动。
@@ -37,7 +38,7 @@ const PATH_VIEW_MAP: Record<string, ViewType> = {
   '/active-predictions': 'activePredictions',
 };
 
-type EventBattleRouteState = {
+type TearStripRouteState = {
   returnTo?: string;
 };
 
@@ -56,8 +57,8 @@ export default function HomeLayout() {
     if (location.pathname.startsWith('/settlement/')) {
       return 'predictions';
     }
-    if (location.pathname === '/event-battle') {
-      const routeState = location.state as EventBattleRouteState | null;
+    if (location.pathname === '/event-battle' || location.pathname === '/rivalry-battle') {
+      const routeState = location.state as TearStripRouteState | null;
       const returnPath = routeState?.returnTo?.split('?')[0];
       if (returnPath && PATH_VIEW_MAP[returnPath]) {
         return PATH_VIEW_MAP[returnPath];

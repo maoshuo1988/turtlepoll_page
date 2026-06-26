@@ -1,8 +1,7 @@
-/** 文件说明：对抗条两端大圆、中间收窄的固定对称外形路径（不随占比变化）。 */
+/** 文件说明：开撕台对抗条固定对称收窄外形路径（仅开撕台使用）。 */
 
 const TAPER_BOTTOM_PCT = 70;
 const EDGE_TRANSITION_PX = 40;
-/** 每侧内半段终点：整轨宽度的 25% / 75%（固定 50:50，不跟色条分界走）。 */
 const HALF_LEFT_RATIO = 0.25;
 const HALF_RIGHT_RATIO = 0.75;
 
@@ -53,13 +52,9 @@ function resolveTaperAnchors(outerLeft: number, outerRight: number): {
   return { halfLeft, halfRight, useCenterMerge: false };
 }
 
-/**
- * 整轨外形：左右完全镜像。
- * 外缘 40px 满高 → 40px~该侧 25%/75% 圆弧收窄 → 中间底边水平。
- */
-export function buildFixedRailClipPathD(
+export function buildHeroBattleRailClipPathD(
   trackWidthPx: number,
-  _trackHeightPx = 44,
+  _trackHeightPx = 48,
 ): string {
   const t = getTaperY();
   const outerLeft = trackWidthPx > 0 ? EDGE_TRANSITION_PX / trackWidthPx : 0;
@@ -93,6 +88,6 @@ export function buildFixedRailClipPathD(
   ].join(' ');
 }
 
-export function clipPathUrl(id: string): string {
+export function heroBattleRailClipPathUrl(id: string): string {
   return `url(#${id})`;
 }

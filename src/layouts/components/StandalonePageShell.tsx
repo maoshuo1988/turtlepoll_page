@@ -143,7 +143,7 @@ export function StandalonePageShell({
   const darkMode = theme === 'dark';
   const { coinMe } = useAppSession();
   const isAuthenticated = Boolean(getAuthToken());
-  const isEventBattleRoute = location.pathname === '/event-battle';
+  const isTearStripRoute = location.pathname === '/event-battle' || location.pathname === '/rivalry-battle';
   const isSettlementRoute = location.pathname.startsWith('/settlement/');
   // 左侧栏宠物卡片需要同时读取装备、拥有、体力和心情状态。
   const petEquipQuery = useRequestPetEquip();
@@ -151,7 +151,7 @@ export function StandalonePageShell({
   const petStaminaQuery = useRequestPetStamina();
   const petStatusQuery = useRequestPetStatus();
   const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20 });
-  const aiUnreadPushesQuery = useRequestAiUnreadPushes(20, isAuthenticated && !isEventBattleRoute);
+  const aiUnreadPushesQuery = useRequestAiUnreadPushes(20, isAuthenticated && !isTearStripRoute);
   const aiPushesReadMutation = useRequestAiPushesRead();
   const aiPresenceMutation = useRequestAiPresence();
   const displayedAiPushIdsRef = useRef<Set<string>>(new Set());
@@ -218,7 +218,7 @@ export function StandalonePageShell({
   }, [appendAiPushMessages, aiUnreadPushesQuery.data?.results]);
 
   useAiPushStream({
-    enabled: isAuthenticated && !isEventBattleRoute,
+    enabled: isAuthenticated && !isTearStripRoute,
     onPush: useCallback((message) => {
       appendAiPushMessages([message]);
     }, [appendAiPushMessages]),
