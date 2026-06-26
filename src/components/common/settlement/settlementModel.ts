@@ -3,6 +3,7 @@
  */
 import type { BattleDetailResponse } from '@/hooks/battleTypes';
 import type { CoinSettleResult, PredictBet } from '@/hooks/coinTypes';
+import type { PKSettleResponse, PKTopicDetailResponse } from '@/hooks/pkTypes';
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
 import type {
   SettlementActionResult,
@@ -292,6 +293,89 @@ export function buildBattleSettlementDetail(params: {
       heatB: challengerStake,
       userSide,
       userScore: Math.round((userSide === 'A' ? bankerStake : challengerStake) * 0.05),
+      userName: currentUserName,
+      participatedHeat,
+    }),
+    leaderboardSideLocked: !participatedHeat,
+    userCampSide: userSide,
+  };
+}
+
+export function buildPkSettlementDetail(params: {
+  record: SettlementRecordItem;
+  topic: PKTopicDetailResponse;
+  settleResult?: PKSettleResponse | SettlementActionResult | null;
+  currentUserName?: string;
+}): SettlementDetailViewModel {
+  const { record, topic, settleResult, currentUserName = '我' } = params;
+  const optionA = topic.topic?.sideAName || '蓝方';
+  const optionB = topic.topic?.sideBName || '红方';
+  const heatA = Number(topic.round?.heatA ?? 0);
+  const heatB = Number(topic.round?.heatB ?? 0);
+  const totalHeat = Math.max(1, heatA + heatB);
+  const heatLeftPct = Math.round((heatA / totalHeat) * 100);
+  const winner = settleResult && 'winner' in settleResult
+    ? settleResult.winner
+    : topic.leader === 'draw'
+      ? 'draw'
+      : topic.leader === 'B'
+        ? 'B'
+        : 'A';
+  const winningHeatSide: SettlementCampSide =
+    winner === 'draw' ? 'draw' : winner === 'B' ? 'B' : 'A';
+  const mySideRaw = topic.mySide || topic.myBet?.side;
+  const userSide: SettlementCampSide =
+    mySideRaw === 'A' ? 'A' : mySideRaw === 'B' ? 'B' : 'unknown';
+  const pkSettlement = settleResult && 'settlement' in settleResult ? settleResult.settlement : null;
+  const principal = pkSettlement?.stakeAmount ?? topic.myBet?.amount ?? 0;
+  const payout = pkSettlement?.payoutAmount ?? 0;
+  const result = String(pkSettlement?.result ?? '').toLowerCase();
+  const betHit = result === 'win' || payout > principal;
+  const odds = principal > 0 && payout > 0 ? Number((payout / principal).toFixed(2)) : topic.myBet?.side === 'A' ? topic.oddsA ?? 1 : topic.oddsB ?? 1;
+  const participatedHeat = userSide !== 'unknown';
+  const userWonHeat = participatedHeat && userSide === winningHeatSide;
+  const winningSideName =
+    winningHeatSide === 'draw' ? '平局' : winningHeatSide === 'A' ? optionA : optionB;
+
+  return {
+    record,
+    eyebrow: '开撕台 · 本局结算',
+    headline: betHit ? '命中赛果 · 派奖到账' : result === 'draw' ? '平局 · 本金退回' : '未命中赛果',
+    headlineAccent: betHit ? 'pink' : 'white',
+    description: `${optionA} vs ${optionB} · ${winningSideName} 热度胜出，本局已结算。`,
+    showHeatDuel: true,
+    heatLeftValue: heatA,
+    heatRightValue: heatB,
+    heatLeftPct,
+    heatBadge: participatedHeat ? (userWonHeat ? '赢得热度对决' : '输掉热度对决') : '未参与热度对决',
+    heatBadgeTone: participatedHeat ? (userWonHeat ? 'pink' : 'grey') : 'gold',
+    heatFootnote: participatedHeat
+      ? `你在${userSide === 'A' ? optionA : optionB}阵营`
+      : '你未参与本局热度对决',
+    showHeatReward: participatedHeat,
+    heatRewardAmount: userWonHeat ? Math.max(0, Math.round(payout * 0.15)) : 0,
+    heatRewardNote: userWonHeat ? '按你在本局阵营的贡献占比发放' : '',
+    heatRewardProgressPct: userWonHeat ? 24 : 0,
+    heatRewardEmpty: !userWonHeat,
+    heatRewardEmptyText: participatedHeat ? '本方热度落后，未瓜分奖励池。' : '你未参与热度对决，不属于任何阵营。',
+    showBetPanel: principal > 0,
+    betPanelTitle: betHit ? '开撕台下注派奖 (命中赛果)' : result === 'draw' ? '开撕台下注结算 (平局退回)' : '开撕台下注结算 (未命中)',
+    betOptionLabel: userSide === 'A' ? optionA : userSide === 'B' ? optionB : '未选边',
+    betPrincipal: principal,
+    betOdds: odds,
+    betHit,
+    betPayout: payout,
+    betFootnote: betHit
+      ? '派奖已计入龟币余额。'
+      : result === 'draw'
+        ? '平局按规则原路退回本金。'
+        : '赛果未命中，本金不返还。',
+    showLeaderboard: true,
+    leaderboardRows: buildLeaderboardRows({
+      heatA,
+      heatB,
+      userSide,
+      userScore: Math.round((userSide === 'A' ? heatA : heatB) * 0.05),
       userName: currentUserName,
       participatedHeat,
     }),

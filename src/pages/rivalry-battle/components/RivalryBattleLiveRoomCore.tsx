@@ -2,39 +2,47 @@
  * 文件说明：开撕台撕裂带直播页核心实现（仅接 PK 开撕台接口）。
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from '@umijs/renderer-react';
 import {
   ChevronDown,
   ChevronLeft,
   ChevronUp,
   Crosshair,
-  Flame,
   MessageCircleReply,
   Radio,
   Send,
   Shield,
   Swords,
+  ThumbsDown,
   ThumbsUp,
-  Trophy,
-  Zap,
 } from 'lucide-react';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import {
   type CommentResponse,
-  useRequestCommentReplies,
 } from '@/hooks/useCommentRequests';
+import { useRequestCoinMe } from '@/hooks/useCoinRequests';
 import {
   useRequestPKBet,
+  useRequestPKCommentReplies,
   useRequestPKComments,
   useRequestPKCreateComment,
+  useRequestPKDownvote,
   useRequestPKHeat,
+  useRequestPKHeatMe,
+  useRequestPKHeatRank,
+  useRequestPKLike,
+  // useRequestPKMyBets,
+  useRequestPKOddsCurrent,
+  useRequestPKRecordOption,
   useRequestPKReplyComment,
+  useRequestPKSettle,
   useRequestPKTopic,
 } from '@/hooks/usePkRequests';
 import type { PKBet } from '@/hooks/pkTypes';
-import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
 import type { PetSkin } from '@/components/common/pet/petTypes';
 import type { RivalryBattleNewsItem } from '../types';
 import { RivalryBattleEnergyBar, buildRivalryBattleEnergyBarBubbles } from './RivalryBattleEnergyBar/index';
+import { RivalryBattleRightRail } from './RivalryBattleRightRail';
 import { resolveRivalryBattleTheme } from './rivalryBattleThemes';
 import './RivalryBattleLiveRoom.css';
 
@@ -59,6 +67,8 @@ type BattleComment = {
   text: string;
   likes: number;
   liked: boolean;
+  downvotes: number;
+  downvoted: boolean;
   replyCount: number;
   ipLocation?: string;
 };
@@ -206,6 +216,7 @@ function getCommentAvatar(comment?: CommentResponse | null) {
 }
 
 function mapCommentToBattleComment(comment: CommentResponse): BattleComment {
+  const pkComment = comment as import('@/hooks/pkTypes').PKCommentResponse;
   const base = getCommentBase(comment);
   return {
     id: String(base?.id ?? comment.id),
@@ -215,6 +226,8 @@ function mapCommentToBattleComment(comment: CommentResponse): BattleComment {
     text: getCommentText(comment) || '这条评论暂时没有正文。',
     likes: base?.likeCount ?? comment.likeCount ?? base?.likes ?? comment.likes ?? 0,
     liked: Boolean(base?.liked ?? comment.liked),
+    downvotes: pkComment.downvoteCount ?? 0,
+    downvoted: Boolean(pkComment.downvoted),
     replyCount: base?.replyCount ?? comment.replyCount ?? base?.replies ?? comment.replies ?? 0,
     ipLocation: base?.ipLocation ?? comment.ipLocation,
   };
@@ -299,7 +312,13 @@ function AvatarStack({ supporter }: { supporter: Supporter }) {
 interface BattleCommentCardProps {
   comment: BattleComment;
   side: CommentSide;
+  sideLabel: string;
+  sideAccent: string;
+  useNeutralStyle: boolean;
+  canInteract: boolean;
+  canDownvote: boolean;
   onToggleLike: (comment: BattleComment, side: CommentSide) => void;
+  onToggleDownvote: (comment: BattleComment, side: CommentSide) => void;
   onOpenReply: (comment: BattleComment, side: CommentSide) => void;
   isReplying: boolean;
   replyDraft: string;
@@ -308,13 +327,20 @@ interface BattleCommentCardProps {
   onCancelReply: () => void;
   replySubmitting: boolean;
   likePending: boolean;
+  downvotePending: boolean;
   latestReplyEvent: LatestReplyEvent | null;
 }
 
 const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
   comment,
   side,
+  sideLabel,
+  sideAccent,
+  useNeutralStyle,
+  canInteract,
+  canDownvote,
   onToggleLike,
+  onToggleDownvote,
   onOpenReply,
   isReplying,
   replyDraft,
@@ -323,12 +349,13 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
   onCancelReply,
   replySubmitting,
   likePending,
+  downvotePending,
   latestReplyEvent,
 }) => {
   const [showReplies, setShowReplies] = useState(false);
   const [replyCursor, setReplyCursor] = useState<number | string>(0);
   const [repliesState, setRepliesState] = useState<BattleReply[]>([]);
-  const repliesQuery = useRequestCommentReplies({
+  const repliesQuery = useRequestPKCommentReplies({
     commentId: comment.id,
     cursor: replyCursor,
     enabled: showReplies || isReplying || latestReplyEvent?.commentId === comment.id,
@@ -356,7 +383,10 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
   const totalReplies = Math.max(comment.replyCount, repliesState.length);
 
   return (
-    <div className={`comment-item ${side === 'A' ? 'comment-blue' : 'comment-red'} ${likePending ? 'comment-busy' : ''}`}>
+    <div
+      className={`comment-item ${useNeutralStyle ? 'comment-neutral' : 'comment-themed'} ${likePending || downvotePending ? 'comment-busy' : ''}`}
+      style={useNeutralStyle ? undefined : { ['--comment-side-accent' as string]: sideAccent }}
+    >
       <div className="c-left">
         <img className="c-avatar" src={comment.avatar || FALLBACK_AVATAR} alt={comment.author} />
       </div>
@@ -366,7 +396,7 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
           <span className="c-time">{comment.time}</span>
         </div>
         <div className="c-meta-line">
-          <span className={`c-side-tag ${side === 'A' ? 'tag-blue' : 'tag-red'}`}>{side === 'A' ? '蓝方' : '红方'}</span>
+          <span className="c-side-tag">{sideLabel}</span>
           {comment.ipLocation ? <span className="c-location">{comment.ipLocation}</span> : null}
         </div>
         <p className="c-text">{comment.text}</p>
@@ -381,7 +411,16 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
             <ThumbsUp size={12} />
             {formatVotes(comment.likes)}
           </button>
-          <button type="button" className="action-btn" onClick={() => onOpenReply(comment, side)}>
+          <button
+            type="button"
+            className={`action-btn ${comment.downvoted ? 'active downvoted' : ''}`}
+            onClick={() => onToggleDownvote(comment, side)}
+            disabled={!canDownvote || downvotePending}
+          >
+            <ThumbsDown size={12} />
+            {formatVotes(comment.downvotes)}
+          </button>
+          <button type="button" className="action-btn" onClick={() => onOpenReply(comment, side)} disabled={!canInteract}>
             <MessageCircleReply size={12} />
             回复
           </button>
@@ -479,11 +518,15 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
   userSide,
   onRequireAuth,
 }) => {
+  const navigate = useNavigate();
   const pkTopicId = Number(news.marketId || news.id);
   const hasPkTopic = Number.isFinite(pkTopicId) && pkTopicId > 0;
   const currentUserQuery = useRequestUserCurrent();
-  const likeMutation = useRequestLikeEntity();
-  const unlikeMutation = useRequestUnlikeEntity();
+  const coinMeQuery = useRequestCoinMe();
+  const pkLikeMutation = useRequestPKLike();
+  const pkDownvoteMutation = useRequestPKDownvote();
+  const pkRecordOptionMutation = useRequestPKRecordOption();
+  const pkSettleMutation = useRequestPKSettle();
   const [cursorA, setCursorA] = useState<number | string>(0);
   const [cursorB, setCursorB] = useState<number | string>(0);
   const [commentsAState, setCommentsAState] = useState<BattleComment[]>([]);
@@ -497,12 +540,14 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
   const [betAmount, setBetAmount] = useState('100');
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [likePendingIds, setLikePendingIds] = useState<Set<string>>(new Set());
+  const [downvotePendingIds, setDownvotePendingIds] = useState<Set<string>>(new Set());
+  const recordOptionAttemptedRef = useRef<Set<string>>(new Set());
+  const viewRecordedTopicRef = useRef<number | null>(null);
   const [countdownLeft, setCountdownLeft] = useState(0);
   const activeTab: string = '全部';
   const [mobileActiveSide, setMobileActiveSide] = useState<CommentSide>(userSide ?? 'A');
-  const [mobileRankMode, setMobileRankMode] = useState<'all' | 'side'>('all');
+  const [rankMode, setRankMode] = useState<'all' | 'side'>('all');
   const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
-  const [betBurst, setBetBurst] = useState<{ side: BetOption; token: number } | null>(null);
   const [betDialogSide, setBetDialogSide] = useState<BetOption | null>(null);
   const [optimisticPkBet, setOptimisticPkBet] = useState<PKBet | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
@@ -526,25 +571,68 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
   const pkCreateCommentMutation = useRequestPKCreateComment();
   const pkReplyCommentMutation = useRequestPKReplyComment();
   const pkBetMutation = useRequestPKBet();
+  const pkHeatMeQuery = useRequestPKHeatMe({
+    topicId: pkTopicId,
+    enabled: hasPkTopic && Boolean(currentUserQuery.data?.id),
+  });
+  const pkHeatRankQuery = useRequestPKHeatRank({
+    topicId: pkTopicId,
+    scope: rankMode === 'side' ? 'MY_SIDE' : 'ALL',
+    page: 1,
+    pageSize: 20,
+    enabled: hasPkTopic,
+  });
+  const pkOddsQuery = useRequestPKOddsCurrent({
+    topicId: pkTopicId,
+    roundId: pkHeatQuery.data?.roundId ?? pkDetailQuery.data?.round?.id,
+    enabled: hasPkTopic,
+  });
+  // 我的下注记录：暂时隐藏，恢复时取消注释
+  // const pkMyBetsQuery = useRequestPKMyBets({
+  //   page: 1,
+  //   pageSize: 20,
+  //   enabled: hasPkTopic && Boolean(currentUserQuery.data?.id),
+  // });
   const pkDetail = pkDetailQuery.data;
   const pkTopic = pkDetail?.topic;
   const pkRound = pkDetail?.round;
   const pkHeat = pkHeatQuery.data;
   const pkPhase = pkHeat?.phase ?? pkRound?.phase;
   const pkMyBet = optimisticPkBet ?? pkDetail?.myBet ?? null;
-  const hasPkBet = Boolean(pkMyBet && hasValue(pkMyBet.id));
+  const hasPkBet = Boolean(pkDetail?.hasBet ?? (pkMyBet && hasValue(pkMyBet.id)));
+  const myBetSide = useMemo((): CommentSide | undefined => {
+    const fromBet = pkMyBet?.side;
+    if (fromBet === 'A' || fromBet === 'B') return fromBet;
+    const fromDetail = pkDetail?.mySide;
+    if (fromDetail === 'A' || fromDetail === 'B') return fromDetail;
+    return undefined;
+  }, [pkDetail?.mySide, pkMyBet?.side]);
+  const useNeutralCommentStyle = !hasPkBet;
   const shouldUsePkBet = hasPkTopic && hasValue(pkPhase) && !pkDetailQuery.isError && !pkHeatQuery.isError;
+  const canCommentOnSide = useCallback((side: CommentSide) => {
+    if (!hasPkBet) return true;
+    return myBetSide === side;
+  }, [hasPkBet, myBetSide]);
+  const canOpenBetSide = useCallback((side: CommentSide) => {
+    if (pkPhase !== 'betting' || !shouldUsePkBet || hasPkBet) return false;
+    return side === 'A' || side === 'B';
+  }, [hasPkBet, pkPhase, shouldUsePkBet]);
+  const canDownvoteOnSide = useCallback((side: CommentSide) => {
+    if (!hasPkBet || !myBetSide) return false;
+    return side !== myBetSide;
+  }, [hasPkBet, myBetSide]);
+  const canPkSettle = Boolean(pkDetail?.canSettle);
   const optionA = pkTopic?.sideAName || news.optionA;
   const optionB = pkTopic?.sideBName || news.optionB;
   const battleTitle = pkTopic?.title || news.title;
-  const oddsA = pkDetail?.oddsA ?? news.oddsA;
-  const oddsB = pkDetail?.oddsB ?? news.oddsB;
+  const oddsA = pkOddsQuery.data?.oddsA ?? pkDetail?.oddsA ?? news.oddsA;
+  const oddsB = pkOddsQuery.data?.oddsB ?? pkDetail?.oddsB ?? news.oddsB;
   const pkCountdownSeconds = pkHeat?.countdownSeconds ?? pkDetail?.countdownSeconds;
   const pkHeatA = Number(pkHeat?.heatA ?? pkRound?.heatA);
   const pkHeatB = Number(pkHeat?.heatB ?? pkRound?.heatB);
 
   const canComment = Boolean(currentUserQuery.data?.id);
-  const balance = 0;
+  const balance = coinMeQuery.data?.balance ?? 0;
   const numericBetAmount = Number(betAmount);
   const leftVotes = Number.isFinite(pkHeatA) ? Math.round(pkHeatA) : news.votes?.A ?? 0;
   const rightVotes = Number.isFinite(pkHeatB) ? Math.round(pkHeatB) : news.votes?.B ?? 0;
@@ -571,9 +659,10 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
     return oddsB;
   }, [oddsA, oddsB]);
   const activeBetOdds = resolveBetOdds(betIntent);
-  const estimatedPayout = Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
-    ? Math.floor(effectiveBetAmount * activeBetOdds)
-    : 0;
+  const estimatedPayout = pkHeatMeQuery.data?.estimatedPayout
+    ?? (Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
+      ? Math.floor(effectiveBetAmount * activeBetOdds)
+      : 0);
   const dialogBetOdds = betDialogSide ? resolveBetOdds(betDialogSide) : 0;
   const dialogBetName = betDialogSide
     ? betDialogSide === 'A'
@@ -663,6 +752,52 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
     onRequireAuth?.();
   }, [onRequireAuth]);
 
+  const submitRecordOption = useCallback(async (
+    side: CommentSide,
+    actionType: string,
+    entityType = 'pk_option',
+    entityId?: number | string,
+  ) => {
+    if (!hasPkTopic || !canComment) return;
+    const roundId = pkHeatQuery.data?.roundId ?? pkDetail?.round?.id ?? pkTopic?.currentRoundId;
+    if (!roundId && entityId === undefined) return;
+    const dedupeKey = `${pkTopicId}-${actionType}-${side}-${entityId ?? roundId ?? ''}`;
+    if (recordOptionAttemptedRef.current.has(dedupeKey)) return;
+    recordOptionAttemptedRef.current.add(dedupeKey);
+    try {
+      await pkRecordOptionMutation.mutateAsync({
+        topicId: pkTopicId,
+        roundId,
+        option: side,
+        actionType,
+        requestId: createRequestId(`pk-record-${dedupeKey}`),
+        entityType,
+        entityId: entityId ?? roundId,
+      });
+    } catch {
+      // 失败后保持去重标记，避免轮询或 effect 重跑导致重复请求
+    }
+  }, [canComment, hasPkTopic, pkDetail?.round?.id, pkHeatQuery.data?.roundId, pkRecordOptionMutation, pkTopic?.currentRoundId, pkTopicId]);
+
+  useEffect(() => {
+    if (!hasPkTopic || !canComment || hasPkBet) return;
+    const roundId = pkHeatQuery.data?.roundId ?? pkDetail?.round?.id ?? pkTopic?.currentRoundId;
+    if (!roundId) return;
+    if (viewRecordedTopicRef.current === pkTopicId) return;
+    viewRecordedTopicRef.current = pkTopicId;
+    void submitRecordOption(selectedSide, 'view');
+  }, [
+    canComment,
+    hasPkBet,
+    hasPkTopic,
+    pkDetail?.round?.id,
+    pkHeatQuery.data?.roundId,
+    pkTopic?.currentRoundId,
+    pkTopicId,
+    selectedSide,
+    submitRecordOption,
+  ]);
+
   useEffect(() => {
     const source = pkCommentsAQuery.data?.results ?? [];
     const mapped = source.map(mapCommentToBattleComment);
@@ -690,7 +825,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
     setCommentsBState([]);
     setSelectedSide(userSide ?? 'A');
     setMobileActiveSide(userSide ?? 'A');
-    setMobileRankMode('all');
+    setRankMode('all');
     setBetIntent(userSide ?? 'A');
     setDraft('');
     setReplyDraft('');
@@ -699,10 +834,26 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
     setLatestReplyEvent(null);
     setMobilePanelOpen(false);
     setOptimisticPkBet(null);
+    recordOptionAttemptedRef.current.clear();
+    viewRecordedTopicRef.current = null;
   }, [news.id, pkTopicId, userSide]);
 
   useEffect(() => {
+    if (!hasPkBet && rankMode === 'side') {
+      setRankMode('all');
+    }
+  }, [hasPkBet, rankMode]);
+
+  useEffect(() => {
+    if (!myBetSide) return;
+    setSelectedSide(myBetSide);
+    setMobileActiveSide(myBetSide);
+    setBetIntent(myBetSide);
+  }, [myBetSide]);
+
+  useEffect(() => {
     if (feedItems.length > 0) return;
+    if (commentsAState.length === 0 && commentsBState.length === 0) return;
     setFeedItems(buildInitialFeed(displayNews, commentsAState, commentsBState));
   }, [commentsAState, commentsBState, displayNews, feedItems.length]);
 
@@ -743,17 +894,18 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
   const leaderSide: CommentSide = leftHeat >= rightHeat ? 'A' : 'B';
   const leaderName = leaderSide === 'A' ? optionA : optionB;
   const combatDiff = Math.abs(leftHeat - rightHeat);
-  const leftRole = userSide === 'A' ? '你当前在蓝方阵营' : '意见领袖';
-  const rightRole = userSide === 'B' ? '你当前在红方阵营' : '破光杀手';
+  const leftRole = myBetSide === 'A' ? `已支持 ${optionA}` : optionA;
+  const rightRole = myBetSide === 'B' ? `已支持 ${optionB}` : optionB;
 
   const handleOpenReply = useCallback((comment: BattleComment, side: CommentSide) => {
     if (!canComment) {
       ensureAuth();
       return;
     }
+    if (!canCommentOnSide(side)) return;
     setReplyingTo({ commentId: comment.id, authorName: comment.author, side });
     setReplyDraft('');
-  }, [canComment, ensureAuth]);
+  }, [canComment, canCommentOnSide, ensureAuth]);
 
   const updateCommentList = useCallback((side: CommentSide, updater: (items: BattleComment[]) => BattleComment[]) => {
     if (side === 'A') {
@@ -768,21 +920,20 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
       ensureAuth();
       return;
     }
+    if (comment.liked) return;
 
-    const nextLiked = !comment.liked;
-    const nextLikes = Math.max(0, comment.likes + (nextLiked ? 1 : -1));
     setLikePendingIds((prev) => new Set(prev).add(comment.id));
     updateCommentList(side, (items) =>
-      items.map((item) => (item.id === comment.id ? { ...item, liked: nextLiked, likes: nextLikes } : item)),
+      items.map((item) => (item.id === comment.id ? { ...item, liked: true, likes: item.likes + 1 } : item)),
     );
 
     try {
-      if (nextLiked) {
-        await likeMutation.mutateAsync({ entityType: 'comment', entityId: comment.id });
-        appendFeed(side, `${comment.author} 获得了一次热度加持`);
-      } else {
-        await unlikeMutation.mutateAsync({ entityType: 'comment', entityId: comment.id });
-      }
+      await pkLikeMutation.mutateAsync({
+        commentId: comment.id,
+        requestId: createRequestId(`pk-like-${comment.id}`),
+      });
+      appendFeed(side, `${comment.author} 获得了一次热度加持`);
+      void pkHeatQuery.refetch();
     } catch (error) {
       const message = error instanceof Error ? error.message : '';
       if (message.includes('NotLogin')) ensureAuth();
@@ -796,7 +947,61 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
         return next;
       });
     }
-  }, [appendFeed, canComment, ensureAuth, likeMutation, unlikeMutation, updateCommentList]);
+  }, [appendFeed, canComment, ensureAuth, pkHeatQuery, pkLikeMutation, updateCommentList]);
+
+  const handleToggleDownvote = useCallback(async (comment: BattleComment, side: CommentSide) => {
+    if (!canComment) {
+      ensureAuth();
+      return;
+    }
+    if (!canDownvoteOnSide(side) || comment.downvoted) return;
+
+    setDownvotePendingIds((prev) => new Set(prev).add(comment.id));
+    updateCommentList(side, (items) =>
+      items.map((item) => (item.id === comment.id ? { ...item, downvoted: true, downvotes: item.downvotes + 1 } : item)),
+    );
+
+    try {
+      await pkDownvoteMutation.mutateAsync({
+        commentId: comment.id,
+        requestId: createRequestId(`pk-downvote-${comment.id}`),
+      });
+      appendFeed(side, `${comment.author} 的评论被拉踩了`);
+      void pkHeatQuery.refetch();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      if (message.includes('NotLogin')) ensureAuth();
+      updateCommentList(side, (items) =>
+        items.map((item) => (item.id === comment.id ? { ...item, downvoted: comment.downvoted, downvotes: comment.downvotes } : item)),
+      );
+    } finally {
+      setDownvotePendingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(comment.id);
+        return next;
+      });
+    }
+  }, [appendFeed, canComment, canDownvoteOnSide, ensureAuth, pkDownvoteMutation, pkHeatQuery, updateCommentList]);
+
+  const handlePkSettle = useCallback(async () => {
+    if (!canComment) {
+      ensureAuth();
+      return;
+    }
+    if (!canPkSettle || !pkTopicId) return;
+    try {
+      await pkSettleMutation.mutateAsync({
+        topicId: pkTopicId,
+        requestId: createRequestId(`pk-settle-${pkTopicId}`),
+        snapshotType: 'SETTLE',
+        freezeSource: 'ON_DEMAND',
+      });
+      navigate(`/settlement/pk/${pkTopicId}?action=view`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      if (message.includes('NotLogin')) ensureAuth();
+    }
+  }, [canComment, canPkSettle, ensureAuth, navigate, pkSettleMutation, pkTopicId]);
 
   const handleSubmitReply = useCallback(async () => {
     const text = replyDraft.trim();
@@ -805,6 +1010,8 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
       ensureAuth();
       return;
     }
+
+    if (!canCommentOnSide(replyingTo.side)) return;
 
     try {
       const createdReply = await pkReplyCommentMutation.mutateAsync({
@@ -837,6 +1044,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
   }, [
     appendFeed,
     canComment,
+    canCommentOnSide,
     currentUserName,
     ensureAuth,
     pkCommentsAQuery,
@@ -855,6 +1063,8 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
       return;
     }
 
+    if (!canCommentOnSide(selectedSide)) return;
+
     try {
       const createdComment = await pkCreateCommentMutation.mutateAsync({
         topicId: pkTopicId,
@@ -866,6 +1076,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
       updateCommentList(selectedSide, (items) => [mapped, ...items.filter((item) => item.id !== mapped.id)]);
       setDraft('');
       appendFeed(selectedSide, `${currentUserName} 为${selectedSide === 'A' ? optionA : optionB}阵营发起了新评论`);
+      void submitRecordOption(selectedSide, 'comment', 'comment', createdComment.id);
       void pkCommentsAQuery.refetch();
       void pkCommentsBQuery.refetch();
     } catch (error) {
@@ -875,6 +1086,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
   }, [
     appendFeed,
     canComment,
+    canCommentOnSide,
     currentUserName,
     draft,
     ensureAuth,
@@ -885,6 +1097,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
     pkCreateCommentMutation,
     pkTopicId,
     selectedSide,
+    submitRecordOption,
     updateCommentList,
   ]);
 
@@ -895,6 +1108,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
       return;
     }
     const targetSide = sideOverride ?? betIntent;
+    if (!canOpenBetSide(targetSide)) return;
     try {
       const result = await pkBetMutation.mutateAsync({
         topicId: pkTopicId,
@@ -912,7 +1126,6 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
       if (message.includes('NotLogin')) ensureAuth();
       return;
     }
-    setBetBurst({ side: targetSide, token: Date.now() });
     setBetDialogSide(null);
     setMobilePanelOpen(false);
     const targetLabel = targetSide === 'A' ? optionA : optionB;
@@ -921,6 +1134,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
     appendFeed,
     betIntent,
     canComment,
+    canOpenBetSide,
     currentUserName,
     effectiveBetAmount,
     ensureAuth,
@@ -936,9 +1150,11 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
       ensureAuth();
       return;
     }
+    if (!canOpenBetSide(side)) return;
     setBetIntent(side);
     setBetDialogSide(side);
-  }, [canComment, ensureAuth]);
+    void submitRecordOption(side, 'bet_intent');
+  }, [canComment, canOpenBetSide, ensureAuth, submitRecordOption]);
 
   const confirmBetDialog = useCallback(async () => {
     if (!betDialogSide) return;
@@ -954,8 +1170,8 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
     return d > 0 ? `${d}天 ${timeText}` : timeText;
   }, [countdownLeft]);
 
-  const leftScore = leftVotes + leftHeat * 120 + leftComments.length * 18000;
-  const rightScore = rightVotes + rightHeat * 120 + rightComments.length * 18000;
+  const leftScore = leftVotes;
+  const rightScore = rightVotes;
   const scoreDiff = Math.abs(leftScore - rightScore);
   const leftHeroImage = visualTheme.sideA.imageUrl || displayNews.image || DEFAULT_BATTLE_IMAGE;
   const rightHeroImage = visualTheme.sideB.imageUrl || displayNews.image || DEFAULT_BATTLE_IMAGE;
@@ -997,7 +1213,6 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
     const buildSideList = (
       side: CommentSide,
       comments: BattleComment[],
-      sideLabel: string,
     ): BarrageItem[] => {
       const sorted = [...comments]
         .sort((a, b) => (b.likes + b.replyCount * 2) - (a.likes + a.replyCount * 2))
@@ -1012,34 +1227,14 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
 
       if (sorted.length >= 3) return sorted;
 
-      const fallbackSeeds: Array<{ author: string; text: string; likes: number }> = side === 'A'
-        ? [
-            { author: `${sideLabel}情报员`, text: `${sideLabel}阵营节奏稳了 👑`, likes: 99 },
-            { author: '阵营前线', text: `支持${sideLabel}！现在就要超越对面 🔥`, likes: 88 },
-            { author: '直播间', text: `${sideLabel}全军出击 💪`, likes: 66 },
-          ]
-        : [
-            { author: `${sideLabel}情报员`, text: `${sideLabel}阵营反击中 ⚡`, likes: 99 },
-            { author: '阵营前线', text: `${sideLabel}才是真正的斗士 🛡`, likes: 88 },
-            { author: '直播间', text: `${sideLabel}永不言败 🔥`, likes: 66 },
-          ];
-
-      const fallbacks: BarrageItem[] = fallbackSeeds.map((seed, index) => ({
-        id: `fallback-barrage-${side}-${index}`,
-        side,
-        author: seed.author,
-        text: seed.text,
-        likes: seed.likes,
-      }));
-
-      return [...sorted, ...fallbacks].slice(0, 3);
+      return sorted;
     };
 
     return {
-      A: buildSideList('A', leftComments, optionA),
-      B: buildSideList('B', rightComments, optionB),
+      A: buildSideList('A', leftComments),
+      B: buildSideList('B', rightComments),
     };
-  }, [leftComments, optionA, optionB, rightComments]);
+  }, [leftComments, rightComments]);
   const getDisplayComments = useCallback((side: CommentSide, comments: BattleComment[]) => {
     let next = comments;
     if (activeTab === '只看我方' && userSide && side !== userSide) next = [];
@@ -1052,49 +1247,35 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
     }
     return next;
   }, [activeTab, userSide]);
-  const leaderBoard = [...leftSupporters, ...rightSupporters]
-    .slice(0, 8)
-    .map((supporter, index) => ({
-      ...supporter,
-      score: [56232, 45678, 28901, 23456, 18765, 15432, 12345, 11234][index] ?? Math.max(8000, leftHeat + rightHeat - index * 800),
-      side: index % 2 === 0 ? 'A' : 'B',
+  const leaderBoard = useMemo(() => {
+    const list = pkHeatRankQuery.data?.list ?? [];
+    if (list.length === 0) return [];
+    return list.slice(0, 8).map((row) => ({
+      id: String(row.userId ?? row.rank ?? Math.random()),
+      name: row.nickname || row.username || `用户${row.userId ?? ''}`,
+      avatar: row.avatar || FALLBACK_AVATAR,
+      rank: row.rank ?? null,
+      score: row.heat ?? row.totalHeat ?? 0,
+      side: (row.option === 'B' ? 'B' : 'A') as CommentSide,
     }));
+  }, [pkHeatRankQuery.data?.list]);
   const personalContribution = useMemo(() => {
-    const myName = currentUserName.trim();
-    const mine = [
-      ...leftComments.map((comment) => ({ ...comment, side: 'A' as const })),
-      ...rightComments.map((comment) => ({ ...comment, side: 'B' as const })),
-    ].filter((comment) => comment.author === myName);
-    const commentCount = mine.length;
-    const likeCount = mine.reduce((sum, comment) => sum + comment.likes, 0);
-    const replyCount = mine.reduce((sum, comment) => sum + comment.replyCount, 0);
-    const blueCount = mine.filter((comment) => comment.side === 'A').length;
-    const redCount = commentCount - blueCount;
-    const side = commentCount === 0 ? userSide : blueCount >= redCount ? 'A' : 'B';
-
+    const me = pkHeatMeQuery.data;
+    const side = me?.myOption === 'A' || me?.myOption === 'B' ? me.myOption : myBetSide;
     return {
       side,
-      commentCount,
-      likeCount,
-      replyCount,
-      score: commentCount * 8 + likeCount + replyCount * 2,
+      commentCount: me?.myCommentCount ?? 0,
+      likeCount: me?.receivedLikeCount ?? 0,
+      betAmount: me?.myBetAmount ?? pkBetAmount,
+      score: me?.myHeat ?? 0,
     };
-  }, [currentUserName, leftComments, rightComments, userSide]);
-  const fallbackLeaders = ['MessiKing', '罗总裁', 'CR7_GOAT', '巴萨信仰', '曼联传奇', '球王梅西10', '蓝白永不倒', '绝代双骄CR7'];
-  const displayLeaderBoard = leaderBoard.length
-    ? leaderBoard
-    : fallbackLeaders.map((name, index) => ({
-      id: name,
-      name,
-      avatar: FALLBACK_AVATAR,
-      rank: index + 1,
-      score: [56232, 45678, 28901, 23456, 18765, 15432, 12345, 11234][index],
-      side: (index % 2 === 0 ? 'A' : 'B') as CommentSide,
-    }));
-  const mobileLeaderBoard = mobileRankMode === 'side'
-    ? displayLeaderBoard.filter((item) => item.side === mobileActiveSide)
-    : displayLeaderBoard;
-  const quickAmounts = [100, 520, 1000, 5000];
+  }, [myBetSide, pkBetAmount, pkHeatMeQuery.data]);
+  // const topicMyBetRecords = useMemo(() => {
+  //   const list = pkMyBetsQuery.data?.list ?? [];
+  //   const filtered = list.filter((item) => String(item.topic?.id ?? item.bet?.topicId ?? '') === String(pkTopicId));
+  //   return filtered.length > 0 ? filtered : list.slice(0, 5);
+  // }, [pkMyBetsQuery.data?.list, pkTopicId]);
+  const quickAmounts = [100, 300, 500, 1000];
 
   return (
     <div className="rb-live-page" style={themeStyle}>
@@ -1113,7 +1294,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
                 >
                   <b>{item.author}</b>
                   <span>{item.text}</span>
-                  <em>🔥 x{Math.max(1, item.likes || ([99, 88, 66][index] ?? 36))}</em>
+                  <em>🔥 x{Math.max(1, item.likes || 1)}</em>
                 </div>
               ))}
             </div>
@@ -1125,7 +1306,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
                 >
                   <b>{item.author}</b>
                   <span>{item.text}</span>
-                  <em>🔥 x{Math.max(1, item.likes || ([99, 88, 66][index] ?? 36))}</em>
+                  <em>🔥 x{Math.max(1, item.likes || 1)}</em>
                 </div>
               ))}
             </div>
@@ -1209,30 +1390,26 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
           <div className={`rb-bet-row ${showDrawBet ? 'rb-bet-row-three' : ''}`}>
             <button
               type="button"
-              className="rb-support rb-support-blue"
+              className={`rb-support rb-support-blue ${hasPkBet && myBetSide !== 'A' ? 'is-hidden-slot' : ''} ${hasPkBet && myBetSide === 'A' ? 'is-readonly' : ''}`}
               onClick={() => {
-                openBetDialog('A');
+                if (!hasPkBet) openBetDialog('A');
               }}
-              disabled={!canPlaceBet || isBetting}
+              disabled={hasPkBet || !canOpenBetSide('A') || isBetting}
             >
-              <span>支持{displayNews.optionA}</span>
-              <em>投币助威</em>
+              <span>{hasPkBet && myBetSide === 'A' ? `已支持${displayNews.optionA}` : `支持${displayNews.optionA}`}</span>
+              <em>{hasPkBet && myBetSide === 'A' ? `${displayNews.oddsA.toFixed(1)}x` : '投币助威'}</em>
             </button>
-            <div className={`rb-gift-flight ${betBurst ? `rb-gift-${betBurst.side === 'A' ? 'blue' : 'red'}` : ''}`} key={betBurst?.token ?? 'idle'}>
-              <span>{currentUserName} 投入 {formatVotes(numericBetAmount || 100)} 龟币</span>
-              <strong>热度 +50,000</strong>
-              <i>💰</i><i>💰</i><i>💰</i><i>💰</i><i>💰</i><i>💰</i>
-            </div>
+            <div className="rb-bet-row-center" aria-hidden="true" />
             <button
               type="button"
-              className="rb-support rb-support-red"
+              className={`rb-support rb-support-red ${hasPkBet && myBetSide !== 'B' ? 'is-hidden-slot' : ''} ${hasPkBet && myBetSide === 'B' ? 'is-readonly' : ''}`}
               onClick={() => {
-                openBetDialog('B');
+                if (!hasPkBet) openBetDialog('B');
               }}
-              disabled={!canPlaceBet || isBetting}
+              disabled={hasPkBet || !canOpenBetSide('B') || isBetting}
             >
-              <span>支持{displayNews.optionB}</span>
-              <em>投币助威</em>
+              <span>{hasPkBet && myBetSide === 'B' ? `已支持${displayNews.optionB}` : `支持${displayNews.optionB}`}</span>
+              <em>{hasPkBet && myBetSide === 'B' ? `${displayNews.oddsB.toFixed(1)}x` : '投币助威'}</em>
             </button>
           </div>
         </section>
@@ -1266,11 +1443,11 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
               onClick={() => {
                 setMobileActiveSide(item.side);
                 setSelectedSide(item.side);
+                if (!hasPkBet) void submitRecordOption(item.side, 'select_side');
               }}
             >
-              <span>{item.side === 'A' ? '蓝方' : '红方'}</span>
-              <strong>{item.label}</strong>
-              <em>{item.pct}% · {formatWan(item.count)}</em>
+              <span>{item.label}</span>
+              <strong>{item.pct}% · {formatWan(item.count)}</strong>
             </button>
           ))}
         </div>
@@ -1282,6 +1459,10 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
           ].map((column) => {
             const displayComments = getDisplayComments(column.side, column.comments);
             const supporters = column.side === 'A' ? leftSupporters : rightSupporters;
+            const sideLabel = column.side === 'A' ? displayNews.optionA : displayNews.optionB;
+            const sideAccent = column.side === 'A' ? visualTheme.sideA.accent : visualTheme.sideB.accent;
+            const columnCanComment = canCommentOnSide(column.side);
+            const columnCanDownvote = canDownvoteOnSide(column.side);
 
             return (
             <div key={column.side} className={`rb-comment-column rb-${column.color}-column`}>
@@ -1304,7 +1485,13 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
                     <BattleCommentCard
                       comment={comment}
                       side={column.side}
+                      sideLabel={sideLabel}
+                      sideAccent={sideAccent}
+                      useNeutralStyle={useNeutralCommentStyle}
+                      canInteract={columnCanComment}
+                      canDownvote={columnCanDownvote}
                       onToggleLike={handleToggleLike}
+                      onToggleDownvote={handleToggleDownvote}
                       onOpenReply={handleOpenReply}
                       isReplying={replyingTo?.commentId === comment.id}
                       replyDraft={replyingTo?.commentId === comment.id ? replyDraft : ''}
@@ -1316,6 +1503,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
                       }}
                       replySubmitting={pkReplyCommentMutation.isLoading}
                       likePending={likePendingIds.has(comment.id)}
+                      downvotePending={downvotePendingIds.has(comment.id)}
                       latestReplyEvent={latestReplyEvent}
                     />
                   </div>
@@ -1327,10 +1515,10 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
                   <button type="button" className="rb-load-more" onClick={() => setCursorB(nextCursorB ?? 0)}>加载更多</button>
                 ) : null}
               </div>
-              <div className="rb-input-row">
+              <div className={`rb-input-row ${!columnCanComment ? 'is-locked' : ''}`}>
                 <input
                   value={selectedSide === column.side ? draft : ''}
-                  placeholder={`为${column.title}发声...`}
+                  placeholder={columnCanComment ? `为${column.title}发声...` : hasPkBet ? '仅可评论你支持的一方' : '为阵营发声...'}
                   onFocus={() => setSelectedSide(column.side)}
                   onChange={(event) => {
                     setSelectedSide(column.side);
@@ -1344,7 +1532,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
                   type="button"
                   className="send-btn"
                   onClick={() => void handleSubmitComment()}
-                  disabled={selectedSide !== column.side || !draft.trim()}
+                  disabled={!columnCanComment || selectedSide !== column.side || !draft.trim()}
                 >
                   <Send size={15} />
                   发送
@@ -1357,75 +1545,43 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
       </div>
 
       <section className="rb-mobile-info-panels" aria-label="场内数据">
-        <section className="rb-mobile-info-card rb-mobile-rank-card">
-          <div className="rb-mobile-info-title">
-            <Trophy size={16} />
-            热度贡献榜
-            <div className="rb-mobile-rank-switch" role="tablist" aria-label="切换热度榜">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={mobileRankMode === 'all'}
-                className={mobileRankMode === 'all' ? 'active' : ''}
-                onClick={() => setMobileRankMode('all')}
-              >
-                总榜
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={mobileRankMode === 'side'}
-                className={mobileRankMode === 'side' ? 'active' : ''}
-                onClick={() => setMobileRankMode('side')}
-              >
-                本方榜
-              </button>
-            </div>
-          </div>
-          <div className="rb-rank-list">
-            {mobileLeaderBoard.map((item, index) => (
-              <div className={`rb-rank-item ${item.side === 'A' ? 'rb-rank-item-side-a' : 'rb-rank-item-side-b'}`} key={item.id}>
-                <i>{index + 1}</i>
-                <img src={item.avatar || FALLBACK_AVATAR} alt={item.name} />
-                <b>{item.name}</b>
-                <strong>{formatVotes(item.score)}</strong>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className={`rb-mobile-info-card rb-mobile-personal-card ${personalContribution.side === 'A' ? 'rb-personal-side-a' : personalContribution.side === 'B' ? 'rb-personal-side-b' : 'rb-personal-side-neutral'}`}>
-          <div className="rb-mobile-info-title">
-            <Shield size={16} />
-            个人贡献
-            <span>{personalContribution.side === 'A' ? '蓝方' : personalContribution.side === 'B' ? '红方' : '未站队'}</span>
-          </div>
-          <div className="rb-personal-profile">
-            <img src={FALLBACK_AVATAR} alt={currentUserName} />
-            <div>
-              <b>{currentUserName}</b>
-              <span>本场互动贡献</span>
-            </div>
-            <strong>{formatVotes(personalContribution.score)}</strong>
-          </div>
-          <div className="rb-personal-stats">
-            <div>
-              <MessageCircleReply size={15} />
-              <span>评论数</span>
-              <strong>{formatVotes(personalContribution.commentCount)}</strong>
-            </div>
-            <div>
-              <ThumbsUp size={15} />
-              <span>获赞数</span>
-              <strong>{formatVotes(personalContribution.likeCount)}</strong>
-            </div>
-            <div>
-              <Flame size={15} />
-              <span>回复互动</span>
-              <strong>{formatVotes(personalContribution.replyCount)}</strong>
-            </div>
-          </div>
-        </section>
+        <RivalryBattleRightRail
+          optionA={displayNews.optionA}
+          optionB={displayNews.optionB}
+          oddsA={displayNews.oddsA}
+          oddsB={displayNews.oddsB}
+          balance={balance}
+          betAmount={betAmount}
+          quickAmounts={quickAmounts}
+          hasPkBet={hasPkBet}
+          myBetSide={myBetSide}
+          pkBetAmount={pkBetAmount}
+          pkPhase={pkPhase}
+          canPlaceBet={canPlaceBet}
+          isBetting={isBetting}
+          estimatedPayout={estimatedPayout}
+          rankMode={rankMode}
+          onRankModeChange={setRankMode}
+          rankRows={leaderBoard}
+          rankLoading={pkHeatRankQuery.isLoading}
+          personalStats={{
+            likeCount: personalContribution.likeCount,
+            commentCount: personalContribution.commentCount,
+            betAmount: personalContribution.betAmount,
+            heatScore: personalContribution.score,
+            side: personalContribution.side,
+          }}
+          visualTheme={visualTheme}
+          onBetAmountChange={setBetAmount}
+          onQuickAmount={(amount) => setBetAmount(String(amount))}
+          onOpenBet={openBetDialog}
+          onConfirmBet={() => openBetDialog(betIntent)}
+          canPkSettle={canPkSettle}
+          isSettling={pkSettleMutation.isLoading}
+          onSettle={() => void handlePkSettle()}
+          // myBetRecords={topicMyBetRecords}
+          // myBetsLoading={pkMyBetsQuery.isLoading}
+        />
       </section>
 
       {betDialogSide ? (
@@ -1466,7 +1622,7 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
                 type="button"
                 className="confirm"
                 onClick={() => void confirmBetDialog()}
-                disabled={isBetting || !canPlaceBet}
+                disabled={isBetting || (betDialogSide ? !canOpenBetSide(betDialogSide) : true)}
               >
                 {isBetting ? '下注中...' : '确认下注'}
               </button>
@@ -1501,126 +1657,43 @@ export const RivalryBattle: React.FC<RivalryBattleProps> = ({
           </div>
           <button type="button" onClick={() => setMobilePanelOpen(false)}>×</button>
         </div>
-        <section className="rb-side-card">
-          <div className="rb-side-title"><Trophy size={18} /> 热度贡献榜 <span>总榜</span><span>本方榜</span></div>
-          <div className="rb-rank-list">
-            {displayLeaderBoard.map((item, index) => (
-              <div className={`rb-rank-item ${item.side === 'A' ? 'rb-rank-item-side-a' : 'rb-rank-item-side-b'}`} key={item.id}>
-                <i>{index + 1}</i>
-                <img src={item.avatar || FALLBACK_AVATAR} alt={item.name} />
-                <b>{item.name}</b>
-                <strong>{formatVotes(item.score)}</strong>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="rb-side-card rb-bet-side-card">
-          <div className="rb-side-title"><Zap size={18} /> 下注助威 <span>{betStatusText}</span></div>
-          <div className={`rb-bet-panel ${betIntent === 'A' ? 'bet-blue' : 'bet-red'}`}>
-            <div className="rb-bet-switch">
-              <button
-                type="button"
-                className={betIntent === 'A' ? 'active' : ''}
-                onClick={() => setBetIntent('A')}
-              >
-                <span>{displayNews.optionA}</span>
-                <strong>{displayNews.oddsA.toFixed(2)}倍</strong>
-              </button>
-              <button
-                type="button"
-                className={betIntent === 'B' ? 'active' : ''}
-                onClick={() => setBetIntent('B')}
-              >
-                <span>{displayNews.optionB}</span>
-                <strong>{displayNews.oddsB.toFixed(2)}倍</strong>
-              </button>
-            </div>
-            <div className="rb-bet-live">
-              <div>
-                <span>当前支持</span>
-                <strong>{betIntent === 'A' ? displayNews.optionA : displayNews.optionB}</strong>
-              </div>
-              <div>
-                <span>账户余额</span>
-                <strong>{formatVotes(balance)}</strong>
-              </div>
-              <div>
-                <span>预计派奖</span>
-                <strong>{formatVotes(estimatedPayout)}</strong>
-              </div>
-            </div>
-            <div className="rb-quick-amounts">
-              {quickAmounts.map((amount) => (
-                <button
-                  type="button"
-                  key={amount}
-                  className={Number(betAmount) === amount ? 'active' : ''}
-                  onClick={() => setBetAmount(String(amount))}
-                  disabled={hasPkBet}
-                >
-                  {formatVotes(amount)}
-                </button>
-              ))}
-            </div>
-            <label className="rb-bet-input-row">
-              <span>龟币</span>
-              <input
-                value={betAmount}
-                inputMode="numeric"
-                disabled={hasPkBet}
-                onChange={(event) => setBetAmount(event.target.value.replace(/[^\d]/g, ''))}
-                placeholder="输入金额"
-              />
-            </label>
-            <button
-              type="button"
-              className="rb-bet-submit"
-              onClick={() => openBetDialog(betIntent)}
-              disabled={!canPlaceBet || isBetting}
-            >
-              {isBetting ? '下注中...' : `支持${betIntent === 'A' ? displayNews.optionA : displayNews.optionB}`}
-            </button>
-            {betBurst ? (
-              <div className={`rb-side-coin-burst ${betBurst.side === 'A' ? 'burst-blue' : 'burst-red'}`} key={`side-${betBurst.token}`}>
-                <i>🪙</i><i>🪙</i><i>🪙</i>
-              </div>
-            ) : null}
-          </div>
-        </section>
-
-        <section className={`rb-side-card rb-personal-card ${personalContribution.side === 'A' ? 'rb-personal-side-a' : personalContribution.side === 'B' ? 'rb-personal-side-b' : 'rb-personal-side-neutral'}`}>
-          <div className="rb-side-title">
-            <Shield size={18} /> 个人贡献
-            <span>{personalContribution.side === 'A' ? '蓝方' : personalContribution.side === 'B' ? '红方' : '未站队'}</span>
-          </div>
-          <div className="rb-personal-profile">
-            <img src={FALLBACK_AVATAR} alt={currentUserName} />
-            <div>
-              <b>{currentUserName}</b>
-              <span>本场互动贡献</span>
-            </div>
-            <strong>{formatVotes(personalContribution.score)}</strong>
-          </div>
-          <div className="rb-personal-stats">
-            <div>
-              <MessageCircleReply size={15} />
-              <span>评论数</span>
-              <strong>{formatVotes(personalContribution.commentCount)}</strong>
-            </div>
-            <div>
-              <ThumbsUp size={15} />
-              <span>获赞数</span>
-              <strong>{formatVotes(personalContribution.likeCount)}</strong>
-            </div>
-            <div>
-              <Flame size={15} />
-              <span>回复互动</span>
-              <strong>{formatVotes(personalContribution.replyCount)}</strong>
-            </div>
-          </div>
-        </section>
-
+        <RivalryBattleRightRail
+          optionA={displayNews.optionA}
+          optionB={displayNews.optionB}
+          oddsA={displayNews.oddsA}
+          oddsB={displayNews.oddsB}
+          balance={balance}
+          betAmount={betAmount}
+          quickAmounts={quickAmounts}
+          hasPkBet={hasPkBet}
+          myBetSide={myBetSide}
+          pkBetAmount={pkBetAmount}
+          pkPhase={pkPhase}
+          canPlaceBet={canPlaceBet}
+          isBetting={isBetting}
+          estimatedPayout={estimatedPayout}
+          rankMode={rankMode}
+          onRankModeChange={setRankMode}
+          rankRows={leaderBoard}
+          rankLoading={pkHeatRankQuery.isLoading}
+          personalStats={{
+            likeCount: personalContribution.likeCount,
+            commentCount: personalContribution.commentCount,
+            betAmount: personalContribution.betAmount,
+            heatScore: personalContribution.score,
+            side: personalContribution.side,
+          }}
+          visualTheme={visualTheme}
+          onBetAmountChange={setBetAmount}
+          onQuickAmount={(amount) => setBetAmount(String(amount))}
+          onOpenBet={openBetDialog}
+          onConfirmBet={() => openBetDialog(betIntent)}
+          canPkSettle={canPkSettle}
+          isSettling={pkSettleMutation.isLoading}
+          onSettle={() => void handlePkSettle()}
+          // myBetRecords={topicMyBetRecords}
+          // myBetsLoading={pkMyBetsQuery.isLoading}
+        />
       </aside>
     </div>
   );

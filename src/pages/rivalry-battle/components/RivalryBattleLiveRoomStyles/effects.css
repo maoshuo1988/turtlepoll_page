@@ -586,6 +586,10 @@
     display: none;
   }
 
+  .rb-bet-row-center {
+    display: none;
+  }
+
   .rb-support {
     height: 52px;
     min-width: 0;
@@ -1072,6 +1076,17 @@
 
   .rb-sidebar > .rb-side-card:not(.rb-bet-side-card),
   .rb-sidebar > .rb-events-card {
+    display: none;
+  }
+
+  .rb-sidebar > .rb-right-rail {
+    display: grid;
+    gap: 10px;
+    padding: 0 12px 12px;
+  }
+
+  .rb-sidebar > .rb-right-rail .rb-right-rank-card,
+  .rb-sidebar > .rb-right-rail .rb-right-me-card {
     display: none;
   }
 

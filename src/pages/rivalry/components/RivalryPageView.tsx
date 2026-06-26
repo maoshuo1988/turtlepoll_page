@@ -6,11 +6,21 @@ interface RivalryPageViewProps {
   userVotes: Record<string, 'A' | 'B'>;
   betError: string | null;
   pendingBetId: string | null;
+  pendingSettleId?: string | null;
   onBet: (newsId: string, option: 'A' | 'B', odds: number, amount?: number) => void;
+  onSettle?: (topicId: string) => void;
   onEnterBattle: (item: RivalryNewsItem) => void;
 }
 
-export function RivalryPageView({ userVotes, betError, pendingBetId, onBet, onEnterBattle }: RivalryPageViewProps) {
+export function RivalryPageView({
+  userVotes,
+  betError,
+  pendingBetId,
+  pendingSettleId,
+  onBet,
+  onSettle,
+  onEnterBattle,
+}: RivalryPageViewProps) {
   return (
     <section className="w-full max-w-none min-h-full mx-0 grid content-start gap-4 max-lg:gap-3 view-rivalry">
       {betError ? (
@@ -21,7 +31,9 @@ export function RivalryPageView({ userVotes, betError, pendingBetId, onBet, onEn
       <RivalryPK
         userVotes={userVotes}
         onBet={onBet}
+        onSettle={onSettle}
         pendingBetId={pendingBetId}
+        pendingSettleId={pendingSettleId}
         onEnterBattle={onEnterBattle}
       />
     </section>

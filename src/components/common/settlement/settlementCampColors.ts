@@ -13,6 +13,7 @@ export const SETTLEMENT_CAMP_COLORS = {
 export const SETTLEMENT_TAB_DOT_COLORS = {
   dark: '#00D2FF',
   arena: '#FF4D4F',
+  pk: '#FF4D4F',
 } as const;
 
 export function resolveSettlementChipColor(side: SettlementCampSide): string {

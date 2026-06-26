@@ -23,9 +23,14 @@ export const SettlementHost: React.FC<SettlementHostProps> = ({
   const {
     pendingDarkItems,
     pendingArenaItems,
+    pendingPkItems,
     settledDarkItems,
     settledArenaItems,
   } = useSettlementRecords();
+  const mergedPendingArenaItems = useMemo(
+    () => [...pendingArenaItems, ...pendingPkItems],
+    [pendingArenaItems, pendingPkItems],
+  );
   const [removingIds] = useState<Set<string>>(() => new Set());
 
   const goToDetail = useCallback(
@@ -55,7 +60,7 @@ export const SettlementHost: React.FC<SettlementHostProps> = ({
       open={open}
       onClose={() => onOpenChange(false)}
       pendingDarkItems={pendingDarkItems}
-      pendingArenaItems={pendingArenaItems}
+      pendingArenaItems={mergedPendingArenaItems}
       settledDarkItems={settledDarkItems}
       settledArenaItems={settledArenaItems}
       hiddenIds={hiddenIds}

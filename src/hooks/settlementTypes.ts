@@ -2,7 +2,7 @@
  * 文件说明：待结算抽屉相关类型定义。
  */
 
-export type SettlementSourceTab = 'dark' | 'arena';
+export type SettlementSourceTab = 'dark' | 'arena' | 'pk';
 
 export type SettlementCampSide = 'A' | 'B' | 'draw' | 'unknown';
 
@@ -17,6 +17,8 @@ export type SettlementRecordItem = {
   campSide: SettlementCampSide;
   marketId?: number;
   battleId?: number;
+  topicId?: number;
+  roundId?: number | string;
 };
 
 /** @deprecated 使用 SettlementRecordItem */

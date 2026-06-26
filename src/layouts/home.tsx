@@ -1,7 +1,7 @@
 /**
  * 文件说明：home，Umi layout 入口，负责路由嵌套和页面壳挂载。
  */
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Outlet, useLocation } from '@umijs/renderer-react';
 import { StandalonePageShell, type ViewType } from './components';
 import { HomeLayoutProvider } from './context';
@@ -66,6 +66,9 @@ export default function HomeLayout() {
     }
     return PATH_VIEW_MAP[location.pathname] ?? 'predictions';
   }, [location.pathname, location.state]);
+  const handleOpenAuth = useCallback(() => {
+    setAuthModalOpen(true);
+  }, []);
 
   return (
     <StandalonePageShell
@@ -79,7 +82,7 @@ export default function HomeLayout() {
           value={{
             darkMode,
             onToggleTheme,
-            onOpenAuth: () => setAuthModalOpen(true),
+            onOpenAuth: handleOpenAuth,
             aiPushMessages,
           }}
         >

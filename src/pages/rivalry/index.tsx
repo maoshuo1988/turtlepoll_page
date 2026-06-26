@@ -3,7 +3,7 @@
  */
 import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from '@umijs/renderer-react';
-import { useRequestPKBet } from '@/hooks/usePkRequests';
+import { useRequestPKBet, useRequestPKSettle } from '@/hooks/usePkRequests';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import type { RivalryNewsItem } from './components/rivalryTypes';
@@ -22,7 +22,9 @@ export default function RivalryPage() {
   const [userVotes, setUserVotes] = useState<Record<string, 'A' | 'B'>>({});
   const [betError, setBetError] = useState<string | null>(null);
   const [pendingBetId, setPendingBetId] = useState<string | null>(null);
+  const [pendingSettleId, setPendingSettleId] = useState<string | null>(null);
   const pkBetMutation = useRequestPKBet();
+  const pkSettleMutation = useRequestPKSettle();
   const { onOpenAuth } = useHomeLayoutContext();
   const requireAuth = useRequireAuth(onOpenAuth);
 
@@ -31,15 +33,16 @@ export default function RivalryPage() {
 
     if (!requireAuth()) return;
 
-    if (newsId.startsWith('pk-')) {
-      setUserVotes((prev) => ({ ...prev, [newsId]: option }));
+    const topicId = Number(newsId);
+    if (!Number.isFinite(topicId) || topicId <= 0) {
+      setBetError('无效的话题 ID');
       return;
     }
 
     try {
       setPendingBetId(newsId);
       await pkBetMutation.mutateAsync({
-        topicId: newsId,
+        topicId,
         side: option,
         requestId: createRequestId(`pk-bet-${newsId}`),
         amount,
@@ -66,13 +69,42 @@ export default function RivalryPage() {
     });
   }, [location.pathname, location.search, navigate]);
 
+  const handlePkSettle = useCallback(async (topicId: string) => {
+    if (!requireAuth()) return;
+
+    const numericTopicId = Number(topicId);
+    if (!Number.isFinite(numericTopicId) || numericTopicId <= 0) return;
+
+    try {
+      setPendingSettleId(topicId);
+      await pkSettleMutation.mutateAsync({
+        topicId: numericTopicId,
+        requestId: createRequestId(`pk-settle-${topicId}`),
+        snapshotType: 'SETTLE',
+        freezeSource: 'ON_DEMAND',
+      });
+      navigate(`/settlement/pk/${numericTopicId}?action=view`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '结算失败，请稍后再试';
+      if (message.includes('NotLogin')) {
+        onOpenAuth();
+        return;
+      }
+      setBetError(message);
+    } finally {
+      setPendingSettleId(null);
+    }
+  }, [navigate, onOpenAuth, pkSettleMutation, requireAuth]);
+
   return (
     <div className="pt-[10px]">
       <RivalryPageView
         userVotes={userVotes}
         betError={betError}
         pendingBetId={pendingBetId}
+        pendingSettleId={pendingSettleId}
         onBet={handleRivalryBet}
+        onSettle={handlePkSettle}
         onEnterBattle={handleEnterBattle}
       />
     </div>

@@ -12,6 +12,8 @@ import {
 import { getBattleActionPermissions } from '@/hooks/battleTypes';
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
 import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
+import { useRequestPKTopics } from '@/hooks/usePkRequests';
+import type { PKTopicSummary } from '@/hooks/pkTypes';
 import type { SettlementCampSide, SettlementRecordItem } from '@/hooks/settlementTypes';
 
 function resolveMarketBetSide(item: FootballMarketAggregate): SettlementCampSide {
@@ -72,9 +74,29 @@ function mapBattleRecord(
   };
 }
 
+function mapPkRecord(summary: PKTopicSummary): SettlementRecordItem | null {
+  if (!summary.canSettle || !summary.topic?.id) return null;
+  const topicId = Number(summary.topic.id);
+  if (!Number.isFinite(topicId) || topicId <= 0) return null;
+  const campSide: SettlementCampSide =
+    summary.mySide === 'A' ? 'A' : summary.mySide === 'B' ? 'B' : 'unknown';
+
+  return {
+    id: `pk-${topicId}`,
+    status: 'pending',
+    sourceTab: 'pk',
+    title: summary.topic.title || `开撕话题 #${topicId}`,
+    subtitle: '回合已结束 · 可结算',
+    campSide,
+    topicId,
+    roundId: summary.round?.id,
+  };
+}
+
 export function useSettlementRecords() {
   const isAuthenticated = Boolean(getAuthToken());
   const marketsQuery = useRequestFootballMarkets({ page: 1, limit: 100 });
+  const pkTopicsQuery = useRequestPKTopics({ page: 1, pageSize: 50 });
   const battlesQuery = useRequestBattleList(
     { mine: '1', status: 'settled', pageSize: 50 },
     { enabled: isAuthenticated },
@@ -125,8 +147,12 @@ export function useSettlementRecords() {
       battleItems.push(mapBattleRecord(battle.id, battle.title, campSide, 'pending'));
     });
 
-    return [...coinItems, ...battleItems];
-  }, [battleDetailQueries, marketList]);
+    const pkItems = (pkTopicsQuery.data?.list ?? [])
+      .map(mapPkRecord)
+      .filter((item): item is SettlementRecordItem => Boolean(item));
+
+    return [...coinItems, ...battleItems, ...pkItems];
+  }, [battleDetailQueries, marketList, pkTopicsQuery.data?.list]);
 
   const settledItems = useMemo(() => {
     const coinItems = marketList
@@ -160,6 +186,10 @@ export function useSettlementRecords() {
     () => pendingItems.filter((item) => item.sourceTab === 'arena'),
     [pendingItems],
   );
+  const pendingPkItems = useMemo(
+    () => pendingItems.filter((item) => item.sourceTab === 'pk'),
+    [pendingItems],
+  );
   const settledDarkItems = useMemo(
     () => settledItems.filter((item) => item.sourceTab === 'dark'),
     [settledItems],
@@ -172,6 +202,7 @@ export function useSettlementRecords() {
   const isLoading =
     (isAuthenticated && marketsQuery.isLoading) ||
     (isAuthenticated && battlesQuery.isLoading) ||
+    (isAuthenticated && pkTopicsQuery.isLoading) ||
     (battleIds.length > 0 && battleDetailQueries.some((query) => query.isLoading));
 
   return {
@@ -179,6 +210,7 @@ export function useSettlementRecords() {
     settledItems,
     pendingDarkItems,
     pendingArenaItems,
+    pendingPkItems,
     settledDarkItems,
     settledArenaItems,
     pendingCount: pendingItems.length,

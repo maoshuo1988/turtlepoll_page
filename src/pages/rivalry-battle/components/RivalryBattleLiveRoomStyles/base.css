@@ -836,6 +836,12 @@
   gap: 24px;
 }
 
+.rb-bet-row-center {
+  min-width: 0;
+  min-height: 0;
+  pointer-events: none;
+}
+
 .rb-support {
   position: relative;
   height: 112px;
@@ -1206,17 +1212,21 @@
 
 .rb-sidebar {
   display: grid;
-  grid-template-rows: minmax(120px, 0.92fr) minmax(220px, auto) minmax(106px, auto) minmax(92px, 0.7fr);
+  grid-template-rows: auto minmax(0, 1fr);
   align-self: stretch;
   height: 100%;
   min-height: 0;
   gap: 0;
   padding: 0;
-  overflow-y: hidden;
+  overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.rb-sidebar > .rb-right-rail {
+  min-height: 0;
 }
 
 .rb-sidebar::-webkit-scrollbar {

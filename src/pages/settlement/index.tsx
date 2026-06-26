@@ -1,14 +1,16 @@
 /**
  * 文件说明：结算详情页路由入口，负责领取结算与详情展示。
  */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from '@umijs/renderer-react';
 import { createBattleRequestId } from '@/hooks/battleTypes';
 import type { CoinSettleResult } from '@/hooks/coinTypes';
+import type { PKSettleResponse } from '@/hooks/pkTypes';
 import type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';
-import { useSettlementRecords } from '@/hooks/usePendingSettlements';
+import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
 import { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';
 import { useRequestCoinSettle } from '@/hooks/useCoinRequests';
+import { useRequestPKSettle } from '@/hooks/usePkRequests';
 import { useSettlementDetailBuilder } from '@/hooks/useSettlementDetail';
 import { useSettlementLayout } from '@/layouts/context/SettlementLayoutContext';
 import { requireAuthOrOpen } from '@/utils/authStorage';
@@ -21,7 +23,7 @@ import {
 } from './settlementNavigation';
 
 function resolveCampSideFromMarket(
-  marketList: ReturnType<typeof useSettlementRecords>['marketList'],
+  marketList: { market: { id: number } }[],
   marketId: number,
 ): SettlementRecordItem['campSide'] {
   const item = marketList.find((entry) => entry.market.id === marketId);
@@ -40,15 +42,24 @@ export default function SettlementPage() {
   const [searchParams] = useSearchParams();
   const { onOpenAuth } = useHomeLayoutContext();
   const { openSettlementDrawer, hideSettlementItem } = useSettlementLayout();
-  const { marketList } = useSettlementRecords();
+  const kind = params.kind;
+  const marketsQuery = useRequestFootballMarkets({ page: 1, limit: 100 });
+  const marketList = kind === 'coin' ? (marketsQuery.data?.list ?? []) : [];
   const { buildDetailModel } = useSettlementDetailBuilder(marketList);
+  const buildDetailModelRef = useRef(buildDetailModel);
+  buildDetailModelRef.current = buildDetailModel;
   const coinSettleMutation = useRequestCoinSettle();
   const battleWithdrawMutation = useRequestBattleWithdraw();
+  const pkSettleMutation = useRequestPKSettle();
 
-  const kind = params.kind;
   const rawId = params.id ?? '';
   const numericId = Number(rawId);
   const action = (searchParams.get('action') as SettlementDetailAction | null) ?? 'view';
+
+  const coinCampSide = useMemo(
+    () => (kind === 'coin' ? resolveCampSideFromMarket(marketList, numericId) : 'unknown' as const),
+    [kind, marketList, numericId],
+  );
 
   const record = useMemo<SettlementRecordItem | null>(() => {
     if (!kind || !Number.isFinite(numericId) || numericId <= 0) return null;
@@ -60,8 +71,20 @@ export default function SettlementPage() {
         sourceTab: 'dark',
         title: '',
         subtitle: '',
-        campSide: resolveCampSideFromMarket(marketList, numericId),
+        campSide: coinCampSide,
         marketId: numericId,
+      };
+    }
+    if (kind === 'pk') {
+      const campSide: SettlementRecordItem['campSide'] = 'unknown';
+      return {
+        id,
+        status: action === 'settle' ? 'pending' : 'settled',
+        sourceTab: 'pk',
+        title: '',
+        subtitle: '',
+        campSide,
+        topicId: numericId,
       };
     }
     return {
@@ -73,12 +96,21 @@ export default function SettlementPage() {
       campSide: 'unknown',
       battleId: numericId,
     };
-  }, [action, kind, marketList, numericId, rawId]);
+  }, [action, coinCampSide, kind, numericId, rawId]);
 
   const [model, setModel] = useState<SettlementDetailViewModel | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorText, setErrorText] = useState<string | undefined>();
   const [settledItemId, setSettledItemId] = useState<string | null>(null);
+  const settleRequestedRef = useRef<string | null>(null);
+  const inflightRouteKeyRef = useRef<string | null>(null);
+  const onOpenAuthRef = useRef(onOpenAuth);
+  onOpenAuthRef.current = onOpenAuth;
+
+  useEffect(() => {
+    settleRequestedRef.current = null;
+    inflightRouteKeyRef.current = null;
+  }, [action, kind, rawId]);
 
   useEffect(() => {
     if (!record) {
@@ -87,12 +119,18 @@ export default function SettlementPage() {
       return;
     }
 
-    if (!requireAuthOrOpen(onOpenAuth)) {
+    const routeKey = `${kind ?? ''}-${rawId}-${action}`;
+    if (inflightRouteKeyRef.current === routeKey) {
+      return;
+    }
+
+    if (!requireAuthOrOpen(onOpenAuthRef.current)) {
       setLoading(false);
       setErrorText('请先登录后查看结算详情');
       return;
     }
 
+    inflightRouteKeyRef.current = routeKey;
     let cancelled = false;
 
     const run = async () => {
@@ -101,9 +139,11 @@ export default function SettlementPage() {
       setModel(null);
 
       try {
-        let settlePayload: CoinSettleResult | SettlementActionResult | null = null;
+        let settlePayload: CoinSettleResult | SettlementActionResult | PKSettleResponse | null = null;
+        const shouldSettle = action === 'settle' && record.status === 'pending';
 
-        if (action === 'settle' && record.status === 'pending') {
+        if (shouldSettle && settleRequestedRef.current !== routeKey) {
+          settleRequestedRef.current = routeKey;
           if (record.sourceTab === 'dark' && record.marketId) {
             settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });
           } else if (record.sourceTab === 'arena' && record.battleId) {
@@ -117,13 +157,20 @@ export default function SettlementPage() {
               outcome: payout > 0 ? 'win' : 'neutral',
               message: '奖励已提取到你的龟币账户。',
             };
+          } else if (record.sourceTab === 'pk' && record.topicId) {
+            settlePayload = await pkSettleMutation.mutateAsync({
+              topicId: record.topicId,
+              requestId: `pk-settle-${record.topicId}-${Date.now()}`,
+              snapshotType: 'SETTLE',
+              freezeSource: 'ON_DEMAND',
+            });
           }
           if (!cancelled) {
             setSettledItemId(record.id);
           }
         }
 
-        const nextModel = await buildDetailModel(
+        const nextModel = await buildDetailModelRef.current(
           { ...record, status: 'settled' },
           settlePayload,
         );
@@ -140,6 +187,9 @@ export default function SettlementPage() {
         if (!cancelled) {
           setLoading(false);
         }
+        if (inflightRouteKeyRef.current === routeKey) {
+          inflightRouteKeyRef.current = null;
+        }
       }
     };
 
@@ -147,14 +197,20 @@ export default function SettlementPage() {
 
     return () => {
       cancelled = true;
+      if (inflightRouteKeyRef.current === routeKey) {
+        inflightRouteKeyRef.current = null;
+      }
     };
   }, [
     action,
-    battleWithdrawMutation.mutateAsync,
-    buildDetailModel,
-    coinSettleMutation.mutateAsync,
-    onOpenAuth,
-    record,
+    kind,
+    rawId,
+    record?.battleId,
+    record?.id,
+    record?.marketId,
+    record?.sourceTab,
+    record?.status,
+    record?.topicId,
   ]);
 
   const handleBack = () => {

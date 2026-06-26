@@ -2,8 +2,11 @@
  * 文件说明：结算详情页数据组装（暗盘 / 开撕台）。
  */
 import { useCallback } from 'react';
-import { fetchBattleDetail } from '@/hooks/useBattleRequests';
+import { useQueryClient } from 'react-query';
+import { battleQueryKeys, fetchBattleDetail } from '@/hooks/useBattleRequests';
+import { fetchPKTopic } from '@/hooks/usePkRequests';
 import type { CoinSettleResult } from '@/hooks/coinTypes';
+import type { PKSettleResponse } from '@/hooks/pkTypes';
 import type {
   SettlementActionResult,
   SettlementDetailViewModel,
@@ -14,9 +17,11 @@ import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import {
   buildBattleSettlementDetail,
   buildCoinSettlementDetail,
+  buildPkSettlementDetail,
 } from '@/components/common/settlement/settlementModel';
 
 export function useSettlementDetailBuilder(marketList: FootballMarketAggregate[]) {
+  const queryClient = useQueryClient();
   const userQuery = useRequestUserCurrent();
   const currentUserName = userQuery.data?.nickname || userQuery.data?.username || '我';
 
@@ -28,7 +33,7 @@ export function useSettlementDetailBuilder(marketList: FootballMarketAggregate[]
   const buildDetailModel = useCallback(
     async (
       item: SettlementRecordItem,
-      settlePayload?: CoinSettleResult | SettlementActionResult | null,
+      settlePayload?: CoinSettleResult | SettlementActionResult | PKSettleResponse | null,
     ): Promise<SettlementDetailViewModel> => {
       if (item.sourceTab === 'dark' && item.marketId) {
         const market = findMarketAggregate(item.marketId);
@@ -41,14 +46,21 @@ export function useSettlementDetailBuilder(marketList: FootballMarketAggregate[]
         return buildCoinSettlementDetail({
           record: item,
           market,
-          settleResult: settlePayload ?? null,
+          settleResult:
+            settlePayload && ('list' in settlePayload || 'outcome' in settlePayload)
+              ? (settlePayload as CoinSettleResult | SettlementActionResult)
+              : null,
           currentUserName,
           participatedHeat,
         });
       }
 
       if (item.sourceTab === 'arena' && item.battleId) {
-        const detail = await fetchBattleDetail(item.battleId);
+        const detail = await queryClient.fetchQuery({
+          queryKey: battleQueryKeys.detail(item.battleId),
+          queryFn: () => fetchBattleDetail(item.battleId),
+          staleTime: 30_000,
+        });
         const payout =
           settlePayload && 'payout' in settlePayload
             ? settlePayload.payout
@@ -61,9 +73,23 @@ export function useSettlementDetailBuilder(marketList: FootballMarketAggregate[]
         });
       }
 
+      if (item.sourceTab === 'pk' && item.topicId) {
+        const topic = await fetchPKTopic({ topicId: item.topicId });
+        const title = topic.topic?.title || item.title || `开撕话题 #${item.topicId}`;
+        return buildPkSettlementDetail({
+          record: { ...item, title },
+          topic,
+          settleResult:
+            settlePayload && 'winner' in settlePayload
+              ? (settlePayload as PKSettleResponse)
+              : null,
+          currentUserName,
+        });
+      }
+
       throw new Error('无法识别结算条目');
     },
-    [currentUserName, findMarketAggregate],
+    [currentUserName, findMarketAggregate, queryClient],
   );
 
   return { buildDetailModel, findMarketAggregate };

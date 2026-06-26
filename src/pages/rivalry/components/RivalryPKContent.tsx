@@ -16,6 +16,7 @@ import {
   Trophy,
   Users,
   Zap,
+  ArrowRight,
 } from 'lucide-react';
 import type { PKPhase, PKRoundResult, PKTopicState, RivalryNewsItem } from './rivalryTypes';
 import { RivalryBetModal } from './RivalryBetModal';
@@ -27,8 +28,9 @@ import {
   HERO_PK_MOBILE_STAGE_MAX_WIDTH,
 } from './heroPkLayout';
 import { resolveHeroPkBackground, resolveRivalryMediaUrl } from './rivalryMedia';
-import { useRequestPKHistory, useRequestPKSeasons, useRequestPKTopics } from '@/hooks/usePkRequests';
+import { useRequestPKHistory, /* useRequestPKMyBets, */ useRequestPKSeasons, useRequestPKTopics } from '@/hooks/usePkRequests';
 import type { PKRound as ApiPKRound, PKSeason as ApiPKSeason, PKTopicSummary } from '@/hooks/pkTypes';
+import { toUnixMs } from '@/hooks/pkNormalize';
 
 interface RivalryPKProps {
   hero?: RivalryNewsItem;
@@ -36,13 +38,20 @@ interface RivalryPKProps {
   userVotes?: Record<string, 'A' | 'B'>;
   onBet?: (newsId: string, option: 'A' | 'B', odds: number, amount?: number) => Promise<void> | void;
   onEnterBattle?: (item: RivalryNewsItem) => void;
+  onSettle?: (topicId: string) => Promise<void> | void;
   pendingBetId?: string | null;
+  pendingSettleId?: string | null;
 }
 
 type RivalryPKState = PKTopicState & {
   apiTopicId?: number | string;
   isApi?: boolean;
   mySide?: 'A' | 'B';
+  hasBet?: boolean;
+  canSettle?: boolean;
+  settleDisabledReason?: string;
+  myBetAmount?: number;
+  roundId?: number | string;
 };
 
 const fallbackImages = [
@@ -329,6 +338,9 @@ function mapTopicSummaryToPK(summary: PKTopicSummary, index: number): RivalryPKS
   const season = summary.season;
   const now = Date.now();
   const countdownMs = asNumber(summary.countdownSeconds) * 1000;
+  const endMs = toUnixMs(round?.endTime) ?? (countdownMs ? now + countdownMs : now);
+  const lockMs = toUnixMs(round?.lockTime) ?? endMs;
+  const startMs = toUnixMs(round?.startTime) ?? now;
   const roundHistory: PKRoundResult[] = [];
   const mappedSeason = mapSeason(season, roundHistory);
   const title = topic.title || `开撕话题 ${topic.id}`;
@@ -374,10 +386,10 @@ function mapTopicSummaryToPK(summary: PKTopicSummary, index: number): RivalryPKS
     },
     currentRound: asNumber(round?.roundNo, 1),
     phase: normalizePhase(round?.phase),
-    roundStartTime: round?.startTime ?? now,
-    roundEndTime: round?.endTime ?? (countdownMs ? now + countdownMs : now),
-    lockTime: round?.lockTime ?? (countdownMs ? now + countdownMs : now),
-    nextRoundTime: round?.nextRoundTime,
+    roundStartTime: startMs,
+    roundEndTime: endMs,
+    lockTime: lockMs,
+    nextRoundTime: toUnixMs(round?.nextRoundTime),
     currentHeatA: heatA,
     currentHeatB: heatB,
     betCountA: asNumber(round?.betCountA),
@@ -395,7 +407,12 @@ function mapTopicSummaryToPK(summary: PKTopicSummary, index: number): RivalryPKS
       seasons: [mappedSeason],
     },
     lastRoundWinner: undefined,
-    mySide: summary.mySide,
+    mySide: summary.mySide === 'A' || summary.mySide === 'B' ? summary.mySide : undefined,
+    hasBet: summary.hasBet,
+    canSettle: summary.canSettle,
+    settleDisabledReason: summary.settleDisabledReason,
+    myBetAmount: summary.myBet?.amount,
+    roundId: round?.id,
   };
 }
 
@@ -749,15 +766,19 @@ function HeroPK({
   onEnterBattle,
   onHistory,
   onOpenBet,
+  onSettle,
   voted,
   isBetting,
+  isSettling,
 }: {
-  pk: PKTopicState;
+  pk: RivalryPKState;
   onEnterBattle?: (item: RivalryNewsItem) => void;
   onHistory: (id: string) => void;
   onOpenBet: (item: RivalryNewsItem, option: 'A' | 'B') => void;
+  onSettle?: (topicId: string) => void;
   voted?: 'A' | 'B';
   isBetting?: boolean;
+  isSettling?: boolean;
 }) {
   const item = pk.newsItem;
   const betTotal = asNumber(pk.betCountA) + asNumber(pk.betCountB);
@@ -978,6 +999,18 @@ function HeroPK({
             </span>
           </button>
 
+          {pk.canSettle ? (
+            <button
+              type="button"
+              disabled={isSettling}
+              onClick={() => onSettle?.(pk.id)}
+              className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#f1c27d]/35 bg-[#463420]/88 px-6 py-2.5 text-sm font-black text-[#ffe3b0] shadow-[0_8px_24px_rgba(0,0,0,0.28)] transition hover:-translate-y-0.5 disabled:opacity-60 max-lg:mb-1.5 max-lg:px-4 max-lg:py-1.5 max-lg:text-xs"
+            >
+              <Trophy size={16} className="max-lg:h-3.5 max-lg:w-3.5" />
+              {isSettling ? '结算中...' : '领取本局结算'}
+            </button>
+          ) : null}
+
           <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[15px] font-black text-white/70 max-lg:mb-1.5 max-lg:gap-1.5 max-lg:text-[10px]">
             <HeroCountdown target={countdownTarget} label={countdownLabel} />
             <span className="rounded-full bg-black/24 px-3 py-2 max-lg:px-2 max-lg:py-0.5 max-lg:text-[10px] max-md:hidden">第{pk.currentRound}局</span>
@@ -1075,7 +1108,13 @@ function HeroPK({
   );
 }
 
-function PKCard({
+function formatOddsLabel(odds?: number) {
+  const value = Number(odds);
+  if (!Number.isFinite(value) || value <= 0) return '--';
+  return `${value.toFixed(1)}x`;
+}
+
+function PKCardLegacy({
   pk,
   index,
   onEnterBattle,
@@ -1216,6 +1255,200 @@ function PKCard({
   );
 }
 
+function PKCardBetting({
+  pk,
+  index,
+  onEnterBattle,
+  onOpenBet,
+  voted,
+  isBetting,
+}: {
+  pk: RivalryPKState;
+  index: number;
+  onEnterBattle?: (item: RivalryNewsItem) => void;
+  onOpenBet: (item: RivalryNewsItem, option: 'A' | 'B') => void;
+  voted?: 'A' | 'B';
+  isBetting?: boolean;
+}) {
+  const item = pk.newsItem;
+  const theme = getRivalryVisualTheme(item);
+  const { pctA, pctB } = heatSharePct(pk.currentHeatA, pk.currentHeatB);
+  const mySide =
+    voted === 'A' || voted === 'B'
+      ? voted
+      : pk.mySide === 'A' || pk.mySide === 'B'
+        ? pk.mySide
+        : undefined;
+  const hasBet = Boolean(pk.hasBet ?? mySide);
+  const participantCount = Math.max(
+    0,
+    Math.round(asNumber(pk.betCountA) + asNumber(pk.betCountB)) || Math.round(pk.currentHeatA + pk.currentHeatB),
+  );
+  const sideAColor = theme.sideA.accent || theme.sideA.primary || '#00d2ff';
+  const sideBColor = theme.sideB.accent || theme.sideB.primary || '#ff2d55';
+  const coverImage = item.listImage || item.coverImage || item.image;
+  const summary =
+    item.summary?.trim() ||
+    `今晚正面对决，人气盘口火热。选边即锁阵营，进入撕裂带为本方加火。`;
+
+  const renderBetActions = () => {
+    if (hasBet && mySide) {
+      const isSideA = mySide === 'A';
+      const color = isSideA ? sideAColor : sideBColor;
+      const label = isSideA ? '加注蓝方' : '加注红方';
+      return (
+        <button
+          type="button"
+          disabled={isBetting}
+          onClick={() => onOpenBet(item, mySide)}
+          className="mt-4 flex w-full items-center justify-center rounded-[14px] border-0 px-4 py-3.5 text-[15px] font-black tracking-tight text-[#071018] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+          style={{ backgroundColor: color }}
+        >
+          {isBetting ? '下注中...' : label}
+        </button>
+      );
+    }
+
+    return (
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          disabled={isBetting}
+          onClick={() => onOpenBet(item, 'A')}
+          className="rounded-[14px] border bg-black/20 px-3 py-3 text-center transition hover:bg-black/30 disabled:cursor-not-allowed disabled:opacity-60"
+          style={{ borderColor: `${sideAColor}cc` }}
+        >
+          <span className="block text-[14px] font-bold text-white">{item.optionA}胜</span>
+          <span className="mt-1 block text-[12px] font-semibold tabular-nums" style={{ color: sideAColor }}>
+            {formatOddsLabel(item.oddsA)}
+          </span>
+        </button>
+        <button
+          type="button"
+          disabled={isBetting}
+          onClick={() => onOpenBet(item, 'B')}
+          className="rounded-[14px] border bg-black/20 px-3 py-3 text-center transition hover:bg-black/30 disabled:cursor-not-allowed disabled:opacity-60"
+          style={{ borderColor: `${sideBColor}cc` }}
+        >
+          <span className="block text-[14px] font-bold text-white">{item.optionB}胜</span>
+          <span className="mt-1 block text-[12px] font-semibold tabular-nums" style={{ color: sideBColor }}>
+            {formatOddsLabel(item.oddsB)}
+          </span>
+        </button>
+      </div>
+    );
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06 }}
+      className="group relative overflow-hidden rounded-[22px] border border-white/10 bg-[#070b12] shadow-[0_14px_40px_rgba(0,0,0,0.34)]"
+    >
+      <div className="absolute inset-0">
+        {coverImage ? (
+          <img
+            src={coverImage}
+            alt=""
+            className="h-full w-full object-cover opacity-35 saturate-125"
+            loading="lazy"
+          />
+        ) : null}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,10,18,0.72)_0%,rgba(6,10,18,0.92)_58%,rgba(6,10,18,0.98)_100%)]" />
+      </div>
+
+      <div className="relative z-10 p-4 md:p-5">
+        <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[#ffb15a]/28 bg-[#ffb15a]/10 px-2.5 py-1 text-[11px] font-bold text-[#ffd7a0]">
+          <Flame size={12} />
+          热门预测
+        </div>
+
+        <h3 className="mb-2 text-[22px] font-black leading-tight tracking-tight text-white md:text-[24px]">
+          {item.title}
+        </h3>
+        <p className="mb-4 line-clamp-2 text-[12px] leading-relaxed text-white/58 md:text-[13px]">
+          {summary}
+        </p>
+
+        <div className="rounded-[18px] border border-white/10 bg-black/35 p-4 backdrop-blur-sm">
+          <div className="mb-3 flex items-center justify-between gap-3 text-[12px] font-bold tabular-nums md:text-[13px]">
+            <span style={{ color: sideAColor }}>{pctA}% {item.optionA}</span>
+            <span style={{ color: sideBColor }}>{item.optionB} {pctB}%</span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full bg-white/10">
+            <div className="flex h-full w-full">
+              <span className="h-full" style={{ width: `${pctA}%`, backgroundColor: sideAColor }} />
+              <span className="h-full" style={{ width: `${pctB}%`, backgroundColor: sideBColor }} />
+            </div>
+          </div>
+          {renderBetActions()}
+        </div>
+
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[11px] font-semibold text-white/62">
+            <Users size={12} />
+            {participantCount.toLocaleString()} 人参与
+          </div>
+          {onEnterBattle ? (
+            <button
+              type="button"
+              onClick={() => onEnterBattle(item)}
+              className="inline-flex items-center gap-1 rounded-full border border-[#f1c27d]/45 bg-transparent px-3 py-1.5 text-[11px] font-bold text-[#ffe3b0] transition hover:bg-[#f1c27d]/10 md:text-[12px]"
+            >
+              进入撕裂带
+              <ArrowRight size={14} />
+            </button>
+          ) : null}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function PKCard({
+  pk,
+  index,
+  onEnterBattle,
+  onHistory,
+  onOpenBet,
+  voted,
+  isBetting,
+}: {
+  pk: RivalryPKState;
+  index: number;
+  onEnterBattle?: (item: RivalryNewsItem) => void;
+  onHistory: (id: string) => void;
+  onOpenBet: (item: RivalryNewsItem, option: 'A' | 'B') => void;
+  voted?: 'A' | 'B';
+  isBetting?: boolean;
+}) {
+  if (pk.phase === 'betting') {
+    return (
+      <PKCardBetting
+        pk={pk}
+        index={index}
+        onEnterBattle={onEnterBattle}
+        onOpenBet={onOpenBet}
+        voted={voted}
+        isBetting={isBetting}
+      />
+    );
+  }
+
+  return (
+    <PKCardLegacy
+      pk={pk}
+      index={index}
+      onEnterBattle={onEnterBattle}
+      onHistory={onHistory}
+      onOpenBet={onOpenBet}
+      voted={voted}
+      isBetting={isBetting}
+    />
+  );
+}
+
 function HistoryPage({ pk, onBack }: { pk: RivalryPKState; onBack: () => void }) {
   const item = pk.newsItem;
   const [seasonOpen, setSeasonOpen] = useState(false);
@@ -1223,6 +1456,14 @@ function HistoryPage({ pk, onBack }: { pk: RivalryPKState; onBack: () => void })
   const topicId = pk.apiTopicId;
   const historyQuery = useRequestPKHistory({ topicId, page: 1, pageSize: 100, enabled: Boolean(topicId) });
   const seasonsQuery = useRequestPKSeasons({ topicId, page: 1, pageSize: 20, enabled: Boolean(topicId) });
+  // 我的下注记录：暂时隐藏，恢复时取消注释
+  // const myBetsQuery = useRequestPKMyBets({ page: 1, pageSize: 20, enabled: Boolean(topicId) });
+  // const topicMyBets = useMemo(() => {
+  //   const list = myBetsQuery.data?.list ?? [];
+  //   if (!topicId) return list;
+  //   const filtered = list.filter((row) => String(row.topic?.id ?? row.bet?.topicId ?? '') === String(topicId));
+  //   return filtered.length > 0 ? filtered : list;
+  // }, [myBetsQuery.data?.list, topicId]);
   const apiRounds = useMemo(
     () => (historyQuery.data?.list ?? []).map(mapRound).filter((round) => round.round > 0),
     [historyQuery.data?.list],
@@ -1278,6 +1519,44 @@ function HistoryPage({ pk, onBack }: { pk: RivalryPKState; onBack: () => void })
           </div>
         </div>
       </div>
+
+      {/* 我的下注记录：暂时隐藏，恢复时取消本段注释
+      <div className="rounded-xl border border-slate-100 bg-white p-4 dark:border-rdark-border dark:bg-rdark-card">
+        <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-rdark-text">
+          <Trophy size={16} className="text-amber-500" />
+          我的下注记录
+          {myBetsQuery.isLoading ? <span className="text-[10px] font-normal text-slate-400">加载中...</span> : null}
+        </h3>
+        {topicMyBets.length === 0 ? (
+          <p className="text-xs text-slate-500 dark:text-rdark-text2">暂无下注记录</p>
+        ) : (
+          <div className="space-y-2">
+            {topicMyBets.slice(0, 8).map((row) => {
+              const sideLabel = row.bet?.side === 'A' ? item.optionA : row.bet?.side === 'B' ? item.optionB : '未选边';
+              const settleLabel = row.bet?.settleResult === 'win'
+                ? '已赢'
+                : row.bet?.settleResult === 'lose'
+                  ? '已输'
+                  : row.bet?.settleResult === 'draw'
+                    ? '平局'
+                    : '待结算';
+              return (
+                <div key={String(row.bet?.id ?? `${row.round?.id}-${row.bet?.side}`)} className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2 text-xs dark:bg-rdark-hover">
+                  <div>
+                    <div className="font-bold text-slate-700 dark:text-rdark-text">第 {row.round?.roundNo ?? '--'} 局 · {sideLabel}</div>
+                    <div className="text-slate-500 dark:text-rdark-text2">投入 {row.bet?.amount ?? 0} 龟币</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-slate-700 dark:text-rdark-text">{settleLabel}</div>
+                    {(row.bet?.payout ?? 0) > 0 ? <div className="text-emerald-500">派奖 {row.bet?.payout}</div> : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+      */}
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <div className="rounded-[20px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,20,44,0.96),rgba(10,14,30,0.98))] p-4 text-white shadow-[0_12px_28px_rgba(0,0,0,0.22)]">
@@ -1391,7 +1670,9 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
   userVotes = {},
   onBet,
   onEnterBattle,
+  onSettle,
   pendingBetId,
+  pendingSettleId,
 }) => {
   const [historyId, setHistoryId] = useState<string | null>(null);
   const [betModal, setBetModal] = useState<{ item: RivalryNewsItem; option: 'A' | 'B' } | null>(null);
@@ -1421,8 +1702,10 @@ export const RivalryPK: React.FC<RivalryPKProps> = ({
           onEnterBattle={onEnterBattle}
           onHistory={setHistoryId}
           onOpenBet={(item, option) => setBetModal({ item, option })}
+          onSettle={onSettle}
           voted={userVotes[heroPK.newsItem.id] ?? heroPK.mySide}
           isBetting={pendingBetId === heroPK.newsItem.id}
+          isSettling={pendingSettleId === heroPK.newsItem.id}
         />
       ) : (
         <div className="rounded-[22px] border border-dashed border-white/10 bg-white/[0.03] px-6 py-12 text-center text-sm text-white/50">

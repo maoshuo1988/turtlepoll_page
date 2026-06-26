@@ -5,13 +5,20 @@ import { axiosCustom } from '@/api/httpClient';
 import {
   API_PK_Bet,
   API_PK_Comment_Create,
+  API_PK_Comment_Replies,
   API_PK_Comment_Reply,
   API_PK_Comments,
   API_PK_Downvote,
   API_PK_Heat,
+  API_PK_Heat_Me,
+  API_PK_Heat_Rank,
   API_PK_History,
+  API_PK_Like,
   API_PK_My_Bets,
+  API_PK_Odds_Current,
+  API_PK_RecordOption,
   API_PK_Seasons,
+  API_PK_Settle,
   API_PK_Topic,
   API_PK_Topics,
 } from '@/api/pkApi';
@@ -25,15 +32,25 @@ import type {
   PKCommentResponse,
   PKCreateCommentPayload,
   PKDownvotePayload,
+  PKHeatMeResponse,
+  PKHeatRankResponse,
   PKHeatResponse,
   PKHistoryResponse,
+  PKMyBetsResponse,
+  PKLikePayload,
+  PKLikeResponse,
+  PKOddsResponse,
+  PKRecordOptionPayload,
   PKReplyCommentPayload,
   PKRound,
   PKSeason,
   PKSeasonListResponse,
+  PKSettlePayload,
+  PKSettleResponse,
   PKTopicDetailResponse,
   PKTopicListResponse,
 } from './pkTypes';
+import { normalizePKCommentItem, unwrapPKCommentPayload, unwrapPKReplyPayload } from './pkNormalize';
 
 const hasValue = (value: unknown) => value !== undefined && value !== null && value !== '';
 
@@ -50,23 +67,36 @@ const buildForm = (payload: Record<string, unknown>) => {
   return data;
 };
 
-const normalizeCursorResult = <T>(raw: unknown): CursorResult<T> => {
+const normalizeCursorResult = <T>(raw: unknown, mapItem?: (item: unknown) => T): CursorResult<T> => {
   const data = raw as {
-    results?: T[];
-    data?: T[];
-    list?: T[];
-    comments?: T[];
-    records?: T[];
+    results?: unknown[];
+    data?: unknown[];
+    list?: unknown[];
+    comments?: unknown[];
+    records?: unknown[];
     cursor?: number | string;
     hasMore?: boolean;
   };
 
+  const source = data.results ?? data.data ?? data.list ?? data.comments ?? data.records ?? [];
+  const results = mapItem ? source.map(mapItem) : (source as T[]);
+
   return {
-    results: data.results ?? data.data ?? data.list ?? data.comments ?? data.records ?? [],
+    results,
     cursor: data.cursor ?? 0,
     hasMore: Boolean(data.hasMore),
   };
 };
+
+export async function fetchPKTopic(params: { topicId?: number | string; slug?: string }) {
+  const res = await axiosCustom({
+    method: 'get',
+    cmd: API_PK_Topic,
+    params,
+    headers: getAuthorizationHeaders(),
+  });
+  return assertSuccess(res) as PKTopicDetailResponse;
+}
 
 export function useRequestPKTopics(params: { page?: number; pageSize?: number } = {}) {
   return useQuery<PKTopicListResponse>({
@@ -144,7 +174,7 @@ export function useRequestPKComments(params: {
         },
         headers: getAuthorizationHeaders(),
       });
-      return normalizeCursorResult<PKCommentResponse>(assertSuccess(res));
+      return normalizeCursorResult<PKCommentResponse>(assertSuccess(res), normalizePKCommentItem);
     },
     enabled: enabled && hasValue(params.topicId) && hasValue(params.side),
   });
@@ -175,6 +205,8 @@ export function useRequestPKBet() {
         queryClient.invalidateQueries(['requestPKTopic']),
         queryClient.invalidateQueries(['requestPKHeat']),
         queryClient.invalidateQueries(['requestPKTopics']),
+        queryClient.invalidateQueries(['requestPKOddsCurrent']),
+        queryClient.invalidateQueries(['requestPKMyBets']),
       ]);
     },
   });
@@ -195,13 +227,14 @@ export function useRequestPKCreateComment() {
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         },
       });
-      return assertSuccess(res) as PKCommentResponse;
+      return unwrapPKCommentPayload(assertSuccess(res));
     },
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries(['requestPKComments']),
         queryClient.invalidateQueries(['requestPKHeat']),
         queryClient.invalidateQueries(['requestPKTopic']),
+        queryClient.invalidateQueries(['requestPKHeatMe']),
       ]);
     },
   });
@@ -222,13 +255,15 @@ export function useRequestPKReplyComment() {
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         },
       });
-      return assertSuccess(res) as PKCommentResponse;
+      return unwrapPKReplyPayload(assertSuccess(res));
     },
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries(['requestPKComments']),
+        queryClient.invalidateQueries(['requestPKCommentReplies']),
         queryClient.invalidateQueries(['requestPKHeat']),
         queryClient.invalidateQueries(['requestPKTopic']),
+        queryClient.invalidateQueries(['requestPKHeatMe']),
       ]);
     },
   });
@@ -330,20 +365,223 @@ export function useRequestPKSeasons(params: { topicId?: number | string; page?: 
   });
 }
 
-export function useRequestPKMyBets(params: { page?: number; pageSize?: number } = {}) {
-  return useQuery({
-    queryKey: ['requestPKMyBets', params],
+export function useRequestPKMyBets(params: { page?: number; pageSize?: number; enabled?: boolean } = {}) {
+  const { enabled = true, ...queryParams } = params;
+
+  return useQuery<PKMyBetsResponse>({
+    queryKey: ['requestPKMyBets', queryParams],
     queryFn: async () => {
       const res = await axiosCustom({
         method: 'get',
         cmd: API_PK_My_Bets,
         params: {
-          page: params.page ?? 1,
-          pageSize: params.pageSize ?? 20,
+          page: queryParams.page ?? 1,
+          pageSize: queryParams.pageSize ?? 20,
         },
         headers: getAuthorizationHeaders(),
       });
+      const raw = assertSuccess(res) as {
+        list?: PKMyBetsResponse['list'];
+        data?: PKMyBetsResponse['list'];
+        results?: PKMyBetsResponse['list'];
+        count?: number;
+        total?: number;
+        page?: number;
+        pageSize?: number;
+      };
+      const list = raw.list ?? raw.data ?? raw.results ?? [];
+      return {
+        list,
+        count: raw.count ?? raw.total ?? list.length,
+        page: raw.page ?? queryParams.page ?? 1,
+        pageSize: raw.pageSize ?? queryParams.pageSize ?? 20,
+      };
+    },
+    enabled,
+  });
+}
+
+export function useRequestPKCommentReplies(params: {
+  commentId?: number | string;
+  cursor?: number | string;
+  pageSize?: number;
+  enabled?: boolean;
+}) {
+  const { enabled = true, ...queryParams } = params;
+
+  return useQuery<CursorResult<PKCommentResponse>>({
+    queryKey: ['requestPKCommentReplies', queryParams],
+    queryFn: async () => {
+      const res = await axiosCustom({
+        method: 'get',
+        cmd: API_PK_Comment_Replies,
+        params: {
+          ...queryParams,
+          pageSize: queryParams.pageSize ?? 20,
+        },
+        headers: getAuthorizationHeaders(),
+      });
+      return normalizeCursorResult<PKCommentResponse>(assertSuccess(res), normalizePKCommentItem);
+    },
+    enabled: enabled && hasValue(params.commentId),
+  });
+}
+
+export function useRequestPKLike() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ['requestPKLike'],
+    mutationFn: async (payload: PKLikePayload) => {
+      const res = await axiosCustom({
+        method: 'post',
+        cmd: API_PK_Like,
+        data: payload,
+        headers: {
+          ...getAuthorizationHeaders(),
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+      });
+      return assertSuccess(res) as PKLikeResponse;
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries(['requestPKComments']),
+        queryClient.invalidateQueries(['requestPKHeat']),
+        queryClient.invalidateQueries(['requestPKTopic']),
+        queryClient.invalidateQueries(['requestPKHeatMe']),
+      ]);
+    },
+  });
+}
+
+export function useRequestPKHeatRank(params: {
+  topicId?: number | string;
+  roundId?: number | string;
+  scope?: 'ALL' | 'MY_SIDE';
+  page?: number;
+  pageSize?: number;
+  enabled?: boolean;
+}) {
+  const { enabled = true, ...queryParams } = params;
+
+  return useQuery<PKHeatRankResponse>({
+    queryKey: ['requestPKHeatRank', queryParams],
+    queryFn: async () => {
+      const res = await axiosCustom({
+        method: 'get',
+        cmd: API_PK_Heat_Rank,
+        params: {
+          scope: queryParams.scope ?? 'ALL',
+          page: queryParams.page ?? 1,
+          pageSize: queryParams.pageSize ?? 20,
+          topicId: queryParams.topicId,
+          roundId: queryParams.roundId,
+        },
+        headers: getAuthorizationHeaders(),
+      });
+      return assertSuccess(res) as PKHeatRankResponse;
+    },
+    enabled: enabled && (hasValue(params.topicId) || hasValue(params.roundId)),
+    refetchInterval: 20 * 1000,
+  });
+}
+
+export function useRequestPKHeatMe(params: {
+  topicId?: number | string;
+  roundId?: number | string;
+  enabled?: boolean;
+}) {
+  const { enabled = true, ...queryParams } = params;
+
+  return useQuery<PKHeatMeResponse>({
+    queryKey: ['requestPKHeatMe', queryParams],
+    queryFn: async () => {
+      const res = await axiosCustom({
+        method: 'get',
+        cmd: API_PK_Heat_Me,
+        params: queryParams,
+        headers: getAuthorizationHeaders(),
+      });
+      return assertSuccess(res) as PKHeatMeResponse;
+    },
+    enabled: enabled && (hasValue(params.topicId) || hasValue(params.roundId)),
+    refetchInterval: 20 * 1000,
+  });
+}
+
+export function useRequestPKOddsCurrent(params: {
+  topicId?: number | string;
+  roundId?: number | string;
+  enabled?: boolean;
+}) {
+  const { enabled = true, ...queryParams } = params;
+
+  return useQuery<PKOddsResponse>({
+    queryKey: ['requestPKOddsCurrent', queryParams],
+    queryFn: async () => {
+      const res = await axiosCustom({
+        method: 'get',
+        cmd: API_PK_Odds_Current,
+        params: queryParams,
+        headers: getAuthorizationHeaders(),
+      });
+      return assertSuccess(res) as PKOddsResponse;
+    },
+    enabled: enabled && (hasValue(params.topicId) || hasValue(params.roundId)),
+    refetchInterval: 15 * 1000,
+  });
+}
+
+export function useRequestPKRecordOption() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ['requestPKRecordOption'],
+    mutationFn: async (payload: PKRecordOptionPayload) => {
+      const res = await axiosCustom({
+        method: 'post',
+        cmd: API_PK_RecordOption,
+        data: payload,
+        headers: {
+          ...getAuthorizationHeaders(),
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+      });
       return assertSuccess(res);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['requestPKHeatMe']);
+    },
+  });
+}
+
+export function useRequestPKSettle() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ['requestPKSettle'],
+    mutationFn: async (payload: PKSettlePayload) => {
+      const res = await axiosCustom({
+        method: 'post',
+        cmd: API_PK_Settle,
+        data: payload,
+        headers: {
+          ...getAuthorizationHeaders(),
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+      });
+      return assertSuccess(res) as PKSettleResponse;
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries(['requestPKTopics']),
+        queryClient.invalidateQueries(['requestPKTopic']),
+        queryClient.invalidateQueries(['requestPKHeat']),
+        queryClient.invalidateQueries(['requestPKHistory']),
+        queryClient.invalidateQueries(['requestPKMyBets']),
+        queryClient.invalidateQueries(COIN_ME_QUERY_KEY),
+      ]);
     },
   });
 }
