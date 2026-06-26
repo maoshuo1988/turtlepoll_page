@@ -538,18 +538,6 @@
     height: 22px;
   }
 
-  .eb-energy-pct {
-    font-size: 10px;
-  }
-
-  .eb-energy-pct-left {
-    left: 8px;
-  }
-
-  .eb-energy-pct-right {
-    right: 8px;
-  }
-
   .eb-pk-core {
     font-size: 18px;
     gap: 1px;

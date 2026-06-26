@@ -1,7 +1,4 @@
-/** 文件说明：撕裂带对抗条，固定收窄外形 + 原蓝红填色与动效。 */
-import { useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { buildFixedRailClipPathD, clipPathUrl } from '../eventBattleEnergyTaper';
-
+/** 文件说明：撕裂带对抗条，原圆角轨道 + 蓝红填色与 PK 动效。 */
 type EnergyBubble = {
   id: string;
   side: 'A' | 'B';
@@ -62,48 +59,17 @@ export function EventBattleEnergyBar({
   rightBubbles,
   pkParticles,
 }: EventBattleEnergyBarProps) {
-  const clipId = useId();
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [trackSizePx, setTrackSizePx] = useState({ width: 0, height: 44 });
-  const railClipId = `${clipId}-rail`.replace(/:/g, '');
-  const railClipD = useMemo(
-    () => buildFixedRailClipPathD(trackSizePx.width, trackSizePx.height),
-    [trackSizePx.height, trackSizePx.width],
-  );
-
-  useLayoutEffect(() => {
-    const node = trackRef.current;
-    if (!node) return undefined;
-
-    const updateWidth = () => {
-      const rect = node.getBoundingClientRect();
-      setTrackSizePx({ width: rect.width, height: rect.height || 44 });
-    };
-
-    updateWidth();
-    const observer = new ResizeObserver(updateWidth);
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
   const trackStyle = {
-    clipPath: clipPathUrl(railClipId),
     '--left-pct': `${leftPct}%`,
     '--left-energy-duration': `${leftEnergyDuration.toFixed(2)}s`,
     '--right-energy-duration': `${rightEnergyDuration.toFixed(2)}s`,
+    '--left-charge-duration': `${(leftEnergyDuration + 0.8).toFixed(2)}s`,
+    '--right-charge-duration': `${(rightEnergyDuration + 0.8).toFixed(2)}s`,
   } as React.CSSProperties;
 
   return (
     <div className="eb-energy-track-wrap">
-      <svg className="eb-energy-clip-defs" aria-hidden focusable="false">
-        <defs>
-          <clipPath id={railClipId} clipPathUnits="objectBoundingBox">
-            <path d={railClipD} />
-          </clipPath>
-        </defs>
-      </svg>
-
-      <div ref={trackRef} className="eb-energy-track" style={trackStyle}>
+      <div className="eb-energy-track" style={trackStyle}>
         <div className="eb-energy-blue" style={{ width: `${leftPct}%` }} />
         <div className="eb-energy-red" style={{ width: `${rightPct}%` }} />
         <div className="eb-energy-bubbles eb-energy-bubbles-blue" aria-hidden>
@@ -116,8 +82,7 @@ export function EventBattleEnergyBar({
             <i key={bubble.id} style={bubble.style} />
           ))}
         </div>
-        <span className="eb-energy-pct eb-energy-pct-left">{leftPct}%</span>
-        <span className="eb-energy-pct eb-energy-pct-right">{rightPct}%</span>
+        <div className="eb-energy-crash" style={{ left: `${leftPct}%` }} />
       </div>
 
       <div className="eb-pk-overlay" style={{ left: `${leftPct}%` }}>

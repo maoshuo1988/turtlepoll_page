@@ -294,6 +294,10 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -843,7 +847,15 @@
             34,
             58,
             23,
-            31
+            31,
+            10,
+            16,
+            14,
+            12,
+            13,
+            11,
+            15,
+            25
           ]
         },
         "register": 1
@@ -1031,7 +1043,11 @@
             9,
             11,
             10,
-            21
+            21,
+            14,
+            13,
+            43,
+            19
           ]
         },
         "register": 11
@@ -1125,6 +1141,10 @@
             0,
             1,
             1,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1388,6 +1408,7 @@
             1,
             0,
             0,
+            0,
             0
           ],
           "onCheckCode": [
@@ -1607,6 +1628,7 @@
             0,
             0,
             1,
+            0,
             0,
             0,
             0,
@@ -2743,6 +2765,9 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -2928,7 +2953,11 @@
             0,
             0,
             1,
-            2
+            2,
+            1,
+            1,
+            1,
+            1
           ],
           "addRuntimePlugin": [
             0,
@@ -3037,6 +3066,10 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -3331,6 +3364,10 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -3681,6 +3718,14 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -3884,7 +3929,11 @@
             12,
             9,
             15,
-            35
+            35,
+            14,
+            9,
+            12,
+            46
           ],
           "addPolyfillImports": [
             0,
@@ -4131,6 +4180,14 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -4577,6 +4634,14 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -4621,6 +4686,10 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -4972,6 +5041,10 @@
             0,
             0,
             0,
+            1,
+            0,
+            0,
+            1,
             1,
             0
           ],
@@ -5330,7 +5403,15 @@
             11,
             1,
             22,
-            2
+            2,
+            5,
+            1,
+            16,
+            1,
+            9,
+            1,
+            15,
+            1
           ]
         },
         "register": 1
@@ -5553,7 +5634,11 @@
             8,
             7,
             4,
-            39
+            39,
+            7,
+            16,
+            15,
+            6
           ]
         },
         "register": 1
@@ -5806,7 +5891,11 @@
             0,
             0,
             0,
-            0
+            0,
+            0,
+            1,
+            1,
+            1
           ]
         },
         "register": 1
@@ -6073,7 +6162,10 @@
             0,
             0,
             0,
-            235
+            235,
+            1,
+            0,
+            0
           ]
         },
         "register": 14
@@ -10195,25 +10287,9 @@
             ],
             "format": "esm"
           },
-          "src/pages/event-battle/components/eventBattleEnergyTaper.ts": {
-            "bytes": 2682,
-            "imports": [],
-            "format": "esm"
-          },
           "src/pages/event-battle/components/EventBattleEnergyBar/index.tsx": {
-            "bytes": 4432,
-            "imports": [
-              {
-                "path": "react",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
-                "path": "src/pages/event-battle/components/eventBattleEnergyTaper.ts",
-                "kind": "import-statement",
-                "original": "../eventBattleEnergyTaper"
-              }
-            ],
+            "bytes": 3273,
+            "imports": [],
             "format": "esm"
           },
           "src/pages/event-battle/components/eventBattleThemes.ts": {
@@ -10489,6 +10565,11 @@
                 "original": "@/hooks/useCoinRequests"
               }
             ],
+            "format": "esm"
+          },
+          "src/pages/event-battle/components/eventBattleEnergyTaper.ts": {
+            "bytes": 2682,
+            "imports": [],
             "format": "esm"
           },
           "src/pages/rivalry/components/HeroBattleRail/index.tsx": {
@@ -13303,11 +13384,6 @@
                 "external": true
               },
               {
-                "path": "react",
-                "kind": "import-statement",
-                "external": true
-              },
-              {
                 "path": "lucide-react",
                 "kind": "import-statement",
                 "external": true
@@ -15350,11 +15426,8 @@
               "src/hooks/useTopicRequests.ts": {
                 "bytesInOutput": 4562
               },
-              "src/pages/event-battle/components/eventBattleEnergyTaper.ts": {
-                "bytesInOutput": 2290
-              },
               "src/pages/event-battle/components/EventBattleEnergyBar/index.tsx": {
-                "bytesInOutput": 4424
+                "bytesInOutput": 3167
               },
               "src/pages/event-battle/components/eventBattleThemes.ts": {
                 "bytesInOutput": 8286
@@ -15392,8 +15465,11 @@
               "src/pages/rivalry/components/RivalryBetModal.tsx": {
                 "bytesInOutput": 9044
               },
+              "src/pages/event-battle/components/eventBattleEnergyTaper.ts": {
+                "bytesInOutput": 2290
+              },
               "src/pages/rivalry/components/HeroBattleRail/index.tsx": {
-                "bytesInOutput": 8188
+                "bytesInOutput": 8177
               },
               "src/pages/rivalry/components/heroPkLayout.ts": {
                 "bytesInOutput": 451
@@ -15666,7 +15742,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1225889
+            "bytes": 1224621
           }
         }
       }
@@ -26575,61 +26651,7 @@
           "type": "ImportDeclaration"
         }
       ],
-      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/event-battle/components/EventBattleEnergyBar/index.tsx": [
-        {
-          "end": 167,
-          "importKind": "value",
-          "source": "react",
-          "specifiers": [
-            {
-              "imported": "useId",
-              "local": "useId",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useLayoutEffect",
-              "local": "useLayoutEffect",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useMemo",
-              "local": "useMemo",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useRef",
-              "local": "useRef",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "useState",
-              "local": "useState",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 93,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 249,
-          "importKind": "value",
-          "source": "../eventBattleEnergyTaper",
-          "specifiers": [
-            {
-              "imported": "buildFixedRailClipPathD",
-              "local": "buildFixedRailClipPathD",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "clipPathUrl",
-              "local": "clipPathUrl",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 168,
-          "type": "ImportDeclaration"
-        }
-      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/event-battle/components/EventBattleEnergyBar/index.tsx": [],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/event-battle/components/EventBattleLiveRoom.tsx": [
         {
           "end": 156,
