@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import { HeroPrediction } from './HeroPrediction';
-import { HomeSpinePreviewRow } from './HomeSpinePreviewRow';
 import { NewsFeed } from './NewsFeed';
 // import { PredictTagCategoryBar } from './PredictTagCategoryBar';
 import type { PredictionBetOption, PredictionCardItem } from './predictionCards';
