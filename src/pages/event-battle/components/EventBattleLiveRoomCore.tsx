@@ -37,6 +37,7 @@ import type { PKBet } from '@/hooks/pkTypes';
 import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
 import type { PetSkin } from '@/components/common/pet/petTypes';
 import { normalizePredictionCardItem, type PredictionBetOption, type PredictionCardItem } from '@/pages/home/components/predictionCards';
+import { EventBattleEnergyBar, buildEnergyBarBubbles } from './EventBattleEnergyBar/index';
 import { resolveEventBattleTheme } from './eventBattleThemes';
 import './EventBattleLiveRoom.css';
 
@@ -93,35 +94,6 @@ type BarrageItem = {
 type PkParticle = {
   id: string;
   style: ParticleStyle;
-};
-
-const pseudoRandom = (seed: number) => {
-  const value = Math.sin(seed * 9301 + 49297) * 233280;
-  return value - Math.floor(value);
-};
-
-const buildEnergyBubbles = (
-  side: CommentSide,
-  pct: number,
-  duration: number,
-): PkParticle[] => {
-  const count = Math.min(26, Math.max(8, Math.round(pct / 4) + 6));
-  const salt = side === 'A' ? 17 : 43;
-
-  return Array.from({ length: count }, (_, index) => {
-    const top = 16 + pseudoRandom(index + salt) * 68;
-    const size = 3 + pseudoRandom(index + salt + 100) * 4;
-    const delay = -pseudoRandom(index + salt + 200) * duration;
-
-    return {
-      id: `${side}-energy-bubble-${index}`,
-      style: {
-        '--top': `${top.toFixed(1)}%`,
-        '--size': `${size.toFixed(1)}px`,
-        '--delay': `${delay.toFixed(2)}s`,
-      },
-    };
-  });
 };
 
 type Supporter = {
@@ -619,22 +591,12 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const rightPct = 100 - leftPct;
   const leftEnergyDuration = 1.8 + (leftPct / 100) * 3.2;
   const rightEnergyDuration = 1.8 + (rightPct / 100) * 3.2;
-  const energyTrackStyle: ParticleStyle = {
-    '--left-pct': `${leftPct}%`,
-    '--left-energy-duration': `${leftEnergyDuration.toFixed(2)}s`,
-    '--right-energy-duration': `${rightEnergyDuration.toFixed(2)}s`,
-    '--left-charge-duration': `${(leftEnergyDuration + 0.8).toFixed(2)}s`,
-    '--right-charge-duration': `${(rightEnergyDuration + 0.8).toFixed(2)}s`,
-  };
-  const pkOverlayStyle: React.CSSProperties = {
-    left: `${leftPct}%`,
-  };
   const leftEnergyBubbles = useMemo(
-    () => buildEnergyBubbles('A', leftPct, leftEnergyDuration),
+    () => buildEnergyBarBubbles('A', leftPct, leftEnergyDuration),
     [leftEnergyDuration, leftPct],
   );
   const rightEnergyBubbles = useMemo(
-    () => buildEnergyBubbles('B', rightPct, rightEnergyDuration),
+    () => buildEnergyBarBubbles('B', rightPct, rightEnergyDuration),
     [rightEnergyDuration, rightPct],
   );
   const effectiveBetAmount = Number.isFinite(numericBetAmount) && numericBetAmount > 0 ? numericBetAmount : 0;
@@ -1322,36 +1284,15 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           </div>
 
           <div className="eb-energy-panel">
-            <div className="eb-energy-track-wrap">
-              <div className="eb-energy-track" style={energyTrackStyle}>
-                <div className="eb-energy-blue" style={{ width: `${leftPct}%` }} />
-                <div className="eb-energy-red" style={{ width: `${rightPct}%` }} />
-                <div className="eb-energy-bubbles eb-energy-bubbles-blue" aria-hidden="true">
-                  {leftEnergyBubbles.map((bubble) => (
-                    <i key={bubble.id} style={bubble.style} />
-                  ))}
-                </div>
-                <div className="eb-energy-bubbles eb-energy-bubbles-red" aria-hidden="true">
-                  {rightEnergyBubbles.map((bubble) => (
-                    <i key={bubble.id} style={bubble.style} />
-                  ))}
-                </div>
-                <div className="eb-energy-crash" style={{ left: `${leftPct}%` }} />
-              </div>
-              <div className="eb-pk-overlay" style={pkOverlayStyle}>
-                <div className="eb-pk-backdrop" />
-                <div className="eb-pk-energy-field" />
-                <div className="eb-pk-sparks" aria-hidden="true">
-                  {pkParticles.map((particle) => (
-                    <i key={particle.id} className="eb-pk-spark" style={particle.style} />
-                  ))}
-                </div>
-                <div className="eb-pk-core">
-                  <span className="eb-pk-letter eb-pk-letter-blue">P</span>
-                  <span className="eb-pk-letter eb-pk-letter-red">K</span>
-                </div>
-              </div>
-            </div>
+            <EventBattleEnergyBar
+              leftPct={leftPct}
+              rightPct={rightPct}
+              leftEnergyDuration={leftEnergyDuration}
+              rightEnergyDuration={rightEnergyDuration}
+              leftBubbles={leftEnergyBubbles}
+              rightBubbles={rightEnergyBubbles}
+              pkParticles={pkParticles}
+            />
             <div className="eb-energy-foot">
               <span>{displayNews.oddsA.toFixed(2)}倍</span>
               <span className="eb-energy-side-meta eb-energy-side-meta-blue">

@@ -842,50 +842,25 @@
 
 .eb-energy-track {
   height: 28px;
-  border-radius: 7px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow:
-    0 0 28px rgba(6, 157, 255, 0.22),
-    0 0 28px rgba(255, 45, 62, 0.18),
-    inset 0 0 18px rgba(255, 255, 255, 0.08);
-}
-
-.eb-energy-blue,
-.eb-energy-red {
-  inset-block: 4px;
-}
-
-.eb-energy-crash {
-  top: -26px;
-  width: 46px;
-  height: 74px;
-  --crash-x: -23px;
 }
 
 .eb-pk-core {
   font-size: 42px;
 }
 
-  .eb-pk-overlay {
-    top: 11px;
-    width: 128px;
-    height: 96px;
-  }
+.eb-pk-overlay {
+  width: 128px;
+  height: 96px;
+}
 
-  .eb-pk-backdrop {
-    width: 118px;
-    height: 82px;
-  }
+.eb-pk-backdrop {
+  width: 118px;
+  height: 82px;
+}
 
 .eb-pk-energy-field {
   width: 56px;
   height: 56px;
-}
-
-.eb-energy-crash::before,
-.eb-energy-crash::after {
-  width: 48px;
-  height: 12px;
 }
 
 .eb-energy-spark {

@@ -534,19 +534,20 @@
     border-radius: 12px;
   }
 
-  .eb-energy-track-wrap {
-    position: relative;
-  }
-
   .eb-energy-track {
     height: 22px;
   }
 
-  .eb-energy-crash {
-    top: -20px;
-    width: 36px;
-  height: 58px;
-    --crash-x: -18px;
+  .eb-energy-pct {
+    font-size: 10px;
+  }
+
+  .eb-energy-pct-left {
+    left: 8px;
+  }
+
+  .eb-energy-pct-right {
+    right: 8px;
   }
 
   .eb-pk-core {
@@ -555,7 +556,6 @@
   }
 
   .eb-pk-overlay {
-    top: 9px;
     width: 92px;
     height: 72px;
   }
