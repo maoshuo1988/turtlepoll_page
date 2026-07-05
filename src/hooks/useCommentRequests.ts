@@ -44,6 +44,7 @@ export type CommentResponse = {
   likeCount?: number;
   likes?: number;
   liked?: boolean;
+  commentCount?: number;
   replyCount?: number;
   replies?: number;
   createTime?: number;

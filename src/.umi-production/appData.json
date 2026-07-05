@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 8
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -109,10 +109,10 @@
       "time": {
         "hooks": {
           "onStart": [
-            2
+            1
           ]
         },
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -129,7 +129,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -142,7 +142,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -156,10 +156,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            10
+            7
           ]
         },
-        "register": 13
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -189,10 +189,10 @@
             0
           ],
           "onCheck": [
-            0
+            1
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -209,7 +209,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -236,10 +236,10 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            0
+            1
           ]
         },
-        "register": 5
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -1134,7 +1134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 44
+        "register": 41
       },
       "enableBy": "register"
     },
@@ -1147,7 +1147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 17
       },
       "enableBy": "config"
     },
@@ -1190,7 +1190,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1203,7 +1203,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1216,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 19
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1228,7 +1228,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1241,7 +1241,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides": {
@@ -1266,7 +1266,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1280,10 +1280,10 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1295,7 +1295,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1308,7 +1308,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1334,7 +1334,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1373,7 +1373,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1398,7 +1398,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1450,7 +1450,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1475,7 +1475,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 12
+        "register": 10
       },
       "enableBy": "config"
     },
@@ -1592,7 +1592,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1604,7 +1604,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1667,7 +1667,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 19
+        "register": 17
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 17
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1692,7 +1692,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1705,7 +1705,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1744,7 +1744,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1926,7 +1926,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 12
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -1965,7 +1965,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     }
@@ -2319,7 +2319,7 @@
       "parentId": "3",
       "id": "6",
       "absPath": "/event-battle",
-      "__content": "/**\n * 文件说明：暗盘撕裂带页面路由入口，根据 market 参数装配预测市场撕裂带。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { EventBattlePage } from './components/EventBattlePage';\nimport {\n  normalizePredictionCardItem,\n  resolveDrawText,\n  resolveDrawVoteCount,\n  resolvePredictionCardImageFields,\n  type PredictionCardItem,\n} from '@/pages/home/components/predictionCards';\n\ntype EventBattleLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n  returnTo?: string;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return normalizePredictionCardItem({\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n      C: resolveDrawVoteCount(topic.context),\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    optionDraw: resolveDrawText(topic.context),\n    oddsA: 1.8,\n    oddsB: 1.8,\n    oddsDraw: 1.8,\n    supportsDrawBet: false,\n    status: 'open',\n  });\n}\n\nexport default function EventBattleRoutePage() {\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const routeState = location.state as EventBattleLocationState | null;\n  const sidebarTopic = routeState?.sidebarTopic;\n  const routeStateBattleNews = routeState?.openBattleNews ?? null;\n  const returnTo = routeState?.returnTo;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const selectedPrediction = useMemo(() => {\n    if (routeStateBattleNews) return routeStateBattleNews;\n    if (!selectedMarket || selectedMarketId === null) return null;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allFallbackItems,\n    routeStateBattleNews,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  useEffect(() => {\n    const raw = location.state as EventBattleLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: {\n        ...(raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {}),\n        ...(raw.returnTo ? { returnTo: raw.returnTo } : {}),\n      },\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  useEffect(() => {\n    if (!selectedPrediction) return;\n    setSelectedBattleNews(selectedPrediction);\n  }, [selectedPrediction]);\n\n  const handleBack = useCallback(() => {\n    if (returnTo) {\n      navigate(returnTo);\n      return;\n    }\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    const nextUrl = nextSearch.toString() ? `/?${nextSearch.toString()}` : '/';\n    navigate(nextUrl);\n  }, [navigate, returnTo, selectedTag]);\n\n  return (\n    <EventBattlePage\n      battleNews={selectedPrediction ?? selectedBattleNews}\n      userSide={null}\n      isLoading={false}\n      onBack={handleBack}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：暗盘撕裂带页面路由入口，根据 market 参数装配预测市场撕裂带。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useLocation, useNavigate } from '@umijs/renderer-react';\nimport type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { EventBattlePage } from './components/EventBattlePage';\nimport {\n  mapMarketToPredictionCard,\n  normalizePredictionCardItem,\n  resolveDrawText,\n  resolveDrawVoteCount,\n  resolvePredictionCardImageFields,\n  type PredictionCardItem,\n} from '@/pages/home/components/predictionCards';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\n\ntype EventBattleLocationState = {\n  sidebarTopic?: SidebarHotTopic;\n  openBattleNews?: PredictionCardItem;\n  returnTo?: string;\n};\n\nfunction mapSidebarTopicToPredictionCard(topic?: SidebarHotTopic): PredictionCardItem | null {\n  if (!topic?.context?.marketId) return null;\n\n  return normalizePredictionCardItem({\n    id: `market-${topic.context.marketId}`,\n    marketId: topic.context.marketId,\n    title: topic.context.eventName || topic.title,\n    summary: topic.context.detail || '查看当前热点争议与讨论风向。',\n    ...resolvePredictionCardImageFields(topic.context),\n    votes: {\n      A: topic.context.proVoteCount ?? 0,\n      B: topic.context.conVoteCount ?? 0,\n      C: resolveDrawVoteCount(topic.context),\n    },\n    optionA: topic.context.proText || '支持',\n    optionB: topic.context.conText || '反对',\n    optionDraw: resolveDrawText(topic.context),\n    oddsA: 1.8,\n    oddsB: 1.8,\n    oddsDraw: 1.8,\n    supportsDrawBet: false,\n    status: 'open',\n  });\n}\n\nexport default function EventBattleRoutePage() {\n  const [selectedBattleNews, setSelectedBattleNews] = useState<PredictionCardItem | null>(null);\n  const location = useLocation();\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const searchParams = new URLSearchParams(location.search);\n  const selectedTag = searchParams.get('tag');\n  const selectedMarket = searchParams.get('market');\n  const routeState = location.state as EventBattleLocationState | null;\n  const sidebarTopic = routeState?.sidebarTopic;\n  const routeStateBattleNews = routeState?.openBattleNews ?? null;\n  const returnTo = routeState?.returnTo;\n  const sidebarTopicItem = mapSidebarTopicToPredictionCard(sidebarTopic);\n\n  const allFallbackItems: PredictionCardItem[] = [];\n  const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;\n\n  const marketsQuery = useRequestFootballMarkets({ page: 1, limit: 100 });\n  const marketCardFromApi = useMemo(() => {\n    if (selectedMarketId === null) return null;\n    const aggregate = (marketsQuery.data?.list ?? []).find((item) => item.market.id === selectedMarketId);\n    return aggregate ? mapMarketToPredictionCard(aggregate) : null;\n  }, [marketsQuery.data?.list, selectedMarketId]);\n\n  const selectedPrediction = useMemo(() => {\n    if (selectedMarketId !== null && marketCardFromApi) {\n      return marketCardFromApi;\n    }\n    if (routeStateBattleNews) return routeStateBattleNews;\n    if (!selectedMarket || selectedMarketId === null) return null;\n    return (\n      allFallbackItems.find(\n        (item) =>\n          item.marketId === selectedMarketId ||\n          item.id === selectedMarket ||\n          item.id === `market-${selectedMarket}`,\n      ) ?? (sidebarTopicItem?.marketId === selectedMarketId ? sidebarTopicItem : null)\n    );\n  }, [\n    allFallbackItems,\n    marketCardFromApi,\n    routeStateBattleNews,\n    selectedMarket,\n    selectedMarketId,\n    sidebarTopicItem,\n  ]);\n\n  useEffect(() => {\n    const raw = location.state as EventBattleLocationState | null;\n    if (!raw?.openBattleNews) return;\n    setSelectedBattleNews(raw.openBattleNews);\n    navigate(`${location.pathname}${location.search || ''}`, {\n      replace: true,\n      state: {\n        ...(raw.sidebarTopic ? { sidebarTopic: raw.sidebarTopic } : {}),\n        ...(raw.returnTo ? { returnTo: raw.returnTo } : {}),\n      },\n    });\n  }, [location.state, location.pathname, location.search, navigate]);\n\n  useEffect(() => {\n    if (!selectedPrediction) return;\n    setSelectedBattleNews(selectedPrediction);\n  }, [selectedPrediction]);\n\n  const handleBack = useCallback(() => {\n    if (returnTo) {\n      navigate(returnTo);\n      return;\n    }\n    const nextSearch = new URLSearchParams();\n    if (selectedTag) nextSearch.set('tag', selectedTag);\n    const nextUrl = nextSearch.toString() ? `/?${nextSearch.toString()}` : '/';\n    navigate(nextUrl);\n  }, [navigate, returnTo, selectedTag]);\n\n  return (\n    <EventBattlePage\n      battleNews={selectedPrediction ?? selectedBattleNews}\n      userSide={null}\n      isLoading={marketsQuery.isLoading && !selectedPrediction}\n      onBack={handleBack}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/event-battle/index.tsx"
     },
@@ -2477,7 +2477,7 @@
       "id": "predictionApi",
       "file": "predictionApi.ts",
       "absPath": "/predictionApi",
-      "__content": "/**\n * 文件说明：prediction Api 接口地址常量，供请求 Hook 统一引用。\n */\n\n/// MARK: 预测事件系统\n/// 基础路径: /api/football\n//查询预测市场（聚合 market + context）\nexport const API_Football_Markets = \"/api/football/markets\";\n//修改/创建 PredictContext\nexport const API_Football_Predict_Context_Update = \"/api/football/predict_context/update\";\n//热度榜\nexport const API_Football_Predict_Context_Hot = \"/api/football/predict_context/hot\";\n//热门标签 TOP10（按热度累计）\nexport const API_Football_Predict_Tags_Hot = \"/api/football/predict_tags/hot\";\n//按标签查询预测市场列表（聚合返回 market + context）\nexport const API_Football_Markets_By_Tag = \"/api/football/markets/by_tag\";\n// 查询用户在某个市场的下注结算结果（betSettleResult）\nexport const API_Football_Bet_Settle_Result = \"/api/football/bet_settle_result\";"
+      "__content": "/**\n * 文件说明：prediction Api 接口地址常量，供请求 Hook 统一引用。\n */\nexport {\n  API_Predict_Markets as API_Football_Markets,\n  API_Predict_Markets_By_Name as API_Football_Markets_By_Name,\n  API_Predict_Markets_By_Tag as API_Football_Markets_By_Tag,\n  API_Predict_Bet_Settle_Result as API_Football_Bet_Settle_Result,\n  API_Predict_Context_Update as API_Football_Predict_Context_Update,\n  API_Predict_Context_Hot as API_Football_Predict_Context_Hot,\n  API_Predict_Tags_Hot as API_Football_Predict_Tags_Hot,\n} from '@/api/predictApi';\n"
     },
     "commentApi": {
       "path": "commentApi",
@@ -2499,6 +2499,13 @@
       "file": "httpClient.ts",
       "absPath": "/httpClient",
       "__content": "/**\n * 文件说明：HTTP 客户端封装，统一拼接服务地址、透传参数并归一化响应。\n */\nimport { SERVER_API } from \"@/config\";\nimport axios from \"axios\";\nimport { handleUnauthorizedSession } from \"@/utils/authStorage\";\n\nexport function axiosCustom({\n  cmd = \"\",\n  headers = {},\n  params = {},\n  method = \"get\",\n  data = {},\n  successCode = 0,\n}): Promise<any> {\n  return new Promise(async (resolve) => {\n    try {\n      const res = await axios({\n        url: SERVER_API + cmd,\n        method: method,\n        headers,\n        params,\n        data,\n        withCredentials: true,\n      });\n      const resData = res.data;\n      const responseCode = resData.errorCode ?? resData.code;\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: resData,\n      });\n\n      resolve({\n        code: responseCode,\n        cmd: cmd,\n        method: method,\n        msg: resData.message,\n        data: resData?.data ?? {},\n        success: resData?.success ?? responseCode === successCode,\n      });\n    } catch (e: any) {\n      const status = e.response?.status;\n      const responseMessage = e.response?.data?.message ?? e.response?.data?.msg;\n\n      console.log(status, \"eeeee\");\n      //twitter user me 如果用户账号异常 也会返回403 但不能重新授权\n      if (\n        (status === 403 && successCode !== 312454645) ||\n        status === 411\n      ) {\n        localStorage.setItem(\"url_token\", \"{}\");\n      }\n\n      if (status === 401) {\n        handleUnauthorizedSession();\n      }\n\n      console.log({\n        cmd: cmd,\n        method: method,\n        data: e,\n      });\n      resolve({\n        cmd: cmd,\n        method: method,\n        code: status ?? 0,\n        msg: responseMessage ?? e.message ?? \"Request failed\",\n        success: false,\n      });\n    }\n  });\n}\n"
+    },
+    "predictApi": {
+      "path": "predictApi",
+      "id": "predictApi",
+      "file": "predictApi.ts",
+      "absPath": "/predictApi",
+      "__content": "/**\n * 文件说明：预测事件系统 /api/predict 接口地址常量。\n */\n\n/// MARK: 市场查询\nexport const API_Predict_Markets = '/api/predict/markets';\nexport const API_Predict_Markets_By_Name = '/api/predict/markets/by-name';\nexport const API_Predict_Markets_By_Tag = '/api/predict/markets/by-tag';\nexport const API_Predict_Bet_Settle_Result = '/api/predict/bet-settle-result';\n\n/// MARK: 上下文与标签\nexport const API_Predict_Context_Update = '/api/predict/context/update';\nexport const API_Predict_Context_Hot = '/api/predict/context/hot';\nexport const API_Predict_Tags_Hot = '/api/predict/tags/hot';\n\n/// MARK: 下注与结算\nexport const API_Predict_Coin_Bet = '/api/predict/coin/bet';\nexport const API_Predict_Coin_Settle = '/api/predict/coin/settle';\n\n/// MARK: 热度、评论、赔率与撕裂带结算\nexport const API_Predict_Heat = '/api/predict/heat';\nexport const API_Predict_Tear_Settle = '/api/predict/tear/settle';\nexport const API_Predict_Comments = '/api/predict/comments';\nexport const API_Predict_Comment_Replies = '/api/predict/comment/replies';\nexport const API_Predict_Heat_Rank = '/api/predict/heat/rank';\nexport const API_Predict_Heat_Me = '/api/predict/heat/me';\nexport const API_Predict_Odds_Current = '/api/predict/odds/current';\n\n/// MARK: 评论、回复与点赞\nexport const API_Predict_Comment_Create = '/api/predict/comment/create';\nexport const API_Predict_Comment_Reply = '/api/predict/comment/reply';\nexport const API_Predict_Like = '/api/predict/like';\nexport const API_Predict_Unlike = '/api/predict/unlike';\n"
     },
     "battleApi": {
       "path": "battleApi",
@@ -2526,7 +2533,7 @@
       "id": "coinApi",
       "file": "coinApi.ts",
       "absPath": "/coinApi",
-      "__content": "/**\n * 文件说明：coin Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 金币 / 预测下注\n/// 基础路径: /api/coin\n//\nexport const API_Coin_Settle = \"/api/coin/settle\";\n//我的金币账户\nexport const API_Coin_Me = \"/api/coin/me\";\n//预测下注\nexport const API_Coin_Bet = \"/api/coin/bet\";\n//账户余额排行榜\nexport const API_Coin_Leaderboard = \"/api/coin/leaderboard\";"
+      "__content": "/**\n * 文件说明：coin Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 金币 / 预测下注\n/// 基础路径: /api/coin\n//\nimport { API_Predict_Coin_Bet, API_Predict_Coin_Settle } from '@/api/predictApi';\n\nexport const API_Coin_Settle = API_Predict_Coin_Settle;\n//我的金币账户\nexport const API_Coin_Me = \"/api/coin/me\";\n//预测下注\nexport const API_Coin_Bet = API_Predict_Coin_Bet;\n//账户余额排行榜\nexport const API_Coin_Leaderboard = \"/api/coin/leaderboard\";"
     },
     "newsApi": {
       "path": "newsApi",

@@ -202,6 +202,10 @@ export function useRequestCoinBet() {
         queryClient.invalidateQueries(["requestFootballMarkets"]),
         queryClient.invalidateQueries(["requestFootballMarketsByTag"]),
         queryClient.invalidateQueries(["requestFootballPredictContextHot"]),
+        queryClient.invalidateQueries(["requestPredictHeat"]),
+        queryClient.invalidateQueries(["requestPredictHeatMe"]),
+        queryClient.invalidateQueries(["requestPredictHeatRank"]),
+        queryClient.invalidateQueries(["requestPredictOddsCurrent"]),
       ]);
     },
   });
@@ -237,6 +241,8 @@ export function useRequestCoinSettle() {
         queryClient.invalidateQueries(["requestFootballMarkets"]),
         queryClient.invalidateQueries(["requestFootballMarketsByTag"]),
         queryClient.invalidateQueries(["requestFootballPredictContextHot"]),
+        queryClient.invalidateQueries(["requestPredictHeat"]),
+        queryClient.invalidateQueries(["requestPredictOddsCurrent"]),
       ]);
     },
   });

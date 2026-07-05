@@ -124,6 +124,9 @@ export type FootballMarketAggregate = {
   context: Partial<PredictContext>;
   hasBet?: boolean;
   betSettleResult?: "WIN" | "LOSE" | string;
+  tearSettlement?: PredictTearSettlement;
+  schedule?: PredictMarketSchedule;
+  matchPhase?: string;
 };
 
 //
@@ -158,10 +161,131 @@ export type FootballBetSettleResultResponse = {
   userId: number;
   marketId: number;
   betSettleResult: string;
+  tearSettlement?: PredictTearSettlement;
 };
 
+export type PredictTearSettlementStatus =
+  | 'NONE'
+  | 'PENDING'
+  | 'PROCESSING'
+  | 'PAID'
+  | 'EXPIRED'
+  | 'FAILED'
+  | string;
 
-//
+export type PredictTearSettlement = {
+  canSettle?: boolean;
+  status?: PredictTearSettlementStatus;
+  reason?: string;
+  settledAt?: number;
+  deadlineAt?: number;
+  remainSeconds?: number;
+  rewardLogId?: number;
+  winnerOption?: string;
+};
+
+export type PredictCommentRewardLog = {
+  id?: number;
+  marketId?: number;
+  winnerOption?: string;
+  marketBetTotal?: number;
+  rewardPool?: number;
+  winnerTotalCommentHeat?: number;
+  winnerCommentUserCount?: number;
+  perUserReward?: number;
+  remainder?: number;
+  status?: string;
+  reason?: string;
+  settledAt?: number;
+  deadlineAt?: number;
+  paidAt?: number;
+};
+
+export type PredictTearSettleResponse = {
+  marketId: number;
+  rewardLog?: PredictCommentRewardLog;
+  tearSettlement?: PredictTearSettlement;
+};
+
+export type PredictHeatOption = {
+  option?: string;
+  hLike?: number;
+  hComment?: number;
+  hCoin?: number;
+  hTotal?: number;
+  snapshotType?: string;
+  snapshotTime?: number;
+};
+
+export type PredictHeatResponse = {
+  marketId?: number;
+  marketType?: string;
+  status?: string;
+  options?: PredictHeatOption[];
+  snapshotTime?: number;
+  snapshotType?: string;
+  leaderOption?: string;
+  totalHeatValue?: number;
+};
+
+export type PredictHeatRankItem = {
+  rank?: number;
+  userId?: number;
+  nickname?: string;
+  avatar?: string;
+  option?: string;
+  totalHeat?: number;
+  commentHeat?: number;
+  likeHeat?: number;
+  coinHeat?: number;
+};
+
+export type PredictHeatRankResponse = {
+  marketId?: number;
+  scope?: string;
+  myOption?: string;
+  list?: PredictHeatRankItem[];
+  count?: number;
+  page?: number;
+  pageSize?: number;
+};
+
+export type PredictHeatMeResponse = {
+  marketId?: number;
+  userId?: number;
+  myOption?: string;
+  myHeat?: number;
+  myRank?: number;
+  commentHeat?: number;
+  likeHeat?: number;
+  coinHeat?: number;
+  myActionCount?: number;
+  myCommentCount?: number;
+  receivedLikeCount?: number;
+  myBetAmount?: number;
+};
+
+export type PredictOddsResponse = {
+  marketId?: number;
+  marketType?: string;
+  status?: string;
+  oddsA?: number;
+  oddsB?: number;
+  oddsDraw?: number;
+  effA?: number;
+  effB?: number;
+  effDraw?: number;
+  totalEffPool?: number;
+};
+
+export type PredictCommentOption = 'A' | 'B' | 'DRAW';
+
+export type PredictMarketSchedule = {
+  id?: number;
+  matchPhase?: string;
+  status?: string;
+};
+
 export type PredictContextUpsertPayload = {
   marketId: number;
   eventName: string;

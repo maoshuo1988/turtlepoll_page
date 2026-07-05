@@ -43,9 +43,14 @@ export const SettlementHost: React.FC<SettlementHostProps> = ({
 
   const handleSettle = useCallback(
     (item: SettlementRecordItem) => {
+      if (item.id.startsWith('tear-') && item.marketId) {
+        onOpenChange(false);
+        navigate(`/event-battle?market=${item.marketId}`);
+        return;
+      }
       goToDetail(item, 'settle');
     },
-    [goToDetail],
+    [goToDetail, navigate, onOpenChange],
   );
 
   const handleView = useCallback(

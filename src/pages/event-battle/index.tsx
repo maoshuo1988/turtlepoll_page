@@ -7,12 +7,14 @@ import type { SidebarHotTopic } from '@/components/common/layout/sidebarHotTopic
 import { useHomeLayoutContext } from '@/layouts/context';
 import { EventBattlePage } from './components/EventBattlePage';
 import {
+  mapMarketToPredictionCard,
   normalizePredictionCardItem,
   resolveDrawText,
   resolveDrawVoteCount,
   resolvePredictionCardImageFields,
   type PredictionCardItem,
 } from '@/pages/home/components/predictionCards';
+import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
 
 type EventBattleLocationState = {
   sidebarTopic?: SidebarHotTopic;
@@ -62,7 +64,17 @@ export default function EventBattleRoutePage() {
   const allFallbackItems: PredictionCardItem[] = [];
   const selectedMarketId = selectedMarket && Number.isFinite(Number(selectedMarket)) ? Number(selectedMarket) : null;
 
+  const marketsQuery = useRequestFootballMarkets({ page: 1, limit: 100 });
+  const marketCardFromApi = useMemo(() => {
+    if (selectedMarketId === null) return null;
+    const aggregate = (marketsQuery.data?.list ?? []).find((item) => item.market.id === selectedMarketId);
+    return aggregate ? mapMarketToPredictionCard(aggregate) : null;
+  }, [marketsQuery.data?.list, selectedMarketId]);
+
   const selectedPrediction = useMemo(() => {
+    if (selectedMarketId !== null && marketCardFromApi) {
+      return marketCardFromApi;
+    }
     if (routeStateBattleNews) return routeStateBattleNews;
     if (!selectedMarket || selectedMarketId === null) return null;
     return (
@@ -75,6 +87,7 @@ export default function EventBattleRoutePage() {
     );
   }, [
     allFallbackItems,
+    marketCardFromApi,
     routeStateBattleNews,
     selectedMarket,
     selectedMarketId,
@@ -114,7 +127,7 @@ export default function EventBattleRoutePage() {
     <EventBattlePage
       battleNews={selectedPrediction ?? selectedBattleNews}
       userSide={null}
-      isLoading={false}
+      isLoading={marketsQuery.isLoading && !selectedPrediction}
       onBack={handleBack}
       onRequireAuth={onOpenAuth}
     />

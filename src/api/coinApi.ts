@@ -4,10 +4,12 @@
 /// MARK: 金币 / 预测下注
 /// 基础路径: /api/coin
 //
-export const API_Coin_Settle = "/api/coin/settle";
+import { API_Predict_Coin_Bet, API_Predict_Coin_Settle } from '@/api/predictApi';
+
+export const API_Coin_Settle = API_Predict_Coin_Settle;
 //我的金币账户
 export const API_Coin_Me = "/api/coin/me";
 //预测下注
-export const API_Coin_Bet = "/api/coin/bet";
+export const API_Coin_Bet = API_Predict_Coin_Bet;
 //账户余额排行榜
 export const API_Coin_Leaderboard = "/api/coin/leaderboard";

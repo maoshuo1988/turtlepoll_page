@@ -1259,6 +1259,31 @@
   min-height: 0;
 }
 
+.eb-tear-settle-btn {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 12px;
+  min-height: 40px;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.22), rgba(180, 83, 9, 0.18));
+  color: #fcd34d;
+  font-size: 13px;
+  font-weight: 700;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.eb-tear-settle-btn:hover:not(:disabled) {
+  border-color: rgba(251, 191, 36, 0.55);
+}
+
+.eb-tear-settle-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .eb-bet-dialog-mask {
   position: absolute;
   inset: 0;
@@ -1364,6 +1389,17 @@
   font-size: 13px;
   font-weight: 1000;
   white-space: nowrap;
+}
+
+.eb-bet-dialog-error {
+  margin: 0 18px 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 142, 151, 0.22);
+  background: rgba(255, 142, 151, 0.1);
+  color: #ff9ca4;
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .eb-bet-dialog-actions {

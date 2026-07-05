@@ -57,6 +57,25 @@ function mapCoinRecord(
   };
 }
 
+function mapTearRecord(item: FootballMarketAggregate): SettlementRecordItem | null {
+  const tear = item.tearSettlement;
+  if (!tear?.canSettle || !item.market?.id) return null;
+  if (String(item.market.status ?? '').toUpperCase() !== 'SETTLED') return null;
+
+  const marketId = item.market.id;
+  const title = item.context?.eventName || item.market.title || `预测市场 #${marketId}`;
+
+  return {
+    id: `tear-${marketId}`,
+    status: 'pending',
+    sourceTab: 'dark',
+    title,
+    subtitle: '撕裂带奖励可领取',
+    campSide: resolveMarketBetSide(item),
+    marketId,
+  };
+}
+
 function mapBattleRecord(
   battleId: number,
   title: string,
@@ -151,7 +170,11 @@ export function useSettlementRecords() {
       .map(mapPkRecord)
       .filter((item): item is SettlementRecordItem => Boolean(item));
 
-    return [...coinItems, ...battleItems, ...pkItems];
+    const tearItems = marketList
+      .map(mapTearRecord)
+      .filter((item): item is SettlementRecordItem => Boolean(item));
+
+    return [...coinItems, ...battleItems, ...pkItems, ...tearItems];
   }, [battleDetailQueries, marketList, pkTopicsQuery.data?.list]);
 
   const settledItems = useMemo(() => {

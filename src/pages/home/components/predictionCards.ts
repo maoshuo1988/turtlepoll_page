@@ -2,7 +2,7 @@
  * 文件说明：prediction Cards，预测市场和撕裂带页面组件。
  */
 import { useMemo } from 'react';
-import type { FootballMarketAggregate, PredictContext } from '@/hooks/predictionTypes';
+import type { FootballMarketAggregate, PredictContext, PredictTearSettlement } from '@/hooks/predictionTypes';
 import {
   marketSupportsDrawBet,
   resolveMarketDrawBase,
@@ -37,6 +37,7 @@ export type PredictionCardItem = {
   status: 'open' | 'closed' | 'settled';
   hasBet?: boolean;
   betSettleResult?: 'WIN' | 'LOSE' | string;
+  tearSettlement?: PredictTearSettlement;
   closeTime?: number;
 };
 
@@ -180,6 +181,7 @@ export function mapMarketToPredictionCard(item: FootballMarketAggregate): Predic
           : 'closed',
     hasBet: item.hasBet ?? false,
     betSettleResult: item.betSettleResult,
+    tearSettlement: item.tearSettlement,
     closeTime: item.market.closeTime,
   });
 }

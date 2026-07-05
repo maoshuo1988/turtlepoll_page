@@ -2,33 +2,41 @@
  * 文件说明：暗盘撕裂带直播页核心实现（仅接预测市场 / 龟币下注）。
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from 'react-query';
 import {
   ChevronDown,
   ChevronLeft,
   ChevronUp,
   Crosshair,
-  Flame,
   MessageCircleReply,
   Radio,
   Send,
   Shield,
   Swords,
   ThumbsUp,
-  Trophy,
-  Zap,
 } from 'lucide-react';
 import { useRequestUserCurrent } from '@/hooks/useAuthRequests';
 import { useRequestCoinMe, useRequestCoinBet } from '@/hooks/useCoinRequests';
+import type { CommentResponse } from '@/hooks/useCommentRequests';
 import {
-  type CommentResponse,
-  useRequestCommentComments,
-  useRequestCommentReplies,
-  useRequestCreateComment,
-} from '@/hooks/useCommentRequests';
-import { useRequestLikeEntity, useRequestUnlikeEntity } from '@/hooks/useTopicRequests';
+  resolveMarketBetSide,
+  toPredictCommentOption,
+  useRequestPredictComments,
+  useRequestPredictCommentReplies,
+  useRequestPredictCreateComment,
+  useRequestPredictHeat,
+  useRequestPredictHeatMe,
+  useRequestPredictHeatRank,
+  useRequestPredictLike,
+  useRequestPredictOddsCurrent,
+  useRequestPredictReplyComment,
+  useRequestPredictTearSettle,
+  useRequestPredictUnlike,
+} from '@/hooks/usePredictRequests';
 import type { PetSkin } from '@/components/common/pet/petTypes';
 import { normalizePredictionCardItem, type PredictionBetOption, type PredictionCardItem } from '@/pages/home/components/predictionCards';
 import { EventBattleEnergyBar, buildEventBattleEnergyBarBubbles } from './EventBattleEnergyBar/index';
+import { EventBattleRightRail } from './EventBattleRightRail';
 import { resolveEventBattleTheme } from './eventBattleThemes';
 import './EventBattleLiveRoom.css';
 
@@ -101,8 +109,7 @@ type LatestReplyEvent = {
   side: CommentSide;
 };
 
-const ENTITY_PREDICT_A = 'predictA';
-const ENTITY_PREDICT_B = 'predictB';
+const ENTITY_PREDICT_COMMENT = 'comment';
 const FALLBACK_AVATAR = `data:image/svg+xml,${encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
   <defs>
@@ -118,10 +125,6 @@ const FALLBACK_AVATAR = `data:image/svg+xml,${encodeURIComponent(`
 `)}`;
 const DEFAULT_BATTLE_IMAGE = 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200&q=80';
 
-function hasValue(value: unknown) {
-  return value !== undefined && value !== null && value !== '';
-}
-
 function formatVotes(value: number) {
   return Math.max(0, Math.round(value)).toLocaleString('zh-CN');
 }
@@ -133,6 +136,34 @@ function formatWan(value: number) {
 
 function clampPct(value: number) {
   return Math.max(8, Math.min(92, value));
+}
+
+function readStoredMarketBetSide(marketId: number | null): CommentSide | undefined {
+  if (!marketId) return undefined;
+  try {
+    return resolveMarketBetSide(sessionStorage.getItem(`eb-market-bet-side-${marketId}`));
+  } catch {
+    return undefined;
+  }
+}
+
+function writeStoredMarketBetSide(marketId: number | null, side: CommentSide) {
+  if (!marketId) return;
+  try {
+    sessionStorage.setItem(`eb-market-bet-side-${marketId}`, side);
+  } catch {
+    // ignore quota / privacy errors
+  }
+}
+
+function resolveBattleMarketId(news: Pick<PredictionCardItem, 'id' | 'marketId'>): number | null {
+  if (typeof news.marketId === 'number' && Number.isFinite(news.marketId) && news.marketId > 0) {
+    return news.marketId;
+  }
+  const matched = String(news.id ?? '').match(/(\d+)/);
+  if (!matched) return null;
+  const parsed = Number(matched[1]);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 }
 
 function getCountdownSeconds(closeTime?: number) {
@@ -213,7 +244,7 @@ function mapCommentToBattleComment(comment: CommentResponse): BattleComment {
     text: getCommentText(comment) || '这条评论暂时没有正文。',
     likes: base?.likeCount ?? comment.likeCount ?? base?.likes ?? comment.likes ?? 0,
     liked: Boolean(base?.liked ?? comment.liked),
-    replyCount: base?.replyCount ?? comment.replyCount ?? base?.replies ?? comment.replies ?? 0,
+    replyCount: base?.commentCount ?? base?.replyCount ?? comment.replyCount ?? base?.replies ?? comment.replies ?? 0,
     ipLocation: base?.ipLocation ?? comment.ipLocation,
   };
 }
@@ -297,6 +328,10 @@ function AvatarStack({ supporter }: { supporter: Supporter }) {
 interface BattleCommentCardProps {
   comment: BattleComment;
   side: CommentSide;
+  sideLabel: string;
+  sideAccent: string;
+  useNeutralStyle: boolean;
+  canReply: boolean;
   onToggleLike: (comment: BattleComment, side: CommentSide) => void;
   onOpenReply: (comment: BattleComment, side: CommentSide) => void;
   isReplying: boolean;
@@ -312,6 +347,10 @@ interface BattleCommentCardProps {
 const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
   comment,
   side,
+  sideLabel,
+  sideAccent,
+  useNeutralStyle,
+  canReply,
   onToggleLike,
   onOpenReply,
   isReplying,
@@ -326,7 +365,7 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
   const [showReplies, setShowReplies] = useState(false);
   const [replyCursor, setReplyCursor] = useState<number | string>(0);
   const [repliesState, setRepliesState] = useState<BattleReply[]>([]);
-  const repliesQuery = useRequestCommentReplies({
+  const repliesQuery = useRequestPredictCommentReplies({
     commentId: comment.id,
     cursor: replyCursor,
     enabled: showReplies || isReplying || latestReplyEvent?.commentId === comment.id,
@@ -354,7 +393,10 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
   const totalReplies = Math.max(comment.replyCount, repliesState.length);
 
   return (
-    <div className={`comment-item ${side === 'A' ? 'comment-blue' : 'comment-red'} ${likePending ? 'comment-busy' : ''}`}>
+    <div
+      className={`comment-item ${useNeutralStyle ? 'comment-neutral' : 'comment-themed'} ${likePending ? 'comment-busy' : ''}`}
+      style={useNeutralStyle ? undefined : { ['--comment-side-accent' as string]: sideAccent }}
+    >
       <div className="c-left">
         <img className="c-avatar" src={comment.avatar || FALLBACK_AVATAR} alt={comment.author} />
       </div>
@@ -364,7 +406,7 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
           <span className="c-time">{comment.time}</span>
         </div>
         <div className="c-meta-line">
-          <span className={`c-side-tag ${side === 'A' ? 'tag-blue' : 'tag-red'}`}>{side === 'A' ? '蓝方' : '红方'}</span>
+          <span className="c-side-tag">{sideLabel}</span>
           {comment.ipLocation ? <span className="c-location">{comment.ipLocation}</span> : null}
         </div>
         <p className="c-text">{comment.text}</p>
@@ -379,7 +421,7 @@ const BattleCommentCard: React.FC<BattleCommentCardProps> = ({
             <ThumbsUp size={12} />
             {formatVotes(comment.likes)}
           </button>
-          <button type="button" className="action-btn" onClick={() => onOpenReply(comment, side)}>
+          <button type="button" className="action-btn" onClick={() => onOpenReply(comment, side)} disabled={!canReply}>
             <MessageCircleReply size={12} />
             回复
           </button>
@@ -480,13 +522,28 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   onRequireAuth,
 }) => {
   const news = useMemo(() => normalizePredictionCardItem(rawNews), [rawNews]);
-  const battleEntityId = useMemo(() => news.marketId ?? news.id, [news.id, news.marketId]);
+  const battleMarketId = useMemo(() => resolveBattleMarketId(news), [news]);
+  const queryClient = useQueryClient();
   const currentUserQuery = useRequestUserCurrent();
   const coinMeQuery = useRequestCoinMe();
   const coinBetMutation = useRequestCoinBet();
-  const createCommentMutation = useRequestCreateComment();
-  const likeMutation = useRequestLikeEntity();
-  const unlikeMutation = useRequestUnlikeEntity();
+  const createCommentMutation = useRequestPredictCreateComment();
+  const replyCommentMutation = useRequestPredictReplyComment();
+  const likeMutation = useRequestPredictLike();
+  const unlikeMutation = useRequestPredictUnlike();
+  const tearSettleMutation = useRequestPredictTearSettle();
+  const predictHeatQuery = useRequestPredictHeat({
+    marketId: battleMarketId ?? undefined,
+    enabled: Boolean(battleMarketId),
+  });
+  const predictHeatMeQuery = useRequestPredictHeatMe({
+    marketId: battleMarketId ?? undefined,
+    enabled: Boolean(battleMarketId),
+  });
+  const predictOddsQuery = useRequestPredictOddsCurrent({
+    marketId: battleMarketId ?? undefined,
+    enabled: Boolean(battleMarketId),
+  });
   const [cursorA, setCursorA] = useState<number | string>(0);
   const [cursorB, setCursorB] = useState<number | string>(0);
   const [commentsAState, setCommentsAState] = useState<BattleComment[]>([]);
@@ -504,9 +561,19 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const activeTab: string = '全部';
   const [mobileActiveSide, setMobileActiveSide] = useState<CommentSide>(userSide ?? 'A');
   const [mobileRankMode, setMobileRankMode] = useState<'all' | 'side'>('all');
+  const rankMode = mobileRankMode;
+  const setRankMode = setMobileRankMode;
+  const predictHeatRankQuery = useRequestPredictHeatRank({
+    marketId: battleMarketId ?? undefined,
+    scope: mobileRankMode === 'side' ? 'MY_SIDE' : 'ALL',
+    enabled: Boolean(battleMarketId),
+  });
   const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
   const [betBurst, setBetBurst] = useState<{ side: BetOption; token: number } | null>(null);
   const [betDialogSide, setBetDialogSide] = useState<BetOption | null>(null);
+  const [betDialogError, setBetDialogError] = useState('');
+  const [optimisticMarketBet, setOptimisticMarketBet] = useState<{ side: CommentSide; amount: number } | null>(null);
+  const [confirmedBetSide, setConfirmedBetSide] = useState<CommentSide | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
   const currentUserName = currentUserQuery.data?.nickname || currentUserQuery.data?.username || '你';
   const optionA = news.optionA;
@@ -517,19 +584,48 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const oddsB = news.oddsB;
   const oddsDraw = news.oddsDraw ?? Number(((Number(oddsA) + Number(oddsB)) / 2).toFixed(1));
 
-  const commentsAQuery = useRequestCommentComments({
-    entityType: ENTITY_PREDICT_A,
-    entityId: battleEntityId,
+  const commentsAQuery = useRequestPredictComments({
+    marketId: battleMarketId ?? 0,
+    option: 'A',
     cursor: cursorA,
-    enabled: hasValue(battleEntityId),
+    enabled: Boolean(battleMarketId),
   });
-  const commentsBQuery = useRequestCommentComments({
-    entityType: ENTITY_PREDICT_B,
-    entityId: battleEntityId,
+  const commentsBQuery = useRequestPredictComments({
+    marketId: battleMarketId ?? 0,
+    option: 'B',
     cursor: cursorB,
-    enabled: hasValue(battleEntityId),
+    enabled: Boolean(battleMarketId),
   });
 
+  const heatMe = predictHeatMeQuery.data;
+  const hasMarketBet = Boolean(
+    news.hasBet ||
+    optimisticMarketBet ||
+    (heatMe?.myBetAmount ?? 0) > 0 ||
+    heatMe?.myOption === 'A' ||
+    heatMe?.myOption === 'B' ||
+    heatMe?.myOption === 'DRAW',
+  );
+  const myBetSide = useMemo((): CommentSide | undefined => {
+    const candidates: Array<CommentSide | null | undefined> = [
+      optimisticMarketBet?.side,
+      confirmedBetSide,
+      resolveMarketBetSide(heatMe?.myOption),
+      readStoredMarketBetSide(battleMarketId),
+      userSide,
+    ];
+    for (const side of candidates) {
+      if (side === 'A' || side === 'B') return side;
+    }
+    return undefined;
+  }, [battleMarketId, confirmedBetSide, heatMe?.myOption, optimisticMarketBet?.side, userSide]);
+  const useNeutralCommentStyle = !hasMarketBet;
+  const canCommentOnSide = useCallback((side: CommentSide) => {
+    if (!hasMarketBet) return true;
+    return myBetSide === side;
+  }, [hasMarketBet, myBetSide]);
+  const marketBetAmount = heatMe?.myBetAmount ?? optimisticMarketBet?.amount ?? 0;
+  const isBettingOpen = news.status === 'open';
   const canComment = Boolean(currentUserQuery.data?.id);
   const balance = coinMeQuery.data?.balance ?? 0;
   const numericBetAmount = Number(betAmount);
@@ -550,18 +646,29 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   );
   const effectiveBetAmount = Number.isFinite(numericBetAmount) && numericBetAmount > 0 ? numericBetAmount : 0;
   const isBetting = (typeof news.marketId === 'number' && bettingMarketId === news.marketId) || coinBetMutation.isLoading;
-  const canPlaceCoinBet = news.status === 'open' && !news.hasBet;
+  const canPlaceCoinBet = news.status === 'open' && !hasMarketBet;
   const canPlaceBet = canPlaceCoinBet || (typeof onBet === 'function' && news.status === 'open');
+  const canOpenBetSide = useCallback((side: BetOption) => {
+    if (hasMarketBet || news.status !== 'open' || !canPlaceCoinBet) return false;
+    return side === 'A' || side === 'B';
+  }, [canPlaceCoinBet, hasMarketBet, news.status]);
   const showDrawBet = news.supportsDrawBet !== false;
+  const oddsFromApi = predictOddsQuery.data;
+  const liveOddsA = oddsFromApi?.oddsA ?? oddsA;
+  const liveOddsB = oddsFromApi?.oddsB ?? oddsB;
+  const liveOddsDraw = oddsFromApi?.oddsDraw ?? oddsDraw;
+  const canTearSettle = Boolean(news.tearSettlement?.canSettle) && news.status === 'settled';
   const resolveBetOdds = useCallback((side: BetOption) => {
-    if (side === 'A') return oddsA;
-    if (side === 'B') return oddsB;
-    return oddsDraw;
-  }, [oddsA, oddsB, oddsDraw]);
+    if (side === 'A') return liveOddsA;
+    if (side === 'B') return liveOddsB;
+    return liveOddsDraw;
+  }, [liveOddsA, liveOddsB, liveOddsDraw]);
   const activeBetOdds = resolveBetOdds(betIntent);
-  const estimatedPayout = Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
-    ? Math.floor(effectiveBetAmount * activeBetOdds)
-    : 0;
+  const estimatedPayout = hasMarketBet && myBetSide
+    ? Math.floor(marketBetAmount * resolveBetOdds(myBetSide))
+    : Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
+      ? Math.floor(effectiveBetAmount * activeBetOdds)
+      : 0;
   const dialogBetOdds = betDialogSide ? resolveBetOdds(betDialogSide) : 0;
   const dialogBetName = betDialogSide
     ? betDialogSide === 'A'
@@ -573,18 +680,20 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const dialogEstimatedPayout = Number.isFinite(effectiveBetAmount) && effectiveBetAmount > 0
     ? Math.floor(effectiveBetAmount * dialogBetOdds)
     : 0;
-  const betStatusText = canPlaceBet ? '进行中' : '已暂停';
+  const betStatusText = hasMarketBet
+    ? `已下注 ${formatVotes(marketBetAmount)}`
+    : canPlaceBet ? '进行中' : canTearSettle ? '可领撕裂带奖励' : '已暂停';
   const displayNews = useMemo<PredictionCardItem>(() => ({
     ...news,
     title: battleTitle,
     optionA,
     optionB,
     optionDraw,
-    oddsA,
-    oddsB,
-    oddsDraw,
+    oddsA: liveOddsA,
+    oddsB: liveOddsB,
+    oddsDraw: liveOddsDraw,
     votes: { A: leftVotes, B: rightVotes, C: news.votes?.C ?? 0 },
-  }), [battleTitle, leftVotes, news, oddsA, oddsB, oddsDraw, optionA, optionB, optionDraw, rightVotes]);
+  }), [battleTitle, leftVotes, liveOddsA, liveOddsB, liveOddsDraw, news, oddsA, oddsB, oddsDraw, optionA, optionB, optionDraw, rightVotes]);
   const liveTopicEyebrow = useMemo(() => {
     const t = battleTitle.trim();
     if (!t) return '正在直播';
@@ -644,24 +753,28 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   }, [onRequireAuth]);
 
   useEffect(() => {
-    const source = commentsAQuery.data?.results ?? [];
-    const mapped = source.map(mapCommentToBattleComment);
-    if (mapped.length === 0) {
-      if (cursorA === 0) setCommentsAState([]);
-      return;
+    if (!commentsAQuery.isLoading || commentsAQuery.data) {
+      const source = commentsAQuery.data?.results ?? [];
+      const mapped = source.map(mapCommentToBattleComment);
+      if (mapped.length === 0) {
+        if (cursorA === 0 && !commentsAQuery.isLoading) setCommentsAState([]);
+        return;
+      }
+      setCommentsAState((prev) => (cursorA === 0 ? mapped : mergeById(prev, mapped)));
     }
-    setCommentsAState((prev) => (cursorA === 0 ? mapped : mergeById(prev, mapped)));
-  }, [commentsAQuery.data, cursorA]);
+  }, [commentsAQuery.data, commentsAQuery.isLoading, cursorA]);
 
   useEffect(() => {
-    const source = commentsBQuery.data?.results ?? [];
-    const mapped = source.map(mapCommentToBattleComment);
-    if (mapped.length === 0) {
-      if (cursorB === 0) setCommentsBState([]);
-      return;
+    if (!commentsBQuery.isLoading || commentsBQuery.data) {
+      const source = commentsBQuery.data?.results ?? [];
+      const mapped = source.map(mapCommentToBattleComment);
+      if (mapped.length === 0) {
+        if (cursorB === 0 && !commentsBQuery.isLoading) setCommentsBState([]);
+        return;
+      }
+      setCommentsBState((prev) => (cursorB === 0 ? mapped : mergeById(prev, mapped)));
     }
-    setCommentsBState((prev) => (cursorB === 0 ? mapped : mergeById(prev, mapped)));
-  }, [commentsBQuery.data, cursorB]);
+  }, [commentsBQuery.data, commentsBQuery.isLoading, cursorB]);
 
   useEffect(() => {
     setCursorA(0);
@@ -678,7 +791,21 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     setFeedItems([]);
     setLatestReplyEvent(null);
     setMobilePanelOpen(false);
-  }, [battleEntityId, news.id, userSide]);
+    setBetDialogSide(null);
+    setBetDialogError('');
+    setOptimisticMarketBet(null);
+    setConfirmedBetSide(null);
+  }, [battleMarketId, news.id, userSide]);
+
+  useEffect(() => {
+    const sideFromHeat = resolveMarketBetSide(heatMe?.myOption);
+    if (!sideFromHeat) return;
+    if ((heatMe?.myBetAmount ?? 0) > 0 || news.hasBet) {
+      setConfirmedBetSide(sideFromHeat);
+      writeStoredMarketBetSide(battleMarketId, sideFromHeat);
+      setOptimisticMarketBet(null);
+    }
+  }, [battleMarketId, heatMe?.myBetAmount, heatMe?.myOption, news.hasBet]);
 
   useEffect(() => {
     if (feedItems.length > 0) return;
@@ -702,7 +829,20 @@ export const EventBattle: React.FC<EventBattleProps> = ({
 
   useEffect(() => {
     setCountdownLeft(getCountdownSeconds(news.closeTime));
-  }, [battleEntityId, news.closeTime]);
+  }, [battleMarketId, news.closeTime]);
+
+  useEffect(() => {
+    if (!hasMarketBet && rankMode === 'side') {
+      setRankMode('all');
+    }
+  }, [hasMarketBet, rankMode]);
+
+  useEffect(() => {
+    if (!hasMarketBet || !myBetSide) return;
+    setSelectedSide(myBetSide);
+    setMobileActiveSide(myBetSide);
+    setBetIntent(myBetSide);
+  }, [hasMarketBet, myBetSide]);
 
   const leftComments = commentsAState;
   const rightComments = commentsBState;
@@ -714,16 +854,29 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const rightSupporters = useMemo(() => buildSupporters(rightComments, 'right'), [rightComments]);
   const commentLeftHeat = useMemo(() => calcSideHeat(leftComments), [leftComments]);
   const commentRightHeat = useMemo(() => calcSideHeat(rightComments), [rightComments]);
-  const leftHeat = commentLeftHeat;
-  const rightHeat = commentRightHeat;
+  const apiHeatByOption = useMemo(() => {
+    const options = predictHeatQuery.data?.options ?? [];
+    const findHeat = (option: string) =>
+      options.find((item) => String(item.option ?? '').toUpperCase() === option)?.hTotal ?? 0;
+    return {
+      A: findHeat('A'),
+      B: findHeat('B'),
+    };
+  }, [predictHeatQuery.data?.options]);
+  const leftHeat = predictHeatQuery.data
+    ? Math.round(apiHeatByOption.A)
+    : commentLeftHeat;
+  const rightHeat = predictHeatQuery.data
+    ? Math.round(apiHeatByOption.B)
+    : commentRightHeat;
   const totalHeat = Math.max(1, leftHeat + rightHeat);
   const leftHeatPct = clampPct(Math.round((leftHeat / totalHeat) * 100));
   const rightHeatPct = 100 - leftHeatPct;
   const leaderSide: CommentSide = leftHeat >= rightHeat ? 'A' : 'B';
   const leaderName = leaderSide === 'A' ? optionA : optionB;
   const combatDiff = Math.abs(leftHeat - rightHeat);
-  const leftRole = userSide === 'A' ? '你当前在蓝方阵营' : '意见领袖';
-  const rightRole = userSide === 'B' ? '你当前在红方阵营' : '破光杀手';
+  const leftRole = hasMarketBet && myBetSide === 'A' ? '你当前在蓝方阵营' : userSide === 'A' ? '你当前在蓝方阵营' : '意见领袖';
+  const rightRole = hasMarketBet && myBetSide === 'B' ? '你当前在红方阵营' : userSide === 'B' ? '你当前在红方阵营' : '破光杀手';
 
   const handleOpenReply = useCallback((comment: BattleComment, side: CommentSide) => {
     if (!canComment) {
@@ -757,10 +910,10 @@ export const EventBattle: React.FC<EventBattleProps> = ({
 
     try {
       if (nextLiked) {
-        await likeMutation.mutateAsync({ entityType: 'comment', entityId: comment.id });
+        await likeMutation.mutateAsync({ entityType: ENTITY_PREDICT_COMMENT, entityId: comment.id });
         appendFeed(side, `${comment.author} 获得了一次热度加持`);
       } else {
-        await unlikeMutation.mutateAsync({ entityType: 'comment', entityId: comment.id });
+        await unlikeMutation.mutateAsync({ entityType: ENTITY_PREDICT_COMMENT, entityId: comment.id });
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : '';
@@ -779,17 +932,21 @@ export const EventBattle: React.FC<EventBattleProps> = ({
 
   const handleSubmitReply = useCallback(async () => {
     const text = replyDraft.trim();
-    if (!replyingTo || !text) return;
+    if (!replyingTo || !text || !battleMarketId) return;
     if (!canComment) {
       ensureAuth();
       return;
     }
 
     try {
-      const createdReply = await createCommentMutation.mutateAsync({
-        entityType: 'comment',
-        entityId: replyingTo.commentId,
+      const replyOption = hasMarketBet && myBetSide
+        ? toPredictCommentOption(myBetSide)
+        : toPredictCommentOption(replyingTo.side);
+      const createdReply = await replyCommentMutation.mutateAsync({
+        commentId: replyingTo.commentId,
+        marketId: battleMarketId,
         content: text,
+        option: replyOption,
       });
 
       setLatestReplyEvent({
@@ -816,16 +973,33 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     }
   }, [
     appendFeed,
+    battleMarketId,
     canComment,
     commentsAQuery,
     commentsBQuery,
-    createCommentMutation,
     currentUserName,
     ensureAuth,
+    hasMarketBet,
+    myBetSide,
+    replyCommentMutation,
     replyDraft,
     replyingTo,
     updateCommentList,
   ]);
+
+  const handleTearSettle = useCallback(async () => {
+    if (!battleMarketId) return;
+    if (!canComment) {
+      ensureAuth();
+      return;
+    }
+    try {
+      await tearSettleMutation.mutateAsync({ marketId: battleMarketId });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      if (message.includes('NotLogin')) ensureAuth();
+    }
+  }, [battleMarketId, canComment, ensureAuth, tearSettleMutation]);
 
   const handleSubmitComment = useCallback(async () => {
     const text = draft.trim();
@@ -834,12 +1008,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       ensureAuth();
       return;
     }
+    if (!canCommentOnSide(selectedSide)) return;
+    if (!battleMarketId) return;
 
     try {
       const createdComment = await createCommentMutation.mutateAsync({
-        entityType: selectedSide === 'A' ? ENTITY_PREDICT_A : ENTITY_PREDICT_B,
-        entityId: battleEntityId,
+        marketId: battleMarketId,
         content: text,
+        option: toPredictCommentOption(selectedSide),
       });
 
       const mapped = mapCommentToBattleComment(createdComment);
@@ -854,8 +1030,9 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     }
   }, [
     appendFeed,
-    battleEntityId,
+    battleMarketId,
     canComment,
+    canCommentOnSide,
     commentsAQuery,
     commentsBQuery,
     createCommentMutation,
@@ -869,35 +1046,67 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   ]);
 
   const handleBet = useCallback(async (sideOverride?: BetOption) => {
-    if (!onBet && !canPlaceCoinBet) return;
+    if (hasMarketBet) return;
     if (!canComment) {
       ensureAuth();
       return;
     }
+    if (!effectiveBetAmount || effectiveBetAmount <= 0) {
+      setBetDialogError('请输入有效的下注金额');
+      return;
+    }
+
     const targetSide = sideOverride ?? betIntent;
     const targetOdds = resolveBetOdds(targetSide);
-    if (canPlaceCoinBet && news.marketId) {
+    const marketId = battleMarketId ?? news.marketId;
+    if (!marketId) {
+      setBetDialogError('当前场次缺少 marketId，无法下注');
+      return;
+    }
+
+    if (canPlaceCoinBet) {
       try {
-        await coinBetMutation.mutateAsync({
-          marketId: news.marketId,
+        setBetDialogError('');
+        const betResult = await coinBetMutation.mutateAsync({
+          marketId,
           option: targetSide,
           amount: effectiveBetAmount,
         });
+        const sideFromResult = resolveMarketBetSide(betResult.bet?.option)
+          ?? (targetSide === 'A' || targetSide === 'B' ? targetSide : undefined);
+        if (sideFromResult) {
+          setConfirmedBetSide(sideFromResult);
+          writeStoredMarketBetSide(marketId, sideFromResult);
+          setOptimisticMarketBet({ side: sideFromResult, amount: effectiveBetAmount });
+        }
+        await Promise.all([
+          queryClient.invalidateQueries(['requestPredictHeatMe']),
+          queryClient.invalidateQueries(['requestPredictHeat']),
+          queryClient.invalidateQueries(['requestFootballMarkets']),
+        ]);
+        void predictHeatMeQuery.refetch();
       } catch (error) {
-        const message = error instanceof Error ? error.message : '';
+        const message = error instanceof Error ? error.message : '下注失败，请稍后再试';
         if (message.includes('NotLogin')) ensureAuth();
+        setBetDialogError(message);
         return;
       }
+    } else if (onBet) {
+      onBet(news.id, targetSide, targetOdds, effectiveBetAmount);
     } else {
-      onBet?.(news.id, targetSide, targetOdds, effectiveBetAmount);
+      setBetDialogError('当前场次不可下注');
+      return;
     }
+
     setBetBurst({ side: targetSide, token: Date.now() });
     setBetDialogSide(null);
+    setBetDialogError('');
     setMobilePanelOpen(false);
     const targetLabel = targetSide === 'A' ? optionA : targetSide === 'B' ? optionB : optionDraw;
     appendFeed(targetSide === 'C' ? 'A' : targetSide, `${currentUserName} 为${targetLabel}追加了 ${formatVotes(effectiveBetAmount)} 龟币`);
   }, [
     appendFeed,
+    battleMarketId,
     betIntent,
     canComment,
     canPlaceCoinBet,
@@ -905,23 +1114,29 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     currentUserName,
     effectiveBetAmount,
     ensureAuth,
+    hasMarketBet,
     news.id,
     news.marketId,
     onBet,
     optionA,
     optionB,
     optionDraw,
+    predictHeatMeQuery,
+    queryClient,
     resolveBetOdds,
   ]);
 
   const openBetDialog = useCallback((side: BetOption) => {
+    if (hasMarketBet) return;
     if (!canComment) {
       ensureAuth();
       return;
     }
+    if ((side === 'A' || side === 'B') && !canOpenBetSide(side)) return;
     setBetIntent(side);
+    setBetDialogError('');
     setBetDialogSide(side);
-  }, [canComment, ensureAuth]);
+  }, [canComment, canOpenBetSide, ensureAuth, hasMarketBet]);
 
   const confirmBetDialog = useCallback(async () => {
     if (!betDialogSide) return;
@@ -1035,14 +1250,22 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     }
     return next;
   }, [activeTab, userSide]);
-  const leaderBoard = [...leftSupporters, ...rightSupporters]
-    .slice(0, 8)
-    .map((supporter, index) => ({
-      ...supporter,
-      score: [56232, 45678, 28901, 23456, 18765, 15432, 12345, 11234][index] ?? Math.max(8000, leftHeat + rightHeat - index * 800),
-      side: index % 2 === 0 ? 'A' : 'B',
-    }));
   const personalContribution = useMemo(() => {
+    const heatMe = predictHeatMeQuery.data;
+    if (heatMe) {
+      const sideFromApi = resolveMarketBetSide(heatMe.myOption);
+      const side: CommentSide =
+        sideFromApi ?? myBetSide ?? userSide ?? 'A';
+      return {
+        side,
+        commentCount: heatMe.myCommentCount ?? 0,
+        likeCount: heatMe.receivedLikeCount ?? 0,
+        replyCount: 0,
+        score: Math.round(heatMe.myHeat ?? 0),
+        betAmount: heatMe.myBetAmount ?? marketBetAmount,
+      };
+    }
+
     const myName = currentUserName.trim();
     const mine = [
       ...leftComments.map((comment) => ({ ...comment, side: 'A' as const })),
@@ -1053,7 +1276,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     const replyCount = mine.reduce((sum, comment) => sum + comment.replyCount, 0);
     const blueCount = mine.filter((comment) => comment.side === 'A').length;
     const redCount = commentCount - blueCount;
-    const side = commentCount === 0 ? userSide : blueCount >= redCount ? 'A' : 'B';
+    const side = commentCount === 0 ? (myBetSide ?? userSide) : blueCount >= redCount ? 'A' : 'B';
 
     return {
       side,
@@ -1061,23 +1284,63 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       likeCount,
       replyCount,
       score: commentCount * 8 + likeCount + replyCount * 2,
+      betAmount: hasMarketBet ? marketBetAmount : 0,
     };
-  }, [currentUserName, leftComments, rightComments, userSide]);
-  const fallbackLeaders = ['MessiKing', '罗总裁', 'CR7_GOAT', '巴萨信仰', '曼联传奇', '球王梅西10', '蓝白永不倒', '绝代双骄CR7'];
-  const displayLeaderBoard = leaderBoard.length
-    ? leaderBoard
-    : fallbackLeaders.map((name, index) => ({
-      id: name,
-      name,
-      avatar: FALLBACK_AVATAR,
-      rank: index + 1,
-      score: [56232, 45678, 28901, 23456, 18765, 15432, 12345, 11234][index],
-      side: (index % 2 === 0 ? 'A' : 'B') as CommentSide,
-    }));
-  const mobileLeaderBoard = mobileRankMode === 'side'
-    ? displayLeaderBoard.filter((item) => item.side === mobileActiveSide)
-    : displayLeaderBoard;
+  }, [currentUserName, hasMarketBet, leftComments, marketBetAmount, myBetSide, predictHeatMeQuery.data, rightComments, userSide]);
+  const leaderBoard = useMemo(() => {
+    const list = predictHeatRankQuery.data?.list ?? [];
+    if (!list.length) return [];
+    return list.slice(0, 8).map((item, index) => {
+      const option = String(item.option ?? '').toUpperCase();
+      return {
+        id: String(item.userId ?? item.rank ?? index),
+        name: item.nickname || `用户${item.userId ?? ''}`,
+        avatar: item.avatar || FALLBACK_AVATAR,
+        rank: item.rank ?? index + 1,
+        score: Math.round(item.totalHeat ?? 0),
+        side: (option === 'B' ? 'B' : 'A') as CommentSide,
+      };
+    });
+  }, [predictHeatRankQuery.data?.list]);
   const quickAmounts = [100, 520, 1000, 5000];
+
+  const rightRail = (
+    <EventBattleRightRail
+      optionA={displayNews.optionA}
+      optionB={displayNews.optionB}
+      oddsA={displayNews.oddsA}
+      oddsB={displayNews.oddsB}
+      balance={balance}
+      betAmount={betAmount}
+      quickAmounts={quickAmounts}
+      hasMarketBet={hasMarketBet}
+      myBetSide={myBetSide}
+      marketBetAmount={marketBetAmount}
+      isBettingOpen={isBettingOpen}
+      canPlaceBet={canPlaceBet}
+      isBetting={isBetting}
+      estimatedPayout={estimatedPayout}
+      rankMode={rankMode}
+      onRankModeChange={setRankMode}
+      rankRows={leaderBoard}
+      rankLoading={predictHeatRankQuery.isLoading}
+      personalStats={{
+        likeCount: personalContribution.likeCount,
+        commentCount: personalContribution.commentCount,
+        betAmount: personalContribution.betAmount,
+        heatScore: personalContribution.score,
+        side: personalContribution.side,
+      }}
+      visualTheme={visualTheme}
+      onBetAmountChange={setBetAmount}
+      onQuickAmount={(amount) => setBetAmount(String(amount))}
+      onOpenBet={(side) => openBetDialog(side)}
+      onConfirmBet={() => openBetDialog(betIntent)}
+      canTearSettle={canTearSettle}
+      isTearSettling={tearSettleMutation.isLoading}
+      onTearSettle={() => void handleTearSettle()}
+    />
+  );
 
   return (
     <div className="eb-live-page" style={themeStyle}>
@@ -1189,19 +1452,19 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             </div>
           </div>
 
-          <div className={`eb-bet-row ${showDrawBet ? 'eb-bet-row-three' : ''}`}>
+          <div className={`eb-bet-row ${showDrawBet && !hasMarketBet ? 'eb-bet-row-three' : ''}`}>
             <button
               type="button"
-              className="eb-support eb-support-blue"
+              className={`eb-support eb-support-blue ${hasMarketBet && myBetSide !== 'A' ? 'is-hidden-slot' : ''} ${hasMarketBet && myBetSide === 'A' ? 'is-readonly' : ''}`}
               onClick={() => {
-                openBetDialog('A');
+                if (!hasMarketBet) openBetDialog('A');
               }}
-              disabled={!canPlaceBet || isBetting}
+              disabled={hasMarketBet || !canOpenBetSide('A') || isBetting}
             >
-              <span>支持{displayNews.optionA}</span>
-              <em>投币助威</em>
+              <span>{hasMarketBet && myBetSide === 'A' ? `已支持${displayNews.optionA}` : `支持${displayNews.optionA}`}</span>
+              <em>{hasMarketBet && myBetSide === 'A' ? `${displayNews.oddsA.toFixed(1)}x` : '投币助威'}</em>
             </button>
-            {showDrawBet ? (
+            {showDrawBet && !hasMarketBet ? (
               <button
                 type="button"
                 className="eb-support eb-support-neutral"
@@ -1222,14 +1485,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             )}
             <button
               type="button"
-              className="eb-support eb-support-red"
+              className={`eb-support eb-support-red ${hasMarketBet && myBetSide !== 'B' ? 'is-hidden-slot' : ''} ${hasMarketBet && myBetSide === 'B' ? 'is-readonly' : ''}`}
               onClick={() => {
-                openBetDialog('B');
+                if (!hasMarketBet) openBetDialog('B');
               }}
-              disabled={!canPlaceBet || isBetting}
+              disabled={hasMarketBet || !canOpenBetSide('B') || isBetting}
             >
-              <span>支持{displayNews.optionB}</span>
-              <em>投币助威</em>
+              <span>{hasMarketBet && myBetSide === 'B' ? `已支持${displayNews.optionB}` : `支持${displayNews.optionB}`}</span>
+              <em>{hasMarketBet && myBetSide === 'B' ? `${displayNews.oddsB.toFixed(1)}x` : '投币助威'}</em>
             </button>
           </div>
         </section>
@@ -1279,6 +1542,9 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           ].map((column) => {
             const displayComments = getDisplayComments(column.side, column.comments);
             const supporters = column.side === 'A' ? leftSupporters : rightSupporters;
+            const sideLabel = column.side === 'A' ? displayNews.optionA : displayNews.optionB;
+            const sideAccent = column.side === 'A' ? visualTheme.sideA.accent : visualTheme.sideB.accent;
+            const columnCanComment = canCommentOnSide(column.side);
 
             return (
             <div key={column.side} className={`eb-comment-column eb-${column.color}-column`}>
@@ -1294,13 +1560,21 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 )}
               </div>
               <div className="eb-comment-list">
-                {displayComments.length === 0 ? (
+                {column.side === 'A' && commentsAQuery.isLoading && displayComments.length === 0 ? (
+                  <div className="eb-empty">评论加载中...</div>
+                ) : column.side === 'B' && commentsBQuery.isLoading && displayComments.length === 0 ? (
+                  <div className="eb-empty">评论加载中...</div>
+                ) : displayComments.length === 0 ? (
                   <div className="eb-empty">该阵营还在集结，抢先发出第一条弹幕。</div>
                 ) : displayComments.slice(0, 8).map((comment, index) => (
                   <div className="eb-comment-card-wrap" key={comment.id} style={{ animationDelay: `${index * 0.05}s` }}>
                     <BattleCommentCard
                       comment={comment}
                       side={column.side}
+                      sideLabel={sideLabel}
+                      sideAccent={sideAccent}
+                      useNeutralStyle={useNeutralCommentStyle}
+                      canReply={canComment}
                       onToggleLike={handleToggleLike}
                       onOpenReply={handleOpenReply}
                       isReplying={replyingTo?.commentId === comment.id}
@@ -1311,7 +1585,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                         setReplyingTo(null);
                         setReplyDraft('');
                       }}
-                      replySubmitting={createCommentMutation.isLoading}
+                      replySubmitting={replyCommentMutation.isLoading}
                       likePending={likePendingIds.has(comment.id)}
                       latestReplyEvent={latestReplyEvent}
                     />
@@ -1324,10 +1598,10 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                   <button type="button" className="eb-load-more" onClick={() => setCursorB(nextCursorB ?? 0)}>加载更多</button>
                 ) : null}
               </div>
-              <div className="eb-input-row">
+              <div className={`eb-input-row ${!columnCanComment ? 'is-locked' : ''}`}>
                 <input
                   value={selectedSide === column.side ? draft : ''}
-                  placeholder={`为${column.title}发声...`}
+                  placeholder={columnCanComment ? `为${column.title}发声...` : hasMarketBet ? '仅可评论你支持的一方' : '为阵营发声...'}
                   onFocus={() => setSelectedSide(column.side)}
                   onChange={(event) => {
                     setSelectedSide(column.side);
@@ -1336,12 +1610,13 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') void handleSubmitComment();
                   }}
+                  disabled={!columnCanComment}
                 />
                 <button
                   type="button"
                   className="send-btn"
                   onClick={() => void handleSubmitComment()}
-                  disabled={selectedSide !== column.side || !draft.trim()}
+                  disabled={!columnCanComment || selectedSide !== column.side || !draft.trim()}
                 >
                   <Send size={15} />
                   发送
@@ -1354,79 +1629,11 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       </div>
 
       <section className="eb-mobile-info-panels" aria-label="场内数据">
-        <section className="eb-mobile-info-card eb-mobile-rank-card">
-          <div className="eb-mobile-info-title">
-            <Trophy size={16} />
-            热度贡献榜
-            <div className="eb-mobile-rank-switch" role="tablist" aria-label="切换热度榜">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={mobileRankMode === 'all'}
-                className={mobileRankMode === 'all' ? 'active' : ''}
-                onClick={() => setMobileRankMode('all')}
-              >
-                总榜
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={mobileRankMode === 'side'}
-                className={mobileRankMode === 'side' ? 'active' : ''}
-                onClick={() => setMobileRankMode('side')}
-              >
-                本方榜
-              </button>
-            </div>
-          </div>
-          <div className="eb-rank-list">
-            {mobileLeaderBoard.map((item, index) => (
-              <div className={`eb-rank-item ${item.side === 'A' ? 'eb-rank-item-side-a' : 'eb-rank-item-side-b'}`} key={item.id}>
-                <i>{index + 1}</i>
-                <img src={item.avatar || FALLBACK_AVATAR} alt={item.name} />
-                <b>{item.name}</b>
-                <strong>{formatVotes(item.score)}</strong>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className={`eb-mobile-info-card eb-mobile-personal-card ${personalContribution.side === 'A' ? 'eb-personal-side-a' : personalContribution.side === 'B' ? 'eb-personal-side-b' : 'eb-personal-side-neutral'}`}>
-          <div className="eb-mobile-info-title">
-            <Shield size={16} />
-            个人贡献
-            <span>{personalContribution.side === 'A' ? '蓝方' : personalContribution.side === 'B' ? '红方' : '未站队'}</span>
-          </div>
-          <div className="eb-personal-profile">
-            <img src={FALLBACK_AVATAR} alt={currentUserName} />
-            <div>
-              <b>{currentUserName}</b>
-              <span>本场互动贡献</span>
-            </div>
-            <strong>{formatVotes(personalContribution.score)}</strong>
-          </div>
-          <div className="eb-personal-stats">
-            <div>
-              <MessageCircleReply size={15} />
-              <span>评论数</span>
-              <strong>{formatVotes(personalContribution.commentCount)}</strong>
-            </div>
-            <div>
-              <ThumbsUp size={15} />
-              <span>获赞数</span>
-              <strong>{formatVotes(personalContribution.likeCount)}</strong>
-            </div>
-            <div>
-              <Flame size={15} />
-              <span>回复互动</span>
-              <strong>{formatVotes(personalContribution.replyCount)}</strong>
-            </div>
-          </div>
-        </section>
+        {rightRail}
       </section>
 
       {betDialogSide ? (
-        <div className="eb-bet-dialog-mask" role="presentation" onMouseDown={() => setBetDialogSide(null)}>
+        <div className="eb-bet-dialog-mask" role="presentation" onMouseDown={() => { setBetDialogSide(null); setBetDialogError(''); }}>
           <div
             className={`eb-bet-dialog ${betDialogSide === 'A' ? 'dialog-blue' : betDialogSide === 'B' ? 'dialog-red' : 'dialog-neutral'}`}
             role="dialog"
@@ -1436,7 +1643,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
           >
             <div className="eb-bet-dialog-head">
               <span>确认投币助威</span>
-              <button type="button" onClick={() => setBetDialogSide(null)}>×</button>
+              <button type="button" onClick={() => { setBetDialogSide(null); setBetDialogError(''); }}>×</button>
             </div>
             <div className="eb-bet-dialog-side">
               <small>支持阵营</small>
@@ -1457,13 +1664,20 @@ export const EventBattle: React.FC<EventBattleProps> = ({
                 <strong>{formatVotes(balance)}</strong>
               </div>
             </div>
+            {betDialogError ? (
+              <p className="eb-bet-dialog-error">{betDialogError}</p>
+            ) : null}
             <div className="eb-bet-dialog-actions">
-              <button type="button" className="cancel" onClick={() => setBetDialogSide(null)}>再想想</button>
+              <button type="button" className="cancel" onClick={() => { setBetDialogSide(null); setBetDialogError(''); }}>再想想</button>
               <button
                 type="button"
                 className="confirm"
                 onClick={() => void confirmBetDialog()}
-                disabled={isBetting || !canPlaceBet}
+                disabled={isBetting || (betDialogSide
+                  ? betDialogSide === 'A' || betDialogSide === 'B'
+                    ? !canOpenBetSide(betDialogSide)
+                    : !canPlaceBet
+                  : true)}
               >
                 {isBetting ? '下注中...' : '确认下注'}
               </button>
@@ -1494,140 +1708,11 @@ export const EventBattle: React.FC<EventBattleProps> = ({
         <div className="eb-mobile-panel-head">
           <div>
             <span>下注助威</span>
-            <strong>选择阵营 · 输入龟币</strong>
+            <strong>{hasMarketBet ? '本场已下注' : '选择阵营 · 输入龟币'}</strong>
           </div>
           <button type="button" onClick={() => setMobilePanelOpen(false)}>×</button>
         </div>
-        <section className="eb-side-card">
-          <div className="eb-side-title"><Trophy size={18} /> 热度贡献榜 <span>总榜</span><span>本方榜</span></div>
-          <div className="eb-rank-list">
-            {displayLeaderBoard.map((item, index) => (
-              <div className={`eb-rank-item ${item.side === 'A' ? 'eb-rank-item-side-a' : 'eb-rank-item-side-b'}`} key={item.id}>
-                <i>{index + 1}</i>
-                <img src={item.avatar || FALLBACK_AVATAR} alt={item.name} />
-                <b>{item.name}</b>
-                <strong>{formatVotes(item.score)}</strong>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="eb-side-card eb-bet-side-card">
-          <div className="eb-side-title"><Zap size={18} /> 下注助威 <span>{betStatusText}</span></div>
-          <div className={`eb-bet-panel ${betIntent === 'A' ? 'bet-blue' : betIntent === 'B' ? 'bet-red' : 'bet-draw'}`}>
-            <div className={`eb-bet-switch ${showDrawBet ? 'eb-bet-switch-three' : ''}`}>
-              <button
-                type="button"
-                className={betIntent === 'A' ? 'active' : ''}
-                onClick={() => setBetIntent('A')}
-              >
-                <span>{displayNews.optionA}</span>
-                <strong>{displayNews.oddsA.toFixed(2)}倍</strong>
-              </button>
-              {showDrawBet ? (
-                <button
-                  type="button"
-                  className={betIntent === 'C' ? 'active' : ''}
-                  onClick={() => setBetIntent('C')}
-                >
-                  <span>{displayNews.optionDraw}</span>
-                  <strong>{displayNews.oddsDraw.toFixed(2)}倍</strong>
-                </button>
-              ) : null}
-              <button
-                type="button"
-                className={betIntent === 'B' ? 'active' : ''}
-                onClick={() => setBetIntent('B')}
-              >
-                <span>{displayNews.optionB}</span>
-                <strong>{displayNews.oddsB.toFixed(2)}倍</strong>
-              </button>
-            </div>
-            <div className="eb-bet-live">
-              <div>
-                <span>当前支持</span>
-                <strong>{betIntent === 'A' ? displayNews.optionA : betIntent === 'B' ? displayNews.optionB : displayNews.optionDraw}</strong>
-              </div>
-              <div>
-                <span>账户余额</span>
-                <strong>{formatVotes(balance)}</strong>
-              </div>
-              <div>
-                <span>预计派奖</span>
-                <strong>{formatVotes(estimatedPayout)}</strong>
-              </div>
-            </div>
-            <div className="eb-quick-amounts">
-              {quickAmounts.map((amount) => (
-                <button
-                  type="button"
-                  key={amount}
-                  className={Number(betAmount) === amount ? 'active' : ''}
-                  onClick={() => setBetAmount(String(amount))}
-                  disabled={Boolean(news.hasBet)}
-                >
-                  {formatVotes(amount)}
-                </button>
-              ))}
-            </div>
-            <label className="eb-bet-input-row">
-              <span>龟币</span>
-              <input
-                value={betAmount}
-                inputMode="numeric"
-                disabled={Boolean(news.hasBet)}
-                onChange={(event) => setBetAmount(event.target.value.replace(/[^\d]/g, ''))}
-                placeholder="输入金额"
-              />
-            </label>
-            <button
-              type="button"
-              className="eb-bet-submit"
-              onClick={() => openBetDialog(betIntent)}
-              disabled={!canPlaceBet || isBetting}
-            >
-              {isBetting ? '下注中...' : `支持${betIntent === 'A' ? displayNews.optionA : betIntent === 'B' ? displayNews.optionB : displayNews.optionDraw}`}
-            </button>
-            {betBurst ? (
-              <div className={`eb-side-coin-burst ${betBurst.side === 'A' ? 'burst-blue' : 'burst-red'}`} key={`side-${betBurst.token}`}>
-                <i>🪙</i><i>🪙</i><i>🪙</i>
-              </div>
-            ) : null}
-          </div>
-        </section>
-
-        <section className={`eb-side-card eb-personal-card ${personalContribution.side === 'A' ? 'eb-personal-side-a' : personalContribution.side === 'B' ? 'eb-personal-side-b' : 'eb-personal-side-neutral'}`}>
-          <div className="eb-side-title">
-            <Shield size={18} /> 个人贡献
-            <span>{personalContribution.side === 'A' ? '蓝方' : personalContribution.side === 'B' ? '红方' : '未站队'}</span>
-          </div>
-          <div className="eb-personal-profile">
-            <img src={FALLBACK_AVATAR} alt={currentUserName} />
-            <div>
-              <b>{currentUserName}</b>
-              <span>本场互动贡献</span>
-            </div>
-            <strong>{formatVotes(personalContribution.score)}</strong>
-          </div>
-          <div className="eb-personal-stats">
-            <div>
-              <MessageCircleReply size={15} />
-              <span>评论数</span>
-              <strong>{formatVotes(personalContribution.commentCount)}</strong>
-            </div>
-            <div>
-              <ThumbsUp size={15} />
-              <span>获赞数</span>
-              <strong>{formatVotes(personalContribution.likeCount)}</strong>
-            </div>
-            <div>
-              <Flame size={15} />
-              <span>回复互动</span>
-              <strong>{formatVotes(personalContribution.replyCount)}</strong>
-            </div>
-          </div>
-        </section>
-
+        {rightRail}
       </aside>
     </div>
   );
