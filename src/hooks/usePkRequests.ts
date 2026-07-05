@@ -23,6 +23,7 @@ import {
   API_PK_Topics,
 } from '@/api/pkApi';
 import { assertSuccess, getAuthorizationHeaders } from '@/utils/requestUtils';
+import { getAuthToken } from '@/utils/authStorage';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { COIN_ME_QUERY_KEY } from './useCoinRequests';
 import type { CursorResult } from './topicTypes';
@@ -37,6 +38,7 @@ import type {
   PKHeatResponse,
   PKHistoryResponse,
   PKMyBetsResponse,
+  PKMyBetStatusFilter,
   PKLikePayload,
   PKLikeResponse,
   PKOddsResponse,
@@ -50,7 +52,7 @@ import type {
   PKTopicDetailResponse,
   PKTopicListResponse,
 } from './pkTypes';
-import { normalizePKCommentItem, unwrapPKCommentPayload, unwrapPKReplyPayload } from './pkNormalize';
+import { normalizePKCommentItem, normalizePKMyBetRecord, unwrapPKCommentPayload, unwrapPKReplyPayload } from './pkNormalize';
 
 const hasValue = (value: unknown) => value !== undefined && value !== null && value !== '';
 
@@ -365,11 +367,17 @@ export function useRequestPKSeasons(params: { topicId?: number | string; page?: 
   });
 }
 
-export function useRequestPKMyBets(params: { page?: number; pageSize?: number; enabled?: boolean } = {}) {
+export function useRequestPKMyBets(params: {
+  page?: number;
+  pageSize?: number;
+  status?: PKMyBetStatusFilter;
+  enabled?: boolean;
+} = {}) {
+  const token = getAuthToken();
   const { enabled = true, ...queryParams } = params;
 
   return useQuery<PKMyBetsResponse>({
-    queryKey: ['requestPKMyBets', queryParams],
+    queryKey: ['requestPKMyBets', queryParams, Boolean(token)],
     queryFn: async () => {
       const res = await axiosCustom({
         method: 'get',
@@ -377,27 +385,31 @@ export function useRequestPKMyBets(params: { page?: number; pageSize?: number; e
         params: {
           page: queryParams.page ?? 1,
           pageSize: queryParams.pageSize ?? 20,
+          ...(queryParams.status ? { status: queryParams.status } : {}),
         },
         headers: getAuthorizationHeaders(),
       });
       const raw = assertSuccess(res) as {
-        list?: PKMyBetsResponse['list'];
-        data?: PKMyBetsResponse['list'];
-        results?: PKMyBetsResponse['list'];
+        list?: unknown[];
+        data?: unknown[];
+        results?: unknown[];
         count?: number;
         total?: number;
         page?: number;
         pageSize?: number;
+        status?: PKMyBetStatusFilter;
       };
-      const list = raw.list ?? raw.data ?? raw.results ?? [];
+      const source = raw.list ?? raw.data ?? raw.results ?? [];
+      const list = source.map((item) => normalizePKMyBetRecord(item));
       return {
         list,
         count: raw.count ?? raw.total ?? list.length,
         page: raw.page ?? queryParams.page ?? 1,
         pageSize: raw.pageSize ?? queryParams.pageSize ?? 20,
+        status: raw.status ?? queryParams.status,
       };
     },
-    enabled,
+    enabled: Boolean(token && enabled),
   });
 }
 

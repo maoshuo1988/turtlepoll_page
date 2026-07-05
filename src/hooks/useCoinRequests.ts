@@ -201,6 +201,7 @@ export function useRequestCoinBet() {
       void Promise.all([
         queryClient.invalidateQueries(["requestFootballMarkets"]),
         queryClient.invalidateQueries(["requestFootballMarketsByTag"]),
+        queryClient.invalidateQueries(["requestPredictMyMarkets"]),
         queryClient.invalidateQueries(["requestFootballPredictContextHot"]),
         queryClient.invalidateQueries(["requestPredictHeat"]),
         queryClient.invalidateQueries(["requestPredictHeatMe"]),
@@ -240,6 +241,7 @@ export function useRequestCoinSettle() {
       void Promise.all([
         queryClient.invalidateQueries(["requestFootballMarkets"]),
         queryClient.invalidateQueries(["requestFootballMarketsByTag"]),
+        queryClient.invalidateQueries(["requestPredictMyMarkets"]),
         queryClient.invalidateQueries(["requestFootballPredictContextHot"]),
         queryClient.invalidateQueries(["requestPredictHeat"]),
         queryClient.invalidateQueries(["requestPredictOddsCurrent"]),

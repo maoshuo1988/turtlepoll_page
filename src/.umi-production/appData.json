@@ -65,7 +65,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 7
       },
       "enableBy": "register"
     },
@@ -95,7 +95,7 @@
             0
           ]
         },
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -129,7 +129,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -142,7 +142,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -156,7 +156,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            14
+            9
           ]
         },
         "register": 11
@@ -172,7 +172,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -206,7 +206,7 @@
       "time": {
         "hooks": {
           "onCheck": [
-            1
+            0
           ]
         },
         "register": 0
@@ -1105,7 +1105,7 @@
       "time": {
         "hooks": {
           "onStart": [
-            0
+            1
           ]
         },
         "register": 1
@@ -1147,7 +1147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 18
+        "register": 16
       },
       "enableBy": "config"
     },
@@ -1190,7 +1190,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1203,7 +1203,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1266,7 +1266,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1283,7 +1283,7 @@
             1
           ]
         },
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/polyfill/publicPathPolyfill": {
@@ -1295,7 +1295,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1308,7 +1308,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1321,7 +1321,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1347,7 +1347,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1360,7 +1360,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1373,7 +1373,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1386,7 +1386,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1437,7 +1437,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -1463,7 +1463,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1475,7 +1475,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 10
       },
       "enableBy": "config"
     },
@@ -1488,7 +1488,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/clickToComponent/clickToComponent": {
@@ -1500,7 +1500,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/legacy/legacy": {
@@ -1604,7 +1604,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 15
+        "register": 14
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1628,7 +1628,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1641,7 +1641,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1667,7 +1667,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 19
+        "register": 18
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 16
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1770,7 +1770,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1796,7 +1796,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1835,7 +1835,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1900,7 +1900,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1913,7 +1913,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1926,7 +1926,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 12
       },
       "enableBy": "register"
     },
@@ -1939,7 +1939,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2451,7 +2451,7 @@
       "parentId": "3",
       "id": "18",
       "absPath": "/settlement/:kind/:id",
-      "__content": "/**\n * 文件说明：结算详情页路由入口，负责领取结算与详情展示。\n */\nimport { useEffect, useMemo, useRef, useState } from 'react';\nimport { useNavigate, useParams, useSearchParams } from '@umijs/renderer-react';\nimport { createBattleRequestId } from '@/hooks/battleTypes';\nimport type { CoinSettleResult } from '@/hooks/coinTypes';\nimport type { PKSettleResponse } from '@/hooks/pkTypes';\nimport type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';\nimport { useRequestCoinSettle } from '@/hooks/useCoinRequests';\nimport { useRequestPKSettle } from '@/hooks/usePkRequests';\nimport { useSettlementDetailBuilder } from '@/hooks/useSettlementDetail';\nimport { useSettlementLayout } from '@/layouts/context/SettlementLayoutContext';\nimport { requireAuthOrOpen } from '@/utils/authStorage';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { SettlementDetailPage } from './components/SettlementDetailPage';\nimport {\n  settlementItemIdFromRoute,\n  type SettlementDetailAction,\n  type SettlementRouteKind,\n} from './settlementNavigation';\n\nfunction resolveCampSideFromMarket(\n  marketList: { market: { id: number } }[],\n  marketId: number,\n): SettlementRecordItem['campSide'] {\n  const item = marketList.find((entry) => entry.market.id === marketId);\n  if (!item) return 'unknown';\n  const raw = item as typeof item & { bet?: { option?: string }; myBet?: { option?: string } };\n  const option = String(raw.bet?.option ?? raw.myBet?.option ?? '').trim().toUpperCase();\n  if (option === 'A') return 'A';\n  if (option === 'B') return 'B';\n  if (option === 'DRAW' || option === 'C') return 'draw';\n  return 'unknown';\n}\n\nexport default function SettlementPage() {\n  const navigate = useNavigate();\n  const params = useParams<{ kind: SettlementRouteKind; id: string }>();\n  const [searchParams] = useSearchParams();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const { openSettlementDrawer, hideSettlementItem } = useSettlementLayout();\n  const kind = params.kind;\n  const marketsQuery = useRequestFootballMarkets({ page: 1, limit: 100 });\n  const marketList = kind === 'coin' ? (marketsQuery.data?.list ?? []) : [];\n  const { buildDetailModel } = useSettlementDetailBuilder(marketList);\n  const buildDetailModelRef = useRef(buildDetailModel);\n  buildDetailModelRef.current = buildDetailModel;\n  const coinSettleMutation = useRequestCoinSettle();\n  const battleWithdrawMutation = useRequestBattleWithdraw();\n  const pkSettleMutation = useRequestPKSettle();\n\n  const rawId = params.id ?? '';\n  const numericId = Number(rawId);\n  const action = (searchParams.get('action') as SettlementDetailAction | null) ?? 'view';\n\n  const coinCampSide = useMemo(\n    () => (kind === 'coin' ? resolveCampSideFromMarket(marketList, numericId) : 'unknown' as const),\n    [kind, marketList, numericId],\n  );\n\n  const record = useMemo<SettlementRecordItem | null>(() => {\n    if (!kind || !Number.isFinite(numericId) || numericId <= 0) return null;\n    const id = settlementItemIdFromRoute(kind, rawId);\n    if (kind === 'coin') {\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'dark',\n        title: '',\n        subtitle: '',\n        campSide: coinCampSide,\n        marketId: numericId,\n      };\n    }\n    if (kind === 'pk') {\n      const campSide: SettlementRecordItem['campSide'] = 'unknown';\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'pk',\n        title: '',\n        subtitle: '',\n        campSide,\n        topicId: numericId,\n      };\n    }\n    return {\n      id,\n      status: action === 'settle' ? 'pending' : 'settled',\n      sourceTab: 'arena',\n      title: '',\n      subtitle: '',\n      campSide: 'unknown',\n      battleId: numericId,\n    };\n  }, [action, coinCampSide, kind, numericId, rawId]);\n\n  const [model, setModel] = useState<SettlementDetailViewModel | null>(null);\n  const [loading, setLoading] = useState(true);\n  const [errorText, setErrorText] = useState<string | undefined>();\n  const [settledItemId, setSettledItemId] = useState<string | null>(null);\n  const settleRequestedRef = useRef<string | null>(null);\n  const inflightRouteKeyRef = useRef<string | null>(null);\n  const onOpenAuthRef = useRef(onOpenAuth);\n  onOpenAuthRef.current = onOpenAuth;\n\n  useEffect(() => {\n    settleRequestedRef.current = null;\n    inflightRouteKeyRef.current = null;\n  }, [action, kind, rawId]);\n\n  useEffect(() => {\n    if (!record) {\n      setLoading(false);\n      setErrorText('无效的结算链接');\n      return;\n    }\n\n    const routeKey = `${kind ?? ''}-${rawId}-${action}`;\n    if (inflightRouteKeyRef.current === routeKey) {\n      return;\n    }\n\n    if (!requireAuthOrOpen(onOpenAuthRef.current)) {\n      setLoading(false);\n      setErrorText('请先登录后查看结算详情');\n      return;\n    }\n\n    inflightRouteKeyRef.current = routeKey;\n    let cancelled = false;\n\n    const run = async () => {\n      setLoading(true);\n      setErrorText(undefined);\n      setModel(null);\n\n      try {\n        let settlePayload: CoinSettleResult | SettlementActionResult | PKSettleResponse | null = null;\n        const shouldSettle = action === 'settle' && record.status === 'pending';\n\n        if (shouldSettle && settleRequestedRef.current !== routeKey) {\n          settleRequestedRef.current = routeKey;\n          if (record.sourceTab === 'dark' && record.marketId) {\n            settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });\n          } else if (record.sourceTab === 'arena' && record.battleId) {\n            const withdrawResult = await battleWithdrawMutation.mutateAsync({\n              battleId: record.battleId,\n              requestId: createBattleRequestId(`battle-withdraw-${record.battleId}`),\n            });\n            const payout = withdrawResult.payoutAmount ?? 0;\n            settlePayload = {\n              payout,\n              outcome: payout > 0 ? 'win' : 'neutral',\n              message: '奖励已提取到你的龟币账户。',\n            };\n          } else if (record.sourceTab === 'pk' && record.topicId) {\n            settlePayload = await pkSettleMutation.mutateAsync({\n              topicId: record.topicId,\n              requestId: `pk-settle-${record.topicId}-${Date.now()}`,\n              snapshotType: 'SETTLE',\n              freezeSource: 'ON_DEMAND',\n            });\n          }\n          if (!cancelled) {\n            setSettledItemId(record.id);\n          }\n        }\n\n        const nextModel = await buildDetailModelRef.current(\n          { ...record, status: 'settled' },\n          settlePayload,\n        );\n        if (!cancelled) {\n          setModel(nextModel);\n        }\n      } catch (error) {\n        if (!cancelled) {\n          const message = error instanceof Error ? error.message : '加载结算详情失败';\n          setErrorText(message);\n          setModel(null);\n        }\n      } finally {\n        if (!cancelled) {\n          setLoading(false);\n        }\n        if (inflightRouteKeyRef.current === routeKey) {\n          inflightRouteKeyRef.current = null;\n        }\n      }\n    };\n\n    void run();\n\n    return () => {\n      cancelled = true;\n      if (inflightRouteKeyRef.current === routeKey) {\n        inflightRouteKeyRef.current = null;\n      }\n    };\n  }, [\n    action,\n    kind,\n    rawId,\n    record?.battleId,\n    record?.id,\n    record?.marketId,\n    record?.sourceTab,\n    record?.status,\n    record?.topicId,\n  ]);\n\n  const handleBack = () => {\n    if (settledItemId) {\n      hideSettlementItem(settledItemId);\n    }\n    openSettlementDrawer();\n    if (window.history.length > 1) {\n      navigate(-1);\n      return;\n    }\n    navigate('/');\n  };\n\n  return (\n    <SettlementDetailPage\n      model={model}\n      loading={loading}\n      errorText={errorText}\n      onBack={handleBack}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：结算详情页路由入口，负责领取结算与详情展示。\n */\nimport { useEffect, useMemo, useRef, useState } from 'react';\nimport { useNavigate, useParams, useSearchParams } from '@umijs/renderer-react';\nimport { createBattleRequestId } from '@/hooks/battleTypes';\nimport type { CoinSettleResult } from '@/hooks/coinTypes';\nimport type { PKSettleResponse } from '@/hooks/pkTypes';\nimport type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';\nimport type { FootballMarketAggregate } from '@/hooks/predictionTypes';\nimport { useRequestPredictMyMarkets } from '@/hooks/usePredictionRequests';\nimport { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';\nimport { useRequestCoinSettle } from '@/hooks/useCoinRequests';\nimport { useRequestPKSettle } from '@/hooks/usePkRequests';\nimport { useSettlementDetailBuilder } from '@/hooks/useSettlementDetail';\nimport { useSettlementLayout } from '@/layouts/context/SettlementLayoutContext';\nimport { requireAuthOrOpen } from '@/utils/authStorage';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { SettlementDetailPage } from './components/SettlementDetailPage';\nimport {\n  settlementItemIdFromRoute,\n  type SettlementDetailAction,\n  type SettlementRouteKind,\n} from './settlementNavigation';\n\nfunction resolveCampSideFromMarket(\n  marketList: { market: { id: number } }[],\n  marketId: number,\n): SettlementRecordItem['campSide'] {\n  const item = marketList.find((entry) => entry.market.id === marketId);\n  if (!item) return 'unknown';\n  const raw = item as typeof item & { bet?: { option?: string }; myBet?: { option?: string } };\n  const option = String(raw.bet?.option ?? raw.myBet?.option ?? '').trim().toUpperCase();\n  if (option === 'A') return 'A';\n  if (option === 'B') return 'B';\n  if (option === 'DRAW' || option === 'C') return 'draw';\n  return 'unknown';\n}\n\nexport default function SettlementPage() {\n  const navigate = useNavigate();\n  const params = useParams<{ kind: SettlementRouteKind; id: string }>();\n  const [searchParams] = useSearchParams();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const { openSettlementDrawer, hideSettlementItem } = useSettlementLayout();\n  const kind = params.kind;\n  const myMarketsPendingQuery = useRequestPredictMyMarkets({\n    page: 1,\n    limit: 100,\n    status: 'pending',\n    enabled: kind === 'coin',\n  });\n  const myMarketsSettledQuery = useRequestPredictMyMarkets({\n    page: 1,\n    limit: 100,\n    status: 'settled',\n    enabled: kind === 'coin',\n  });\n  const marketList = useMemo(() => {\n    if (kind !== 'coin') return [];\n    const merged = new Map<number, FootballMarketAggregate>();\n    [...(myMarketsPendingQuery.data?.list ?? []), ...(myMarketsSettledQuery.data?.list ?? [])].forEach(\n      (item) => {\n        if (item.market?.id) merged.set(item.market.id, item);\n      },\n    );\n    return Array.from(merged.values());\n  }, [kind, myMarketsPendingQuery.data?.list, myMarketsSettledQuery.data?.list]);\n  const { buildDetailModel } = useSettlementDetailBuilder(marketList);\n  const buildDetailModelRef = useRef(buildDetailModel);\n  buildDetailModelRef.current = buildDetailModel;\n  const coinSettleMutation = useRequestCoinSettle();\n  const battleWithdrawMutation = useRequestBattleWithdraw();\n  const pkSettleMutation = useRequestPKSettle();\n\n  const rawId = params.id ?? '';\n  const numericId = Number(rawId);\n  const action = (searchParams.get('action') as SettlementDetailAction | null) ?? 'view';\n  const roundIdParam = searchParams.get('roundId') ?? undefined;\n\n  const coinCampSide = useMemo(\n    () => (kind === 'coin' ? resolveCampSideFromMarket(marketList, numericId) : 'unknown' as const),\n    [kind, marketList, numericId],\n  );\n\n  const record = useMemo<SettlementRecordItem | null>(() => {\n    if (!kind || !Number.isFinite(numericId) || numericId <= 0) return null;\n    const id = settlementItemIdFromRoute(kind, rawId);\n    if (kind === 'coin') {\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'dark',\n        title: '',\n        subtitle: '',\n        campSide: coinCampSide,\n        marketId: numericId,\n      };\n    }\n    if (kind === 'pk') {\n      const campSide: SettlementRecordItem['campSide'] = 'unknown';\n      return {\n        id: roundIdParam ? `pk-${numericId}-${roundIdParam}` : settlementItemIdFromRoute(kind, rawId),\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'pk',\n        title: '',\n        subtitle: '',\n        campSide,\n        topicId: numericId,\n        roundId: roundIdParam ?? undefined,\n      };\n    }\n    return {\n      id,\n      status: action === 'settle' ? 'pending' : 'settled',\n      sourceTab: 'arena',\n      title: '',\n      subtitle: '',\n      campSide: 'unknown',\n      battleId: numericId,\n    };\n  }, [action, coinCampSide, kind, numericId, rawId, roundIdParam]);\n\n  const [model, setModel] = useState<SettlementDetailViewModel | null>(null);\n  const [loading, setLoading] = useState(true);\n  const [errorText, setErrorText] = useState<string | undefined>();\n  const [settledItemId, setSettledItemId] = useState<string | null>(null);\n  const settleRequestedRef = useRef<string | null>(null);\n  const inflightRouteKeyRef = useRef<string | null>(null);\n  const onOpenAuthRef = useRef(onOpenAuth);\n  onOpenAuthRef.current = onOpenAuth;\n\n  useEffect(() => {\n    settleRequestedRef.current = null;\n    inflightRouteKeyRef.current = null;\n  }, [action, kind, rawId]);\n\n  useEffect(() => {\n    if (!record) {\n      setLoading(false);\n      setErrorText('无效的结算链接');\n      return;\n    }\n\n    const routeKey = `${kind ?? ''}-${rawId}-${action}`;\n    if (inflightRouteKeyRef.current === routeKey) {\n      return;\n    }\n\n    if (!requireAuthOrOpen(onOpenAuthRef.current)) {\n      setLoading(false);\n      setErrorText('请先登录后查看结算详情');\n      return;\n    }\n\n    inflightRouteKeyRef.current = routeKey;\n    let cancelled = false;\n\n    const run = async () => {\n      setLoading(true);\n      setErrorText(undefined);\n      setModel(null);\n\n      try {\n        let settlePayload: CoinSettleResult | SettlementActionResult | PKSettleResponse | null = null;\n        const shouldSettle = action === 'settle' && record.status === 'pending';\n\n        if (shouldSettle && settleRequestedRef.current !== routeKey) {\n          settleRequestedRef.current = routeKey;\n          if (record.sourceTab === 'dark' && record.marketId) {\n            settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });\n          } else if (record.sourceTab === 'arena' && record.battleId) {\n            const withdrawResult = await battleWithdrawMutation.mutateAsync({\n              battleId: record.battleId,\n              requestId: createBattleRequestId(`battle-withdraw-${record.battleId}`),\n            });\n            const payout = withdrawResult.payoutAmount ?? 0;\n            settlePayload = {\n              payout,\n              outcome: payout > 0 ? 'win' : 'neutral',\n              message: '奖励已提取到你的龟币账户。',\n            };\n          } else if (record.sourceTab === 'pk' && record.topicId) {\n            settlePayload = await pkSettleMutation.mutateAsync({\n              topicId: record.topicId,\n              roundId: record.roundId,\n              requestId: `pk-settle-${record.topicId}-${record.roundId ?? 'latest'}-${Date.now()}`,\n              snapshotType: 'SETTLE',\n              freezeSource: 'ON_DEMAND',\n            });\n          }\n          if (!cancelled) {\n            setSettledItemId(record.id);\n          }\n        }\n\n        const nextModel = await buildDetailModelRef.current(\n          { ...record, status: 'settled' },\n          settlePayload,\n        );\n        if (!cancelled) {\n          setModel(nextModel);\n        }\n      } catch (error) {\n        if (!cancelled) {\n          const message = error instanceof Error ? error.message : '加载结算详情失败';\n          setErrorText(message);\n          setModel(null);\n        }\n      } finally {\n        if (!cancelled) {\n          setLoading(false);\n        }\n        if (inflightRouteKeyRef.current === routeKey) {\n          inflightRouteKeyRef.current = null;\n        }\n      }\n    };\n\n    void run();\n\n    return () => {\n      cancelled = true;\n      if (inflightRouteKeyRef.current === routeKey) {\n        inflightRouteKeyRef.current = null;\n      }\n    };\n  }, [\n    action,\n    kind,\n    rawId,\n    record?.battleId,\n    record?.id,\n    record?.marketId,\n    record?.sourceTab,\n    record?.status,\n    record?.topicId,\n    record?.roundId,\n  ]);\n\n  const handleBack = () => {\n    if (settledItemId) {\n      hideSettlementItem(settledItemId);\n    }\n    openSettlementDrawer();\n    if (window.history.length > 1) {\n      navigate(-1);\n      return;\n    }\n    navigate('/');\n  };\n\n  return (\n    <SettlementDetailPage\n      model={model}\n      loading={loading}\n      errorText={errorText}\n      onBack={handleBack}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/settlement/index.tsx"
     },
@@ -2477,7 +2477,7 @@
       "id": "predictionApi",
       "file": "predictionApi.ts",
       "absPath": "/predictionApi",
-      "__content": "/**\n * 文件说明：prediction Api 接口地址常量，供请求 Hook 统一引用。\n */\nexport {\n  API_Predict_Markets as API_Football_Markets,\n  API_Predict_Markets_By_Name as API_Football_Markets_By_Name,\n  API_Predict_Markets_By_Tag as API_Football_Markets_By_Tag,\n  API_Predict_Bet_Settle_Result as API_Football_Bet_Settle_Result,\n  API_Predict_Context_Update as API_Football_Predict_Context_Update,\n  API_Predict_Context_Hot as API_Football_Predict_Context_Hot,\n  API_Predict_Tags_Hot as API_Football_Predict_Tags_Hot,\n} from '@/api/predictApi';\n"
+      "__content": "/**\n * 文件说明：prediction Api 接口地址常量，供请求 Hook 统一引用。\n */\nexport {\n  API_Predict_Markets as API_Football_Markets,\n  API_Predict_My_Markets as API_Football_My_Markets,\n  API_Predict_Markets_By_Name as API_Football_Markets_By_Name,\n  API_Predict_Markets_By_Tag as API_Football_Markets_By_Tag,\n  API_Predict_Bet_Settle_Result as API_Football_Bet_Settle_Result,\n  API_Predict_Context_Update as API_Football_Predict_Context_Update,\n  API_Predict_Context_Hot as API_Football_Predict_Context_Hot,\n  API_Predict_Tags_Hot as API_Football_Predict_Tags_Hot,\n} from '@/api/predictApi';\n"
     },
     "commentApi": {
       "path": "commentApi",
@@ -2505,7 +2505,7 @@
       "id": "predictApi",
       "file": "predictApi.ts",
       "absPath": "/predictApi",
-      "__content": "/**\n * 文件说明：预测事件系统 /api/predict 接口地址常量。\n */\n\n/// MARK: 市场查询\nexport const API_Predict_Markets = '/api/predict/markets';\nexport const API_Predict_Markets_By_Name = '/api/predict/markets/by-name';\nexport const API_Predict_Markets_By_Tag = '/api/predict/markets/by-tag';\nexport const API_Predict_Bet_Settle_Result = '/api/predict/bet-settle-result';\n\n/// MARK: 上下文与标签\nexport const API_Predict_Context_Update = '/api/predict/context/update';\nexport const API_Predict_Context_Hot = '/api/predict/context/hot';\nexport const API_Predict_Tags_Hot = '/api/predict/tags/hot';\n\n/// MARK: 下注与结算\nexport const API_Predict_Coin_Bet = '/api/predict/coin/bet';\nexport const API_Predict_Coin_Settle = '/api/predict/coin/settle';\n\n/// MARK: 热度、评论、赔率与撕裂带结算\nexport const API_Predict_Heat = '/api/predict/heat';\nexport const API_Predict_Tear_Settle = '/api/predict/tear/settle';\nexport const API_Predict_Comments = '/api/predict/comments';\nexport const API_Predict_Comment_Replies = '/api/predict/comment/replies';\nexport const API_Predict_Heat_Rank = '/api/predict/heat/rank';\nexport const API_Predict_Heat_Me = '/api/predict/heat/me';\nexport const API_Predict_Odds_Current = '/api/predict/odds/current';\n\n/// MARK: 评论、回复与点赞\nexport const API_Predict_Comment_Create = '/api/predict/comment/create';\nexport const API_Predict_Comment_Reply = '/api/predict/comment/reply';\nexport const API_Predict_Like = '/api/predict/like';\nexport const API_Predict_Unlike = '/api/predict/unlike';\n"
+      "__content": "/**\n * 文件说明：预测事件系统 /api/predict 接口地址常量。\n */\n\n/// MARK: 市场查询\nexport const API_Predict_Markets = '/api/predict/markets';\nexport const API_Predict_My_Markets = '/api/predict/my/markets';\nexport const API_Predict_Markets_By_Name = '/api/predict/markets/by-name';\nexport const API_Predict_Markets_By_Tag = '/api/predict/markets/by-tag';\nexport const API_Predict_Bet_Settle_Result = '/api/predict/bet-settle-result';\n\n/// MARK: 上下文与标签\nexport const API_Predict_Context_Update = '/api/predict/context/update';\nexport const API_Predict_Context_Hot = '/api/predict/context/hot';\nexport const API_Predict_Tags_Hot = '/api/predict/tags/hot';\n\n/// MARK: 下注与结算\nexport const API_Predict_Coin_Bet = '/api/predict/coin/bet';\nexport const API_Predict_Coin_Settle = '/api/predict/coin/settle';\n\n/// MARK: 热度、评论、赔率与撕裂带结算\nexport const API_Predict_Heat = '/api/predict/heat';\nexport const API_Predict_Tear_Settle = '/api/predict/tear/settle';\nexport const API_Predict_Comments = '/api/predict/comments';\nexport const API_Predict_Comment_Replies = '/api/predict/comment/replies';\nexport const API_Predict_Heat_Rank = '/api/predict/heat/rank';\nexport const API_Predict_Heat_Me = '/api/predict/heat/me';\nexport const API_Predict_Odds_Current = '/api/predict/odds/current';\n\n/// MARK: 评论、回复与点赞\nexport const API_Predict_Comment_Create = '/api/predict/comment/create';\nexport const API_Predict_Comment_Reply = '/api/predict/comment/reply';\nexport const API_Predict_Like = '/api/predict/like';\nexport const API_Predict_Unlike = '/api/predict/unlike';\n"
     },
     "battleApi": {
       "path": "battleApi",

@@ -4,6 +4,7 @@
 
 /// MARK: 市场查询
 export const API_Predict_Markets = '/api/predict/markets';
+export const API_Predict_My_Markets = '/api/predict/my/markets';
 export const API_Predict_Markets_By_Name = '/api/predict/markets/by-name';
 export const API_Predict_Markets_By_Tag = '/api/predict/markets/by-tag';
 export const API_Predict_Bet_Settle_Result = '/api/predict/bet-settle-result';

@@ -44,7 +44,11 @@ import {
 import type { AiPushMessage } from '@/hooks/aiTypes';
 import { AUTH_REQUIRED_EVENT, clearAuthRequiredFlag, clearInfo, getAuthToken, hasAuthRequiredFlag, requireAuthOrOpen } from '@/utils/authStorage';
 import { scrollAppContentToTop } from '@/utils/scrollAppContent';
-import { SettlementHost, useSettlementEntryState } from '@/components/common/settlement/SettlementHost';
+import {
+  SettlementHost,
+  useSettlementDrawerState,
+} from '@/components/common/settlement/SettlementHost';
+import { useSettlementRecords } from '@/hooks/usePendingSettlements';
 import { SettlementLayoutProvider } from '@/layouts/context/SettlementLayoutContext';
 
 const THEME_KEY = 'theme';
@@ -131,6 +135,7 @@ export function StandalonePageShell({
   const [aiPetDialogue, setAiPetDialogue] = useState<string | null>(null);
   const [aiPushMessages, setAiPushMessages] = useState<AiPushMessage[]>([]);
   const [guideTourOpen, setGuideTourOpen] = useState(false);
+  const settlementRecords = useSettlementRecords();
   const {
     drawerOpen: settlementDrawerOpen,
     setDrawerOpen: setSettlementDrawerOpen,
@@ -138,7 +143,7 @@ export function StandalonePageShell({
     hideItem: hideSettlementItem,
     resetHiddenIds: resetSettlementHiddenIds,
     visibleCount: pendingSettlementCount,
-  } = useSettlementEntryState();
+  } = useSettlementDrawerState(settlementRecords);
   const signOutMutation = useRequestSignout();
   const darkMode = theme === 'dark';
   const { coinMe } = useAppSession();
@@ -387,8 +392,9 @@ export function StandalonePageShell({
 
   const handleOpenSettlements = useCallback(() => {
     if (!requireAuthOrOpen(() => onAuthModalOpenChange(true))) return;
+    void settlementRecords.refetch();
     setSettlementDrawerOpen(true);
-  }, [onAuthModalOpenChange]);
+  }, [onAuthModalOpenChange, settlementRecords]);
 
   const handleRequireAuthNavigation = useCallback((path: string) => {
     if (!requireAuthOrOpen(() => onAuthModalOpenChange(true))) return;
@@ -418,6 +424,8 @@ export function StandalonePageShell({
     queryClient.removeQueries(['requestBadgeBadges']);
     queryClient.removeQueries(['requestUserMsgRecent']);
     queryClient.removeQueries(['requestFootballMarkets']);
+    queryClient.removeQueries(['requestPredictMyMarkets']);
+    queryClient.removeQueries(['requestPKMyBets']);
     queryClient.removeQueries(battleQueryKeys.all);
     queryClient.removeQueries(COIN_ME_QUERY_KEY);
     queryClient.removeQueries(PET_EQUIP_QUERY_KEY);
@@ -525,6 +533,7 @@ export function StandalonePageShell({
           open={settlementDrawerOpen}
           onOpenChange={setSettlementDrawerOpen}
           hiddenIds={settlementHiddenIds}
+          records={settlementRecords}
         />
       ) : null}
     </AppPageLayout>

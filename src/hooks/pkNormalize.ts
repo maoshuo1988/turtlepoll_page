@@ -2,7 +2,7 @@
  * 文件说明：PK 接口响应归一化（评论嵌套、时间戳、回复/点赞回包）。
  */
 import type { CommentResponse } from './useCommentRequests';
-import type { PKCommentResponse, PKSide } from './pkTypes';
+import type { PKCommentResponse, PKMyBetRecord, PKSide } from './pkTypes';
 
 export function toUnixMs(value?: number | null) {
   if (!value) return undefined;
@@ -44,4 +44,17 @@ export function unwrapPKReplyPayload(raw: unknown): PKCommentResponse {
   const data = raw as { comment?: CommentResponse };
   if (data.comment) return normalizePKCommentItem(data.comment);
   return unwrapPKCommentPayload(raw);
+}
+
+/** 归一化 /api/pk/my/bets 列表项，兼容 battle 嵌套与 bet/topic/round 顶层字段。 */
+export function normalizePKMyBetRecord(raw: unknown): PKMyBetRecord {
+  const item = raw as PKMyBetRecord;
+  const battle = item.battle;
+  return {
+    ...item,
+    bet: item.bet ?? battle?.bet,
+    topic: item.topic ?? battle?.topic,
+    round: item.round ?? battle?.round,
+    battle,
+  };
 }

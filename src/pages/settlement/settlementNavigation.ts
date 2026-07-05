@@ -13,7 +13,7 @@ export type SettlementDetailLocationState = {
 };
 
 export function settlementRecordToPath(
-  item: Pick<SettlementRecordItem, 'id' | 'sourceTab' | 'marketId' | 'battleId' | 'topicId' | 'status'>,
+  item: Pick<SettlementRecordItem, 'id' | 'sourceTab' | 'marketId' | 'battleId' | 'topicId' | 'roundId' | 'status'>,
   action: SettlementDetailAction,
 ) {
   const query = new URLSearchParams();
@@ -26,6 +26,9 @@ export function settlementRecordToPath(
     return `/settlement/battle/${item.battleId}?${query.toString()}`;
   }
   if (item.sourceTab === 'pk' && item.topicId) {
+    if (item.roundId) {
+      query.set('roundId', String(item.roundId));
+    }
     return `/settlement/pk/${item.topicId}?${query.toString()}`;
   }
   return '/';

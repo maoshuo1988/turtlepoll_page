@@ -1,19 +1,13 @@
 /**
- * 文件说明：聚合暗盘与开撕台待结算 / 已结算条目。
+ * 文件说明：右上角待结算抽屉数据聚合。
+ * 仅使用 GET /api/predict/my/markets（暗盘）与 GET /api/pk/my/bets（开撕台 PK）。
  */
-import { useMemo } from 'react';
-import { useQueries } from 'react-query';
+import { useCallback, useMemo } from 'react';
 import { getAuthToken } from '@/utils/authStorage';
-import {
-  fetchBattleDetail,
-  battleQueryKeys,
-  useRequestBattleList,
-} from '@/hooks/useBattleRequests';
-import { getBattleActionPermissions } from '@/hooks/battleTypes';
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
-import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
-import { useRequestPKTopics } from '@/hooks/usePkRequests';
-import type { PKTopicSummary } from '@/hooks/pkTypes';
+import { useRequestPredictMyMarkets } from '@/hooks/usePredictionRequests';
+import { useRequestPKMyBets } from '@/hooks/usePkRequests';
+import type { PKMyBetRecord } from '@/hooks/pkTypes';
 import type { SettlementCampSide, SettlementRecordItem } from '@/hooks/settlementTypes';
 
 function resolveMarketBetSide(item: FootballMarketAggregate): SettlementCampSide {
@@ -37,21 +31,29 @@ function mapCoinRecord(
 ): SettlementRecordItem | null {
   const market = item.market;
   if (!item.hasBet) return null;
-  if (String(market.status ?? '').toUpperCase() !== 'SETTLED') return null;
 
+  const marketStatus = String(market.status ?? '').toUpperCase();
   const isPending = !item.betSettleResult;
   if (status === 'pending' && !isPending) return null;
   if (status === 'settled' && isPending) return null;
 
+  if (status === 'pending') {
+    if (!['CLOSED', 'CLOSE', 'SETTLED'].includes(marketStatus)) return null;
+  } else if (marketStatus !== 'SETTLED') {
+    return null;
+  }
+
   const marketId = market.id;
   const title = item.context?.eventName || market.title || `预测市场 #${marketId}`;
+  const pendingSubtitle =
+    marketStatus === 'SETTLED' ? '已结束 · 赛果已出' : '已结束 · 待结算';
 
   return {
     id: `coin-${marketId}`,
     status,
     sourceTab: 'dark',
     title,
-    subtitle: status === 'pending' ? '已结束 · 赛果已出' : '已结算',
+    subtitle: status === 'pending' ? pendingSubtitle : '已结算',
     campSide: resolveMarketBetSide(item),
     marketId,
   };
@@ -76,137 +78,113 @@ function mapTearRecord(item: FootballMarketAggregate): SettlementRecordItem | nu
   };
 }
 
-function mapBattleRecord(
-  battleId: number,
-  title: string,
-  campSide: SettlementCampSide,
-  status: 'pending' | 'settled',
-): SettlementRecordItem {
-  return {
-    id: `battle-${battleId}`,
-    status,
-    sourceTab: 'arena',
-    title,
-    subtitle: status === 'pending' ? '已结束 · 赛果已出' : '已结算',
-    campSide,
-    battleId,
-  };
+function resolvePkBetSide(record: PKMyBetRecord): SettlementCampSide {
+  const side = record.bet?.side;
+  if (side === 'A') return 'A';
+  if (side === 'B') return 'B';
+  return 'unknown';
 }
 
-function mapPkRecord(summary: PKTopicSummary): SettlementRecordItem | null {
-  if (!summary.canSettle || !summary.topic?.id) return null;
-  const topicId = Number(summary.topic.id);
+function mapPkBetRecord(
+  record: PKMyBetRecord,
+  drawerStatus: 'pending' | 'settled',
+): SettlementRecordItem | null {
+  const topicId = Number(record.topic?.id ?? record.bet?.topicId ?? record.battle?.topicId);
+  const roundId = record.round?.id ?? record.bet?.roundId ?? record.battle?.id;
   if (!Number.isFinite(topicId) || topicId <= 0) return null;
-  const campSide: SettlementCampSide =
-    summary.mySide === 'A' ? 'A' : summary.mySide === 'B' ? 'B' : 'unknown';
+  if (!record.bet?.id && !record.bet?.amount) return null;
+
+  const title = record.topic?.title || record.battle?.topic?.title || `开撕话题 #${topicId}`;
 
   return {
-    id: `pk-${topicId}`,
-    status: 'pending',
+    id: `pk-${topicId}-${roundId ?? '0'}`,
+    status: drawerStatus,
     sourceTab: 'pk',
-    title: summary.topic.title || `开撕话题 #${topicId}`,
-    subtitle: '回合已结束 · 可结算',
-    campSide,
+    title,
+    subtitle: drawerStatus === 'pending' ? '回合已结束 · 可结算' : '已结算',
+    campSide: resolvePkBetSide(record),
     topicId,
-    roundId: summary.round?.id,
+    roundId,
   };
 }
 
 export function useSettlementRecords() {
   const isAuthenticated = Boolean(getAuthToken());
-  const marketsQuery = useRequestFootballMarkets({ page: 1, limit: 100 });
-  const pkTopicsQuery = useRequestPKTopics({ page: 1, pageSize: 50 });
-  const battlesQuery = useRequestBattleList(
-    { mine: '1', status: 'settled', pageSize: 50 },
-    { enabled: isAuthenticated },
-  );
 
-  const battleIds = useMemo(() => {
-    const list = battlesQuery.data?.list ?? [];
-    return list
-      .filter((item) => item.myRole !== 'none' || item.myAction !== '')
-      .map((item) => item.battle.id)
-      .filter((id) => typeof id === 'number' && id > 0);
-  }, [battlesQuery.data?.list]);
+  const myMarketsPendingQuery = useRequestPredictMyMarkets({
+    page: 1,
+    limit: 100,
+    status: 'pending',
+    enabled: isAuthenticated,
+  });
+  const myMarketsSettledQuery = useRequestPredictMyMarkets({
+    page: 1,
+    limit: 100,
+    status: 'settled',
+    enabled: isAuthenticated,
+  });
+  const pkPendingBetsQuery = useRequestPKMyBets({
+    page: 1,
+    pageSize: 50,
+    status: 'pending',
+    enabled: isAuthenticated,
+  });
+  const pkSettledBetsQuery = useRequestPKMyBets({
+    page: 1,
+    pageSize: 50,
+    status: 'settled',
+    enabled: isAuthenticated,
+  });
 
-  const battleDetailQueries = useQueries(
-    battleIds.map((battleId) => ({
-      queryKey: battleQueryKeys.detail(battleId),
-      queryFn: () => fetchBattleDetail(battleId),
-      enabled: isAuthenticated,
-      staleTime: 30_000,
-      refetchOnWindowFocus: false,
-    })),
-  );
+  const pendingMarketList = myMarketsPendingQuery.data?.list ?? [];
+  const settledMarketList = myMarketsSettledQuery.data?.list ?? [];
 
-  const marketList = marketsQuery.data?.list ?? [];
+  const marketList = useMemo(() => {
+    const merged = new Map<number, FootballMarketAggregate>();
+    [...pendingMarketList, ...settledMarketList].forEach((item) => {
+      if (item.market?.id) merged.set(item.market.id, item);
+    });
+    return Array.from(merged.values());
+  }, [pendingMarketList, settledMarketList]);
 
   const pendingItems = useMemo(() => {
-    const coinItems = marketList
+    const coinItemsFromPending = pendingMarketList
       .map((item) => mapCoinRecord(item, 'pending'))
       .filter((item): item is SettlementRecordItem => Boolean(item));
+    const coinItemsFromSettled = settledMarketList
+      .map((item) => mapCoinRecord(item, 'pending'))
+      .filter((item): item is SettlementRecordItem => Boolean(item));
+    const dedupedCoinItems = Array.from(
+      new Map(
+        [...coinItemsFromPending, ...coinItemsFromSettled].map((item) => [item.id, item]),
+      ).values(),
+    );
 
-    const battleItems: SettlementRecordItem[] = [];
-    battleDetailQueries.forEach((query) => {
-      const detail = query.data;
-      if (!detail) return;
-
-      const { battle, myRole, myAction, settlement } = detail;
-      const permissions = getBattleActionPermissions({
-        battle,
-        myRole,
-        myAction,
-        settlementItem: settlement.myItem,
-      });
-      if (!permissions.canWithdraw) return;
-
-      const campSide: SettlementCampSide =
-        myRole === 'banker' ? 'A' : myRole === 'challenger' ? 'B' : 'unknown';
-
-      battleItems.push(mapBattleRecord(battle.id, battle.title, campSide, 'pending'));
-    });
-
-    const pkItems = (pkTopicsQuery.data?.list ?? [])
-      .map(mapPkRecord)
+    const pkItems = (pkPendingBetsQuery.data?.list ?? [])
+      .map((item) => mapPkBetRecord(item, 'pending'))
       .filter((item): item is SettlementRecordItem => Boolean(item));
 
-    const tearItems = marketList
+    const tearItems = settledMarketList
       .map(mapTearRecord)
       .filter((item): item is SettlementRecordItem => Boolean(item));
 
-    return [...coinItems, ...battleItems, ...pkItems, ...tearItems];
-  }, [battleDetailQueries, marketList, pkTopicsQuery.data?.list]);
+    return [...dedupedCoinItems, ...pkItems, ...tearItems];
+  }, [pendingMarketList, settledMarketList, pkPendingBetsQuery.data?.list]);
 
   const settledItems = useMemo(() => {
-    const coinItems = marketList
+    const coinItems = settledMarketList
       .map((item) => mapCoinRecord(item, 'settled'))
       .filter((item): item is SettlementRecordItem => Boolean(item));
 
-    const battleItems: SettlementRecordItem[] = [];
-    battleDetailQueries.forEach((query) => {
-      const detail = query.data;
-      if (!detail) return;
+    const pkItems = (pkSettledBetsQuery.data?.list ?? [])
+      .map((item) => mapPkBetRecord(item, 'settled'))
+      .filter((item): item is SettlementRecordItem => Boolean(item));
 
-      const { battle, myRole, myAction, settlement } = detail;
-      const myItem = settlement.myItem;
-      if (!myItem || !myItem.withdrawn) return;
-      if (myRole === 'none' && myAction === '') return;
-
-      const campSide: SettlementCampSide =
-        myRole === 'banker' ? 'A' : myRole === 'challenger' ? 'B' : 'unknown';
-
-      battleItems.push(mapBattleRecord(battle.id, battle.title, campSide, 'settled'));
-    });
-
-    return [...coinItems, ...battleItems];
-  }, [battleDetailQueries, marketList]);
+    return [...coinItems, ...pkItems];
+  }, [pkSettledBetsQuery.data?.list, settledMarketList]);
 
   const pendingDarkItems = useMemo(
     () => pendingItems.filter((item) => item.sourceTab === 'dark'),
-    [pendingItems],
-  );
-  const pendingArenaItems = useMemo(
-    () => pendingItems.filter((item) => item.sourceTab === 'arena'),
     [pendingItems],
   );
   const pendingPkItems = useMemo(
@@ -217,32 +195,49 @@ export function useSettlementRecords() {
     () => settledItems.filter((item) => item.sourceTab === 'dark'),
     [settledItems],
   );
-  const settledArenaItems = useMemo(
-    () => settledItems.filter((item) => item.sourceTab === 'arena'),
+  const settledPkItems = useMemo(
+    () => settledItems.filter((item) => item.sourceTab === 'pk'),
     [settledItems],
   );
 
+  const refetch = useCallback(async () => {
+    if (!isAuthenticated) return;
+    await Promise.all([
+      myMarketsPendingQuery.refetch(),
+      myMarketsSettledQuery.refetch(),
+      pkPendingBetsQuery.refetch(),
+      pkSettledBetsQuery.refetch(),
+    ]);
+  }, [
+    isAuthenticated,
+    myMarketsPendingQuery,
+    myMarketsSettledQuery,
+    pkPendingBetsQuery,
+    pkSettledBetsQuery,
+  ]);
+
   const isLoading =
-    (isAuthenticated && marketsQuery.isLoading) ||
-    (isAuthenticated && battlesQuery.isLoading) ||
-    (isAuthenticated && pkTopicsQuery.isLoading) ||
-    (battleIds.length > 0 && battleDetailQueries.some((query) => query.isLoading));
+    (isAuthenticated && myMarketsPendingQuery.isLoading) ||
+    (isAuthenticated && myMarketsSettledQuery.isLoading) ||
+    (isAuthenticated && pkPendingBetsQuery.isLoading) ||
+    (isAuthenticated && pkSettledBetsQuery.isLoading);
 
   return {
     pendingItems,
     settledItems,
     pendingDarkItems,
-    pendingArenaItems,
     pendingPkItems,
     settledDarkItems,
-    settledArenaItems,
+    settledPkItems,
     pendingCount: pendingItems.length,
     marketList,
-    battleDetails: battleDetailQueries.map((query) => query.data).filter(Boolean),
+    refetch,
     isLoading,
     isAuthenticated,
   };
 }
+
+export type SettlementRecords = ReturnType<typeof useSettlementRecords>;
 
 /** @deprecated 使用 useSettlementRecords */
 export function usePendingSettlements() {
@@ -250,7 +245,7 @@ export function usePendingSettlements() {
   return {
     items: records.pendingItems,
     darkItems: records.pendingDarkItems,
-    arenaItems: records.pendingArenaItems,
+    arenaItems: records.pendingPkItems,
     totalCount: records.pendingCount,
     isLoading: records.isLoading,
     isAuthenticated: records.isAuthenticated,

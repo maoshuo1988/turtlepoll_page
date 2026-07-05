@@ -81,6 +81,7 @@ const invalidatePredictMarketQueries = async (
   await Promise.all([
     queryClient.invalidateQueries(['requestFootballMarkets']),
     queryClient.invalidateQueries(['requestFootballMarketsByTag']),
+    queryClient.invalidateQueries(['requestPredictMyMarkets']),
     queryClient.invalidateQueries(['requestFootballPredictContextHot']),
     queryClient.invalidateQueries(['requestPredictComments']),
     queryClient.invalidateQueries(['requestPredictCommentReplies']),

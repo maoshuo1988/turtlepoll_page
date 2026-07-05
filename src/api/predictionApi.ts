@@ -3,6 +3,7 @@
  */
 export {
   API_Predict_Markets as API_Football_Markets,
+  API_Predict_My_Markets as API_Football_My_Markets,
   API_Predict_Markets_By_Name as API_Football_Markets_By_Name,
   API_Predict_Markets_By_Tag as API_Football_Markets_By_Tag,
   API_Predict_Bet_Settle_Result as API_Football_Bet_Settle_Result,

@@ -21,6 +21,26 @@ export type FootballMarketsByTagParams = {
   requireAuth?: boolean;
 };
 
+/** GET /api/predict/my/markets 的 status 查询参数 */
+export type PredictMyMarketsStatusFilter =
+  | 'OPEN'
+  | 'CLOSED'
+  | 'CLOSE'
+  | 'SETTLED'
+  | '进行中'
+  | '待结算'
+  | '已结算'
+  | 'pending'
+  | 'settled'
+  | string;
+
+export type PredictMyMarketsParams = {
+  page?: number;
+  limit?: number;
+  status?: PredictMyMarketsStatusFilter;
+  enabled?: boolean;
+};
+
 export type FootballPredictContextHotParams = {
   limit?: number;
 };
@@ -133,6 +153,10 @@ export type FootballMarketAggregate = {
 export type FootballMarketsResponse = {
   list: FootballMarketAggregate[];
   total: number;
+};
+
+export type PredictMyMarketsResponse = FootballMarketsResponse & {
+  status?: PredictMyMarketsStatusFilter;
 };
 
 export type FootballMarketsByTagResponse = FootballMarketsResponse & {

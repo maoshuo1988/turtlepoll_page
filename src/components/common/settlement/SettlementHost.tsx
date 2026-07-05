@@ -3,7 +3,7 @@
  */
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from '@umijs/renderer-react';
-import { useSettlementRecords } from '@/hooks/usePendingSettlements';
+import type { SettlementRecords } from '@/hooks/usePendingSettlements';
 import type { SettlementRecordItem } from '@/hooks/settlementTypes';
 import { SettlementDrawer } from './SettlementDrawer';
 import { settlementRecordToPath } from '@/pages/settlement/settlementNavigation';
@@ -12,25 +12,23 @@ interface SettlementHostProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   hiddenIds: ReadonlySet<string>;
+  records: SettlementRecords;
 }
 
 export const SettlementHost: React.FC<SettlementHostProps> = ({
   open,
   onOpenChange,
   hiddenIds,
+  records,
 }) => {
   const navigate = useNavigate();
   const {
     pendingDarkItems,
-    pendingArenaItems,
     pendingPkItems,
     settledDarkItems,
-    settledArenaItems,
-  } = useSettlementRecords();
-  const mergedPendingArenaItems = useMemo(
-    () => [...pendingArenaItems, ...pendingPkItems],
-    [pendingArenaItems, pendingPkItems],
-  );
+    settledPkItems,
+  } = records;
+
   const [removingIds] = useState<Set<string>>(() => new Set());
 
   const goToDetail = useCallback(
@@ -65,9 +63,9 @@ export const SettlementHost: React.FC<SettlementHostProps> = ({
       open={open}
       onClose={() => onOpenChange(false)}
       pendingDarkItems={pendingDarkItems}
-      pendingArenaItems={mergedPendingArenaItems}
+      pendingArenaItems={pendingPkItems}
       settledDarkItems={settledDarkItems}
-      settledArenaItems={settledArenaItems}
+      settledArenaItems={settledPkItems}
       hiddenIds={hiddenIds}
       removingIds={removingIds}
       onSettle={handleSettle}
@@ -76,14 +74,13 @@ export const SettlementHost: React.FC<SettlementHostProps> = ({
   );
 };
 
-export function useSettlementEntryState() {
+export function useSettlementDrawerState(records: SettlementRecords) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(() => new Set());
-  const { pendingItems } = useSettlementRecords();
 
   const visibleCount = useMemo(() => {
-    return pendingItems.filter((item) => !hiddenIds.has(item.id)).length;
-  }, [hiddenIds, pendingItems]);
+    return records.pendingItems.filter((item) => !hiddenIds.has(item.id)).length;
+  }, [hiddenIds, records.pendingItems]);
 
   const hideItem = useCallback((itemId: string) => {
     setHiddenIds((prev) => new Set(prev).add(itemId));
@@ -95,7 +92,7 @@ export function useSettlementEntryState() {
 
   return {
     drawerOpen,
-    setDrawerOpen,
+    setDrawerOpen: setDrawerOpen,
     hiddenIds,
     hideItem,
     resetHiddenIds,

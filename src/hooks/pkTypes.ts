@@ -251,7 +251,42 @@ export type PKCommentResponse = CommentResponse & {
   downvoted?: boolean;
 };
 
+export type PKMyBetBattleStatus = 'in_progress' | 'pending' | 'settled' | string;
+
+/** /api/pk/my/bets 的 status 查询参数 */
+export type PKMyBetStatusFilter =
+  | 'in_progress'
+  | 'pending'
+  | 'settled'
+  | 'betting'
+  | 'locked'
+  | 'cooldown'
+  | string;
+
+export type PKMyBetBattle = {
+  id?: number | string;
+  topicId?: number | string;
+  status?: PKMyBetBattleStatus;
+  phase?: PKRoundPhase | string;
+  result?: PKWinner | string;
+  resultBy?: string;
+  resultTime?: number;
+  bet?: PKBet;
+  topic?: PKTopic;
+  round?: PKRound;
+};
+
+export type PKMyBetSettlementBundle = {
+  settlement?: PKSettlement | null;
+  myItem?: PKSettlement | null;
+};
+
 export type PKMyBetRecord = {
+  battle?: PKMyBetBattle;
+  myAction?: string;
+  myRole?: string;
+  settlement?: PKMyBetSettlementBundle;
+  /** 兼容旧字段 */
   bet?: PKBet;
   topic?: PKTopic;
   round?: PKRound;
@@ -262,6 +297,7 @@ export type PKMyBetsResponse = {
   count?: number;
   page?: number;
   pageSize?: number;
+  status?: PKMyBetStatusFilter;
 };
 
 export type PKRecordOptionResponse = {

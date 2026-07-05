@@ -4,6 +4,7 @@
 import {
     API_Football_Bet_Settle_Result,
     API_Football_Markets,
+    API_Football_My_Markets,
     API_Football_Markets_By_Tag,
     API_Football_Predict_Context_Hot,
     API_Football_Predict_Context_Update,
@@ -20,6 +21,8 @@ import {
     type FootballMarketsResponse,
     type FootballMarketsByTagParams,
     type FootballMarketsByTagResponse,
+    type PredictMyMarketsParams,
+    type PredictMyMarketsResponse,
     type FootballPredictContextHotParams,
     type FootballPredictContextHotResponse,
     type FootballPredictTagsHotParams,
@@ -75,6 +78,36 @@ export function useRequestFootballMarkets(params: FootballMarketsParams = {}) {
             return assertSuccess(res);
         },
         enabled: Boolean(!requireAuth || token),
+    });
+}
+
+/** 查询当前用户参与（下注）过的预测市场，结构与 GET /api/predict/markets 对齐 */
+export function useRequestPredictMyMarkets(params: PredictMyMarketsParams = {}) {
+    const token = getAuthToken();
+    const { enabled = true, ...queryParams } = params;
+
+    return useQuery<PredictMyMarketsResponse>({
+        queryKey: ["requestPredictMyMarkets", queryParams, Boolean(token)],
+        queryFn: async () => {
+            const res = await axiosCustom({
+                method: "get",
+                cmd: API_Football_My_Markets,
+                params: {
+                    page: queryParams.page ?? 1,
+                    limit: queryParams.limit ?? 20,
+                    ...(queryParams.status ? { status: queryParams.status } : {}),
+                },
+                headers: getAuthorizationHeaders(),
+            });
+            const raw = assertSuccess(res) as PredictMyMarketsResponse & { count?: number };
+            const list = Array.isArray(raw.list) ? raw.list : [];
+            return {
+                list,
+                total: raw.total ?? raw.count ?? list.length,
+                status: raw.status ?? queryParams.status,
+            };
+        },
+        enabled: Boolean(token && enabled),
     });
 }
 
@@ -180,6 +213,7 @@ export function useRequestFootballPredictContextUpdate() {
             await Promise.all([
                 queryClient.invalidateQueries(["requestFootballMarkets"]),
                 queryClient.invalidateQueries(["requestFootballMarketsByTag"]),
+                queryClient.invalidateQueries(["requestPredictMyMarkets"]),
                 queryClient.invalidateQueries(["requestFootballPredictContextHot"]),
                 queryClient.invalidateQueries(["requestFootballPredictTagsHot"]),
             ]);

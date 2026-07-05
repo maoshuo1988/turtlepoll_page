@@ -7,7 +7,8 @@ import { createBattleRequestId } from '@/hooks/battleTypes';
 import type { CoinSettleResult } from '@/hooks/coinTypes';
 import type { PKSettleResponse } from '@/hooks/pkTypes';
 import type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';
-import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
+import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
+import { useRequestPredictMyMarkets } from '@/hooks/usePredictionRequests';
 import { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';
 import { useRequestCoinSettle } from '@/hooks/useCoinRequests';
 import { useRequestPKSettle } from '@/hooks/usePkRequests';
@@ -43,8 +44,28 @@ export default function SettlementPage() {
   const { onOpenAuth } = useHomeLayoutContext();
   const { openSettlementDrawer, hideSettlementItem } = useSettlementLayout();
   const kind = params.kind;
-  const marketsQuery = useRequestFootballMarkets({ page: 1, limit: 100 });
-  const marketList = kind === 'coin' ? (marketsQuery.data?.list ?? []) : [];
+  const myMarketsPendingQuery = useRequestPredictMyMarkets({
+    page: 1,
+    limit: 100,
+    status: 'pending',
+    enabled: kind === 'coin',
+  });
+  const myMarketsSettledQuery = useRequestPredictMyMarkets({
+    page: 1,
+    limit: 100,
+    status: 'settled',
+    enabled: kind === 'coin',
+  });
+  const marketList = useMemo(() => {
+    if (kind !== 'coin') return [];
+    const merged = new Map<number, FootballMarketAggregate>();
+    [...(myMarketsPendingQuery.data?.list ?? []), ...(myMarketsSettledQuery.data?.list ?? [])].forEach(
+      (item) => {
+        if (item.market?.id) merged.set(item.market.id, item);
+      },
+    );
+    return Array.from(merged.values());
+  }, [kind, myMarketsPendingQuery.data?.list, myMarketsSettledQuery.data?.list]);
   const { buildDetailModel } = useSettlementDetailBuilder(marketList);
   const buildDetailModelRef = useRef(buildDetailModel);
   buildDetailModelRef.current = buildDetailModel;
@@ -55,6 +76,7 @@ export default function SettlementPage() {
   const rawId = params.id ?? '';
   const numericId = Number(rawId);
   const action = (searchParams.get('action') as SettlementDetailAction | null) ?? 'view';
+  const roundIdParam = searchParams.get('roundId') ?? undefined;
 
   const coinCampSide = useMemo(
     () => (kind === 'coin' ? resolveCampSideFromMarket(marketList, numericId) : 'unknown' as const),
@@ -78,13 +100,14 @@ export default function SettlementPage() {
     if (kind === 'pk') {
       const campSide: SettlementRecordItem['campSide'] = 'unknown';
       return {
-        id,
+        id: roundIdParam ? `pk-${numericId}-${roundIdParam}` : settlementItemIdFromRoute(kind, rawId),
         status: action === 'settle' ? 'pending' : 'settled',
         sourceTab: 'pk',
         title: '',
         subtitle: '',
         campSide,
         topicId: numericId,
+        roundId: roundIdParam ?? undefined,
       };
     }
     return {
@@ -96,7 +119,7 @@ export default function SettlementPage() {
       campSide: 'unknown',
       battleId: numericId,
     };
-  }, [action, coinCampSide, kind, numericId, rawId]);
+  }, [action, coinCampSide, kind, numericId, rawId, roundIdParam]);
 
   const [model, setModel] = useState<SettlementDetailViewModel | null>(null);
   const [loading, setLoading] = useState(true);
@@ -160,7 +183,8 @@ export default function SettlementPage() {
           } else if (record.sourceTab === 'pk' && record.topicId) {
             settlePayload = await pkSettleMutation.mutateAsync({
               topicId: record.topicId,
-              requestId: `pk-settle-${record.topicId}-${Date.now()}`,
+              roundId: record.roundId,
+              requestId: `pk-settle-${record.topicId}-${record.roundId ?? 'latest'}-${Date.now()}`,
               snapshotType: 'SETTLE',
               freezeSource: 'ON_DEMAND',
             });
@@ -211,6 +235,7 @@ export default function SettlementPage() {
     record?.sourceTab,
     record?.status,
     record?.topicId,
+    record?.roundId,
   ]);
 
   const handleBack = () => {
