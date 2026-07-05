@@ -12,25 +12,47 @@ import type { PetEggHatchResponse, PetStaminaResponse } from '@/hooks/petTypes';
 import type { OwnedPetItem } from '@/hooks/petTypes';
 import { PetPoolPreviewTile } from './PetPoolPreviewTile';
 import { PetAssetPreview } from '@/components/common/pet/PetAssetPreview';
-import { resolvePetPreviewAsset } from '@/components/common/pet/petPreviewAsset';
+import { resolvePetPreviewAsset, pickPetAvatarUrl, resolvePetSpineAtlasUrl } from '@/components/common/pet/petPreviewAsset';
+import { prefetchSpineAssets } from '@/components/common/spine/prefetchSpineAssets';
 import { getPetApiErrorMessage, isAuthError } from '@/utils/petHelpers';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { useMedia768 } from '@/hooks/useMedia768';
 import { HORIZONTAL_DRAG_SCROLL_TRACK_CLASS, useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
 import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade } from '@/components/common/pet/petRarity';
 import { TextEmptyState } from '@/components/common/state/PageState';
 import { ShopGachaEggStage } from './ShopGachaEggStage';
 import { ShopGachaHeroMobile } from './ShopGachaHeroMobile';
 import { ShopGachaStageLayers } from './ShopGachaStageLayers';
+import {
+  ShopSharedSpineStrip,
+  type ShopSharedSpineSlot,
+} from './ShopSharedSpineStrip';
 import { getPetEggHatchMissMessage, getPetEggHatchWinMessage, isPetEggHatchWin } from './shopHatchReveal';
 import {
   SHOP_AURORA_STAGE_OFFSET_X,
   SHOP_AURORA_STAGE_OFFSET_Y,
   SHOP_EGG_REVEAL_DELAY_MS,
+  SHOP_EGG_SPINE_ASSETS,
   SHOP_GACHA_EGG_STAGE_ANCHOR,
+  SHOP_SPINE_ASSETS,
 } from '@/config/shopSpineAssets';
 
 const card =
   'rounded-[24px] max-lg:rounded-[18px] border border-cyan-400/18 max-lg:border-cyan-400/11 bg-[linear-gradient(180deg,rgba(7,15,31,0.96),rgba(6,12,24,0.98))] shadow-[0_14px_40px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.06)] max-lg:shadow-[0_10px_26px_rgba(0,0,0,0.22),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl';
+
+function toSharedSpineSlot(
+  key: string,
+  preview: ReturnType<typeof resolvePetPreviewAsset>,
+): ShopSharedSpineSlot {
+  if (preview?.kind === 'spine' && preview.atlasUrl) {
+    return {
+      key,
+      skeletonUrl: preview.src,
+      atlasUrl: preview.atlasUrl,
+    };
+  }
+  return null;
+}
 
 /* ── Types ── */
 type HatchPhase = 'idle' | 'opening' | 'glowing' | 'reveal';
@@ -98,8 +120,6 @@ export const Shop: React.FC<ShopProps> = ({
   const openDoneRef = useRef(false);
   const hatchReadyRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const previewScrollMobileRef = useRef<HTMLDivElement | null>(null);
-  const ownedPetsScrollMobileRef = useRef<HTMLDivElement | null>(null);
   const previewDragScroll = useHorizontalDragScroll();
   const ownedPetsDragScroll = useHorizontalDragScroll();
   const [buyFlash, setBuyFlash] = useState<string | null>(null);
@@ -117,6 +137,7 @@ export const Shop: React.FC<ShopProps> = ({
   const gachaCost =
     typeof gachaConfigQuery.data?.cost === 'number' ? gachaConfigQuery.data.cost : GACHA_COST;
   const aiAppleMutation = useRequestAiStaminaApple();
+  const isMobileShop = useMedia768();
 
   const clearTimers = useCallback(() => {
     timerRef.current.forEach(clearTimeout);
@@ -124,6 +145,38 @@ export const Shop: React.FC<ShopProps> = ({
   }, []);
 
   useEffect(() => () => clearTimers(), [clearTimers]);
+
+  useEffect(() => {
+    prefetchSpineAssets([
+      ...Object.values(SHOP_SPINE_ASSETS),
+      {
+        skeletonUrl: SHOP_EGG_SPINE_ASSETS.dan.skeletonUrl,
+        atlasUrl: SHOP_EGG_SPINE_ASSETS.dan.atlasUrl,
+      },
+      {
+        skeletonUrl: SHOP_EGG_SPINE_ASSETS.guang.skeletonUrl,
+        atlasUrl: SHOP_EGG_SPINE_ASSETS.guang.atlasUrl,
+      },
+    ]);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const list = petDefsQuery.data?.list;
+      if (!list?.length) return;
+
+      prefetchSpineAssets(
+        list
+          .filter((item) => item.avatarUrl?.trim().toLowerCase().endsWith('.json'))
+          .map((item) => ({
+            skeletonUrl: item.avatarUrl!.trim(),
+            atlasUrl: resolvePetSpineAtlasUrl(item.avatarUrl!.trim()),
+          })),
+      );
+    }, 1200);
+
+    return () => window.clearTimeout(timer);
+  }, [petDefsQuery.data?.list]);
 
   const playWinHatchAnimation = useCallback(() => {
     timerRef.current.push(
@@ -277,12 +330,36 @@ export const Shop: React.FC<ShopProps> = ({
     (petItem: OwnedPetItem) => {
       const def = petDefByKey.get(petItem.petKey ?? '') ?? petDefByKey.get(petItem.petName ?? '');
       return {
-        avatarUrl: def?.avatarUrl,
+        avatarUrl: pickPetAvatarUrl(petItem.icon, petItem.image, def?.avatarUrl),
         petKey: petItem.petKey ?? def?.petKey,
         petName: petItem.petName ?? def?.displayName,
       };
     },
     [petDefByKey],
+  );
+
+  const poolPreviewSlots = useMemo(
+    () => petPoolPreviewRows.map((row) => toSharedSpineSlot(row.key, row.preview)),
+    [petPoolPreviewRows],
+  );
+
+  const ownedPreviewSlots = useMemo(
+    () =>
+      ownedPetList.map((petItem) => {
+        const preview = resolvePetPreviewAsset(resolveOwnedPetSource(petItem));
+        return toSharedSpineSlot(String(petItem.petId), preview);
+      }),
+    [ownedPetList, resolveOwnedPetSource],
+  );
+
+  const desktopPoolPreviewRows = useMemo(
+    () => petPoolPreviewRows.slice(0, 12),
+    [petPoolPreviewRows],
+  );
+
+  const desktopPoolPreviewSlots = useMemo(
+    () => poolPreviewSlots.slice(0, 12),
+    [poolPreviewSlots],
   );
 
   // const recordRows = [
@@ -296,7 +373,8 @@ export const Shop: React.FC<ShopProps> = ({
 
   return (
     <div className="legacy-shop-page min-w-0 max-w-full overflow-x-hidden space-y-3 px-0 md:space-y-4">
-      <div className="grid gap-3.5 md:hidden md:gap-4">
+      {isMobileShop ? (
+      <div className="grid gap-3.5 md:gap-4">
         <ShopGachaHeroMobile
           balance={balance}
           pet={pet}
@@ -330,17 +408,29 @@ export const Shop: React.FC<ShopProps> = ({
                   <div className="text-[15px] font-black text-white">奖池预览</div>
                   <button type="button" onClick={() => setIsPreviewDialogOpen(true)} className="touch-manipulation text-[12px] font-bold text-white/72 transition hover:text-white">全部预览 &gt;</button>
                 </div>
-                <div ref={previewScrollMobileRef} className="mt-3 flex min-w-0 gap-3 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  {petPoolPreviewRows.length > 0 ? petPoolPreviewRows.map((item) => (
-                    <PetPoolPreviewTile
-                      key={`m-${item.key}`}
-                      variant="strip"
-                      rarityGrade={item.rarityGrade}
-                      label={item.label}
-                      petKey={item.petKey}
-                      preview={item.preview}
-                    />
-                  )) : (
+                <div className="mt-3 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  {petPoolPreviewRows.length > 0 ? (
+                    <ShopSharedSpineStrip
+                      slots={poolPreviewSlots}
+                      columnWidth={92}
+                      previewWidth={48}
+                      previewHeight={48}
+                      gap={12}
+                      previewTopPx={34}
+                    >
+                      {petPoolPreviewRows.map((item) => (
+                        <PetPoolPreviewTile
+                          key={`m-${item.key}`}
+                          variant="strip"
+                          useSharedSpine
+                          rarityGrade={item.rarityGrade}
+                          label={item.label}
+                          petKey={item.petKey}
+                          preview={item.preview}
+                        />
+                      ))}
+                    </ShopSharedSpineStrip>
+                  ) : (
                     <TextEmptyState text="暂无预览数据" className="min-w-full py-3 text-sm text-white/70" />
                   )}
                 </div>
@@ -387,41 +477,60 @@ export const Shop: React.FC<ShopProps> = ({
           <h3 className="!mb-2.5 text-base font-bold text-slate-700 dark:text-rdark-text sm:text-lg">
             已拥有龟种 ({ownedPetList.length})
           </h3>
-          <div
-            ref={ownedPetsScrollMobileRef}
-            className="flex min-w-0 gap-3 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {ownedPetList.length > 0 ? ownedPetList.map((petItem) => (
-              <div
-                key={String(petItem.petId)}
-                className={`relative flex h-40 w-[132px] shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-[22px] border border-white/12 bg-[linear-gradient(180deg,rgba(22,16,56,0.38),rgba(98,42,154,0.32),rgba(44,86,160,0.28),rgba(14,20,52,0.4))] px-3 text-center shadow-[0_12px_24px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(222,212,255,0.12)] ${petItem.isEquipped ? 'border-cyan-300/70 ring-2 ring-cyan-400/75 ring-offset-2 ring-offset-[#071527]' : ''}`}
+          <div className="overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {ownedPetList.length > 0 ? (
+              <ShopSharedSpineStrip
+                slots={ownedPreviewSlots}
+                columnWidth={132}
+                previewWidth={80}
+                previewHeight={80}
+                gap={12}
+                previewTopPx={12}
               >
-                {petItem.isEquipped ? (
-                  <div className="absolute left-[-1px] top-[-1px] z-10 rounded-br-xl rounded-tl-[22px] border border-cyan-300/70 bg-cyan-400/95 px-2.5 py-1 text-[10px] font-black text-[#06242c] shadow-[0_6px_14px_rgba(34,211,238,0.22)]">
-                    已装备
-                  </div>
-                ) : null}
-                <div className="mx-auto flex justify-center">
-                  <PetAssetPreview
-                    {...resolveOwnedPetSource(petItem)}
-                    size={80}
-                    className="mx-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
-                    imageClassName="object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
-                  />
-                </div>
-                <span className={`rounded-full !px-2 !py-0.5 text-[13px] font-semibold ${getPetRarityBadgeClass(petItem.rarity)}`}>
-                  {normalizePetRarityGrade(petItem.rarity)}
-                </span>
-                <span className="truncate text-[11px] font-bold text-white">{petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}</span>
-              </div>
-            )) : (
+                {ownedPetList.map((petItem) => {
+                  const ownedSource = resolveOwnedPetSource(petItem);
+                  const ownedPreview = resolvePetPreviewAsset(ownedSource);
+                  const useSharedSpine = ownedPreview?.kind === 'spine';
+
+                  return (
+                    <div
+                      key={String(petItem.petId)}
+                      className={`relative flex h-40 w-[132px] shrink-0 snap-start flex-col items-center gap-2 rounded-[22px] border border-white/12 bg-[linear-gradient(180deg,rgba(22,16,56,0.38),rgba(98,42,154,0.32),rgba(44,86,160,0.28),rgba(14,20,52,0.4))] px-3 pt-3 text-center shadow-[0_12px_24px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(222,212,255,0.12)] ${petItem.isEquipped ? 'border-cyan-300/70 ring-2 ring-cyan-400/75 ring-offset-2 ring-offset-[#071527]' : ''}`}
+                    >
+                      {petItem.isEquipped ? (
+                        <div className="absolute left-[-1px] top-[-1px] z-10 rounded-br-xl rounded-tl-[22px] border border-cyan-300/70 bg-cyan-400/95 px-2.5 py-1 text-[10px] font-black text-[#06242c] shadow-[0_6px_14px_rgba(34,211,238,0.22)]">
+                          已装备
+                        </div>
+                      ) : null}
+                      <div className="flex h-[80px] w-[80px] items-center justify-center">
+                        {useSharedSpine ? (
+                          <div className="h-[80px] w-[80px]" aria-hidden />
+                        ) : (
+                          <PetAssetPreview
+                            {...ownedSource}
+                            size={80}
+                            className="mx-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
+                            imageClassName="object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
+                          />
+                        )}
+                      </div>
+                      <span className={`rounded-full !px-2 !py-0.5 text-[13px] font-semibold ${getPetRarityBadgeClass(petItem.rarity)}`}>
+                        {normalizePetRarityGrade(petItem.rarity)}
+                      </span>
+                      <span className="truncate text-[11px] font-bold text-white">{petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}</span>
+                    </div>
+                  );
+                })}
+              </ShopSharedSpineStrip>
+            ) : (
               <TextEmptyState text="暂无已拥有龟种" className="min-h-40 w-full" />
             )}
           </div>
         </div>
       </div>
-
-      <div className={`${card} hidden min-w-0 md:block overflow-hidden !px-0 !py-0`}>
+      ) : (
+      <>
+      <div className={`${card} min-w-0 overflow-hidden !px-0 !py-0`}>
         <div className="grid min-w-0 gap-3 p-1 md:grid-cols-3 2xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(280px,0.82fr)]">
           <section className="relative min-h-[600px] min-w-0 overflow-hidden rounded-[22px] px-4 py-5 md:col-span-3 md:px-5 2xl:col-span-3 !bg-transparent">
             <img src={SHOP_BG} alt="黑市背景" className="absolute inset-0 h-full w-full object-fill" />
@@ -515,16 +624,28 @@ export const Shop: React.FC<ShopProps> = ({
                 onMouseDown={previewDragScroll.onMouseDown}
                 className={`mt-3 ${HORIZONTAL_DRAG_SCROLL_TRACK_CLASS}`}
               >
-                {petPoolPreviewRows.length > 0 ? petPoolPreviewRows.slice(0, 12).map((item) => (
-                  <PetPoolPreviewTile
-                    key={item.key}
-                    variant="strip"
-                    rarityGrade={item.rarityGrade}
-                    label={item.label}
-                    petKey={item.petKey}
-                    preview={item.preview}
-                  />
-                )) : (
+                {desktopPoolPreviewRows.length > 0 ? (
+                  <ShopSharedSpineStrip
+                    slots={desktopPoolPreviewSlots}
+                    columnWidth={92}
+                    previewWidth={48}
+                    previewHeight={48}
+                    gap={12}
+                    previewTopPx={34}
+                  >
+                    {desktopPoolPreviewRows.map((item) => (
+                      <PetPoolPreviewTile
+                        key={item.key}
+                        variant="strip"
+                        useSharedSpine
+                        rarityGrade={item.rarityGrade}
+                        label={item.label}
+                        petKey={item.petKey}
+                        preview={item.preview}
+                      />
+                    ))}
+                  </ShopSharedSpineStrip>
+                ) : (
                   <TextEmptyState text="暂无预览数据" className="min-w-full py-3 text-sm text-white/70" />
                 )}
               </div>
@@ -563,6 +684,68 @@ export const Shop: React.FC<ShopProps> = ({
           </section> */}
         </div>
       </div>
+      <div className={`${card} !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
+        <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-700 dark:text-rdark-text !mb-2.5 md:!mb-3">
+          已拥有龟种 ({ownedPetList.length})
+        </h3>
+        <div
+          ref={ownedPetsDragScroll.scrollRef}
+          onMouseDown={ownedPetsDragScroll.onMouseDown}
+          className={HORIZONTAL_DRAG_SCROLL_TRACK_CLASS}
+        >
+          {ownedPetList.length > 0 ? (
+            <ShopSharedSpineStrip
+              slots={ownedPreviewSlots}
+              columnWidth={132}
+              previewWidth={80}
+              previewHeight={80}
+              gap={12}
+              previewTopPx={12}
+            >
+              {ownedPetList.map((petItem) => {
+                const ownedSource = resolveOwnedPetSource(petItem);
+                const ownedPreview = resolvePetPreviewAsset(ownedSource);
+                const useSharedSpine = ownedPreview?.kind === 'spine';
+
+                return (
+                  <div
+                    key={String(petItem.petId)}
+                    className={`relative flex h-40 w-[132px] shrink-0 snap-start flex-col items-center gap-2 rounded-[22px] border border-white/12 bg-[linear-gradient(180deg,rgba(22,16,56,0.38),rgba(98,42,154,0.32),rgba(44,86,160,0.28),rgba(14,20,52,0.4))] px-3 pt-3 text-center shadow-[0_12px_24px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(222,212,255,0.12)] transition ${petItem.isEquipped ? 'border-cyan-300/70 ring-2 ring-cyan-400/75 ring-offset-2 ring-offset-[#071527]' : ''}`}
+                  >
+                    {petItem.isEquipped ? (
+                      <div className="absolute left-[-1px] top-[-1px] z-10 rounded-br-xl rounded-tl-[22px] border border-cyan-300/70 bg-cyan-400/95 px-2.5 py-1 text-[10px] font-black text-[#06242c] shadow-[0_6px_14px_rgba(34,211,238,0.22)]">
+                        已装备
+                      </div>
+                    ) : null}
+                    <div className="flex h-[80px] w-[80px] items-center justify-center">
+                      {useSharedSpine ? (
+                        <div className="h-[80px] w-[80px]" aria-hidden />
+                      ) : (
+                        <PetAssetPreview
+                          {...ownedSource}
+                          size={80}
+                          className="mx-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
+                          imageClassName="object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
+                        />
+                      )}
+                    </div>
+                    <span
+                      className={`text-[13px] font-semibold !px-2 !py-0.5 rounded-full ${getPetRarityBadgeClass(petItem.rarity)}`}
+                    >
+                      {normalizePetRarityGrade(petItem.rarity)}
+                    </span>
+                    <span className="truncate text-[11px] font-bold text-white">{petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}</span>
+                  </div>
+                );
+              })}
+            </ShopSharedSpineStrip>
+          ) : (
+            <TextEmptyState text="暂无已拥有龟种" className="min-h-40 w-full" />
+          )}
+        </div>
+      </div>
+      </>
+      )}
       <AnimatePresence>
         {isPreviewDialogOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-end justify-center bg-[#020817]/82 p-0 backdrop-blur-sm sm:items-center sm:p-4">
@@ -649,46 +832,6 @@ export const Shop: React.FC<ShopProps> = ({
           </motion.div>
         ) : null}
       </AnimatePresence>
-      {/* ━━━ Skin Collection ━━━ */}
-      <div className={`${card} hidden md:block !mt-3 md:!mt-4 !px-3 sm:!px-4 md:!px-5 !py-3 md:!py-4`}>
-        <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-700 dark:text-rdark-text !mb-2.5 md:!mb-3">
-          已拥有龟种 ({ownedPetList.length})
-        </h3>
-        <div
-          ref={ownedPetsDragScroll.scrollRef}
-          onMouseDown={ownedPetsDragScroll.onMouseDown}
-          className={HORIZONTAL_DRAG_SCROLL_TRACK_CLASS}
-        >
-          {ownedPetList.length > 0 ? ownedPetList.map((petItem) => (
-            <div
-              key={String(petItem.petId)}
-              className={`relative flex h-40 w-[132px] shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-[22px] border border-white/12 bg-[linear-gradient(180deg,rgba(22,16,56,0.38),rgba(98,42,154,0.32),rgba(44,86,160,0.28),rgba(14,20,52,0.4))] px-3 text-center shadow-[0_12px_24px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(222,212,255,0.12)] transition ${petItem.isEquipped ? 'border-cyan-300/70 ring-2 ring-cyan-400/75 ring-offset-2 ring-offset-[#071527]' : ''}`}
-            >
-              {petItem.isEquipped ? (
-                <div className="absolute left-[-1px] top-[-1px] z-10 rounded-br-xl rounded-tl-[22px] border border-cyan-300/70 bg-cyan-400/95 px-2.5 py-1 text-[10px] font-black text-[#06242c] shadow-[0_6px_14px_rgba(34,211,238,0.22)]">
-                  已装备
-                </div>
-              ) : null}
-              <div className="mx-auto flex justify-center">
-                <PetAssetPreview
-                  {...resolveOwnedPetSource(petItem)}
-                  size={80}
-                  className="mx-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
-                  imageClassName="object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
-                />
-              </div>
-              <span
-                className={`text-[13px] font-semibold !px-2 !py-0.5 rounded-full ${getPetRarityBadgeClass(petItem.rarity)}`}
-              >
-                {normalizePetRarityGrade(petItem.rarity)}
-              </span>
-              <span className="truncate text-[11px] font-bold text-white">{petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}</span>
-            </div>
-          )) : (
-            <TextEmptyState text="暂无已拥有龟种" className="min-h-40 w-full" />
-          )}
-        </div>
-      </div>
     </div>
   );
 };

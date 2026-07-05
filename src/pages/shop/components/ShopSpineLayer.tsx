@@ -130,6 +130,7 @@ export function ShopSpineLayer({
           <div className="absolute overflow-visible" style={bleedWrapperStyle}>
             <DynamicSpine
               {...assets}
+              initPriority="stage"
               width={canvasWidth}
               height={canvasHeight}
               animation={animation}
@@ -147,6 +148,7 @@ export function ShopSpineLayer({
         ) : (
           <DynamicSpine
             {...assets}
+            initPriority="stage"
             width={size.width}
             height={size.height}
             animation={animation}

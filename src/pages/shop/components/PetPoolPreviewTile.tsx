@@ -12,6 +12,8 @@ export interface PetPoolPreviewTileProps {
   preview: PetPreviewAsset | null;
   petKey?: string;
   variant: 'strip' | 'dialog';
+  /** 横向列表共用 WebGL 时，预览区留空由 ShopSharedSpineStrip 绘制 */
+  useSharedSpine?: boolean;
 }
 
 export function PetPoolPreviewTile({
@@ -20,30 +22,37 @@ export function PetPoolPreviewTile({
   preview,
   petKey,
   variant,
+  useSharedSpine = false,
 }: PetPoolPreviewTileProps) {
   const frame = getPetPoolPreviewFrameClass(rarityGrade);
   const badgeTone = getPetPoolPreviewBadgeTextClass(rarityGrade);
   const previewSize = variant === 'strip' ? 48 : 56;
+  const isSharedSpineSlot = useSharedSpine && variant === 'strip' && preview?.kind === 'spine';
 
   return (
     <div
       className={
         variant === 'strip'
-          ? `w-[clamp(76px,8vw,92px)] shrink-0 rounded-[18px] border p-2 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] ${frame}`
+          ? `${useSharedSpine ? 'w-[92px]' : 'w-[clamp(76px,8vw,92px)]'} shrink-0 rounded-[18px] border p-2 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] ${frame}`
           : `rounded-[18px] border p-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] ${frame}`
       }
     >
       <div className={`rounded-[10px] px-1 py-0.5 text-[10px] font-black ${badgeTone}`}>{rarityGrade}</div>
       <div className="mx-auto mt-2 flex justify-center">
-        <PetAssetPreview
-          asset={preview}
-          petKey={petKey}
-          petName={label}
-          alt={label}
-          size={previewSize}
-          className="mx-auto"
-          imageClassName="mx-auto object-contain"
-        />
+        {isSharedSpineSlot ? (
+          <div className="h-[48px] w-[48px]" aria-hidden />
+        ) : (
+          <PetAssetPreview
+            asset={preview}
+            petKey={petKey}
+            petName={label}
+            alt={label}
+            size={previewSize}
+            deferSpineMount={variant === 'strip'}
+            className="mx-auto"
+            imageClassName="mx-auto object-contain"
+          />
+        )}
       </div>
       <div
         className={

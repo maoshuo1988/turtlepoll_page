@@ -120,58 +120,56 @@ function resolveApiAssetUrl(path: string): string {
   return `${SERVER_ASSET_ORIGIN}${normalized}`;
 }
 
-function pickPetDefAvatarUrl(row: Record<string, unknown>): string | undefined {
-  const topIcon = pickNonEmptyString(row.icon);
-  if (topIcon) {
-    return resolveApiAssetUrl(topIcon);
+function isSpineJsonAssetUrl(url: string): boolean {
+  try {
+    return /\.json$/i.test(new URL(url, "http://local.invalid").pathname);
+  } catch {
+    return /\.json(\?.*)?$/i.test(url);
   }
+}
+
+/** 从 def/owned 行里收集 avatar，优先 .json 骨骼地址。 */
+function pickPetRowAvatarUrlPreferSpine(row: Record<string, unknown>): string | undefined {
+  const candidates: string[] = [];
+  const add = (value: unknown) => {
+    const text = pickNonEmptyString(value);
+    if (text) candidates.push(resolveApiAssetUrl(text));
+  };
+
+  add(row.avatarUrl);
+  add(row.avatar_url);
+  add(row.skeletonUrl);
+  add(row.skeleton_url);
+  add(row.icon);
+  add(row.image);
+  add(row.thumbnail);
+  add(row.cover);
 
   const display = row.display;
-  if (!isRecord(display)) return undefined;
+  if (isRecord(display)) {
+    add(display.avatarUrl);
+    add(display.avatar_url);
+    add(display.skeletonUrl);
+    add(display.skeleton_url);
+    add(display.icon);
+    add(display.image);
+    add(display.thumbnail);
+    add(display.cover);
+  }
 
-  const rel = pickNonEmptyString(display.thumbnail, display.icon, display.cover);
-  return rel ? resolveApiAssetUrl(rel) : undefined;
+  const unique = [...new Set(candidates)];
+  return unique.find(isSpineJsonAssetUrl) ?? unique[0];
+}
+
+function pickPetDefAvatarUrl(row: Record<string, unknown>): string | undefined {
+  return pickPetRowAvatarUrlPreferSpine(row);
 }
 
 function pickPetRewardAvatarUrl(...rows: Record<string, unknown>[]): string | undefined {
   for (const row of rows) {
-    const direct = pickNonEmptyString(
-      row.avatarUrl,
-      row.avatar_url,
-      row.avatar,
-      row.icon,
-      row.image,
-      row.thumbnail,
-      row.cover,
-      row.skeletonUrl,
-      row.skeleton_url,
-      row.assetUrl,
-      row.asset_url,
-    );
-    if (direct) {
-      return resolveApiAssetUrl(direct);
-    }
-
-    const display = row.display;
-    if (!isRecord(display)) continue;
-
-    const rel = pickNonEmptyString(
-      display.avatarUrl,
-      display.avatar_url,
-      display.thumbnail,
-      display.icon,
-      display.image,
-      display.cover,
-      display.skeletonUrl,
-      display.skeleton_url,
-      display.assetUrl,
-      display.asset_url,
-    );
-    if (rel) {
-      return resolveApiAssetUrl(rel);
-    }
+    const picked = pickPetRowAvatarUrlPreferSpine(row);
+    if (picked) return picked;
   }
-
   return undefined;
 }
 

@@ -16,6 +16,11 @@ import {
   SHOP_GACHA_EGG_STAGE_LAYOUT,
   SHOP_GACHA_STAGE_LAYERS,
 } from '@/config/shopSpineAssets';
+import { safeDestroyPixiApp } from '@/components/common/spine/safeDestroyPixiApp';
+import {
+  cancelSpineInitWait,
+  withSpineInitSlot,
+} from '@/components/common/spine/spineInitGate';
 
 type ShopEggAnimationMode = 'idle' | 'open';
 type ShopEggDisplayMode = 'hidden' | 'egg' | 'glow';
@@ -229,97 +234,22 @@ export function ShopEggSpine({
   useEffect(() => {
     if (size.width <= 0 || size.height <= 0 || !canvasHostRef.current) return undefined;
 
+    const waitToken = { cancelled: false };
     let mounted = true;
     let spines: EggSpinePair | null = null;
     let tickSpine: ((ticker: Application['ticker']) => void) | null = null;
+    let app: Application | null = null;
     const bleedX = Math.round(size.width * EGG_CANVAS_BLEED_RATIO);
     const bleedY = Math.round(size.height * EGG_CANVAS_BLEED_RATIO);
     const renderWidth = size.width + bleedX * 2;
     const renderHeight = size.height + bleedY * 2;
 
-    const setup = async () => {
-      try {
-        ensureEggAssetsRegistered();
-        await Assets.load(EGG_SPINE_ASSET_LIST.flatMap(({ skeletonAlias, atlasAlias }) => [skeletonAlias, atlasAlias]));
-        if (!mounted || !canvasHostRef.current) return;
-
-        const app = new Application();
-        await app.init({
-          width: renderWidth,
-          height: renderHeight,
-          backgroundAlpha: 0,
-          premultipliedAlpha: false,
-          antialias: true,
-          resolution: Math.min(window.devicePixelRatio || 1, 2),
-          autoDensity: true,
-        });
-
-        if (!mounted || !canvasHostRef.current) {
-          app.destroy(true, { children: true });
-          return;
-        }
-
-        appRef.current = app;
-        canvasHostRef.current.replaceChildren(app.canvas);
-        app.canvas.style.display = 'block';
-        app.canvas.style.position = 'absolute';
-        app.canvas.style.left = `${-bleedX}px`;
-        app.canvas.style.top = `${-bleedY}px`;
-        app.canvas.style.width = `${renderWidth}px`;
-        app.canvas.style.height = `${renderHeight}px`;
-
-        const dan = Spine.from({
-          skeleton: SHOP_EGG_SPINE_ASSETS.dan.skeletonAlias,
-          atlas: SHOP_EGG_SPINE_ASSETS.dan.atlasAlias,
-          autoUpdate: false,
-          boundsProvider: createEggBoundsProvider(),
-        });
-        const guang = Spine.from({
-          skeleton: SHOP_EGG_SPINE_ASSETS.guang.skeletonAlias,
-          atlas: SHOP_EGG_SPINE_ASSETS.guang.atlasAlias,
-          autoUpdate: false,
-          boundsProvider: createEggBoundsProvider(),
-        });
-        spines = { dan, guang };
-        spinePairRef.current = spines;
-
-        app.stage.addChild(guang);
-        app.stage.addChild(dan);
-        layoutEggSpinePair(spines, size.width, size.height, stageOffset, bleedX, bleedY, 'hidden', stageVariant);
-        tickSpine = (ticker) => {
-          const deltaSec = ticker.deltaMS / 1000;
-          spines?.guang.update(deltaSec);
-          spines?.dan.update(deltaSec);
-        };
-        app.ticker.add(tickSpine);
-        app.start();
-
-        playEggAnimation(spines, 'hidden');
-        playbackModeRef.current = 'hidden';
-
-        if (mounted) {
-          setHasError(false);
-          setIsReady(true);
-        }
-      } catch (error) {
-        console.error('Failed to initialize ShopEggSpine.', error);
-        if (mounted) {
-          setHasError(true);
-          setIsReady(false);
-        }
-      }
-    };
-
-    setIsReady(false);
-    void setup();
-
-    return () => {
-      mounted = false;
-      appRef.current?.stop();
+    const releaseScene = () => {
       if (tickSpine) {
-        appRef.current?.ticker.remove(tickSpine);
+        app?.ticker.remove(tickSpine);
         tickSpine = null;
       }
+      app?.stop();
       if (spines?.guang.parent) {
         spines.guang.parent.removeChild(spines.guang);
       }
@@ -328,10 +258,99 @@ export function ShopEggSpine({
       }
       spines?.guang.destroy();
       spines?.dan.destroy();
+      spines = null;
       spinePairRef.current = null;
       playbackModeRef.current = 'hidden';
-      appRef.current?.destroy(true, { children: true });
+      safeDestroyPixiApp(appRef.current ?? app);
       appRef.current = null;
+      app = null;
+    };
+
+    const setup = async () => {
+      await withSpineInitSlot(waitToken, 'stage', async () => {
+        try {
+          ensureEggAssetsRegistered();
+          await Assets.load(
+            EGG_SPINE_ASSET_LIST.flatMap(({ skeletonAlias, atlasAlias }) => [skeletonAlias, atlasAlias]),
+          );
+          if (!mounted || waitToken.cancelled || !canvasHostRef.current) return;
+
+          app = new Application();
+          await app.init({
+            width: renderWidth,
+            height: renderHeight,
+            backgroundAlpha: 0,
+            premultipliedAlpha: false,
+            antialias: true,
+            resolution: Math.min(window.devicePixelRatio || 1, 2),
+            autoDensity: true,
+          });
+
+          if (!mounted || waitToken.cancelled || !canvasHostRef.current) {
+            releaseScene();
+            return;
+          }
+
+          appRef.current = app;
+          canvasHostRef.current.replaceChildren(app.canvas);
+          app.canvas.style.display = 'block';
+          app.canvas.style.position = 'absolute';
+          app.canvas.style.left = `${-bleedX}px`;
+          app.canvas.style.top = `${-bleedY}px`;
+          app.canvas.style.width = `${renderWidth}px`;
+          app.canvas.style.height = `${renderHeight}px`;
+
+          const dan = Spine.from({
+            skeleton: SHOP_EGG_SPINE_ASSETS.dan.skeletonAlias,
+            atlas: SHOP_EGG_SPINE_ASSETS.dan.atlasAlias,
+            autoUpdate: false,
+            boundsProvider: createEggBoundsProvider(),
+          });
+          const guang = Spine.from({
+            skeleton: SHOP_EGG_SPINE_ASSETS.guang.skeletonAlias,
+            atlas: SHOP_EGG_SPINE_ASSETS.guang.atlasAlias,
+            autoUpdate: false,
+            boundsProvider: createEggBoundsProvider(),
+          });
+          spines = { dan, guang };
+          spinePairRef.current = spines;
+
+          app.stage.addChild(guang);
+          app.stage.addChild(dan);
+          layoutEggSpinePair(spines, size.width, size.height, stageOffset, bleedX, bleedY, 'hidden', stageVariant);
+          tickSpine = (ticker) => {
+            const deltaSec = ticker.deltaMS / 1000;
+            spines?.guang.update(deltaSec);
+            spines?.dan.update(deltaSec);
+          };
+          app.ticker.add(tickSpine);
+          app.start();
+
+          playEggAnimation(spines, 'hidden');
+          playbackModeRef.current = 'hidden';
+
+          if (mounted && !waitToken.cancelled) {
+            setHasError(false);
+            setIsReady(true);
+          }
+        } catch (error) {
+          console.error('Failed to initialize ShopEggSpine.', error);
+          releaseScene();
+          if (mounted && !waitToken.cancelled) {
+            setHasError(true);
+            setIsReady(false);
+          }
+        }
+      });
+    };
+
+    setIsReady(false);
+    void setup();
+
+    return () => {
+      mounted = false;
+      cancelSpineInitWait(waitToken);
+      releaseScene();
     };
   }, [size.height, size.width, stageVariant]);
 

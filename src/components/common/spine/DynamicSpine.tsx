@@ -5,13 +5,26 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Application, Assets } from 'pixi.js';
 import '@esotericsoftware/spine-pixi-v8';
 import {
-  AtlasAttachmentLoader,
   Physics,
-  SkeletonJson,
   SkinsAndAnimationBoundsProvider,
   Spine,
 } from '@esotericsoftware/spine-pixi-v8';
-import type { SkeletonData, TextureAtlas } from '@esotericsoftware/spine-core';
+import type { TextureAtlas } from '@esotericsoftware/spine-core';
+import { safeDestroyPixiApp } from '@/components/common/spine/safeDestroyPixiApp';
+import {
+  acquireSpineInitSlot,
+  cancelSpineInitWait,
+  releaseSpineInitSlot,
+  type SpineInitPriority,
+} from '@/components/common/spine/spineInitGate';
+import { loadSkeletonDataFromAtlas } from '@/components/common/spine/spineSkeletonLoad';
+import {
+  cancelShopStageBootWait,
+  isShopStageBootComplete,
+  notifyShopStageLayerReady,
+  waitForShopStageBoot,
+  type ShopStageBootToken,
+} from '@/components/common/spine/shopStageBootGate';
 
 export interface DynamicSpineProps {
   skeletonUrl: string;
@@ -36,6 +49,12 @@ export interface DynamicSpineProps {
   boundsClipMargin?: number;
   /** 布局采样时间（秒），用于特效动画取最大包围盒，如龟蛋 idle 光晕 */
   layoutSampleTime?: number;
+  /** 延迟挂载（毫秒），用于舞台分层异步加载 */
+  deferMs?: number;
+  /** stage=黑市舞台法师/极光；preview=列表缩略图 */
+  initPriority?: SpineInitPriority;
+  /** 黑市列表：等舞台法师加载完再 init */
+  waitForStageBoot?: boolean;
 }
 
 const registeredAtlasAliases = new Set<string>();
@@ -51,33 +70,32 @@ function hashAssetKey(input: string) {
 
 function registerAtlasAsset(atlasUrl: string) {
   const alias = `dynamic-spine-atlas-${hashAssetKey(atlasUrl)}`;
-  if (registeredAtlasAliases.has(alias)) {
-    return alias;
+  if (!registeredAtlasAliases.has(alias)) {
+    registeredAtlasAliases.add(alias);
+    Assets.add({
+      alias,
+      src: atlasUrl,
+      parser: 'spineTextureAtlasLoader',
+    });
   }
-
-  registeredAtlasAliases.add(alias);
-  Assets.add({
-    alias,
-    src: atlasUrl,
-    parser: 'spineTextureAtlasLoader',
-  });
-
   return alias;
 }
 
-async function loadSkeletonData(skeletonUrl: string, atlas: TextureAtlas): Promise<SkeletonData> {
-  const response = await fetch(skeletonUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch skeleton json: ${response.status} ${response.statusText}`);
+function resolveLayoutBounds(spine: Spine) {
+  const bounds = spine.skeleton.getBoundsRect();
+  if (Number.isFinite(bounds.width) && bounds.width > 0 && bounds.height > 0) {
+    return bounds;
   }
 
-  const json = await response.json();
-  if (!json || !Array.isArray(json.bones)) {
-    throw new Error('Invalid spine skeleton json: missing bones array');
-  }
-
-  const attachmentLoader = new AtlasAttachmentLoader(atlas);
-  return new SkeletonJson(attachmentLoader).readSkeletonData(json);
+  const data = spine.skeleton.data;
+  const fallbackWidth = data.width > 0 ? data.width : 1;
+  const fallbackHeight = data.height > 0 ? data.height : 1;
+  return {
+    x: data.x,
+    y: data.y,
+    width: fallbackWidth,
+    height: fallbackHeight,
+  };
 }
 
 function resolveAnimationName(spine: Spine, preferred?: string): string | null {
@@ -89,12 +107,11 @@ function resolveAnimationName(spine: Spine, preferred?: string): string | null {
   return spine.skeleton.data.animations[0]?.name ?? null;
 }
 
-function layoutSpine(
+export function layoutSpineInBox(
   spine: Spine,
-  app: Application,
+  boxWidth: number,
+  boxHeight: number,
   options: {
-    width: number;
-    height: number;
     padding: number;
     offsetX: number;
     offsetY: number;
@@ -124,13 +141,10 @@ function layoutSpine(
   spine.skeleton.updateWorldTransform(Physics.update);
   spine.update(0);
 
-  const bounds = spine.skeleton.getBoundsRect();
-  if (!Number.isFinite(bounds.width) || bounds.width <= 0 || bounds.height <= 0) {
-    return;
-  }
+  const bounds = resolveLayoutBounds(spine);
 
-  const targetWidth = Math.max(options.width - options.padding * 2, 1);
-  const targetHeight = Math.max(options.height - options.padding * 2, 1);
+  const targetWidth = Math.max(boxWidth - options.padding * 2, 1);
+  const targetHeight = Math.max(boxHeight - options.padding * 2, 1);
   const scaleX = targetWidth / bounds.width;
   const scaleY = targetHeight / bounds.height;
   const scale = options.fit === 'cover' ? Math.max(scaleX, scaleY) : Math.min(scaleX, scaleY);
@@ -138,13 +152,13 @@ function layoutSpine(
   const scaledWidth = bounds.width * scale;
   const scaledHeight = bounds.height * scale;
 
-  let x = (app.screen.width - scaledWidth) / 2 - bounds.x * scale;
-  let y =
+  const x = (boxWidth - scaledWidth) / 2 - bounds.x * scale;
+  const y =
     options.verticalAlign === 'top'
       ? options.padding - bounds.y * scale
       : options.verticalAlign === 'bottom'
-        ? app.screen.height - scaledHeight - options.padding - bounds.y * scale
-        : (app.screen.height - scaledHeight) / 2 - bounds.y * scale;
+        ? boxHeight - scaledHeight - options.padding - bounds.y * scale
+        : (boxHeight - scaledHeight) / 2 - bounds.y * scale;
 
   spine.scale.set(scale);
   spine.x = x + options.offsetX;
@@ -156,6 +170,26 @@ function layoutSpine(
     spine.skeleton.updateWorldTransform(Physics.update);
     spine.update(0);
   }
+}
+
+export function layoutDynamicSpine(
+  spine: Spine,
+  _app: Application,
+  options: {
+    width: number;
+    height: number;
+    padding: number;
+    offsetX: number;
+    offsetY: number;
+    verticalAlign: 'center' | 'top' | 'bottom';
+    fit: 'contain' | 'cover';
+    animation?: string;
+    loop: boolean;
+    boundsSampleStep: number;
+    layoutSampleTime: number;
+  },
+) {
+  layoutSpineInBox(spine, options.width, options.height, options);
 }
 
 export const DynamicSpine: React.FC<DynamicSpineProps> = ({
@@ -175,34 +209,101 @@ export const DynamicSpine: React.FC<DynamicSpineProps> = ({
   boundsSampleStep = 0.05,
   boundsClipMargin,
   layoutSampleTime = 0,
+  deferMs = 0,
+  initPriority = 'preview',
+  waitForStageBoot = false,
 }) => {
   const resolvedBoundsSampleStep = boundsClipMargin ?? boundsSampleStep;
   const hostRef = useRef<HTMLDivElement | null>(null);
   const appRef = useRef<Application | null>(null);
+  const spineRef = useRef<Spine | null>(null);
+  const initTokenRef = useRef(0);
   const [hasError, setHasError] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [canInit, setCanInit] = useState(deferMs <= 0);
+  const canRender = width > 0 && height > 0;
 
   useEffect(() => {
+    if (deferMs <= 0) {
+      setCanInit(true);
+      return undefined;
+    }
+
+    setCanInit(false);
+    const timer = window.setTimeout(() => setCanInit(true), deferMs);
+    return () => window.clearTimeout(timer);
+  }, [deferMs, skeletonUrl, atlasUrl]);
+
+  useEffect(() => {
+    if (!canRender || !canInit) return undefined;
+
+    const initToken = ++initTokenRef.current;
+    const waitToken: { cancelled: boolean } = { cancelled: false };
     let mounted = true;
     let spine: Spine | null = null;
+    let app: Application | null = null;
+    const stageBootToken: ShopStageBootToken = { cancelled: false };
+    const initWidth = width;
+    const initHeight = height;
+    const isCancelled = () => waitToken.cancelled || !mounted || initToken !== initTokenRef.current;
+
+    const releaseScene = () => {
+      if (spine?.parent) {
+        spine.parent.removeChild(spine);
+      }
+      spine?.destroy();
+      spine = null;
+      spineRef.current = null;
+
+      const activeApp = appRef.current ?? app;
+      appRef.current = null;
+      app = null;
+      safeDestroyPixiApp(activeApp);
+    };
+
+    const waitForHost = async () => {
+      for (let attempt = 0; attempt < 12; attempt += 1) {
+        if (hostRef.current) return hostRef.current;
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => resolve());
+        });
+      }
+      return hostRef.current;
+    };
 
     const setup = async () => {
-      if (!hostRef.current || width <= 0 || height <= 0) return;
+      if (waitForStageBoot) {
+        await waitForShopStageBoot(stageBootToken);
+        if (isCancelled()) return;
+      }
+
+      await acquireSpineInitSlot(waitToken, initPriority);
+      if (isCancelled()) {
+        releaseSpineInitSlot(initPriority);
+        releaseScene();
+        return;
+      }
 
       try {
+        const host = await waitForHost();
+        if (isCancelled() || !host) {
+          releaseScene();
+          return;
+        }
+
         const atlasAlias = registerAtlasAsset(atlasUrl);
-        const app = new Application();
+        app = new Application();
         await app.init({
-          width,
-          height,
+          width: initWidth,
+          height: initHeight,
           backgroundAlpha: 0,
           antialias: true,
           resolution: Math.min(window.devicePixelRatio || 1, 2),
           autoDensity: true,
         });
 
-        if (!mounted || !hostRef.current) {
-          app.destroy(true, { children: true });
+        if (isCancelled() || !hostRef.current) {
+          releaseScene();
           return;
         }
 
@@ -212,25 +313,41 @@ export const DynamicSpine: React.FC<DynamicSpineProps> = ({
         app.canvas.style.width = '100%';
         app.canvas.style.height = '100%';
 
+        const onContextLost = (event: Event) => {
+          event.preventDefault();
+          setIsReady(false);
+          releaseScene();
+          if (!isCancelled() && initPriority === 'stage') {
+            window.setTimeout(() => {
+              if (!isCancelled()) void setup();
+            }, 64);
+          }
+        };
+        app.canvas.addEventListener('webglcontextlost', onContextLost);
+
         await Assets.load(atlasAlias);
         const atlas = Assets.get<TextureAtlas>(atlasAlias);
         if (!atlas) {
           throw new Error('Spine atlas asset missing after load');
         }
 
-        const skeletonData = await loadSkeletonData(skeletonUrl, atlas);
-        if (!mounted) return;
+        const skeletonData = await loadSkeletonDataFromAtlas(skeletonUrl, atlas);
+        if (isCancelled() || !hostRef.current) {
+          releaseScene();
+          return;
+        }
 
         spine = new Spine({
           skeletonData,
           autoUpdate: true,
           ticker: app.ticker,
         });
+        spineRef.current = spine;
 
         app.stage.addChild(spine);
-        layoutSpine(spine, app, {
-          width,
-          height,
+        layoutDynamicSpine(spine, app, {
+          width: initWidth,
+          height: initHeight,
           padding,
           offsetX,
           offsetY,
@@ -242,32 +359,74 @@ export const DynamicSpine: React.FC<DynamicSpineProps> = ({
           layoutSampleTime,
         });
 
-        if (mounted) {
+        if (!isCancelled()) {
           setHasError(false);
           setIsReady(true);
+          if (initPriority === 'stage' && !isShopStageBootComplete()) {
+            notifyShopStageLayerReady();
+          }
         }
       } catch (error) {
         console.error('Failed to initialize DynamicSpine scene.', error);
-        if (mounted) {
+        releaseScene();
+        if (!isCancelled()) {
           setHasError(true);
           setIsReady(false);
         }
+      } finally {
+        releaseSpineInitSlot(initPriority);
       }
     };
 
     setIsReady(false);
+    setHasError(false);
     void setup();
 
     return () => {
       mounted = false;
-      if (spine?.parent) {
-        spine.parent.removeChild(spine);
-      }
-      spine?.destroy();
-      appRef.current?.destroy(true, { children: true });
-      appRef.current = null;
+      stageBootToken.cancelled = true;
+      cancelShopStageBootWait(stageBootToken);
+      cancelSpineInitWait(waitToken);
+      releaseScene();
     };
-  }, [animation, atlasUrl, boundsClipMargin, boundsSampleStep, fit, height, layoutSampleTime, loop, offsetX, offsetY, padding, skeletonUrl, verticalAlign, width]);
+  }, [atlasUrl, canInit, canRender, initPriority, skeletonUrl, waitForStageBoot]);
+
+  useEffect(() => {
+    const app = appRef.current;
+    const spine = spineRef.current;
+    if (!isReady || !app || !spine || width <= 0 || height <= 0) return;
+
+    if (app.screen.width !== width || app.screen.height !== height) {
+      app.renderer.resize(width, height);
+    }
+
+    layoutDynamicSpine(spine, app, {
+      width,
+      height,
+      padding,
+      offsetX,
+      offsetY,
+      verticalAlign,
+      fit,
+      animation,
+      loop,
+      boundsSampleStep: resolvedBoundsSampleStep,
+      layoutSampleTime,
+    });
+  }, [
+    animation,
+    fit,
+    height,
+    isReady,
+    layoutSampleTime,
+    loop,
+    offsetX,
+    offsetY,
+    padding,
+    resolvedBoundsSampleStep,
+    verticalAlign,
+    width,
+  ]);
 
   if (hasError && fallback) {
     return (

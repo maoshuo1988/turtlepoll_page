@@ -14,8 +14,9 @@ export interface PetAssetPreviewProps extends PetPreviewSource {
   className?: string;
   imageClassName?: string;
   alt?: string;
-  /** 直接传入已解析资源，避免重复计算 */
   asset?: PetPreviewAsset | null;
+  /** 黑市列表：等舞台法师加载完再 init */
+  deferSpineMount?: boolean;
 }
 
 function renderFallback(fallback: string, className: string) {
@@ -31,6 +32,7 @@ export function PetAssetPreview({
   imageClassName = 'object-contain',
   alt,
   asset,
+  deferSpineMount = false,
 }: PetAssetPreviewProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const preview = asset ?? resolvePetPreviewAsset({ avatarUrl, petKey, petName });
@@ -38,36 +40,35 @@ export function PetAssetPreview({
 
   if (!preview) {
     return (
-      <div
-        className={`grid place-items-center ${className}`}
-        style={{ width: size, height: size }}
-      >
+      <div className={`grid place-items-center ${className}`} style={{ width: size, height: size }}>
         {renderFallback('🐢', 'text-[1.4em]')}
       </div>
     );
   }
 
   if (preview.kind === 'spine' && preview.atlasUrl) {
+    const fallbackNode = renderFallback(preview.fallback, 'text-[1.4em]');
+
     return (
-      <DynamicSpine
-        skeletonUrl={preview.src}
-        atlasUrl={preview.atlasUrl}
-        width={size}
-        height={size}
-        className={className}
-        fallback={renderFallback(preview.fallback, 'text-[1.4em]')}
-        padding={Math.max(4, Math.round(size * 0.08))}
-        offsetY={Math.round(size * 0.04)}
-      />
+      <div className={className} style={{ width: size, height: size }}>
+        <DynamicSpine
+          skeletonUrl={preview.src}
+          atlasUrl={preview.atlasUrl}
+          width={size}
+          height={size}
+          initPriority="preview"
+          waitForStageBoot={deferSpineMount}
+          fallback={fallbackNode}
+          padding={Math.max(4, Math.round(size * 0.08))}
+          offsetY={Math.round(size * 0.04)}
+        />
+      </div>
     );
   }
 
   if (imageFailed) {
     return (
-      <div
-        className={`grid place-items-center ${className}`}
-        style={{ width: size, height: size }}
-      >
+      <div className={`grid place-items-center ${className}`} style={{ width: size, height: size }}>
         {renderFallback(preview.fallback, 'text-[1.4em]')}
       </div>
     );

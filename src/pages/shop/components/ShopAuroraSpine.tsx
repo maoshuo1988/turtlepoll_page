@@ -41,6 +41,7 @@ export function ShopAuroraSpine({ className = '', animation = 'animation' }: Sho
       {size.width > 0 && size.height > 0 ? (
         <DynamicSpine
           {...SHOP_SPINE_ASSETS.aurora}
+          initPriority="stage"
           width={size.width}
           height={size.height}
           animation={animation}
