@@ -574,12 +574,12 @@
     left: 10px;
     right: 10px;
     bottom: 10px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 8px;
   }
 
-  .eb-bet-row.eb-bet-row-three {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .eb-bet-row-center {
+    display: none;
   }
 
   .eb-gift-flight {

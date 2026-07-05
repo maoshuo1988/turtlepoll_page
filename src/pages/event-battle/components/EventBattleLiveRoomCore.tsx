@@ -26,7 +26,6 @@ import {
   useRequestPredictCreateComment,
   useRequestPredictHeat,
   useRequestPredictHeatMe,
-  useRequestPredictHeatRank,
   useRequestPredictLike,
   useRequestPredictOddsCurrent,
   useRequestPredictReplyComment,
@@ -560,16 +559,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const [countdownLeft, setCountdownLeft] = useState(() => getCountdownSeconds(news.closeTime));
   const activeTab: string = '全部';
   const [mobileActiveSide, setMobileActiveSide] = useState<CommentSide>(userSide ?? 'A');
-  const [mobileRankMode, setMobileRankMode] = useState<'all' | 'side'>('all');
-  const rankMode = mobileRankMode;
-  const setRankMode = setMobileRankMode;
-  const predictHeatRankQuery = useRequestPredictHeatRank({
-    marketId: battleMarketId ?? undefined,
-    scope: mobileRankMode === 'side' ? 'MY_SIDE' : 'ALL',
-    enabled: Boolean(battleMarketId),
-  });
   const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
-  const [betBurst, setBetBurst] = useState<{ side: BetOption; token: number } | null>(null);
   const [betDialogSide, setBetDialogSide] = useState<BetOption | null>(null);
   const [betDialogError, setBetDialogError] = useState('');
   const [optimisticMarketBet, setOptimisticMarketBet] = useState<{ side: CommentSide; amount: number } | null>(null);
@@ -652,7 +642,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     if (hasMarketBet || news.status !== 'open' || !canPlaceCoinBet) return false;
     return side === 'A' || side === 'B';
   }, [canPlaceCoinBet, hasMarketBet, news.status]);
-  const showDrawBet = news.supportsDrawBet !== false;
   const oddsFromApi = predictOddsQuery.data;
   const liveOddsA = oddsFromApi?.oddsA ?? oddsA;
   const liveOddsB = oddsFromApi?.oddsB ?? oddsB;
@@ -783,7 +772,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     setCommentsBState([]);
     setSelectedSide(userSide ?? 'A');
     setMobileActiveSide(userSide ?? 'A');
-    setMobileRankMode('all');
     setBetIntent(userSide ?? 'A');
     setDraft('');
     setReplyDraft('');
@@ -830,12 +818,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   useEffect(() => {
     setCountdownLeft(getCountdownSeconds(news.closeTime));
   }, [battleMarketId, news.closeTime]);
-
-  useEffect(() => {
-    if (!hasMarketBet && rankMode === 'side') {
-      setRankMode('all');
-    }
-  }, [hasMarketBet, rankMode]);
 
   useEffect(() => {
     if (!hasMarketBet || !myBetSide) return;
@@ -1098,7 +1080,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       return;
     }
 
-    setBetBurst({ side: targetSide, token: Date.now() });
     setBetDialogSide(null);
     setBetDialogError('');
     setMobilePanelOpen(false);
@@ -1287,21 +1268,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       betAmount: hasMarketBet ? marketBetAmount : 0,
     };
   }, [currentUserName, hasMarketBet, leftComments, marketBetAmount, myBetSide, predictHeatMeQuery.data, rightComments, userSide]);
-  const leaderBoard = useMemo(() => {
-    const list = predictHeatRankQuery.data?.list ?? [];
-    if (!list.length) return [];
-    return list.slice(0, 8).map((item, index) => {
-      const option = String(item.option ?? '').toUpperCase();
-      return {
-        id: String(item.userId ?? item.rank ?? index),
-        name: item.nickname || `用户${item.userId ?? ''}`,
-        avatar: item.avatar || FALLBACK_AVATAR,
-        rank: item.rank ?? index + 1,
-        score: Math.round(item.totalHeat ?? 0),
-        side: (option === 'B' ? 'B' : 'A') as CommentSide,
-      };
-    });
-  }, [predictHeatRankQuery.data?.list]);
   const quickAmounts = [100, 520, 1000, 5000];
 
   const rightRail = (
@@ -1320,10 +1286,6 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       canPlaceBet={canPlaceBet}
       isBetting={isBetting}
       estimatedPayout={estimatedPayout}
-      rankMode={rankMode}
-      onRankModeChange={setRankMode}
-      rankRows={leaderBoard}
-      rankLoading={predictHeatRankQuery.isLoading}
       personalStats={{
         likeCount: personalContribution.likeCount,
         commentCount: personalContribution.commentCount,
@@ -1452,7 +1414,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
             </div>
           </div>
 
-          <div className={`eb-bet-row ${showDrawBet && !hasMarketBet ? 'eb-bet-row-three' : ''}`}>
+          <div className="eb-bet-row">
             <button
               type="button"
               className={`eb-support eb-support-blue ${hasMarketBet && myBetSide !== 'A' ? 'is-hidden-slot' : ''} ${hasMarketBet && myBetSide === 'A' ? 'is-readonly' : ''}`}
@@ -1464,25 +1426,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
               <span>{hasMarketBet && myBetSide === 'A' ? `已支持${displayNews.optionA}` : `支持${displayNews.optionA}`}</span>
               <em>{hasMarketBet && myBetSide === 'A' ? `${displayNews.oddsA.toFixed(1)}x` : '投币助威'}</em>
             </button>
-            {showDrawBet && !hasMarketBet ? (
-              <button
-                type="button"
-                className="eb-support eb-support-neutral"
-                onClick={() => {
-                  openBetDialog('C');
-                }}
-                disabled={!canPlaceBet || isBetting}
-              >
-                <span>支持{displayNews.optionDraw}</span>
-                <em>投币助威</em>
-              </button>
-            ) : (
-              <div className={`eb-gift-flight ${betBurst ? `eb-gift-${betBurst.side === 'A' ? 'blue' : 'red'}` : ''}`} key={betBurst?.token ?? 'idle'}>
-                <span>{currentUserName} 投入 {formatVotes(numericBetAmount || 100)} 龟币</span>
-                <strong>热度 +50,000</strong>
-                <i>💰</i><i>💰</i><i>💰</i><i>💰</i><i>💰</i><i>💰</i>
-              </div>
-            )}
+            <div className="eb-bet-row-center" aria-hidden="true" />
             <button
               type="button"
               className={`eb-support eb-support-red ${hasMarketBet && myBetSide !== 'B' ? 'is-hidden-slot' : ''} ${hasMarketBet && myBetSide === 'B' ? 'is-readonly' : ''}`}

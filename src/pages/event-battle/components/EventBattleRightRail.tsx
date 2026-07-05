@@ -1,19 +1,10 @@
-/** 文件说明：暗盘撕裂带右侧栏（热度榜、下注面板、我的贡献），对齐开撕台撕裂带布局。 */
+/** 文件说明：暗盘撕裂带右侧栏（下注面板、我的贡献），对齐开撕台撕裂带布局。 */
 import React from 'react';
-import { Flame, Lock, Shield, Trophy } from 'lucide-react';
+import { Shield, Trophy } from 'lucide-react';
 import type { EventBattleTheme } from './eventBattleThemes';
 import './EventBattleRightRail.css';
 
 type CommentSide = 'A' | 'B';
-
-export type EventBattleRankRow = {
-  id: string;
-  name: string;
-  avatar: string;
-  rank: number | null;
-  score: number;
-  side: CommentSide;
-};
 
 export type EventBattleRightRailProps = {
   optionA: string;
@@ -30,10 +21,6 @@ export type EventBattleRightRailProps = {
   canPlaceBet: boolean;
   isBetting: boolean;
   estimatedPayout: number;
-  rankMode: 'all' | 'side';
-  onRankModeChange: (mode: 'all' | 'side') => void;
-  rankRows: EventBattleRankRow[];
-  rankLoading?: boolean;
   personalStats: {
     likeCount: number;
     commentCount: number;
@@ -86,10 +73,6 @@ export const EventBattleRightRail: React.FC<EventBattleRightRailProps> = ({
   canPlaceBet,
   isBetting,
   estimatedPayout,
-  rankMode,
-  onRankModeChange,
-  rankRows,
-  rankLoading,
   personalStats,
   visualTheme,
   onBetAmountChange,
@@ -109,64 +92,6 @@ export const EventBattleRightRail: React.FC<EventBattleRightRailProps> = ({
 
   return (
     <div className={`eb-right-rail ${className}`.trim()}>
-      <section className="eb-right-card eb-right-rank-card">
-        <div className="eb-right-card-head">
-          <div className="eb-right-card-title">
-            <Trophy size={16} />
-            <span>热度贡献榜</span>
-          </div>
-          <div className="eb-right-rank-tabs" role="tablist" aria-label="切换热度榜">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={rankMode === 'all'}
-              className={rankMode === 'all' ? 'active' : ''}
-              onClick={() => onRankModeChange('all')}
-            >
-              总榜
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={rankMode === 'side'}
-              className={rankMode === 'side' ? 'active' : ''}
-              disabled={!hasMarketBet}
-              onClick={() => {
-                if (!hasMarketBet) return;
-                onRankModeChange('side');
-              }}
-            >
-              本方榜
-              {!hasMarketBet ? <Lock size={12} /> : null}
-            </button>
-          </div>
-        </div>
-        {!hasMarketBet ? <p className="eb-right-rank-hint">下注后解锁本方榜</p> : null}
-        <div className="eb-right-rank-list">
-          {rankLoading ? (
-            <div className="eb-right-empty">榜单加载中...</div>
-          ) : rankRows.length === 0 ? (
-            <div className="eb-right-empty">暂无热度贡献数据</div>
-          ) : (
-            rankRows.slice(0, 8).map((item, index) => (
-              <div
-                key={item.id}
-                className="eb-right-rank-item"
-                style={{ ['--rank-side-color' as string]: sideColor(visualTheme, item.side) }}
-              >
-                <i>{item.rank ?? index + 1}</i>
-                <img src={item.avatar} alt={item.name} />
-                <b>{item.name}</b>
-                <strong>
-                  <Flame size={12} />
-                  {formatVotes(item.score)}
-                </strong>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-
       <section className="eb-right-card eb-right-bet-card">
         <div className="eb-right-card-head">
           <div className="eb-right-card-title">
