@@ -1,0 +1,218 @@
+@import '@/styles/viewport.scss';
+
+.hero {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #000;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
+}
+
+.heroBg {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.heroBgImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+.heroBgMask {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.stageWrap {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.head {
+  position: relative;
+  z-index: 20;
+  flex-shrink: 0;
+  padding: 8px 8px 0;
+}
+
+.hatchStage {
+  position: absolute;
+  top: 104px;
+  right: 0;
+  bottom: 56px;
+  left: 0;
+  z-index: 9;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hatchStageAnchor {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(calc(-50% - 10px));
+  overflow: visible;
+}
+
+.headRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.stats {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.statPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.statCoin {
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.statStamina {
+  border: 1px solid rgba(244, 114, 182, 0.28);
+  background: rgba(244, 114, 182, 0.08);
+  color: #fda4af;
+}
+
+.backBtn {
+  display: inline-flex;
+  min-height: 36px;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.42);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.feedback {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.feedbackError {
+  color: #fca5a5;
+}
+
+.feedbackMiss {
+  color: #fcd34d;
+}
+
+.feedbackSuccess {
+  color: #6ee7b7;
+}
+
+.actionWrap {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 15;
+  width: 100%;
+  max-width: 100%;
+  transform: translateX(-50%);
+  padding: 8px 12px max(12px, env(safe-area-inset-bottom));
+}
+
+.hatchBtn {
+  position: relative;
+  display: flex;
+  margin: 0 auto;
+  height: 52px;
+  width: min(220px, 100%);
+  touch-action: manipulation;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hatchBtnImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.hatchBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.hatchBtnText {
+  position: relative;
+  z-index: 1;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(120, 48, 0, 0.55);
+}
+
+.hatchBtnIdle {
+  opacity: 0.78;
+}

@@ -111,6 +111,12 @@ function mapPkBetRecord(
 export function useSettlementRecords() {
   const isAuthenticated = Boolean(getAuthToken());
 
+  const myMarketsOpenQuery = useRequestPredictMyMarkets({
+    page: 1,
+    limit: 100,
+    status: 'OPEN',
+    enabled: isAuthenticated,
+  });
   const myMarketsPendingQuery = useRequestPredictMyMarkets({
     page: 1,
     limit: 100,
@@ -136,16 +142,17 @@ export function useSettlementRecords() {
     enabled: isAuthenticated,
   });
 
+  const openMarketList = myMarketsOpenQuery.data?.list ?? [];
   const pendingMarketList = myMarketsPendingQuery.data?.list ?? [];
   const settledMarketList = myMarketsSettledQuery.data?.list ?? [];
 
   const marketList = useMemo(() => {
     const merged = new Map<number, FootballMarketAggregate>();
-    [...pendingMarketList, ...settledMarketList].forEach((item) => {
+    [...openMarketList, ...pendingMarketList, ...settledMarketList].forEach((item) => {
       if (item.market?.id) merged.set(item.market.id, item);
     });
     return Array.from(merged.values());
-  }, [pendingMarketList, settledMarketList]);
+  }, [openMarketList, pendingMarketList, settledMarketList]);
 
   const pendingItems = useMemo(() => {
     const coinItemsFromPending = pendingMarketList
@@ -203,6 +210,7 @@ export function useSettlementRecords() {
   const refetch = useCallback(async () => {
     if (!isAuthenticated) return;
     await Promise.all([
+      myMarketsOpenQuery.refetch(),
       myMarketsPendingQuery.refetch(),
       myMarketsSettledQuery.refetch(),
       pkPendingBetsQuery.refetch(),
@@ -210,6 +218,7 @@ export function useSettlementRecords() {
     ]);
   }, [
     isAuthenticated,
+    myMarketsOpenQuery,
     myMarketsPendingQuery,
     myMarketsSettledQuery,
     pkPendingBetsQuery,
@@ -217,6 +226,7 @@ export function useSettlementRecords() {
   ]);
 
   const isLoading =
+    (isAuthenticated && myMarketsOpenQuery.isLoading) ||
     (isAuthenticated && myMarketsPendingQuery.isLoading) ||
     (isAuthenticated && myMarketsSettledQuery.isLoading) ||
     (isAuthenticated && pkPendingBetsQuery.isLoading) ||

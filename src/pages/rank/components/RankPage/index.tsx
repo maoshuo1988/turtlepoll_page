@@ -10,6 +10,7 @@ import {
   Search,
 } from 'lucide-react';
 import type { CoinLeaderboardItem, CoinLeaderboardResult } from '@/hooks/coinTypes';
+import { useMedia768 } from '@/hooks/useMedia768';
 import { EmptyDataPage, LoginRequiredPage } from '@/components/common/state/PageState';
 import { createUserAvatarUrl } from '@/utils/userAvatar';
 import styles from './index.module.scss';
@@ -206,6 +207,7 @@ export const RankPage: React.FC<RankPageProps> = ({
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [locatedToMyRank, setLocatedToMyRank] = useState(false);
+  const isMobile = useMedia768();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const listScrollRef = useRef<HTMLDivElement>(null);
 
@@ -226,6 +228,7 @@ export const RankPage: React.FC<RankPageProps> = ({
   const pageStart = filteredList.length === 0 ? 0 : (safePage - 1) * PAGE_SIZE + 1;
   const pageEnd = Math.min(safePage * PAGE_SIZE, filteredList.length);
   const pageItems = filteredList.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  const visibleItems = isMobile ? filteredList : pageItems;
 
   const myRank = data?.myRank ?? null;
   const myBalance = data?.myBalance ?? 0;
@@ -234,7 +237,14 @@ export const RankPage: React.FC<RankPageProps> = ({
     window.setTimeout(() => {
       const container = listScrollRef.current;
       const target = container?.querySelector('[data-rank-me="true"]');
-      if (!container || !target) return;
+      if (!target) return;
+
+      if (isMobile) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      if (!container) return;
 
       const containerRect = container.getBoundingClientRect();
       const targetRect = target.getBoundingClientRect();
@@ -247,25 +257,28 @@ export const RankPage: React.FC<RankPageProps> = ({
 
       container.scrollTo({ top: Math.max(0, nextTop), behavior: 'smooth' });
     }, 80);
-  }, []);
+  }, [isMobile]);
 
   const jumpToMyRank = useCallback(() => {
     if (!myRank) return;
 
-    const index = filteredList.findIndex(
-      (user) => isSameUser(currentUserId, user) || user.rank === myRank,
-    );
+    if (!isMobile) {
+      const index = filteredList.findIndex(
+        (user) => isSameUser(currentUserId, user) || user.rank === myRank,
+      );
 
-    if (index < 0) {
-      setLocatedToMyRank(false);
-      return;
+      if (index < 0) {
+        setLocatedToMyRank(false);
+        return;
+      }
+
+      const targetPage = Math.floor(index / PAGE_SIZE) + 1;
+      setPage(targetPage);
     }
 
-    const targetPage = Math.floor(index / PAGE_SIZE) + 1;
-    setPage(targetPage);
     setLocatedToMyRank(true);
     scrollToMyRow();
-  }, [currentUserId, filteredList, myRank, scrollToMyRow]);
+  }, [currentUserId, filteredList, isMobile, myRank, scrollToMyRow]);
 
   useEffect(() => {
     setPage(1);
@@ -332,12 +345,14 @@ export const RankPage: React.FC<RankPageProps> = ({
   const footNote =
     filteredList.length === 0
       ? `共 ${totalCount.toLocaleString()} 名`
-      : `显示 ${pageStart}-${pageEnd}，共 ${totalCount.toLocaleString()} 名${locatedToMyRank ? ' · 已定位到我的排名' : ''}`;
+      : isMobile
+        ? `共 ${totalCount.toLocaleString()} 名${locatedToMyRank ? ' · 已定位到我的排名' : ''}`
+        : `显示 ${pageStart}-${pageEnd}，共 ${totalCount.toLocaleString()} 名${locatedToMyRank ? ' · 已定位到我的排名' : ''}`;
 
   return (
-    <section className={css('page')}>
-      <div className={css('page-header')}>
-        <h1 className={css('title')}>排行榜</h1>
+    <section className={css('page', isMobile && 'page-mobile')}>
+      <div className={css('page-header', isMobile && 'page-header-mobile')}>
+        <h1 className={css('title', 'title-desktop')}>排行榜</h1>
 
         <div className={css('search-wrap')}>
           <Search size={16} className={css('search-icon')} aria-hidden />
@@ -347,17 +362,19 @@ export const RankPage: React.FC<RankPageProps> = ({
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="搜索用户名..."
-            className={css('search-input')}
+            className={css('search-input', isMobile && 'search-input-mobile')}
             aria-label="搜索用户名"
           />
-          <span className={css('search-kbd')} aria-hidden>
-            ⌘ K
-          </span>
+          {!isMobile ? (
+            <span className={css('search-kbd')} aria-hidden>
+              ⌘ K
+            </span>
+          ) : null}
         </div>
       </div>
 
-      <div className={css('page-body')}>
-        <div className={css('table-card')}>
+      <div className={css('page-body', isMobile && 'page-body-mobile')}>
+        <div className={css('table-card', isMobile && 'table-card-mobile')}>
           {filteredList.length === 0 ? (
             <EmptyDataPage
               title={search.trim() ? '没有匹配的用户' : '暂无排行榜数据'}
@@ -374,37 +391,40 @@ export const RankPage: React.FC<RankPageProps> = ({
                 <span className={css('table-head-cell', 'table-head-metric')}>龟币</span>
               </div>
 
-              <div ref={listScrollRef} className={css('list-scroll')}>
-                <div className={`${css('table-body')} max-sm:hidden`}>
-                  {pageItems.map((user) => {
-                    const isMe = isSameUser(currentUserId, user);
-                    return (
-                      <RankTableRow
-                        key={`${user.rank}-${user.userId}`}
-                        user={user}
-                        isMe={isMe}
-                      />
-                    );
-                  })}
-                </div>
-
-                <div className={`${css('mobile-list')} hidden max-sm:grid`}>
-                  {pageItems.map((user) => {
-                    const isMe = isSameUser(currentUserId, user);
-                    return (
-                      <RankMobileRow
-                        key={`${user.rank}-${user.userId}-mobile`}
-                        user={user}
-                        isMe={isMe}
-                      />
-                    );
-                  })}
-                </div>
+              <div ref={listScrollRef} className={css('list-scroll', isMobile && 'list-scroll-mobile')}>
+                {!isMobile ? (
+                  <div className={css('table-body')}>
+                    {visibleItems.map((user) => {
+                      const isMe = isSameUser(currentUserId, user);
+                      return (
+                        <RankTableRow
+                          key={`${user.rank}-${user.userId}`}
+                          user={user}
+                          isMe={isMe}
+                        />
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className={css('mobile-list')}>
+                    {visibleItems.map((user) => {
+                      const isMe = isSameUser(currentUserId, user);
+                      return (
+                        <RankMobileRow
+                          key={`${user.rank}-${user.userId}-mobile`}
+                          user={user}
+                          isMe={isMe}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
-              <div className={css('table-foot')}>
+              <div className={css('table-foot', isMobile && 'table-foot-mobile')}>
                 <p className={css('foot-note')}>{footNote}</p>
-                <div className={css('pagination')}>
+                {!isMobile ? (
+                  <div className={css('pagination')}>
                   <button
                     type="button"
                     className={css('page-btn')}
@@ -449,6 +469,7 @@ export const RankPage: React.FC<RankPageProps> = ({
                     <ChevronRight size={16} />
                   </button>
                 </div>
+                ) : null}
               </div>
             </>
           )}

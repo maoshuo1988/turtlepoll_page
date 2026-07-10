@@ -16,8 +16,9 @@ export default function GamesPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="pt-[10px]">
+    <div className="pt-0 lg:pt-3">
       <GamesPageView
+        onBack={() => navigate('/')}
         onOpenJump={() => navigate('/jump')}
         onOpenLab={openLabStandalone}
         onOpenBattle={openBattleStandalone}

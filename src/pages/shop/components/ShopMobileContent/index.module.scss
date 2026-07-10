@@ -1,0 +1,357 @@
+@import '@/styles/viewport.scss';
+
+.root {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0e1518;
+  padding: 12px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+}
+
+.sectionHead {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sectionTitle {
+  margin: 0;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.sectionHint {
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.38);
+  white-space: nowrap;
+}
+
+.linkBtn {
+  touch-action: manipulation;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.probGrid {
+  margin-top: 12px;
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.probCell {
+  display: flex;
+  min-width: 0;
+  min-height: 68px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 8px 6px;
+  text-align: center;
+}
+
+.probIcon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.probGrade {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.probValue {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.prob-sss,
+.prob-ss,
+.prob-s {
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.prob-a {
+  border-color: rgba(168, 85, 247, 0.35);
+}
+
+.prob-b {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.prob-c {
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.tone-sss,
+.tone-ss,
+.tone-s {
+  color: #fbbf24;
+}
+
+.tone-a {
+  color: #c084fc;
+}
+
+.tone-b {
+  color: #38bdf8;
+}
+
+.tone-c {
+  color: #4ade80;
+}
+
+.previewTrack {
+  margin-top: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.previewStrip {
+  display: inline-block;
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+  vertical-align: top;
+}
+
+.staminaHead {
+  margin-bottom: 12px;
+}
+
+.staminaPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 114, 182, 0.28);
+  background: rgba(244, 114, 182, 0.08);
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fda4af;
+}
+
+.staminaRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 12px;
+}
+
+.staminaIcon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.staminaCopy {
+  min-width: 0;
+  flex: 1;
+}
+
+.staminaName {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.staminaDesc {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.staminaPrice {
+  display: inline-flex;
+  margin-top: 8px;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.28);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.buyBtn {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  height: 44px;
+  min-width: 80px;
+  touch-action: manipulation;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.buyBtnImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.buyBtnText {
+  position: relative;
+  z-index: 1;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 40, 0, 0.45);
+}
+
+.buyFlash {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ownedTitle {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.ownedList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ownedRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 12px;
+}
+
+.ownedRowEquipped {
+  border-color: rgba(0, 230, 153, 0.35);
+  background: rgba(0, 230, 153, 0.05);
+}
+
+.ownedPreview {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.ownedCopy {
+  min-width: 0;
+  flex: 1;
+}
+
+.ownedName {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.ownedMeta {
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ownedMetaEquipped {
+  color: #4ade80;
+}
+
+.equippedBtn {
+  flex-shrink: 0;
+  min-width: 72px;
+  border-radius: 12px;
+  border: none;
+  background: #00e699;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #04130c;
+}
+
+.equippedBtnGhost {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.empty {
+  min-height: 120px;
+}

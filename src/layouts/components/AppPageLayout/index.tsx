@@ -3,9 +3,10 @@
  */
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from '@umijs/renderer-react';
-import { MobileFooter } from '@/components/mobile/footer/MobileFooter';
+import { useNavigate, useLocation } from '@umijs/renderer-react';
+import { MobileFooter, isMobileTabBarRoute } from '@/components/mobile/footer/MobileFooter';
 import { MobileHeader } from '@/components/mobile/header/MobileHeader';
+import { shouldShowMobileHeader } from '@/utils/mobileRoutes';
 import { PcHeader } from '@/components/pc/header/PcHeader';
 import { Sidebar } from '@/components/pc/layout/Sidebar';
 import type { SidebarHotTag, SidebarHotTopic } from '@/components/common/layout/sidebarHotTopics';
@@ -61,7 +62,9 @@ type AppPageLayoutProps = HeaderProps & {
  */
 export function AppLayoutHeader(props: HeaderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const openGames = props.onOpenGames ?? (() => navigate('/games'));
+  const showMobileHeader = shouldShowMobileHeader(location.pathname);
 
   return (
     <>
@@ -78,17 +81,19 @@ export function AppLayoutHeader(props: HeaderProps) {
         onOpenSettlements={props.onOpenSettlements}
         pendingSettlementCount={props.pendingSettlementCount}
       />
-      <MobileHeader
-        darkMode={props.darkMode}
-        onOpenGames={openGames}
-        onOpenPet={() => navigate('/pet')}
-        onOpenShop={() => navigate('/shop')}
-        onOpenAuth={props.onOpenAuth}
-        onOpenProfile={props.onOpenProfile}
-        onSignOut={props.onSignOut}
-        onOpenSettlements={props.onOpenSettlements}
-        pendingSettlementCount={props.pendingSettlementCount}
-      />
+      {showMobileHeader ? (
+        <MobileHeader
+          darkMode={props.darkMode}
+          onOpenGames={openGames}
+          onOpenPet={() => navigate('/pet')}
+          onOpenShop={() => navigate('/shop')}
+          onOpenAuth={props.onOpenAuth}
+          onOpenProfile={props.onOpenProfile}
+          onSignOut={props.onSignOut}
+          onOpenSettlements={props.onOpenSettlements}
+          pendingSettlementCount={props.pendingSettlementCount}
+        />
+      ) : null}
     </>
   );
 }
@@ -140,6 +145,8 @@ export function AppPageLayout({
   showSidebar = false,
   showFooter = true,
 }: AppPageLayoutProps) {
+  const location = useLocation();
+  const isTabBarRoute = isMobileTabBarRoute(location.pathname);
   const [scrollContainer, setScrollContainer] = useState<HTMLElement | null>(null);
   const captureScrollContainerRef = useCallback((node: HTMLElement | null) => {
     setScrollContainer(node);
@@ -148,7 +155,14 @@ export function AppPageLayout({
   const lastScrollTopRef = useRef(0);
 
   useEffect(() => {
-    if (!scrollContainer) return;
+    if (isTabBarRoute) {
+      setMobileTabBarVisible(true);
+      lastScrollTopRef.current = scrollContainer?.scrollTop ?? 0;
+    }
+  }, [isTabBarRoute, location.pathname, scrollContainer]);
+
+  useEffect(() => {
+    if (!scrollContainer || !isTabBarRoute) return;
     lastScrollTopRef.current = scrollContainer.scrollTop;
     const onScroll = () => {
       const y = scrollContainer.scrollTop;
@@ -163,20 +177,28 @@ export function AppPageLayout({
     };
     scrollContainer.addEventListener('scroll', onScroll, { passive: true });
     return () => scrollContainer.removeEventListener('scroll', onScroll);
-  }, [scrollContainer]);
+  }, [scrollContainer, isTabBarRoute]);
 
-  const mobileBottomPaddingClass =
-    showFooter
-      ? mobileTabBarVisible
-        ? 'max-lg:pb-[calc(56px+env(safe-area-inset-bottom,0px)+10px)]'
-        : 'max-lg:pb-[calc(12px+env(safe-area-inset-bottom,0px))]'
-      : '';
+  const showMobileTabBar = showFooter && isTabBarRoute;
+
+  useEffect(() => {
+    document.documentElement.classList.add('app-shell-locked');
+    return () => {
+      document.documentElement.classList.remove('app-shell-locked');
+    };
+  }, []);
+
+  const mobileBottomPaddingClass = showMobileTabBar
+    ? mobileTabBarVisible
+      ? 'max-lg:pb-[calc(56px+env(safe-area-inset-bottom,0px)+10px)]'
+      : 'max-lg:pb-[calc(12px+env(safe-area-inset-bottom,0px))]'
+    : 'max-lg:pb-[calc(12px+env(safe-area-inset-bottom,0px))]';
 
   const contentInnerClassName =
-    `${contentClassName} max-lg:transition-[padding-bottom] max-lg:duration-200 max-lg:ease-out ${mobileBottomPaddingClass}`.trim();
+    `w-full max-w-full min-w-0 max-lg:overflow-x-hidden ${contentClassName} max-lg:transition-[padding-bottom] max-lg:duration-200 max-lg:ease-out ${mobileBottomPaddingClass}`.trim();
 
   return (
-    <div className={css("legacy-fusion-app fixed-sidebar-style flex h-screen flex-col overflow-hidden bg-[#080808] text-white transition-colors dark:bg-rdark")}>
+    <div className={css("legacy-fusion-app fixed-sidebar-style flex h-screen max-lg:h-dvh max-lg:max-h-dvh w-full max-w-full min-w-0 flex-col overflow-hidden bg-[#080808] text-white transition-colors dark:bg-rdark")}>
       <AppLayoutHeader
         darkMode={darkMode}
         onToggleTheme={onToggleTheme}
@@ -218,7 +240,7 @@ export function AppPageLayout({
         </main>
       )}
 
-      {showFooter ? (
+      {showMobileTabBar ? (
         <div className="pointer-events-none shrink-0 border-0 bg-transparent p-0 lg:hidden">
           <AppLayoutFooter mobileTabBarVisible={mobileTabBarVisible} />
         </div>

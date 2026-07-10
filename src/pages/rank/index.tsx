@@ -1,6 +1,7 @@
 /**
  * 文件说明：index 页面路由入口，负责排行榜取数、登录校验与页面组装。
  */
+import { useNavigate } from '@umijs/renderer-react';
 import { RankPageView } from './components/RankPageView';
 import { useHomeLayoutContext } from '@/layouts/context';
 import { useAppSession } from '@/hooks/useAppSession';
@@ -8,6 +9,7 @@ import { useRequestCoinLeaderboard } from '@/hooks/useCoinRequests';
 import { getAuthToken } from '@/utils/authStorage';
 
 export default function RankPage() {
+  const navigate = useNavigate();
   const { onOpenAuth } = useHomeLayoutContext();
   const token = getAuthToken();
   const { user } = useAppSession();
@@ -26,6 +28,7 @@ export default function RankPage() {
       data={leaderboardQuery.data ?? null}
       currentUserId={currentUserId}
       currentUserName={currentUserName}
+      onBack={() => navigate('/')}
       onOpenAuth={onOpenAuth}
       onRetry={() => {
         void leaderboardQuery.refetch();

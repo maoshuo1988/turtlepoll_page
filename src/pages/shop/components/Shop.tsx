@@ -3,7 +3,7 @@
  */
 import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Coins, Heart } from 'lucide-react';
+import { ArrowLeft, Coins } from 'lucide-react';
 import type { PetInfo } from '@/components/common/pet/petTypes';
 import type { ShopItem } from './shopTypes';
 import { useRequestAiStaminaApple } from '@/hooks/useAiRequests';
@@ -22,6 +22,7 @@ import { getPetRarityBadgeClass, getPetRarityTextClass, normalizePetRarityGrade 
 import { TextEmptyState } from '@/components/common/state/PageState';
 import { ShopGachaEggStage } from './ShopGachaEggStage';
 import { ShopGachaHeroMobile } from './ShopGachaHeroMobile';
+import { ShopMobileContent } from './ShopMobileContent';
 import { ShopGachaStageLayers } from './ShopGachaStageLayers';
 import {
   ShopSharedSpineStrip,
@@ -374,7 +375,7 @@ export const Shop: React.FC<ShopProps> = ({
   return (
     <div className="legacy-shop-page min-w-0 max-w-full overflow-x-hidden space-y-3 px-0 md:space-y-4">
       {isMobileShop ? (
-      <div className="grid gap-3.5 md:gap-4">
+      <div className="grid w-full min-w-0 max-w-full gap-2 pb-3">
         <ShopGachaHeroMobile
           balance={balance}
           pet={pet}
@@ -391,142 +392,22 @@ export const Shop: React.FC<ShopProps> = ({
           onResetGacha={resetGacha}
         />
 
-        <div className={`${card} min-w-0 overflow-hidden !px-0 !py-0`}>
-          <div className="grid min-w-0 gap-3 p-1">
-            <section className="relative min-w-0 overflow-hidden rounded-[24px] border border-[#9a73ff]/30 bg-[linear-gradient(135deg,rgba(18,12,48,0.46)_0%,rgba(76,42,150,0.38)_30%,rgba(32,74,150,0.34)_58%,rgba(18,120,118,0.22)_78%,rgba(10,18,48,0.48)_100%)] px-4 py-4 shadow-[0_16px_40px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(210,188,255,0.16)]">
-              <div className="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,transparent,rgba(195,128,255,0.92),rgba(101,151,255,0.88),rgba(113,255,225,0.65),transparent)]" />
-              <div className="relative rounded-[22px] border border-white/12 bg-[linear-gradient(135deg,rgba(22,16,54,0.36),rgba(88,44,144,0.3),rgba(38,82,156,0.26),rgba(18,92,92,0.18))] p-3 shadow-[inset_0_1px_0_rgba(222,212,255,0.12)]">
-                <div className="text-base font-black text-white">奖池概率</div>
-                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {probabilityRows.length > 0 ? probabilityRows.map((item) => <div key={item.label} className="flex min-w-0 items-center justify-between rounded-[18px] border border-white/10 bg-[linear-gradient(135deg,rgba(10,20,48,0.92),rgba(35,31,84,0.9),rgba(16,78,85,0.88))] px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"><div className="flex min-w-0 items-center gap-2"><img src={item.icon} alt={item.label} className="h-6 w-6 shrink-0 object-contain" /><span className={`truncate text-[15px] font-black ${item.tone}`}>{item.label}</span></div><span className={`shrink-0 text-[16px] font-black ${item.tone}`}>{item.value}</span></div>) : (
-                    <TextEmptyState text="暂无概率数据" className="sm:col-span-2" />
-                  )}
-                </div>
-              </div>
-              <div className="relative mt-5 overflow-hidden rounded-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(22,16,56,0.38),rgba(98,42,154,0.32),rgba(44,86,160,0.28),rgba(18,92,92,0.18),rgba(14,20,52,0.4))] p-3 shadow-[0_14px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(222,212,255,0.14)]">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="text-[15px] font-black text-white">奖池预览</div>
-                  <button type="button" onClick={() => setIsPreviewDialogOpen(true)} className="touch-manipulation text-[12px] font-bold text-white/72 transition hover:text-white">全部预览 &gt;</button>
-                </div>
-                <div className="mt-3 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  {petPoolPreviewRows.length > 0 ? (
-                    <ShopSharedSpineStrip
-                      slots={poolPreviewSlots}
-                      columnWidth={92}
-                      previewWidth={48}
-                      previewHeight={48}
-                      gap={12}
-                      previewTopPx={34}
-                    >
-                      {petPoolPreviewRows.map((item) => (
-                        <PetPoolPreviewTile
-                          key={`m-${item.key}`}
-                          variant="strip"
-                          useSharedSpine
-                          rarityGrade={item.rarityGrade}
-                          label={item.label}
-                          petKey={item.petKey}
-                          preview={item.preview}
-                        />
-                      ))}
-                    </ShopSharedSpineStrip>
-                  ) : (
-                    <TextEmptyState text="暂无预览数据" className="min-w-full py-3 text-sm text-white/70" />
-                  )}
-                </div>
-              </div>
-            </section>
-
-            <section className="relative min-w-0 overflow-hidden rounded-[24px] border border-white/12 bg-[linear-gradient(180deg,rgba(28,14,64,0.42),rgba(98,42,154,0.34),rgba(44,86,160,0.24),rgba(12,20,50,0.42))] px-4 py-4 shadow-[0_16px_36px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(230,210,255,0.12)]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(195,120,255,0.18),transparent_36%),radial-gradient(circle_at_100%_0%,rgba(105,122,255,0.14),transparent_30%)]" />
-              <div className="relative flex items-center justify-between gap-2">
-                <div className="text-[15px] font-black text-white">体力商店</div>
-                <div className="inline-flex items-center gap-1 rounded-full border border-rose-300/20 bg-rose-300/10 px-2.5 py-1 text-[12px] font-semibold text-rose-200">
-                  <Heart size={13} strokeWidth={2.3} />
-                  {pet.stamina}/{pet.maxStamina}
-                </div>
-              </div>
-              {firstStaminaItem ? (
-                <div className="relative mt-4 grid grid-cols-1 gap-3">
-                  <div className={`relative min-w-0 overflow-hidden px-3 py-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ${STAMINA_SHOP_META.apple1.frame}`}>
-                    {buyFlash === firstStaminaItem.id && <motion.div initial={{ opacity: 0.5 }} animate={{ opacity: 0 }} transition={{ duration: 0.6 }} className="absolute inset-0 bg-white/20" />}
-                    <div className="truncate text-[13px] font-black text-white">小苹果</div>
-                    <img src={APPLE_IMAGE_BY_ITEM.apple1} alt="小苹果" className="mx-auto mt-3 h-[clamp(64px,8vw,96px)] w-[clamp(64px,8vw,96px)] object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]" />
-                    <div className="mt-3 text-[18px] font-black text-white">+{SMALL_APPLE_RECOVERY}</div>
-                    <div className={`mx-auto mt-4 inline-flex h-[38px] min-w-[74px] items-center justify-center gap-1.5 rounded-full border px-3 text-[14px] font-black text-white ${STAMINA_SHOP_META.apple1.pill}`}>
-                      <Coins size={14} className="text-emerald-300" /> {SMALL_APPLE_PRICE}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setAppleBuyOpen(true)}
-                      className="relative mx-auto mt-4 flex h-[56px] w-full max-w-[168px] touch-manipulation items-center justify-center overflow-hidden text-center"
-                    >
-                      <img src="/shop/btn-g.png" alt="购买按钮" className="absolute inset-0 h-full w-full object-fill" />
-                      <span className="relative z-10 flex items-center gap-2 text-[20px] font-black text-white drop-shadow-[0_2px_4px_rgba(0,40,0,0.45)]">
-                        购买
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              ) : null}
-            </section>
-          </div>
-        </div>
-
-        <div className={`${card} min-w-0 !px-3 !py-3 sm:!px-4 sm:!py-4`}>
-          <h3 className="!mb-2.5 text-base font-bold text-slate-700 dark:text-rdark-text sm:text-lg">
-            已拥有龟种 ({ownedPetList.length})
-          </h3>
-          <div className="overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {ownedPetList.length > 0 ? (
-              <ShopSharedSpineStrip
-                slots={ownedPreviewSlots}
-                columnWidth={132}
-                previewWidth={80}
-                previewHeight={80}
-                gap={12}
-                previewTopPx={12}
-              >
-                {ownedPetList.map((petItem) => {
-                  const ownedSource = resolveOwnedPetSource(petItem);
-                  const ownedPreview = resolvePetPreviewAsset(ownedSource);
-                  const useSharedSpine = ownedPreview?.kind === 'spine';
-
-                  return (
-                    <div
-                      key={String(petItem.petId)}
-                      className={`relative flex h-40 w-[132px] shrink-0 snap-start flex-col items-center gap-2 rounded-[22px] border border-white/12 bg-[linear-gradient(180deg,rgba(22,16,56,0.38),rgba(98,42,154,0.32),rgba(44,86,160,0.28),rgba(14,20,52,0.4))] px-3 pt-3 text-center shadow-[0_12px_24px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(222,212,255,0.12)] ${petItem.isEquipped ? 'border-cyan-300/70 ring-2 ring-cyan-400/75 ring-offset-2 ring-offset-[#071527]' : ''}`}
-                    >
-                      {petItem.isEquipped ? (
-                        <div className="absolute left-[-1px] top-[-1px] z-10 rounded-br-xl rounded-tl-[22px] border border-cyan-300/70 bg-cyan-400/95 px-2.5 py-1 text-[10px] font-black text-[#06242c] shadow-[0_6px_14px_rgba(34,211,238,0.22)]">
-                          已装备
-                        </div>
-                      ) : null}
-                      <div className="flex h-[80px] w-[80px] items-center justify-center">
-                        {useSharedSpine ? (
-                          <div className="h-[80px] w-[80px]" aria-hidden />
-                        ) : (
-                          <PetAssetPreview
-                            {...ownedSource}
-                            size={80}
-                            className="mx-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
-                            imageClassName="object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.34)]"
-                          />
-                        )}
-                      </div>
-                      <span className={`rounded-full !px-2 !py-0.5 text-[13px] font-semibold ${getPetRarityBadgeClass(petItem.rarity)}`}>
-                        {normalizePetRarityGrade(petItem.rarity)}
-                      </span>
-                      <span className="truncate text-[11px] font-bold text-white">{petItem.petName ?? petItem.petKey ?? `宠物 ${petItem.petId}`}</span>
-                    </div>
-                  );
-                })}
-              </ShopSharedSpineStrip>
-            ) : (
-              <TextEmptyState text="暂无已拥有龟种" className="min-h-40 w-full" />
-            )}
-          </div>
-        </div>
+        <ShopMobileContent
+          petStamina={pet.stamina}
+          petMaxStamina={pet.maxStamina}
+          probabilityRows={probabilityRows}
+          petPoolPreviewRows={petPoolPreviewRows}
+          poolPreviewSlots={poolPreviewSlots}
+          firstStaminaItem={firstStaminaItem}
+          appleImage={APPLE_IMAGE_BY_ITEM.apple1}
+          applePrice={SMALL_APPLE_PRICE}
+          appleRecovery={SMALL_APPLE_RECOVERY}
+          buyFlashId={buyFlash}
+          ownedPetList={ownedPetList}
+          resolveOwnedPetSource={resolveOwnedPetSource}
+          onOpenPreviewDialog={() => setIsPreviewDialogOpen(true)}
+          onOpenAppleBuy={() => setAppleBuyOpen(true)}
+        />
       </div>
       ) : (
       <>

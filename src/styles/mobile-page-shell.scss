@@ -1,0 +1,23 @@
+@import './viewport.scss';
+
+/** 移动端页面根：限制宽度、裁切横向溢出，二级页预留顶部安全区。 */
+@mixin mobile-page-root($with-safe-top: false) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  @if $with-safe-top {
+    padding-top: max(8px, env(safe-area-inset-top, 0px));
+  }
+}
+
+/** 移动端一级 Tab 页内容区（全局 Header 已占位时不再重复 safe-top）。 */
+@mixin mobile-tab-page-root {
+  @include mobile-page-root(false);
+}
+
+/** 移动端二级页内容区（全局 Header 已占位，不再重复 safe-top）。 */
+@mixin mobile-secondary-page-root {
+  @include mobile-tab-page-root;
+}

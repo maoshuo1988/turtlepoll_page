@@ -3,6 +3,7 @@
  */
 import { useMemo } from 'react';
 import type { FootballMarketAggregate, PredictContext, PredictTearSettlement } from '@/hooks/predictionTypes';
+import { pickFirstNonEmptyString, resolveAssetUrl } from '@/utils/assetUrl';
 import {
   marketSupportsDrawBet,
   resolveMarketDrawBase,
@@ -60,11 +61,110 @@ export const PREDICTION_TYPE_COLORS: Record<PredictionCardType, string> = {
 export const PREDICTION_CARD_FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80';
 
+function isLikelyImageUrl(value?: string) {
+  const trimmed = value?.trim();
+  if (!trimmed) return false;
+  if (trimmed.startsWith('#')) return false;
+  return (
+    /^(https?:)?\/\//.test(trimmed) ||
+    trimmed.startsWith('data:') ||
+    trimmed.startsWith('blob:') ||
+    trimmed.startsWith('/') ||
+    /\.(png|jpe?g|gif|webp|svg|avif)(\?.*)?$/i.test(trimmed)
+  );
+}
+
+function resolveAggregateContext(item: FootballMarketAggregate) {
+  const raw = item as FootballMarketAggregate & Record<string, unknown>;
+  const nested = (raw.context ?? raw.predictContext ?? raw.predict_context ?? {}) as Record<string, unknown>;
+
+  return {
+    ...nested,
+    eventName: pickFirstNonEmptyString(nested.eventName, nested.event_name, raw.eventName, raw.event_name),
+    proText: pickFirstNonEmptyString(nested.proText, nested.pro_text, raw.proText, raw.pro_text),
+    conText: pickFirstNonEmptyString(nested.conText, nested.con_text, raw.conText, raw.con_text),
+    imageUrl: pickFirstNonEmptyString(nested.imageUrl, nested.image_url, raw.imageUrl, raw.image_url),
+    listImage: pickFirstNonEmptyString(nested.listImage, nested.list_image, raw.listImage, raw.list_image),
+    sideABgImage: pickFirstNonEmptyString(
+      nested.sideABgImage,
+      nested.side_a_bg_image,
+      nested.sideABg_image,
+      nested.proImage,
+      nested.pro_image,
+      nested.proBgImage,
+      nested.pro_bg_image,
+      nested.sideAAvatar,
+      nested.side_a_avatar,
+      nested.proAvatar,
+      nested.pro_avatar,
+      raw.sideABgImage,
+      raw.side_a_bg_image,
+    ),
+    sideBBgImage: pickFirstNonEmptyString(
+      nested.sideBBgImage,
+      nested.side_b_bg_image,
+      nested.sideBBg_image,
+      nested.conImage,
+      nested.con_image,
+      nested.conBgImage,
+      nested.con_bg_image,
+      nested.sideBAvatar,
+      nested.side_b_avatar,
+      nested.conAvatar,
+      nested.con_avatar,
+      raw.sideBBgImage,
+      raw.side_b_bg_image,
+    ),
+    sideABgColor: pickFirstNonEmptyString(nested.sideABgColor, nested.side_a_bg_color, raw.sideABgColor, raw.side_a_bg_color),
+    sideBBgColor: pickFirstNonEmptyString(nested.sideBBgColor, nested.side_b_bg_color, raw.sideBBgColor, raw.side_b_bg_color),
+  } as Partial<PredictContext> & Record<string, unknown>;
+}
+
+function resolvePredictContextMediaFields(context: Partial<PredictContext>) {
+  const raw = context as Partial<PredictContext> & Record<string, unknown>;
+
+  return {
+    cover: pickFirstNonEmptyString(raw.imageUrl, raw.image_url),
+    listImage: pickFirstNonEmptyString(raw.listImage, raw.list_image),
+    sideABgImage: pickFirstNonEmptyString(
+      raw.sideABgImage,
+      raw.side_a_bg_image,
+      raw.sideABg_image,
+      raw.proImage,
+      raw.pro_image,
+      raw.proBgImage,
+      raw.pro_bg_image,
+      raw.sideAAvatar,
+      raw.side_a_avatar,
+      raw.proAvatar,
+      raw.pro_avatar,
+    ),
+    sideBBgImage: pickFirstNonEmptyString(
+      raw.sideBBgImage,
+      raw.side_b_bg_image,
+      raw.sideBBg_image,
+      raw.conImage,
+      raw.con_image,
+      raw.conBgImage,
+      raw.con_bg_image,
+      raw.sideBAvatar,
+      raw.side_b_avatar,
+      raw.conAvatar,
+      raw.con_avatar,
+    ),
+    sideABgColor: pickFirstNonEmptyString(raw.sideABgColor, raw.side_a_bg_color),
+    sideBBgColor: pickFirstNonEmptyString(raw.sideBBgColor, raw.side_b_bg_color),
+  };
+}
+
 export function resolvePredictionCardImageFields(context: Partial<PredictContext>) {
-  const cover = context.imageUrl?.trim() || undefined;
-  const listImage = context.listImage?.trim() || undefined;
-  const sideABgImage = context.sideABgImage?.trim() || undefined;
-  const sideBBgImage = context.sideBBgImage?.trim() || undefined;
+  const fields = resolvePredictContextMediaFields(context);
+  const cover = fields.cover && isLikelyImageUrl(fields.cover) ? resolveAssetUrl(fields.cover) : undefined;
+  const listImage = fields.listImage && isLikelyImageUrl(fields.listImage) ? resolveAssetUrl(fields.listImage) : undefined;
+  const sideABgRaw = fields.sideABgImage && isLikelyImageUrl(fields.sideABgImage) ? fields.sideABgImage : undefined;
+  const sideBBgRaw = fields.sideBBgImage && isLikelyImageUrl(fields.sideBBgImage) ? fields.sideBBgImage : undefined;
+  const sideABgImage = sideABgRaw ? resolveAssetUrl(sideABgRaw) : undefined;
+  const sideBBgImage = sideBBgRaw ? resolveAssetUrl(sideBBgRaw) : undefined;
   const coverImage = cover || listImage;
 
   return {
@@ -72,8 +172,8 @@ export function resolvePredictionCardImageFields(context: Partial<PredictContext
     listImage,
     sideABgImage,
     sideBBgImage,
-    sideABgColor: context.sideABgColor?.trim() || undefined,
-    sideBBgColor: context.sideBBgColor?.trim() || undefined,
+    sideABgColor: fields.sideABgColor,
+    sideBBgColor: fields.sideBBgColor,
     image: coverImage || PREDICTION_CARD_FALLBACK_IMAGE,
   };
 }
@@ -157,7 +257,9 @@ export function getPredictionOptionOdds(item: Pick<PredictionCardItem, 'oddsA' |
 
 export function mapMarketToPredictionCard(item: FootballMarketAggregate): PredictionCardItem {
   const marketId = item.market.id;
-  const context = item.context ?? {};
+  const context = resolveAggregateContext(item);
+  const optionA = context.proText || '正方';
+  const optionB = context.conText || '反方';
   const { votesA, votesB, votesC, oddsA, oddsB, oddsDraw } = calcPredictionMarketOdds(item);
   return normalizePredictionCardItem({
     id: `market-${marketId}`,
@@ -166,8 +268,8 @@ export function mapMarketToPredictionCard(item: FootballMarketAggregate): Predic
     summary: context.detail || item.market.title || '查看当前预测双方观点与热度变化。',
     ...resolvePredictionCardImageFields(context),
     votes: { A: votesA, B: votesB, C: votesC },
-    optionA: context.proText || '正方',
-    optionB: context.conText || '反方',
+    optionA,
+    optionB,
     optionDraw: resolveDrawText(context),
     oddsA,
     oddsB,

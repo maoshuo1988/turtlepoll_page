@@ -34,7 +34,11 @@ const PATH_VIEW_MAP: Record<string, ViewType> = {
   '/pet': 'pet',
   // 个人中心页：展示用户资料、资产和历史记录。
   '/profile': 'profile',
-  // 活跃预测页：展示当前正在进行的预测市场。
+  // 我的 Tab：待结算与个人快捷入口（移动端一级页）。
+  '/mine': 'activePredictions',
+  // 暗盘二级页：移动端从首页功能卡进入。
+  '/dark-market': 'predictions',
+  // 活跃预测页：展示当前正在进行的预测市场（PC 侧栏）。
   '/active-predictions': 'activePredictions',
 };
 

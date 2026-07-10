@@ -1,7 +1,7 @@
 /**
  * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。
  */
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate } from '@umijs/renderer-react';
 import { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';
 import { ActivePredictionsPageView } from './components/ActivePredictionsPageView';
@@ -12,21 +12,22 @@ export default function ActivePredictionsPage() {
   const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });
   const activePredictionItems = useMemo<PredictionCardItem[]>(() => {
     const list = footballMarkets.data?.list ?? [];
-    const liveNews = Array.isArray(list) && list.length > 0
-      ? list.map(mapMarketToPredictionCard)
-      : [];
+    const liveNews = Array.isArray(list) && list.length > 0 ? list.map(mapMarketToPredictionCard) : [];
     return liveNews.filter((item) => item.status === 'open');
   }, [footballMarkets.data]);
+
+  const handleEnterBattle = useCallback(
+    (item: PredictionCardItem) => {
+      navigate(`/event-battle?market=${item.marketId}`);
+    },
+    [navigate],
+  );
 
   return (
     <ActivePredictionsPageView
       items={activePredictionItems}
-      onBack={() => {
-        navigate('/');
-      }}
-      onEnterBattle={() => {
-        navigate('/');
-      }}
+      onBack={() => navigate('/')}
+      onEnterBattle={handleEnterBattle}
     />
   );
 }

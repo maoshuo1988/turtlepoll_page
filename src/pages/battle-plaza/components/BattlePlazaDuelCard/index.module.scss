@@ -24,6 +24,48 @@
   gap: 8px 10px;
 }
 
+.head-meta {
+  display: none;
+}
+
+.opinions-wrap {
+  display: block;
+}
+
+.opinion-label-short {
+  display: none;
+}
+
+.opinion-label-full {
+  display: inline;
+}
+
+.cap-label-short {
+  display: none;
+}
+
+.cap-label-full {
+  display: inline;
+}
+
+.foot-join-label-short,
+.foot-join-ico-full {
+  display: none;
+}
+
+.foot-join-label-full {
+  display: inline;
+}
+
+.vs-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #71717a;
+  letter-spacing: 1px;
+  margin: 8px 0;
+}
+
 .cat {
   display: inline-flex;
   align-items: center;
@@ -268,15 +310,6 @@
   font-size: 14px;
   line-height: 1.65;
   color: rgba(244, 244, 245, 0.88);
-}
-
-.vs-label {
-  text-align: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: #71717a;
-  letter-spacing: 1px;
-  margin: 8px 0;
 }
 
 .room-meta {
@@ -945,6 +978,215 @@
   cursor: pointer;
 }
 
+@media (max-width: 1279px) {
+  .card {
+    margin-bottom: 12px;
+    background: #0e1518;
+    border-color: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+  }
+
+  .head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 14px 14px 10px;
+  }
+
+  .head-badges {
+    margin-left: 0;
+    order: 0;
+  }
+
+  .title {
+    order: 1;
+    font-size: 16px;
+    line-height: 1.4;
+    flex: none;
+    width: 100%;
+  }
+
+  .head-meta {
+    order: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .head-meta-banker {
+    font-size: 12px;
+    font-weight: 600;
+    color: #71717a;
+  }
+
+  .head-meta-pool {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fbbf24;
+  }
+
+  .head-meta-pool-suffix {
+    color: #fbbf24;
+    font-weight: 700;
+  }
+
+  .body {
+    padding: 0 14px 12px;
+  }
+
+  .banker-row {
+    display: none;
+  }
+
+  .opinions-wrap {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .opinion-box {
+    padding: 10px;
+    border-radius: 12px;
+    min-height: 72px;
+  }
+
+  .opinion-banker {
+    background: rgba(127, 29, 29, 0.35);
+    border: 1px solid rgba(239, 68, 68, 0.16);
+  }
+
+  .opinion-challenger {
+    background: rgba(30, 58, 138, 0.35);
+    border: 1px solid rgba(59, 130, 246, 0.16);
+  }
+
+  .opinion-label-row {
+    margin-bottom: 6px;
+  }
+
+  .opinion-label {
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .opinion-label-short {
+    display: inline;
+  }
+
+  .opinion-label-full {
+    display: none;
+  }
+
+  .opinion-text {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .opinion-win-badge {
+    display: none;
+  }
+
+  .capacity {
+    padding: 10px 14px;
+  }
+
+  .cap-label-short {
+    display: inline;
+  }
+
+  .cap-label-full {
+    display: none;
+  }
+
+  .cap-bar {
+    height: 8px;
+    margin-top: 6px;
+    background: #1f2937;
+  }
+
+  .cap-fill {
+    background: linear-gradient(90deg, #00e699 0%, #00e699 72%, #ef4444 72%, #ef4444 100%);
+  }
+
+  .cap-fill-full,
+  .cap-fill-sealed {
+    background: #f59e0b;
+  }
+
+  .cap-detail {
+    font-size: 10px;
+    margin-top: 6px;
+  }
+
+  .foot {
+    padding: 10px 14px 14px;
+    gap: 4px;
+  }
+
+  .foot-btn {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .foot-action {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 4px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .foot-join {
+    min-height: 40px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .foot-join-blue {
+    background: #00e699;
+    color: #04130c;
+    box-shadow: 0 8px 20px rgba(0, 230, 153, 0.22);
+  }
+
+  .foot-join-orange {
+    background: transparent;
+    color: #fbbf24;
+    border: 1.5px solid rgba(245, 158, 11, 0.45);
+    box-shadow: none;
+  }
+
+  .foot-join-label-short {
+    display: inline;
+  }
+
+  .foot-join-label-full,
+  .foot-join-ico-full {
+    display: none;
+  }
+
+  .foot-time {
+    width: 100%;
+    margin-top: 4px;
+    justify-content: flex-end;
+    font-size: 11px;
+  }
+
+  .my-challenge-box-confirm {
+    display: block;
+  }
+
+  .my-challenge-actions {
+    margin-top: 10px;
+  }
+}
+
 @media (max-width: 640px) {
   .banker-row {
     flex-wrap: wrap;
@@ -956,21 +1198,9 @@
     text-align: left;
   }
 
-  .title {
-    font-size: 16px;
-  }
-
   .foot-action {
     width: 100%;
     margin-left: 0;
     justify-content: space-between;
-  }
-
-  .my-challenge-box-confirm {
-    display: block;
-  }
-
-  .my-challenge-actions {
-    margin-top: 10px;
   }
 }

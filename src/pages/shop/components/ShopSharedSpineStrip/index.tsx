@@ -207,8 +207,8 @@ export function ShopSharedSpineStrip({
   }
 
   return (
-    <div className={`relative ${className}`.trim()}>
-      <div className="relative z-[2] flex min-w-0" style={{ gap }}>
+    <div className={`relative w-full max-w-full ${className}`.trim()}>
+      <div className="relative z-[2] flex w-max max-w-none min-w-0" style={{ gap }}>
         {children}
       </div>
       {/* 画布必须在卡片之上：卡片背景不透明，放在下层会被完全挡住 */}

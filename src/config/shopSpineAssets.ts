@@ -60,10 +60,10 @@ export type ShopSpineAssetKey = keyof typeof SHOP_SPINE_ASSETS;
 export const SHOP_AURORA_STAGE_OFFSET_X = -70;
 export const SHOP_AURORA_STAGE_OFFSET_Y = -20;
 export const SHOP_AURORA_STAGE_OFFSET_MOBILE_X = -36;
-export const SHOP_AURORA_STAGE_OFFSET_MOBILE_Y = 8;
+export const SHOP_AURORA_STAGE_OFFSET_MOBILE_Y = -8;
 
 /** 手机端抽奖主舞台高度。 */
-export const SHOP_GACHA_HERO_MOBILE_MIN_HEIGHT = 'min(520px, 72dvh)';
+export const SHOP_GACHA_HERO_MOBILE_MIN_HEIGHT = 'min(400px, 55dvh)';
 
 /** 黑市龟蛋 open 动画时长（秒），用于同步孵化 reveal。 */
 export const SHOP_EGG_OPEN_DURATION_SEC = 5.5;
@@ -113,9 +113,12 @@ export const SHOP_EGG_SPINE_STAGE_OFFSET: Record<
   keyof typeof SHOP_GACHA_EGG_STAGE_LAYOUT,
   { offsetX: number; offsetY: number }
 > = {
-  mobile: { offsetX: -6, offsetY: 98 },
+  mobile: { offsetX: -6, offsetY: 112 },
   desktop: { offsetX: -6, offsetY: 118 },
 };
+
+/** 手机端 Hero 底部按钮区高度（52px 按钮 + 上下 padding），开蛋舞台贴此区域上沿。 */
+export const SHOP_GACHA_HERO_MOBILE_ACTION_ZONE_PX = 56;
 
 /** 手机端分层：开蛋时法师层需高于蛋/光效（z-[10]），蛋舞台 z-[7]。 */
 export const SHOP_GACHA_MOBILE_LAYER_Z = {

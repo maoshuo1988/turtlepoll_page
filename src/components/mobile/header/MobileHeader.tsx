@@ -1,11 +1,13 @@
 /**
- * 文件说明：mobile Header 组件，负责手机浏览器顶栏（与 PC 分离的紧凑布局）。
+ * 文件说明：mobile Header，保留左上 logo 与右上菜单；右侧展示龟币余额。
  */
 import React, { useState } from 'react';
-import { Gamepad2, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import { getAuthToken } from '@/utils/authStorage';
+import { useAppSession } from '@/hooks/useAppSession';
+import { IconFont } from '@/components/common/iconfont/IconFont';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { MOBILE_HEADER_INNER_HEIGHT_PX } from './mobileHeaderMetrics';
-import { SettlementEntryButton } from '@/components/common/settlement/SettlementEntryButton';
 
 export interface MobileHeaderProps {
   darkMode: boolean;
@@ -19,18 +21,27 @@ export interface MobileHeaderProps {
   pendingSettlementCount?: number;
 }
 
+function formatCoinBalance(balance: number) {
+  if (!Number.isFinite(balance)) return '0';
+  if (balance >= 10000) {
+    const wan = balance / 10000;
+    return `${wan >= 100 ? wan.toFixed(0) : wan.toFixed(1).replace(/\.0$/, '')}万`;
+  }
+  return String(Math.floor(balance));
+}
+
 export const MobileHeader: React.FC<MobileHeaderProps> = ({
   darkMode,
-  onOpenGames,
   onOpenPet,
   onOpenShop,
   onOpenAuth,
   onOpenProfile,
   onSignOut,
-  onOpenSettlements,
-  pendingSettlementCount = 0,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const isAuthenticated = Boolean(getAuthToken());
+  const { coin } = useAppSession();
+  const balance = typeof coin?.balance === 'number' ? coin.balance : 0;
 
   return (
     <>
@@ -47,20 +58,26 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
           </div>
 
           <div className="flex shrink-0 items-center gap-1.5">
-            {onOpenSettlements ? (
-              <SettlementEntryButton
-                pendingCount={pendingSettlementCount}
-                onClick={onOpenSettlements}
-                className="h-9 px-3 text-[12px] lg:hidden"
-              />
-            ) : null}
             <button
               type="button"
-              onClick={onOpenGames}
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/10 bg-[#141518] text-violet-400 dark:border-rdark-border dark:bg-rdark-card dark:text-violet-300"
-              aria-label="游戏"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  onOpenAuth();
+                  return;
+                }
+                onOpenShop();
+              }}
+              className="inline-flex h-9 max-w-[120px] touch-manipulation items-center gap-1.5 rounded-full border border-emerald-400/45 bg-[#0a100e] px-2.5 text-white shadow-[0_0_14px_rgba(0,255,163,0.16)]"
+              aria-label={isAuthenticated ? `龟币 ${formatCoinBalance(balance)}` : '登录查看龟币'}
             >
-              <Gamepad2 size={17} strokeWidth={2} />
+              <IconFont
+                name="qianbi"
+                className="shrink-0 leading-none text-emerald-400"
+                style={{ fontSize: 28 }}
+              />
+              <span className="truncate text-[13px] font-black tabular-nums tracking-tight">
+                {isAuthenticated ? formatCoinBalance(balance) : '--'}
+              </span>
             </button>
             <button
               type="button"

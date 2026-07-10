@@ -1232,60 +1232,88 @@ export const BattlePlazaPage: React.FC = () => {
             </div>
           ) : null}
 
-          <div className={css("bp-page-head")}>
-            <div className={css("bp-page-kicker")}>
-              <HubBuildingIcon className={css("bp-page-kicker-ico")} />
+          <div className={css('bp-page-head', 'bp-page-head-desktop')}>
+            <div className={css('bp-page-kicker')}>
+              <HubBuildingIcon className={css('bp-page-kicker-ico')} />
               <span>BATTLE PLAZA</span>
             </div>
-            <h1 className={css("bp-page-title")}>地下钱庄</h1>
+            <h1 className={css('bp-page-title')}>地下钱庄</h1>
+            <p className={css('bp-page-sub')}>开局做庄、挑战庄家、进入私人赌局</p>
           </div>
 
-          <div className={css("bp-hub")}>
-            <div className={css("bp-hub-metrics")}>
-              <div className={css("phb-stats")}>
-                <div className={css("phb-metric")}>
-                  <div className={css("phb-metric-head")}>
-                    <img src={BATTLE_HUB_ASSETS.activeGames} alt="" className={css("phb-metric-ico-img")} />
-                    <span className={css("phb-metric-lbl")}>当前赌局</span>
-                  </div>
-                  <span className={css("phb-metric-val phb-metric-val--green")}>{totalBattleCount}</span>
+          <div className={css('bp-hub')}>
+            <div className={css('bp-hub-metrics')}>
+              <div className={css('bp-exchange-head')}>
+                <img src={BATTLE_HUB_ASSETS.activeGames} alt="" className={css('bp-exchange-ico')} />
+                <div className={css('bp-exchange-copy')}>
+                  <div className={css('bp-exchange-title')}>龟币交易所</div>
+                  <p className={css('bp-exchange-desc')}>公开赌局挑战收取 5% 入场费，冻结资金待结算后释放</p>
                 </div>
-                <div className={css("phb-metric")}>
-                  <div className={css("phb-metric-head")}>
-                    <img src={BATTLE_HUB_ASSETS.frozenCoins} alt="" className={css("phb-metric-ico-img")} />
-                    <span className={css("phb-metric-lbl")}>冻结龟币</span>
+              </div>
+              <div className={css('phb-stats')}>
+                <div className={css('phb-metric')}>
+                  <div className={css('phb-metric-head')}>
+                    <img src={BATTLE_HUB_ASSETS.activeGames} alt="" className={css('phb-metric-ico-img')} />
+                    <span className={css('phb-metric-lbl')}>
+                      <span className={css('phb-metric-lbl-full')}>当前赌局</span>
+                      <span className={css('phb-metric-lbl-short')}>当前</span>
+                    </span>
                   </div>
-                  <span className={css("phb-metric-val phb-metric-val--gold")}>{formatCoins(totalFrozen)}</span>
+                  <span className={css('phb-metric-val phb-metric-val--green')}>{totalBattleCount}</span>
                 </div>
-                <div className={css("phb-metric")}>
-                  <div className={css("phb-metric-head")}>
-                    <img src={BATTLE_HUB_ASSETS.bankers} alt="" className={css("phb-metric-ico-img")} />
-                    <span className={css("phb-metric-lbl")}>庄家人数</span>
+                <div className={css('phb-metric')}>
+                  <div className={css('phb-metric-head')}>
+                    <img src={BATTLE_HUB_ASSETS.frozenCoins} alt="" className={css('phb-metric-ico-img')} />
+                    <span className={css('phb-metric-lbl')}>
+                      <span className={css('phb-metric-lbl-full')}>冻结龟币</span>
+                      <span className={css('phb-metric-lbl-short')}>冻结</span>
+                    </span>
                   </div>
-                  <span className={css("phb-metric-val phb-metric-val--blue")}>{totalBankerCount}</span>
+                  <span className={css('phb-metric-val phb-metric-val--gold')}>{formatCoins(totalFrozen)}</span>
                 </div>
-                <div className={css("phb-metric")}>
-                  <div className={css("phb-metric-head")}>
-                    <img src={BATTLE_HUB_ASSETS.challengers} alt="" className={css("phb-metric-ico-img")} />
-                    <span className={css("phb-metric-lbl")}>待结算</span>
+                <div className={css('phb-metric')}>
+                  <div className={css('phb-metric-head')}>
+                    <img src={BATTLE_HUB_ASSETS.bankers} alt="" className={css('phb-metric-ico-img')} />
+                    <span className={css('phb-metric-lbl')}>
+                      <span className={css('phb-metric-lbl-full')}>庄家人数</span>
+                      <span className={css('phb-metric-lbl-short')}>庄家</span>
+                    </span>
                   </div>
-                  <span className={css("phb-metric-val phb-metric-val--purple")}>{totalPendingCount}</span>
+                  <span className={css('phb-metric-val phb-metric-val--blue')}>{totalBankerCount}</span>
+                </div>
+                <div className={css('phb-metric')}>
+                  <div className={css('phb-metric-head')}>
+                    <img src={BATTLE_HUB_ASSETS.challengers} alt="" className={css('phb-metric-ico-img')} />
+                    <span className={css('phb-metric-lbl')}>
+                      <span className={css('phb-metric-lbl-full')}>待结算</span>
+                      <span className={css('phb-metric-lbl-short')}>待结算</span>
+                    </span>
+                  </div>
+                  <span className={css('phb-metric-val phb-metric-val--purple')}>{totalPendingCount}</span>
                 </div>
               </div>
             </div>
 
-            <div className={css("bp-hub-divider")} aria-hidden />
+            <div className={css('bp-hub-divider')} aria-hidden />
 
-            <div className={css("duel-compose")}>
-              <div className={css("dc-header")}>
-                <div className={css("dc-ava")}>
-                  <img src={userAvatarUrl} alt="" className={css("dc-ava-img")} />
+            <div className={css('duel-compose', 'duel-compose-banker')}>
+              <div className={css('dc-header', 'dc-header-banker')}>
+                <div className={css('dc-shield')} aria-hidden>
+                  <span className={css('dc-shield-plus')}>+</span>
                 </div>
-                <div className={css("dc-placeholder")} onClick={handleOpenCompose}>
-                  想开局收押注？设一个议题，让挑战者来撕……
+                <div className={css('dc-ava', 'dc-ava-desktop')}>
+                  <img src={userAvatarUrl} alt="" className={css('dc-ava-img')} />
                 </div>
-                <button type="button" className={css("dc-btn")} onClick={handleOpenCompose}>
-                  我要做庄
+                <div className={css('dc-copy')} onClick={handleOpenCompose} role="presentation">
+                  <div className={css('dc-copy-title')}>我要做庄</div>
+                  <div className={css('dc-copy-desc')}>设议题、押龟币，等挑战者来撕</div>
+                  <div className={css('dc-placeholder', 'dc-placeholder-desktop')} onClick={handleOpenCompose}>
+                    想开局收押注？设一个议题，让挑战者来撕……
+                  </div>
+                </div>
+                <button type="button" className={css('dc-btn', 'dc-btn-start')} onClick={handleOpenCompose}>
+                  <span className={css('dc-btn-label-full')}>我要做庄</span>
+                  <span className={css('dc-btn-label-short')}>开局</span>
                 </button>
               </div>
             </div>
@@ -1365,22 +1393,22 @@ export const BattlePlazaPage: React.FC = () => {
               ) : null}
             </div>
 
-            <div className={css("bp-hub-divider")} aria-hidden />
+            <div className={css('bp-hub-divider')} aria-hidden />
 
-            <div className={css("private-entry")}>
-              <div className={css("private-entry-head")}>
-                <HubLockIcon className={css("private-entry-head-ico")} />
-                <span className={css("private-entry-title")}>私人赌局 · 两种进入方式</span>
+            <div className={css('private-entry', 'private-entry-desktop')}>
+              <div className={css('private-entry-head')}>
+                <HubLockIcon className={css('private-entry-head-ico')} />
+                <span className={css('private-entry-title')}>私人赌局 · 两种进入方式</span>
               </div>
-              <div className={css("private-entry-grid")}>
-                <div className={css("private-entry-card")}>
-                  <div className={css("private-entry-card-head")}>
-                    <HubHomeIcon className={css("private-entry-card-ico")} />
+              <div className={css('private-entry-grid')}>
+                <div className={css('private-entry-card')}>
+                  <div className={css('private-entry-card-head')}>
+                    <HubHomeIcon className={css('private-entry-card-ico')} />
                     <span>房间号入口 · 12位 · 与赌局绑定，长期有效</span>
                   </div>
-                  <div className={css("private-entry-row")}>
+                  <div className={css('private-entry-row')}>
                     <input
-                      className={css("private-entry-input")}
+                      className={css('private-entry-input')}
                       value={privateRoomNumber}
                       onChange={(e) => setPrivateRoomNumber(e.target.value)}
                       placeholder="粘贴或输入房间号，如 0001-0002-0003"
@@ -1392,19 +1420,19 @@ export const BattlePlazaPage: React.FC = () => {
                         }
                       }}
                     />
-                    <button type="button" className={css("private-entry-btn", "private-entry-btn-room")} onClick={handleEnterPrivateBattle}>
+                    <button type="button" className={css('private-entry-btn', 'private-entry-btn-room')} onClick={handleEnterPrivateBattle}>
                       进入房间
                     </button>
                   </div>
                 </div>
-                <div className={css("private-entry-card")}>
-                  <div className={css("private-entry-card-head")}>
-                    <HubTicketIcon className={css("private-entry-card-ico")} />
+                <div className={css('private-entry-card')}>
+                  <div className={css('private-entry-card-head')}>
+                    <HubTicketIcon className={css('private-entry-card-ico')} />
                     <span>邀请码入口 · 4位 · 48小时内有效</span>
                   </div>
-                  <div className={css("private-entry-row")}>
+                  <div className={css('private-entry-row')}>
                     <input
-                      className={css("private-entry-input")}
+                      className={css('private-entry-input')}
                       value={privateInviteCode}
                       onChange={(e) => setPrivateInviteCode(e.target.value)}
                       placeholder="粘贴或输入邀请码，如 A B C D"
@@ -1416,7 +1444,7 @@ export const BattlePlazaPage: React.FC = () => {
                         }
                       }}
                     />
-                    <button type="button" className={css("private-entry-btn", "private-entry-btn-invite")} onClick={handleEnterPrivateBattle}>
+                    <button type="button" className={css('private-entry-btn', 'private-entry-btn-invite')} onClick={handleEnterPrivateBattle}>
                       用邀请码进入
                     </button>
                   </div>
@@ -1425,44 +1453,48 @@ export const BattlePlazaPage: React.FC = () => {
             </div>
           </div>
 
-          <div className={css("bp-toolbar")}>
-            <div className={css("bp-segmented")} role="tablist" aria-label="赌局列表视图">
+          <div className={css('bp-toolbar')}>
+            <div className={css('bp-segmented')} role="tablist" aria-label="赌局列表视图">
               <button
                 type="button"
                 role="tab"
                 aria-selected={activeTab === 'plaza'}
-                className={css("bp-segment")}
+                className={css('bp-segment')}
                 onClick={() => handleTabChange('plaza')}
               >
-                赌局广场
+                <span className={css('bp-segment-label-full')}>赌局广场</span>
+                <span className={css('bp-segment-label-short')}>广场</span>
               </button>
               <button
                 type="button"
                 role="tab"
                 aria-selected={activeTab === 'private'}
-                className={css("bp-segment")}
+                className={css('bp-segment')}
                 onClick={() => handleTabChange('private')}
               >
-                {activeTab !== 'private' ? <HubLockIcon className={css("bp-segment-lock")} /> : null}
-                私人赌局
+                {activeTab !== 'private' ? <HubLockIcon className={css('bp-segment-lock')} /> : null}
+                <span className={css('bp-segment-label-full')}>私人赌局</span>
+                <span className={css('bp-segment-label-short')}>私人</span>
               </button>
               <button
                 type="button"
                 role="tab"
                 aria-selected={activeTab === 'my-banker'}
-                className={css("bp-segment")}
+                className={css('bp-segment')}
                 onClick={() => handleTabChange('my-banker')}
               >
-                我做的庄
+                <span className={css('bp-segment-label-full')}>我做的庄</span>
+                <span className={css('bp-segment-label-short')}>我做庄</span>
               </button>
               <button
                 type="button"
                 role="tab"
                 aria-selected={activeTab === 'my-challenger'}
-                className={css("bp-segment")}
+                className={css('bp-segment')}
                 onClick={() => handleTabChange('my-challenger')}
               >
-                我的挑战
+                <span className={css('bp-segment-label-full')}>我的挑战</span>
+                <span className={css('bp-segment-label-short')}>挑战</span>
               </button>
             </div>
             {activeTab === 'plaza' || activeTab === 'private' ? (
@@ -1502,8 +1534,62 @@ export const BattlePlazaPage: React.FC = () => {
             ) : null}
           </div>
 
+          <div className={css('private-entry', 'private-entry-mobile')}>
+            <div className={css('private-entry-head')}>
+              <HubLockIcon className={css('private-entry-head-ico')} />
+              <div className={css('private-entry-head-copy')}>
+                <span className={css('private-entry-title')}>私人赌局</span>
+                <p className={css('private-entry-sub')}>房间号长期有效，邀请码 48 小时内有效</p>
+              </div>
+            </div>
+            <div className={css('private-entry-mobile-stack')}>
+              <div className={css('private-entry-row', 'private-entry-row-mobile')}>
+                <input
+                  className={css('private-entry-input')}
+                  value={privateRoomNumber}
+                  onChange={(e) => setPrivateRoomNumber(e.target.value)}
+                  placeholder="房间号 / 邀请码"
+                  maxLength={18}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleEnterPrivateBattle();
+                    }
+                  }}
+                />
+                <button type="button" className={css('private-entry-btn', 'private-entry-btn-room')} onClick={handleEnterPrivateBattle}>
+                  进入房间
+                </button>
+              </div>
+              <div className={css('private-entry-invite-row')}>
+                <input
+                  className={css('private-entry-input', 'private-entry-input-invite')}
+                  value={privateInviteCode}
+                  onChange={(e) => setPrivateInviteCode(e.target.value)}
+                  placeholder="或输入 4 位邀请码"
+                  maxLength={12}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      handleEnterPrivateBattle();
+                    }
+                  }}
+                />
+                <button type="button" className={css('private-entry-btn', 'private-entry-btn-invite')} onClick={handleEnterPrivateBattle}>
+                  用邀请码进入
+                </button>
+              </div>
+            </div>
+          </div>
+
           {activeTab === 'plaza' && (
             <>
+              <div className={css('bp-list-head')}>
+                <div className={css('bp-list-head-copy')}>
+                  <h2 className={css('bp-list-head-title')}>赌局广场</h2>
+                  <p className={css('bp-list-head-sub')}>按容量先到先得，上拉加载更多</p>
+                </div>
+              </div>
               {plazaQuery.isLoading ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⏳</div>
@@ -1528,6 +1614,12 @@ export const BattlePlazaPage: React.FC = () => {
 
           {activeTab === 'private' && (
             <>
+              <div className={css('bp-list-head')}>
+                <div className={css('bp-list-head-copy')}>
+                  <h2 className={css('bp-list-head-title')}>私人赌局</h2>
+                  <p className={css('bp-list-head-sub')}>仅受邀或持码用户可见，按容量先到先得</p>
+                </div>
+              </div>
               {privateListQuery.isLoading ? (
                 <div className={css("empty-state")}>
                   <div className={css("empty-ico")}>⏳</div>

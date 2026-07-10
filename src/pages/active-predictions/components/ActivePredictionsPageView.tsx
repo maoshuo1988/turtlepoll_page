@@ -5,16 +5,19 @@ import type { PredictionCardItem } from './predictionCards';
 interface ActivePredictionsPageViewProps {
   items: PredictionCardItem[];
   onBack: () => void;
-  onEnterBattle: () => void;
+  onEnterBattle: (item: PredictionCardItem) => void;
 }
 
 export function ActivePredictionsPageView({ items, onBack, onEnterBattle }: ActivePredictionsPageViewProps) {
   return (
-    <section className="w-full max-w-none min-h-full mx-0 grid content-start gap-4 max-lg:gap-3 view-active-predictions">
+    <section className="hidden lg:grid w-full max-w-none min-h-full mx-0 content-start gap-4 view-active-predictions">
       <ActivePredictionsPage
         items={items}
         onBack={onBack}
-        onEnterBattle={onEnterBattle}
+        onEnterBattle={(newsId) => {
+          const item = items.find((entry) => entry.id === newsId);
+          if (item) onEnterBattle(item);
+        }}
       />
     </section>
   );

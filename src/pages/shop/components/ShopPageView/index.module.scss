@@ -1,0 +1,12 @@
+@import '@/styles/viewport.scss';
+@import '@/styles/mobile-page-shell.scss';
+
+.root {
+  @include mobile-tab-page-root;
+  box-sizing: border-box;
+  min-height: 100%;
+  padding-right: 8px;
+  padding-bottom: 12px;
+  padding-left: 8px;
+  background: #000;
+}

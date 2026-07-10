@@ -551,6 +551,7 @@ export const NewsFeed: React.FC<NewsFeedProps> = ({
   onEnterBattle,
 }) => {
   const { feedItems: displayItems } = usePredictionCardItems(selectedTag);
+
   return (
     <div className="legacy-news-feed legacy-pred-feed min-w-0 w-full">
       <PredictTagCategoryBar compact selectedTag={selectedTag} onTagChange={onTagChange} />

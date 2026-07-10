@@ -33,7 +33,7 @@ export function PetPoolPreviewTile({
     <div
       className={
         variant === 'strip'
-          ? `${useSharedSpine ? 'w-[92px]' : 'w-[clamp(76px,8vw,92px)]'} shrink-0 rounded-[18px] border p-2 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] ${frame}`
+          ? `${useSharedSpine ? 'w-[76px]' : 'w-[clamp(68px,20vw,76px)]'} shrink-0 rounded-[14px] border p-2 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] ${frame}`
           : `rounded-[18px] border p-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] ${frame}`
       }
     >

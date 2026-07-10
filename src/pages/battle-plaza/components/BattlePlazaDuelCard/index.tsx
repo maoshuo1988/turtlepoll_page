@@ -199,7 +199,6 @@ export function BattlePlazaDuelCard({
       )}
     >
       <header className={css('head')}>
-        <h3 className={css('title')}>{duel.topic}</h3>
         <div className={css('head-badges')}>
           <span className={css('badge', duel.statusBadge.className)}>
             {isPrivateOwnerOpen ? (
@@ -209,6 +208,16 @@ export function BattlePlazaDuelCard({
             ) : null}
             {isPrivateGuestOpen ? <Lock size={11} aria-hidden className={css('badge-lock-ico')} /> : null}
             {duel.statusBadge.label}
+          </span>
+        </div>
+        <h3 className={css('title')}>{duel.topic}</h3>
+        <div className={css('head-meta')}>
+          <span className={css('head-meta-banker')}>
+            {isMyBanker ? '你 · 庄家' : `庄家 ${duel.banker.name}`}
+          </span>
+          <span className={css('head-meta-pool')}>
+            <CoinAmount amount={duel.wager} iconSize={13} coinTone="gold" />
+            <span className={css('head-meta-pool-suffix')}>龟币</span>
           </span>
         </div>
       </header>
@@ -236,30 +245,31 @@ export function BattlePlazaDuelCard({
           </div>
         </div>
 
-        <div className={css('opinion-box', 'opinion-banker', bankerWins && 'opinion-winner')}>
-          <div className={css('opinion-label-row')}>
-            <div className={css('opinion-label', 'opinion-label-banker')}>
-              <BankerStanceIcon />
-              庄家立场
+        <div className={css('opinions-wrap')}>
+          <div className={css('opinion-box', 'opinion-banker', bankerWins && 'opinion-winner')}>
+            <div className={css('opinion-label-row')}>
+              <div className={css('opinion-label', 'opinion-label-banker')}>
+                <BankerStanceIcon />
+                <span className={css('opinion-label-full')}>庄家立场</span>
+                <span className={css('opinion-label-short')}>庄家</span>
+              </div>
+              {bankerWins ? (
+                <span className={css('opinion-win-badge')}>
+                  <Check size={12} aria-hidden />
+                  本局获胜
+                </span>
+              ) : null}
             </div>
-            {bankerWins ? (
-              <span className={css('opinion-win-badge')}>
-                <Check size={12} aria-hidden />
-                本局获胜
-              </span>
-            ) : null}
+            <div className={css('opinion-text')}>{duel.banker.stance}</div>
           </div>
-          <div className={css('opinion-text')}>{duel.banker.stance}</div>
-        </div>
 
-        {duel.challengerSideText ? (
-          <>
-            <div className={css('vs-label')}>— VS —</div>
+          {duel.challengerSideText ? (
             <div className={css('opinion-box', 'opinion-challenger', challengerWins && 'opinion-winner')}>
               <div className={css('opinion-label-row')}>
                 <div className={css('opinion-label', 'opinion-label-challenger')}>
                   <ChallengerStanceIcon />
-                  挑战者立场 (加入即站此方)
+                  <span className={css('opinion-label-full')}>挑战者立场 (加入即站此方)</span>
+                  <span className={css('opinion-label-short')}>挑战者</span>
                 </div>
                 {challengerWins ? (
                   <span className={css('opinion-win-badge')}>
@@ -270,8 +280,8 @@ export function BattlePlazaDuelCard({
               </div>
               <div className={css('opinion-text')}>{duel.challengerSideText}</div>
             </div>
-          </>
-        ) : null}
+          ) : null}
+        </div>
 
         {isPrivateOpen && duel.roomNumberDisplay ? (
           <div className={css('room-meta', 'room-meta-open')}>
@@ -298,7 +308,10 @@ export function BattlePlazaDuelCard({
       {duel.showCapacity ? (
         <div className={css('capacity', isPrivateOpen && 'capacity-private-open')}>
           <div className={css('cap-header')}>
-            <span className={css('cap-label')}>挑战者容量</span>
+            <span className={css('cap-label')}>
+              <span className={css('cap-label-full')}>挑战者容量</span>
+              <span className={css('cap-label-short')}>容量</span>
+            </span>
             <span className={css('cap-nums')}>
               <CoinAmount
                 amount={duel.currentPool}
@@ -464,14 +477,16 @@ export function BattlePlazaDuelCard({
           ) : null}
           {duel.canJoin ? (
             <button type="button" className={css('foot-join', 'foot-join-blue')} onClick={onJoin}>
-              <Swords size={15} aria-hidden />
-              {duel.footerActionLabel ?? '挑战庄家'}
+              <Swords size={15} aria-hidden className={css('foot-join-ico-full')} />
+              <span className={css('foot-join-label-full')}>{duel.footerActionLabel ?? '挑战庄家'}</span>
+              <span className={css('foot-join-label-short')}>挑战</span>
             </button>
           ) : null}
           {duel.canBankerAddStake ? (
             <button type="button" className={css('foot-join', 'foot-join-orange')} onClick={onAddStake}>
-              <Plus size={15} aria-hidden />
-              庄家加注
+              <Plus size={15} aria-hidden className={css('foot-join-ico-full')} />
+              <span className={css('foot-join-label-full')}>庄家加注</span>
+              <span className={css('foot-join-label-short')}>加注</span>
             </button>
           ) : null}
           {duel.canDeclare ? (

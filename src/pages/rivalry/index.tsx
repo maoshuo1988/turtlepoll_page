@@ -103,6 +103,7 @@ export default function RivalryPage() {
         betError={betError}
         pendingBetId={pendingBetId}
         pendingSettleId={pendingSettleId}
+        onBack={() => navigate('/')}
         onBet={handleRivalryBet}
         onSettle={handlePkSettle}
         onEnterBattle={handleEnterBattle}
