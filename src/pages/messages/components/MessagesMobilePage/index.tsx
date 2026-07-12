@@ -1,42 +1,103 @@
 /**
- * 文件说明：移动端「消息」Tab 页（系统通知与互动提醒，不含线报广场）。
+ * 文件说明：移动端「消息」Tab 页（主站消息中心，对接 message-notify 接口）。
  */
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/zh-cn';
+import { useCallback, useMemo, useState } from 'react';
+import { useNavigate } from '@umijs/renderer-react';
+import { Check, SlidersHorizontal } from 'lucide-react';
 import { getAuthToken } from '@/utils/authStorage';
-import { useRequestUserMsgRecent } from '@/hooks/useAuthRequests';
+import type { MessageNotifyRecord } from '@/hooks/messageNotifyTypes';
+import {
+  useInfiniteRequestMessageNotifyList,
+  useMutateMessageNotifyRead,
+  useMutateMessageNotifyReadAll,
+  useRequestMessageNotifyUnreadCount,
+} from '@/hooks/useMessageNotifyRequests';
 import { useHomeLayoutContext } from '@/layouts/context';
+import { IconFont } from '@/components/common/iconfont/IconFont';
+import {
+  MESSAGE_BUSINESS_META,
+  MESSAGE_FILTER_TABS,
+  resolveMessageDetailPath,
+  resolveMessageFilterBusinessCode,
+  type MessageFilterKey,
+} from '../messageNotifyModel';
+import { MessageNotifyCategoryIcon } from '../MessageNotifyCategoryIcon';
+import { MessagesNotifyCard } from '../MessagesNotifyCard';
 import styles from './index.module.scss';
 
-dayjs.extend(relativeTime);
-dayjs.locale('zh-cn');
-
-type RecentMessage = {
-  id?: number;
-  title?: string;
-  content?: string;
-  createTime?: number;
-  detailUrl?: string;
-  from?: {
-    nickname?: string;
-    username?: string;
-  };
-};
-
 export function MessagesMobilePage() {
+  const navigate = useNavigate();
   const { onOpenAuth } = useHomeLayoutContext();
   const isAuthenticated = Boolean(getAuthToken());
-  const msgQuery = useRequestUserMsgRecent();
-  const messages = Array.isArray((msgQuery.data as { messages?: RecentMessage[] } | undefined)?.messages)
-    ? ((msgQuery.data as { messages: RecentMessage[] }).messages)
-    : [];
+  const [activeFilter, setActiveFilter] = useState<MessageFilterKey>('all');
+  const businessCode = resolveMessageFilterBusinessCode(activeFilter);
 
-  const renderBody = () => {
+  const unreadQuery = useRequestMessageNotifyUnreadCount(isAuthenticated);
+  const listQuery = useInfiniteRequestMessageNotifyList({ businessCode, limit: 20 }, isAuthenticated);
+  const readMutation = useMutateMessageNotifyRead();
+  const readAllMutation = useMutateMessageNotifyReadAll();
+
+  const messages = useMemo(
+    () => listQuery.data?.pages.flatMap((page) => page.results) ?? [],
+    [listQuery.data?.pages],
+  );
+
+  const totalUnread = unreadQuery.data?.totalUnread ?? 0;
+  const businessUnread = unreadQuery.data?.businessUnread ?? {};
+
+  const summaryItems = useMemo(
+    () =>
+      MESSAGE_BUSINESS_META.map((meta) => ({
+        ...meta,
+        count: businessUnread[meta.code] ?? 0,
+      })),
+    [businessUnread],
+  );
+
+  const handleOpenMessage = useCallback(
+    async (record: MessageNotifyRecord) => {
+      if (!isAuthenticated) {
+        onOpenAuth();
+        return;
+      }
+      try {
+        if (record.status === 0) {
+          await readMutation.mutateAsync(record.id);
+        }
+      } catch {
+        // 已读失败不阻断跳转
+      }
+
+      const target = resolveMessageDetailPath(record.detailUrl);
+      if (!target) return;
+      if (/^https?:\/\//i.test(target)) {
+        window.location.href = target;
+        return;
+      }
+      navigate(target);
+    },
+    [isAuthenticated, navigate, onOpenAuth, readMutation],
+  );
+
+  const handleMarkAllRead = useCallback(async () => {
+    if (!isAuthenticated) {
+      onOpenAuth();
+      return;
+    }
+    if (!totalUnread || readAllMutation.isLoading) return;
+    try {
+      await readAllMutation.mutateAsync();
+    } catch {
+      // 页面层不额外弹 toast
+    }
+  }, [isAuthenticated, onOpenAuth, readAllMutation, totalUnread]);
+
+  const renderListBody = () => {
     if (!isAuthenticated) {
       return (
         <div className={styles.emptyCard}>
           <p className={styles.emptyTitle}>登录后查看消息</p>
+          <p className={styles.emptySub}>暗盘、开撕台、线报、系统和奖励通知都会出现在这里</p>
           <button type="button" className={styles.emptyAction} onClick={onOpenAuth}>
             去登录
           </button>
@@ -44,14 +105,14 @@ export function MessagesMobilePage() {
       );
     }
 
-    if (msgQuery.isLoading) {
+    if (listQuery.isLoading && !messages.length) {
       return <div className={styles.emptyCard}>加载消息中...</div>;
     }
 
-    if (msgQuery.isError) {
+    if (listQuery.isError && !messages.length) {
       return (
         <div className={styles.emptyCard}>
-          {msgQuery.error instanceof Error ? msgQuery.error.message : '消息加载失败'}
+          {listQuery.error instanceof Error ? listQuery.error.message : '消息加载失败'}
         </div>
       );
     }
@@ -59,39 +120,98 @@ export function MessagesMobilePage() {
     if (!messages.length) {
       return (
         <div className={styles.emptyCard}>
-          <p className={styles.emptyTitle}>暂无新消息</p>
-          <p className={styles.emptySub}>点赞、评论和系统通知会出现在这里</p>
+          <p className={styles.emptyTitle}>暂无消息</p>
+          <p className={styles.emptySub}>当前分类下还没有新的通知</p>
         </div>
       );
     }
 
     return (
-      <div className={styles.messageList}>
-        {messages.map((item) => {
-          const sender = item.from?.nickname || item.from?.username || '系统通知';
-          const timeLabel = item.createTime ? dayjs(item.createTime).fromNow() : '';
-          return (
-            <article key={String(item.id)} className={styles.messageCard}>
-              <div className={styles.messageHead}>
-                <span className={styles.messageSender}>{sender}</span>
-                {timeLabel ? <span className={styles.messageTime}>{timeLabel}</span> : null}
-              </div>
-              {item.title ? <h3 className={styles.messageTitle}>{item.title}</h3> : null}
-              {item.content ? <p className={styles.messageContent}>{item.content}</p> : null}
-            </article>
-          );
-        })}
-      </div>
+      <>
+        <div className={styles.messageList}>
+          {messages.map((item) => (
+            <MessagesNotifyCard key={item.id} record={item} onClick={handleOpenMessage} />
+          ))}
+        </div>
+        {listQuery.hasNextPage ? (
+          <button
+            type="button"
+            className={styles.loadMoreBtn}
+            disabled={listQuery.isFetchingNextPage}
+            onClick={() => listQuery.fetchNextPage()}
+          >
+            {listQuery.isFetchingNextPage ? '加载中…' : '加载更多'}
+          </button>
+        ) : null}
+      </>
     );
   };
 
   return (
     <div className={styles.root}>
-      <div>
-        <h1 className={styles.pageTitle}>消息</h1>
-        <p className={styles.pageSub}>互动提醒与系统通知</p>
-      </div>
-      {renderBody()}
+      <header className={styles.pageHead}>
+        <div className={styles.pageTitleWrap}>
+          <h1 className={styles.pageTitle}>消息</h1>
+          <p className={styles.pageSub}>暗盘、开撕台、线报、系统和奖励都在这里</p>
+        </div>
+        {/* <button
+          type="button"
+          className={styles.markAllBtn}
+          aria-label="全部标记已读"
+          disabled={!isAuthenticated || !totalUnread || readAllMutation.isLoading}
+          onClick={() => void handleMarkAllRead()}
+        >
+          <Check size={18} strokeWidth={2.4} />
+        </button> */}
+      </header>
+
+      {isAuthenticated ? (
+        <section className={styles.summaryCard}>
+          <div className={styles.summaryTop}>
+            <span className={styles.summaryIconWrap}>
+              <IconFont name="tongzhi" style={{ fontSize: 18 }} />
+            </span>
+            <span className={styles.summaryLabel}>今日未读</span>
+            <span className={styles.summaryCount}>
+              {totalUnread}
+              <span className={styles.summaryCountUnit}>条</span>
+            </span>
+          </div>
+          <div className={styles.summaryGrid}>
+            {summaryItems.map((item) => (
+              <div key={item.code} className={`${styles.summaryItem} ${styles[`summaryTone_${item.tone}`]}`}>
+                <span className={styles.summaryItemCount}>{item.count}</span>
+                <span className={styles.summaryItemLabel}>{item.shortLabel}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {isAuthenticated ? (
+        <div className={styles.filterRow}>
+          {MESSAGE_FILTER_TABS.map((tab) => {
+            const active = activeFilter === tab.key;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                className={active ? styles.filterActive : styles.filterIdle}
+                onClick={() => setActiveFilter(tab.key)}
+              >
+                {tab.key === 'all' ? (
+                  <SlidersHorizontal size={14} strokeWidth={2.2} aria-hidden />
+                ) : (
+                  <MessageNotifyCategoryIcon businessCode={tab.key} size={14} />
+                )}
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+
+      {renderListBody()}
     </div>
   );
 }
