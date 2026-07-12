@@ -6,6 +6,13 @@ import type { CoinSettleResult, PredictBet } from '@/hooks/coinTypes';
 import type { PKSettleResponse, PKTopicDetailResponse } from '@/hooks/pkTypes';
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
 import type {
+  PredictCommentRewardLog,
+  PredictHeatMeResponse,
+  PredictHeatRankResponse,
+  PredictHeatResponse,
+  PredictTearSettlement,
+} from '@/hooks/predictionTypes';
+import type {
   SettlementActionResult,
   SettlementCampSide,
   SettlementDetailViewModel,
@@ -13,6 +20,16 @@ import type {
   SettlementRecordItem,
 } from '@/hooks/settlementTypes';
 import { SETTLEMENT_CAMP_COLORS } from './settlementCampColors';
+import {
+  formatTearRemainLabel,
+  formatWinnerOptionLabel,
+  hasHeatParticipation,
+  mapHeatRankToLeaderboardRows,
+  resolveHeatByOption,
+  resolveHeatPct,
+  resolveTearRewardAmount,
+  resolveWinningSideFromLeader,
+} from './predictHeatSettlementModel';
 
 function formatNumber(value: number) {
   return Math.max(0, Math.round(value)).toLocaleString('zh-CN');
@@ -111,17 +128,37 @@ export function buildCoinSettlementDetail(params: {
   settleResult?: CoinSettleResult | SettlementActionResult | null;
   currentUserName?: string;
   participatedHeat?: boolean;
+  heat?: PredictHeatResponse | null;
+  heatMe?: PredictHeatMeResponse | null;
+  heatRank?: PredictHeatRankResponse | null;
+  rewardLog?: PredictCommentRewardLog | null;
+  tearSettlement?: PredictTearSettlement | null;
 }): SettlementDetailViewModel {
-  const { record, market, settleResult, currentUserName = '我', participatedHeat = false } = params;
+  const {
+    record,
+    market,
+    settleResult,
+    currentUserName = '我',
+    participatedHeat: participatedHeatOverride,
+    heat,
+    heatMe,
+    heatRank,
+    rewardLog,
+    tearSettlement,
+  } = params;
   const context = market.context ?? {};
   const optionA = context.proText || '蓝方';
   const optionB = context.conText || '红方';
   const drawText = context.drawText || context.tieText || '平局';
-  const heatA = context.proVoteCount ?? market.market.poolA ?? 0;
-  const heatB = context.conVoteCount ?? market.market.poolB ?? 0;
-  const totalHeat = Math.max(1, heatA + heatB);
-  const heatLeftPct = Math.round((heatA / totalHeat) * 100);
-  const winningHeatSide: SettlementCampSide = heatA >= heatB ? 'A' : 'B';
+  const apiHeat = resolveHeatByOption(heat);
+  const heatA = heat ? apiHeat.A : (context.proVoteCount ?? market.market.poolA ?? 0);
+  const heatB = heat ? apiHeat.B : (context.conVoteCount ?? market.market.poolB ?? 0);
+  const heatLeftPct = resolveHeatPct(heatA, heatB);
+  const winningHeatSide: SettlementCampSide = heat?.leaderOption
+    ? resolveWinningSideFromLeader(heat.leaderOption)
+    : heatA >= heatB
+      ? 'A'
+      : 'B';
   const bet = resolveBetFields(market);
   const latestSettle =
     settleResult && 'list' in settleResult
@@ -135,12 +172,20 @@ export function buildCoinSettlementDetail(params: {
   const principal = latestSettle?.bet?.amount ?? bet.amount;
   const odds = latestSettle?.bet?.odds ?? bet.odds;
   const payout = latestSettle?.payout ?? bet.payout ?? (settleResult && 'payout' in settleResult ? settleResult.payout : 0);
-  const userSide = bet.side;
+  const userSide = heatMe?.myOption ? resolveWinningSideFromLeader(heatMe.myOption) : bet.side;
+  const participatedHeat =
+    participatedHeatOverride ??
+    (hasHeatParticipation(heatMe) || (userSide !== 'unknown' && Boolean(market.hasBet)));
   const userWonHeat = participatedHeat && userSide !== 'unknown' && userSide === winningHeatSide;
   const userLostHeat = participatedHeat && userSide !== 'unknown' && userSide !== winningHeatSide;
-  const winningSideName = winningHeatSide === 'A' ? optionA : optionB;
+  const winningSideName = formatWinnerOptionLabel(
+    heat?.leaderOption ?? (winningHeatSide === 'draw' ? 'DRAW' : winningHeatSide),
+    optionA,
+    optionB,
+    drawText,
+  );
 
-  let headline = `热度对决 · ${winningHeatSide === 'A' ? '蓝方胜' : '红方胜'}`;
+  let headline = `热度对决 · ${winningHeatSide === 'A' ? '蓝方胜' : winningHeatSide === 'B' ? '红方胜' : '平局'}`;
   let headlineAccent: 'pink' | 'white' = winningHeatSide === 'B' ? 'pink' : 'white';
   let description = `${optionA} vs ${optionB} · ${winningSideName}热度领先，瓜分热度奖励池。`;
 
@@ -153,35 +198,50 @@ export function buildCoinSettlementDetail(params: {
     headlineAccent = 'white';
     description = '本方热度落后，无热度奖励；但你的赛果下注仍独立结算。';
   } else if (userLostHeat && !betHit) {
-    headline = `热度对决 · ${winningHeatSide === 'B' ? '红方胜' : '蓝方胜'}`;
+    headline = `热度对决 · ${winningHeatSide === 'B' ? '红方胜' : winningHeatSide === 'A' ? '蓝方胜' : '平局'}`;
     headlineAccent = winningHeatSide === 'B' ? 'pink' : 'white';
     description = `${optionA} vs ${optionB} · 你押「${sideLabel(userSide, optionA, optionB, drawText)}」未命中，本金不返还。`;
   } else if (userWonHeat) {
-    headline = `热度对决 · ${winningHeatSide === 'B' ? '红方胜' : '蓝方胜'}`;
+    headline = `热度对决 · ${winningHeatSide === 'B' ? '红方胜' : winningHeatSide === 'A' ? '蓝方胜' : '平局'}`;
     headlineAccent = winningHeatSide === 'B' ? 'pink' : 'white';
-    description = `${optionA} vs ${optionB} · ${winningSideName}晋级。本场${winningHeatSide === 'B' ? '红' : '蓝'}方热度领先，瓜分热度奖励池。`;
+    description = `${optionA} vs ${optionB} · ${winningSideName}晋级。本场${winningHeatSide === 'B' ? '红' : winningHeatSide === 'A' ? '蓝' : '胜'}方热度领先，瓜分热度奖励池。`;
   }
 
-  const userScore = participatedHeat
-    ? Math.max(120, Math.round((userSide === 'A' ? heatA : heatB) * 0.018))
-    : 0;
-  const heatRewardAmount = userWonHeat ? Math.max(0, Math.round(userScore * 1.28)) : 0;
+  const userScore = Math.round(heatMe?.myHeat ?? 0);
+  const apiReward = resolveTearRewardAmount(rewardLog);
+  const heatRewardAmount = apiReward > 0 ? apiReward : userWonHeat ? Math.max(0, Math.round(userScore * 1.28)) : 0;
+  const winnerTotalHeat = rewardLog?.winnerTotalCommentHeat ?? heat?.totalHeatValue ?? heatA + heatB;
+  const heatRewardProgressPct =
+    userWonHeat && winnerTotalHeat > 0
+      ? Math.min(100, Math.max(8, Math.round((userScore / winnerTotalHeat) * 100)))
+      : 0;
 
   const betPanelTitle = record.sourceTab === 'arena'
     ? `开撕台下注${betHit ? '派奖 (命中赛果)' : '结算 (未命中)'}`
     : `暗盘下注结算${betHit ? '' : ' (未命中)'}`;
 
   const betOptionText = `${sideLabel(userSide, optionA, optionB, drawText)}`;
+  const leaderboardRows = heatRank?.list?.length
+    ? mapHeatRankToLeaderboardRows(heatRank.list, heatMe, currentUserName)
+    : buildLeaderboardRows({
+        heatA,
+        heatB,
+        userSide,
+        userScore,
+        userName: currentUserName,
+        participatedHeat,
+      });
 
   return {
     record,
+    settlementKind: 'coin',
     eyebrow: '本场已结算',
     headline,
     headlineAccent,
     description,
     showHeatDuel: true,
-    heatLeftValue: heatA,
-    heatRightValue: heatB,
+    heatLeftValue: Math.round(heatA),
+    heatRightValue: Math.round(heatB),
     heatLeftPct,
     heatBadge: !participatedHeat
       ? '未参与热度对决'
@@ -190,20 +250,31 @@ export function buildCoinSettlementDetail(params: {
         : '输掉热度对决',
     heatBadgeTone: !participatedHeat ? 'gold' : userWonHeat ? 'pink' : 'grey',
     heatFootnote: !participatedHeat
-      ? '你未参与热度对决（平局 / 未下注）'
+      ? heatMe?.myCommentCount
+        ? `你已评论 ${heatMe.myCommentCount} 次，但未站队`
+        : '你未参与热度对决（平局 / 未下注）'
       : userSide === 'A'
-        ? '你在蓝方，本方热度' + (userWonHeat ? '领先' : '落后')
+        ? `你在蓝方，本方热度${userWonHeat ? '领先' : '落后'}`
         : userSide === 'B'
-          ? '你在红方，本方热度' + (userWonHeat ? '领先' : '落后')
-          : '你未站队',
+          ? `你在红方，本方热度${userWonHeat ? '领先' : '落后'}`
+          : userSide === 'draw'
+            ? `你在平局阵营，本方热度${userWonHeat ? '领先' : '落后'}`
+            : '你未站队',
     showHeatReward: true,
     heatRewardAmount,
-    heatRewardNote: userWonHeat ? `按你在${userSide === 'B' ? '红' : '蓝'}方的贡献占比发放` : '',
-    heatRewardProgressPct: userWonHeat ? Math.min(100, Math.max(8, Math.round(userScore / 80))) : 0,
-    heatRewardEmpty: !userWonHeat,
+    heatRewardNote: userWonHeat
+      ? rewardLog?.perUserReward
+        ? `胜方 ${formatWinnerOptionLabel(rewardLog.winnerOption, optionA, optionB, drawText)} · 按评论贡献发放`
+        : `按你在${userSide === 'B' ? '红' : userSide === 'A' ? '蓝' : '胜'}方的贡献占比发放`
+      : '',
+    heatRewardProgressPct,
+    heatRewardEmpty: !userWonHeat || heatRewardAmount <= 0,
     heatRewardEmptyText: !participatedHeat
       ? '你未参与热度对决，不属于任何阵营。'
       : '本方热度落后，未瓜分奖励池。',
+    rewardPool: rewardLog?.rewardPool,
+    winnerOption: rewardLog?.winnerOption ?? heat?.leaderOption ?? tearSettlement?.winnerOption,
+    remainSeconds: tearSettlement?.remainSeconds,
     showBetPanel: principal > 0 || record.status === 'pending',
     betPanelTitle: record.sourceTab === 'dark' && betHit
       ? '赛果下注派奖 (人人有 · 独立于热度奖励)'
@@ -217,14 +288,115 @@ export function buildCoinSettlementDetail(params: {
       ? '赛果派奖按赔率独立结算，与热度对决结果无关。'
       : '赛果未命中，本金不返还；与热度结果相互独立。',
     showLeaderboard: true,
-    leaderboardRows: buildLeaderboardRows({
-      heatA,
-      heatB,
-      userSide,
-      userScore,
-      userName: currentUserName,
-      participatedHeat,
-    }),
+    leaderboardRows,
+    leaderboardSideLocked: !participatedHeat || userSide === 'unknown',
+    userCampSide: userSide,
+  };
+}
+
+export function buildTearSettlementDetail(params: {
+  record: SettlementRecordItem;
+  market: FootballMarketAggregate;
+  currentUserName?: string;
+  heat?: PredictHeatResponse | null;
+  heatMe?: PredictHeatMeResponse | null;
+  heatRank?: PredictHeatRankResponse | null;
+  rewardLog?: PredictCommentRewardLog | null;
+  tearSettlement?: PredictTearSettlement | null;
+}): SettlementDetailViewModel {
+  const {
+    record,
+    market,
+    currentUserName = '我',
+    heat,
+    heatMe,
+    heatRank,
+    rewardLog,
+    tearSettlement,
+  } = params;
+  const context = market.context ?? {};
+  const optionA = context.proText || '蓝方';
+  const optionB = context.conText || '红方';
+  const drawText = context.drawText || context.tieText || '平局';
+  const apiHeat = resolveHeatByOption(heat);
+  const heatA = Math.round(heat ? apiHeat.A : (context.proVoteCount ?? market.market.poolA ?? 0));
+  const heatB = Math.round(heat ? apiHeat.B : (context.conVoteCount ?? market.market.poolB ?? 0));
+  const heatLeftPct = resolveHeatPct(heatA, heatB);
+  const winningHeatSide = resolveWinningSideFromLeader(
+    heat?.leaderOption ?? tearSettlement?.winnerOption ?? rewardLog?.winnerOption,
+  );
+  const userSide = heatMe?.myOption ? resolveWinningSideFromLeader(heatMe.myOption) : record.campSide;
+  const participatedHeat = hasHeatParticipation(heatMe);
+  const userWonHeat = participatedHeat && userSide !== 'unknown' && userSide === winningHeatSide;
+  const winningSideName = formatWinnerOptionLabel(
+    rewardLog?.winnerOption ?? heat?.leaderOption ?? tearSettlement?.winnerOption,
+    optionA,
+    optionB,
+    drawText,
+  );
+  const userScore = Math.round(heatMe?.myHeat ?? 0);
+  const heatRewardAmount = resolveTearRewardAmount(rewardLog);
+  const winnerTotalHeat = rewardLog?.winnerTotalCommentHeat ?? Math.max(1, heatA + heatB);
+  const heatRewardProgressPct =
+    userWonHeat && winnerTotalHeat > 0
+      ? Math.min(100, Math.max(8, Math.round((userScore / winnerTotalHeat) * 100)))
+      : 0;
+  const remainSeconds = tearSettlement?.remainSeconds;
+  const isPaid = tearSettlement?.status === 'PAID' || rewardLog?.status === 'PAID';
+  const leaderboardRows = heatRank?.list?.length
+    ? mapHeatRankToLeaderboardRows(heatRank.list, heatMe, currentUserName)
+    : buildLeaderboardRows({
+        heatA,
+        heatB,
+        userSide,
+        userScore,
+        userName: currentUserName,
+        participatedHeat,
+      });
+
+  return {
+    record,
+    settlementKind: 'tear',
+    eyebrow: isPaid ? '撕裂带奖励已到账' : '撕裂带奖励待领取',
+    headline: userWonHeat ? `撕裂带 · ${winningSideName}胜出` : `撕裂带 · ${winningSideName}热度胜出`,
+    headlineAccent: winningHeatSide === 'B' ? 'pink' : 'white',
+    description: isPaid
+      ? `胜方 ${winningSideName} · 评论奖励 ${heatRewardAmount > 0 ? `+${heatRewardAmount} 龟币` : '已结算'}`
+      : `${optionA} vs ${optionB} · 胜方 ${winningSideName}，${formatTearRemainLabel(remainSeconds)}`,
+    showHeatDuel: true,
+    heatLeftValue: heatA,
+    heatRightValue: heatB,
+    heatLeftPct,
+    heatBadge: isPaid ? '奖励已发放' : userWonHeat ? '可领取奖励' : '胜方已产生',
+    heatBadgeTone: isPaid ? 'gold' : userWonHeat ? 'pink' : 'grey',
+    heatFootnote: participatedHeat
+      ? `我的评论热度 ${userScore}${heatMe?.myCommentCount ? ` · 评论 ${heatMe.myCommentCount} 条` : ''}`
+      : '你未参与撕裂带评论互动',
+    showHeatReward: true,
+    heatRewardAmount,
+    heatRewardNote: rewardLog?.rewardPool
+      ? `奖励池 ${Math.round(rewardLog.rewardPool)} 龟币 · 胜方评论 ${Math.round(rewardLog.winnerTotalCommentHeat ?? 0)} 热度`
+      : userWonHeat
+        ? '按胜方阵营评论贡献占比发放'
+        : '',
+    heatRewardProgressPct,
+    heatRewardEmpty: heatRewardAmount <= 0,
+    heatRewardEmptyText: participatedHeat
+      ? '本方未胜出或未满足评论奖励条件。'
+      : '你未参与撕裂带评论，无法领取奖励。',
+    rewardPool: rewardLog?.rewardPool,
+    winnerOption: rewardLog?.winnerOption ?? tearSettlement?.winnerOption ?? heat?.leaderOption,
+    remainSeconds,
+    showBetPanel: false,
+    betPanelTitle: '',
+    betOptionLabel: sideLabel(userSide, optionA, optionB, drawText),
+    betPrincipal: 0,
+    betOdds: 0,
+    betHit: false,
+    betPayout: 0,
+    betFootnote: '',
+    showLeaderboard: true,
+    leaderboardRows,
     leaderboardSideLocked: !participatedHeat || userSide === 'unknown',
     userCampSide: userSide,
   };

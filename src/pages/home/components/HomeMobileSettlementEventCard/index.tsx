@@ -15,6 +15,9 @@ import {
   resolveSettlementSourceLabel,
   resolveSettlementStatusLabel,
   resolveSidePercents,
+  isTearSettlementRecord,
+  resolveTearWinnerLabel,
+  resolveTearRemainLabel,
 } from '../homeMobileSettlementModel';
 import styles from '../HomeMobileHome/index.module.scss';
 
@@ -34,6 +37,7 @@ export interface HomeMobileSettlementEventCardProps {
 
 export function HomeMobileSettlementEventCard({ item, onAction }: HomeMobileSettlementEventCardProps) {
   const { record, card, market } = item;
+  const isTear = isTearSettlementRecord(record);
   const { pctA, pctB } = resolveSidePercents(card);
   const pool = resolvePoolTotal(card);
   const betAmount = resolveBetAmount(market);
@@ -81,41 +85,84 @@ export function HomeMobileSettlementEventCard({ item, onAction }: HomeMobileSett
       ) : null}
 
       <div className={styles.statGrid}>
-        <div className={styles.statItem}>
-          <IconFont name="fenshiqiehuan-panqianpanzhong" className={styles.statIcon} />
-          <div>
-            <div className={styles.statLabel}>我的下注</div>
-            <div className={styles.statValue}>{betAmount > 0 ? `${formatCoin(betAmount)} 龟币` : '--'}</div>
-          </div>
-        </div>
-        <div className={styles.statItem}>
-          <IconFont name="shijian" className={styles.statIcon} />
-          <div>
-            <div className={styles.statLabel}>事件状态</div>
-            <div className={styles.statValue}>{resolveSettlementStatusLabel(item)}</div>
-          </div>
-        </div>
-        <div className={styles.statItem}>
-          <IconFont name="qianbao" className={styles.statIcon} />
-          <div>
-            <div className={styles.statLabel}>预计到账</div>
-            <div className={styles.statValue}>
-              {expectedPayout > 0 ? `${formatCoin(expectedPayout)} 龟币` : '--'}
+        {isTear ? (
+          <>
+            <div className={styles.statItem}>
+              <IconFont name="sen018" className={styles.statIcon} />
+              <div>
+                <div className={styles.statLabel}>胜方阵营</div>
+                <div className={styles.statValue}>{resolveTearWinnerLabel(market, card)}</div>
+              </div>
             </div>
-          </div>
-        </div>
+            <div className={styles.statItem}>
+              <IconFont name="shijian" className={styles.statIcon} />
+              <div>
+                <div className={styles.statLabel}>领取时效</div>
+                <div className={styles.statValue}>{resolveTearRemainLabel(market)}</div>
+              </div>
+            </div>
+            <div className={styles.statItem}>
+              <IconFont name="qianbao" className={styles.statIcon} />
+              <div>
+                <div className={styles.statLabel}>奖励类型</div>
+                <div className={styles.statValue}>评论热度奖励</div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={styles.statItem}>
+              <IconFont name="fenshiqiehuan-panqianpanzhong" className={styles.statIcon} />
+              <div>
+                <div className={styles.statLabel}>我的下注</div>
+                <div className={styles.statValue}>{betAmount > 0 ? `${formatCoin(betAmount)} 龟币` : '--'}</div>
+              </div>
+            </div>
+            <div className={styles.statItem}>
+              <IconFont name="shijian" className={styles.statIcon} />
+              <div>
+                <div className={styles.statLabel}>事件状态</div>
+                <div className={styles.statValue}>{resolveSettlementStatusLabel(item)}</div>
+              </div>
+            </div>
+            <div className={styles.statItem}>
+              <IconFont name="qianbao" className={styles.statIcon} />
+              <div>
+                <div className={styles.statLabel}>预计到账</div>
+                <div className={styles.statValue}>
+                  {expectedPayout > 0 ? `${formatCoin(expectedPayout)} 龟币` : '--'}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <div className={styles.eventFoot}>
         <div className={styles.footStats}>
-          <div>
-            <div className={styles.footLabel}>资金池</div>
-            <div className={styles.footValue}>{pool > 0 ? `${formatCoin(pool)}龟币` : '--'}</div>
-          </div>
-          <div>
-            <div className={styles.footLabel}>预期收益率</div>
-            <div className={styles.footGain}>{expectedReturn > 0 ? `+${expectedReturn}%` : '--'}</div>
-          </div>
+          {isTear ? (
+            <>
+              <div>
+                <div className={styles.footLabel}>结算状态</div>
+                <div className={styles.footValue}>{market?.tearSettlement?.status || 'PENDING'}</div>
+              </div>
+              <div>
+                <div className={styles.footLabel}>奖励说明</div>
+                <div className={styles.footGain}>胜方评论瓜分奖池</div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <div className={styles.footLabel}>资金池</div>
+                <div className={styles.footValue}>{pool > 0 ? `${formatCoin(pool)}龟币` : '--'}</div>
+              </div>
+              <div>
+                <div className={styles.footLabel}>预期收益率</div>
+                <div className={styles.footGain}>{expectedReturn > 0 ? `+${expectedReturn}%` : '--'}</div>
+              </div>
+            </>
+          )}
         </div>
         <button type="button" className={styles.settleCta} onClick={() => onAction(record)}>
           {resolveSettlementCtaLabel(record, card)}

@@ -90,7 +90,7 @@ export function HomeMobileHome() {
         onOpenAuth();
         return;
       }
-      if ((record.id.startsWith('open-') || record.id.startsWith('tear-')) && record.marketId) {
+      if (record.id.startsWith('open-') && record.marketId) {
         navigate(`/event-battle?market=${record.marketId}`);
         return;
       }

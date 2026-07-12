@@ -44,6 +44,8 @@ export type SettlementLeaderboardRow = {
 
 export type SettlementDetailViewModel = {
   record: SettlementRecordItem;
+  /** coin=赛果下注结算；tear=撕裂带评论奖励 */
+  settlementKind?: 'coin' | 'tear';
   eyebrow: string;
   headline: string;
   headlineAccent: 'pink' | 'white';
@@ -61,6 +63,12 @@ export type SettlementDetailViewModel = {
   heatRewardProgressPct: number;
   heatRewardEmpty: boolean;
   heatRewardEmptyText: string;
+  /** 撕裂带奖励池（接口 rewardLog.rewardPool） */
+  rewardPool?: number;
+  /** 胜方选项 A/B/DRAW */
+  winnerOption?: string;
+  /** 领取截止剩余秒数 */
+  remainSeconds?: number;
   showBetPanel: boolean;
   betPanelTitle: string;
   betOptionLabel: string;

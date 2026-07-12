@@ -2,13 +2,13 @@
  * 文件说明：News Feed，预测市场和撕裂带页面组件。
  */
 import React, { useState } from 'react';
+import { useNavigate } from '@umijs/renderer-react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, MessageSquare, Trophy, Clock3, Lock, Coins } from 'lucide-react';
 import type { PlaceBetResult } from '@/hooks/coinTypes';
 import { normalizePredictionCardItem, usePredictionCardItems, type PredictionBetOption, type PredictionCardItem } from './predictionCards';
 import { PredictionBetModal } from './PredictionBetModal';
 import { PredictionCardCover } from './PredictionCardCover';
-import { useRequestCoinSettle } from '@/hooks/useCoinRequests';
 import { PredictTagCategoryBar } from './PredictTagCategoryBar';
 
 interface NewsFeedProps {
@@ -126,6 +126,9 @@ function getPrimaryAction(item: PredictionCardItem) {
   if (item.status === 'closed') {
     return { label: '等待结果', disabled: true };
   }
+  if (item.status === 'settled' && item.tearSettlement?.canSettle) {
+    return { label: '领取撕裂带奖励', disabled: false };
+  }
   if (item.hasBet && !item.betSettleResult) {
     return { label: '立即结算', disabled: false };
   }
@@ -159,8 +162,8 @@ const NewsCardDesktop: React.FC<NewsCardViewProps> = ({
   onRequireAuth,
   onEnterBattle,
 }) => {
+  const navigate = useNavigate();
   const [betModalOption, setBetModalOption] = useState<PredictionBetOption | null>(null);
-  const coinSettleMutation = useRequestCoinSettle();
   const card = normalizePredictionCardItem(item);
   const showDrawBet = card.supportsDrawBet !== false;
   const totalVotes = card.votes.A + card.votes.B + card.votes.C;
@@ -170,20 +173,20 @@ const NewsCardDesktop: React.FC<NewsCardViewProps> = ({
   const statusMeta = getCardStatusMeta(card);
   const primaryAction = getPrimaryAction(card);
   const canOpenBet = card.status === 'open';
+  const canTearSettle = card.status === 'settled' && Boolean(card.tearSettlement?.canSettle);
   const canSettle = card.status === 'settled' && card.hasBet && !card.betSettleResult;
 
-  const handlePrimaryAction = async () => {
+  const handlePrimaryAction = () => {
     if (canOpenBet) {
       setBetModalOption('A');
       return;
     }
-
+    if (canTearSettle) {
+      navigate(`/settlement/tear/${card.marketId}?action=settle`);
+      return;
+    }
     if (canSettle) {
-      try {
-        await coinSettleMutation.mutateAsync({ marketId: card.marketId });
-      } catch (error) {
-        console.error(error);
-      }
+      navigate(`/settlement/coin/${card.marketId}?action=settle`);
     }
   };
 
@@ -277,6 +280,9 @@ const NewsCardDesktop: React.FC<NewsCardViewProps> = ({
               {card.hasBet && card.status === 'settled' && !card.betSettleResult && (
                 <div className="mt-1 text-[12px] font-bold text-[#f1c27d]">结算结果已生成，等待你手动结算</div>
               )}
+              {canTearSettle ? (
+                <div className="mt-1 text-[12px] font-bold text-[#f1c27d]">撕裂带评论奖励可领取</div>
+              ) : null}
             </div>
           </div>
 
@@ -319,11 +325,11 @@ const NewsCardDesktop: React.FC<NewsCardViewProps> = ({
             {card.status !== 'open' ? (
               <button
                 type="button"
-                onClick={() => void handlePrimaryAction()}
-                disabled={primaryAction.disabled || coinSettleMutation.isLoading}
+                onClick={() => handlePrimaryAction()}
+                disabled={primaryAction.disabled}
                 className="flex h-[32px] md:h-[28px] min-w-0 items-center justify-center rounded-full border border-[#5d5245] bg-[#181716] px-3 text-[11px] font-semibold text-[#ecd0a7] transition hover:border-[#8a7457] hover:bg-[#211f1d] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {coinSettleMutation.isLoading ? '处理中...' : primaryAction.label}
+                {primaryAction.label}
               </button>
             ) : null}
             {onEnterBattle && (
@@ -358,8 +364,8 @@ const NewsCardMobile: React.FC<NewsCardViewProps> = ({
   onRequireAuth,
   onEnterBattle,
 }) => {
+  const navigate = useNavigate();
   const [betModalOption, setBetModalOption] = useState<PredictionBetOption | null>(null);
-  const coinSettleMutation = useRequestCoinSettle();
   const card = normalizePredictionCardItem(item);
   const showDrawBet = card.supportsDrawBet !== false;
   const totalVotes = card.votes.A + card.votes.B + card.votes.C;
@@ -369,21 +375,21 @@ const NewsCardMobile: React.FC<NewsCardViewProps> = ({
   const statusMeta = getCardStatusMeta(card);
   const primaryAction = getPrimaryAction(card);
   const canOpenBet = card.status === 'open';
+  const canTearSettle = card.status === 'settled' && Boolean(card.tearSettlement?.canSettle);
   const canSettle = card.status === 'settled' && card.hasBet && !card.betSettleResult;
   const bestOdds = Math.max(card.oddsA, card.oddsB, showDrawBet ? card.oddsDraw : 0);
 
-  const handlePrimaryAction = async () => {
+  const handlePrimaryAction = () => {
     if (canOpenBet) {
       setBetModalOption('A');
       return;
     }
-
+    if (canTearSettle) {
+      navigate(`/settlement/tear/${card.marketId}?action=settle`);
+      return;
+    }
     if (canSettle) {
-      try {
-        await coinSettleMutation.mutateAsync({ marketId: card.marketId });
-      } catch (error) {
-        console.error(error);
-      }
+      navigate(`/settlement/coin/${card.marketId}?action=settle`);
     }
   };
 
@@ -500,11 +506,11 @@ const NewsCardMobile: React.FC<NewsCardViewProps> = ({
             {card.status !== 'open' ? (
               <button
                 type="button"
-                onClick={() => void handlePrimaryAction()}
-                disabled={primaryAction.disabled || coinSettleMutation.isLoading}
+                onClick={() => handlePrimaryAction()}
+                disabled={primaryAction.disabled}
                 className="flex h-[28px] min-w-0 items-center justify-center rounded-full border border-[#5d5245] bg-[#181716] px-2 text-[10px] font-semibold text-[#ecd0a7] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {coinSettleMutation.isLoading ? '处理中...' : primaryAction.label}
+                {primaryAction.label}
               </button>
             ) : null}
             {onEnterBattle && (

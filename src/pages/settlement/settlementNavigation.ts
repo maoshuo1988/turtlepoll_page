@@ -5,7 +5,7 @@ import type { SettlementRecordItem } from '@/hooks/settlementTypes';
 
 export type SettlementDetailAction = 'settle' | 'view';
 
-export type SettlementRouteKind = 'coin' | 'battle' | 'pk';
+export type SettlementRouteKind = 'coin' | 'tear' | 'battle' | 'pk';
 
 export type SettlementDetailLocationState = {
   itemId?: string;
@@ -20,6 +20,9 @@ export function settlementRecordToPath(
   query.set('action', action);
 
   if (item.sourceTab === 'dark' && item.marketId) {
+    if (item.id.startsWith('tear-')) {
+      return `/settlement/tear/${item.marketId}?${query.toString()}`;
+    }
     return `/settlement/coin/${item.marketId}?${query.toString()}`;
   }
   if (item.sourceTab === 'arena' && item.battleId) {
@@ -36,6 +39,7 @@ export function settlementRecordToPath(
 
 export function settlementItemIdFromRoute(kind: SettlementRouteKind, id: string) {
   if (kind === 'coin') return `coin-${id}`;
+  if (kind === 'tear') return `tear-${id}`;
   if (kind === 'pk') return `pk-${id}`;
   return `battle-${id}`;
 }

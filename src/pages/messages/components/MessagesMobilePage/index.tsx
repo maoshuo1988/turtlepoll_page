@@ -3,13 +3,12 @@
  */
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from '@umijs/renderer-react';
-import { Check, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import { getAuthToken } from '@/utils/authStorage';
 import type { MessageNotifyRecord } from '@/hooks/messageNotifyTypes';
 import {
   useInfiniteRequestMessageNotifyList,
   useMutateMessageNotifyRead,
-  useMutateMessageNotifyReadAll,
   useRequestMessageNotifyUnreadCount,
 } from '@/hooks/useMessageNotifyRequests';
 import { useHomeLayoutContext } from '@/layouts/context';
@@ -35,7 +34,6 @@ export function MessagesMobilePage() {
   const unreadQuery = useRequestMessageNotifyUnreadCount(isAuthenticated);
   const listQuery = useInfiniteRequestMessageNotifyList({ businessCode, limit: 20 }, isAuthenticated);
   const readMutation = useMutateMessageNotifyRead();
-  const readAllMutation = useMutateMessageNotifyReadAll();
 
   const messages = useMemo(
     () => listQuery.data?.pages.flatMap((page) => page.results) ?? [],
@@ -78,19 +76,6 @@ export function MessagesMobilePage() {
     },
     [isAuthenticated, navigate, onOpenAuth, readMutation],
   );
-
-  const handleMarkAllRead = useCallback(async () => {
-    if (!isAuthenticated) {
-      onOpenAuth();
-      return;
-    }
-    if (!totalUnread || readAllMutation.isLoading) return;
-    try {
-      await readAllMutation.mutateAsync();
-    } catch {
-      // 页面层不额外弹 toast
-    }
-  }, [isAuthenticated, onOpenAuth, readAllMutation, totalUnread]);
 
   const renderListBody = () => {
     if (!isAuthenticated) {

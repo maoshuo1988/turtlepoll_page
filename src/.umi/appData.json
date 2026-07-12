@@ -131,6 +131,29 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
             0
           ]
         },
@@ -180,7 +203,107 @@
             10,
             12,
             14,
-            38
+            38,
+            29,
+            33,
+            40,
+            13,
+            24,
+            23,
+            34,
+            14,
+            15,
+            20,
+            33,
+            10,
+            29,
+            14,
+            18,
+            15,
+            11,
+            16,
+            23,
+            14,
+            19,
+            14,
+            45,
+            9,
+            13,
+            12,
+            9,
+            16,
+            14,
+            14,
+            7,
+            9,
+            23,
+            22,
+            43,
+            18,
+            23,
+            16,
+            32,
+            297,
+            14,
+            11,
+            16,
+            78,
+            27,
+            18,
+            12,
+            32,
+            179,
+            21,
+            51,
+            96,
+            21,
+            13,
+            16,
+            26,
+            17,
+            97,
+            58,
+            13,
+            20,
+            23,
+            19,
+            36,
+            24,
+            11,
+            14,
+            13,
+            29,
+            55,
+            82,
+            24,
+            81,
+            71,
+            129,
+            72,
+            28,
+            43,
+            33,
+            35,
+            29,
+            29,
+            24,
+            41,
+            26,
+            34,
+            28,
+            59,
+            40,
+            37,
+            7,
+            24,
+            19,
+            18,
+            17,
+            269,
+            37,
+            29,
+            13,
+            29
           ]
         },
         "register": 0
@@ -205,7 +328,30 @@
             19,
             29,
             13,
-            19
+            19,
+            50,
+            19,
+            27,
+            20,
+            45,
+            26,
+            21,
+            24,
+            16,
+            17,
+            28,
+            532,
+            70,
+            84,
+            110,
+            16,
+            26,
+            15,
+            30,
+            27,
+            24,
+            19,
+            12
           ]
         },
         "register": 12
@@ -226,6 +372,29 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
             0,
             0
           ]
@@ -250,6 +419,33 @@
             0
           ],
           "onPrepareBuildSuccess": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -318,7 +514,65 @@
             0,
             0,
             0,
-            1
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
           ]
         },
         "register": 0
@@ -1318,6 +1572,21 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1340,11 +1609,57 @@
             0,
             1,
             0,
-            1
+            1,
+            8,
+            3,
+            2,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            15,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0
           ],
           "addRuntimePlugin": [
             0,
             1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1427,9 +1742,78 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addEntryImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1479,9 +1863,78 @@
             16,
             23,
             7,
-            9
+            9,
+            71,
+            24,
+            53,
+            9,
+            73,
+            10,
+            30,
+            15,
+            10,
+            18,
+            29,
+            112,
+            11,
+            10,
+            11,
+            21,
+            23,
+            19,
+            19,
+            13,
+            57,
+            17,
+            7
           ],
           "addPolyfillImports": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -1520,6 +1973,52 @@
             0,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -1540,6 +2039,29 @@
             123,
             0,
             0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
             0,
             0,
             0
@@ -1590,6 +2112,29 @@
             0,
             0,
             0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            2,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ],
           "addBeforeMiddlewares": [
@@ -1621,7 +2166,53 @@
             5,
             0,
             7,
-            0
+            0,
+            43,
+            4,
+            13,
+            1,
+            8,
+            1,
+            10,
+            1,
+            8,
+            0,
+            14,
+            1,
+            7,
+            1,
+            8,
+            0,
+            10,
+            0,
+            13,
+            4,
+            45,
+            3,
+            122,
+            2,
+            7,
+            0,
+            8,
+            0,
+            16,
+            1,
+            13,
+            1,
+            18,
+            1,
+            10,
+            0,
+            13,
+            1,
+            11,
+            0,
+            24,
+            1,
+            25,
+            1,
+            9,
+            1
           ]
         },
         "register": 3
@@ -1681,7 +2272,30 @@
             12,
             6,
             6,
-            5
+            5,
+            23,
+            16,
+            21,
+            5,
+            4,
+            7,
+            18,
+            6,
+            11,
+            16,
+            29,
+            26,
+            7,
+            5,
+            10,
+            7,
+            8,
+            10,
+            12,
+            6,
+            19,
+            9,
+            4
           ]
         },
         "register": 1
@@ -1771,7 +2385,30 @@
             1,
             1,
             1,
-            1
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            2,
+            1,
+            0
           ]
         },
         "register": 0
@@ -1909,6 +2546,21 @@
             0,
             0,
             1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            40,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0
           ]
         },
@@ -2818,7 +3470,7 @@
       "parentId": "3",
       "id": "21",
       "absPath": "/settlement/:kind/:id",
-      "__content": "/**\n * 文件说明：结算详情页路由入口，负责领取结算与详情展示。\n */\nimport { useEffect, useMemo, useRef, useState } from 'react';\nimport { useNavigate, useParams, useSearchParams } from '@umijs/renderer-react';\nimport { createBattleRequestId } from '@/hooks/battleTypes';\nimport type { CoinSettleResult } from '@/hooks/coinTypes';\nimport type { PKSettleResponse } from '@/hooks/pkTypes';\nimport type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';\nimport type { FootballMarketAggregate } from '@/hooks/predictionTypes';\nimport { useRequestPredictMyMarkets } from '@/hooks/usePredictionRequests';\nimport { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';\nimport { useRequestCoinSettle } from '@/hooks/useCoinRequests';\nimport { useRequestPKSettle } from '@/hooks/usePkRequests';\nimport { useSettlementDetailBuilder } from '@/hooks/useSettlementDetail';\nimport { useSettlementLayout } from '@/layouts/context/SettlementLayoutContext';\nimport { requireAuthOrOpen } from '@/utils/authStorage';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { SettlementDetailPage } from './components/SettlementDetailPage';\nimport {\n  settlementItemIdFromRoute,\n  type SettlementDetailAction,\n  type SettlementRouteKind,\n} from './settlementNavigation';\n\nfunction resolveCampSideFromMarket(\n  marketList: { market: { id: number } }[],\n  marketId: number,\n): SettlementRecordItem['campSide'] {\n  const item = marketList.find((entry) => entry.market.id === marketId);\n  if (!item) return 'unknown';\n  const raw = item as typeof item & { bet?: { option?: string }; myBet?: { option?: string } };\n  const option = String(raw.bet?.option ?? raw.myBet?.option ?? '').trim().toUpperCase();\n  if (option === 'A') return 'A';\n  if (option === 'B') return 'B';\n  if (option === 'DRAW' || option === 'C') return 'draw';\n  return 'unknown';\n}\n\nexport default function SettlementPage() {\n  const navigate = useNavigate();\n  const params = useParams<{ kind: SettlementRouteKind; id: string }>();\n  const [searchParams] = useSearchParams();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const { openSettlementDrawer, hideSettlementItem } = useSettlementLayout();\n  const kind = params.kind;\n  const myMarketsPendingQuery = useRequestPredictMyMarkets({\n    page: 1,\n    limit: 100,\n    status: 'pending',\n    enabled: kind === 'coin',\n  });\n  const myMarketsSettledQuery = useRequestPredictMyMarkets({\n    page: 1,\n    limit: 100,\n    status: 'settled',\n    enabled: kind === 'coin',\n  });\n  const marketList = useMemo(() => {\n    if (kind !== 'coin') return [];\n    const merged = new Map<number, FootballMarketAggregate>();\n    [...(myMarketsPendingQuery.data?.list ?? []), ...(myMarketsSettledQuery.data?.list ?? [])].forEach(\n      (item) => {\n        if (item.market?.id) merged.set(item.market.id, item);\n      },\n    );\n    return Array.from(merged.values());\n  }, [kind, myMarketsPendingQuery.data?.list, myMarketsSettledQuery.data?.list]);\n  const { buildDetailModel } = useSettlementDetailBuilder(marketList);\n  const buildDetailModelRef = useRef(buildDetailModel);\n  buildDetailModelRef.current = buildDetailModel;\n  const coinSettleMutation = useRequestCoinSettle();\n  const battleWithdrawMutation = useRequestBattleWithdraw();\n  const pkSettleMutation = useRequestPKSettle();\n\n  const rawId = params.id ?? '';\n  const numericId = Number(rawId);\n  const action = (searchParams.get('action') as SettlementDetailAction | null) ?? 'view';\n  const roundIdParam = searchParams.get('roundId') ?? undefined;\n\n  const coinCampSide = useMemo(\n    () => (kind === 'coin' ? resolveCampSideFromMarket(marketList, numericId) : 'unknown' as const),\n    [kind, marketList, numericId],\n  );\n\n  const record = useMemo<SettlementRecordItem | null>(() => {\n    if (!kind || !Number.isFinite(numericId) || numericId <= 0) return null;\n    const id = settlementItemIdFromRoute(kind, rawId);\n    if (kind === 'coin') {\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'dark',\n        title: '',\n        subtitle: '',\n        campSide: coinCampSide,\n        marketId: numericId,\n      };\n    }\n    if (kind === 'pk') {\n      const campSide: SettlementRecordItem['campSide'] = 'unknown';\n      return {\n        id: roundIdParam ? `pk-${numericId}-${roundIdParam}` : settlementItemIdFromRoute(kind, rawId),\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'pk',\n        title: '',\n        subtitle: '',\n        campSide,\n        topicId: numericId,\n        roundId: roundIdParam ?? undefined,\n      };\n    }\n    return {\n      id,\n      status: action === 'settle' ? 'pending' : 'settled',\n      sourceTab: 'arena',\n      title: '',\n      subtitle: '',\n      campSide: 'unknown',\n      battleId: numericId,\n    };\n  }, [action, coinCampSide, kind, numericId, rawId, roundIdParam]);\n\n  const [model, setModel] = useState<SettlementDetailViewModel | null>(null);\n  const [loading, setLoading] = useState(true);\n  const [errorText, setErrorText] = useState<string | undefined>();\n  const [settledItemId, setSettledItemId] = useState<string | null>(null);\n  const settleRequestedRef = useRef<string | null>(null);\n  const inflightRouteKeyRef = useRef<string | null>(null);\n  const onOpenAuthRef = useRef(onOpenAuth);\n  onOpenAuthRef.current = onOpenAuth;\n\n  useEffect(() => {\n    settleRequestedRef.current = null;\n    inflightRouteKeyRef.current = null;\n  }, [action, kind, rawId]);\n\n  useEffect(() => {\n    if (!record) {\n      setLoading(false);\n      setErrorText('无效的结算链接');\n      return;\n    }\n\n    const routeKey = `${kind ?? ''}-${rawId}-${action}`;\n    if (inflightRouteKeyRef.current === routeKey) {\n      return;\n    }\n\n    if (!requireAuthOrOpen(onOpenAuthRef.current)) {\n      setLoading(false);\n      setErrorText('请先登录后查看结算详情');\n      return;\n    }\n\n    inflightRouteKeyRef.current = routeKey;\n    let cancelled = false;\n\n    const run = async () => {\n      setLoading(true);\n      setErrorText(undefined);\n      setModel(null);\n\n      try {\n        let settlePayload: CoinSettleResult | SettlementActionResult | PKSettleResponse | null = null;\n        const shouldSettle = action === 'settle' && record.status === 'pending';\n\n        if (shouldSettle && settleRequestedRef.current !== routeKey) {\n          settleRequestedRef.current = routeKey;\n          if (record.sourceTab === 'dark' && record.marketId) {\n            settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });\n          } else if (record.sourceTab === 'arena' && record.battleId) {\n            const withdrawResult = await battleWithdrawMutation.mutateAsync({\n              battleId: record.battleId,\n              requestId: createBattleRequestId(`battle-withdraw-${record.battleId}`),\n            });\n            const payout = withdrawResult.payoutAmount ?? 0;\n            settlePayload = {\n              payout,\n              outcome: payout > 0 ? 'win' : 'neutral',\n              message: '奖励已提取到你的龟币账户。',\n            };\n          } else if (record.sourceTab === 'pk' && record.topicId) {\n            settlePayload = await pkSettleMutation.mutateAsync({\n              topicId: record.topicId,\n              roundId: record.roundId,\n              requestId: `pk-settle-${record.topicId}-${record.roundId ?? 'latest'}-${Date.now()}`,\n              snapshotType: 'SETTLE',\n              freezeSource: 'ON_DEMAND',\n            });\n          }\n          if (!cancelled) {\n            setSettledItemId(record.id);\n          }\n        }\n\n        const nextModel = await buildDetailModelRef.current(\n          { ...record, status: 'settled' },\n          settlePayload,\n        );\n        if (!cancelled) {\n          setModel(nextModel);\n        }\n      } catch (error) {\n        if (!cancelled) {\n          const message = error instanceof Error ? error.message : '加载结算详情失败';\n          setErrorText(message);\n          setModel(null);\n        }\n      } finally {\n        if (!cancelled) {\n          setLoading(false);\n        }\n        if (inflightRouteKeyRef.current === routeKey) {\n          inflightRouteKeyRef.current = null;\n        }\n      }\n    };\n\n    void run();\n\n    return () => {\n      cancelled = true;\n      if (inflightRouteKeyRef.current === routeKey) {\n        inflightRouteKeyRef.current = null;\n      }\n    };\n  }, [\n    action,\n    kind,\n    rawId,\n    record?.battleId,\n    record?.id,\n    record?.marketId,\n    record?.sourceTab,\n    record?.status,\n    record?.topicId,\n    record?.roundId,\n  ]);\n\n  const handleBack = () => {\n    if (settledItemId) {\n      hideSettlementItem(settledItemId);\n    }\n    openSettlementDrawer();\n    if (window.history.length > 1) {\n      navigate(-1);\n      return;\n    }\n    navigate('/');\n  };\n\n  return (\n    <SettlementDetailPage\n      model={model}\n      loading={loading}\n      errorText={errorText}\n      onBack={handleBack}\n    />\n  );\n}\n",
+      "__content": "/**\n * 文件说明：结算详情页路由入口，负责领取结算与详情展示。\n */\nimport { useEffect, useMemo, useRef, useState } from 'react';\nimport { useNavigate, useParams, useSearchParams } from '@umijs/renderer-react';\nimport { createBattleRequestId } from '@/hooks/battleTypes';\nimport type { CoinSettleResult } from '@/hooks/coinTypes';\nimport type { PKSettleResponse } from '@/hooks/pkTypes';\nimport type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';\nimport type { FootballMarketAggregate, PredictTearSettleResponse } from '@/hooks/predictionTypes';\nimport { useRequestPredictMyMarkets } from '@/hooks/usePredictionRequests';\nimport { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';\nimport { useRequestCoinSettle } from '@/hooks/useCoinRequests';\nimport { useRequestPredictTearSettle } from '@/hooks/usePredictRequests';\nimport { useRequestPKSettle } from '@/hooks/usePkRequests';\nimport { useSettlementDetailBuilder } from '@/hooks/useSettlementDetail';\nimport { useSettlementLayout } from '@/layouts/context/SettlementLayoutContext';\nimport { requireAuthOrOpen } from '@/utils/authStorage';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { SettlementDetailPage } from './components/SettlementDetailPage';\nimport {\n  settlementItemIdFromRoute,\n  type SettlementDetailAction,\n  type SettlementRouteKind,\n} from './settlementNavigation';\n\nfunction resolveCampSideFromMarket(\n  marketList: { market: { id: number } }[],\n  marketId: number,\n): SettlementRecordItem['campSide'] {\n  const item = marketList.find((entry) => entry.market.id === marketId);\n  if (!item) return 'unknown';\n  const raw = item as typeof item & { bet?: { option?: string }; myBet?: { option?: string } };\n  const option = String(raw.bet?.option ?? raw.myBet?.option ?? '').trim().toUpperCase();\n  if (option === 'A') return 'A';\n  if (option === 'B') return 'B';\n  if (option === 'DRAW' || option === 'C') return 'draw';\n  return 'unknown';\n}\n\nexport default function SettlementPage() {\n  const navigate = useNavigate();\n  const params = useParams<{ kind: SettlementRouteKind; id: string }>();\n  const [searchParams] = useSearchParams();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const { openSettlementDrawer, hideSettlementItem } = useSettlementLayout();\n  const kind = params.kind;\n  const myMarketsPendingQuery = useRequestPredictMyMarkets({\n    page: 1,\n    limit: 100,\n    status: 'pending',\n    enabled: kind === 'coin' || kind === 'tear',\n  });\n  const myMarketsSettledQuery = useRequestPredictMyMarkets({\n    page: 1,\n    limit: 100,\n    status: 'settled',\n    enabled: kind === 'coin' || kind === 'tear',\n  });\n  const marketList = useMemo(() => {\n    if (kind !== 'coin' && kind !== 'tear') return [];\n    const merged = new Map<number, FootballMarketAggregate>();\n    [...(myMarketsPendingQuery.data?.list ?? []), ...(myMarketsSettledQuery.data?.list ?? [])].forEach(\n      (item) => {\n        if (item.market?.id) merged.set(item.market.id, item);\n      },\n    );\n    return Array.from(merged.values());\n  }, [kind, myMarketsPendingQuery.data?.list, myMarketsSettledQuery.data?.list]);\n  const { buildDetailModel } = useSettlementDetailBuilder(marketList);\n  const buildDetailModelRef = useRef(buildDetailModel);\n  buildDetailModelRef.current = buildDetailModel;\n  const coinSettleMutation = useRequestCoinSettle();\n  const tearSettleMutation = useRequestPredictTearSettle();\n  const battleWithdrawMutation = useRequestBattleWithdraw();\n  const pkSettleMutation = useRequestPKSettle();\n\n  const rawId = params.id ?? '';\n  const numericId = Number(rawId);\n  const action = (searchParams.get('action') as SettlementDetailAction | null) ?? 'view';\n  const roundIdParam = searchParams.get('roundId') ?? undefined;\n\n  const coinCampSide = useMemo(\n    () => (kind === 'coin' || kind === 'tear' ? resolveCampSideFromMarket(marketList, numericId) : 'unknown' as const),\n    [kind, marketList, numericId],\n  );\n\n  const record = useMemo<SettlementRecordItem | null>(() => {\n    if (!kind || !Number.isFinite(numericId) || numericId <= 0) return null;\n    const id = settlementItemIdFromRoute(kind, rawId);\n    if (kind === 'coin') {\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'dark',\n        title: '',\n        subtitle: '',\n        campSide: coinCampSide,\n        marketId: numericId,\n      };\n    }\n    if (kind === 'tear') {\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'dark',\n        title: '',\n        subtitle: '撕裂带奖励可领取',\n        campSide: coinCampSide,\n        marketId: numericId,\n      };\n    }\n    if (kind === 'pk') {\n      const campSide: SettlementRecordItem['campSide'] = 'unknown';\n      return {\n        id: roundIdParam ? `pk-${numericId}-${roundIdParam}` : settlementItemIdFromRoute(kind, rawId),\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'pk',\n        title: '',\n        subtitle: '',\n        campSide,\n        topicId: numericId,\n        roundId: roundIdParam ?? undefined,\n      };\n    }\n    return {\n      id,\n      status: action === 'settle' ? 'pending' : 'settled',\n      sourceTab: 'arena',\n      title: '',\n      subtitle: '',\n      campSide: 'unknown',\n      battleId: numericId,\n    };\n  }, [action, coinCampSide, kind, numericId, rawId, roundIdParam]);\n\n  const [model, setModel] = useState<SettlementDetailViewModel | null>(null);\n  const [loading, setLoading] = useState(true);\n  const [errorText, setErrorText] = useState<string | undefined>();\n  const [settledItemId, setSettledItemId] = useState<string | null>(null);\n  const settleRequestedRef = useRef<string | null>(null);\n  const inflightRouteKeyRef = useRef<string | null>(null);\n  const onOpenAuthRef = useRef(onOpenAuth);\n  onOpenAuthRef.current = onOpenAuth;\n\n  useEffect(() => {\n    settleRequestedRef.current = null;\n    inflightRouteKeyRef.current = null;\n  }, [action, kind, rawId]);\n\n  useEffect(() => {\n    if (!record) {\n      setLoading(false);\n      setErrorText('无效的结算链接');\n      return;\n    }\n\n    const routeKey = `${kind ?? ''}-${rawId}-${action}`;\n    if (inflightRouteKeyRef.current === routeKey) {\n      return;\n    }\n\n    if (!requireAuthOrOpen(onOpenAuthRef.current)) {\n      setLoading(false);\n      setErrorText('请先登录后查看结算详情');\n      return;\n    }\n\n    inflightRouteKeyRef.current = routeKey;\n    let cancelled = false;\n\n    const run = async () => {\n      setLoading(true);\n      setErrorText(undefined);\n      setModel(null);\n\n      try {\n        let settlePayload: CoinSettleResult | SettlementActionResult | PKSettleResponse | PredictTearSettleResponse | null = null;\n        const shouldSettle = action === 'settle' && record.status === 'pending';\n\n        if (shouldSettle && settleRequestedRef.current !== routeKey) {\n          settleRequestedRef.current = routeKey;\n          if (record.sourceTab === 'dark' && record.marketId) {\n            if (record.id.startsWith('tear-')) {\n              settlePayload = await tearSettleMutation.mutateAsync({ marketId: record.marketId });\n            } else {\n              settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });\n            }\n          } else if (record.sourceTab === 'arena' && record.battleId) {\n            const withdrawResult = await battleWithdrawMutation.mutateAsync({\n              battleId: record.battleId,\n              requestId: createBattleRequestId(`battle-withdraw-${record.battleId}`),\n            });\n            const payout = withdrawResult.payoutAmount ?? 0;\n            settlePayload = {\n              payout,\n              outcome: payout > 0 ? 'win' : 'neutral',\n              message: '奖励已提取到你的龟币账户。',\n            };\n          } else if (record.sourceTab === 'pk' && record.topicId) {\n            settlePayload = await pkSettleMutation.mutateAsync({\n              topicId: record.topicId,\n              roundId: record.roundId,\n              requestId: `pk-settle-${record.topicId}-${record.roundId ?? 'latest'}-${Date.now()}`,\n              snapshotType: 'SETTLE',\n              freezeSource: 'ON_DEMAND',\n            });\n          }\n          if (!cancelled) {\n            setSettledItemId(record.id);\n          }\n        }\n\n        const nextModel = await buildDetailModelRef.current(\n          { ...record, status: 'settled' },\n          settlePayload,\n        );\n        if (!cancelled) {\n          setModel(nextModel);\n        }\n      } catch (error) {\n        if (!cancelled) {\n          const message = error instanceof Error ? error.message : '加载结算详情失败';\n          setErrorText(message);\n          setModel(null);\n        }\n      } finally {\n        if (!cancelled) {\n          setLoading(false);\n        }\n        if (inflightRouteKeyRef.current === routeKey) {\n          inflightRouteKeyRef.current = null;\n        }\n      }\n    };\n\n    void run();\n\n    return () => {\n      cancelled = true;\n      if (inflightRouteKeyRef.current === routeKey) {\n        inflightRouteKeyRef.current = null;\n      }\n    };\n  }, [\n    action,\n    kind,\n    rawId,\n    record?.battleId,\n    record?.id,\n    record?.marketId,\n    record?.sourceTab,\n    record?.status,\n    record?.topicId,\n    record?.roundId,\n  ]);\n\n  const handleBack = () => {\n    if (settledItemId) {\n      hideSettlementItem(settledItemId);\n    }\n    openSettlementDrawer();\n    if (window.history.length > 1) {\n      navigate(-1);\n      return;\n    }\n    navigate('/');\n  };\n\n  return (\n    <SettlementDetailPage\n      model={model}\n      loading={loading}\n      errorText={errorText}\n      onBack={handleBack}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/settlement/index.tsx"
     },
@@ -5568,12 +6220,12 @@
             "format": "esm"
           },
           "src/pages/settlement/settlementNavigation.ts": {
-            "bytes": 1281,
+            "bytes": 1449,
             "imports": [],
             "format": "esm"
           },
           "src/components/common/settlement/SettlementHost.tsx": {
-            "bytes": 2761,
+            "bytes": 2567,
             "imports": [
               {
                 "path": "react",
@@ -5649,8 +6301,13 @@
             ],
             "format": "esm"
           },
+          "src/components/common/settlement/predictHeatSettlementModel.ts": {
+            "bytes": 3668,
+            "imports": [],
+            "format": "esm"
+          },
           "src/hooks/usePendingSettlements.ts": {
-            "bytes": 8591,
+            "bytes": 8964,
             "imports": [
               {
                 "path": "react",
@@ -5671,6 +6328,11 @@
                 "path": "src/hooks/usePkRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/usePkRequests"
+              },
+              {
+                "path": "src/components/common/settlement/predictHeatSettlementModel.ts",
+                "kind": "import-statement",
+                "original": "@/components/common/settlement/predictHeatSettlementModel"
               }
             ],
             "format": "esm"
@@ -6001,8 +6663,13 @@
             "format": "esm"
           },
           "src/pages/home/components/homeMobileSettlementModel.ts": {
-            "bytes": 5825,
+            "bytes": 6848,
             "imports": [
+              {
+                "path": "src/components/common/settlement/predictHeatSettlementModel.ts",
+                "kind": "import-statement",
+                "original": "@/components/common/settlement/predictHeatSettlementModel"
+              },
               {
                 "path": "src/pages/home/components/predictionCards.ts",
                 "kind": "import-statement",
@@ -6012,7 +6679,7 @@
             "format": "esm"
           },
           "src/pages/home/components/HomeMobileSettlementEventCard/index.tsx": {
-            "bytes": 4913,
+            "bytes": 6771,
             "imports": [
               {
                 "path": "src/components/common/iconfont/IconFont.tsx",
@@ -6033,7 +6700,7 @@
             "format": "esm"
           },
           "src/pages/home/components/HomeMobileHome/index.tsx": {
-            "bytes": 8594,
+            "bytes": 8559,
             "imports": [
               {
                 "path": "react",
@@ -6146,10 +6813,15 @@
             "format": "esm"
           },
           "src/pages/home/components/NewsFeed.tsx": {
-            "bytes": 26319,
+            "bytes": 26640,
             "imports": [
               {
                 "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -6177,11 +6849,6 @@
                 "path": "src/pages/home/components/PredictionCardCover.tsx",
                 "kind": "import-statement",
                 "original": "./PredictionCardCover"
-              },
-              {
-                "path": "src/hooks/useCoinRequests.ts",
-                "kind": "import-statement",
-                "original": "@/hooks/useCoinRequests"
               },
               {
                 "path": "src/pages/home/components/PredictTagCategoryBar.tsx",
@@ -6426,7 +7093,7 @@
             "format": "esm"
           },
           "src/hooks/usePredictRequests.ts": {
-            "bytes": 13024,
+            "bytes": 14014,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -6473,7 +7140,7 @@
             "format": "esm"
           },
           "src/pages/event-battle/components/EventBattleRightRail.tsx": {
-            "bytes": 7866,
+            "bytes": 10601,
             "imports": [
               {
                 "path": "react",
@@ -6499,10 +7166,15 @@
             "format": "esm"
           },
           "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-            "bytes": 64245,
+            "bytes": 66350,
             "imports": [
               {
                 "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -6535,6 +7207,11 @@
                 "path": "src/pages/home/components/predictionCards.ts",
                 "kind": "import-statement",
                 "original": "@/pages/home/components/predictionCards"
+              },
+              {
+                "path": "src/components/common/settlement/predictHeatSettlementModel.ts",
+                "kind": "import-statement",
+                "original": "@/components/common/settlement/predictHeatSettlementModel"
               },
               {
                 "path": "src/pages/event-battle/components/EventBattleEnergyBar/index.tsx",
@@ -7444,7 +8121,7 @@
             "format": "esm"
           },
           "src/pages/messages/components/MessagesMobilePage/index.tsx": {
-            "bytes": 7271,
+            "bytes": 6813,
             "imports": [
               {
                 "path": "react",
@@ -8938,7 +9615,7 @@
             "format": "esm"
           },
           "src/pages/mine/components/MineMobilePage/index.tsx": {
-            "bytes": 4506,
+            "bytes": 4471,
             "imports": [
               {
                 "path": "react",
@@ -9193,18 +9870,23 @@
             "format": "esm"
           },
           "src/components/common/settlement/settlementModel.ts": {
-            "bytes": 16038,
+            "bytes": 22939,
             "imports": [
               {
                 "path": "src/components/common/settlement/settlementCampColors.ts",
                 "kind": "import-statement",
                 "original": "./settlementCampColors"
+              },
+              {
+                "path": "src/components/common/settlement/predictHeatSettlementModel.ts",
+                "kind": "import-statement",
+                "original": "./predictHeatSettlementModel"
               }
             ],
             "format": "esm"
           },
           "src/hooks/useSettlementDetail.ts": {
-            "bytes": 3451,
+            "bytes": 4736,
             "imports": [
               {
                 "path": "react",
@@ -9227,6 +9909,11 @@
                 "original": "@/hooks/usePkRequests"
               },
               {
+                "path": "src/hooks/usePredictRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/usePredictRequests"
+              },
+              {
                 "path": "src/hooks/useAuthRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/useAuthRequests"
@@ -9240,7 +9927,7 @@
             "format": "esm"
           },
           "src/components/common/settlement/SettlementDetailView/index.tsx": {
-            "bytes": 9234,
+            "bytes": 9514,
             "imports": [
               {
                 "path": "react",
@@ -9292,7 +9979,7 @@
             "format": "esm"
           },
           "src/pages/settlement/index.tsx": {
-            "bytes": 9045,
+            "bytes": 9778,
             "imports": [
               {
                 "path": "react",
@@ -9323,6 +10010,11 @@
                 "path": "src/hooks/useCoinRequests.ts",
                 "kind": "import-statement",
                 "original": "@/hooks/useCoinRequests"
+              },
+              {
+                "path": "src/hooks/usePredictRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/usePredictRequests"
               },
               {
                 "path": "src/hooks/usePkRequests.ts",
@@ -10283,6 +10975,11 @@
                 "external": true
               },
               {
+                "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
                 "path": "framer-motion",
                 "kind": "import-statement",
                 "external": true
@@ -10374,6 +11071,11 @@
               },
               {
                 "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -12389,7 +13091,7 @@
                 "bytesInOutput": 1504
               },
               "src/api/predictApi.ts": {
-                "bytesInOutput": 1337
+                "bytesInOutput": 1414
               },
               "src/api/coinApi.ts": {
                 "bytesInOutput": 329
@@ -12581,10 +13283,10 @@
                 "bytesInOutput": 9892
               },
               "src/pages/settlement/settlementNavigation.ts": {
-                "bytesInOutput": 842
+                "bytesInOutput": 1001
               },
               "src/components/common/settlement/SettlementHost.tsx": {
-                "bytesInOutput": 2508
+                "bytesInOutput": 2294
               },
               "src/api/pkApi.ts": {
                 "bytesInOutput": 1133
@@ -12595,8 +13297,11 @@
               "src/hooks/usePkRequests.ts": {
                 "bytesInOutput": 13998
               },
+              "src/components/common/settlement/predictHeatSettlementModel.ts": {
+                "bytesInOutput": 2950
+              },
               "src/hooks/usePendingSettlements.ts": {
-                "bytesInOutput": 7121
+                "bytesInOutput": 7434
               },
               "src/layouts/context/SettlementLayoutContext.tsx": {
                 "bytesInOutput": 684
@@ -12632,13 +13337,13 @@
                 "bytesInOutput": 18783
               },
               "src/pages/home/components/homeMobileSettlementModel.ts": {
-                "bytesInOutput": 4455
+                "bytesInOutput": 5314
               },
               "src/pages/home/components/HomeMobileSettlementEventCard/index.tsx": {
-                "bytesInOutput": 5401
+                "bytesInOutput": 7604
               },
               "src/pages/home/components/HomeMobileHome/index.tsx": {
-                "bytesInOutput": 8945
+                "bytesInOutput": 8910
               },
               "src/hooks/useHorizontalDragScroll.ts": {
                 "bytesInOutput": 1882
@@ -12650,7 +13355,7 @@
                 "bytesInOutput": 6718
               },
               "src/pages/home/components/NewsFeed.tsx": {
-                "bytesInOutput": 28944
+                "bytesInOutput": 29362
               },
               "src/pages/home/components/PredictionsView.tsx": {
                 "bytesInOutput": 1105
@@ -12674,7 +13379,7 @@
                 "bytesInOutput": 8296
               },
               "src/pages/rivalry-battle/components/RivalryBattleLiveRoomCore.tsx": {
-                "bytesInOutput": 66696
+                "bytesInOutput": 66698
               },
               "src/pages/rivalry-battle/components/RivalryBattleLiveRoom.tsx": {
                 "bytesInOutput": 157
@@ -12686,7 +13391,7 @@
                 "bytesInOutput": 2776
               },
               "src/hooks/usePredictRequests.ts": {
-                "bytesInOutput": 9676
+                "bytesInOutput": 11108
               },
               "src/pages/event-battle/components/EventBattleEnergyBar/eventBattleEnergyBarBubbles.ts": {
                 "bytesInOutput": 944
@@ -12695,13 +13400,13 @@
                 "bytesInOutput": 2428
               },
               "src/pages/event-battle/components/EventBattleRightRail.tsx": {
-                "bytesInOutput": 8325
+                "bytesInOutput": 11170
               },
               "src/pages/event-battle/components/eventBattleThemes.ts": {
                 "bytesInOutput": 8305
               },
               "src/pages/event-battle/components/EventBattleLiveRoomCore.tsx": {
-                "bytesInOutput": 67021
+                "bytesInOutput": 69141
               },
               "src/pages/event-battle/components/EventBattleLiveRoom.tsx": {
                 "bytesInOutput": 149
@@ -12821,19 +13526,19 @@
                 "bytesInOutput": 2046
               },
               "src/hooks/useMessageNotifyRequests.ts": {
-                "bytesInOutput": 3807
+                "bytesInOutput": 2556
               },
               "src/pages/messages/components/messageNotifyModel.ts": {
                 "bytesInOutput": 3558
               },
               "src/pages/messages/components/MessageNotifyCategoryIcon.tsx": {
-                "bytesInOutput": 1070
+                "bytesInOutput": 1072
               },
               "src/pages/messages/components/MessagesNotifyCard/index.tsx": {
                 "bytesInOutput": 1642
               },
               "src/pages/messages/components/MessagesMobilePage/index.tsx": {
-                "bytesInOutput": 7052
+                "bytesInOutput": 6670
               },
               "src/pages/messages/components/MessagesPageView/index.tsx": {
                 "bytesInOutput": 352
@@ -12863,7 +13568,7 @@
                 "bytesInOutput": 19719
               },
               "src/pages/battle-plaza/components/BattlePlazaDuelCard/index.tsx": {
-                "bytesInOutput": 22863
+                "bytesInOutput": 22850
               },
               "src/pages/battle-plaza/components/BattlePlazaInviteCodeModal/index.tsx": {
                 "bytesInOutput": 5541
@@ -13001,7 +13706,7 @@
                 "bytesInOutput": 3316
               },
               "src/pages/mine/components/MineMobilePage/index.tsx": {
-                "bytesInOutput": 4559
+                "bytesInOutput": 4524
               },
               "src/pages/mine/components/MinePageView.tsx": {
                 "bytesInOutput": 318
@@ -13031,19 +13736,19 @@
                 "bytesInOutput": 1276
               },
               "src/components/common/settlement/settlementModel.ts": {
-                "bytesInOutput": 16098
+                "bytesInOutput": 22330
               },
               "src/hooks/useSettlementDetail.ts": {
-                "bytesInOutput": 2619
+                "bytesInOutput": 3676
               },
               "src/components/common/settlement/SettlementDetailView/index.tsx": {
-                "bytesInOutput": 10137
+                "bytesInOutput": 10405
               },
               "src/pages/settlement/components/SettlementDetailPage.tsx": {
                 "bytesInOutput": 1708
               },
               "src/pages/settlement/index.tsx": {
-                "bytesInOutput": 8009
+                "bytesInOutput": 8667
               },
               "src/components/common/feedback/OperationToast/index.tsx": {
                 "bytesInOutput": 1263
@@ -13085,7 +13790,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1464238
+            "bytes": 1483970
           }
         }
       }
@@ -16917,6 +17622,56 @@
           "type": "ImportDeclaration"
         }
       ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/settlement/predictHeatSettlementModel.ts": [
+        {
+          "end": 263,
+          "importKind": "type",
+          "source": "@/hooks/predictionTypes",
+          "specifiers": [
+            {
+              "imported": "PredictCommentRewardLog",
+              "local": "PredictCommentRewardLog",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictHeatMeResponse",
+              "local": "PredictHeatMeResponse",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictHeatRankItem",
+              "local": "PredictHeatRankItem",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictHeatResponse",
+              "local": "PredictHeatResponse",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 118,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 356,
+          "importKind": "type",
+          "source": "@/hooks/settlementTypes",
+          "specifiers": [
+            {
+              "imported": "SettlementCampSide",
+              "local": "SettlementCampSide",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "SettlementLeaderboardRow",
+              "local": "SettlementLeaderboardRow",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 264,
+          "type": "ImportDeclaration"
+        }
+      ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/components/common/settlement/settlementCampColors.ts": [
         {
           "end": 136,
@@ -17001,7 +17756,41 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 558,
+          "end": 556,
+          "importKind": "type",
+          "source": "@/hooks/predictionTypes",
+          "specifiers": [
+            {
+              "imported": "PredictCommentRewardLog",
+              "local": "PredictCommentRewardLog",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictHeatMeResponse",
+              "local": "PredictHeatMeResponse",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictHeatRankResponse",
+              "local": "PredictHeatRankResponse",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictHeatResponse",
+              "local": "PredictHeatResponse",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictTearSettlement",
+              "local": "PredictTearSettlement",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 382,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 733,
           "importKind": "type",
           "source": "@/hooks/settlementTypes",
           "specifiers": [
@@ -17031,11 +17820,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 382,
+          "start": 557,
           "type": "ImportDeclaration"
         },
         {
-          "end": 623,
+          "end": 798,
           "importKind": "value",
           "source": "./settlementCampColors",
           "specifiers": [
@@ -17045,7 +17834,56 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 559,
+          "start": 734,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1054,
+          "importKind": "value",
+          "source": "./predictHeatSettlementModel",
+          "specifiers": [
+            {
+              "imported": "formatTearRemainLabel",
+              "local": "formatTearRemainLabel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "formatWinnerOptionLabel",
+              "local": "formatWinnerOptionLabel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "hasHeatParticipation",
+              "local": "hasHeatParticipation",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "mapHeatRankToLeaderboardRows",
+              "local": "mapHeatRankToLeaderboardRows",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveHeatByOption",
+              "local": "resolveHeatByOption",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveHeatPct",
+              "local": "resolveHeatPct",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveTearRewardAmount",
+              "local": "resolveTearRewardAmount",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveWinningSideFromLeader",
+              "local": "resolveWinningSideFromLeader",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 799,
           "type": "ImportDeclaration"
         }
       ],
@@ -20572,6 +21410,20 @@
           ],
           "start": 524,
           "type": "ImportDeclaration"
+        },
+        {
+          "end": 711,
+          "importKind": "value",
+          "source": "@/components/common/settlement/predictHeatSettlementModel",
+          "specifiers": [
+            {
+              "imported": "formatTearRemainLabel",
+              "local": "formatTearRemainLabel",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 613,
+          "type": "ImportDeclaration"
         }
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/hooks/usePetRequests.ts": [
@@ -21832,7 +22684,31 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 357,
+          "end": 410,
+          "importKind": "value",
+          "source": "@/hooks/usePredictRequests",
+          "specifiers": [
+            {
+              "imported": "fetchPredictHeat",
+              "local": "fetchPredictHeat",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "fetchPredictHeatMe",
+              "local": "fetchPredictHeatMe",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "fetchPredictHeatRank",
+              "local": "fetchPredictHeatRank",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 299,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 469,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -21842,11 +22718,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 299,
+          "start": 411,
           "type": "ImportDeclaration"
         },
         {
-          "end": 414,
+          "end": 526,
           "importKind": "type",
           "source": "@/hooks/pkTypes",
           "specifiers": [
@@ -21856,11 +22732,25 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 358,
+          "start": 470,
           "type": "ImportDeclaration"
         },
         {
-          "end": 541,
+          "end": 600,
+          "importKind": "type",
+          "source": "@/hooks/predictionTypes",
+          "specifiers": [
+            {
+              "imported": "PredictTearSettleResponse",
+              "local": "PredictTearSettleResponse",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 527,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 727,
           "importKind": "type",
           "source": "@/hooks/settlementTypes",
           "specifiers": [
@@ -21880,11 +22770,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 415,
+          "start": 601,
           "type": "ImportDeclaration"
         },
         {
-          "end": 613,
+          "end": 799,
           "importKind": "type",
           "source": "@/hooks/predictionTypes",
           "specifiers": [
@@ -21894,11 +22784,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 542,
+          "start": 728,
           "type": "ImportDeclaration"
         },
         {
-          "end": 678,
+          "end": 864,
           "importKind": "value",
           "source": "@/hooks/useAuthRequests",
           "specifiers": [
@@ -21908,11 +22798,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 614,
+          "start": 800,
           "type": "ImportDeclaration"
         },
         {
-          "end": 831,
+          "end": 1046,
           "importKind": "value",
           "source": "@/components/common/settlement/settlementModel",
           "specifiers": [
@@ -21930,9 +22820,14 @@
               "imported": "buildPkSettlementDetail",
               "local": "buildPkSettlementDetail",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "buildTearSettlementDetail",
+              "local": "buildTearSettlementDetail",
+              "type": "ImportSpecifier"
             }
           ],
-          "start": 679,
+          "start": 865,
           "type": "ImportDeclaration"
         }
       ],
@@ -25422,7 +26317,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 233,
+          "end": 240,
+          "importKind": "value",
+          "source": "@umijs/renderer-react",
+          "specifiers": [
+            {
+              "imported": "useNavigate",
+              "local": "useNavigate",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 188,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 286,
           "importKind": "value",
           "source": "react-query",
           "specifiers": [
@@ -25432,11 +26341,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 188,
+          "start": 241,
           "type": "ImportDeclaration"
         },
         {
-          "end": 392,
+          "end": 445,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
@@ -25491,11 +26400,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 234,
+          "start": 287,
           "type": "ImportDeclaration"
         },
         {
-          "end": 457,
+          "end": 510,
           "importKind": "value",
           "source": "@/hooks/useAuthRequests",
           "specifiers": [
@@ -25505,11 +26414,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 393,
+          "start": 446,
           "type": "ImportDeclaration"
         },
         {
-          "end": 536,
+          "end": 589,
           "importKind": "value",
           "source": "@/hooks/useCoinRequests",
           "specifiers": [
@@ -25524,11 +26433,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 458,
+          "start": 511,
           "type": "ImportDeclaration"
         },
         {
-          "end": 603,
+          "end": 656,
           "importKind": "type",
           "source": "@/hooks/useCommentRequests",
           "specifiers": [
@@ -25538,11 +26447,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 537,
+          "start": 590,
           "type": "ImportDeclaration"
         },
         {
-          "end": 997,
+          "end": 1079,
           "importKind": "value",
           "source": "@/hooks/usePredictRequests",
           "specifiers": [
@@ -25582,6 +26491,11 @@
               "type": "ImportSpecifier"
             },
             {
+              "imported": "useRequestPredictHeatRank",
+              "local": "useRequestPredictHeatRank",
+              "type": "ImportSpecifier"
+            },
+            {
               "imported": "useRequestPredictLike",
               "local": "useRequestPredictLike",
               "type": "ImportSpecifier"
@@ -25607,11 +26521,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 604,
+          "start": 657,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1062,
+          "end": 1144,
           "importKind": "type",
           "source": "@/components/common/pet/petTypes",
           "specifiers": [
@@ -25621,11 +26535,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 998,
+          "start": 1080,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1200,
+          "end": 1282,
           "importKind": "value",
           "source": "@/pages/home/components/predictionCards",
           "specifiers": [
@@ -25645,11 +26559,30 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1063,
+          "start": 1145,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1303,
+          "end": 1411,
+          "importKind": "value",
+          "source": "@/components/common/settlement/predictHeatSettlementModel",
+          "specifiers": [
+            {
+              "imported": "formatTearRemainLabel",
+              "local": "formatTearRemainLabel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "formatWinnerOptionLabel",
+              "local": "formatWinnerOptionLabel",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 1283,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 1514,
           "importKind": "value",
           "source": "./EventBattleEnergyBar/index",
           "specifiers": [
@@ -25664,11 +26597,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1201,
+          "start": 1412,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1366,
+          "end": 1577,
           "importKind": "value",
           "source": "./EventBattleRightRail",
           "specifiers": [
@@ -25678,11 +26611,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1304,
+          "start": 1515,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1429,
+          "end": 1640,
           "importKind": "value",
           "source": "./eventBattleThemes",
           "specifiers": [
@@ -25692,15 +26625,15 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1367,
+          "start": 1578,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1465,
+          "end": 1676,
           "importKind": "value",
           "source": "./EventBattleLiveRoom.css",
           "specifiers": [],
-          "start": 1430,
+          "start": 1641,
           "type": "ImportDeclaration"
         }
       ],
@@ -25750,7 +26683,7 @@
       ],
       "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/event-battle/components/EventBattleRightRail.tsx": [
         {
-          "end": 143,
+          "end": 155,
           "importKind": "value",
           "source": "react",
           "specifiers": [
@@ -25759,14 +26692,24 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 117,
+          "start": 129,
           "type": "ImportDeclaration"
         },
         {
-          "end": 190,
+          "end": 215,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
+            {
+              "imported": "Flame",
+              "local": "Flame",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Lock",
+              "local": "Lock",
+              "type": "ImportSpecifier"
+            },
             {
               "imported": "Shield",
               "local": "Shield",
@@ -25778,11 +26721,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 144,
+          "start": 156,
           "type": "ImportDeclaration"
         },
         {
-          "end": 251,
+          "end": 276,
           "importKind": "type",
           "source": "./eventBattleThemes",
           "specifiers": [
@@ -25792,15 +26735,15 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 191,
+          "start": 216,
           "type": "ImportDeclaration"
         },
         {
-          "end": 288,
+          "end": 313,
           "importKind": "value",
           "source": "./EventBattleRightRail.css",
           "specifiers": [],
-          "start": 252,
+          "start": 277,
           "type": "ImportDeclaration"
         }
       ],
@@ -27300,7 +28243,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 599,
+          "end": 677,
           "importKind": "value",
           "source": "../homeMobileSettlementModel",
           "specifiers": [
@@ -27353,13 +28296,28 @@
               "imported": "resolveSidePercents",
               "local": "resolveSidePercents",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "isTearSettlementRecord",
+              "local": "isTearSettlementRecord",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveTearWinnerLabel",
+              "local": "resolveTearWinnerLabel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveTearRemainLabel",
+              "local": "resolveTearRemainLabel",
+              "type": "ImportSpecifier"
             }
           ],
           "start": 286,
           "type": "ImportDeclaration"
         },
         {
-          "end": 657,
+          "end": 735,
           "importKind": "value",
           "source": "../HomeMobileHome/index.module.scss",
           "specifiers": [
@@ -27368,7 +28326,7 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 600,
+          "start": 678,
           "type": "ImportDeclaration"
         }
       ],
@@ -27441,7 +28399,21 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 159,
+          "end": 172,
+          "importKind": "value",
+          "source": "@umijs/renderer-react",
+          "specifiers": [
+            {
+              "imported": "useNavigate",
+              "local": "useNavigate",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 120,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 212,
           "importKind": "value",
           "source": "framer-motion",
           "specifiers": [
@@ -27451,11 +28423,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 120,
+          "start": 173,
           "type": "ImportDeclaration"
         },
         {
-          "end": 247,
+          "end": 300,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
@@ -27490,11 +28462,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 160,
+          "start": 213,
           "type": "ImportDeclaration"
         },
         {
-          "end": 304,
+          "end": 357,
           "importKind": "type",
           "source": "@/hooks/coinTypes",
           "specifiers": [
@@ -27504,11 +28476,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 248,
+          "start": 301,
           "type": "ImportDeclaration"
         },
         {
-          "end": 444,
+          "end": 497,
           "importKind": "value",
           "source": "./predictionCards",
           "specifiers": [
@@ -27533,11 +28505,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 305,
+          "start": 358,
           "type": "ImportDeclaration"
         },
         {
-          "end": 503,
+          "end": 556,
           "importKind": "value",
           "source": "./PredictionBetModal",
           "specifiers": [
@@ -27547,11 +28519,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 445,
+          "start": 498,
           "type": "ImportDeclaration"
         },
         {
-          "end": 564,
+          "end": 617,
           "importKind": "value",
           "source": "./PredictionCardCover",
           "specifiers": [
@@ -27561,25 +28533,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 504,
+          "start": 557,
           "type": "ImportDeclaration"
         },
         {
-          "end": 628,
-          "importKind": "value",
-          "source": "@/hooks/useCoinRequests",
-          "specifiers": [
-            {
-              "imported": "useRequestCoinSettle",
-              "local": "useRequestCoinSettle",
-              "type": "ImportSpecifier"
-            }
-          ],
-          "start": 565,
-          "type": "ImportDeclaration"
-        },
-        {
-          "end": 693,
+          "end": 682,
           "importKind": "value",
           "source": "./PredictTagCategoryBar",
           "specifiers": [
@@ -27589,7 +28547,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 629,
+          "start": 618,
           "type": "ImportDeclaration"
         }
       ],
@@ -27981,7 +28939,26 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 250,
+          "end": 305,
+          "importKind": "value",
+          "source": "@/components/common/settlement/predictHeatSettlementModel",
+          "specifiers": [
+            {
+              "imported": "formatTearRemainLabel",
+              "local": "formatTearRemainLabel",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "formatWinnerOptionLabel",
+              "local": "formatWinnerOptionLabel",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 182,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 374,
           "importKind": "type",
           "source": "@/hooks/settlementTypes",
           "specifiers": [
@@ -27991,11 +28968,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 182,
+          "start": 306,
           "type": "ImportDeclaration"
         },
         {
-          "end": 322,
+          "end": 446,
           "importKind": "type",
           "source": "@/hooks/usePendingSettlements",
           "specifiers": [
@@ -28005,11 +28982,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 251,
+          "start": 375,
           "type": "ImportDeclaration"
         },
         {
-          "end": 410,
+          "end": 534,
           "importKind": "value",
           "source": "./predictionCards",
           "specifiers": [
@@ -28024,11 +29001,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 323,
+          "start": 447,
           "type": "ImportDeclaration"
         },
         {
-          "end": 483,
+          "end": 607,
           "importKind": "type",
           "source": "./HomeMobileStatusFilters",
           "specifiers": [
@@ -28038,7 +29015,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 411,
+          "start": 535,
           "type": "ImportDeclaration"
         }
       ],
@@ -28622,15 +29599,10 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 279,
+          "end": 272,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
-            {
-              "imported": "Check",
-              "local": "Check",
-              "type": "ImportSpecifier"
-            },
             {
               "imported": "SlidersHorizontal",
               "local": "SlidersHorizontal",
@@ -28641,7 +29613,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 331,
+          "end": 324,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -28651,11 +29623,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 280,
+          "start": 273,
           "type": "ImportDeclaration"
         },
         {
-          "end": 402,
+          "end": 395,
           "importKind": "type",
           "source": "@/hooks/messageNotifyTypes",
           "specifiers": [
@@ -28665,11 +29637,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 332,
+          "start": 325,
           "type": "ImportDeclaration"
         },
         {
-          "end": 594,
+          "end": 554,
           "importKind": "value",
           "source": "@/hooks/useMessageNotifyRequests",
           "specifiers": [
@@ -28684,21 +29656,16 @@
               "type": "ImportSpecifier"
             },
             {
-              "imported": "useMutateMessageNotifyReadAll",
-              "local": "useMutateMessageNotifyReadAll",
-              "type": "ImportSpecifier"
-            },
-            {
               "imported": "useRequestMessageNotifyUnreadCount",
               "local": "useRequestMessageNotifyUnreadCount",
               "type": "ImportSpecifier"
             }
           ],
-          "start": 403,
+          "start": 396,
           "type": "ImportDeclaration"
         },
         {
-          "end": 652,
+          "end": 612,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -28708,11 +29675,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 595,
+          "start": 555,
           "type": "ImportDeclaration"
         },
         {
-          "end": 718,
+          "end": 678,
           "importKind": "value",
           "source": "@/components/common/iconfont/IconFont",
           "specifiers": [
@@ -28722,11 +29689,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 653,
+          "start": 613,
           "type": "ImportDeclaration"
         },
         {
-          "end": 896,
+          "end": 856,
           "importKind": "value",
           "source": "../messageNotifyModel",
           "specifiers": [
@@ -28756,11 +29723,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 719,
+          "start": 679,
           "type": "ImportDeclaration"
         },
         {
-          "end": 970,
+          "end": 930,
           "importKind": "value",
           "source": "../MessageNotifyCategoryIcon",
           "specifiers": [
@@ -28770,11 +29737,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 897,
+          "start": 857,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1030,
+          "end": 990,
           "importKind": "value",
           "source": "../MessagesNotifyCard",
           "specifiers": [
@@ -28784,11 +29751,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 971,
+          "start": 931,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1072,
+          "end": 1032,
           "importKind": "value",
           "source": "./index.module.scss",
           "specifiers": [
@@ -28797,7 +29764,7 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 1031,
+          "start": 991,
           "type": "ImportDeclaration"
         }
       ],
@@ -32164,7 +33131,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 605,
+          "end": 632,
           "importKind": "type",
           "source": "@/hooks/predictionTypes",
           "specifiers": [
@@ -32172,13 +33139,18 @@
               "imported": "FootballMarketAggregate",
               "local": "FootballMarketAggregate",
               "type": "ImportSpecifier"
+            },
+            {
+              "imported": "PredictTearSettleResponse",
+              "local": "PredictTearSettleResponse",
+              "type": "ImportSpecifier"
             }
           ],
           "start": 534,
           "type": "ImportDeclaration"
         },
         {
-          "end": 681,
+          "end": 708,
           "importKind": "value",
           "source": "@/hooks/usePredictionRequests",
           "specifiers": [
@@ -32188,11 +33160,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 606,
+          "start": 633,
           "type": "ImportDeclaration"
         },
         {
-          "end": 751,
+          "end": 778,
           "importKind": "value",
           "source": "@/hooks/useBattleRequests",
           "specifiers": [
@@ -32202,11 +33174,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 682,
+          "start": 709,
           "type": "ImportDeclaration"
         },
         {
-          "end": 815,
+          "end": 842,
           "importKind": "value",
           "source": "@/hooks/useCoinRequests",
           "specifiers": [
@@ -32216,11 +33188,25 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 752,
+          "start": 779,
           "type": "ImportDeclaration"
         },
         {
-          "end": 875,
+          "end": 916,
+          "importKind": "value",
+          "source": "@/hooks/usePredictRequests",
+          "specifiers": [
+            {
+              "imported": "useRequestPredictTearSettle",
+              "local": "useRequestPredictTearSettle",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 843,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 976,
           "importKind": "value",
           "source": "@/hooks/usePkRequests",
           "specifiers": [
@@ -32230,11 +33216,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 816,
+          "start": 917,
           "type": "ImportDeclaration"
         },
         {
-          "end": 949,
+          "end": 1050,
           "importKind": "value",
           "source": "@/hooks/useSettlementDetail",
           "specifiers": [
@@ -32244,11 +33230,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 876,
+          "start": 977,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1030,
+          "end": 1131,
           "importKind": "value",
           "source": "@/layouts/context/SettlementLayoutContext",
           "specifiers": [
@@ -32258,11 +33244,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 950,
+          "start": 1051,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1087,
+          "end": 1188,
           "importKind": "value",
           "source": "@/utils/authStorage",
           "specifiers": [
@@ -32272,11 +33258,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1031,
+          "start": 1132,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1145,
+          "end": 1246,
           "importKind": "value",
           "source": "@/layouts/context",
           "specifiers": [
@@ -32286,11 +33272,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1088,
+          "start": 1189,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1219,
+          "end": 1320,
           "importKind": "value",
           "source": "./components/SettlementDetailPage",
           "specifiers": [
@@ -32300,11 +33286,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1146,
+          "start": 1247,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1349,
+          "end": 1450,
           "importKind": "value",
           "source": "./settlementNavigation",
           "specifiers": [
@@ -32324,7 +33310,7 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 1220,
+          "start": 1321,
           "type": "ImportDeclaration"
         }
       ],

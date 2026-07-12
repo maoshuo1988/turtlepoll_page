@@ -9,6 +9,7 @@ import { useRequestPredictMyMarkets } from '@/hooks/usePredictionRequests';
 import { useRequestPKMyBets } from '@/hooks/usePkRequests';
 import type { PKMyBetRecord } from '@/hooks/pkTypes';
 import type { SettlementCampSide, SettlementRecordItem } from '@/hooks/settlementTypes';
+import { formatTearRemainLabel } from '@/components/common/settlement/predictHeatSettlementModel';
 
 function resolveMarketBetSide(item: FootballMarketAggregate): SettlementCampSide {
   const raw = item as FootballMarketAggregate & {
@@ -66,13 +67,18 @@ function mapTearRecord(item: FootballMarketAggregate): SettlementRecordItem | nu
 
   const marketId = item.market.id;
   const title = item.context?.eventName || item.market.title || `预测市场 #${marketId}`;
+  const winnerHint = tear.winnerOption ? ` · 胜方 ${tear.winnerOption}` : '';
+  const remainHint =
+    typeof tear.remainSeconds === 'number' && tear.remainSeconds > 0
+      ? ` · ${formatTearRemainLabel(tear.remainSeconds)}`
+      : '';
 
   return {
     id: `tear-${marketId}`,
     status: 'pending',
     sourceTab: 'dark',
     title,
-    subtitle: '撕裂带奖励可领取',
+    subtitle: `撕裂带评论奖励可领取${winnerHint}${remainHint}`,
     campSide: resolveMarketBetSide(item),
     marketId,
   };

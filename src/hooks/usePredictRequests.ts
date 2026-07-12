@@ -29,6 +29,39 @@ import { assertSuccess, getAuthorizationHeaders } from '@/utils/requestUtils';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { COIN_ME_QUERY_KEY } from './useCoinRequests';
 
+export async function fetchPredictHeat(marketId: number) {
+  const res = await axiosCustom({
+    method: 'get',
+    cmd: API_Predict_Heat,
+    params: { marketId },
+    headers: getAuthorizationHeaders(),
+  });
+  return assertSuccess(res) as PredictHeatResponse;
+}
+
+export async function fetchPredictHeatMe(marketId: number) {
+  const res = await axiosCustom({
+    method: 'get',
+    cmd: API_Predict_Heat_Me,
+    params: { marketId },
+    headers: getAuthorizationHeaders(),
+  });
+  return assertSuccess(res) as PredictHeatMeResponse;
+}
+
+export async function fetchPredictHeatRank(
+  marketId: number,
+  params: { scope?: 'ALL' | 'MY_SIDE'; page?: number; pageSize?: number } = {},
+) {
+  const res = await axiosCustom({
+    method: 'get',
+    cmd: API_Predict_Heat_Rank,
+    params: { marketId, scope: params.scope ?? 'ALL', page: params.page ?? 1, pageSize: params.pageSize ?? 20 },
+    headers: getAuthorizationHeaders(),
+  });
+  return assertSuccess(res) as PredictHeatRankResponse;
+}
+
 const hasValue = (value: unknown) => value !== undefined && value !== null && value !== '';
 
 const buildForm = (payload: Record<string, unknown>) => {

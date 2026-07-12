@@ -2,6 +2,7 @@
  * 文件说明：暗盘撕裂带直播页核心实现（仅接预测市场 / 龟币下注）。
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from '@umijs/renderer-react';
 import { useQueryClient } from 'react-query';
 import {
   ChevronDown,
@@ -26,6 +27,7 @@ import {
   useRequestPredictCreateComment,
   useRequestPredictHeat,
   useRequestPredictHeatMe,
+  useRequestPredictHeatRank,
   useRequestPredictLike,
   useRequestPredictOddsCurrent,
   useRequestPredictReplyComment,
@@ -34,6 +36,10 @@ import {
 } from '@/hooks/usePredictRequests';
 import type { PetSkin } from '@/components/common/pet/petTypes';
 import { normalizePredictionCardItem, type PredictionBetOption, type PredictionCardItem } from '@/pages/home/components/predictionCards';
+import {
+  formatTearRemainLabel,
+  formatWinnerOptionLabel,
+} from '@/components/common/settlement/predictHeatSettlementModel';
 import { EventBattleEnergyBar, buildEventBattleEnergyBarBubbles } from './EventBattleEnergyBar/index';
 import { EventBattleRightRail } from './EventBattleRightRail';
 import { resolveEventBattleTheme } from './eventBattleThemes';
@@ -522,6 +528,7 @@ export const EventBattle: React.FC<EventBattleProps> = ({
 }) => {
   const news = useMemo(() => normalizePredictionCardItem(rawNews), [rawNews]);
   const battleMarketId = useMemo(() => resolveBattleMarketId(news), [news]);
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const currentUserQuery = useRequestUserCurrent();
   const coinMeQuery = useRequestCoinMe();
@@ -537,6 +544,14 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   });
   const predictHeatMeQuery = useRequestPredictHeatMe({
     marketId: battleMarketId ?? undefined,
+    enabled: Boolean(battleMarketId),
+  });
+  const [rankMode, setRankMode] = useState<'all' | 'side'>('all');
+  const predictHeatRankQuery = useRequestPredictHeatRank({
+    marketId: battleMarketId ?? undefined,
+    scope: rankMode === 'side' ? 'MY_SIDE' : 'ALL',
+    page: 1,
+    pageSize: 20,
     enabled: Boolean(battleMarketId),
   });
   const predictOddsQuery = useRequestPredictOddsCurrent({
@@ -622,18 +637,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const leftVotes = news.votes?.A ?? 0;
   const rightVotes = news.votes?.B ?? 0;
   const totalVotes = Math.max(1, leftVotes + rightVotes);
-  const leftPct = clampPct(Math.round((leftVotes / totalVotes) * 100));
-  const rightPct = 100 - leftPct;
-  const leftEnergyDuration = 1.8 + (leftPct / 100) * 3.2;
-  const rightEnergyDuration = 1.8 + (rightPct / 100) * 3.2;
-  const leftEnergyBubbles = useMemo(
-    () => buildEventBattleEnergyBarBubbles('A', leftPct, leftEnergyDuration),
-    [leftEnergyDuration, leftPct],
-  );
-  const rightEnergyBubbles = useMemo(
-    () => buildEventBattleEnergyBarBubbles('B', rightPct, rightEnergyDuration),
-    [rightEnergyDuration, rightPct],
-  );
+  const voteLeftPct = clampPct(Math.round((leftVotes / totalVotes) * 100));
+  const voteRightPct = 100 - voteLeftPct;
   const effectiveBetAmount = Number.isFinite(numericBetAmount) && numericBetAmount > 0 ? numericBetAmount : 0;
   const isBetting = (typeof news.marketId === 'number' && bettingMarketId === news.marketId) || coinBetMutation.isLoading;
   const canPlaceCoinBet = news.status === 'open' && !hasMarketBet;
@@ -854,6 +859,18 @@ export const EventBattle: React.FC<EventBattleProps> = ({
   const totalHeat = Math.max(1, leftHeat + rightHeat);
   const leftHeatPct = clampPct(Math.round((leftHeat / totalHeat) * 100));
   const rightHeatPct = 100 - leftHeatPct;
+  const displayLeftPct = predictHeatQuery.data ? leftHeatPct : voteLeftPct;
+  const displayRightPct = predictHeatQuery.data ? rightHeatPct : voteRightPct;
+  const leftEnergyDuration = 1.8 + (displayLeftPct / 100) * 3.2;
+  const rightEnergyDuration = 1.8 + (displayRightPct / 100) * 3.2;
+  const leftEnergyBubbles = useMemo(
+    () => buildEventBattleEnergyBarBubbles('A', displayLeftPct, leftEnergyDuration),
+    [displayLeftPct, leftEnergyDuration],
+  );
+  const rightEnergyBubbles = useMemo(
+    () => buildEventBattleEnergyBarBubbles('B', displayRightPct, rightEnergyDuration),
+    [displayRightPct, rightEnergyDuration],
+  );
   const leaderSide: CommentSide = leftHeat >= rightHeat ? 'A' : 'B';
   const leaderName = leaderSide === 'A' ? optionA : optionB;
   const combatDiff = Math.abs(leftHeat - rightHeat);
@@ -977,11 +994,12 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     }
     try {
       await tearSettleMutation.mutateAsync({ marketId: battleMarketId });
+      navigate(`/settlement/tear/${battleMarketId}?action=view`);
     } catch (error) {
       const message = error instanceof Error ? error.message : '';
       if (message.includes('NotLogin')) ensureAuth();
     }
-  }, [battleMarketId, canComment, ensureAuth, tearSettleMutation]);
+  }, [battleMarketId, canComment, ensureAuth, navigate, tearSettleMutation]);
 
   const handleSubmitComment = useCallback(async () => {
     const text = draft.trim();
@@ -1133,8 +1151,12 @@ export const EventBattle: React.FC<EventBattleProps> = ({
     return d > 0 ? `${d}天 ${timeText}` : timeText;
   }, [countdownLeft]);
 
-  const leftScore = leftVotes + leftHeat * 120 + leftComments.length * 18000;
-  const rightScore = rightVotes + rightHeat * 120 + rightComments.length * 18000;
+  const leftScore = predictHeatQuery.data
+    ? leftHeat
+    : leftVotes + leftHeat * 120 + leftComments.length * 18000;
+  const rightScore = predictHeatQuery.data
+    ? rightHeat
+    : rightVotes + rightHeat * 120 + rightComments.length * 18000;
   const scoreDiff = Math.abs(leftScore - rightScore);
   const leftHeroImage = visualTheme.sideA.imageUrl || displayNews.image || DEFAULT_BATTLE_IMAGE;
   const rightHeroImage = visualTheme.sideB.imageUrl || displayNews.image || DEFAULT_BATTLE_IMAGE;
@@ -1268,6 +1290,33 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       betAmount: hasMarketBet ? marketBetAmount : 0,
     };
   }, [currentUserName, hasMarketBet, leftComments, marketBetAmount, myBetSide, predictHeatMeQuery.data, rightComments, userSide]);
+
+  useEffect(() => {
+    if (!hasMarketBet && rankMode === 'side') {
+      setRankMode('all');
+    }
+  }, [hasMarketBet, rankMode]);
+
+  const leaderBoard = useMemo(() => {
+    const list = predictHeatRankQuery.data?.list ?? [];
+    if (list.length === 0) return [];
+    return list.slice(0, 8).map((row, index) => ({
+      id: String(row.userId ?? row.rank ?? index),
+      name: row.nickname || `用户${row.userId ?? index + 1}`,
+      avatar: row.avatar || FALLBACK_AVATAR,
+      rank: row.rank ?? null,
+      score: Math.round(row.totalHeat ?? 0),
+      side: (String(row.option ?? '').toUpperCase() === 'B' ? 'B' : 'A') as CommentSide,
+    }));
+  }, [predictHeatRankQuery.data?.list]);
+
+  const tearWinnerLabel = formatWinnerOptionLabel(
+    news.tearSettlement?.winnerOption ?? predictHeatQuery.data?.leaderOption,
+    optionA,
+    optionB,
+    optionDraw,
+  );
+  const tearRemainLabel = formatTearRemainLabel(news.tearSettlement?.remainSeconds);
   const quickAmounts = [100, 520, 1000, 5000];
 
   const rightRail = (
@@ -1286,6 +1335,10 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       canPlaceBet={canPlaceBet}
       isBetting={isBetting}
       estimatedPayout={estimatedPayout}
+      rankMode={rankMode}
+      onRankModeChange={setRankMode}
+      rankRows={leaderBoard}
+      rankLoading={predictHeatRankQuery.isLoading}
       personalStats={{
         likeCount: personalContribution.likeCount,
         commentCount: personalContribution.commentCount,
@@ -1301,6 +1354,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({
       canTearSettle={canTearSettle}
       isTearSettling={tearSettleMutation.isLoading}
       onTearSettle={() => void handleTearSettle()}
+      tearRemainLabel={tearRemainLabel}
+      winnerOptionLabel={tearWinnerLabel}
     />
   );
 
@@ -1389,8 +1444,8 @@ export const EventBattle: React.FC<EventBattleProps> = ({
 
           <div className="eb-energy-panel">
             <EventBattleEnergyBar
-              leftPct={leftPct}
-              rightPct={rightPct}
+              leftPct={displayLeftPct}
+              rightPct={displayRightPct}
               leftEnergyDuration={leftEnergyDuration}
               rightEnergyDuration={rightEnergyDuration}
               leftBubbles={leftEnergyBubbles}

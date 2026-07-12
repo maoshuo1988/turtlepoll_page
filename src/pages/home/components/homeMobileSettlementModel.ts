@@ -2,6 +2,7 @@
  * 文件说明：移动端首页待结算卡片数据映射（对齐 PC 结算抽屉数据源）。
  */
 import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
+import { formatTearRemainLabel, formatWinnerOptionLabel } from '@/components/common/settlement/predictHeatSettlementModel';
 import type { SettlementRecordItem } from '@/hooks/settlementTypes';
 import type { SettlementRecords } from '@/hooks/usePendingSettlements';
 import { mapMarketToPredictionCard, type PredictionCardItem } from './predictionCards';
@@ -83,6 +84,7 @@ export function resolveSettlementSectionMeta(filter: HomeMobileStatusFilter) {
 }
 
 export function resolveSettlementSourceLabel(record: SettlementRecordItem) {
+  if (record.id.startsWith('tear-')) return '暗盘·撕裂带';
   return record.sourceTab === 'pk' ? '开撕台' : '暗盘事件';
 }
 
@@ -104,8 +106,31 @@ export function resolveSettlementCtaLabel(
   record: SettlementRecordItem,
   card: PredictionCardItem | null = null,
 ) {
+  if (record.id.startsWith('tear-')) return record.status === 'pending' ? '领取奖励' : '查看';
   if (record.id.startsWith('open-') || card?.status === 'open') return '去查看';
   return record.status === 'pending' ? '去结算' : '查看';
+}
+
+export function isTearSettlementRecord(record: SettlementRecordItem) {
+  return record.id.startsWith('tear-');
+}
+
+export function resolveTearWinnerLabel(
+  market: FootballMarketAggregate | null,
+  card: PredictionCardItem | null,
+) {
+  const winnerOption = market?.tearSettlement?.winnerOption;
+  if (!winnerOption) return '待公布';
+  return formatWinnerOptionLabel(
+    winnerOption,
+    card?.optionA || market?.context?.proText || '看多',
+    card?.optionB || market?.context?.conText || '看空',
+    card?.optionDraw || market?.context?.drawText || '平局',
+  );
+}
+
+export function resolveTearRemainLabel(market: FootballMarketAggregate | null) {
+  return formatTearRemainLabel(market?.tearSettlement?.remainSeconds);
 }
 
 export function resolveBetAmount(market: FootballMarketAggregate | null) {

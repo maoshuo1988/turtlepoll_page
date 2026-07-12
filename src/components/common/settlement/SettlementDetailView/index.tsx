@@ -92,7 +92,9 @@ export const SettlementDetailView: React.FC<SettlementDetailViewProps> = ({
 
           {model.showHeatReward ? (
             <section className={css('reward-card')}>
-              <p className={css('reward-title')}>热度对决奖励 (仅阵营方)</p>
+              <p className={css('reward-title')}>
+                {model.settlementKind === 'tear' ? '撕裂带评论奖励' : '热度对决奖励 (仅阵营方)'}
+              </p>
               {model.heatRewardEmpty ? (
                 <>
                   <p className={css('reward-empty')}>无热度奖励</p>
@@ -105,6 +107,9 @@ export const SettlementDetailView: React.FC<SettlementDetailViewProps> = ({
                     {formatSettlementHeat(model.heatRewardAmount)} 龟币
                   </p>
                   <p className={css('reward-note')}>{model.heatRewardNote}</p>
+                  {model.rewardPool ? (
+                    <p className={css('reward-note')}>奖励池 {formatSettlementHeat(model.rewardPool)} 龟币</p>
+                  ) : null}
                   <div className={css('reward-progress')}>
                     <span style={{ width: `${model.heatRewardProgressPct}%` }} />
                   </div>

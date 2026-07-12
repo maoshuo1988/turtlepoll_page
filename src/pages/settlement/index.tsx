@@ -7,10 +7,11 @@ import { createBattleRequestId } from '@/hooks/battleTypes';
 import type { CoinSettleResult } from '@/hooks/coinTypes';
 import type { PKSettleResponse } from '@/hooks/pkTypes';
 import type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';
-import type { FootballMarketAggregate } from '@/hooks/predictionTypes';
+import type { FootballMarketAggregate, PredictTearSettleResponse } from '@/hooks/predictionTypes';
 import { useRequestPredictMyMarkets } from '@/hooks/usePredictionRequests';
 import { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';
 import { useRequestCoinSettle } from '@/hooks/useCoinRequests';
+import { useRequestPredictTearSettle } from '@/hooks/usePredictRequests';
 import { useRequestPKSettle } from '@/hooks/usePkRequests';
 import { useSettlementDetailBuilder } from '@/hooks/useSettlementDetail';
 import { useSettlementLayout } from '@/layouts/context/SettlementLayoutContext';
@@ -48,16 +49,16 @@ export default function SettlementPage() {
     page: 1,
     limit: 100,
     status: 'pending',
-    enabled: kind === 'coin',
+    enabled: kind === 'coin' || kind === 'tear',
   });
   const myMarketsSettledQuery = useRequestPredictMyMarkets({
     page: 1,
     limit: 100,
     status: 'settled',
-    enabled: kind === 'coin',
+    enabled: kind === 'coin' || kind === 'tear',
   });
   const marketList = useMemo(() => {
-    if (kind !== 'coin') return [];
+    if (kind !== 'coin' && kind !== 'tear') return [];
     const merged = new Map<number, FootballMarketAggregate>();
     [...(myMarketsPendingQuery.data?.list ?? []), ...(myMarketsSettledQuery.data?.list ?? [])].forEach(
       (item) => {
@@ -70,6 +71,7 @@ export default function SettlementPage() {
   const buildDetailModelRef = useRef(buildDetailModel);
   buildDetailModelRef.current = buildDetailModel;
   const coinSettleMutation = useRequestCoinSettle();
+  const tearSettleMutation = useRequestPredictTearSettle();
   const battleWithdrawMutation = useRequestBattleWithdraw();
   const pkSettleMutation = useRequestPKSettle();
 
@@ -79,7 +81,7 @@ export default function SettlementPage() {
   const roundIdParam = searchParams.get('roundId') ?? undefined;
 
   const coinCampSide = useMemo(
-    () => (kind === 'coin' ? resolveCampSideFromMarket(marketList, numericId) : 'unknown' as const),
+    () => (kind === 'coin' || kind === 'tear' ? resolveCampSideFromMarket(marketList, numericId) : 'unknown' as const),
     [kind, marketList, numericId],
   );
 
@@ -93,6 +95,17 @@ export default function SettlementPage() {
         sourceTab: 'dark',
         title: '',
         subtitle: '',
+        campSide: coinCampSide,
+        marketId: numericId,
+      };
+    }
+    if (kind === 'tear') {
+      return {
+        id,
+        status: action === 'settle' ? 'pending' : 'settled',
+        sourceTab: 'dark',
+        title: '',
+        subtitle: '撕裂带奖励可领取',
         campSide: coinCampSide,
         marketId: numericId,
       };
@@ -162,13 +175,17 @@ export default function SettlementPage() {
       setModel(null);
 
       try {
-        let settlePayload: CoinSettleResult | SettlementActionResult | PKSettleResponse | null = null;
+        let settlePayload: CoinSettleResult | SettlementActionResult | PKSettleResponse | PredictTearSettleResponse | null = null;
         const shouldSettle = action === 'settle' && record.status === 'pending';
 
         if (shouldSettle && settleRequestedRef.current !== routeKey) {
           settleRequestedRef.current = routeKey;
           if (record.sourceTab === 'dark' && record.marketId) {
-            settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });
+            if (record.id.startsWith('tear-')) {
+              settlePayload = await tearSettleMutation.mutateAsync({ marketId: record.marketId });
+            } else {
+              settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });
+            }
           } else if (record.sourceTab === 'arena' && record.battleId) {
             const withdrawResult = await battleWithdrawMutation.mutateAsync({
               battleId: record.battleId,

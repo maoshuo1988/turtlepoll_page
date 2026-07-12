@@ -5,8 +5,14 @@ import { useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { battleQueryKeys, fetchBattleDetail } from '@/hooks/useBattleRequests';
 import { fetchPKTopic } from '@/hooks/usePkRequests';
+import {
+  fetchPredictHeat,
+  fetchPredictHeatMe,
+  fetchPredictHeatRank,
+} from '@/hooks/usePredictRequests';
 import type { CoinSettleResult } from '@/hooks/coinTypes';
 import type { PKSettleResponse } from '@/hooks/pkTypes';
+import type { PredictTearSettleResponse } from '@/hooks/predictionTypes';
 import type {
   SettlementActionResult,
   SettlementDetailViewModel,
@@ -18,7 +24,17 @@ import {
   buildBattleSettlementDetail,
   buildCoinSettlementDetail,
   buildPkSettlementDetail,
+  buildTearSettlementDetail,
 } from '@/components/common/settlement/settlementModel';
+
+async function loadPredictHeatBundle(marketId: number) {
+  const [heat, heatMe, heatRank] = await Promise.all([
+    fetchPredictHeat(marketId).catch(() => null),
+    fetchPredictHeatMe(marketId).catch(() => null),
+    fetchPredictHeatRank(marketId, { scope: 'ALL', page: 1, pageSize: 20 }).catch(() => null),
+  ]);
+  return { heat, heatMe, heatRank };
+}
 
 export function useSettlementDetailBuilder(marketList: FootballMarketAggregate[]) {
   const queryClient = useQueryClient();
@@ -33,16 +49,30 @@ export function useSettlementDetailBuilder(marketList: FootballMarketAggregate[]
   const buildDetailModel = useCallback(
     async (
       item: SettlementRecordItem,
-      settlePayload?: CoinSettleResult | SettlementActionResult | PKSettleResponse | null,
+      settlePayload?: CoinSettleResult | SettlementActionResult | PKSettleResponse | PredictTearSettleResponse | null,
     ): Promise<SettlementDetailViewModel> => {
       if (item.sourceTab === 'dark' && item.marketId) {
         const market = findMarketAggregate(item.marketId);
         if (!market) {
           throw new Error('未找到市场数据');
         }
-        const participatedHeat = Boolean(
-          (market.context?.participantCount ?? 0) > 0 && item.campSide !== 'unknown',
-        );
+
+        const heatBundle = await loadPredictHeatBundle(item.marketId);
+        const tearPayload = settlePayload && 'rewardLog' in settlePayload ? settlePayload : null;
+
+        if (item.id.startsWith('tear-')) {
+          return buildTearSettlementDetail({
+            record: item,
+            market,
+            currentUserName,
+            heat: heatBundle.heat,
+            heatMe: heatBundle.heatMe,
+            heatRank: heatBundle.heatRank,
+            rewardLog: tearPayload?.rewardLog ?? undefined,
+            tearSettlement: tearPayload?.tearSettlement ?? market.tearSettlement,
+          });
+        }
+
         return buildCoinSettlementDetail({
           record: item,
           market,
@@ -51,7 +81,11 @@ export function useSettlementDetailBuilder(marketList: FootballMarketAggregate[]
               ? (settlePayload as CoinSettleResult | SettlementActionResult)
               : null,
           currentUserName,
-          participatedHeat,
+          heat: heatBundle.heat,
+          heatMe: heatBundle.heatMe,
+          heatRank: heatBundle.heatRank,
+          rewardLog: tearPayload?.rewardLog,
+          tearSettlement: tearPayload?.tearSettlement ?? market.tearSettlement,
         });
       }
 
