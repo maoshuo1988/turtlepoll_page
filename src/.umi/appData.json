@@ -65,7 +65,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 5
+        "register": 9
       },
       "enableBy": "register"
     },
@@ -95,7 +95,7 @@
             0
           ]
         },
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -128,32 +128,6 @@
           "modifyRoutes": [
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            1,
-            0,
             0
           ]
         },
@@ -171,139 +145,15 @@
       "time": {
         "hooks": {
           "onDevCompileDone": [
-            89,
-            12,
-            15,
-            22,
-            33,
-            19,
+            24,
             11,
-            29,
             14,
-            13,
-            10,
-            10,
-            28,
-            8,
-            9,
-            14,
-            7,
-            15,
-            26,
-            44,
             17,
-            23,
-            28,
-            21,
-            11,
-            16,
+            33,
             15,
-            33,
             12,
-            10,
-            12,
-            14,
-            38,
-            29,
-            33,
-            40,
-            13,
-            24,
             23,
-            34,
-            14,
-            15,
-            20,
-            33,
-            10,
-            29,
-            14,
-            18,
-            15,
-            11,
-            16,
-            23,
-            14,
-            19,
-            14,
-            45,
-            9,
-            13,
-            12,
-            9,
-            16,
-            14,
-            14,
-            7,
-            9,
-            23,
-            22,
-            43,
-            18,
-            23,
-            16,
-            32,
-            297,
-            14,
-            11,
-            16,
-            78,
-            27,
-            18,
-            12,
-            32,
-            179,
-            21,
-            51,
-            96,
-            21,
-            13,
-            16,
-            26,
-            17,
-            97,
-            58,
-            13,
-            20,
-            23,
-            19,
-            36,
-            24,
-            11,
-            14,
-            13,
-            29,
-            55,
-            82,
-            24,
-            81,
-            71,
-            129,
-            72,
-            28,
-            43,
-            33,
-            35,
-            29,
-            29,
-            24,
-            41,
-            26,
-            34,
-            28,
-            59,
-            40,
-            37,
-            7,
-            24,
-            19,
-            18,
-            17,
-            269,
-            37,
-            29,
-            13,
-            29
+            11
           ]
         },
         "register": 0
@@ -320,38 +170,12 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            15
+            14
           ],
           "onGenerateFiles": [
             1,
-            19,
-            19,
-            29,
-            13,
-            19,
-            50,
-            19,
-            27,
-            20,
-            45,
-            26,
-            21,
-            24,
-            16,
-            17,
-            28,
-            532,
-            70,
-            84,
-            110,
-            16,
-            26,
-            15,
-            30,
-            27,
-            24,
-            19,
-            12
+            14,
+            9
           ]
         },
         "register": 12
@@ -369,32 +193,6 @@
         "hooks": {
           "addEntryCode": [
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
             0,
             0
           ]
@@ -421,82 +219,10 @@
           "onPrepareBuildSuccess": [
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ],
           "onCheckCode": [
             0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -560,10 +286,188 @@
             0,
             0,
             0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             1,
             0,
-            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             0,
             0,
             0,
@@ -575,7 +479,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -622,7 +526,7 @@
             0
           ]
         },
-        "register": 6
+        "register": 5
       },
       "enableBy": "register"
     },
@@ -1505,7 +1409,7 @@
       "time": {
         "hooks": {
           "addBeforeMiddlewares": [
-            6
+            5
           ]
         },
         "register": 0
@@ -1521,7 +1425,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 47
+        "register": 44
       },
       "enableBy": "register"
     },
@@ -1534,7 +1438,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 19
       },
       "enableBy": "config"
     },
@@ -1576,17 +1480,6 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
@@ -1605,62 +1498,10 @@
         "hooks": {
           "onGenerateFiles": [
             0,
-            2,
             0,
-            1,
-            0,
-            1,
-            8,
-            3,
-            2,
-            1,
-            1,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            15,
-            0,
-            1,
-            0,
-            0,
-            1,
-            0,
-            1,
-            0,
-            1,
-            0,
-            0
+            1
           ],
           "addRuntimePlugin": [
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0
@@ -1699,7 +1540,7 @@
             1
           ]
         },
-        "register": 18
+        "register": 19
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1737,89 +1578,11 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0
           ],
           "addEntryImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -1858,89 +1621,11 @@
             1
           ],
           "onGenerateFiles": [
-            63,
-            34,
-            16,
-            23,
-            7,
-            9,
-            71,
-            24,
-            53,
-            9,
-            73,
-            10,
-            30,
-            15,
-            10,
-            18,
-            29,
-            112,
-            11,
-            10,
-            11,
+            39,
             21,
-            23,
-            19,
-            19,
-            13,
-            57,
-            17,
-            7
+            12
           ],
           "addPolyfillImports": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0,
@@ -1967,62 +1652,10 @@
             0,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2036,33 +1669,7 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            123,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
+            96,
             0,
             0
           ]
@@ -2080,7 +1687,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2107,32 +1714,6 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            1,
-            0,
-            0,
-            1,
-            0,
-            2,
-            0,
-            6,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
             0,
             0,
             0
@@ -2155,67 +1736,15 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            8,
-            3,
-            16,
-            1,
-            15,
-            1,
-            9,
-            0,
-            5,
-            0,
-            7,
-            0,
-            43,
-            4,
-            13,
-            1,
-            8,
-            1,
-            10,
-            1,
-            8,
-            0,
-            14,
-            1,
-            7,
-            1,
-            8,
-            0,
-            10,
-            0,
-            13,
-            4,
-            45,
-            3,
-            122,
+            6,
             2,
-            7,
-            0,
-            8,
-            0,
-            16,
-            1,
-            13,
-            1,
-            18,
-            1,
-            10,
-            0,
-            13,
-            1,
-            11,
-            0,
-            24,
-            1,
-            25,
-            1,
             9,
-            1
+            1,
+            6,
+            0
           ]
         },
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -2228,7 +1757,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2253,7 +1782,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2267,34 +1796,8 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            227,
-            19,
-            12,
-            6,
-            6,
-            5,
-            23,
-            16,
-            21,
-            5,
-            4,
-            7,
-            18,
-            6,
+            205,
             11,
-            16,
-            29,
-            26,
-            7,
-            5,
-            10,
-            7,
-            8,
-            10,
-            12,
-            6,
-            19,
-            9,
             4
           ]
         },
@@ -2328,7 +1831,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -2366,7 +1869,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 12
+        "register": 11
       },
       "enableBy": "config"
     },
@@ -2380,35 +1883,9 @@
       "time": {
         "hooks": {
           "onGenerateFiles": [
-            2,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
             1,
             0,
-            0,
-            1,
-            0,
-            0,
-            1,
-            1,
-            1,
-            2,
-            1,
-            1,
-            1,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            2,
-            1,
-            0
+            1
           ]
         },
         "register": 0
@@ -2449,7 +1926,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2491,7 +1968,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -2541,20 +2018,9 @@
       "time": {
         "hooks": {
           "addHTMLHeadScripts": [
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            40,
-            0,
-            1,
+            21,
+            21,
+            10,
             0,
             0,
             0,
@@ -2564,7 +2030,7 @@
             0
           ]
         },
-        "register": 16
+        "register": 15
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -2576,7 +2042,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2590,7 +2056,7 @@
       "time": {
         "hooks": {
           "modifyUniBundler": [
-            516
+            296
           ]
         },
         "register": 1
@@ -2606,7 +2072,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2633,10 +2099,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            9
+            6
           ]
         },
-        "register": 18
+        "register": 17
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -2648,7 +2114,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2661,7 +2127,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2700,7 +2166,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2713,7 +2179,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2778,7 +2244,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2791,7 +2257,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2882,7 +2348,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 12
+        "register": 11
       },
       "enableBy": "register"
     },
@@ -2908,7 +2374,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2921,7 +2387,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     }
@@ -2995,6 +2461,11 @@
             "path": "/messages",
             "component": "messages",
             "name": "消息"
+          },
+          {
+            "path": "/messages/:id",
+            "component": "messages/detail",
+            "name": "消息详情"
           },
           {
             "path": "/games",
@@ -3159,6 +2630,11 @@
             "path": "/messages",
             "component": "messages",
             "name": "消息"
+          },
+          {
+            "path": "/messages/:id",
+            "component": "messages/detail",
+            "name": "消息详情"
           },
           {
             "path": "/games",
@@ -3354,121 +2830,132 @@
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/messages/index.tsx"
     },
     "11": {
+      "path": "/messages/:id",
+      "name": "消息详情",
+      "file": "@/pages/messages/detail.tsx",
+      "parentId": "3",
+      "id": "11",
+      "absPath": "/messages/:id",
+      "__content": "/**\n * 文件说明：消息详情路由入口，负责按消息 ID 展示详情页。\n */\nimport { MessagesDetailPageView } from './components/MessagesDetailPageView';\n\nexport default function MessagesDetailPage() {\n  return <MessagesDetailPageView />;\n}\n",
+      "__isJSFile": true,
+      "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/messages/detail.tsx"
+    },
+    "12": {
       "path": "/games",
       "name": "游戏",
       "file": "@/pages/games/index.tsx",
       "parentId": "3",
-      "id": "11",
+      "id": "12",
       "absPath": "/games",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { GamesPageView } from './components/GamesPageView';\n\nfunction openLabStandalone() {\n  window.location.href = '/games/turtle-jump/index.html';\n}\n\nfunction openBattleStandalone() {\n  window.location.href = '/games/turtle-arena-game/index.html';\n}\n\nexport default function GamesPage() {\n  const navigate = useNavigate();\n\n  return (\n    <div className=\"pt-0 lg:pt-3\">\n      <GamesPageView\n        onBack={() => navigate('/')}\n        onOpenJump={() => navigate('/jump')}\n        onOpenLab={openLabStandalone}\n        onOpenBattle={openBattleStandalone}\n      />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/games/index.tsx"
     },
-    "12": {
+    "13": {
       "path": "/turtle-contest",
       "name": "龟龟争霸",
       "file": "@/pages/turtle-contest/index.tsx",
       "parentId": "3",
-      "id": "12",
+      "id": "13",
       "absPath": "/turtle-contest",
       "__content": "/**\n * 文件说明：turtle-contest 页面路由入口，负责挂载新的龟战 Arena 游戏。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { TurtleContestPageView } from './components/TurtleContestPageView';\n\nexport default function TurtleContestPage() {\n  const navigate = useNavigate();\n\n  return (\n    <TurtleContestPageView\n      isMobileMode={typeof window !== 'undefined' ? window.innerWidth < 1024 : false}\n      onBack={() => {\n        navigate('/');\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/turtle-contest/index.tsx"
     },
-    "13": {
+    "14": {
       "path": "/battle-plaza",
       "name": "撕裂带广场",
       "file": "@/pages/battle-plaza/index.tsx",
       "parentId": "3",
-      "id": "13",
+      "id": "14",
       "absPath": "/battle-plaza",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { BattlePlazaPageView } from './components/BattlePlazaPageView';\n\nexport default function BattlePlazaPage() {\n  const navigate = useNavigate();\n\n  return (\n    <div className=\"pt-0 lg:pt-3\">\n      <BattlePlazaPageView onBack={() => navigate('/')} />\n    </div>\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/battle-plaza/index.tsx"
     },
-    "14": {
+    "15": {
       "path": "/rank",
       "name": "排行榜",
       "file": "@/pages/rank/index.tsx",
       "parentId": "3",
-      "id": "14",
+      "id": "15",
       "absPath": "/rank",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责排行榜取数、登录校验与页面组装。\n */\nimport { useNavigate } from '@umijs/renderer-react';\nimport { RankPageView } from './components/RankPageView';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport { useRequestCoinLeaderboard } from '@/hooks/useCoinRequests';\nimport { getAuthToken } from '@/utils/authStorage';\n\nexport default function RankPage() {\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const token = getAuthToken();\n  const { user } = useAppSession();\n  const leaderboardQuery = useRequestCoinLeaderboard({ limit: 200 });\n\n  const currentUserId =\n    user?.id !== undefined && user?.id !== null && String(user.id).trim() !== '' ? user.id : undefined;\n  const currentUserName = user?.nickname || user?.username || '我';\n\n  return (\n    <RankPageView\n      isLoginRequired={!token}\n      isLoading={Boolean(token) && leaderboardQuery.isLoading}\n      isError={Boolean(token) && leaderboardQuery.isError}\n      errorMessage={leaderboardQuery.error instanceof Error ? leaderboardQuery.error.message : undefined}\n      data={leaderboardQuery.data ?? null}\n      currentUserId={currentUserId}\n      currentUserName={currentUserName}\n      onBack={() => navigate('/')}\n      onOpenAuth={onOpenAuth}\n      onRetry={() => {\n        void leaderboardQuery.refetch();\n      }}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/rank/index.tsx"
     },
-    "15": {
+    "16": {
       "path": "/shop",
       "name": "商店",
       "file": "@/pages/shop/index.tsx",
       "parentId": "3",
-      "id": "15",
+      "id": "16",
       "absPath": "/shop",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { ShopPageView } from './components/ShopPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\n\nexport default function ShopPage() {\n  const navigate = useNavigate();\n  const [balance, setBalance] = useState(0);\n  const [petStamina, setPetStamina] = useState(0);\n  const [skins] = useState<PetSkin[]>([]);\n  const { onOpenAuth } = useHomeLayoutContext();\n\n  // 商城页自己维护它需要的金币和宠物接口，页面壳统一交给 layouts/home。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof coinMe.data?.balance === 'number') {\n      setBalance(coinMe.data.balance);\n    }\n  }, [coinMe.data?.balance]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  return (\n    <ShopPageView\n      balance={balance}\n      pet={currentPet}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onBack={() => {\n        navigate('/');\n      }}\n      onRequireAuth={onOpenAuth}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/shop/index.tsx"
     },
-    "16": {
+    "17": {
       "path": "/pet",
       "name": "宠物",
       "file": "@/pages/pet/index.tsx",
       "parentId": "3",
-      "id": "16",
+      "id": "17",
       "absPath": "/pet",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetEquipUpdate,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { PetPageView } from './components/PetPageView';\nimport { getPetMoodLabel } from './components/petDisplay';\nimport { useHomeLayoutContext } from '@/layouts/context';\n\nexport default function PetPage() {\n  const navigate = useNavigate();\n  const { aiPushMessages } = useHomeLayoutContext();\n  const [petStamina, setPetStamina] = useState(0);\n  const [skins, setSkins] = useState<PetSkin[]>([]);\n\n  // 宠物页自己维护金币、当前装备龟种、拥有龟种、体力和心情接口。\n  const { coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n  const petEquipMutation = useRequestPetEquipUpdate();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petEquipQuery.data?.petName ?? '',\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar ?? '',\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.level,\n    petEquipQuery.data?.petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  useEffect(() => {\n    if (typeof petStaminaQuery.data?.current === 'number') {\n      setPetStamina(petStaminaQuery.data.current);\n    }\n  }, [petStaminaQuery.data?.current]);\n\n  const handleEquipSkin = useCallback((skinId: string) => {\n    setSkins((prev) => prev.map((skin) => ({ ...skin, equipped: skin.id === skinId })));\n  }, []);\n\n  const handleEquipPet = useCallback(async (petId: number) => {\n    const result = await petEquipMutation.mutateAsync({ petId });\n    void Promise.all([\n      petEquipQuery.refetch(),\n      petOwnedQuery.refetch(),\n      petStatusQuery.refetch(),\n    ]);\n    return result;\n  }, [petEquipMutation, petEquipQuery, petOwnedQuery, petStatusQuery]);\n\n  return (\n    <PetPageView\n      pet={currentPet}\n      balance={coinMe.data?.balance ?? 0}\n      winRate={0}\n      winStreak={0}\n      totalPredictions={0}\n      onBack={() => {\n        navigate('/');\n      }}\n      skins={skins}\n      onEquipSkin={handleEquipSkin}\n      equippedPet={petEquipQuery.data ?? null}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n      petStatus={petStatusQuery.data ?? null}\n      petStaminaInfo={petStaminaQuery.data ?? null}\n      onEquipPet={handleEquipPet}\n      equippingPetId={\n        petEquipMutation.isLoading\n          ? (petEquipMutation.variables?.petId ?? null)\n          : null\n      }\n      onStaminaChange={setPetStamina}\n      aiPushMessages={aiPushMessages}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/pet/index.tsx"
     },
-    "17": {
+    "18": {
       "path": "/profile",
       "name": "个人中心",
       "file": "@/pages/profile/index.tsx",
       "parentId": "3",
-      "id": "17",
+      "id": "18",
       "absPath": "/profile",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { PetInfo, PetSkin } from '@/components/common/pet/petTypes';\nimport { LoginRequiredPage } from '@/components/common/state/PageState';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { useAppSession } from '@/hooks/useAppSession';\nimport {\n  findEquippedOwnedPet,\n  useRequestPetEquip,\n  useRequestPetOwned,\n  useRequestPetStamina,\n  useRequestPetStatus,\n} from '@/hooks/usePetRequests';\nimport { getAuthToken, getStoredUserInfo } from '@/utils/authStorage';\nimport { createUserAvatarUrl } from '@/utils/userAvatar';\nimport { ProfilePageView } from './components/ProfilePageView';\nimport { getPetDisplayAvatar, getPetMoodLabel } from './components/petDisplay';\n\nexport default function ProfilePage() {\n  const navigate = useNavigate();\n  const [skins] = useState<PetSkin[]>([]);\n  const { onOpenAuth } = useHomeLayoutContext();\n  const token = getAuthToken();\n\n  // 我的主页自己维护用户、金币、宠物接口，避免依赖 AppShell 的全局 activeView。\n  const { user, coinMe } = useAppSession();\n  const petEquipQuery = useRequestPetEquip();\n  const petOwnedQuery = useRequestPetOwned();\n  const petStaminaQuery = useRequestPetStamina();\n  const petStatusQuery = useRequestPetStatus();\n\n  const equippedSkin = skins.find((skin) => skin.equipped && skin.owned);\n  const equippedOwnedPet = useMemo(() => findEquippedOwnedPet(petOwnedQuery.data), [petOwnedQuery.data]);\n  const storedUser = getStoredUserInfo();\n  const userId = user?.id;\n  const displayName = storedUser?.nickname ?? storedUser?.username ?? '未登录用户';\n  const displayHandle = storedUser?.username ? `@${storedUser.username}` : '';\n  const avatarUrl = createUserAvatarUrl(userId, 96);\n  const petStamina = petStaminaQuery.data?.current ?? 0;\n  const petKey = petEquipQuery.data?.petKey ?? equippedOwnedPet?.petKey;\n  const petName = petEquipQuery.data?.petName ?? equippedOwnedPet?.petName ?? '';\n  const currentPet = useMemo<PetInfo>(() => ({\n    name: petName,\n    status: getPetMoodLabel(petStatusQuery.data?.moodState) ?? '',\n    level: petEquipQuery.data?.level ?? equippedOwnedPet?.level ?? 0,\n    stamina: petStamina,\n    maxStamina: petStaminaQuery.data?.cap ?? 0,\n    avatar: equippedSkin?.avatar || getPetDisplayAvatar(petKey, petName),\n    petKey,\n    icon: petEquipQuery.data?.icon,\n    image: petEquipQuery.data?.image,\n  }), [\n    equippedOwnedPet?.level,\n    equippedSkin?.avatar,\n    petEquipQuery.data?.icon,\n    petEquipQuery.data?.image,\n    petEquipQuery.data?.level,\n    petKey,\n    petName,\n    petStamina,\n    petStaminaQuery.data?.cap,\n    petStatusQuery.data?.moodState,\n  ]);\n\n  if (!token) {\n    return (\n      <section className=\"view-profile h-full min-h-full xl:bg-[#080808] px-3 pt-[10px]\">\n        <LoginRequiredPage\n          title=\"登录后查看个人中心\"\n          description=\"登录后即可查看和管理你的帖子、评论与宠物档案。\"\n          actionLabel=\"去登录\"\n          onAction={onOpenAuth}\n          className=\"min-h-[420px]\"\n        />\n      </section>\n    );\n  }\n\n  return (\n    <ProfilePageView\n      userName={displayName}\n      userHandle={displayHandle}\n      avatarUrl={avatarUrl}\n      pet={currentPet}\n      skins={skins}\n      balance={coinMe.data?.balance ?? 0}\n      onBack={() => {\n        navigate('/');\n      }}\n      onOpenForum={() => {\n        navigate('/forum');\n      }}\n      onOpenAuth={onOpenAuth}\n      ownedPets={petOwnedQuery.data?.list ?? []}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/profile/index.tsx"
     },
-    "18": {
+    "19": {
       "path": "/mine",
       "name": "我的",
       "file": "@/pages/mine/index.tsx",
       "parentId": "3",
-      "id": "18",
+      "id": "19",
       "absPath": "/mine",
       "__content": "/**\n * 文件说明：我的 Tab 页面路由入口（移动端一级页，与暗盘二级页分离）。\n */\nimport { MinePageView } from './components/MinePageView';\n\nexport default function MinePage() {\n  return <MinePageView />;\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/mine/index.tsx"
     },
-    "19": {
+    "20": {
       "path": "/dark-market",
       "name": "暗盘",
       "file": "@/pages/dark-market/index.tsx",
       "parentId": "3",
-      "id": "19",
+      "id": "20",
       "absPath": "/dark-market",
       "__content": "/**\n * 文件说明：暗盘二级页路由入口（移动端从首页功能卡进入，独立 Tab 之外）。\n */\nimport { useCallback, useEffect, useMemo, useState } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport type { FootballMarketAggregate } from '@/hooks/predictionTypes';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport type { PlaceBetResult } from '@/hooks/coinTypes';\nimport {\n  mapMarketToPredictionCard,\n  type PredictionBetOption,\n  type PredictionCardItem,\n} from '@/pages/home/components/predictionCards';\nimport { DarkMarketPageView } from './components/DarkMarketPageView';\n\nconst DARK_MARKET_PAGE_SIZE = 50;\n\nfunction mergeMarketPages(\n  prev: FootballMarketAggregate[],\n  pageList: FootballMarketAggregate[],\n  reset: boolean,\n) {\n  const next = reset ? [] : [...prev];\n  pageList.forEach((item) => {\n    const existingIndex = next.findIndex((current) => current.market.id === item.market.id);\n    if (existingIndex >= 0) {\n      next[existingIndex] = item;\n      return;\n    }\n    next.push(item);\n  });\n  return next;\n}\n\nexport default function DarkMarketPage() {\n  const navigate = useNavigate();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const [page, setPage] = useState(1);\n  const [loadedMarkets, setLoadedMarkets] = useState<FootballMarketAggregate[]>([]);\n  const footballMarkets = useRequestFootballMarkets({\n    page,\n    limit: DARK_MARKET_PAGE_SIZE,\n    requireAuth: false,\n  });\n\n  const pageList = useMemo(() => footballMarkets.data?.list ?? [], [footballMarkets.data?.list]);\n  const total = footballMarkets.data?.total ?? pageList.length;\n  const hasMore = loadedMarkets.length > 0 ? loadedMarkets.length < total : pageList.length < total;\n\n  useEffect(() => {\n    if (!pageList.length) return;\n    setLoadedMarkets((prev) => mergeMarketPages(prev, pageList, page === 1));\n  }, [page, pageList]);\n\n  useEffect(() => {\n    if (footballMarkets.isLoading || footballMarkets.isFetching) return;\n    if (!hasMore) return;\n    if (!pageList.length) return;\n    setPage((current) => current + 1);\n  }, [footballMarkets.isLoading, footballMarkets.isFetching, hasMore, pageList.length]);\n\n  const marketItems = useMemo<PredictionCardItem[]>(() => {\n    const source = loadedMarkets.length > 0 ? loadedMarkets : pageList;\n    if (!Array.isArray(source) || source.length === 0) return [];\n    return source.map(mapMarketToPredictionCard);\n  }, [loadedMarkets, pageList]);\n\n  const isInitialLoading = (footballMarkets.isLoading || footballMarkets.isFetching) && marketItems.length === 0;\n  const isLoadingMore = (footballMarkets.isLoading || footballMarkets.isFetching) && marketItems.length > 0 && hasMore;\n\n  const handleEnterBattle = useCallback(\n    (item: PredictionCardItem) => {\n      navigate(`/event-battle?market=${item.marketId}`);\n    },\n    [navigate],\n  );\n\n  const handleBetSuccess = useCallback(\n    (_item: PredictionCardItem, _option: PredictionBetOption, _result: PlaceBetResult) => {\n      setPage(1);\n      setLoadedMarkets([]);\n      void footballMarkets.refetch();\n    },\n    [footballMarkets],\n  );\n\n  return (\n    <DarkMarketPageView\n      items={marketItems}\n      isLoading={isInitialLoading}\n      isLoadingMore={isLoadingMore}\n      onBack={() => navigate('/')}\n      onEnterBattle={handleEnterBattle}\n      onRequireAuth={onOpenAuth}\n      onBetSuccess={handleBetSuccess}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/dark-market/index.tsx"
     },
-    "20": {
+    "21": {
       "path": "/active-predictions",
       "name": "活跃预测",
       "file": "@/pages/active-predictions/index.tsx",
       "parentId": "3",
-      "id": "20",
+      "id": "21",
       "absPath": "/active-predictions",
       "__content": "/**\n * 文件说明：index 页面路由入口，负责组装当前页面的业务组件和页面级状态。\n */\nimport { useCallback, useMemo } from 'react';\nimport { useNavigate } from '@umijs/renderer-react';\nimport { useRequestFootballMarkets } from '@/hooks/usePredictionRequests';\nimport { ActivePredictionsPageView } from './components/ActivePredictionsPageView';\nimport { mapMarketToPredictionCard, type PredictionCardItem } from './components/predictionCards';\n\nexport default function ActivePredictionsPage() {\n  const navigate = useNavigate();\n  const footballMarkets = useRequestFootballMarkets({ page: 1, limit: 20, requireAuth: false });\n  const activePredictionItems = useMemo<PredictionCardItem[]>(() => {\n    const list = footballMarkets.data?.list ?? [];\n    const liveNews = Array.isArray(list) && list.length > 0 ? list.map(mapMarketToPredictionCard) : [];\n    return liveNews.filter((item) => item.status === 'open');\n  }, [footballMarkets.data]);\n\n  const handleEnterBattle = useCallback(\n    (item: PredictionCardItem) => {\n      navigate(`/event-battle?market=${item.marketId}`);\n    },\n    [navigate],\n  );\n\n  return (\n    <ActivePredictionsPageView\n      items={activePredictionItems}\n      onBack={() => navigate('/')}\n      onEnterBattle={handleEnterBattle}\n    />\n  );\n}\n",
       "__isJSFile": true,
       "__absFile": "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/active-predictions/index.tsx"
     },
-    "21": {
+    "22": {
       "path": "/settlement/:kind/:id",
       "name": "结算详情",
       "file": "@/pages/settlement/index.tsx",
       "parentId": "3",
-      "id": "21",
+      "id": "22",
       "absPath": "/settlement/:kind/:id",
       "__content": "/**\n * 文件说明：结算详情页路由入口，负责领取结算与详情展示。\n */\nimport { useEffect, useMemo, useRef, useState } from 'react';\nimport { useNavigate, useParams, useSearchParams } from '@umijs/renderer-react';\nimport { createBattleRequestId } from '@/hooks/battleTypes';\nimport type { CoinSettleResult } from '@/hooks/coinTypes';\nimport type { PKSettleResponse } from '@/hooks/pkTypes';\nimport type { SettlementActionResult, SettlementDetailViewModel, SettlementRecordItem } from '@/hooks/settlementTypes';\nimport type { FootballMarketAggregate, PredictTearSettleResponse } from '@/hooks/predictionTypes';\nimport { useRequestPredictMyMarkets } from '@/hooks/usePredictionRequests';\nimport { useRequestBattleWithdraw } from '@/hooks/useBattleRequests';\nimport { useRequestCoinSettle } from '@/hooks/useCoinRequests';\nimport { useRequestPredictTearSettle } from '@/hooks/usePredictRequests';\nimport { useRequestPKSettle } from '@/hooks/usePkRequests';\nimport { useSettlementDetailBuilder } from '@/hooks/useSettlementDetail';\nimport { useSettlementLayout } from '@/layouts/context/SettlementLayoutContext';\nimport { requireAuthOrOpen } from '@/utils/authStorage';\nimport { useHomeLayoutContext } from '@/layouts/context';\nimport { SettlementDetailPage } from './components/SettlementDetailPage';\nimport {\n  settlementItemIdFromRoute,\n  type SettlementDetailAction,\n  type SettlementRouteKind,\n} from './settlementNavigation';\n\nfunction resolveCampSideFromMarket(\n  marketList: { market: { id: number } }[],\n  marketId: number,\n): SettlementRecordItem['campSide'] {\n  const item = marketList.find((entry) => entry.market.id === marketId);\n  if (!item) return 'unknown';\n  const raw = item as typeof item & { bet?: { option?: string }; myBet?: { option?: string } };\n  const option = String(raw.bet?.option ?? raw.myBet?.option ?? '').trim().toUpperCase();\n  if (option === 'A') return 'A';\n  if (option === 'B') return 'B';\n  if (option === 'DRAW' || option === 'C') return 'draw';\n  return 'unknown';\n}\n\nexport default function SettlementPage() {\n  const navigate = useNavigate();\n  const params = useParams<{ kind: SettlementRouteKind; id: string }>();\n  const [searchParams] = useSearchParams();\n  const { onOpenAuth } = useHomeLayoutContext();\n  const { openSettlementDrawer, hideSettlementItem } = useSettlementLayout();\n  const kind = params.kind;\n  const myMarketsPendingQuery = useRequestPredictMyMarkets({\n    page: 1,\n    limit: 100,\n    status: 'pending',\n    enabled: kind === 'coin' || kind === 'tear',\n  });\n  const myMarketsSettledQuery = useRequestPredictMyMarkets({\n    page: 1,\n    limit: 100,\n    status: 'settled',\n    enabled: kind === 'coin' || kind === 'tear',\n  });\n  const marketList = useMemo(() => {\n    if (kind !== 'coin' && kind !== 'tear') return [];\n    const merged = new Map<number, FootballMarketAggregate>();\n    [...(myMarketsPendingQuery.data?.list ?? []), ...(myMarketsSettledQuery.data?.list ?? [])].forEach(\n      (item) => {\n        if (item.market?.id) merged.set(item.market.id, item);\n      },\n    );\n    return Array.from(merged.values());\n  }, [kind, myMarketsPendingQuery.data?.list, myMarketsSettledQuery.data?.list]);\n  const { buildDetailModel } = useSettlementDetailBuilder(marketList);\n  const buildDetailModelRef = useRef(buildDetailModel);\n  buildDetailModelRef.current = buildDetailModel;\n  const coinSettleMutation = useRequestCoinSettle();\n  const tearSettleMutation = useRequestPredictTearSettle();\n  const battleWithdrawMutation = useRequestBattleWithdraw();\n  const pkSettleMutation = useRequestPKSettle();\n\n  const rawId = params.id ?? '';\n  const numericId = Number(rawId);\n  const action = (searchParams.get('action') as SettlementDetailAction | null) ?? 'view';\n  const roundIdParam = searchParams.get('roundId') ?? undefined;\n\n  const coinCampSide = useMemo(\n    () => (kind === 'coin' || kind === 'tear' ? resolveCampSideFromMarket(marketList, numericId) : 'unknown' as const),\n    [kind, marketList, numericId],\n  );\n\n  const record = useMemo<SettlementRecordItem | null>(() => {\n    if (!kind || !Number.isFinite(numericId) || numericId <= 0) return null;\n    const id = settlementItemIdFromRoute(kind, rawId);\n    if (kind === 'coin') {\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'dark',\n        title: '',\n        subtitle: '',\n        campSide: coinCampSide,\n        marketId: numericId,\n      };\n    }\n    if (kind === 'tear') {\n      return {\n        id,\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'dark',\n        title: '',\n        subtitle: '撕裂带奖励可领取',\n        campSide: coinCampSide,\n        marketId: numericId,\n      };\n    }\n    if (kind === 'pk') {\n      const campSide: SettlementRecordItem['campSide'] = 'unknown';\n      return {\n        id: roundIdParam ? `pk-${numericId}-${roundIdParam}` : settlementItemIdFromRoute(kind, rawId),\n        status: action === 'settle' ? 'pending' : 'settled',\n        sourceTab: 'pk',\n        title: '',\n        subtitle: '',\n        campSide,\n        topicId: numericId,\n        roundId: roundIdParam ?? undefined,\n      };\n    }\n    return {\n      id,\n      status: action === 'settle' ? 'pending' : 'settled',\n      sourceTab: 'arena',\n      title: '',\n      subtitle: '',\n      campSide: 'unknown',\n      battleId: numericId,\n    };\n  }, [action, coinCampSide, kind, numericId, rawId, roundIdParam]);\n\n  const [model, setModel] = useState<SettlementDetailViewModel | null>(null);\n  const [loading, setLoading] = useState(true);\n  const [errorText, setErrorText] = useState<string | undefined>();\n  const [settledItemId, setSettledItemId] = useState<string | null>(null);\n  const settleRequestedRef = useRef<string | null>(null);\n  const inflightRouteKeyRef = useRef<string | null>(null);\n  const onOpenAuthRef = useRef(onOpenAuth);\n  onOpenAuthRef.current = onOpenAuth;\n\n  useEffect(() => {\n    settleRequestedRef.current = null;\n    inflightRouteKeyRef.current = null;\n  }, [action, kind, rawId]);\n\n  useEffect(() => {\n    if (!record) {\n      setLoading(false);\n      setErrorText('无效的结算链接');\n      return;\n    }\n\n    const routeKey = `${kind ?? ''}-${rawId}-${action}`;\n    if (inflightRouteKeyRef.current === routeKey) {\n      return;\n    }\n\n    if (!requireAuthOrOpen(onOpenAuthRef.current)) {\n      setLoading(false);\n      setErrorText('请先登录后查看结算详情');\n      return;\n    }\n\n    inflightRouteKeyRef.current = routeKey;\n    let cancelled = false;\n\n    const run = async () => {\n      setLoading(true);\n      setErrorText(undefined);\n      setModel(null);\n\n      try {\n        let settlePayload: CoinSettleResult | SettlementActionResult | PKSettleResponse | PredictTearSettleResponse | null = null;\n        const shouldSettle = action === 'settle' && record.status === 'pending';\n\n        if (shouldSettle && settleRequestedRef.current !== routeKey) {\n          settleRequestedRef.current = routeKey;\n          if (record.sourceTab === 'dark' && record.marketId) {\n            if (record.id.startsWith('tear-')) {\n              settlePayload = await tearSettleMutation.mutateAsync({ marketId: record.marketId });\n            } else {\n              settlePayload = await coinSettleMutation.mutateAsync({ marketId: record.marketId });\n            }\n          } else if (record.sourceTab === 'arena' && record.battleId) {\n            const withdrawResult = await battleWithdrawMutation.mutateAsync({\n              battleId: record.battleId,\n              requestId: createBattleRequestId(`battle-withdraw-${record.battleId}`),\n            });\n            const payout = withdrawResult.payoutAmount ?? 0;\n            settlePayload = {\n              payout,\n              outcome: payout > 0 ? 'win' : 'neutral',\n              message: '奖励已提取到你的龟币账户。',\n            };\n          } else if (record.sourceTab === 'pk' && record.topicId) {\n            settlePayload = await pkSettleMutation.mutateAsync({\n              topicId: record.topicId,\n              roundId: record.roundId,\n              requestId: `pk-settle-${record.topicId}-${record.roundId ?? 'latest'}-${Date.now()}`,\n              snapshotType: 'SETTLE',\n              freezeSource: 'ON_DEMAND',\n            });\n          }\n          if (!cancelled) {\n            setSettledItemId(record.id);\n          }\n        }\n\n        const nextModel = await buildDetailModelRef.current(\n          { ...record, status: 'settled' },\n          settlePayload,\n        );\n        if (!cancelled) {\n          setModel(nextModel);\n        }\n      } catch (error) {\n        if (!cancelled) {\n          const message = error instanceof Error ? error.message : '加载结算详情失败';\n          setErrorText(message);\n          setModel(null);\n        }\n      } finally {\n        if (!cancelled) {\n          setLoading(false);\n        }\n        if (inflightRouteKeyRef.current === routeKey) {\n          inflightRouteKeyRef.current = null;\n        }\n      }\n    };\n\n    void run();\n\n    return () => {\n      cancelled = true;\n      if (inflightRouteKeyRef.current === routeKey) {\n        inflightRouteKeyRef.current = null;\n      }\n    };\n  }, [\n    action,\n    kind,\n    rawId,\n    record?.battleId,\n    record?.id,\n    record?.marketId,\n    record?.sourceTab,\n    record?.status,\n    record?.topicId,\n    record?.roundId,\n  ]);\n\n  const handleBack = () => {\n    if (settledItemId) {\n      hideSettlementItem(settledItemId);\n    }\n    openSettlementDrawer();\n    if (window.history.length > 1) {\n      navigate(-1);\n      return;\n    }\n    navigate('/');\n  };\n\n  return (\n    <SettlementDetailPage\n      model={model}\n      loading={loading}\n      errorText={errorText}\n      onBack={handleBack}\n    />\n  );\n}\n",
       "__isJSFile": true,
@@ -3484,6 +2971,13 @@
     }
   },
   "apiRoutes": {
+    "messageNotifyApi": {
+      "path": "messageNotifyApi",
+      "id": "messageNotifyApi",
+      "file": "messageNotifyApi.ts",
+      "absPath": "/messageNotifyApi",
+      "__content": "/**\n * 文件说明：message-notify Api 接口地址常量，供请求 Hook 统一引用。\n */\n/// MARK: 主站消息通知\n/// 基础路径: /api/message-notify\n\n/** 消息列表（cursor 分页） */\nexport const API_MessageNotify_List = '/api/message-notify/list';\n\n/** 未读数量（总数 + 按业务分类） */\nexport const API_MessageNotify_UnreadCount = '/api/message-notify/unread-count';\n\n/** 消息详情 /{id} */\nexport const API_MessageNotify_ById = '/api/message-notify/by';\n\n/** 标记单条已读 */\nexport const API_MessageNotify_Read = '/api/message-notify/read';\n"
+    },
     "predictTagApi": {
       "path": "predictTagApi",
       "id": "predictTagApi",
@@ -3645,9 +3139,9 @@
     "tsVersion": "5.9.3",
     "tslibVersion": "2.8.1"
   },
-  "port": 8001,
+  "port": 8000,
   "host": "0.0.0.0",
-  "ip": "192.168.1.7",
+  "ip": "192.168.3.144",
   "prepare": {
     "buildResult": {
       "errors": [],
@@ -8048,7 +7542,7 @@
             "format": "esm"
           },
           "src/hooks/useMessageNotifyRequests.ts": {
-            "bytes": 5176,
+            "bytes": 5243,
             "imports": [
               {
                 "path": "src/api/httpClient.ts",
@@ -8084,12 +7578,12 @@
             "format": "esm"
           },
           "src/pages/messages/components/messageNotifyModel.ts": {
-            "bytes": 4048,
+            "bytes": 16692,
             "imports": [],
             "format": "esm"
           },
           "src/pages/messages/components/MessageNotifyCategoryIcon.tsx": {
-            "bytes": 976,
+            "bytes": 984,
             "imports": [
               {
                 "path": "lucide-react",
@@ -8121,7 +7615,7 @@
             "format": "esm"
           },
           "src/pages/messages/components/MessagesMobilePage/index.tsx": {
-            "bytes": 6813,
+            "bytes": 6605,
             "imports": [
               {
                 "path": "react",
@@ -8199,6 +7693,95 @@
                 "path": "src/pages/messages/components/MessagesPageView/index.tsx",
                 "kind": "import-statement",
                 "original": "./components/MessagesPageView"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/messages/components/MessageDetailTimelineIcon.tsx": {
+            "bytes": 830,
+            "imports": [
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/messages/components/MessagesDetailMobilePage/index.tsx": {
+            "bytes": 8941,
+            "imports": [
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "src/utils/authStorage.ts",
+                "kind": "import-statement",
+                "original": "@/utils/authStorage"
+              },
+              {
+                "path": "src/hooks/useMessageNotifyRequests.ts",
+                "kind": "import-statement",
+                "original": "@/hooks/useMessageNotifyRequests"
+              },
+              {
+                "path": "src/layouts/context/index.ts",
+                "kind": "import-statement",
+                "original": "@/layouts/context"
+              },
+              {
+                "path": "src/pages/messages/components/messageNotifyModel.ts",
+                "kind": "import-statement",
+                "original": "../messageNotifyModel"
+              },
+              {
+                "path": "src/pages/messages/components/MessageNotifyCategoryIcon.tsx",
+                "kind": "import-statement",
+                "original": "../MessageNotifyCategoryIcon"
+              },
+              {
+                "path": "src/pages/messages/components/MessageDetailTimelineIcon.tsx",
+                "kind": "import-statement",
+                "original": "../MessageDetailTimelineIcon"
+              },
+              {
+                "path": "./index.module.scss",
+                "kind": "import-statement",
+                "external": true
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/messages/components/MessagesDetailPageView/index.tsx": {
+            "bytes": 336,
+            "imports": [
+              {
+                "path": "src/pages/messages/components/MessagesDetailMobilePage/index.tsx",
+                "kind": "import-statement",
+                "original": "../MessagesDetailMobilePage"
+              }
+            ],
+            "format": "esm"
+          },
+          "src/pages/messages/detail.tsx": {
+            "bytes": 256,
+            "imports": [
+              {
+                "path": "src/pages/messages/components/MessagesDetailPageView/index.tsx",
+                "kind": "import-statement",
+                "original": "./components/MessagesDetailPageView"
               }
             ],
             "format": "esm"
@@ -10102,7 +9685,7 @@
             "format": "esm"
           },
           "src/.umi/core/route.tsx": {
-            "bytes": 4205,
+            "bytes": 4390,
             "imports": [
               {
                 "path": "react",
@@ -10158,6 +9741,11 @@
                 "path": "src/pages/messages/index.tsx",
                 "kind": "dynamic-import",
                 "original": "@/pages/messages/index.tsx"
+              },
+              {
+                "path": "src/pages/messages/detail.tsx",
+                "kind": "dynamic-import",
+                "original": "@/pages/messages/detail.tsx"
               },
               {
                 "path": "src/pages/games/index.tsx",
@@ -10239,7 +9827,7 @@
             "format": "esm"
           },
           "src/app.ts": {
-            "bytes": 1711,
+            "bytes": 1730,
             "imports": [
               {
                 "path": "react",
@@ -11336,6 +10924,31 @@
               },
               {
                 "path": "./index.module.scss",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "@umijs/renderer-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "./index.module.scss",
+                "kind": "import-statement",
+                "external": true
+              },
+              {
+                "path": "lucide-react",
                 "kind": "import-statement",
                 "external": true
               },
@@ -13520,31 +13133,43 @@
                 "bytesInOutput": 1764
               },
               "src/api/messageNotifyApi.ts": {
-                "bytesInOutput": 349
+                "bytesInOutput": 428
               },
               "src/hooks/messageNotifyTypes.ts": {
                 "bytesInOutput": 2046
               },
               "src/hooks/useMessageNotifyRequests.ts": {
-                "bytesInOutput": 2556
+                "bytesInOutput": 3083
               },
               "src/pages/messages/components/messageNotifyModel.ts": {
-                "bytesInOutput": 3558
+                "bytesInOutput": 15946
               },
               "src/pages/messages/components/MessageNotifyCategoryIcon.tsx": {
-                "bytesInOutput": 1072
+                "bytesInOutput": 1095
               },
               "src/pages/messages/components/MessagesNotifyCard/index.tsx": {
                 "bytesInOutput": 1642
               },
               "src/pages/messages/components/MessagesMobilePage/index.tsx": {
-                "bytesInOutput": 6670
+                "bytesInOutput": 6491
               },
               "src/pages/messages/components/MessagesPageView/index.tsx": {
                 "bytesInOutput": 352
               },
               "src/pages/messages/index.tsx": {
                 "bytesInOutput": 290
+              },
+              "src/pages/messages/components/MessageDetailTimelineIcon.tsx": {
+                "bytesInOutput": 910
+              },
+              "src/pages/messages/components/MessagesDetailMobilePage/index.tsx": {
+                "bytesInOutput": 10329
+              },
+              "src/pages/messages/components/MessagesDetailPageView/index.tsx": {
+                "bytesInOutput": 389
+              },
+              "src/pages/messages/detail.tsx": {
+                "bytesInOutput": 309
               },
               "src/pages/games/components/GameHubPage.tsx": {
                 "bytesInOutput": 4682
@@ -13568,7 +13193,7 @@
                 "bytesInOutput": 19719
               },
               "src/pages/battle-plaza/components/BattlePlazaDuelCard/index.tsx": {
-                "bytesInOutput": 22850
+                "bytesInOutput": 22873
               },
               "src/pages/battle-plaza/components/BattlePlazaInviteCodeModal/index.tsx": {
                 "bytesInOutput": 5541
@@ -13661,7 +13286,7 @@
                 "bytesInOutput": 7688
               },
               "src/pages/shop/components/Shop.tsx": {
-                "bytesInOutput": 35815
+                "bytesInOutput": 35817
               },
               "src/pages/shop/components/ShopPageView/index.tsx": {
                 "bytesInOutput": 368
@@ -13748,7 +13373,7 @@
                 "bytesInOutput": 1708
               },
               "src/pages/settlement/index.tsx": {
-                "bytesInOutput": 8667
+                "bytesInOutput": 8682
               },
               "src/components/common/feedback/OperationToast/index.tsx": {
                 "bytesInOutput": 1263
@@ -13763,10 +13388,10 @@
                 "bytesInOutput": 1827
               },
               "src/.umi/core/route.tsx": {
-                "bytesInOutput": 4329
+                "bytesInOutput": 4524
               },
               "src/app.ts": {
-                "bytesInOutput": 1575
+                "bytesInOutput": 1594
               },
               "src/queryClient.ts": {
                 "bytesInOutput": 389
@@ -13790,7 +13415,7 @@
                 "bytesInOutput": 880
               }
             },
-            "bytes": 1483970
+            "bytes": 1509233
           }
         }
       }
@@ -29504,15 +29129,70 @@
           "type": "ImportDeclaration"
         }
       ],
-      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/messages/components/MessageNotifyCategoryIcon.tsx": [
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/messages/components/MessageDetailTimelineIcon.tsx": [
         {
-          "end": 141,
+          "end": 140,
           "importKind": "value",
           "source": "lucide-react",
           "specifiers": [
             {
-              "imported": "DollarSign",
-              "local": "DollarSign",
+              "imported": "Check",
+              "local": "Check",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Flame",
+              "local": "Flame",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Gift",
+              "local": "Gift",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Package",
+              "local": "Package",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Plus",
+              "local": "Plus",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Wallet",
+              "local": "Wallet",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 67,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 205,
+          "importKind": "type",
+          "source": "./messageNotifyModel",
+          "specifiers": [
+            {
+              "imported": "MessageTimelineItem",
+              "local": "MessageTimelineItem",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 141,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/messages/components/MessageNotifyCategoryIcon.tsx": [
+        {
+          "end": 145,
+          "importKind": "value",
+          "source": "lucide-react",
+          "specifiers": [
+            {
+              "imported": "BarChart3",
+              "local": "BarChart3",
               "type": "ImportSpecifier"
             },
             {
@@ -29536,8 +29216,8 @@
               "type": "ImportSpecifier"
             },
             {
-              "imported": "Wallet",
-              "local": "Wallet",
+              "imported": "ShoppingBag",
+              "local": "ShoppingBag",
               "type": "ImportSpecifier"
             }
           ],
@@ -29545,7 +29225,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 218,
+          "end": 222,
           "importKind": "type",
           "source": "@/hooks/messageNotifyTypes",
           "specifiers": [
@@ -29555,7 +29235,234 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 142,
+          "start": 146,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/messages/components/MessagesDetailMobilePage/index.tsx": [
+        {
+          "end": 186,
+          "importKind": "value",
+          "source": "react",
+          "specifiers": [
+            {
+              "imported": "useCallback",
+              "local": "useCallback",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useEffect",
+              "local": "useEffect",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useMemo",
+              "local": "useMemo",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRef",
+              "local": "useRef",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 122,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 250,
+          "importKind": "value",
+          "source": "@umijs/renderer-react",
+          "specifiers": [
+            {
+              "imported": "useNavigate",
+              "local": "useNavigate",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useParams",
+              "local": "useParams",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 187,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 329,
+          "importKind": "value",
+          "source": "lucide-react",
+          "specifiers": [
+            {
+              "imported": "ArrowLeft",
+              "local": "ArrowLeft",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "ClipboardList",
+              "local": "ClipboardList",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "Mail",
+              "local": "Mail",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "MoreHorizontal",
+              "local": "MoreHorizontal",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 251,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 381,
+          "importKind": "value",
+          "source": "@/utils/authStorage",
+          "specifiers": [
+            {
+              "imported": "getAuthToken",
+              "local": "getAuthToken",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 330,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 496,
+          "importKind": "value",
+          "source": "@/hooks/useMessageNotifyRequests",
+          "specifiers": [
+            {
+              "imported": "useMutateMessageNotifyRead",
+              "local": "useMutateMessageNotifyRead",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "useRequestMessageNotifyDetail",
+              "local": "useRequestMessageNotifyDetail",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 382,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 554,
+          "importKind": "value",
+          "source": "@/layouts/context",
+          "specifiers": [
+            {
+              "imported": "useHomeLayoutContext",
+              "local": "useHomeLayoutContext",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 497,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 802,
+          "importKind": "value",
+          "source": "../messageNotifyModel",
+          "specifiers": [
+            {
+              "imported": "formatMessageDetailTime",
+              "local": "formatMessageDetailTime",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveMessageBusinessMeta",
+              "local": "resolveMessageBusinessMeta",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveMessageDetailFields",
+              "local": "resolveMessageDetailFields",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveMessageDetailStatusBadge",
+              "local": "resolveMessageDetailStatusBadge",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveMessagePrimaryAction",
+              "local": "resolveMessagePrimaryAction",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveMessageSceneTitle",
+              "local": "resolveMessageSceneTitle",
+              "type": "ImportSpecifier"
+            },
+            {
+              "imported": "resolveMessageTimeline",
+              "local": "resolveMessageTimeline",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 555,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 876,
+          "importKind": "value",
+          "source": "../MessageNotifyCategoryIcon",
+          "specifiers": [
+            {
+              "imported": "MessageNotifyCategoryIcon",
+              "local": "MessageNotifyCategoryIcon",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 803,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 950,
+          "importKind": "value",
+          "source": "../MessageDetailTimelineIcon",
+          "specifiers": [
+            {
+              "imported": "MessageDetailTimelineIcon",
+              "local": "MessageDetailTimelineIcon",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 877,
+          "type": "ImportDeclaration"
+        },
+        {
+          "end": 992,
+          "importKind": "value",
+          "source": "./index.module.scss",
+          "specifiers": [
+            {
+              "local": "styles",
+              "type": "ImportDefaultSpecifier"
+            }
+          ],
+          "start": 951,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/messages/components/MessagesDetailPageView/index.tsx": [
+        {
+          "end": 149,
+          "importKind": "value",
+          "source": "../MessagesDetailMobilePage",
+          "specifiers": [
+            {
+              "imported": "MessagesDetailMobilePage",
+              "local": "MessagesDetailMobilePage",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 78,
           "type": "ImportDeclaration"
         }
       ],
@@ -29693,7 +29600,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 856,
+          "end": 828,
           "importKind": "value",
           "source": "../messageNotifyModel",
           "specifiers": [
@@ -29705,11 +29612,6 @@
             {
               "imported": "MESSAGE_FILTER_TABS",
               "local": "MESSAGE_FILTER_TABS",
-              "type": "ImportSpecifier"
-            },
-            {
-              "imported": "resolveMessageDetailPath",
-              "local": "resolveMessageDetailPath",
               "type": "ImportSpecifier"
             },
             {
@@ -29727,7 +29629,7 @@
           "type": "ImportDeclaration"
         },
         {
-          "end": 930,
+          "end": 902,
           "importKind": "value",
           "source": "../MessageNotifyCategoryIcon",
           "specifiers": [
@@ -29737,11 +29639,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 857,
+          "start": 829,
           "type": "ImportDeclaration"
         },
         {
-          "end": 990,
+          "end": 962,
           "importKind": "value",
           "source": "../MessagesNotifyCard",
           "specifiers": [
@@ -29751,11 +29653,11 @@
               "type": "ImportSpecifier"
             }
           ],
-          "start": 931,
+          "start": 903,
           "type": "ImportDeclaration"
         },
         {
-          "end": 1032,
+          "end": 1004,
           "importKind": "value",
           "source": "./index.module.scss",
           "specifiers": [
@@ -29764,7 +29666,7 @@
               "type": "ImportDefaultSpecifier"
             }
           ],
-          "start": 991,
+          "start": 963,
           "type": "ImportDeclaration"
         }
       ],
@@ -29869,6 +29771,22 @@
             }
           ],
           "start": 88,
+          "type": "ImportDeclaration"
+        }
+      ],
+      "/Users/wangheng/Documents/PolyMarket/forum/turtle_project/src/pages/messages/detail.tsx": [
+        {
+          "end": 169,
+          "importKind": "value",
+          "source": "./components/MessagesDetailPageView",
+          "specifiers": [
+            {
+              "imported": "MessagesDetailPageView",
+              "local": "MessagesDetailPageView",
+              "type": "ImportSpecifier"
+            }
+          ],
+          "start": 92,
           "type": "ImportDeclaration"
         }
       ],

@@ -1,5 +1,5 @@
 /** 文件说明：消息中心业务分类图标。 */
-import { DollarSign, FileText, Flame, Gift, Megaphone, Wallet } from 'lucide-react';
+import { BarChart3, FileText, Flame, Gift, Megaphone, ShoppingBag } from 'lucide-react';
 import type { MessageNotifyBusinessCode } from '@/hooks/messageNotifyTypes';
 
 interface MessageNotifyCategoryIconProps {
@@ -13,7 +13,7 @@ export function MessageNotifyCategoryIcon({ businessCode, size = 16 }: MessageNo
 
   switch (code) {
     case 'dark_market':
-      return <DollarSign {...props} />;
+      return <BarChart3 {...props} />;
     case 'intel':
       return <FileText {...props} />;
     case 'tear_square':
@@ -23,7 +23,7 @@ export function MessageNotifyCategoryIcon({ businessCode, size = 16 }: MessageNo
     case 'reward':
       return <Gift {...props} />;
     case 'underground_bank':
-      return <Wallet {...props} />;
+      return <ShoppingBag {...props} />;
     default:
       return <Megaphone {...props} />;
   }

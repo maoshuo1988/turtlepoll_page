@@ -1,7 +1,7 @@
 /*
  * 文件说明：全局样式入口，定义主题变量、基础背景和滚动条样式。
+ * 不从 Google Fonts 拉取字体（国内易断连会导致 CSS chunk 加载失败），改用系统字体栈。
  */
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700;800&display=swap');
 @import "./styles/viewport-global.css";
 @import "tailwindcss";
 
@@ -59,7 +59,7 @@ html.dark {
 }
 
 html {
-  font-family: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

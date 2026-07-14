@@ -45,7 +45,7 @@ export function rootContainer(container: React.ReactNode) {
         token: {
           borderRadius: 8,
           colorPrimary: '#22c55e',
-          fontFamily: "'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', sans-serif",
+          fontFamily: "'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif",
         },
       },
     },

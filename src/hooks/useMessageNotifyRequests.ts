@@ -31,6 +31,7 @@ async function invalidateMessageNotifyQueries(queryClient: ReturnType<typeof use
   await Promise.all([
     queryClient.invalidateQueries([MESSAGE_NOTIFY_LIST_QUERY_KEY]),
     queryClient.invalidateQueries([MESSAGE_NOTIFY_UNREAD_COUNT_QUERY_KEY]),
+    queryClient.invalidateQueries(['requestMessageNotifyDetail']),
   ]);
 }
 

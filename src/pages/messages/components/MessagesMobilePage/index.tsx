@@ -16,7 +16,6 @@ import { IconFont } from '@/components/common/iconfont/IconFont';
 import {
   MESSAGE_BUSINESS_META,
   MESSAGE_FILTER_TABS,
-  resolveMessageDetailPath,
   resolveMessageFilterBusinessCode,
   type MessageFilterKey,
 } from '../messageNotifyModel';
@@ -65,14 +64,7 @@ export function MessagesMobilePage() {
       } catch {
         // 已读失败不阻断跳转
       }
-
-      const target = resolveMessageDetailPath(record.detailUrl);
-      if (!target) return;
-      if (/^https?:\/\//i.test(target)) {
-        window.location.href = target;
-        return;
-      }
-      navigate(target);
+      navigate(`/messages/${record.id}`);
     },
     [isAuthenticated, navigate, onOpenAuth, readMutation],
   );
